@@ -11,7 +11,7 @@ If you find this plugin helpful, please consider supporting its development. You
 
 ## Features
 
-*   Search Z-library for books and articles.
+*   Search Z-library for books.
 *   Filter search results by language and file extension.
 *   Download content directly to your device.
 
@@ -30,7 +30,7 @@ If you find this plugin helpful, please consider supporting its development. You
 ## Configuration
 
 1.  Ensure you are in the KOReader file browser.
-2.  Navigate to the "Tools" menu
+2.  Access the "Search" menu.
 3.  Select "Z-library Settings" (it's probably on the second page of this menu).
 4.  Enter your Z-library username, password, and the base URL for your Z-library instance.
 5.  Adjust other settings if needed.
@@ -39,7 +39,7 @@ If you find this plugin helpful, please consider supporting its development. You
 
 1.  Ensure you are in the KOReader file browser.
 2.  Access the "Search" menu.
-3.  Select "Search Z-library" (this might also be on a subsequent page of the tools menu).
+3.  Select "Z-library search" (this might also be on a subsequent page of the tools menu).
 4.  Enter your search query and enjoy the content!
 
 ## Keywords

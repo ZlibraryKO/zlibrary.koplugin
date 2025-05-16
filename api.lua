@@ -28,7 +28,7 @@ function Api.makeHttpRequest(options)
 
     local sink_to_use = options.sink
     if not sink_to_use then
-        response_body_table = {} -- Ensure fresh for this call context
+        response_body_table = {}
         sink_to_use = ltn12.sink.table(response_body_table)
     end
 
@@ -49,7 +49,7 @@ function Api.makeHttpRequest(options)
         tostring(req_ok), tostring(r_val), type(r_val), tostring(r_code), type(r_code), type(r_headers_tbl), tostring(r_status_str)))
 
     if not req_ok then
-        result.error = "Network request failed: " .. tostring(r_val) -- r_val is the error message from pcall
+        result.error = "Network request failed: " .. tostring(r_val)
         logger.err(string.format("Zlibrary:Api.makeHttpRequest - END (pcall error) - Error: %s", result.error))
         return result
     end
@@ -58,12 +58,7 @@ function Api.makeHttpRequest(options)
     result.headers = r_headers_tbl
 
     if not options.sink then
-        -- If the caller did not provide a sink, we used our internal
-        -- ltn12.sink.table(response_body_table). The body chunks would have been
-        -- collected in response_body_table.
         result.body = table.concat(response_body_table)
-    -- else, the caller provided a sink (e.g., for file download), so they are responsible for handling the body.
-    -- result.body remains nil in that case, which is correct.
     end
 
     if type(result.status_code) ~= "number" then

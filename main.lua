@@ -201,8 +201,8 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
     logger.info(string.format("Zlibrary:displaySearchResults - Preparing menu items from %d initial results.", #initial_book_data_list))
 
     for i = 1, #initial_book_data_list do
-        local book = initial_book_data_list[i]
-        menu_items[i] = Ui.createBookMenuItem(book, self)
+        local book_menu_item_data = initial_book_data_list[i]
+        menu_items[i] = Ui.createBookMenuItem(book_menu_item_data, self)
     end
 
     if self.active_results_menu then
@@ -236,9 +236,9 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
                     self.current_search_api_page_loaded = next_api_page_to_fetch
 
                     local new_menu_items_to_add = {}
-                    for _, book_data in ipairs(new_book_objects) do
-                        table.insert(self.all_search_results_data, book_data)
-                        table.insert(new_menu_items_to_add, Ui.createBookMenuItem(book_data, self))
+                    for _, book_api_data_transformed in ipairs(new_book_objects) do
+                        table.insert(self.all_search_results_data, book_api_data_transformed)
+                        table.insert(new_menu_items_to_add, Ui.createBookMenuItem(book_api_data_transformed, self))
                     end
                     Ui.appendSearchResultsToMenu(menu_instance, new_menu_items_to_add)
                 else

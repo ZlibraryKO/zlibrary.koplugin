@@ -330,13 +330,23 @@ function Zlibrary:downloadBook(book)
                 end)
             else
                 local fail_msg = (api_result and api_result.message) or T("Download failed: Unknown error")
+                if api_result and api_result.error and string.find(api_result.error, "Download limit reached or file is an HTML page", 1, true) then
+                    fail_msg = T("Download limit reached. Please try again later or check your account.")
+                elseif api_result and api_result.error then
+                    fail_msg = api_result.error
+                end
                 Ui.showErrorMessage(fail_msg)
                 pcall(os.remove, target_filepath)
             end
         end
 
         local function on_error_download(err_msg)
-            Ui.showErrorMessage(tostring(err_msg))
+            local error_string = tostring(err_msg)
+            if string.find(error_string, "Download limit reached or file is an HTML page", 1, true) then
+                Ui.showErrorMessage(T("Download limit reached. Please try again later or check your account."))
+            else
+                Ui.showErrorMessage(error_string)
+            end
             pcall(os.remove, target_filepath)
         end
 

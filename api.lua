@@ -24,63 +24,57 @@ function Api.makeHttpRequest(options)
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - START - URL: %s, Method: %s", options.url, options.method or "GET"))
 
     local response_body_table = {}
-    local result = { body = nil, status_code = nil, error = nil }
+    local result = { body = nil, status_code = nil, error = nil, headers = nil }
 
-    local sink = options.sink or ltn12.sink.table(response_body_table)
+    local sink_to_use = options.sink
+    if not sink_to_use then
+        response_body_table = {}
+        sink_to_use = ltn12.sink.table(response_body_table)
+    end
 
     local request_params = {
         url = options.url,
         method = options.method or "GET",
         headers = options.headers,
         source = options.source,
-        sink = sink,
+        sink = sink_to_use,
         timeout = options.timeout or Config.REQUEST_TIMEOUT,
         redirect = options.redirect or false
     }
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Timeout: %s, Redirect: %s", request_params.url, request_params.method, request_params.timeout, tostring(request_params.redirect)))
 
-    local ok, r1, r2, r3 = pcall(http.request, request_params)
+    local req_ok, r_val, r_code, r_headers_tbl, r_status_str = pcall(http.request, request_params)
 
-    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - pcall result: ok=%s, r1=%s (type %s), r2=%s (type %s), r3=%s (type %s)",
-        tostring(ok), tostring(r1), type(r1), tostring(r2), type(r2), tostring(r3), type(r3)))
+    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - pcall result: ok=%s, r_val=%s (type %s), r_code=%s (type %s), r_headers_tbl type=%s, r_status_str=%s",
+        tostring(req_ok), tostring(r_val), type(r_val), tostring(r_code), type(r_code), type(r_headers_tbl), tostring(r_status_str)))
 
-    local final_status_code
-    local status_text
-
-    if not ok then
-        result.error = "Network request failed: " .. tostring(r1)
+    if not req_ok then
+        result.error = "Network request failed: " .. tostring(r_val)
         logger.err(string.format("Zlibrary:Api.makeHttpRequest - END (pcall error) - Error: %s", result.error))
         return result
     end
 
-    if request_params.redirect then
-        if type(r1) == "number" and r1 >= 0 and type(r2) == "number" then
-             final_status_code = r2
-        else
-            if type(r1) == "number" then
-                final_status_code = r1
-            else
-                 result.error = "Unexpected http.request result with redirect=true: " .. tostring(r1)
-                 logger.err(string.format("Zlibrary:Api.makeHttpRequest - END (unexpected redirect result) - Error: %s", result.error))
-                 return result
-            end
-        end
-    else
-        final_status_code = r1
-        status_text = r3
-    end
-
-    result.status_code = final_status_code
+    result.status_code = r_code
+    result.headers = r_headers_tbl
 
     if not options.sink then
         result.body = table.concat(response_body_table)
     end
 
-    if final_status_code ~= 200 then
-        result.error = string.format("HTTP Error: %s (%s)", final_status_code, status_text or "Unknown Status")
+    if type(result.status_code) ~= "number" then
+        result.error = "Invalid HTTP response: status code missing or not a number. Got: " .. tostring(result.status_code)
+        logger.err(string.format("Zlibrary:Api.makeHttpRequest - END (Invalid response code type) - Error: %s", result.error))
+        return result
     end
 
-    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - END - Status: %s, Error: %s", result.status_code, tostring(result.error)))
+    if result.status_code ~= 200 and result.status_code ~= 206 then
+        if not result.error then
+            result.error = string.format("HTTP Error: %s (%s)", result.status_code, r_status_str or "Unknown Status")
+        end
+    end
+
+    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - END - Status: %s, Headers found: %s, Error: %s",
+        result.status_code, tostring(result.headers ~= nil), tostring(result.error)))
     return result
 end
 
@@ -159,14 +153,14 @@ function Api.search(query, user_id, user_key, languages, extensions, page)
 
     local base_url = Config.getBaseUrl()
     if not base_url then
-        result.error = "The Zlibrary server address (URL) is not set. Please configure it in the Zlibrary plugin settings." -- Updated
+        result.error = "The Zlibrary server address (URL) is not set. Please configure it in the Zlibrary plugin settings."
         logger.err(string.format("Zlibrary:Api.search - END (Configuration error) - Error: %s", result.error))
         return result
     end
 
     local search_url = Config.getSearchUrl(query)
     if not search_url then
-        result.error = "Could not construct the Zlibrary search address. Please verify the Zlibrary URL in the plugin settings." -- Updated
+        result.error = "Could not construct the Zlibrary search address. Please verify the Zlibrary URL in the plugin settings."
         logger.err(string.format("Zlibrary:Api.search - END (Configuration error) - Error: %s", result.error))
         return result
     end
@@ -246,14 +240,29 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
         redirect = true
     }
 
-    if http_result.error or http_result.status_code ~= 200 then
+    if http_result.error and not (http_result.status_code and http_result.headers) then
+        result.error = "Download failed: " .. http_result.error
+        pcall(os.remove, target_filepath)
+        logger.err(string.format("Zlibrary:Api.downloadBook - END (Request error) - Error: %s", result.error))
+        return result
+    end
+
+    local content_type = http_result.headers and http_result.headers["content-type"]
+    if content_type and string.find(string.lower(content_type), "text/html") then
+        result.error = "Download limit reached or file is an HTML page."
+        pcall(os.remove, target_filepath)
+        logger.warn(string.format("Zlibrary:Api.downloadBook - END (HTML content detected) - URL: %s, Status: %s, Content-Type: %s", download_url, tostring(http_result.status_code), content_type))
+        return result
+    end
+
+    if http_result.error or (http_result.status_code and http_result.status_code ~= 200) then
         result.error = "Download failed: " .. (http_result.error or string.format("HTTP Error: %s", http_result.status_code))
         pcall(os.remove, target_filepath)
-        logger.err(string.format("Zlibrary:Api.downloadBook - END (Download error) - Error: %s", result.error))
+        logger.err(string.format("Zlibrary:Api.downloadBook - END (Download error) - Error: %s, Status: %s", result.error, tostring(http_result.status_code)))
         return result
     else
         result.success = true
-        logger.info(string.format("Zlibrary:Api.downloadBook - END (Success)"))
+        logger.info(string.format("Zlibrary:Api.downloadBook - END (Success) - Target: %s", target_filepath))
         return result
     end
 end

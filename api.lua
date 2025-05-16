@@ -171,7 +171,7 @@ function Api.search(query, user_id, user_key, languages, extensions, page)
 
     local search_url = base_url .. "/eapi/book/search"
     local page_num = page or 1
-    local limit_num = 30 -- Default limit for results per page
+    local limit_num = Config.SEARCH_RESULTS_LIMIT
 
     local body_data_parts = {}
     table.insert(body_data_parts, "message=" .. util.urlEncode(query or ""))
@@ -240,7 +240,7 @@ function Api.search(query, user_id, user_key, languages, extensions, page)
     local books_from_api = {}
     if data.books and type(data.books) == "table" then
         books_from_api = data.books
-    elseif data.exactMatch and data.exactMatch.books and type(data.exactMatch.books) == "table" then -- Fallback for single exact match structure
+    elseif data.exactMatch and data.exactMatch.books and type(data.exactMatch.books) == "table" then
         books_from_api = data.exactMatch.books
     end
 

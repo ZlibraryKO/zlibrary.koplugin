@@ -153,24 +153,29 @@ function Ui.showGenericInputDialog(title, setting_key, current_value_or_default,
             {
                 text = T("Set"),
                 callback = function()
-                    local input = dialog:getInputText()
+                    local raw_input = dialog:getInputText() or ""
+                    local close_dialog_after_action = false
 
                     if validate_and_save_callback then
-                        if (validate_and_save_callback(input, setting_key)) then
+                        if validate_and_save_callback(raw_input, setting_key) then
                             Ui.showInfoMessage(T("Setting saved successfully!"))
+                            close_dialog_after_action = true
                         end
-                        UIManager:close(dialog)
-                        return
+                    else
+                        local trimmed_input = util.trim(raw_input)
+                        if trimmed_input ~= "" then
+                            Config.saveSetting(setting_key, trimmed_input)
+                            Ui.showInfoMessage(T("Setting saved successfully!"))
+                        else
+                            Config.deleteSetting(setting_key)
+                            Ui.showInfoMessage(T("Setting cleared."))
+                        end
+                        close_dialog_after_action = true
                     end
 
-                    if input and input:match("%S") then
-                        Config.saveSetting(setting_key, util.trim(input))
-                        Ui.showInfoMessage(T("Setting saved successfully!"))
-                    else
-                        Config.deleteSetting(setting_key)
-                        Ui.showInfoMessage(T("Setting cleared."))
+                    if close_dialog_after_action then
+                        UIManager:close(dialog)
                     end
-                    UIManager:close(dialog)
                 end,
             },
         }},

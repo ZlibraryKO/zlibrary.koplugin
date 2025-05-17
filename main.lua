@@ -57,7 +57,15 @@ function Zlibrary:addToMainMenu(menu_items)
                             T("Set Z-library base URL"),
                             Config.SETTINGS_BASE_URL_KEY,
                             Config.getBaseUrl(),
-                            false
+                            false,
+                            function(input_value)
+                                local success, err_msg = Config.setAndValidateBaseUrl(input_value)
+                                if not success then
+                                    Ui.showErrorMessage(err_msg or T("Invalid Base URL."))
+                                    return false
+                                end
+                                return true
+                            end
                         )
                     end,
                     separator = true,

@@ -162,14 +162,13 @@ function Api.search(query, user_id, user_key, languages, extensions, page)
     logger.info(string.format("Zlibrary:Api.search - START - Query: %s, Page: %s", query, tostring(page)))
     local result = { results = nil, total_count = nil, error = nil }
 
-    local base_url = Config.getBaseUrl()
-    if not base_url then
+    local search_url = Config.getSearchUrl()
+    if not search_url then
         result.error = "The Zlibrary server address (URL) is not set. Please configure it in the Zlibrary plugin settings."
         logger.err(string.format("Zlibrary:Api.search - END (Configuration error) - Error: %s", result.error))
         return result
     end
 
-    local search_url = base_url .. "/eapi/book/search"
     local page_num = page or 1
     local limit_num = Config.SEARCH_RESULTS_LIMIT
 

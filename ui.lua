@@ -1,6 +1,7 @@
 local UIManager = require("ui/uimanager")
 local InfoMessage = require("ui/widget/infomessage")
 local ConfirmBox = require("ui/widget/confirmbox")
+local TextViewer = require("ui/widget/textviewer") -- Added TextViewer
 local T = require("gettext")
 local DownloadMgr = require("ui/downloadmgr")
 local InputDialog = require("ui/widget/inputdialog")
@@ -32,10 +33,18 @@ function Ui.closeMessage(message_widget)
 end
 
 function Ui.showFullTextDialog(title, full_text)
-    UIManager:show(ConfirmBox:new{
+    UIManager:show(TextViewer:new{
         title = title,
         text = full_text,
-        ok_text = T("OK"),
+    })
+end
+
+function Ui.showSimpleMessageDialog(title, text)
+    UIManager:show(ConfirmBox:new{
+        title = title,
+        text = text, 
+        cancel_text = T("Close"),
+        no_ok_button = true,
     })
 end
 
@@ -203,17 +212,15 @@ function Ui.createBookMenuItem(book_data, parent_zlibrary_instance)
     local year_str = (book_data.year and book_data.year ~= "N/A" and tostring(book_data.year) ~= "0") and (" (" .. book_data.year .. ")") or ""
     local title = util.htmlEntitiesToUtf8(book_data.title or T("Unknown Title"))
     local author = util.htmlEntitiesToUtf8(book_data.author or T("Unknown Author"))
-    local main_text_part = string.format("%s by %s%s", title, author, year_str)
+    local combined_text = string.format("%s by %s%s", title, author, year_str)
 
-    local sub_text_parts = {}
-    if book_data.format and book_data.format ~= "N/A" then table.insert(sub_text_parts, book_data.format) end
-    if book_data.size and book_data.size ~= "N/A" then table.insert(sub_text_parts, book_data.size) end
-    if book_data.rating and book_data.rating ~= "N/A" then table.insert(sub_text_parts, T("Rating: ") .. book_data.rating) end
-    local sub_text_part = table.concat(sub_text_parts, " | ")
+    local additional_info_parts = {}
+    if book_data.format and book_data.format ~= "N/A" then table.insert(additional_info_parts, book_data.format) end
+    if book_data.size and book_data.size ~= "N/A" then table.insert(additional_info_parts, book_data.size) end
+    if book_data.rating and book_data.rating ~= "N/A" then table.insert(additional_info_parts, T("Rating: ") .. book_data.rating) end
 
-    local combined_text = main_text_part
-    if sub_text_part ~= "" then
-        combined_text = combined_text .. " | " .. sub_text_part
+    if #additional_info_parts > 0 then
+        combined_text = combined_text .. " | " .. table.concat(additional_info_parts, " | ")
     end
 
     return {
@@ -251,56 +258,74 @@ function Ui.showBookDetails(parent_zlibrary, book)
     local details_menu_items = {}
     local details_menu
 
-    local full_title = book.title or ""
+    local full_title = util.htmlEntitiesToUtf8(book.title or "")
     table.insert(details_menu_items, {
         text = T("Title: ") .. full_title,
         enabled = true,
         callback = function()
-            Ui.showFullTextDialog(T("Full Title"), full_title)
+            Ui.showSimpleMessageDialog(T("Full Title"), full_title)
         end,
         keep_menu_open = true,
     })
 
-    local full_author = book.author or ""
+    local full_author = util.htmlEntitiesToUtf8(book.author or "")
     table.insert(details_menu_items, {
         text = T("Author: ") .. full_author,
         enabled = true,
         callback = function()
-            Ui.showFullTextDialog(T("Full Author"), full_author)
+            Ui.showSimpleMessageDialog(T("Full Author"), full_author)
         end,
         keep_menu_open = true,
     })
 
     if book.year and book.year ~= "N/A" and tostring(book.year) ~= "0" then table.insert(details_menu_items, { text = T("Year: ") .. book.year, enabled = false }) end
-    if book.format and book.format ~= "N/A" then table.insert(details_menu_items, { text = T("Format: ") .. book.format, enabled = false }) end
-    if book.size and book.size ~= "N/A" then table.insert(details_menu_items, { text = T("Size: ") .. book.size, enabled = false }) end
     if book.lang and book.lang ~= "N/A" then table.insert(details_menu_items, { text = T("Language: ") .. book.lang, enabled = false }) end
-    if book.rating and book.rating ~= "N/A" then table.insert(details_menu_items, { text = T("Rating: ") .. book.rating, enabled = false }) end
 
-    if book.href then
-        local full_link = Config.getBookUrl(book.href)
+    if book.format and book.format ~= "N/A" then
+        if book.download then
+            table.insert(details_menu_items, {
+                text = string.format(T("Format: %s (tap to download)"), book.format),
+                callback = function()
+                    parent_zlibrary:downloadBook(book)
+                end,
+                keep_menu_open = true,
+            })
+        else
+            table.insert(details_menu_items, { text = string.format(T("Format: %s (Download not available)"), book.format), enabled = false })
+        end
+    elseif book.download then
         table.insert(details_menu_items, {
-            text = T("Link: ") .. full_link,
-            enabled = true,
-            callback = function()
-                Ui.showFullTextDialog(T("Full Link"), full_link)
-            end,
-            keep_menu_open = true,
-        })
-    end
-
-    table.insert(details_menu_items, { text = "---" })
-
-    if book.download then
-        table.insert(details_menu_items, {
-            text = T("Download Book"),
+            text = T("Download Book (Unknown Format)"),
             callback = function()
                 parent_zlibrary:downloadBook(book)
             end,
             keep_menu_open = true,
         })
-    else
-        table.insert(details_menu_items, { text = T("Download link not available"), enabled = false })
+    end
+
+    if book.size and book.size ~= "N/A" then table.insert(details_menu_items, { text = T("Size: ") .. book.size, enabled = false }) end
+    if book.rating and book.rating ~= "N/A" then table.insert(details_menu_items, { text = T("Rating: ") .. book.rating, enabled = false }) end
+    if book.publisher and book.publisher ~= "" then table.insert(details_menu_items, { text = T("Publisher: ") .. util.htmlEntitiesToUtf8(book.publisher), enabled = false }) end
+    if book.series and book.series ~= "" then table.insert(details_menu_items, { text = T("Series: ") .. util.htmlEntitiesToUtf8(book.series), enabled = false }) end
+    if book.pages and book.pages ~= 0 then table.insert(details_menu_items, { text = T("Pages: ") .. book.pages, enabled = false }) end
+
+    if book.description and book.description ~= "" then
+        local full_description = util.htmlEntitiesToUtf8(book.description)
+
+        full_description = string.gsub(full_description, "<[Bb][Rr]%s*/?>", "\n")
+        full_description = string.gsub(full_description, "</[Pp]>", "\n\n")
+        full_description = string.gsub(full_description, "<[^>]+>", "")        
+        full_description = string.gsub(full_description, "(\n\r?%s*){2,}", "\n\n")
+        full_description = util.trim(full_description)
+
+        table.insert(details_menu_items, {
+            text = T("Description (tap to view)"),
+            enabled = true,
+            callback = function()
+                Ui.showFullTextDialog(T("Description"), full_description)
+            end,
+            keep_menu_open = true,
+        })
     end
 
     table.insert(details_menu_items, { text = "---" })

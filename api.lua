@@ -1,5 +1,4 @@
 local Config = require("config")
-local Parser = require("parser")
 local util = require("frontend/util")
 local logger = require("logger")
 local json = require("json")
@@ -8,16 +7,28 @@ local http = require("socket.http")
 
 local Api = {}
 
-local function append_array_query_params(base_url, param_name, values)
-    if not values or #values == 0 then
-        return base_url
+local function _transformApiBookData(api_book)
+    if not api_book or type(api_book) ~= "table" then
+        return nil
     end
-    local params_str_parts = {}
-    for i, value in ipairs(values) do
-        table.insert(params_str_parts, string.format("%s[%d]=%s", param_name, i - 1, util.urlEncode(value)))
-    end
-    local separator = base_url:find("?") and "&" or "?"
-    return base_url .. separator .. table.concat(params_str_parts, "&")
+    return {
+        id = api_book.id,
+        title = util.trim(api_book.title or "Unknown Title"),
+        author = util.trim(api_book.author or "Unknown Author"),
+        year = api_book.year or "N/A",
+        format = api_book.extension or "N/A",
+        size = api_book.filesizeString or api_book.filesize or "N/A",
+        lang = api_book.language or "N/A",
+        rating = api_book.interestScore or "N/A",
+        href = api_book.href,
+        download = api_book.dl,
+        cover = api_book.cover,
+        description = api_book.description,
+        publisher = api_book.publisher,
+        series = api_book.series,
+        pages = api_book.pages,
+        identifier = api_book.identifier,
+    }
 end
 
 function Api.makeHttpRequest(options)
@@ -158,38 +169,45 @@ function Api.search(query, user_id, user_key, languages, extensions, page)
         return result
     end
 
-    local search_url = Config.getSearchUrl(query)
-    if not search_url then
-        result.error = "Could not construct the Zlibrary search address. Please verify the Zlibrary URL in the plugin settings."
-        logger.err(string.format("Zlibrary:Api.search - END (Configuration error) - Error: %s", result.error))
-        return result
+    local search_url = base_url .. "/eapi/book/search"
+    local page_num = page or 1
+    local limit_num = Config.SEARCH_RESULTS_LIMIT
+
+    local body_data_parts = {}
+    table.insert(body_data_parts, "message=" .. util.urlEncode(query or ""))
+    table.insert(body_data_parts, "page=" .. util.urlEncode(tostring(page_num)))
+    table.insert(body_data_parts, "limit=" .. util.urlEncode(tostring(limit_num)))
+
+    if languages and #languages > 0 then
+        for i, lang in ipairs(languages) do
+            table.insert(body_data_parts, string.format("languages[%d]=%s", i - 1, util.urlEncode(lang)))
+        end
     end
+    if extensions and #extensions > 0 then
+        for i, ext in ipairs(extensions) do
+            table.insert(body_data_parts, string.format("extensions[%d]=%s", i - 1, util.urlEncode(ext)))
+        end
+    end
+
+    local body = table.concat(body_data_parts, "&")
 
     local headers = {
         ["User-Agent"] = Config.USER_AGENT,
-        ["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-        ["Accept-Language"] = "en-US,en;q=0.5",
-        ["Referer"] = base_url .. "/",
+        ["Accept"] = "application/json, text/javascript, */*; q=0.01",
+        ["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8",
+        ["Content-Length"] = tostring(#body),
     }
     if user_id and user_key then
         headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
     end
 
-    search_url = append_array_query_params(search_url, "languages", languages)
-    search_url = append_array_query_params(search_url, "extensions", extensions)
-
-    search_url = search_url .. (search_url:find("?") and "&" or "?") .. "content_type=book"
-
-    if page and page > 1 then
-        search_url = search_url .. "&page=" .. tostring(page)
-    end
-
-    logger.dbg(string.format("Zlibrary:Api.search - Final Search URL: %s", search_url))
+    logger.dbg(string.format("Zlibrary:Api.search - Request URL: %s, Body: %s", search_url, body))
 
     local http_result = Api.makeHttpRequest{
         url = search_url,
-        method = "GET",
+        method = "POST",
         headers = headers,
+        source = ltn12.source.string(body),
         redirect = true,
     }
 
@@ -199,17 +217,55 @@ function Api.search(query, user_id, user_key, languages, extensions, page)
         return result
     end
 
-    local parsed = Parser.parseSearchResults(http_result.body)
-
-    if parsed.error then
-        result.error = parsed.error
-        logger.err(string.format("Zlibrary:Api.search - END (Parse error) - Error: %s", result.error))
+    if not http_result.body then
+        result.error = "Search request failed: Empty response body."
+        logger.err(string.format("Zlibrary:Api.search - END (Empty body) - Error: %s", result.error))
         return result
     end
 
-    result.results = parsed.results
-    result.total_count = parsed.total_count
-    logger.info(string.format("Zlibrary:Api.search - END (Success) - Found results: %d, Total: %s", #result.results, tostring(result.total_count)))
+    local data, _, err_msg = json.decode(http_result.body)
+
+    if not data or type(data) ~= "table" then
+        result.error = "Search request failed: Invalid JSON response. " .. (err_msg or "")
+        logger.err(string.format("Zlibrary:Api.search - END (JSON error) - Error: %s, Body: %s", result.error, http_result.body))
+        return result
+    end
+
+    if data.error then
+        result.error = "Search API error: " .. (data.error.message or data.error)
+        logger.warn(string.format("Zlibrary:Api.search - END (API error in response) - Error: %s", result.error))
+        return result
+    end
+
+    local books_from_api = {}
+    if data.books and type(data.books) == "table" then
+        books_from_api = data.books
+    elseif data.exactMatch and data.exactMatch.books and type(data.exactMatch.books) == "table" then
+        books_from_api = data.exactMatch.books
+    end
+
+    local transformed_books = {}
+    if #books_from_api > 0 then
+        for _, api_book_item in ipairs(books_from_api) do
+            local transformed_book = _transformApiBookData(api_book_item)
+            if transformed_book then
+                table.insert(transformed_books, transformed_book)
+            else
+                logger.warn("Zlibrary:Api.search - Failed to transform an API book item, skipping.")
+            end
+        end
+    end
+    result.results = transformed_books
+
+    if data.pagination and data.pagination.total_items then
+        result.total_count = tonumber(data.pagination.total_items)
+    elseif data.exactBooksCount then -- Fallback for exact match count
+        result.total_count = tonumber(data.exactBooksCount)
+    elseif #transformed_books > 0 and not result.total_count then
+        logger.warn("Zlibrary:Api.search - Total count not found in API response pagination or exactBooksCount.")
+    end
+
+    logger.info(string.format("Zlibrary:Api.search - END (Success) - Found %d results, Total reported: %s", #result.results, tostring(result.total_count)))
     return result
 end
 

@@ -14,6 +14,7 @@ Config.SETTINGS_DOWNLOAD_DIR_KEY = "zlibrary_download_dir"
 
 Config.DEFAULT_DOWNLOAD_DIR_FALLBACK = DataStorage:getDataDir() .. "/downloads"
 Config.REQUEST_TIMEOUT = 15 -- seconds
+Config.SEARCH_RESULTS_LIMIT = 30
 
 Config.SUPPORTED_LANGUAGES = {
     { name = "Arabic", value = "arabic" },

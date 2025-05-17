@@ -6,7 +6,7 @@ Access Z-library seamlessly within your KOReader application. This plugin allows
 
 If you find this plugin helpful, please consider supporting its development. Your donations help keep the project alive and allow for new features and improvements.
 
-<a href="https://www.buymeacoffee.com/Z-libraryko" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+<a href="https://buymeacoffee.com/zlibraryko" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
 
 ## Features

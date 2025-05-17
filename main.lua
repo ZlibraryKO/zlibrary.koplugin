@@ -57,7 +57,43 @@ function Zlibrary:addToMainMenu(menu_items)
                             T("Set Z-library base URL"),
                             Config.SETTINGS_BASE_URL_KEY,
                             Config.getBaseUrl(),
-                            false
+                            false,
+                            function(input_value, config_key)
+                                local validated_url = util.trim(input_value or "")
+
+                                if validated_url == "" then
+                                    Ui.showErrorMessage(T("Base URL cannot be empty."))
+                                    return false
+                                end
+
+                                if not validated_url:match("^https?://") then
+                                    validated_url = "https://" .. validated_url
+                                end
+
+                                local hostname = validated_url:match("^https?://([^/]+)")
+
+                                if not hostname then
+                                    Ui.showErrorMessage(T("Invalid URL format. Could not extract hostname."))
+                                    return false
+                                end
+
+                                local last_dot_pos = hostname:match(".*%.()")
+                                if not last_dot_pos then
+                                    Ui.showErrorMessage(T("URL must include a valid domain with a TLD (e.g., 'example.com')."))
+                                    return false
+                                end
+
+                                local domain_part = hostname:sub(1, last_dot_pos - 2)
+                                local tld_part = hostname:sub(last_dot_pos)
+
+                                if domain_part == "" or tld_part == "" or #tld_part < 2 then
+                                    Ui.showErrorMessage(T("Invalid domain name or TLD. Ensure format like 'example.com' with a TLD of at least 2 characters (e.g., .com, .org)."))
+                                    return false
+                                end
+
+                                Config.saveSetting(config_key, validated_url)
+                                return true
+                            end
                         )
                     end,
                     separator = true,

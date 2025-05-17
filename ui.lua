@@ -1,7 +1,7 @@
 local UIManager = require("ui/uimanager")
 local InfoMessage = require("ui/widget/infomessage")
 local ConfirmBox = require("ui/widget/confirmbox")
-local TextViewer = require("ui/widget/textviewer") -- Added TextViewer
+local TextViewer = require("ui/widget/textviewer")
 local T = require("gettext")
 local DownloadMgr = require("ui/downloadmgr")
 local InputDialog = require("ui/widget/inputdialog")
@@ -137,7 +137,7 @@ function Ui.showExtensionSelectionDialog(parent_ui)
     _showMultiSelectionDialog(parent_ui, T("Select search formats"), Config.SETTINGS_SEARCH_EXTENSIONS_KEY, Config.SUPPORTED_EXTENSIONS)
 end
 
-function Ui.showGenericInputDialog(title, setting_key, current_value_or_default, is_password)
+function Ui.showGenericInputDialog(title, setting_key, current_value_or_default, is_password, validate_and_save_callback)
     local dialog
 
     dialog = InputDialog:new{
@@ -154,6 +154,15 @@ function Ui.showGenericInputDialog(title, setting_key, current_value_or_default,
                 text = T("Set"),
                 callback = function()
                     local input = dialog:getInputText()
+
+                    if validate_and_save_callback then
+                        if (validate_and_save_callback(input, setting_key)) then
+                            Ui.showInfoMessage(T("Setting saved successfully!"))
+                        end
+                        UIManager:close(dialog)
+                        return
+                    end
+
                     if input and input:match("%S") then
                         Config.saveSetting(setting_key, util.trim(input))
                         Ui.showInfoMessage(T("Setting saved successfully!"))

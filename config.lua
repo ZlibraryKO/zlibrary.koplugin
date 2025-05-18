@@ -72,6 +72,29 @@ function Config.getBaseUrl()
     return configured_url
 end
 
+function Config.setAndValidateBaseUrl(url_string)
+    if not url_string or url_string == "" then
+        return false, "Error: URL cannot be empty."
+    end
+
+    url_string = util.trim(url_string)
+
+    if not (string.sub(url_string, 1, 8) == "https://" or string.sub(url_string, 1, 7) == "http://") then
+        url_string = "https://" .. url_string
+    end
+
+    if not string.find(url_string, "%.") then
+        return false, "Error: URL must include a valid domain name (e.g., example.com)."
+    end
+
+    if string.sub(url_string, -1) == "/" then
+        url_string = string.sub(url_string, 1, -2)
+    end
+
+    Config.saveSetting(Config.SETTINGS_BASE_URL_KEY, url_string)
+    return true, nil
+end
+
 function Config.getRpcUrl()
     local base = Config.getBaseUrl()
     if not base then return nil end
@@ -81,7 +104,7 @@ end
 function Config.getSearchUrl(query)
     local base = Config.getBaseUrl()
     if not base then return nil end
-    return string.format(base .. "/s/%s", util.urlEncode(query))
+    return base .. "/eapi/book/search"
 end
 
 function Config.getBookUrl(href)

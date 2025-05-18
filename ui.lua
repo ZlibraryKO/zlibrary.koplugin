@@ -210,8 +210,10 @@ end
 
 function Ui.createBookMenuItem(book_data, parent_zlibrary_instance)
     local year_str = (book_data.year and book_data.year ~= "N/A" and tostring(book_data.year) ~= "0") and (" (" .. book_data.year .. ")") or ""
-    local title = util.htmlEntitiesToUtf8(book_data.title or T("Unknown Title"))
-    local author = util.htmlEntitiesToUtf8(book_data.author or T("Unknown Author"))
+    local title_for_html = (type(book_data.title) == "string" and book_data.title) or T("Unknown Title")
+    local title = util.htmlEntitiesToUtf8(title_for_html)
+    local author_for_html = (type(book_data.author) == "string" and book_data.author) or T("Unknown Author")
+    local author = util.htmlEntitiesToUtf8(author_for_html)
     local combined_text = string.format("%s by %s%s", title, author, year_str)
 
     local additional_info_parts = {}
@@ -258,7 +260,8 @@ function Ui.showBookDetails(parent_zlibrary, book)
     local details_menu_items = {}
     local details_menu
 
-    local full_title = util.htmlEntitiesToUtf8(book.title or "")
+    local title_text_for_html = (type(book.title) == "string" and book.title) or ""
+    local full_title = util.htmlEntitiesToUtf8(title_text_for_html)
     table.insert(details_menu_items, {
         text = T("Title: ") .. full_title,
         enabled = true,
@@ -268,7 +271,8 @@ function Ui.showBookDetails(parent_zlibrary, book)
         keep_menu_open = true,
     })
 
-    local full_author = util.htmlEntitiesToUtf8(book.author or "")
+    local author_text_for_html = (type(book.author) == "string" and book.author) or ""
+    local full_author = util.htmlEntitiesToUtf8(author_text_for_html)
     table.insert(details_menu_items, {
         text = T("Author: ") .. full_author,
         enabled = true,
@@ -305,12 +309,19 @@ function Ui.showBookDetails(parent_zlibrary, book)
 
     if book.size and book.size ~= "N/A" then table.insert(details_menu_items, { text = T("Size: ") .. book.size, enabled = false }) end
     if book.rating and book.rating ~= "N/A" then table.insert(details_menu_items, { text = T("Rating: ") .. book.rating, enabled = false }) end
-    if book.publisher and book.publisher ~= "" then table.insert(details_menu_items, { text = T("Publisher: ") .. util.htmlEntitiesToUtf8(book.publisher), enabled = false }) end
-    if book.series and book.series ~= "" then table.insert(details_menu_items, { text = T("Series: ") .. util.htmlEntitiesToUtf8(book.series), enabled = false }) end
+    if book.publisher and book.publisher ~= "" then
+        local publisher_for_html = (type(book.publisher) == "string" and book.publisher) or ""
+        table.insert(details_menu_items, { text = T("Publisher: ") .. util.htmlEntitiesToUtf8(publisher_for_html), enabled = false })
+    end
+    if book.series and book.series ~= "" then
+        local series_for_html = (type(book.series) == "string" and book.series) or ""
+        table.insert(details_menu_items, { text = T("Series: ") .. util.htmlEntitiesToUtf8(series_for_html), enabled = false })
+    end
     if book.pages and book.pages ~= 0 then table.insert(details_menu_items, { text = T("Pages: ") .. book.pages, enabled = false }) end
 
     if book.description and book.description ~= "" then
-        local full_description = util.htmlEntitiesToUtf8(book.description)
+        local desc_for_html = (type(book.description) == "string" and book.description) or ""
+        local full_description = util.htmlEntitiesToUtf8(desc_for_html)
 
         full_description = string.gsub(full_description, "<[Bb][Rr]%s*/?>", "\n")
         full_description = string.gsub(full_description, "</[Pp]>", "\n\n")

@@ -77,14 +77,14 @@ function Config.setAndValidateBaseUrl(url_string)
         return false, "Error: URL cannot be empty."
     end
 
+    url_string = util.trim(url_string)
+
     if not (string.sub(url_string, 1, 8) == "https://" or string.sub(url_string, 1, 7) == "http://") then
         url_string = "https://" .. url_string
     end
 
-    if not string.match(url_string, "^https?://[^/]+%.[a-zA-Z]{2,}(/[^%.%/]*)?$") and not string.match(url_string, "^https?://[^/]+%.[a-zA-Z]{2,}$") then
-        if not string.match(url_string, "^https?://[^/]+%.[a-zA-Z]{2,}$") then
-            return false, "Error: URL must include a valid domain name (e.g., .com, .org)."
-        end
+    if not string.find(url_string, "%.") then
+        return false, "Error: URL must include a valid domain name (e.g., example.com)."
     end
 
     if string.sub(url_string, -1) == "/" then

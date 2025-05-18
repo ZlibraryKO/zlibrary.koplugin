@@ -1,7 +1,7 @@
-local _ = require("gettext")
+local T = require("gettext")
 return {
     name = "zlibrary",
-    fullname = _("Z-library"),
-    description = _("[[A plugin to search and download books from Z-library.]]"),
-    version = "1.0.8",
+    fullname = T("Z-library"),
+    description = T("[[A plugin to search and download books from Z-library.]]"),
+    version = "1.0.9",
 }

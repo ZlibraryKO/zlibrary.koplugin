@@ -6,7 +6,7 @@ local T = require("gettext")
 local DownloadMgr = require("ui/downloadmgr")
 local InputDialog = require("ui/widget/inputdialog")
 local Menu = require("ui/widget/menu")
-local Config = require("config")
+local Config = require("zlibrary.config")
 local util = require("frontend/util")
 local logger = require("logger")
 

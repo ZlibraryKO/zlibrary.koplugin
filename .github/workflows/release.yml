@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - '*.lua'
+      - 'zlibrary/*.lua'
 
 jobs:
   build-and-release:
@@ -81,12 +82,22 @@ jobs:
           # Initialize an empty list string
           FILE_LINES=""
 
-          # Add .lua files, each on a new line, prefixed with ./
+          # Add .lua files from the root directory, prefixed with ./
           # find will output nothing if no files are found.
           # Using -type f to ensure we only get files.
-          TEMP_LUA_FILES=$(find . -maxdepth 1 -type f -name '*.lua' -printf './%f\\n')
-          if [ -n "$TEMP_LUA_FILES" ]; then
-            FILE_LINES="${TEMP_LUA_FILES}"
+          TEMP_ROOT_LUA_FILES=$(find . -maxdepth 1 -type f -name '*.lua' -printf './%f\\n')
+          if [ -n "$TEMP_ROOT_LUA_FILES" ]; then
+            FILE_LINES="${TEMP_ROOT_LUA_FILES}"
+          fi
+          
+          # Add .lua files from the zlibrary subdirectory, prefixed with ./zlibrary/
+          if [ -d "zlibrary" ]; then
+            TEMP_ZLIB_LUA_FILES=$(find ./zlibrary -maxdepth 1 -type f -name '*.lua' -printf './zlibrary/%f\\n')
+            if [ -n "$TEMP_ZLIB_LUA_FILES" ]; then
+              FILE_LINES="${FILE_LINES}${TEMP_ZLIB_LUA_FILES}"
+            fi
+          else
+            echo "Info: 'zlibrary' directory not found. Skipping files from 'zlibrary'."
           fi
           
           # Add README.md if it exists and is a file
@@ -101,8 +112,8 @@ jobs:
           PROCESSED_FILES_LIST=$(echo -e "${FILE_LINES}" | awk 'NF')
 
           if [ -z "$PROCESSED_FILES_LIST" ]; then
-            echo "Error: No .lua files or README.md found in the plugin directory ('${{ steps.plugin_vars.outputs.plugin_dir }}')."
-            echo "::error title=No files to zip::No .lua files or README.md found in '${{ steps.plugin_vars.outputs.plugin_dir }}'. Workflow cannot proceed to create zip."
+            echo "Error: No .lua files or README.md found in the plugin directory ('${{ steps.plugin_vars.outputs.plugin_dir }}') or its 'zlibrary' subdirectory."
+            echo "::error title=No files to zip::No .lua files or README.md found in '${{ steps.plugin_vars.outputs.plugin_dir }}' or its 'zlibrary' subdirectory. Workflow cannot proceed to create zip."
             exit 1
           fi
           
@@ -136,12 +147,24 @@ jobs:
           mkdir -p "$FULL_TARGET_STAGING_PATH"
 
           # Copy listed files into the target staging path
-          # files_list contains paths like ./main.lua, which are already relative to GITHUB_WORKSPACE
           echo "${{ steps.list_files.outputs.files_list }}" | while IFS= read -r file_path; do
-            if [ -f "$file_path" ]; then # $file_path is e.g. ./main.lua, already correct for use here
-              cp "$file_path" "$FULL_TARGET_STAGING_PATH/"
+            # file_path is like ./main.lua or ./zlibrary/api.lua (relative to GITHUB_WORKSPACE)
+            if [ -z "$file_path" ]; then continue; fi # Skip empty lines
+
+            SOURCE_FILE_PATH="${{ github.workspace }}/${file_path#./}" 
+
+            if [ -f "$SOURCE_FILE_PATH" ]; then
+              # cleaned_file_path is like main.lua or zlibrary/api.lua
+              cleaned_file_path="${file_path#./}"
+              DEST_FILE_PATH="$FULL_TARGET_STAGING_PATH/$cleaned_file_path"
+
+              # Create the parent directory for the destination file if it doesn't exist
+              mkdir -p "$(dirname "$DEST_FILE_PATH")"
+              
+              cp "$SOURCE_FILE_PATH" "$DEST_FILE_PATH"
+              echo "Copied $SOURCE_FILE_PATH to $DEST_FILE_PATH"
             else
-              echo "Warning: File $file_path not found in ${{ github.workspace }}, skipping."
+              echo "Warning: File $SOURCE_FILE_PATH (from entry '$file_path') not found, skipping."
             fi
           done
 

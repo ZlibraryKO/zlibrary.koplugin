@@ -1,4 +1,4 @@
-local Config = require("config")
+local Config = require("zlibrary.config")
 local util = require("frontend/util")
 local logger = require("logger")
 local json = require("json")

@@ -4,21 +4,20 @@
 
 local Dispatcher = require("dispatcher")  -- luacheck:ignore
 local lfs = require("libs/libkoreader-lfs")
-local meta = require("_meta")
 local UIManager = require("ui/uimanager")
 local NetworkMgr = require("ui/network/manager")
 local util = require("frontend/util")
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
 local T = require("gettext")
-local Config = require("config")
-local Api = require("api")
-local Ui = require("ui")
+local Config = require("zlibrary.config")
+local Api = require("zlibrary.api")
+local Ui = require("zlibrary.ui")
 local ReaderUI = require("apps/reader/readerui")
-local AsyncHelper = require("async_helper")
+local AsyncHelper = require("zlibrary.async_helper")
 local logger = require("logger")
 
 local Zlibrary = WidgetContainer:extend{
-    name = meta.fullname,
+    name = T("Z-library"),
     is_doc_only = false,
 }
 

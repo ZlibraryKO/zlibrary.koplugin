@@ -231,7 +231,13 @@ function Ui.createBookMenuItem(book_data, parent_zlibrary_instance)
     local combined_text = string.format("%s by %s%s", title, author, year_str)
 
     local additional_info_parts = {}
-    if book_data.format and book_data.format ~= "N/A" then table.insert(additional_info_parts, book_data.format) end
+    local selected_extensions = Config.getSearchExtensions()
+
+    if book_data.format and book_data.format ~= "N/A" then
+        if #selected_extensions ~= 1 then
+            table.insert(additional_info_parts, book_data.format)
+        end
+    end
     if book_data.size and book_data.size ~= "N/A" then table.insert(additional_info_parts, book_data.size) end
     if book_data.rating and book_data.rating ~= "N/A" then table.insert(additional_info_parts, T("Rating: ") .. book_data.rating) end
 

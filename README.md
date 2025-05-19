@@ -2,7 +2,9 @@
 
 **Disclaimer:** This plugin is for educational purposes only. Please respect copyright laws and use this plugin responsibly.
 
-![Demo Animation](assets/search_and_download.gif)
+<div align="center">
+  <img src="assets/demo.gif" width="400">
+</div>
 
 Access Z-library seamlessly within your KOReader application. This plugin allows you to browse and download content directly to your e-reader.
 

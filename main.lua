@@ -6,7 +6,7 @@ local Dispatcher = require("dispatcher")  -- luacheck:ignore
 local lfs = require("libs/libkoreader-lfs")
 local UIManager = require("ui/uimanager")
 local NetworkMgr = require("ui/network/manager")
-local util = require("frontend/util")
+local util = require("frontend.util")
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
 local T = require("gettext")
 local Config = require("zlibrary.config")
@@ -15,6 +15,7 @@ local Ui = require("zlibrary.ui")
 local ReaderUI = require("apps/reader/readerui")
 local AsyncHelper = require("zlibrary.async_helper")
 local logger = require("logger")
+local ConfirmBox = require("ui/widget/confirmbox")
 
 local Zlibrary = WidgetContainer:extend{
     name = T("Z-library"),
@@ -159,6 +160,34 @@ function Zlibrary:login()
     return true
 end
 
+function Zlibrary:handleSearchError(err_msg, query, user_session, selected_languages, selected_extensions, current_page, loading_msg_to_close, original_on_success, original_on_error)
+    if string.match(tostring(err_msg), "HTTP Error: 400") then
+        local confirm_box = ConfirmBox:new{
+            text = T("Search failed due to a temporary issue (HTTP 400). Would you like to retry?"),
+            ok_text = T("Retry"),
+            cancel_text = T("Cancel"),
+            ok_callback = function()
+                Ui.closeMessage(loading_msg_to_close)
+                local new_loading_msg = Ui.showLoadingMessage(T("Retrying search for \"") .. query .. "\"...")
+                local retry_task = function()
+                    return Api.search(query, user_session.user_id, user_session.user_key, selected_languages, selected_extensions, current_page)
+                end
+                AsyncHelper.run(retry_task, original_on_success, function(new_err_msg)
+                    self:handleSearchError(new_err_msg, query, user_session, selected_languages, selected_extensions, current_page, new_loading_msg, original_on_success, original_on_error)
+                end, new_loading_msg)
+            end,
+            cancel_callback = function()
+                Ui.closeMessage(loading_msg_to_close)
+                original_on_error(err_msg)
+            end
+        }
+        UIManager:show(confirm_box)
+    else
+        Ui.closeMessage(loading_msg_to_close)
+        original_on_error(err_msg)
+    end
+end
+
 function Zlibrary:performSearch(query)
     if not NetworkMgr:isOnline() then
         Ui.showErrorMessage(T("No internet connection detected."))
@@ -167,22 +196,32 @@ function Zlibrary:performSearch(query)
 
     local loading_msg = Ui.showLoadingMessage(T("Searching for \"") .. query .. "\"...")
 
-    local function task()
-        local user_session = Config.getUserSession()
-        local selected_languages = Config.getSearchLanguages()
-        local selected_extensions = Config.getSearchExtensions()
-        return Api.search(query, user_session.user_id, user_session.user_key, selected_languages, selected_extensions, 1)
+    local user_session = Config.getUserSession()
+    local selected_languages = Config.getSearchLanguages()
+    local selected_extensions = Config.getSearchExtensions()
+    local current_page_to_search = 1
+
+    local task = function()
+        return Api.search(query, user_session.user_id, user_session.user_key, selected_languages, selected_extensions, current_page_to_search)
     end
 
-    local function on_success(api_result)
-        if not api_result or not api_result.results or #api_result.results == 0 then
+    local on_success
+    local on_error_handler
+
+    on_success = function(api_result)
+        if api_result.error then
+            self:handleSearchError(api_result.error, query, user_session, selected_languages, selected_extensions, current_page_to_search, loading_msg, on_success, function(final_err_msg) Ui.showErrorMessage(T("Search failed: ") .. tostring(final_err_msg)) end)
+            return
+        end
+
+        if not api_result.results or #api_result.results == 0 then
             Ui.showInfoMessage(T("No results found for \"") .. query .. "\".")
             return
         end
 
         logger.info(string.format("Zlibrary:performSearch - Fetch successful. Results: %d", #api_result.results))
         self.current_search_query = query
-        self.current_search_api_page_loaded = 1
+        self.current_search_api_page_loaded = current_page_to_search
         self.all_search_results_data = api_result.results
         self.has_more_api_results = true
 
@@ -191,11 +230,11 @@ function Zlibrary:performSearch(query)
         end)
     end
 
-    local function on_error(err_msg)
-        Ui.showErrorMessage(T("Search failed: ") .. tostring(err_msg))
+    on_error_handler = function(err_msg)
+        self:handleSearchError(err_msg, query, user_session, selected_languages, selected_extensions, current_page_to_search, loading_msg, on_success, function(final_err_msg) Ui.showErrorMessage(T("Search failed: ") .. tostring(final_err_msg)) end)
     end
 
-    AsyncHelper.run(task, on_success, on_error, loading_msg)
+    AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
 end
 
 function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
@@ -227,17 +266,26 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
             logger.info(string.format("Zlibrary: Reached page %d (last page of current items). Attempting to load more from API.", new_page_number))
 
             local next_api_page_to_fetch = self.current_search_api_page_loaded + 1
-            local loading_msg = Ui.showLoadingMessage(T("Loading more results (Page ") .. next_api_page_to_fetch .. T(")..."))
+            local loading_msg_more = Ui.showLoadingMessage(T("Loading more results (Page ") .. next_api_page_to_fetch .. T(")..."))
 
-            local function task_load_more()
-                local user_session = Config.getUserSession()
-                local selected_languages = Config.getSearchLanguages()
-                local selected_extensions = Config.getSearchExtensions()
-                return Api.search(self.current_search_query, user_session.user_id, user_session.user_key, selected_languages, selected_extensions, next_api_page_to_fetch)
+            local user_session_more = Config.getUserSession()
+            local selected_languages_more = Config.getSearchLanguages()
+            local selected_extensions_more = Config.getSearchExtensions()
+
+            local task_load_more = function()
+                return Api.search(self.current_search_query, user_session_more.user_id, user_session_more.user_key, selected_languages_more, selected_extensions_more, next_api_page_to_fetch)
             end
 
-            local function on_success_load_more(api_result)
-                local new_book_objects = api_result and api_result.results
+            local on_success_load_more
+            local on_error_load_more
+
+            on_success_load_more = function(api_result_more)
+                if api_result_more.error then
+                    self:handleSearchError(api_result_more.error, self.current_search_query, user_session_more, selected_languages_more, selected_extensions_more, next_api_page_to_fetch, loading_msg_more, on_success_load_more, function(final_err_msg) Ui.showErrorMessage(T("Failed to load more results: ") .. tostring(final_err_msg)) end)
+                    return
+                end
+
+                local new_book_objects = api_result_more.results
                 if new_book_objects and #new_book_objects > 0 then
                     logger.info(string.format("Zlibrary: Adding %d new book objects from API.", #new_book_objects))
                     self.current_search_api_page_loaded = next_api_page_to_fetch
@@ -256,13 +304,11 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
                 end
             end
 
-            local function on_error_load_more(err_msg)
-                Ui.showErrorMessage(T("Failed to load more results: ") .. tostring(err_msg))
-                self.has_more_api_results = false
-                menu_instance:updateItems(1, true)
+            on_error_load_more = function(err_msg_more)
+                self:handleSearchError(err_msg_more, self.current_search_query, user_session_more, selected_languages_more, selected_extensions_more, next_api_page_to_fetch, loading_msg_more, on_success_load_more, function(final_err_msg) Ui.showErrorMessage(T("Failed to load more results: ") .. tostring(final_err_msg)) end)
             end
 
-            AsyncHelper.run(task_load_more, on_success_load_more, on_error_load_more, loading_msg)
+            AsyncHelper.run(task_load_more, on_success_load_more, on_error_load_more, loading_msg_more)
         else
             if is_last_page_of_current_items and not self.has_more_api_results then
                 logger.info("Zlibrary: Reached last page, and no more API results to load.")

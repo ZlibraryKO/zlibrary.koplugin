@@ -8,12 +8,19 @@ If you find this plugin helpful, please consider supporting its development. You
 
 <a href="https://buymeacoffee.com/zlibraryko" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
+## Demo
+
+<div align="center">
+  <img src="assets/search_and_download.gif" width="400">
+</div>
+
 
 ## Features
 
 *   Search Z-library for books.
 *   Filter search results by language and file extension.
 *   Download content directly to your device.
+
 
 ## Prerequisites
 

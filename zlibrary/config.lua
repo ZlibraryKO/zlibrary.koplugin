@@ -1,4 +1,4 @@
-local util = require("frontend/util")
+local util = require("frontend.util")
 local DataStorage = require("datastorage")
 
 local Config = {}

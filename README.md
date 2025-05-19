@@ -2,10 +2,6 @@
 
 **Disclaimer:** This plugin is for educational purposes only. Please respect copyright laws and use this plugin responsibly.
 
-<div align="center">
-  <img src="assets/search_and_download.gif" width="400">
-</div>
-
 Access Z-library seamlessly within your KOReader application. This plugin allows you to browse and download content directly to your e-reader.
 
 If you find this plugin helpful, please consider supporting its development. Your donations help keep the project alive and allow for new features and improvements.
@@ -18,6 +14,10 @@ If you find this plugin helpful, please consider supporting its development. You
 *   Search Z-library for books.
 *   Filter search results by language and file extension.
 *   Download content directly to your device.
+
+<div align="center">
+  <img src="assets/search_and_download.gif" width="400">
+</div>
 
 ## Prerequisites
 

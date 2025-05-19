@@ -107,13 +107,23 @@ jobs:
             FILE_LINES="${FILE_LINES}./README.md\\n"
           fi
 
+          # Add COPYING if it exists and is a file
+          if [ -f "COPYING" ]; then
+            FILE_LINES="${FILE_LINES}./COPYING\\n"
+          fi
+
+          # Add LICENSE if it exists and is a file
+          if [ -f "LICENSE" ]; then
+            FILE_LINES="${FILE_LINES}./LICENSE\\n"
+          fi
+
           # Remove any blank lines from the list and trim whitespace from each line.
           # awk 'NF' prints lines that have at least one non-whitespace character.
           PROCESSED_FILES_LIST=$(echo -e "${FILE_LINES}" | awk 'NF')
 
           if [ -z "$PROCESSED_FILES_LIST" ]; then
-            echo "Error: No .lua files or README.md found in the plugin directory ('${{ steps.plugin_vars.outputs.plugin_dir }}') or its 'zlibrary' subdirectory."
-            echo "::error title=No files to zip::No .lua files or README.md found in '${{ steps.plugin_vars.outputs.plugin_dir }}' or its 'zlibrary' subdirectory. Workflow cannot proceed to create zip."
+            echo "Error: No .lua files, README.md, COPYING, or LICENSE found in the plugin directory ('${{ steps.plugin_vars.outputs.plugin_dir }}') or its 'zlibrary' subdirectory."
+            echo "::error title=No files to zip::No .lua files, README.md, COPYING, or LICENSE found in '${{ steps.plugin_vars.outputs.plugin_dir }}' or its 'zlibrary' subdirectory. Workflow cannot proceed to create zip."
             exit 1
           fi
           

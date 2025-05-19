@@ -1,4 +1,4 @@
-# KOReader Z-library Plugin
+# [KOReader Z-library Plugin](https://github.com/ZlibraryKO/zlibrary.koplugin)
 
 **Disclaimer:** This plugin is for educational purposes only. Please respect copyright laws and use this plugin responsibly.
 

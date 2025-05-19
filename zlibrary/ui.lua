@@ -257,6 +257,10 @@ function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_it
         items_per_page = 10,
         show_captions = true,
         onGotoPage = on_goto_page_handler,
+        is_popout = false,
+        is_borderless = true,
+        title_bar_fm_style = true,
+        multilines_show_more_text = true
     }
     UIManager:show(menu)
     return menu
@@ -334,19 +338,16 @@ function Ui.showBookDetails(parent_zlibrary, book)
     if book.pages and book.pages ~= 0 then table.insert(details_menu_items, { text = T("Pages: ") .. book.pages, enabled = false }) end
 
     if book.description and book.description ~= "" then
-        local desc_for_html = (type(book.description) == "string" and book.description) or ""
-        local full_description = util.htmlEntitiesToUtf8(desc_for_html)
-
-        full_description = string.gsub(full_description, "<[Bb][Rr]%s*/?>", "\n")
-        full_description = string.gsub(full_description, "</[Pp]>", "\n\n")
-        full_description = string.gsub(full_description, "<[^>]+>", "")        
-        full_description = string.gsub(full_description, "(\n\r?%s*){2,}", "\n\n")
-        full_description = util.trim(full_description)
-
         table.insert(details_menu_items, {
             text = T("Description (tap to view)"),
             enabled = true,
             callback = function()
+                local desc_for_html = (type(book.description) == "string" and book.description) or ""
+                local full_description = util.htmlEntitiesToUtf8(util.trim(desc_for_html))
+                full_description = string.gsub(full_description, "<[Bb][Rr]%s*/?>", "\n")
+                full_description = string.gsub(full_description, "</[Pp]>", "\n\n")
+                full_description = string.gsub(full_description, "<[^>]+>", "")     
+                full_description = string.gsub(full_description, "(\n\r?%s*){2,}", "\n\n")
                 Ui.showFullTextDialog(T("Description"), full_description)
             end,
             keep_menu_open = true,

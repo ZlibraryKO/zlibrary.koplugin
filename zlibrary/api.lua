@@ -212,7 +212,8 @@ function Api.search(query, user_id, user_key, languages, extensions, page)
 
     if http_result.error then
         result.error = "Search request failed: " .. http_result.error
-        logger.err(string.format("Zlibrary:Api.search - END (HTTP error) - Error: %s", result.error))
+        result.status_code = http_result.status_code
+        logger.err(string.format("Zlibrary:Api.search - END (HTTP error) - Error: %s, Status: %s", result.error, tostring(result.status_code)))
         return result
     end
 

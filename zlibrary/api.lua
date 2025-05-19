@@ -1,5 +1,5 @@
 local Config = require("zlibrary.config")
-local util = require("frontend/util")
+local util = require("frontend.util")
 local logger = require("logger")
 local json = require("json")
 local ltn12 = require("ltn12")

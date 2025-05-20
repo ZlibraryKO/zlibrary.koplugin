@@ -1,0 +1,60 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Translators:
+# test plugin l10n po
+
+msgid "Z-library"
+msgstr "Z-图书馆"
+
+msgid "Z-library search"
+msgstr "搜索Z-图书馆"
+
+msgid "Z-library settings"
+msgstr "设置Z-图书馆"
+
+msgid "Set base URL"
+msgstr "设置接口地址"
+
+msgid "Set Z-library base URL"
+msgstr "设置Z-图书馆接口地址"
+
+msgid "Invalid Base URL."
+msgstr "接口地址无效"
+
+msgid "Set username"
+msgstr "设置用户名"
+
+msgid "Set Z-library username"
+msgstr "设置Z-图书馆用户名"
+
+# test call koreader po
+#msgid "Set password"
+#msgstr "设置密码"
+
+msgid "Set Z-library password"
+msgstr "设置Z-图书馆密码"
+
+msgid "Verify credentials"
+msgstr "测试账号密码"
+
+msgid "Set download directory"
+msgstr "设置下载文件夹"
+
+msgid "Select search languages"
+msgstr "设置搜索语言"
+
+msgid "Select search languages"
+msgstr "设置搜索语言"
+
+msgid "Select search formats"
+msgstr "设置搜索书籍格式"
+
+msgid "No internet connection detected."
+msgstr "未检测到互联网连接。"
+
+msgid "Please set both username and password first."
+msgstr "请先设置用户名和密码。"
+
+msgid "Logging in..."
+msgstr "正在登录..."

@@ -42,6 +42,15 @@ If you find this plugin helpful, please consider supporting its development. You
 4.  Enter your Z-library username, password, and the base URL for your Z-library instance.
 5.  Adjust other settings if needed.
 
+## Setup gesture (optional)
+
+To easily access this plugin, you can set up a gesture to open the search menu:
+
+1.  Open the top menu and tap the **Cog (⚙️)** icon.
+2.  Navigate to **Taps and gestures** > **Gesture manager**.
+3.  Select your desired gesture in two steps.
+4.  Under **General**, find **Z-library search** on the last page and check the box.
+
 ## Usage
 
 1.  Ensure you are in the KOReader file browser.

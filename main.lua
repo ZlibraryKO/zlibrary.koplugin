@@ -35,6 +35,13 @@ function Zlibrary:init()
     end
 end
 
+function Zlibrary:onZlibrarySearch()
+    if not self.ui.view then
+        Ui.showSearchDialog(self)
+    end
+    return true
+end
+
 function Zlibrary:addToMainMenu(menu_items)
     if not self.ui.view then
         menu_items.find_book_in_zlibrary = {

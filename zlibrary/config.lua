@@ -12,41 +12,42 @@ Config.SETTINGS_SEARCH_LANGUAGES_KEY = "zlibrary_search_languages"
 Config.SETTINGS_SEARCH_EXTENSIONS_KEY = "zlibrary_search_extensions"
 Config.SETTINGS_DOWNLOAD_DIR_KEY = "zlibrary_download_dir"
 
-Config.DEFAULT_DOWNLOAD_DIR_FALLBACK = DataStorage:getDataDir() .. "/downloads"
+Config.DEFAULT_DOWNLOAD_DIR_FALLBACK = G_reader_settings:readSetting("home_dir")
+             or require("apps/filemanager/filemanagerutil").getDefaultDir()
 Config.REQUEST_TIMEOUT = 15 -- seconds
 Config.SEARCH_RESULTS_LIMIT = 30
 
 Config.SUPPORTED_LANGUAGES = {
-    { name = "Arabic", value = "arabic" },
-    { name = "Armenian", value = "armenian" },
-    { name = "Azerbaijani", value = "azerbaijani" },
-    { name = "Bengali", value = "bengali" },
-    { name = "Chinese", value = "chinese" },
-    { name = "Dutch", value = "dutch" },
+    { name = "العربية", value = "arabic" },
+    { name = "Հայերեն", value = "armenian" },
+    { name = "Azərbaycanca", value = "azerbaijani" },
+    { name = "বাংলা", value = "bengali" },
+    { name = "简体中文", value = "chinese" },
+    { name = "Nederlands", value = "dutch" },
     { name = "English", value = "english" },
-    { name = "French", value = "french" },
-    { name = "Georgian", value = "georgian" },
-    { name = "German", value = "german" },
-    { name = "Greek", value = "greek" },
-    { name = "Hindi", value = "hindi" },
-    { name = "Indonesian", value = "indonesian" },
-    { name = "Italian", value = "italian" },
-    { name = "Japanese", value = "japanese" },
-    { name = "Korean", value = "korean" },
-    { name = "Malaysian", value = "malaysian" },
-    { name = "Pashto", value = "pashto" },
-    { name = "Polish", value = "polish" },
-    { name = "Portuguese", value = "portuguese" },
-    { name = "Russian", value = "russian" },
-    { name = "Serbian", value = "serbian" },
-    { name = "Spanish", value = "spanish" },
-    { name = "Telugu", value = "telugu" },
-    { name = "Thai", value = "thai" },
-    { name = "Traditional Chinese", value = "traditional chinese" },
-    { name = "Turkish", value = "turkish" },
-    { name = "Ukrainian", value = "ukrainian" },
-    { name = "Urdu", value = "urdu" },
-    { name = "Vietnamese", value = "vietnamese" },
+    { name = "Français", value = "french" },
+    { name = "ქართული", value = "georgian" },
+    { name = "Deutsch", value = "german" },
+    { name = "Ελληνικά", value = "greek" },
+    { name = "हिन्दी", value = "hindi" },
+    { name = "Bahasa Indonesia", value = "indonesian" },
+    { name = "Italiano", value = "italian" },
+    { name = "日本語", value = "japanese" },
+    { name = "한국어", value = "korean" },
+    { name = "Bahasa Malaysia", value = "malaysian" },
+    { name = "پښتو", value = "pashto" },
+    { name = "Polski", value = "polish" },
+    { name = "Português", value = "portuguese" },
+    { name = "Русский", value = "russian" },
+    { name = "Српски", value = "serbian" },
+    { name = "Español", value = "spanish" },
+    { name = "తెలుగు", value = "telugu" },
+    { name = "ไทย", value = "thai" },
+    { name = "繁體中文", value = "traditional chinese" },
+    { name = "Türkçe", value = "turkish" },
+    { name = "Українська", value = "ukrainian" },
+    { name = "اردو", value = "urdu" },
+    { name = "Tiếng Việt", value = "vietnamese" },
 }
 
 Config.SUPPORTED_EXTENSIONS = {

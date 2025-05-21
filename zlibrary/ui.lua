@@ -97,6 +97,7 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
         title = title,
         item_table = menu_items,
         parent = parent_ui,
+        show_captions = true,
         onClose = function()
             local ok, err = pcall(function()
                 local new_selected_values = {}
@@ -373,6 +374,7 @@ function Ui.showBookDetails(parent_zlibrary, book)
         title = T("Book Details"),
         item_table = details_menu_items,
         parent = parent_zlibrary.ui,
+        show_captions = true,
     }
     UIManager:show(details_menu)
 end

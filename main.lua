@@ -60,113 +60,116 @@ end
 
 function Zlibrary:addToMainMenu(menu_items)
     if not self.ui.view then
-        menu_items.find_book_in_zlibrary = {
+        menu_items.zlibrary_main = {
             sorting_hint = "search",
-            text = T("Z-library search"),
-            callback = function()
-                Ui.showSearchDialog(self)
-            end,
-        }
-        menu_items.zlibrary_recommended = {
-            sorting_hint = "search",
-            text = T("Z-library recommended"),
-            callback = function()
-                self:onShowRecommendedBooks()
-            end,
-        }
-        menu_items.zlibrary_most_popular = {
-            sorting_hint = "search",
-            text = T("Z-library most popular"),
-            callback = function()
-                self:onShowMostPopularBooks()
-            end,
-        }
-        menu_items.configure_zlibrary_plugin = {
-            sorting_hint = "search",
-            text = T("Z-library settings"),
+            text = T("Z-library"),
             sub_item_table = {
                 {
-                    text = T("Set base URL"),
+                    text = T("Settings"),
                     keep_menu_open = true,
-                    callback = function()
-                        Ui.showGenericInputDialog(
-                            T("Set Z-library base URL"),
-                            Config.SETTINGS_BASE_URL_KEY,
-                            Config.getBaseUrl(),
-                            false,
-                            function(input_value)
-                                local success, err_msg = Config.setAndValidateBaseUrl(input_value)
-                                if not success then
-                                    Ui.showErrorMessage(err_msg or T("Invalid Base URL."))
-                                    return false
+                    separator = true,
+                    sub_item_table = {
+                        {
+                            text = T("Set base URL"),
+                            keep_menu_open = true,
+                            callback = function()
+                                Ui.showGenericInputDialog(
+                                    T("Set base URL"),
+                                    Config.SETTINGS_BASE_URL_KEY,
+                                    Config.getBaseUrl(),
+                                    false,
+                                    function(input_value)
+                                        local success, err_msg = Config.setAndValidateBaseUrl(input_value)
+                                        if not success then
+                                            Ui.showErrorMessage(err_msg or T("Invalid Base URL."))
+                                            return false
+                                        end
+                                        return true
+                                    end
+                                )
+                            end,
+                            separator = true,
+                        },
+                        {
+                            text = T("Set username"),
+                            keep_menu_open = true,
+                            callback = function()
+                                Ui.showGenericInputDialog(
+                                    T("Set username"),
+                                    Config.SETTINGS_USERNAME_KEY,
+                                    Config.getSetting(Config.SETTINGS_USERNAME_KEY),
+                                    false
+                                )
+                            end,
+                        },
+                        {
+                            text = T("Set password"),
+                            keep_menu_open = true,
+                            callback = function()
+                                Ui.showGenericInputDialog(
+                                    T("Set password"),
+                                    Config.SETTINGS_PASSWORD_KEY,
+                                    Config.getSetting(Config.SETTINGS_PASSWORD_KEY),
+                                    true
+                                )
+                            end,
+                        },
+                        {
+                            text = T("Verify credentials"),
+                            keep_menu_open = true,
+                            callback = function()
+                                local success = self:login()
+                                if (success) then
+                                    Ui.showInfoMessage(T("Login successful!"))
                                 end
-                                return true
-                            end
-                        )
-                    end,
-                    separator = true,
+                            end,
+                            separator = true,
+                        },
+                        {
+                            text = T("Set download directory"),
+                            keep_menu_open = true,
+                            callback = function()
+                                Ui.showDownloadDirectoryDialog()
+                            end,
+                        },
+                        {
+                            text = T("Select search languages"),
+                            keep_menu_open = true,
+                            callback = function()
+                                Ui.showLanguageSelectionDialog(self.ui)
+                            end,
+                        },
+                        {
+                            text = T("Select search formats"),
+                            keep_menu_open = true,
+                            callback = function()
+                                Ui.showExtensionSelectionDialog(self.ui)
+                            end,
+                        },
+                    }
                 },
                 {
-                    text = T("Set username"),
-                    keep_menu_open = true,
+                    text = T("Search"),
                     callback = function()
-                        Ui.showGenericInputDialog(
-                            T("Set Z-library username"),
-                            Config.SETTINGS_USERNAME_KEY,
-                            Config.getSetting(Config.SETTINGS_USERNAME_KEY),
-                            false
-                        )
-                    end,
-                },
-                {
-                    text = T("Set password"),
-                    keep_menu_open = true,
-                    callback = function()
-                        Ui.showGenericInputDialog(
-                            T("Set Z-library password"),
-                            Config.SETTINGS_PASSWORD_KEY,
-                            Config.getSetting(Config.SETTINGS_PASSWORD_KEY),
-                            true
-                        )
-                    end,
-                },
-                {
-                    text = T("Verify credentials"),
-                    keep_menu_open = true,
-                    callback = function()
-                        local success = self:login()
-                        if (success) then
-                            Ui.showInfoMessage(T("Login successful!"))
-                        end
-                    end,
-                    separator = true,
-                },
-                {
-                    text = T("Set download directory"),
-                    keep_menu_open = true,
-                    callback = function()
-                        Ui.showDownloadDirectoryDialog()
+                        Ui.showSearchDialog(self)
                     end,
                 },
                 {
-                    text = T("Select search languages"),
-                    keep_menu_open = true,
+                    text = T("Recommended"),
                     callback = function()
-                        Ui.showLanguageSelectionDialog(self.ui)
+                        self:onShowRecommendedBooks()
                     end,
                 },
                 {
-                    text = T("Select search formats"),
-                    keep_menu_open = true,
+                    text = T("Most popular"),
                     callback = function()
-                        Ui.showExtensionSelectionDialog(self.ui)
+                        self:onShowMostPopularBooks()
                     end,
                 },
             }
         }
     end
 end
-
 
 function Zlibrary:_fetchBookList(options)
     if not NetworkMgr:isOnline() then

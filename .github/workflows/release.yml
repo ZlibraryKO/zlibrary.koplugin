@@ -3,7 +3,7 @@ name: Create Plugin Release
 on:
   push:
     branches:
-      - test
+      - main
     paths:
       - '*.lua'
       - 'zlibrary/*.lua'

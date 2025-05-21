@@ -20,6 +20,7 @@ local ConfirmBox = require("ui/widget/confirmbox")
 local Zlibrary = WidgetContainer:extend{
     name = T("Z-library"),
     is_doc_only = false,
+    plugin_path = nil,
 }
 
 function Zlibrary:onDispatcherRegisterActions()
@@ -29,6 +30,15 @@ function Zlibrary:onDispatcherRegisterActions()
 end
 
 function Zlibrary:init()
+    local full_source_path = debug.getinfo(1, "S").source
+    if full_source_path:sub(1,1) == "@" then
+        full_source_path = full_source_path:sub(2)
+    end
+    self.plugin_path, _ = util.splitFilePathName(full_source_path)
+    logger.info("Plugin path:", self.plugin_path)
+
+    Config.loadCredentialsFromFile(self.plugin_path)
+
     self:onDispatcherRegisterActions()
     if self.ui and self.ui.menu then
         self.ui.menu:registerToMainMenu(self)

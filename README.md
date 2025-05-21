@@ -37,12 +37,38 @@ If you find this plugin helpful, please consider supporting its development. You
 
 ## Configuration
 
+There are two ways to configure your Z-library credentials:
+
+**1. Via the KOReader User Interface (UI):**
+
 1.  Ensure you are in the KOReader file browser.
 2.  Access the "Search" menu.
 3.  Select "Z-library" (it's probably on the second page of this menu).
 4.  Select "Settings".
 5.  Enter your Z-library username, password, and the base URL for your Z-library instance.
 6.  Adjust other settings if needed.
+
+**2. Via a Credentials File (Advanced):**
+
+For a more permanent or automated setup, you can create a file named `zlibrary_credentials.lua` in the root of the `zlibrary.koplugin` directory (e.g., `koreader/plugins/zlibrary.koplugin/zlibrary_credentials.lua`).
+
+This file allows you to override the credentials set in the UI. If this file exists and is correctly formatted, the plugin will use the values from this file.
+
+Create the `zlibrary_credentials.lua` file with the following content, uncommenting and filling in the details you wish to use:
+
+```lua
+-- This file allows you to override Z-library credentials.
+-- Uncomment and fill in the details you want to override.
+-- Values set here will take precedence over those set in the plugin's UI.
+
+return {
+    -- baseUrl = "https://your.zlibrary.domain",
+    -- username = "your_username",
+    -- password = "your_password",
+}
+```
+
+**Note:** Credentials set in the `zlibrary_credentials.lua` file will always take precedence over those set via the UI. The plugin loads these settings at startup.
 
 ## Setup gesture (optional)
 

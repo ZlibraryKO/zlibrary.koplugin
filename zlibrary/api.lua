@@ -4,6 +4,7 @@ local logger = require("logger")
 local json = require("json")
 local ltn12 = require("ltn12")
 local http = require("socket.http")
+local T = require("gettext")
 
 local Api = {}
 
@@ -13,6 +14,7 @@ local function _transformApiBookData(api_book)
     end
     return {
         id = api_book.id,
+        hash = api_book.hash,
         title = util.trim(api_book.title or "Unknown Title"),
         author = util.trim(api_book.author or "Unknown Author"),
         year = api_book.year or "N/A",
@@ -321,6 +323,167 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
         logger.info(string.format("Zlibrary:Api.downloadBook - END (Success) - Target: %s", target_filepath))
         return result
     end
+end
+
+function Api.getRecommendedBooks(user_id, user_key)
+    local url = Config.getRecommendedBooksUrl()
+    if not url then
+        logger.warn("Api.getRecommendedBooks - Base URL not configured")
+        return { error = T("Z-library server URL not configured.") }
+    end
+
+    local headers = {
+        ['Content-Type'] = 'application/x-www-form-urlencoded',
+        ["User-Agent"] = Config.USER_AGENT,
+    }
+    if user_id and user_key then
+        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
+    end
+
+    local http_result = Api.makeHttpRequest{
+        url = url,
+        method = "GET",
+        headers = headers,
+    }
+
+    if http_result.error then
+        logger.warn("Api.getRecommendedBooks - HTTP request error: ", http_result.error)
+        return { error = T("Failed to fetch recommended books: ") .. http_result.error }
+    end
+
+    if not http_result.body then
+        logger.warn("Api.getRecommendedBooks - No response body")
+        return { error = T("Failed to fetch recommended books (no response body).") }
+    end
+
+    local success, data = pcall(json.decode, http_result.body)
+    if not success or not data then
+        logger.warn("Api.getRecommendedBooks - Failed to decode JSON: ", http_result.body)
+        return { error = T("Failed to parse recommended books response.") }
+    end
+
+    if data.success ~= 1 or not data.books then
+        logger.warn("Api.getRecommendedBooks - API error: ", http_result.body)
+        return { error = data.message or T("API returned an error for recommended books.") }
+    end
+
+    local transformed_books = {}
+    for _, book_data in ipairs(data.books) do
+        local transformed_book = _transformApiBookData(book_data)
+        if transformed_book then
+            table.insert(transformed_books, transformed_book)
+        else
+            logger.warn("Api.getRecommendedBooks - Failed to transform book data: ", book_data.id)
+        end
+    end
+
+    return { books = transformed_books }
+end
+
+function Api.getMostPopularBooks(user_id, user_key)
+    local url = Config.getMostPopularBooksUrl()
+    if not url then
+        logger.warn("Api.getMostPopularBooks - Base URL not configured")
+        return { error = T("Z-library server URL not configured.") }
+    end
+
+    local headers = {
+        ['Content-Type'] = 'application/x-www-form-urlencoded',
+        ["User-Agent"] = Config.USER_AGENT,
+    }
+    if user_id and user_key then
+        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
+    end
+
+    local http_result = Api.makeHttpRequest{
+        url = url,
+        method = "GET",
+        headers = headers,
+    }
+
+    if http_result.error then
+        logger.warn("Api.getMostPopularBooks - HTTP request error: ", http_result.error)
+        return { error = T("Failed to fetch most popular books: ") .. http_result.error }
+    end
+
+    if not http_result.body then
+        logger.warn("Api.getMostPopularBooks - No response body")
+        return { error = T("Failed to fetch most popular books (no response body).") }
+    end
+
+    local success, data = pcall(json.decode, http_result.body)
+    if not success or not data then
+        logger.warn("Api.getMostPopularBooks - Failed to decode JSON: ", http_result.body)
+        return { error = T("Failed to parse most popular books response.") }
+    end
+
+    if data.success ~= 1 or not data.books then
+        logger.warn("Api.getMostPopularBooks - API error: ", http_result.body)
+        return { error = data.message or T("API returned an error for most popular books.") }
+    end
+
+    local transformed_books = {}
+    for _, book_data in ipairs(data.books) do
+        local transformed_book = _transformApiBookData(book_data)
+        if transformed_book then
+            table.insert(transformed_books, transformed_book)
+        else
+            logger.warn("Api.getMostPopularBooks - Failed to transform book data: ", book_data.id)
+        end
+    end
+
+    return { books = transformed_books }
+end
+
+function Api.getBookDetails(user_id, user_key, book_id, book_hash)
+    local url = Config.getBookDetailsUrl(book_id, book_hash)
+    if not url then
+        logger.warn("Api.getBookDetails - URL could not be constructed. Base URL configured? Book ID/Hash provided?")
+        return { error = T("Z-library server URL not configured or book identifiers missing.") }
+    end
+
+    local headers = {
+        ["User-Agent"] = Config.USER_AGENT,
+        ['Content-Type'] = 'application/x-www-form-urlencoded',
+    }
+    if user_id and user_key then
+        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
+    end
+
+    local http_result = Api.makeHttpRequest{
+        url = url,
+        method = "GET",
+        headers = headers,
+    }
+
+    if http_result.error then
+        logger.warn("Api.getBookDetails - HTTP request error: ", http_result.error)
+        return { error = T("Failed to fetch book details: ") .. http_result.error }
+    end
+
+    if not http_result.body then
+        logger.warn("Api.getBookDetails - No response body")
+        return { error = T("Failed to fetch book details (no response body).") }
+    end
+
+    local success, data = pcall(json.decode, http_result.body)
+    if not success or not data then
+        logger.warn("Api.getBookDetails - Failed to decode JSON: ", http_result.body)
+        return { error = T("Failed to parse book details response.") }
+    end
+
+    if data.success ~= 1 or not data.book then
+        logger.warn("Api.getBookDetails - API error: ", http_result.body)
+        return { error = data.message or T("API returned an error for book details.") }
+    end
+
+    local transformed_book = _transformApiBookData(data.book)
+    if not transformed_book then
+        logger.warn("Api.getBookDetails - Failed to transform book data: ", data.book.id)
+        return { error = T("Failed to process book details.") }
+    end
+
+    return { book = transformed_book }
 end
 
 return Api

@@ -39,9 +39,10 @@ If you find this plugin helpful, please consider supporting its development. You
 
 1.  Ensure you are in the KOReader file browser.
 2.  Access the "Search" menu.
-3.  Select "Z-library Settings" (it's probably on the second page of this menu).
-4.  Enter your Z-library username, password, and the base URL for your Z-library instance.
-5.  Adjust other settings if needed.
+3.  Select "Z-library" (it's probably on the second page of this menu).
+4.  Select "Settings".
+5.  Enter your Z-library username, password, and the base URL for your Z-library instance.
+6.  Adjust other settings if needed.
 
 ## Setup gesture (optional)
 
@@ -56,9 +57,9 @@ To easily access this plugin, you can set up a gesture to open the search menu:
 
 1.  Ensure you are in the KOReader file browser.
 2.  Access the "Search" menu.
-3.  Select "Z-library search" (this might also be on a subsequent page of the tools menu).
-4.  Enter your search query and enjoy the content!
-5.  Or use the most popular or recommended options.
+3.  Select "Z-library".
+4.  Select "Search" and enter your search query.
+5.  Or select "Recommended" or "Most popular" to browse those lists.
 
 ## Keywords
 

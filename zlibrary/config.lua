@@ -123,6 +123,24 @@ function Config.getDownloadUrl(download_path)
     return base .. download_path
 end
 
+function Config.getBookDetailsUrl(book_id, book_hash)
+    local base = Config.getBaseUrl()
+    if not base or not book_id or not book_hash then return nil end
+    return base .. string.format("/eapi/book/%s/%s", book_id, book_hash)
+end
+
+function Config.getRecommendedBooksUrl()
+    local base = Config.getBaseUrl()
+    if not base then return nil end
+    return base .. "/eapi/user/book/recommended"
+end
+
+function Config.getMostPopularBooksUrl()
+    local base = Config.getBaseUrl()
+    if not base then return nil end
+    return base .. "/eapi/book/most-popular"
+end
+
 function Config.getSetting(key, default)
     return G_reader_settings:readSetting(key) or default
 end

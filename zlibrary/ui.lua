@@ -97,6 +97,7 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
         title = title,
         item_table = menu_items,
         parent = parent_ui,
+        show_captions = true,
         onClose = function()
             local ok, err = pcall(function()
                 local new_selected_values = {}
@@ -373,6 +374,7 @@ function Ui.showBookDetails(parent_zlibrary, book)
         title = T("Book Details"),
         item_table = details_menu_items,
         parent = parent_zlibrary.ui,
+        show_captions = true,
     }
     UIManager:show(details_menu)
 end
@@ -393,6 +395,104 @@ function Ui.confirmOpenBook(filename, ok_open_callback)
         ok_callback = ok_open_callback,
         cancel_text = T("Close")
     })
+end
+
+function Ui.showRecommendedBooksMenu(ui_self, books, plugin_self)
+    local menu_items = {}
+    for _, book in ipairs(books) do
+        local title = book.title or T("Untitled")
+        local author = book.author or T("Unknown Author")
+        local menu_text = string.format("%s - %s", title, author)
+        table.insert(menu_items, {
+            text = menu_text,
+            callback = function()
+                plugin_self:onSelectRecommendedBook(book)
+            end,
+        })
+    end
+
+    if #menu_items == 0 then
+        Ui.showInfoMessage(T("No recommended books found, please try again. Sometimes this requires a couple of retries."))
+        return
+    end
+
+    local menu = Menu:new({
+        title = T("Z-library Recommended Books"),
+        item_table = menu_items,
+        items_per_page = 10,
+        show_captions = true,
+        parent = ui_self.document_menu_parent_holder,
+        is_popout = false,
+        is_borderless = true,
+        title_bar_fm_style = true,
+        multilines_show_more_text = true
+    })
+    UIManager:show(menu)
+end
+
+function Ui.showMostPopularBooksMenu(ui_self, books, plugin_self)
+    local menu_items = {}
+    for _, book in ipairs(books) do
+        local title = book.title or T("Untitled")
+        local author = book.author or T("Unknown Author")
+        local menu_text = string.format("%s - %s", title, author)
+        table.insert(menu_items, {
+            text = menu_text,
+            callback = function()
+                plugin_self:onSelectRecommendedBook(book)
+            end,
+        })
+    end
+
+    if #menu_items == 0 then
+        Ui.showInfoMessage(T("No most popular books found. The list was empty, please try again."))
+        return
+    end
+
+    local menu = Menu:new({
+        title = T("Z-library Most Popular Books"),
+        item_table = menu_items,
+        items_per_page = 10,
+        show_captions = true,
+        parent = ui_self.document_menu_parent_holder,
+        is_popout = false,
+        is_borderless = true,
+        title_bar_fm_style = true,
+        multilines_show_more_text = true
+    })
+    UIManager:show(menu)
+end
+
+function Ui.confirmShowRecommendedBooks(ok_callback)
+    UIManager:show(ConfirmBox:new{
+        text = T("Fetch most recommended book from Z-library?"),
+        ok_text = T("OK"),
+        cancel_text = T("Cancel"),
+        ok_callback = ok_callback,
+    })
+end
+
+function Ui.confirmShowMostPopularBooks(ok_callback)
+    UIManager:show(ConfirmBox:new{
+        text = T("Fetch most popular books from Z-library?"),
+        ok_text = T("OK"),
+        cancel_text = T("Cancel"),
+        ok_callback = ok_callback,
+    })
+end
+
+function Ui.createSingleBookMenu(ui_self, title, menu_items)
+    local menu = Menu:new{
+        title = title or T("Book Details"),
+        show_parent_menu = true,
+        parent_menu_text = T("Back"),
+        item_table = menu_items,
+        parent = ui_self.view,
+        items_per_page = 10,
+        show_captions = true,
+    }
+    UIManager:show(menu)
+    return menu
 end
 
 return Ui

@@ -24,6 +24,8 @@ local Zlibrary = WidgetContainer:extend{
 
 function Zlibrary:onDispatcherRegisterActions()
     Dispatcher:registerAction("zlibrary_search", { category="none", event="ZlibrarySearch", title=T("Z-library search"), general=true,})
+    Dispatcher:registerAction("zlibrary_most_popular", { category="none", event="ZlibraryMostPopular", title=T("Z-library most popular"), general=true,})
+    Dispatcher:registerAction("zlibrary_recommended", { category="none", event="ZlibraryRecommended", title=T("Z-library recommended"), general=true,})
 end
 
 function Zlibrary:init()
@@ -42,100 +44,257 @@ function Zlibrary:onZlibrarySearch()
     return true
 end
 
+function Zlibrary:onZlibraryMostPopular()
+    Ui.confirmShowMostPopularBooks(function()
+        self:onShowMostPopularBooks()
+    end)
+    return true
+end
+
+function Zlibrary:onZlibraryRecommended()
+    Ui.confirmShowRecommendedBooks(function()
+        self:onShowRecommendedBooks()
+    end)
+    return true
+end
+
 function Zlibrary:addToMainMenu(menu_items)
     if not self.ui.view then
-        menu_items.find_book_in_zlibrary = {
+        menu_items.zlibrary_main = {
             sorting_hint = "search",
-            text = T("Z-library search"),
-            callback = function()
-                Ui.showSearchDialog(self)
-            end,
-            separator = true,
-        }
-        menu_items.configure_zlibrary_plugin = {
-            sorting_hint = "search",
-            text = T("Z-library settings"),
+            text = T("Z-library"),
             sub_item_table = {
                 {
-                    text = T("Set base URL"),
+                    text = T("Settings"),
                     keep_menu_open = true,
-                    callback = function()
-                        Ui.showGenericInputDialog(
-                            T("Set Z-library base URL"),
-                            Config.SETTINGS_BASE_URL_KEY,
-                            Config.getBaseUrl(),
-                            false,
-                            function(input_value)
-                                local success, err_msg = Config.setAndValidateBaseUrl(input_value)
-                                if not success then
-                                    Ui.showErrorMessage(err_msg or T("Invalid Base URL."))
-                                    return false
+                    separator = true,
+                    sub_item_table = {
+                        {
+                            text = T("Set base URL"),
+                            keep_menu_open = true,
+                            callback = function()
+                                Ui.showGenericInputDialog(
+                                    T("Set base URL"),
+                                    Config.SETTINGS_BASE_URL_KEY,
+                                    Config.getBaseUrl(),
+                                    false,
+                                    function(input_value)
+                                        local success, err_msg = Config.setAndValidateBaseUrl(input_value)
+                                        if not success then
+                                            Ui.showErrorMessage(err_msg or T("Invalid Base URL."))
+                                            return false
+                                        end
+                                        return true
+                                    end
+                                )
+                            end,
+                            separator = true,
+                        },
+                        {
+                            text = T("Set username"),
+                            keep_menu_open = true,
+                            callback = function()
+                                Ui.showGenericInputDialog(
+                                    T("Set username"),
+                                    Config.SETTINGS_USERNAME_KEY,
+                                    Config.getSetting(Config.SETTINGS_USERNAME_KEY),
+                                    false
+                                )
+                            end,
+                        },
+                        {
+                            text = T("Set password"),
+                            keep_menu_open = true,
+                            callback = function()
+                                Ui.showGenericInputDialog(
+                                    T("Set password"),
+                                    Config.SETTINGS_PASSWORD_KEY,
+                                    Config.getSetting(Config.SETTINGS_PASSWORD_KEY),
+                                    true
+                                )
+                            end,
+                        },
+                        {
+                            text = T("Verify credentials"),
+                            keep_menu_open = true,
+                            callback = function()
+                                local success = self:login()
+                                if (success) then
+                                    Ui.showInfoMessage(T("Login successful!"))
                                 end
-                                return true
-                            end
-                        )
-                    end,
-                    separator = true,
+                            end,
+                            separator = true,
+                        },
+                        {
+                            text = T("Set download directory"),
+                            keep_menu_open = true,
+                            callback = function()
+                                Ui.showDownloadDirectoryDialog()
+                            end,
+                        },
+                        {
+                            text = T("Select search languages"),
+                            keep_menu_open = true,
+                            callback = function()
+                                Ui.showLanguageSelectionDialog(self.ui)
+                            end,
+                        },
+                        {
+                            text = T("Select search formats"),
+                            keep_menu_open = true,
+                            callback = function()
+                                Ui.showExtensionSelectionDialog(self.ui)
+                            end,
+                        },
+                    }
                 },
                 {
-                    text = T("Set username"),
-                    keep_menu_open = true,
+                    text = T("Search"),
                     callback = function()
-                        Ui.showGenericInputDialog(
-                            T("Set Z-library username"),
-                            Config.SETTINGS_USERNAME_KEY,
-                            Config.getSetting(Config.SETTINGS_USERNAME_KEY),
-                            false
-                        )
-                    end,
-                },
-                {
-                    text = T("Set password"),
-                    keep_menu_open = true,
-                    callback = function()
-                        Ui.showGenericInputDialog(
-                            T("Set Z-library password"),
-                            Config.SETTINGS_PASSWORD_KEY,
-                            Config.getSetting(Config.SETTINGS_PASSWORD_KEY),
-                            true
-                        )
-                    end,
-                },
-                {
-                    text = T("Verify credentials"),
-                    keep_menu_open = true,
-                    callback = function()
-                        local success = self:login()
-                        if (success) then
-                            Ui.showInfoMessage(T("Login successful!"))
-                        end
-                    end,
-                    separator = true,
-                },
-                {
-                    text = T("Set download directory"),
-                    keep_menu_open = true,
-                    callback = function()
-                        Ui.showDownloadDirectoryDialog()
+                        Ui.showSearchDialog(self)
                     end,
                 },
                 {
-                    text = T("Select search languages"),
-                    keep_menu_open = true,
+                    text = T("Recommended"),
                     callback = function()
-                        Ui.showLanguageSelectionDialog(self.ui)
+                        self:onShowRecommendedBooks()
                     end,
                 },
                 {
-                    text = T("Select search formats"),
-                    keep_menu_open = true,
+                    text = T("Most popular"),
                     callback = function()
-                        Ui.showExtensionSelectionDialog(self.ui)
+                        self:onShowMostPopularBooks()
                     end,
                 },
             }
         }
     end
+end
+
+function Zlibrary:_fetchBookList(options)
+    if not NetworkMgr:isOnline() then
+        Ui.showErrorMessage(T("No internet connection detected."))
+        return
+    end
+
+    local loading_msg = Ui.showLoadingMessage(T(options.loading_text_key))
+
+    UIManager:nextTick(function()
+        local login_ok = self:login()
+        if not login_ok then
+            Ui.closeMessage(loading_msg)
+            return
+        end
+
+        local user_session = Config.getUserSession()
+        if not user_session or not user_session.user_id or not user_session.user_key then
+            Ui.closeMessage(loading_msg)
+            Ui.showErrorMessage(T("Failed to retrieve user session after login."))
+            return
+        end
+
+        local task = function()
+            return options.api_method(user_session.user_id, user_session.user_key)
+        end
+
+        local on_success
+        local on_error_handler
+
+        on_success = function(api_result)
+            Ui.closeMessage(loading_msg)
+            if api_result.error then
+                Ui.showErrorMessage(T(options.error_prefix_key) .. tostring(api_result.error))
+                return
+            end
+
+            if not api_result.books or #api_result.books == 0 then
+                if options.no_items_text_key then
+                    Ui.showInfoMessage(T(options.no_items_text_key))
+                else
+                    Ui.showInfoMessage(T("No books found, please try again"))
+                end
+                return
+            end
+
+            logger.info(string.format("Zlibrary:%s - Fetch successful. Results: %d", options.log_context, #api_result.books))
+            self[options.results_member_name] = api_result.books
+
+            UIManager:nextTick(function()
+                options.display_menu_func(self.ui, self[options.results_member_name], self)
+            end)
+        end
+
+        on_error_handler = function(err_msg)
+            Ui.closeMessage(loading_msg)
+            Ui.showErrorMessage(T(options.error_prefix_key) .. tostring(err_msg))
+        end
+
+        AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
+    end)
+end
+
+function Zlibrary:onShowRecommendedBooks()
+    self:_fetchBookList({
+        api_method = Api.getRecommendedBooks,
+        loading_text_key = T("Fetching recommended books..."),
+        error_prefix_key = T("Failed to fetch recommended books: "),
+        log_context = "onShowRecommendedBooks",
+        results_member_name = "current_recommended_books",
+        display_menu_func = Ui.showRecommendedBooksMenu
+    })
+end
+
+function Zlibrary:onShowMostPopularBooks()
+    self:_fetchBookList({
+        api_method = Api.getMostPopularBooks,
+        loading_text_key = T("Fetching most popular books..."),
+        error_prefix_key = T("Failed to fetch most popular books: "),
+        log_context = "onShowMostPopularBooks",
+        results_member_name = "current_most_popular_books",
+        display_menu_func = Ui.showMostPopularBooksMenu,
+    })
+end
+
+function Zlibrary:onSelectRecommendedBook(book_stub)
+    if not NetworkMgr:isOnline() then
+        Ui.showErrorMessage(T("No internet connection detected."))
+        return
+    end
+
+    local loading_msg = Ui.showLoadingMessage(T("Fetching book details..."))
+    local user_session = Config.getUserSession()
+
+    local task = function()
+        return Api.getBookDetails(user_session.user_id, user_session.user_key, book_stub.id, book_stub.hash)
+    end
+
+    local on_success
+    local on_error_handler
+
+    on_success = function(api_result)
+        Ui.closeMessage(loading_msg)
+        if api_result.error then
+            Ui.showErrorMessage(T("Failed to fetch book details: ") .. tostring(api_result.error))
+            return
+        end
+
+        if not api_result.book then
+            Ui.showErrorMessage(T("Could not retrieve book details."))
+            return
+        end
+
+        logger.info(string.format("Zlibrary:onSelectRecommendedBook - Fetch successful for book ID: %s", api_result.book.id))
+        
+        Ui.showBookDetails(self, api_result.book)
+
+    end
+
+    on_error_handler = function(err_msg)
+        Ui.closeMessage(loading_msg)
+        Ui.showErrorMessage(T("Failed to fetch book details: ") .. tostring(err_msg))
+    end
+
+    AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
 end
 
 function Zlibrary:login()

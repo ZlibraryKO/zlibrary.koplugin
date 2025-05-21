@@ -27,11 +27,11 @@ If you find this plugin helpful, please consider supporting its development. You
 
 *   KOReader installed on your device.
 *   A Z-library account.
-*   A Z-library url
+*   A Z-library url.
 
 ## Installation
 
-1.  Download the latest release
+1.  Download the latest release.
 2.  Copy the `plugins/zlibrary.koplugin` directory to the `koreader/plugins` folder on your device.
 3.  Restart KOReader.
 

@@ -3,10 +3,12 @@ name: Create Plugin Release
 on:
   push:
     branches:
-      - main
+      - test
     paths:
       - '*.lua'
       - 'zlibrary/*.lua'
+      - 'l10n/**/*.po'
+      - 'l10n/**/*.pot'
 
 jobs:
   build-and-release:
@@ -100,6 +102,15 @@ jobs:
             echo "Info: 'zlibrary' directory not found. Skipping files from 'zlibrary'."
           fi
           
+          if [ -d "l10n" ]; then
+             TEMP_ZLIB_PO_FILES=$(find ./l10n -maxdepth 2 -type f \( -name '*.po' -o -name '*.pot' \))
+          if [ -n "$TEMP_ZLIB_PO_FILES" ]; then
+            FILE_LINES="${FILE_LINES}${TEMP_ZLIB_PO_FILES}"$'\n'
+          fi
+          else
+            echo "Info: 'l10n' directory not found. Skipping files from 'l10n'."
+          fi
+
           # Add README.md if it exists and is a file
           if [ -f "README.md" ]; then
             # Append ./README.md.

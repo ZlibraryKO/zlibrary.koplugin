@@ -5,19 +5,19 @@
 # test plugin l10n po
 
 msgid "Z-library"
-msgstr "Z-图书馆"
+msgstr "Z-书库"
 
 msgid "Z-library search"
-msgstr "搜索Z-图书馆"
+msgstr "搜索Z-书库"
 
 msgid "Z-library settings"
-msgstr "设置Z-图书馆"
+msgstr "设置Z-书库"
 
 msgid "Set base URL"
 msgstr "设置接口地址"
 
 msgid "Set Z-library base URL"
-msgstr "设置Z-图书馆接口地址"
+msgstr "设置Z-书库接口地址"
 
 msgid "Invalid Base URL."
 msgstr "接口地址无效"
@@ -26,14 +26,14 @@ msgid "Set username"
 msgstr "设置用户名"
 
 msgid "Set Z-library username"
-msgstr "设置Z-图书馆用户名"
+msgstr "设置Z-书库用户名"
 
 # test call koreader po
 #msgid "Set password"
 #msgstr "设置密码"
 
 msgid "Set Z-library password"
-msgstr "设置Z-图书馆密码"
+msgstr "设置Z-书库密码"
 
 msgid "Verify credentials"
 msgstr "测试账号密码"

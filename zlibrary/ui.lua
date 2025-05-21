@@ -451,7 +451,7 @@ function Ui.showMostPopularBooksMenu(ui_self, books, plugin_self)
         title = T("Z-library Most Popular Books"),
         item_table = menu_items,
         items_per_page = 10,
-        show_captions = false,
+        show_captions = true,
         parent = ui_self.document_menu_parent_holder,
         is_popout = false,
         is_borderless = true,

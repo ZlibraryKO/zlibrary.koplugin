@@ -1,5 +1,7 @@
 local util = require("frontend.util")
 local DataStorage = require("datastorage")
+local logger = require("logger")
+local lfs = require("libs/libkoreader-lfs")
 
 local Config = {}
 
@@ -11,11 +13,43 @@ Config.SETTINGS_USER_KEY_KEY = "zlib_user_key"
 Config.SETTINGS_SEARCH_LANGUAGES_KEY = "zlibrary_search_languages"
 Config.SETTINGS_SEARCH_EXTENSIONS_KEY = "zlibrary_search_extensions"
 Config.SETTINGS_DOWNLOAD_DIR_KEY = "zlibrary_download_dir"
+Config.CREDENTIALS_FILENAME = "zlibrary_credentials.lua"
 
 Config.DEFAULT_DOWNLOAD_DIR_FALLBACK = G_reader_settings:readSetting("home_dir")
              or require("apps/filemanager/filemanagerutil").getDefaultDir()
 Config.REQUEST_TIMEOUT = 15 -- seconds
 Config.SEARCH_RESULTS_LIMIT = 30
+
+function Config.loadCredentialsFromFile(plugin_path)
+    local cred_file_path = plugin_path .. "/" .. Config.CREDENTIALS_FILENAME
+    if lfs.attributes(cred_file_path, "mode") == "file" then
+        local func, err = loadfile(cred_file_path)
+        if func then
+            local success, result = pcall(func)
+            if success and type(result) == "table" then
+                logger.info("Successfully loaded credentials from " .. Config.CREDENTIALS_FILENAME)
+                if result.baseUrl then
+                    Config.saveSetting(Config.SETTINGS_BASE_URL_KEY, result.baseUrl)
+                    logger.info("Overriding Base URL from " .. Config.CREDENTIALS_FILENAME)
+                end
+                if result.username then
+                    Config.saveSetting(Config.SETTINGS_USERNAME_KEY, result.username)
+                    logger.info("Overriding Username from " .. Config.CREDENTIALS_FILENAME)
+                end
+                if result.password then
+                    Config.saveSetting(Config.SETTINGS_PASSWORD_KEY, result.password)
+                    logger.info("Overriding Password from " .. Config.CREDENTIALS_FILENAME)
+                end
+            else
+                logger.warn("Failed to execute or get table from " .. Config.CREDENTIALS_FILENAME .. ": " .. tostring(result))
+            end
+        else
+            logger.warn("Failed to load " .. Config.CREDENTIALS_FILENAME .. ": " .. tostring(err))
+        end
+    else
+        logger.info(Config.CREDENTIALS_FILENAME .. " not found. Using UI settings if available.")
+    end
+end
 
 Config.SUPPORTED_LANGUAGES = {
     { name = "العربية", value = "arabic" },

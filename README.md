@@ -58,6 +58,7 @@ To easily access this plugin, you can set up a gesture to open the search menu:
 2.  Access the "Search" menu.
 3.  Select "Z-library search" (this might also be on a subsequent page of the tools menu).
 4.  Enter your search query and enjoy the content!
+5.  Or use the most popular or recommended options.
 
 ## Keywords
 

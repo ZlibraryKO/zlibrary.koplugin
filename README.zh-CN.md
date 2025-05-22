@@ -13,7 +13,7 @@
 ## 演示
 
 <div align="center">
-  <img src="../assets/search_and_download.gif" width="400">
+  <img src="assets/search_and_download.gif" width="400">
 </div>
 
 ## 功能特色

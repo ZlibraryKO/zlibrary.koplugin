@@ -4,7 +4,7 @@ local logger = require("logger")
 local json = require("json")
 local ltn12 = require("ltn12")
 local http = require("socket.http")
-local T = require("gettext")
+local T = require("zlibrary.gettext")
 local Api = {}
 
 local function _transformApiBookData(api_book)

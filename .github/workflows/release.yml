@@ -100,13 +100,13 @@ jobs:
             echo "Info: 'zlibrary' directory not found. Skipping files from 'zlibrary'."
           fi
           
-          # Add README.md if it exists and is a file
-          if [ -f "README.md" ]; then
-            # Append ./README.md.
-            # If FILE_LINES is not empty, it already ends with a newline from find's -printf.
-            FILE_LINES="${FILE_LINES}./README.md\\n"
-          fi
-
+          # Add README*.md if it exists and is a file
+          for readme_file in README*; do
+            if [ -f "$readme_file" ]; then
+              FILE_LINES="${FILE_LINES}${readme_file}\\n"
+            fi
+          done
+          
           # Add LICENSE if it exists and is a file
           if [ -f "LICENSE" ]; then
             FILE_LINES="${FILE_LINES}./LICENSE\\n"

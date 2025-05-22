@@ -1,6 +1,6 @@
 # [KOReader Z-library Plugin](https://github.com/ZlibraryKO/zlibrary.koplugin)
 
-简体中文 | [English](./README.md)
+English | [简体中文](./README.zh-CN.md)
 
 **Disclaimer:** This plugin is for educational purposes only. Please respect copyright laws and use this plugin responsibly.
 

@@ -1,0 +1,275 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: v1.0.15\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-21 22:36+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: Italian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Z-library"
+msgstr "Z-library"
+
+msgid "[[A plugin to search and download books from Z-library.]]"
+msgstr "[[Un plugin per cercare e scaricare libri da Z-library.]]"
+
+msgid "Z-library search"
+msgstr "Ricerca Z-library"
+
+msgid "Z-library most popular"
+msgstr "Più popolari di Z-library"
+
+msgid "Z-library recommended"
+msgstr "Consigliati da Z-library"
+
+msgid "Set base URL"
+msgstr "Imposta URL base"
+
+msgid "Invalid Base URL."
+msgstr "URL base non valido."
+
+msgid "Set username"
+msgstr "Imposta nome utente"
+
+msgid "Verify credentials"
+msgstr "Verifica credenziali"
+
+msgid "Login successful!"
+msgstr "Accesso riuscito!"
+
+msgid "Set download directory"
+msgstr "Imposta directory di download"
+
+msgid "Select search languages"
+msgstr "Seleziona lingue di ricerca"
+
+msgid "Select search formats"
+msgstr "Seleziona formati di ricerca"
+
+msgid "Recommended"
+msgstr "Consigliati"
+
+msgid "Most popular"
+msgstr "Più popolari"
+
+msgid "No internet connection detected."
+msgstr "Nessuna connessione internet rilevata."
+
+msgid "Failed to retrieve user session after login."
+msgstr "Impossibile recuperare la sessione utente dopo il login."
+
+msgid "No books found, please try again"
+msgstr "Nessun libro trovato, riprova"
+
+msgid "Fetching recommended books..."
+msgstr "Recupero dei libri consigliati..."
+
+msgid "Failed to fetch recommended books: "
+msgstr "Impossibile recuperare i libri consigliati: "
+
+msgid "Fetching most popular books..."
+msgstr "Recupero dei libri più popolari..."
+
+msgid "Failed to fetch most popular books: "
+msgstr "Impossibile recuperare i libri più popolari: "
+
+msgid "Fetching book details..."
+msgstr "Recupero dei dettagli del libro..."
+
+msgid "Failed to fetch book details: "
+msgstr "Impossibile recuperare i dettagli del libro: "
+
+msgid "Could not retrieve book details."
+msgstr "Impossibile recuperare i dettagli del libro."
+
+msgid "Please set both username and password first."
+msgstr "Imposta prima sia il nome utente che la password."
+
+msgid "Logging in..."
+msgstr "Accesso in corso..."
+
+msgid ""
+"Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+msgstr ""
+"Ricerca fallita a causa di un problema temporaneo (HTTP 400). Vuoi riprovare?"
+
+msgid "Retrying search for \""
+msgstr "Nuovo tentativo di ricerca per \""
+
+msgid "Searching for \""
+msgstr "Ricerca di \""
+
+msgid "Search failed: "
+msgstr "Ricerca fallita: "
+
+msgid "No results found for \""
+msgstr "Nessun risultato trovato per \""
+
+msgid "Failed to load more results: "
+msgstr "Impossibile caricare altri risultati: "
+
+msgid "No more results found."
+msgstr "Nessun altro risultato trovato."
+
+msgid "No download link available for this book."
+msgstr "Nessun link di download disponibile per questo libro."
+
+#, lua-format
+msgid "Cannot create downloads directory: %s"
+msgstr "Impossibile creare la directory dei download: %s"
+
+msgid "Could not open reader UI."
+msgstr "Impossibile aprire l'interfaccia del lettore."
+
+msgid "Download failed: Unknown error"
+msgstr "Download fallito: Errore sconosciuto"
+
+msgid "Download limit reached. Please try again later or check your account."
+msgstr "Limite di download raggiunto. Riprova più tardi o controlla il tuo account."
+
+msgid "Z-library server URL not configured."
+msgstr "URL del server Z-library non configurato."
+
+msgid "Failed to fetch recommended books (no response body)."
+msgstr "Impossibile recuperare i libri consigliati (nessun corpo di risposta)."
+
+msgid "Failed to parse recommended books response."
+msgstr "Impossibile analizzare la risposta dei libri consigliati."
+
+msgid "API returned an error for recommended books."
+msgstr "L'API ha restituito un errore per i libri consigliati."
+
+msgid "Failed to fetch most popular books (no response body)."
+msgstr "Impossibile recuperare i libri più popolari (nessun corpo di risposta)."
+
+msgid "Failed to parse most popular books response."
+msgstr "Impossibile analizzare la risposta dei libri più popolari."
+
+msgid "API returned an error for most popular books."
+msgstr "L'API ha restituito un errore per i libri più popolari."
+
+msgid "Z-library server URL not configured or book identifiers missing."
+msgstr "URL del server Z-library non configurato o identificatori del libro mancanti."
+
+msgid "Failed to fetch book details (no response body)."
+msgstr "Impossibile recuperare i dettagli del libro (nessun corpo di risposta)."
+
+msgid "Failed to parse book details response."
+msgstr "Impossibile analizzare la risposta dei dettagli del libro."
+
+msgid "API returned an error for book details."
+msgstr "L'API ha restituito un errore per i dettagli del libro."
+
+msgid "Failed to process book details."
+msgstr "Impossibile elaborare i dettagli del libro."
+
+msgid "Select Z-library Download Directory"
+msgstr "Seleziona la directory di download di Z-library"
+
+#, lua-format
+msgid "Download directory set to: %s"
+msgstr "Directory di download impostata su: %s"
+
+msgid "No directory selected."
+msgstr "Nessuna directory selezionata."
+
+#, lua-format
+msgid "%d items selected for %s."
+msgstr "%d elementi selezionati per %s."
+
+#, lua-format
+msgid "Filter cleared for %s."
+msgstr "Filtro cancellato per %s."
+
+msgid "Setting saved successfully!"
+msgstr "Impostazione salvata con successo!"
+
+msgid "Setting cleared."
+msgstr "Impostazione cancellata."
+
+msgid "Search Z-library"
+msgstr "Cerca in Z-library"
+
+msgid "Please enter a search term."
+msgstr "Inserisci un termine di ricerca."
+
+msgid "Unknown Title"
+msgstr "Titolo sconosciuto"
+
+msgid "Full Title"
+msgstr "Titolo completo"
+
+msgid "Author: "
+msgstr "Autore: "
+
+msgid "Full Author"
+msgstr "Autore completo"
+
+msgid "Year: "
+msgstr "Anno: "
+
+#, lua-format
+msgid "Format: %s (tap to download)"
+msgstr "Formato: %s (tocca per scaricare)"
+
+#, lua-format
+msgid "Format: %s (Download not available)"
+msgstr "Formato: %s (Download non disponibile)"
+
+msgid "Download Book (Unknown Format)"
+msgstr "Scarica libro (Formato sconosciuto)"
+
+msgid "Publisher: "
+msgstr "Editore: "
+
+msgid "Description (tap to view)"
+msgstr "Descrizione (tocca per visualizzare)"
+
+msgid "Book Details"
+msgstr "Dettagli del libro"
+
+#, lua-format
+msgid "Download \"%s\"?"
+msgstr "Scaricare \"%s\"?"
+
+#, lua-format
+msgid "\"%s\" downloaded successfully. Open it now?"
+msgstr "\"%s\" scaricato con successo. Aprirlo ora?"
+
+msgid "Open book"
+msgstr "Apri libro"
+
+msgid "Untitled"
+msgstr "Senza titolo"
+
+msgid ""
+"No recommended books found, please try again. Sometimes this requires a "
+"couple of retries."
+msgstr ""
+"Nessun libro consigliato trovato, riprova. A volte sono necessari un "
+"paio di tentativi."
+
+msgid "Z-library Recommended Books"
+msgstr "Libri consigliati di Z-library"
+
+msgid "No most popular books found. The list was empty, please try again."
+msgstr "Nessun libro più popolare trovato. La lista era vuota, riprova."
+
+msgid "Z-library Most Popular Books"
+msgstr "Libri più popolari di Z-library"
+
+msgid "Fetch most recommended book from Z-library?"
+msgstr "Recuperare i libri più consigliati da Z-library?"
+
+msgid "Fetch most popular books from Z-library?"
+msgstr "Recuperare i libri più popolari da Z-library?"

@@ -1,0 +1,277 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: v1.0.15\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-21 22:36+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: Dutch\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Z-library"
+msgstr "Z-library"
+
+msgid "[[A plugin to search and download books from Z-library.]]"
+msgstr "[[Een plug-in om boeken te zoeken en te downloaden van Z-library.]]"
+
+msgid "Z-library search"
+msgstr "Z-library zoeken"
+
+msgid "Z-library most popular"
+msgstr "Z-library populairst"
+
+msgid "Z-library recommended"
+msgstr "Z-library aanbevolen"
+
+msgid "Set base URL"
+msgstr "Basis-URL instellen"
+
+msgid "Invalid Base URL."
+msgstr "Ongeldige basis-URL."
+
+msgid "Set username"
+msgstr "Gebruikersnaam instellen"
+
+msgid "Verify credentials"
+msgstr "Inloggegevens verifiëren"
+
+msgid "Login successful!"
+msgstr "Inloggen gelukt!"
+
+msgid "Set download directory"
+msgstr "Downloadmap instellen"
+
+msgid "Select search languages"
+msgstr "Zoektalen selecteren"
+
+msgid "Select search formats"
+msgstr "Zoekformaten selecteren"
+
+msgid "Recommended"
+msgstr "Aanbevolen"
+
+msgid "Most popular"
+msgstr "Meest populair"
+
+msgid "No internet connection detected."
+msgstr "Geen internetverbinding gedetecteerd."
+
+msgid "Failed to retrieve user session after login."
+msgstr "Kon gebruikerssessie na het inloggen niet ophalen."
+
+msgid "No books found, please try again"
+msgstr "Geen boeken gevonden, probeer het opnieuw"
+
+msgid "Fetching recommended books..."
+msgstr "Aanbevolen boeken ophalen..."
+
+msgid "Failed to fetch recommended books: "
+msgstr "Mislukt om aanbevolen boeken op te halen: "
+
+msgid "Fetching most popular books..."
+msgstr "Populairste boeken ophalen..."
+
+msgid "Failed to fetch most popular books: "
+msgstr "Mislukt om populairste boeken op te halen: "
+
+msgid "Fetching book details..."
+msgstr "Boekdetails ophalen..."
+
+msgid "Failed to fetch book details: "
+msgstr "Mislukt om boekdetails op te halen: "
+
+msgid "Could not retrieve book details."
+msgstr "Kon boekdetails niet ophalen."
+
+msgid "Please set both username and password first."
+msgstr "Stel eerst zowel gebruikersnaam als wachtwoord in."
+
+msgid "Logging in..."
+msgstr "Inloggen..."
+
+msgid ""
+"Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+msgstr ""
+"Zoeken mislukt vanwege een tijdelijk probleem (HTTP 400). Wilt u het "
+"opnieuw proberen?"
+
+msgid "Retrying search for \""
+msgstr "Opnieuw zoeken naar \""
+
+msgid "Searching for \""
+msgstr "Zoeken naar \""
+
+msgid "Search failed: "
+msgstr "Zoeken mislukt: "
+
+msgid "No results found for \""
+msgstr "Geen resultaten gevonden voor \""
+
+msgid "Failed to load more results: "
+msgstr "Mislukt om meer resultaten te laden: "
+
+msgid "No more results found."
+msgstr "Geen verdere resultaten gevonden."
+
+msgid "No download link available for this book."
+msgstr "Geen downloadlink beschikbaar voor dit boek."
+
+#, lua-format
+msgid "Cannot create downloads directory: %s"
+msgstr "Kan downloadmap niet aanmaken: %s"
+
+msgid "Could not open reader UI."
+msgstr "Kon de gebruikersinterface van de lezer niet openen."
+
+msgid "Download failed: Unknown error"
+msgstr "Download mislukt: Onbekende fout"
+
+msgid "Download limit reached. Please try again later or check your account."
+msgstr "Downloadlimiet bereikt. Probeer het later opnieuw of controleer uw account."
+
+msgid "Z-library server URL not configured."
+msgstr "Z-library server-URL niet geconfigureerd."
+
+msgid "Failed to fetch recommended books (no response body)."
+msgstr "Mislukt om aanbevolen boeken op te halen (geen antwoordtekst)."
+
+msgid "Failed to parse recommended books response."
+msgstr "Mislukt om de reactie van aanbevolen boeken te parseren."
+
+msgid "API returned an error for recommended books."
+msgstr "API gaf een fout terug voor aanbevolen boeken."
+
+msgid "Failed to fetch most popular books (no response body)."
+msgstr "Mislukt om populairste boeken op te halen (geen antwoordtekst)."
+
+msgid "Failed to parse most popular books response."
+msgstr "Mislukt om de reactie van populairste boeken te parseren."
+
+msgid "API returned an error for most popular books."
+msgstr "API gaf een fout terug voor populairste boeken."
+
+msgid "Z-library server URL not configured or book identifiers missing."
+msgstr "Z-library server-URL niet geconfigureerd of boekidentificatoren ontbreken."
+
+msgid "Failed to fetch book details (no response body)."
+msgstr "Mislukt om boekdetails op te halen (geen antwoordtekst)."
+
+msgid "Failed to parse book details response."
+msgstr "Mislukt om de reactie van boekdetails te parseren."
+
+msgid "API returned an error for book details."
+msgstr "API gaf een fout terug voor boekdetails."
+
+msgid "Failed to process book details."
+msgstr "Mislukt om boekdetails te verwerken."
+
+msgid "Select Z-library Download Directory"
+msgstr "Selecteer Z-library Downloadmap"
+
+#, lua-format
+msgid "Download directory set to: %s"
+msgstr "Downloadmap ingesteld op: %s"
+
+msgid "No directory selected."
+msgstr "Geen map geselecteerd."
+
+#, lua-format
+msgid "%d items selected for %s."
+msgstr "%d items geselecteerd voor %s."
+
+#, lua-format
+msgid "Filter cleared for %s."
+msgstr "Filter gewist voor %s."
+
+msgid "Setting saved successfully!"
+msgstr "Instelling succesvol opgeslagen!"
+
+msgid "Setting cleared."
+msgstr "Instelling gewist."
+
+msgid "Search Z-library"
+msgstr "Z-library doorzoeken"
+
+msgid "Please enter a search term."
+msgstr "Voer een zoekterm in."
+
+msgid "Unknown Title"
+msgstr "Onbekende titel"
+
+msgid "Full Title"
+msgstr "Volledige titel"
+
+msgid "Author: "
+msgstr "Auteur: "
+
+msgid "Full Author"
+msgstr "Volledige auteur"
+
+msgid "Year: "
+msgstr "Jaar: "
+
+#, lua-format
+msgid "Format: %s (tap to download)"
+msgstr "Formaat: %s (tik om te downloaden)"
+
+#, lua-format
+msgid "Format: %s (Download not available)"
+msgstr "Formaat: %s (Download niet beschikbaar)"
+
+msgid "Download Book (Unknown Format)"
+msgstr "Boek downloaden (Onbekend formaat)"
+
+msgid "Publisher: "
+msgstr "Uitgever: "
+
+msgid "Description (tap to view)"
+msgstr "Beschrijving (tik om te bekijken)"
+
+msgid "Book Details"
+msgstr "Boekdetails"
+
+#, lua-format
+msgid "Download \"%s\"?"
+msgstr "Download \"%s\"?"
+
+#, lua-format
+msgid "\"%s\" downloaded successfully. Open it now?"
+msgstr "\"%s\" succesvol gedownload. Nu openen?"
+
+msgid "Open book"
+msgstr "Boek openen"
+
+msgid "Untitled"
+msgstr "Zonder titel"
+
+msgid ""
+"No recommended books found, please try again. Sometimes this requires a "
+"couple of retries."
+msgstr ""
+"Geen aanbevolen boeken gevonden, probeer het opnieuw. Soms zijn hiervoor "
+"enkele pogingen nodig."
+
+msgid "Z-library Recommended Books"
+msgstr "Z-library aanbevolen boeken"
+
+msgid "No most popular books found. The list was empty, please try again."
+msgstr "Geen populairste boeken gevonden. De lijst was leeg, probeer het opnieuw."
+
+msgid "Z-library Most Popular Books"
+msgstr "Z-library populairste boeken"
+
+msgid "Fetch most recommended book from Z-library?"
+msgstr "Meest aanbevolen boek van Z-library ophalen?"
+
+msgid "Fetch most popular books from Z-library?"
+msgstr "Populairste boeken van Z-library ophalen?"
+

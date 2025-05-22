@@ -1,0 +1,269 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: v1.0.15\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-21 22:36+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: Russian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Z-library"
+msgstr "Z-библиотека"
+
+msgid "[[A plugin to search and download books from Z-library.]]"
+msgstr "[[Плагин для поиска и скачивания книг из Z-библиотеки.]]"
+
+msgid "Z-library search"
+msgstr "Поиск в Z-библиотеке"
+
+msgid "Z-library most popular"
+msgstr "Самые популярные в Z-библиотеке"
+
+msgid "Z-library recommended"
+msgstr "Рекомендуемые в Z-библиотеке"
+
+msgid "Set base URL"
+msgstr "Установить базовый URL"
+
+msgid "Invalid Base URL."
+msgstr "Неверный базовый URL."
+
+msgid "Set username"
+msgstr "Установить имя пользователя"
+
+msgid "Verify credentials"
+msgstr "Проверить учетные данные"
+
+msgid "Login successful!"
+msgstr "Вход выполнен успешно!"
+
+msgid "Set download directory"
+msgstr "Установить папку для загрузок"
+
+msgid "Select search languages"
+msgstr "Выбрать языки для поиска"
+
+msgid "Select search formats"
+msgstr "Выбрать форматы для поиска"
+
+msgid "Recommended"
+msgstr "Рекомендуемые"
+
+msgid "Most popular"
+msgstr "Самые популярные"
+
+msgid "No internet connection detected."
+msgstr "Интернет-соединение не обнаружено."
+
+msgid "Failed to retrieve user session after login."
+msgstr "Не удалось получить сессию пользователя после входа."
+
+msgid "No books found, please try again"
+msgstr "Книги не найдены, попробуйте еще раз"
+
+msgid "Fetching recommended books..."
+msgstr "Получение рекомендуемых книг..."
+
+msgid "Failed to fetch recommended books: "
+msgstr "Не удалось получить рекомендуемые книги: "
+
+msgid "Fetching most popular books..."
+msgstr "Получение самых популярных книг..."
+
+msgid "Failed to fetch most popular books: "
+msgstr "Не удалось получить самые популярные книги: "
+
+msgid "Fetching book details..."
+msgstr "Получение деталей книги..."
+
+msgid "Failed to fetch book details: "
+msgstr "Не удалось получить детали книги: "
+
+msgid "Could not retrieve book details."
+msgstr "Не удалось получить информацию о книге."
+
+msgid "Please set both username and password first."
+msgstr "Пожалуйста, сначала укажите имя пользователя и пароль."
+
+msgid "Logging in..."
+msgstr "Вход в систему..."
+
+msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+msgstr "Поиск не удался из-за временной проблемы (HTTP 400). Хотите повторить?"
+
+msgid "Retrying search for \""
+msgstr "Повторный поиск для \""
+
+msgid "Searching for \""
+msgstr "Поиск \""
+
+msgid "Search failed: "
+msgstr "Поиск не удался: "
+
+msgid "No results found for \""
+msgstr "Ничего не найдено для \""
+
+msgid "Failed to load more results: "
+msgstr "Не удалось загрузить больше результатов: "
+
+msgid "No more results found."
+msgstr "Больше результатов не найдено."
+
+msgid "No download link available for this book."
+msgstr "Для этой книги нет ссылки для скачивания."
+
+#, lua-format
+msgid "Cannot create downloads directory: %s"
+msgstr "Не удалось создать папку для загрузок: %s"
+
+msgid "Could not open reader UI."
+msgstr "Не удалось открыть интерфейс читалки."
+
+msgid "Download failed: Unknown error"
+msgstr "Ошибка загрузки: Неизвестная ошибка"
+
+msgid "Download limit reached. Please try again later or check your account."
+msgstr "Достигнут лимит загрузок. Попробуйте позже или проверьте свой аккаунт."
+
+msgid "Z-library server URL not configured."
+msgstr "URL сервера Z-библиотеки не настроен."
+
+msgid "Failed to fetch recommended books (no response body)."
+msgstr "Не удалось получить рекомендуемые книги (нет тела ответа)."
+
+msgid "Failed to parse recommended books response."
+msgstr "Не удалось обработать ответ с рекомендуемыми книгами."
+
+msgid "API returned an error for recommended books."
+msgstr "API вернул ошибку для рекомендуемых книг."
+
+msgid "Failed to fetch most popular books (no response body)."
+msgstr "Не удалось получить самые популярные книги (нет тела ответа)."
+
+msgid "Failed to parse most popular books response."
+msgstr "Не удалось обработать ответ с популярными книгами."
+
+msgid "API returned an error for most popular books."
+msgstr "API вернул ошибку для популярных книг."
+
+msgid "Z-library server URL not configured or book identifiers missing."
+msgstr "URL сервера Z-библиотеки не настроен или отсутствуют идентификаторы книги."
+
+msgid "Failed to fetch book details (no response body)."
+msgstr "Не удалось получить детали книги (нет тела ответа)."
+
+msgid "Failed to parse book details response."
+msgstr "Не удалось обработать ответ с деталями книги."
+
+msgid "API returned an error for book details."
+msgstr "API вернул ошибку для деталей книги."
+
+msgid "Failed to process book details."
+msgstr "Не удалось обработать детали книги."
+
+msgid "Select Z-library Download Directory"
+msgstr "Выбрать папку для загрузок из Z-библиотеки"
+
+#, lua-format
+msgid "Download directory set to: %s"
+msgstr "Папка для загрузок установлена: %s"
+
+msgid "No directory selected."
+msgstr "Папка не выбрана."
+
+#, lua-format
+msgid "%d items selected for %s."
+msgstr "Выбрано %d элементов для %s."
+
+#, lua-format
+msgid "Filter cleared for %s."
+msgstr "Фильтр очищен для %s."
+
+msgid "Setting saved successfully!"
+msgstr "Настройки успешно сохранены!"
+
+msgid "Setting cleared."
+msgstr "Настройка очищена."
+
+msgid "Search Z-library"
+msgstr "Поиск в Z-библиотеке"
+
+msgid "Please enter a search term."
+msgstr "Пожалуйста, введите поисковый запрос."
+
+msgid "Unknown Title"
+msgstr "Неизвестное название"
+
+msgid "Full Title"
+msgstr "Полное название"
+
+msgid "Author: "
+msgstr "Автор: "
+
+msgid "Full Author"
+msgstr "Полное имя автора"
+
+msgid "Year: "
+msgstr "Год: "
+
+#, lua-format
+msgid "Format: %s (tap to download)"
+msgstr "Формат: %s (нажмите для скачивания)"
+
+#, lua-format
+msgid "Format: %s (Download not available)"
+msgstr "Формат: %s (Скачивание недоступно)"
+
+msgid "Download Book (Unknown Format)"
+msgstr "Скачать книгу (неизвестный формат)"
+
+msgid "Publisher: "
+msgstr "Издательство: "
+
+msgid "Description (tap to view)"
+msgstr "Описание (нажмите для просмотра)"
+
+msgid "Book Details"
+msgstr "Детали книги"
+
+#, lua-format
+msgid "Download \"%s\"?"
+msgstr "Скачать \"%s\"?"
+
+#, lua-format
+msgid "\"%s\" downloaded successfully. Open it now?"
+msgstr "\"%s\" успешно скачана. Открыть сейчас?"
+
+msgid "Open book"
+msgstr "Открыть книгу"
+
+msgid "Untitled"
+msgstr "Без названия"
+
+msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
+msgstr "Рекомендуемые книги не найдены, попробуйте еще раз. Иногда требуется несколько попыток."
+
+msgid "Z-library Recommended Books"
+msgstr "Рекомендуемые книги Z-библиотеки"
+
+msgid "No most popular books found. The list was empty, please try again."
+msgstr "Самые популярные книги не найдены. Список пуст, попробуйте еще раз."
+
+msgid "Z-library Most Popular Books"
+msgstr "Самые популярные книги Z-библиотеки"
+
+msgid "Fetch most recommended book from Z-library?"
+msgstr "Загрузить самые рекомендуемые книги из Z-библиотеки?"
+
+msgid "Fetch most popular books from Z-library?"
+msgstr "Загрузить самые популярные книги из Z-библиотеки?"

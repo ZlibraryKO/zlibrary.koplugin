@@ -1,5 +1,4 @@
 local DataStorage = require("datastorage")
-local isAndroid, android = pcall(require, "android")
 local util = require("util")
 local GetText = require("gettext")
 
@@ -29,25 +28,31 @@ local changeLang = function(new_lang)
     GetText.wrapUntranslated = GetText.wrapUntranslated_nowrap
 end
 
-if os.getenv("LANGUAGE") then
-    changeLang(os.getenv("LANGUAGE"))
-elseif os.getenv("LC_ALL") then
-    changeLang(os.getenv("LC_ALL"))
-elseif os.getenv("LC_MESSAGES") then
-    changeLang(os.getenv("LC_MESSAGES"))
-elseif os.getenv("LANG") then
-    changeLang(os.getenv("LANG"))
-end
-
-if isAndroid then
-    local ffi = require("ffi")
-    local buf = ffi.new("char[?]", 16)
-    android.lib.AConfiguration_getLanguage(android.app.config, buf)
-    local lang = ffi.string(buf)
-    android.lib.AConfiguration_getCountry(android.app.config, buf)
-    local country = ffi.string(buf)
-    if lang and country then
-        changeLang(lang .. "_" .. country)
+local setting_language = G_reader_settings:readSetting("language")
+if setting_language then
+    changeLang(setting_language)
+else
+    if os.getenv("LANGUAGE") then
+        changeLang(os.getenv("LANGUAGE"))
+    elseif os.getenv("LC_ALL") then
+        changeLang(os.getenv("LC_ALL"))
+    elseif os.getenv("LC_MESSAGES") then
+        changeLang(os.getenv("LC_MESSAGES"))
+    elseif os.getenv("LANG") then
+        changeLang(os.getenv("LANG"))
+    end
+    
+    local isAndroid, android = pcall(require, "android")
+    if isAndroid then
+        local ffi = require("ffi")
+        local buf = ffi.new("char[?]", 16)
+        android.lib.AConfiguration_getLanguage(android.app.config, buf)
+        local lang = ffi.string(buf)
+        android.lib.AConfiguration_getCountry(android.app.config, buf)
+        local country = ffi.string(buf)
+        if lang and country then
+            changeLang(lang .. "_" .. country)
+        end
     end
 end
 

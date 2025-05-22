@@ -1,0 +1,276 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: v1.0.15\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-21 22:36+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: Arabic\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Z-library"
+msgstr "مكتبة-Z"
+
+msgid "[[A plugin to search and download books from Z-library.]]"
+msgstr "[[إضافة للبحث وتحميل الكتب من مكتبة-Z.]]"
+
+msgid "Z-library search"
+msgstr "البحث في مكتبة-Z"
+
+msgid "Z-library most popular"
+msgstr "الأكثر شعبية في مكتبة-Z"
+
+msgid "Z-library recommended"
+msgstr "موصى به في مكتبة-Z"
+
+msgid "Set base URL"
+msgstr "تعيين عنوان URL الأساسي"
+
+msgid "Invalid Base URL."
+msgstr "عنوان URL الأساسي غير صالح."
+
+msgid "Set username"
+msgstr "تعيين اسم المستخدم"
+
+msgid "Verify credentials"
+msgstr "التحقق من بيانات الاعتماد"
+
+msgid "Login successful!"
+msgstr "تم تسجيل الدخول بنجاح!"
+
+msgid "Set download directory"
+msgstr "تعيين مجلد التنزيل"
+
+msgid "Select search languages"
+msgstr "اختيار لغات البحث"
+
+msgid "Select search formats"
+msgstr "اختيار تنسيقات البحث"
+
+msgid "Recommended"
+msgstr "موصى به"
+
+msgid "Most popular"
+msgstr "الأكثر شعبية"
+
+msgid "No internet connection detected."
+msgstr "لم يتم اكتشاف اتصال بالإنترنت."
+
+msgid "Failed to retrieve user session after login."
+msgstr "فشل استرداد جلسة المستخدم بعد تسجيل الدخول."
+
+msgid "No books found, please try again"
+msgstr "لم يتم العثور على كتب، يرجى المحاولة مرة أخرى"
+
+msgid "Fetching recommended books..."
+msgstr "جارٍ جلب الكتب الموصى بها..."
+
+msgid "Failed to fetch recommended books: "
+msgstr "فشل في جلب الكتب الموصى بها: "
+
+msgid "Fetching most popular books..."
+msgstr "جارٍ جلب الكتب الأكثر شعبية..."
+
+msgid "Failed to fetch most popular books: "
+msgstr "فشل في جلب الكتب الأكثر شعبية: "
+
+msgid "Fetching book details..."
+msgstr "جارٍ جلب تفاصيل الكتاب..."
+
+msgid "Failed to fetch book details: "
+msgstr "فشل في جلب تفاصيل الكتاب: "
+
+msgid "Could not retrieve book details."
+msgstr "تعذر استرداد تفاصيل الكتاب."
+
+msgid "Please set both username and password first."
+msgstr "يرجى تعيين اسم المستخدم وكلمة المرور أولاً."
+
+msgid "Logging in..."
+msgstr "جارٍ تسجيل الدخول..."
+
+msgid ""
+"Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+msgstr ""
+"فشل البحث بسبب مشكلة مؤقتة (HTTP 400). هل ترغب في إعادة المحاولة؟"
+
+msgid "Retrying search for \""
+msgstr "إعادة محاولة البحث عن \""
+
+msgid "Searching for \""
+msgstr "جارٍ البحث عن \""
+
+msgid "Search failed: "
+msgstr "فشل البحث: "
+
+msgid "No results found for \""
+msgstr "لم يتم العثور على نتائج لـ \""
+
+msgid "Failed to load more results: "
+msgstr "فشل تحميل المزيد من النتائج: "
+
+msgid "No more results found."
+msgstr "لم يتم العثور على المزيد من النتائج."
+
+msgid "No download link available for this book."
+msgstr "لا يوجد رابط تنزيل متاح لهذا الكتاب."
+
+#, lua-format
+msgid "Cannot create downloads directory: %s"
+msgstr "لا يمكن إنشاء مجلد التنزيلات: %s"
+
+msgid "Could not open reader UI."
+msgstr "تعذر فتح واجهة القارئ."
+
+msgid "Download failed: Unknown error"
+msgstr "فشل التنزيل: خطأ غير معروف"
+
+msgid "Download limit reached. Please try again later or check your account."
+msgstr "تم الوصول إلى حد التنزيل. يرجى المحاولة مرة أخرى لاحقًا أو التحقق من حسابك."
+
+msgid "Z-library server URL not configured."
+msgstr "لم يتم تكوين عنوان URL لخادم مكتبة-Z."
+
+msgid "Failed to fetch recommended books (no response body)."
+msgstr "فشل في جلب الكتب الموصى بها (لا يوجد نص استجابة)."
+
+msgid "Failed to parse recommended books response."
+msgstr "فشل في تحليل استجابة الكتب الموصى بها."
+
+msgid "API returned an error for recommended books."
+msgstr "أرجعت واجهة برمجة التطبيقات خطأ للكتب الموصى بها."
+
+msgid "Failed to fetch most popular books (no response body)."
+msgstr "فشل في جلب الكتب الأكثر شعبية (لا يوجد نص استجابة)."
+
+msgid "Failed to parse most popular books response."
+msgstr "فشل في تحليل استجابة الكتب الأكثر شعبية."
+
+msgid "API returned an error for most popular books."
+msgstr "أرجعت واجهة برمجة التطبيقات خطأ للكتب الأكثر شعبية."
+
+msgid "Z-library server URL not configured or book identifiers missing."
+msgstr "لم يتم تكوين عنوان URL لخادم مكتبة-Z أو معرفات الكتاب مفقودة."
+
+msgid "Failed to fetch book details (no response body)."
+msgstr "فشل في جلب تفاصيل الكتاب (لا يوجد نص استجابة)."
+
+msgid "Failed to parse book details response."
+msgstr "فشل في تحليل استجابة تفاصيل الكتاب."
+
+msgid "API returned an error for book details."
+msgstr "أرجعت واجهة برمجة التطبيقات خطأ لتفاصيل الكتاب."
+
+msgid "Failed to process book details."
+msgstr "فشل في معالجة تفاصيل الكتاب."
+
+msgid "Select Z-library Download Directory"
+msgstr "اختر مجلد تنزيل مكتبة-Z"
+
+#, lua-format
+msgid "Download directory set to: %s"
+msgstr "تم تعيين مجلد التنزيل إلى: %s"
+
+msgid "No directory selected."
+msgstr "لم يتم اختيار مجلد."
+
+#, lua-format
+msgid "%d items selected for %s."
+msgstr "%d عناصر محددة لـ %s."
+
+#, lua-format
+msgid "Filter cleared for %s."
+msgstr "تم مسح التصفية لـ %s."
+
+msgid "Setting saved successfully!"
+msgstr "تم حفظ الإعداد بنجاح!"
+
+msgid "Setting cleared."
+msgstr "تم مسح الإعداد."
+
+msgid "Search Z-library"
+msgstr "البحث في مكتبة-Z"
+
+msgid "Please enter a search term."
+msgstr "يرجى إدخال مصطلح البحث."
+
+msgid "Unknown Title"
+msgstr "عنوان غير معروف"
+
+msgid "Full Title"
+msgstr "العنوان الكامل"
+
+msgid "Author: "
+msgstr "المؤلف: "
+
+msgid "Full Author"
+msgstr "المؤلف الكامل"
+
+msgid "Year: "
+msgstr "السنة: "
+
+#, lua-format
+msgid "Format: %s (tap to download)"
+msgstr "التنسيق: %s (انقر للتنزيل)"
+
+#, lua-format
+msgid "Format: %s (Download not available)"
+msgstr "التنسيق: %s (التنزيل غير متاح)"
+
+msgid "Download Book (Unknown Format)"
+msgstr "تنزيل الكتاب (تنسيق غير معروف)"
+
+msgid "Publisher: "
+msgstr "الناشر: "
+
+msgid "Description (tap to view)"
+msgstr "الوصف (انقر للعرض)"
+
+msgid "Book Details"
+msgstr "تفاصيل الكتاب"
+
+#, lua-format
+msgid "Download \"%s\"?"
+msgstr "تنزيل \"%s\"؟"
+
+#, lua-format
+msgid "\"%s\" downloaded successfully. Open it now?"
+msgstr "تم تنزيل \"%s\" بنجاح. هل تريد فتحه الآن؟"
+
+msgid "Open book"
+msgstr "فتح الكتاب"
+
+msgid "Untitled"
+msgstr "بدون عنوان"
+
+msgid ""
+"No recommended books found, please try again. Sometimes this requires a "
+"couple of retries."
+msgstr ""
+"لم يتم العثور على كتب موصى بها، يرجى المحاولة مرة أخرى. أحيانًا يتطلب هذا "
+"بضع محاولات."
+
+msgid "Z-library Recommended Books"
+msgstr "الكتب الموصى بها في مكتبة-Z"
+
+msgid "No most popular books found. The list was empty, please try again."
+msgstr "لم يتم العثور على الكتب الأكثر شعبية. القائمة كانت فارغة، يرجى المحاولة مرة أخرى."
+
+msgid "Z-library Most Popular Books"
+msgstr "الكتب الأكثر شعبية في مكتبة-Z"
+
+msgid "Fetch most recommended book from Z-library?"
+msgstr "جلب الكتب الأكثر توصية من مكتبة-Z؟"
+
+msgid "Fetch most popular books from Z-library?"
+msgstr "جلب الكتب الأكثر شعبية من مكتبة-Z؟"
+

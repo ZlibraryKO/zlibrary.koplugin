@@ -18,252 +18,255 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 msgid "Z-library"
-msgstr "Z-图书馆"
+msgstr "Z-圖書館"
 
 msgid "[[A plugin to search and download books from Z-library.]]"
-msgstr "[[用于从Z-图书馆搜索和下载书籍的插件。]]"
+msgstr "[[一個用於從Z-圖書館搜索和下載書籍的插件。]]"
 
 msgid "Z-library search"
-msgstr "Z-图书馆搜索"
+msgstr "Z-圖書館搜索"
 
 msgid "Z-library most popular"
-msgstr "Z-图书馆最受欢迎"
+msgstr "Z-圖書館最受歡迎"
 
 msgid "Z-library recommended"
-msgstr "Z-图书馆推荐"
+msgstr "Z-圖書館推薦"
 
 msgid "Set base URL"
-msgstr "设置基础URL"
+msgstr "設置基礎URL"
 
 msgid "Invalid Base URL."
-msgstr "无效的基础URL。"
+msgstr "無效的基礎URL。"
 
 msgid "Set username"
-msgstr "设置用户名"
+msgstr "設置用戶名"
 
 msgid "Verify credentials"
-msgstr "验证凭据"
+msgstr "驗證憑證"
 
 msgid "Login successful!"
-msgstr "登录成功！"
+msgstr "登入成功！"
 
 msgid "Set download directory"
-msgstr "设置下载目录"
+msgstr "設置下載目錄"
 
 msgid "Select search languages"
-msgstr "选择搜索语言"
+msgstr "選擇搜索語言"
 
 msgid "Select search formats"
-msgstr "选择搜索格式"
+msgstr "選擇搜索格式"
 
 msgid "Recommended"
-msgstr "推荐"
+msgstr "推薦"
 
 msgid "Most popular"
-msgstr "最受欢迎"
+msgstr "最受歡迎"
 
 msgid "No internet connection detected."
-msgstr "未检测到网络连接。"
+msgstr "未檢測到網絡連接。"
 
 msgid "Failed to retrieve user session after login."
-msgstr "登录后无法获取用户会话。"
+msgstr "登入後無法檢索用戶會話。"
 
 msgid "No books found, please try again"
-msgstr "未找到书籍，请重试"
+msgstr "未找到書籍，請重試"
 
 msgid "Fetching recommended books..."
-msgstr "正在获取推荐书籍..."
+msgstr "正在獲取推薦書籍..."
 
 msgid "Failed to fetch recommended books: "
-msgstr "获取推荐书籍失败："
+msgstr "獲取推薦書籍失敗: "
 
 msgid "Fetching most popular books..."
-msgstr "正在获取最受欢迎书籍..."
+msgstr "正在獲取最受歡迎書籍..."
 
 msgid "Failed to fetch most popular books: "
-msgstr "获取最受欢迎书籍失败："
+msgstr "獲取最受歡迎書籍失敗: "
 
 msgid "Fetching book details..."
-msgstr "正在获取书籍详情..."
+msgstr "正在獲取書籍詳情..."
 
 msgid "Failed to fetch book details: "
-msgstr "获取书籍详情失败："
+msgstr "獲取書籍詳情失敗: "
 
 msgid "Could not retrieve book details."
-msgstr "无法获取书籍详情。"
+msgstr "無法檢索書籍詳情。"
 
 msgid "Please set both username and password first."
-msgstr "请先设置用户名和密码。"
+msgstr "請先設置用戶名和密碼。"
 
 msgid "Logging in..."
-msgstr "正在登录..."
+msgstr "正在登入..."
 
-msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
-msgstr "由于临时问题搜索失败(HTTP 400)。是否重试？"
+msgid ""
+"Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+msgstr "由於臨時問題導致搜索失敗(HTTP 400)。您想重試嗎？"
 
 msgid "Retrying search for \""
-msgstr "正在重试搜索\""
+msgstr "正在重試搜索\""
 
 msgid "Searching for \""
 msgstr "正在搜索\""
 
 msgid "Search failed: "
-msgstr "搜索失败："
+msgstr "搜索失敗: "
 
 msgid "No results found for \""
 msgstr "未找到\""
 
 msgid "Failed to load more results: "
-msgstr "加载更多结果失败："
+msgstr "加載更多結果失敗: "
 
 msgid "No more results found."
-msgstr "没有更多结果。"
+msgstr "未找到更多結果。"
 
 msgid "No download link available for this book."
-msgstr "本书无可用下载链接。"
+msgstr "此書籍無可用下載鏈接。"
 
 #, lua-format
 msgid "Cannot create downloads directory: %s"
-msgstr "无法创建下载目录：%s"
+msgstr "無法創建下載目錄: %s"
 
 msgid "Could not open reader UI."
-msgstr "无法打开阅读器界面。"
+msgstr "無法打開閱讀器界面。"
 
 msgid "Download failed: Unknown error"
-msgstr "下载失败：未知错误"
+msgstr "下載失敗: 未知錯誤"
 
 msgid "Download limit reached. Please try again later or check your account."
-msgstr "达到下载限制。请稍后重试或检查您的账户。"
+msgstr "達到下載限制。請稍後重試或檢查您的帳戶。"
 
 msgid "Z-library server URL not configured."
-msgstr "未配置Z-图书馆服务器URL。"
+msgstr "未配置Z-圖書館服務器URL。"
 
 msgid "Failed to fetch recommended books (no response body)."
-msgstr "获取推荐书籍失败(无响应体)。"
+msgstr "獲取推薦書籍失敗(無響應體)。"
 
 msgid "Failed to parse recommended books response."
-msgstr "解析推荐书籍响应失败。"
+msgstr "解析推薦書籍響應失敗。"
 
 msgid "API returned an error for recommended books."
-msgstr "API返回推荐书籍错误。"
+msgstr "API返回推薦書籍錯誤。"
 
 msgid "Failed to fetch most popular books (no response body)."
-msgstr "获取最受欢迎书籍失败(无响应体)。"
+msgstr "獲取最受歡迎書籍失敗(無響應體)。"
 
 msgid "Failed to parse most popular books response."
-msgstr "解析最受欢迎书籍响应失败。"
+msgstr "解析最受歡迎書籍響應失敗。"
 
 msgid "API returned an error for most popular books."
-msgstr "API返回最受欢迎书籍错误。"
+msgstr "API返回最受歡迎書籍錯誤。"
 
 msgid "Z-library server URL not configured or book identifiers missing."
-msgstr "未配置Z-图书馆服务器URL或缺少书籍标识符。"
+msgstr "未配置Z-圖書館服務器URL或缺少書籍標識符。"
 
 msgid "Failed to fetch book details (no response body)."
-msgstr "获取书籍详情失败(无响应体)。"
+msgstr "獲取書籍詳情失敗(無響應體)。"
 
 msgid "Failed to parse book details response."
-msgstr "解析书籍详情响应失败。"
+msgstr "解析書籍詳情響應失敗。"
 
 msgid "API returned an error for book details."
-msgstr "API返回书籍详情错误。"
+msgstr "API返回書籍詳情錯誤。"
 
 msgid "Failed to process book details."
-msgstr "处理书籍详情失败。"
+msgstr "處理書籍詳情失敗。"
 
 msgid "Select Z-library Download Directory"
-msgstr "选择Z-图书馆下载目录"
+msgstr "選擇Z-圖書館下載目錄"
 
 #, lua-format
 msgid "Download directory set to: %s"
-msgstr "下载目录设置为：%s"
+msgstr "下載目錄設置為: %s"
 
 msgid "No directory selected."
-msgstr "未选择目录。"
+msgstr "未選擇目錄。"
 
 #, lua-format
 msgid "%d items selected for %s."
-msgstr "已为%s选择%d个项目。"
+msgstr "已為%s選擇%d個項目。"
 
 #, lua-format
 msgid "Filter cleared for %s."
-msgstr "已清除%s的筛选器。"
+msgstr "已清除%s的過濾器。"
 
 msgid "Setting saved successfully!"
-msgstr "设置保存成功！"
+msgstr "設置保存成功！"
 
 msgid "Setting cleared."
-msgstr "设置已清除。"
+msgstr "設置已清除。"
 
 msgid "Search Z-library"
-msgstr "搜索Z-图书馆"
+msgstr "搜索Z-圖書館"
 
 msgid "Please enter a search term."
-msgstr "请输入搜索词。"
+msgstr "請輸入搜索詞。"
 
 msgid "Unknown Title"
-msgstr "未知标题"
+msgstr "未知標題"
 
 msgid "Full Title"
-msgstr "完整标题"
+msgstr "完整標題"
 
 msgid "Author: "
-msgstr "作者："
+msgstr "作者: "
 
 msgid "Full Author"
 msgstr "完整作者"
 
 msgid "Year: "
-msgstr "年份："
+msgstr "年份: "
 
 #, lua-format
 msgid "Format: %s (tap to download)"
-msgstr "格式：%s(点击下载)"
+msgstr "格式: %s (點擊下載)"
 
 #, lua-format
 msgid "Format: %s (Download not available)"
-msgstr "格式：%s(不可下载)"
+msgstr "格式: %s (無法下載)"
 
 msgid "Download Book (Unknown Format)"
-msgstr "下载书籍(未知格式)"
+msgstr "下載書籍(未知格式)"
 
 msgid "Publisher: "
-msgstr "出版商："
+msgstr "出版商: "
 
 msgid "Description (tap to view)"
-msgstr "描述(点击查看)"
+msgstr "描述(點擊查看)"
 
 msgid "Book Details"
-msgstr "书籍详情"
+msgstr "書籍詳情"
 
 #, lua-format
 msgid "Download \"%s\"?"
-msgstr "下载\"%s\"?"
+msgstr "下載\"%s\"?"
 
 #, lua-format
 msgid "\"%s\" downloaded successfully. Open it now?"
-msgstr "\"%s\"下载成功。现在打开吗？"
+msgstr "\"%s\"下載成功。現在打開嗎？"
 
 msgid "Open book"
-msgstr "打开书籍"
+msgstr "打開書籍"
 
 msgid "Untitled"
-msgstr "无标题"
+msgstr "無標題"
 
-msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
-msgstr "未找到推荐书籍，请重试。有时需要多次尝试。"
+msgid ""
+"No recommended books found, please try again. Sometimes this requires a "
+"couple of retries."
+msgstr "未找到推薦書籍，請重試。有時需要多次重試。"
 
 msgid "Z-library Recommended Books"
-msgstr "Z-图书馆推荐书籍"
+msgstr "Z-圖書館推薦書籍"
 
 msgid "No most popular books found. The list was empty, please try again."
-msgstr "未找到最受欢迎书籍。列表为空，请重试。"
+msgstr "未找到最受歡迎書籍。列表為空，請重試。"
 
 msgid "Z-library Most Popular Books"
-msgstr "Z-图书馆最受欢迎书籍"
+msgstr "Z-圖書館最受歡迎書籍"
 
 msgid "Fetch most recommended book from Z-library?"
-msgstr "从Z-图书馆获取最推荐书籍？"
+msgstr "從Z-圖書館獲取最推薦書籍？"
 
 msgid "Fetch most popular books from Z-library?"
-msgstr "从Z-图书馆获取最受欢迎书籍？"
+msgstr "從Z-圖書館獲取最受歡迎書籍？"

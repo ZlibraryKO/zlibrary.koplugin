@@ -1,5 +1,7 @@
 # [KOReader Z-library Plugin](https://github.com/ZlibraryKO/zlibrary.koplugin)
 
+English | [简体中文](./README.zh-CN.md)
+
 **Disclaimer:** This plugin is for educational purposes only. Please respect copyright laws and use this plugin responsibly.
 
 Access Z-library seamlessly within your KOReader application. This plugin allows you to browse and download content directly to your e-reader.

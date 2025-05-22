@@ -1,6 +1,6 @@
 # [KOReader Z-library 插件](https://github.com/ZlibraryKO/zlibrary.koplugin)
 
-[English](../README.md) | [简体中文](README.zh-CN.md)
+[English](README.md) | [简体中文](README.zh-CN.md)
 
 **免责声明：** 本插件仅供教育用途。请尊重版权法并负责任地使用本插件。
 

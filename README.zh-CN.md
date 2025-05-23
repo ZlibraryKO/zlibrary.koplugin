@@ -80,32 +80,7 @@ return {
 
 ## 本地化支持（可选）
 
-本插件提供基础的多语言支持。如需完善或新增翻译，请按以下步骤操作：
-
-### 翻译指南
-1. **定位 PO 文件**
-   - 访问插件的 `l10n` 目录：
-     ```
-     koreader/plugins/zlibrary.koplugin/l10n/{语言代码}/koreader.po
-     ```
-   - 示例（日语）：
-     ```
-     zlibrary.koplugin/l10n/ja/koreader.po
-     ```
-
-2. **新增语言支持**
-   - 若您的语言未被支持：
-     1. 使用 [ISO 639-1 语言代码](https://zh.wikipedia.org/wiki/ISO_639-1)创建文件夹（如 `zh_CN` 简体中文，`fr` 法语）
-     2. 复制模板文件 `l10n/koreader.pot` 到新目录
-     3. 重命名为 `koreader.po` 并编辑翻译内容
-
-3. **编辑 PO 文件**
-   - 使用文本编辑器或 [Poedit](https://poedit.net/) 等工具翻译 `msgstr` 字段（请勿修改 `msgid`）
-   - 欢迎通过 **Pull Request** 提交您的翻译，帮助更多用户！
-
-**注意：**
-- 插件会根据 KOReader 系统语言自动加载对应翻译
-- 若翻译缺失，将默认回退至英文版本
+该插件提供基础的多语言支持，更多信息请参阅 [l10n/README.MD](l10n/README.md)。
 
 ## 使用方法
 

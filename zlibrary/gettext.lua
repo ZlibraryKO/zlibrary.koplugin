@@ -5,7 +5,8 @@ local full_source_path = debug.getinfo(1, "S").source
 if full_source_path:sub(1,1) == "@" then
     full_source_path = full_source_path:sub(2)
 end
-local plugin_path, _ = util.splitFilePathName(full_source_path)
+local lib_path, _ = util.splitFilePathName(full_source_path)
+local plugin_path = lib_path:gsub("[\\/]zlibrary[\\/]", "")
 
 local NewGetText = {
     dirname = string.format("%s/l10n", plugin_path)

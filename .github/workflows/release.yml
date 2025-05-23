@@ -105,7 +105,7 @@ jobs:
                 echo "Checking $f"
                 msgfmt --check --verbose "$po_file" || echo "Errors in $po_file"
                 echo "Updating: $po_file"
-                msgmerge --no-fuzzy-matching --update "$po_file" "$POT_FILE"
+                msgmerge --no-fuzzy-matching --no-wrap --update "$po_file" "$POT_FILE"
                 if [ $? -ne 0 ]; then
                     echo "Failed to update $po_file!"
                 fi

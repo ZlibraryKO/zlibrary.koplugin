@@ -1,5 +1,7 @@
 local util = require("frontend.util")
 local DataStorage = require("datastorage")
+local logger = require("logger")
+local lfs = require("libs/libkoreader-lfs")
 
 local Config = {}
 
@@ -11,42 +13,75 @@ Config.SETTINGS_USER_KEY_KEY = "zlib_user_key"
 Config.SETTINGS_SEARCH_LANGUAGES_KEY = "zlibrary_search_languages"
 Config.SETTINGS_SEARCH_EXTENSIONS_KEY = "zlibrary_search_extensions"
 Config.SETTINGS_DOWNLOAD_DIR_KEY = "zlibrary_download_dir"
+Config.CREDENTIALS_FILENAME = "zlibrary_credentials.lua"
 
-Config.DEFAULT_DOWNLOAD_DIR_FALLBACK = DataStorage:getDataDir() .. "/downloads"
+Config.DEFAULT_DOWNLOAD_DIR_FALLBACK = G_reader_settings:readSetting("home_dir")
+             or require("apps/filemanager/filemanagerutil").getDefaultDir()
 Config.REQUEST_TIMEOUT = 15 -- seconds
 Config.SEARCH_RESULTS_LIMIT = 30
 
+function Config.loadCredentialsFromFile(plugin_path)
+    local cred_file_path = plugin_path .. "/" .. Config.CREDENTIALS_FILENAME
+    if lfs.attributes(cred_file_path, "mode") == "file" then
+        local func, err = loadfile(cred_file_path)
+        if func then
+            local success, result = pcall(func)
+            if success and type(result) == "table" then
+                logger.info("Successfully loaded credentials from " .. Config.CREDENTIALS_FILENAME)
+                if result.baseUrl then
+                    Config.saveSetting(Config.SETTINGS_BASE_URL_KEY, result.baseUrl)
+                    logger.info("Overriding Base URL from " .. Config.CREDENTIALS_FILENAME)
+                end
+                if result.username then
+                    Config.saveSetting(Config.SETTINGS_USERNAME_KEY, result.username)
+                    logger.info("Overriding Username from " .. Config.CREDENTIALS_FILENAME)
+                end
+                if result.password then
+                    Config.saveSetting(Config.SETTINGS_PASSWORD_KEY, result.password)
+                    logger.info("Overriding Password from " .. Config.CREDENTIALS_FILENAME)
+                end
+            else
+                logger.warn("Failed to execute or get table from " .. Config.CREDENTIALS_FILENAME .. ": " .. tostring(result))
+            end
+        else
+            logger.warn("Failed to load " .. Config.CREDENTIALS_FILENAME .. ": " .. tostring(err))
+        end
+    else
+        logger.info(Config.CREDENTIALS_FILENAME .. " not found. Using UI settings if available.")
+    end
+end
+
 Config.SUPPORTED_LANGUAGES = {
-    { name = "Arabic", value = "arabic" },
-    { name = "Armenian", value = "armenian" },
-    { name = "Azerbaijani", value = "azerbaijani" },
-    { name = "Bengali", value = "bengali" },
-    { name = "Chinese", value = "chinese" },
-    { name = "Dutch", value = "dutch" },
+    { name = "العربية", value = "arabic" },
+    { name = "Հայերեն", value = "armenian" },
+    { name = "Azərbaycanca", value = "azerbaijani" },
+    { name = "বাংলা", value = "bengali" },
+    { name = "简体中文", value = "chinese" },
+    { name = "Nederlands", value = "dutch" },
     { name = "English", value = "english" },
-    { name = "French", value = "french" },
-    { name = "Georgian", value = "georgian" },
-    { name = "German", value = "german" },
-    { name = "Greek", value = "greek" },
-    { name = "Hindi", value = "hindi" },
-    { name = "Indonesian", value = "indonesian" },
-    { name = "Italian", value = "italian" },
-    { name = "Japanese", value = "japanese" },
-    { name = "Korean", value = "korean" },
-    { name = "Malaysian", value = "malaysian" },
-    { name = "Pashto", value = "pashto" },
-    { name = "Polish", value = "polish" },
-    { name = "Portuguese", value = "portuguese" },
-    { name = "Russian", value = "russian" },
-    { name = "Serbian", value = "serbian" },
-    { name = "Spanish", value = "spanish" },
-    { name = "Telugu", value = "telugu" },
-    { name = "Thai", value = "thai" },
-    { name = "Traditional Chinese", value = "traditional chinese" },
-    { name = "Turkish", value = "turkish" },
-    { name = "Ukrainian", value = "ukrainian" },
-    { name = "Urdu", value = "urdu" },
-    { name = "Vietnamese", value = "vietnamese" },
+    { name = "Français", value = "french" },
+    { name = "ქართული", value = "georgian" },
+    { name = "Deutsch", value = "german" },
+    { name = "Ελληνικά", value = "greek" },
+    { name = "हिन्दी", value = "hindi" },
+    { name = "Bahasa Indonesia", value = "indonesian" },
+    { name = "Italiano", value = "italian" },
+    { name = "日本語", value = "japanese" },
+    { name = "한국어", value = "korean" },
+    { name = "Bahasa Malaysia", value = "malaysian" },
+    { name = "پښتو", value = "pashto" },
+    { name = "Polski", value = "polish" },
+    { name = "Português", value = "portuguese" },
+    { name = "Русский", value = "russian" },
+    { name = "Српски", value = "serbian" },
+    { name = "Español", value = "spanish" },
+    { name = "తెలుగు", value = "telugu" },
+    { name = "ไทย", value = "thai" },
+    { name = "繁體中文", value = "traditional chinese" },
+    { name = "Türkçe", value = "turkish" },
+    { name = "Українська", value = "ukrainian" },
+    { name = "اردو", value = "urdu" },
+    { name = "Tiếng Việt", value = "vietnamese" },
 }
 
 Config.SUPPORTED_EXTENSIONS = {
@@ -121,6 +156,24 @@ function Config.getDownloadUrl(download_path)
     if not base then return nil end
     if not download_path:match("^/") then download_path = "/" .. download_path end
     return base .. download_path
+end
+
+function Config.getBookDetailsUrl(book_id, book_hash)
+    local base = Config.getBaseUrl()
+    if not base or not book_id or not book_hash then return nil end
+    return base .. string.format("/eapi/book/%s/%s", book_id, book_hash)
+end
+
+function Config.getRecommendedBooksUrl()
+    local base = Config.getBaseUrl()
+    if not base then return nil end
+    return base .. "/eapi/user/book/recommended"
+end
+
+function Config.getMostPopularBooksUrl()
+    local base = Config.getBaseUrl()
+    if not base then return nil end
+    return base .. "/eapi/book/most-popular"
 end
 
 function Config.getSetting(key, default)

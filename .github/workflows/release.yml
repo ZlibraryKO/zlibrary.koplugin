@@ -158,7 +158,7 @@ jobs:
               FILE_LINES="${FILE_LINES}${readme_file}\\n"
             fi
           done
-
+          
           # Add LICENSE if it exists and is a file
           if [ -f "LICENSE" ]; then
             FILE_LINES="${FILE_LINES}./LICENSE\\n"

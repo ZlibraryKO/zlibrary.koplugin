@@ -54,7 +54,7 @@ function Api.makeHttpRequest(options)
         sink = sink_to_use,
         redirect = options.redirect or false,
     }
-    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Socket Timeout: %s, Redirect: %s", request_params.url, request_params.method, request_timeout, tostring(request_params.redirect)))
+    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Redirect: %s", request_params.url, request_params.method, tostring(request_params.redirect)))
 
     local req_ok, r_val, r_code, r_headers_tbl, r_status_str = pcall(http.request, request_params)
 

@@ -35,6 +35,10 @@ function Config.loadCredentialsFromFile(plugin_path)
                     Config.saveSetting(Config.SETTINGS_USERNAME_KEY, result.username)
                     logger.info("Overriding Username from " .. Config.CREDENTIALS_FILENAME)
                 end
+                if result.email then
+                    Config.saveSetting(Config.SETTINGS_USERNAME_KEY, result.email)
+                    logger.info("Overriding Username from " .. Config.CREDENTIALS_FILENAME)
+                end
                 if result.password then
                     Config.saveSetting(Config.SETTINGS_PASSWORD_KEY, result.password)
                     logger.info("Overriding Password from " .. Config.CREDENTIALS_FILENAME)

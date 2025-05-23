@@ -102,11 +102,11 @@ function Zlibrary:addToMainMenu(menu_items)
                             separator = true,
                         },
                         {
-                            text = T("Set username"),
+                            text = T("Set email"),
                             keep_menu_open = true,
                             callback = function()
                                 Ui.showGenericInputDialog(
-                                    T("Set username"),
+                                    T("Set email"),
                                     Config.SETTINGS_USERNAME_KEY,
                                     Config.getSetting(Config.SETTINGS_USERNAME_KEY),
                                     false

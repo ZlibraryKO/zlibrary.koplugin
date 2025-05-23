@@ -70,19 +70,19 @@ msgstr ""
 msgid "Fetching recommended books..."
 msgstr ""
 
-msgid "Failed to fetch recommended books: "
+msgid "Failed to fetch recommended books"
 msgstr ""
 
 msgid "Fetching most popular books..."
 msgstr ""
 
-msgid "Failed to fetch most popular books: "
+msgid "Failed to fetch most popular books"
 msgstr ""
 
 msgid "Fetching book details..."
 msgstr ""
 
-msgid "Failed to fetch book details: "
+msgid "Failed to fetch book details"
 msgstr ""
 
 msgid "Could not retrieve book details."
@@ -104,13 +104,13 @@ msgstr ""
 msgid "Searching for \""
 msgstr ""
 
-msgid "Search failed: "
+msgid "Search failed"
 msgstr ""
 
 msgid "No results found for \""
 msgstr ""
 
-msgid "Failed to load more results: "
+msgid "Failed to load more results"
 msgstr ""
 
 msgid "No more results found."
@@ -204,13 +204,13 @@ msgstr ""
 msgid "Full Title"
 msgstr ""
 
-msgid "Author: "
+msgid "Author"
 msgstr ""
 
 msgid "Full Author"
 msgstr ""
 
-msgid "Year: "
+msgid "Year"
 msgstr ""
 
 #, lua-format
@@ -224,7 +224,7 @@ msgstr ""
 msgid "Download Book (Unknown Format)"
 msgstr ""
 
-msgid "Publisher: "
+msgid "Publisher"
 msgstr ""
 
 msgid "Description (tap to view)"
@@ -303,25 +303,25 @@ msgstr ""
 msgid "Unknown Author"
 msgstr ""
 
-msgid "Rating: "
+msgid "Rating"
 msgstr ""
 
-msgid "Search Results: "
+msgid "Search Results"
 msgstr ""
 
-msgid "Title: "
+msgid "Title"
 msgstr ""
 
-msgid "Language: "
+msgid "Language"
 msgstr ""
 
-msgid "Size: "
+msgid "Size"
 msgstr ""
 
-msgid "Series: "
+msgid "Series"
 msgstr ""
 
-msgid "Pages: "
+msgid "Pages"
 msgstr ""
 
 msgid "Description"

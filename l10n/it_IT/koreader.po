@@ -70,20 +70,20 @@ msgstr "Nessun libro trovato, riprova"
 msgid "Fetching recommended books..."
 msgstr "Recupero dei libri consigliati..."
 
-msgid "Failed to fetch recommended books: "
-msgstr "Impossibile recuperare i libri consigliati: "
+msgid "Failed to fetch recommended books"
+msgstr "Impossibile recuperare i libri consigliati"
 
 msgid "Fetching most popular books..."
 msgstr "Recupero dei libri più popolari..."
 
-msgid "Failed to fetch most popular books: "
-msgstr "Impossibile recuperare i libri più popolari: "
+msgid "Failed to fetch most popular books"
+msgstr "Impossibile recuperare i libri più popolari"
 
 msgid "Fetching book details..."
 msgstr "Recupero dei dettagli del libro..."
 
-msgid "Failed to fetch book details: "
-msgstr "Impossibile recuperare i dettagli del libro: "
+msgid "Failed to fetch book details"
+msgstr "Impossibile recuperare i dettagli del libro"
 
 msgid "Could not retrieve book details."
 msgstr "Impossibile recuperare i dettagli del libro."
@@ -105,14 +105,14 @@ msgstr "Nuovo tentativo di ricerca per \""
 msgid "Searching for \""
 msgstr "Ricerca di \""
 
-msgid "Search failed: "
-msgstr "Ricerca fallita: "
+msgid "Search failed"
+msgstr "Ricerca fallita"
 
 msgid "No results found for \""
 msgstr "Nessun risultato trovato per \""
 
-msgid "Failed to load more results: "
-msgstr "Impossibile caricare altri risultati: "
+msgid "Failed to load more results"
+msgstr "Impossibile caricare altri risultati"
 
 msgid "No more results found."
 msgstr "Nessun altro risultato trovato."
@@ -209,14 +209,14 @@ msgstr "Titolo sconosciuto"
 msgid "Full Title"
 msgstr "Titolo completo"
 
-msgid "Author: "
-msgstr "Autore: "
+msgid "Author"
+msgstr "Autore"
 
 msgid "Full Author"
 msgstr "Autore completo"
 
-msgid "Year: "
-msgstr "Anno: "
+msgid "Year"
+msgstr "Anno"
 
 #, lua-format
 msgid "Format: %s (tap to download)"
@@ -229,8 +229,8 @@ msgstr "Formato: %s (Download non disponibile)"
 msgid "Download Book (Unknown Format)"
 msgstr "Scarica libro (Formato sconosciuto)"
 
-msgid "Publisher: "
-msgstr "Editore: "
+msgid "Publisher"
+msgstr "Editore"
 
 msgid "Description (tap to view)"
 msgstr "Descrizione (tocca per visualizzare)"
@@ -312,26 +312,26 @@ msgstr ""
 msgid "Unknown Author"
 msgstr "Titolo sconosciuto"
 
-msgid "Rating: "
+msgid "Rating"
 msgstr ""
 
 #, fuzzy
-msgid "Search Results: "
-msgstr "Ricerca fallita: "
+msgid "Search Results"
+msgstr "Ricerca fallita"
 
-msgid "Title: "
+msgid "Title"
 msgstr ""
 
-msgid "Language: "
+msgid "Language"
 msgstr ""
 
-msgid "Size: "
+msgid "Size"
 msgstr ""
 
-msgid "Series: "
+msgid "Series"
 msgstr ""
 
-msgid "Pages: "
+msgid "Pages"
 msgstr ""
 
 #, fuzzy

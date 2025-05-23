@@ -70,20 +70,20 @@ msgstr "책을 찾을 수 없습니다. 다시 시도해 주세요"
 msgid "Fetching recommended books..."
 msgstr "추천 도서를 가져오는 중..."
 
-msgid "Failed to fetch recommended books: "
-msgstr "추천 도서를 가져오는 데 실패했습니다: "
+msgid "Failed to fetch recommended books"
+msgstr "추천 도서를 가져오는 데 실패했습니다"
 
 msgid "Fetching most popular books..."
 msgstr "인기 도서를 가져오는 중..."
 
-msgid "Failed to fetch most popular books: "
-msgstr "인기 도서를 가져오는 데 실패했습니다: "
+msgid "Failed to fetch most popular books"
+msgstr "인기 도서를 가져오는 데 실패했습니다"
 
 msgid "Fetching book details..."
 msgstr "책 상세 정보를 가져오는 중..."
 
-msgid "Failed to fetch book details: "
-msgstr "책 상세 정보를 가져오는 데 실패했습니다: "
+msgid "Failed to fetch book details"
+msgstr "책 상세 정보를 가져오는 데 실패했습니다"
 
 msgid "Could not retrieve book details."
 msgstr "책 상세 정보를 검색할 수 없습니다."
@@ -104,14 +104,14 @@ msgstr "다시 검색 시도 중: \""
 msgid "Searching for \""
 msgstr "검색 중: \""
 
-msgid "Search failed: "
-msgstr "검색 실패: "
+msgid "Search failed"
+msgstr "검색 실패"
 
 msgid "No results found for \""
 msgstr "검색 결과 없음: \""
 
-msgid "Failed to load more results: "
-msgstr "추가 결과를 로드하는 데 실패했습니다: "
+msgid "Failed to load more results"
+msgstr "추가 결과를 로드하는 데 실패했습니다"
 
 msgid "No more results found."
 msgstr "더 이상 결과가 없습니다."
@@ -205,14 +205,14 @@ msgstr "제목 없음"
 msgid "Full Title"
 msgstr "전체 제목"
 
-msgid "Author: "
-msgstr "저자: "
+msgid "Author"
+msgstr "저자"
 
 msgid "Full Author"
 msgstr "전체 저자 정보"
 
-msgid "Year: "
-msgstr "연도: "
+msgid "Year"
+msgstr "연도"
 
 #, lua-format
 msgid "Format: %s (tap to download)"
@@ -225,8 +225,8 @@ msgstr "형식: %s (다운로드 불가)"
 msgid "Download Book (Unknown Format)"
 msgstr "책 다운로드 (알 수 없는 형식)"
 
-msgid "Publisher: "
-msgstr "출판사: "
+msgid "Publisher"
+msgstr "출판사"
 
 msgid "Description (tap to view)"
 msgstr "설명 (탭하여 보기)"
@@ -309,26 +309,26 @@ msgstr ""
 msgid "Unknown Author"
 msgstr "제목 없음"
 
-msgid "Rating: "
+msgid "Rating"
 msgstr ""
 
 #, fuzzy
-msgid "Search Results: "
-msgstr "검색 실패: "
+msgid "Search Results"
+msgstr "검색 실패"
 
-msgid "Title: "
+msgid "Title"
 msgstr ""
 
-msgid "Language: "
+msgid "Language"
 msgstr ""
 
-msgid "Size: "
+msgid "Size"
 msgstr ""
 
-msgid "Series: "
+msgid "Series"
 msgstr ""
 
-msgid "Pages: "
+msgid "Pages"
 msgstr ""
 
 #, fuzzy

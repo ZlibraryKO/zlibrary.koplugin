@@ -70,20 +70,20 @@ msgstr "Книги не найдены, попробуйте еще раз"
 msgid "Fetching recommended books..."
 msgstr "Получение рекомендуемых книг..."
 
-msgid "Failed to fetch recommended books: "
-msgstr "Не удалось получить рекомендуемые книги: "
+msgid "Failed to fetch recommended books"
+msgstr "Не удалось получить рекомендуемые книги"
 
 msgid "Fetching most popular books..."
 msgstr "Получение самых популярных книг..."
 
-msgid "Failed to fetch most popular books: "
-msgstr "Не удалось получить самые популярные книги: "
+msgid "Failed to fetch most popular books"
+msgstr "Не удалось получить самые популярные книги"
 
 msgid "Fetching book details..."
 msgstr "Получение деталей книги..."
 
-msgid "Failed to fetch book details: "
-msgstr "Не удалось получить детали книги: "
+msgid "Failed to fetch book details"
+msgstr "Не удалось получить детали книги"
 
 msgid "Could not retrieve book details."
 msgstr "Не удалось получить информацию о книге."
@@ -104,14 +104,14 @@ msgstr "Повторный поиск для \""
 msgid "Searching for \""
 msgstr "Поиск \""
 
-msgid "Search failed: "
-msgstr "Поиск не удался: "
+msgid "Search failed"
+msgstr "Поиск не удался"
 
 msgid "No results found for \""
 msgstr "Ничего не найдено для \""
 
-msgid "Failed to load more results: "
-msgstr "Не удалось загрузить больше результатов: "
+msgid "Failed to load more results"
+msgstr "Не удалось загрузить больше результатов"
 
 msgid "No more results found."
 msgstr "Больше результатов не найдено."
@@ -205,14 +205,14 @@ msgstr "Неизвестное название"
 msgid "Full Title"
 msgstr "Полное название"
 
-msgid "Author: "
-msgstr "Автор: "
+msgid "Author"
+msgstr "Автор"
 
 msgid "Full Author"
 msgstr "Полное имя автора"
 
-msgid "Year: "
-msgstr "Год: "
+msgid "Year"
+msgstr "Год"
 
 #, lua-format
 msgid "Format: %s (tap to download)"
@@ -225,8 +225,8 @@ msgstr "Формат: %s (Скачивание недоступно)"
 msgid "Download Book (Unknown Format)"
 msgstr "Скачать книгу (неизвестный формат)"
 
-msgid "Publisher: "
-msgstr "Издательство: "
+msgid "Publisher"
+msgstr "Издательство"
 
 msgid "Description (tap to view)"
 msgstr "Описание (нажмите для просмотра)"
@@ -308,26 +308,26 @@ msgstr ""
 msgid "Unknown Author"
 msgstr "Неизвестное название"
 
-msgid "Rating: "
+msgid "Rating"
 msgstr ""
 
 #, fuzzy
-msgid "Search Results: "
-msgstr "Поиск не удался: "
+msgid "Search Results"
+msgstr "Поиск не удался"
 
-msgid "Title: "
+msgid "Title"
 msgstr ""
 
-msgid "Language: "
+msgid "Language"
 msgstr ""
 
-msgid "Size: "
+msgid "Size"
 msgstr ""
 
-msgid "Series: "
+msgid "Series"
 msgstr ""
 
-msgid "Pages: "
+msgid "Pages"
 msgstr ""
 
 #, fuzzy

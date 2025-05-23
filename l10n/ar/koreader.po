@@ -70,20 +70,20 @@ msgstr "لم يتم العثور على كتب، يرجى المحاولة مر�
 msgid "Fetching recommended books..."
 msgstr "جارٍ جلب الكتب الموصى بها..."
 
-msgid "Failed to fetch recommended books: "
-msgstr "فشل في جلب الكتب الموصى بها: "
+msgid "Failed to fetch recommended books"
+msgstr "فشل في جلب الكتب الموصى بها"
 
 msgid "Fetching most popular books..."
 msgstr "جارٍ جلب الكتب الأكثر شعبية..."
 
-msgid "Failed to fetch most popular books: "
-msgstr "فشل في جلب الكتب الأكثر شعبية: "
+msgid "Failed to fetch most popular books"
+msgstr "فشل في جلب الكتب الأكثر شعبية"
 
 msgid "Fetching book details..."
 msgstr "جارٍ جلب تفاصيل الكتاب..."
 
-msgid "Failed to fetch book details: "
-msgstr "فشل في جلب تفاصيل الكتاب: "
+msgid "Failed to fetch book details"
+msgstr "فشل في جلب تفاصيل الكتاب"
 
 msgid "Could not retrieve book details."
 msgstr "تعذر استرداد تفاصيل الكتاب."
@@ -104,14 +104,14 @@ msgstr "إعادة محاولة البحث عن \""
 msgid "Searching for \""
 msgstr "جارٍ البحث عن \""
 
-msgid "Search failed: "
-msgstr "فشل البحث: "
+msgid "Search failed"
+msgstr "فشل البحث"
 
 msgid "No results found for \""
 msgstr "لم يتم العثور على نتائج لـ \""
 
-msgid "Failed to load more results: "
-msgstr "فشل تحميل المزيد من النتائج: "
+msgid "Failed to load more results"
+msgstr "فشل تحميل المزيد من النتائج"
 
 msgid "No more results found."
 msgstr "لم يتم العثور على المزيد من النتائج."
@@ -205,14 +205,14 @@ msgstr "عنوان غير معروف"
 msgid "Full Title"
 msgstr "العنوان الكامل"
 
-msgid "Author: "
-msgstr "المؤلف: "
+msgid "Author"
+msgstr "المؤلف"
 
 msgid "Full Author"
 msgstr "المؤلف الكامل"
 
-msgid "Year: "
-msgstr "السنة: "
+msgid "Year"
+msgstr "السنة"
 
 #, lua-format
 msgid "Format: %s (tap to download)"
@@ -225,8 +225,8 @@ msgstr "التنسيق: %s (التنزيل غير متاح)"
 msgid "Download Book (Unknown Format)"
 msgstr "تنزيل الكتاب (تنسيق غير معروف)"
 
-msgid "Publisher: "
-msgstr "الناشر: "
+msgid "Publisher"
+msgstr "الناشر"
 
 msgid "Description (tap to view)"
 msgstr "الوصف (انقر للعرض)"
@@ -310,26 +310,26 @@ msgstr ""
 msgid "Unknown Author"
 msgstr "عنوان غير معروف"
 
-msgid "Rating: "
+msgid "Rating"
 msgstr ""
 
 #, fuzzy
-msgid "Search Results: "
-msgstr "فشل البحث: "
+msgid "Search Results"
+msgstr "فشل البحث"
 
-msgid "Title: "
+msgid "Title"
 msgstr ""
 
-msgid "Language: "
+msgid "Language"
 msgstr ""
 
-msgid "Size: "
+msgid "Size"
 msgstr ""
 
-msgid "Series: "
+msgid "Series"
 msgstr ""
 
-msgid "Pages: "
+msgid "Pages"
 msgstr ""
 
 #, fuzzy

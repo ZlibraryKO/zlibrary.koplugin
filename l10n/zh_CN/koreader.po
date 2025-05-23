@@ -70,19 +70,19 @@ msgstr "未找到书籍，请重试"
 msgid "Fetching recommended books..."
 msgstr "正在获取推荐书籍..."
 
-msgid "Failed to fetch recommended books: "
+msgid "Failed to fetch recommended books"
 msgstr "获取推荐书籍失败："
 
 msgid "Fetching most popular books..."
 msgstr "正在获取最受欢迎书籍..."
 
-msgid "Failed to fetch most popular books: "
+msgid "Failed to fetch most popular books"
 msgstr "获取最受欢迎书籍失败："
 
 msgid "Fetching book details..."
 msgstr "正在获取书籍详情..."
 
-msgid "Failed to fetch book details: "
+msgid "Failed to fetch book details"
 msgstr "获取书籍详情失败："
 
 msgid "Could not retrieve book details."
@@ -104,13 +104,13 @@ msgstr "正在重试搜索\""
 msgid "Searching for \""
 msgstr "正在搜索\""
 
-msgid "Search failed: "
+msgid "Search failed"
 msgstr "搜索失败："
 
 msgid "No results found for \""
 msgstr "未找到\""
 
-msgid "Failed to load more results: "
+msgid "Failed to load more results"
 msgstr "加载更多结果失败："
 
 msgid "No more results found."
@@ -204,13 +204,13 @@ msgstr "未知标题"
 msgid "Full Title"
 msgstr "完整标题"
 
-msgid "Author: "
+msgid "Author"
 msgstr "作者："
 
 msgid "Full Author"
 msgstr "完整作者"
 
-msgid "Year: "
+msgid "Year"
 msgstr "年份："
 
 #, lua-format
@@ -224,7 +224,7 @@ msgstr "格式：%s(不可下载)"
 msgid "Download Book (Unknown Format)"
 msgstr "下载书籍(未知格式)"
 
-msgid "Publisher: "
+msgid "Publisher"
 msgstr "出版商："
 
 msgid "Description (tap to view)"
@@ -305,26 +305,26 @@ msgstr ""
 msgid "Unknown Author"
 msgstr "未知标题"
 
-msgid "Rating: "
+msgid "Rating"
 msgstr ""
 
 #, fuzzy
-msgid "Search Results: "
+msgid "Search Results"
 msgstr "搜索失败："
 
-msgid "Title: "
+msgid "Title"
 msgstr ""
 
-msgid "Language: "
+msgid "Language"
 msgstr ""
 
-msgid "Size: "
+msgid "Size"
 msgstr ""
 
-msgid "Series: "
+msgid "Series"
 msgstr ""
 
-msgid "Pages: "
+msgid "Pages"
 msgstr ""
 
 #, fuzzy

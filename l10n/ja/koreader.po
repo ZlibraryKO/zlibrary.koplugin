@@ -70,20 +70,20 @@ msgstr "書籍が見つかりませんでした。再度お試しください"
 msgid "Fetching recommended books..."
 msgstr "おすすめ書籍を取得中..."
 
-msgid "Failed to fetch recommended books: "
-msgstr "おすすめ書籍の取得に失敗しました: "
+msgid "Failed to fetch recommended books"
+msgstr "おすすめ書籍の取得に失敗しました"
 
 msgid "Fetching most popular books..."
 msgstr "人気書籍を取得中..."
 
-msgid "Failed to fetch most popular books: "
-msgstr "人気書籍の取得に失敗しました: "
+msgid "Failed to fetch most popular books"
+msgstr "人気書籍の取得に失敗しました"
 
 msgid "Fetching book details..."
 msgstr "書籍詳細を取得中..."
 
-msgid "Failed to fetch book details: "
-msgstr "書籍詳細の取得に失敗しました: "
+msgid "Failed to fetch book details"
+msgstr "書籍詳細の取得に失敗しました"
 
 msgid "Could not retrieve book details."
 msgstr "書籍詳細を取得できませんでした。"
@@ -104,14 +104,14 @@ msgstr "再試行中: \""
 msgid "Searching for \""
 msgstr "検索中: \""
 
-msgid "Search failed: "
-msgstr "検索失敗: "
+msgid "Search failed"
+msgstr "検索失敗"
 
 msgid "No results found for \""
 msgstr "\" に対する結果が見つかりませんでした"
 
-msgid "Failed to load more results: "
-msgstr "追加結果の読み込みに失敗しました: "
+msgid "Failed to load more results"
+msgstr "追加結果の読み込みに失敗しました"
 
 msgid "No more results found."
 msgstr "これ以上の結果は見つかりませんでした。"
@@ -207,14 +207,14 @@ msgstr "タイトル不明"
 msgid "Full Title"
 msgstr "完全なタイトル"
 
-msgid "Author: "
-msgstr "著者: "
+msgid "Author"
+msgstr "著者"
 
 msgid "Full Author"
 msgstr "完全な著者名"
 
-msgid "Year: "
-msgstr "年: "
+msgid "Year"
+msgstr "年"
 
 #, lua-format
 msgid "Format: %s (tap to download)"
@@ -227,8 +227,8 @@ msgstr "フォーマット: %s (ダウンロード不可)"
 msgid "Download Book (Unknown Format)"
 msgstr "書籍をダウンロード (不明なフォーマット)"
 
-msgid "Publisher: "
-msgstr "出版社: "
+msgid "Publisher"
+msgstr "出版社"
 
 msgid "Description (tap to view)"
 msgstr "説明 (タップで表示)"
@@ -309,26 +309,26 @@ msgstr ""
 msgid "Unknown Author"
 msgstr "タイトル不明"
 
-msgid "Rating: "
+msgid "Rating"
 msgstr ""
 
 #, fuzzy
-msgid "Search Results: "
-msgstr "検索失敗: "
+msgid "Search Results"
+msgstr "検索失敗"
 
-msgid "Title: "
+msgid "Title"
 msgstr ""
 
-msgid "Language: "
+msgid "Language"
 msgstr ""
 
-msgid "Size: "
+msgid "Size"
 msgstr ""
 
-msgid "Series: "
+msgid "Series"
 msgstr ""
 
-msgid "Pages: "
+msgid "Pages"
 msgstr ""
 
 #, fuzzy

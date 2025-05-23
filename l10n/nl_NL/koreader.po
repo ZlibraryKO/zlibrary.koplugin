@@ -70,20 +70,20 @@ msgstr "Geen boeken gevonden, probeer het opnieuw"
 msgid "Fetching recommended books..."
 msgstr "Aanbevolen boeken ophalen..."
 
-msgid "Failed to fetch recommended books: "
-msgstr "Mislukt om aanbevolen boeken op te halen: "
+msgid "Failed to fetch recommended books"
+msgstr "Mislukt om aanbevolen boeken op te halen"
 
 msgid "Fetching most popular books..."
 msgstr "Populairste boeken ophalen..."
 
-msgid "Failed to fetch most popular books: "
-msgstr "Mislukt om populairste boeken op te halen: "
+msgid "Failed to fetch most popular books"
+msgstr "Mislukt om populairste boeken op te halen"
 
 msgid "Fetching book details..."
 msgstr "Boekdetails ophalen..."
 
-msgid "Failed to fetch book details: "
-msgstr "Mislukt om boekdetails op te halen: "
+msgid "Failed to fetch book details"
+msgstr "Mislukt om boekdetails op te halen"
 
 msgid "Could not retrieve book details."
 msgstr "Kon boekdetails niet ophalen."
@@ -106,14 +106,14 @@ msgstr "Opnieuw zoeken naar \""
 msgid "Searching for \""
 msgstr "Zoeken naar \""
 
-msgid "Search failed: "
-msgstr "Zoeken mislukt: "
+msgid "Search failed"
+msgstr "Zoeken mislukt"
 
 msgid "No results found for \""
 msgstr "Geen resultaten gevonden voor \""
 
-msgid "Failed to load more results: "
-msgstr "Mislukt om meer resultaten te laden: "
+msgid "Failed to load more results"
+msgstr "Mislukt om meer resultaten te laden"
 
 msgid "No more results found."
 msgstr "Geen verdere resultaten gevonden."
@@ -208,14 +208,14 @@ msgstr "Onbekende titel"
 msgid "Full Title"
 msgstr "Volledige titel"
 
-msgid "Author: "
-msgstr "Auteur: "
+msgid "Author"
+msgstr "Auteur"
 
 msgid "Full Author"
 msgstr "Volledige auteur"
 
-msgid "Year: "
-msgstr "Jaar: "
+msgid "Year"
+msgstr "Jaar"
 
 #, lua-format
 msgid "Format: %s (tap to download)"
@@ -228,8 +228,8 @@ msgstr "Formaat: %s (Download niet beschikbaar)"
 msgid "Download Book (Unknown Format)"
 msgstr "Boek downloaden (Onbekend formaat)"
 
-msgid "Publisher: "
-msgstr "Uitgever: "
+msgid "Publisher"
+msgstr "Uitgever"
 
 msgid "Description (tap to view)"
 msgstr "Beschrijving (tik om te bekijken)"
@@ -312,26 +312,26 @@ msgstr ""
 msgid "Unknown Author"
 msgstr "Onbekende titel"
 
-msgid "Rating: "
+msgid "Rating"
 msgstr ""
 
 #, fuzzy
-msgid "Search Results: "
-msgstr "Zoeken mislukt: "
+msgid "Search Results"
+msgstr "Zoeken mislukt"
 
-msgid "Title: "
+msgid "Title"
 msgstr ""
 
-msgid "Language: "
+msgid "Language"
 msgstr ""
 
-msgid "Size: "
+msgid "Size"
 msgstr ""
 
-msgid "Series: "
+msgid "Series"
 msgstr ""
 
-msgid "Pages: "
+msgid "Pages"
 msgstr ""
 
 #, fuzzy

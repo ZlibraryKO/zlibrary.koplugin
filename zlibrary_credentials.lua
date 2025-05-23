@@ -4,6 +4,6 @@
 
 return {
     -- baseUrl = "https://your.zlibrary.domain.com",
-    -- username = "your_username",
+    -- email = "your_email",
     -- password = "your_password",
 }

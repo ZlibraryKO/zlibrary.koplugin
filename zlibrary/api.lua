@@ -1,9 +1,10 @@
 local Config = require("zlibrary.config")
-local util = require("frontend.util")
+local util = require("util")
 local logger = require("logger")
 local json = require("json")
 local ltn12 = require("ltn12")
 local http = require("socket.http")
+local socket = require("socket")
 local T = require("gettext")
 
 local Api = {}
@@ -51,10 +52,9 @@ function Api.makeHttpRequest(options)
         headers = options.headers,
         source = options.source,
         sink = sink_to_use,
-        timeout = options.timeout or Config.REQUEST_TIMEOUT,
-        redirect = options.redirect or false
+        redirect = options.redirect or false,
     }
-    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Timeout: %s, Redirect: %s", request_params.url, request_params.method, request_params.timeout, tostring(request_params.redirect)))
+    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Socket Timeout: %s, Redirect: %s", request_params.url, request_params.method, request_timeout, tostring(request_params.redirect)))
 
     local req_ok, r_val, r_code, r_headers_tbl, r_status_str = pcall(http.request, request_params)
 

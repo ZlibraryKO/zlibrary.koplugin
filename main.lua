@@ -157,9 +157,9 @@ function Zlibrary:addToMainMenu(menu_items)
                                 Ui.showExtensionSelectionDialog(self.ui)
                             end,
                         },
-                        { -- New OTA Update Menu Item
-                            text = T("Check for Updates"),
-                            keep_menu_open = false, -- Close menu after initiating check
+                        {
+                            text = T("Check for updates"),
+                            keep_menu_open = false,
                             separator = true,
                             callback = function()
                                 if self.plugin_path then

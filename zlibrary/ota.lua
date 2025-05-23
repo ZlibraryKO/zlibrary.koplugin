@@ -4,7 +4,6 @@ local json = require("json")
 local T = require("gettext")
 local ConfirmBox = require("ui/widget/confirmbox")
 local UIManager = require("ui/uimanager")
-local Device = require("device")
 local util = require("util")
 local NetworkMgr = require("ui/network/manager")
 local Api = require("zlibrary.api")
@@ -300,13 +299,16 @@ function Ota.startUpdateProcess(plugin_path_from_main)
         return
     end
 
-    local confirmation_message = string.format(T([[New version available: %s (you have %s). Download and install %s?]]), normalized_latest_version, current_version or T("an older version"), asset_name)
+    local confirmation_message = string.format(T([[New version available: %s (you have %s). Download and install?]]),
+        normalized_latest_version,
+        current_version or T("an older version")
+    )
 
     local confirm_dialog = ConfirmBox:new{
-        title = T("Update Available"),
+        title = T("Update available"),
         text = confirmation_message,
-        ok_text = T("Yes, Update"),
-        cancel_text = T("No, Later"),
+        ok_text = T("Update"),
+        cancel_text = T("Cancel"),
         ok_callback = function()
             _show_ota_status_loading(T("Downloading update..."))
             local temp_path_base = plugin_path_from_main .. "tmp_download" -- Removed slash from "/tmp_download"
@@ -345,7 +347,7 @@ function Ota.startUpdateProcess(plugin_path_from_main)
             end
         end,
         cancel_callback = function()
-            _show_ota_final_message(T("Update cancelled."), false)
+            _close_current_ota_status_widget()
             logger.info("Zlibrary:Ota.startUpdateProcess - User cancelled update.")
         end
     }

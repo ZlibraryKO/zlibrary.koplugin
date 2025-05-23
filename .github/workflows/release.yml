@@ -82,7 +82,7 @@ jobs:
           POT_FILE="./l10n/koreader.pot"
           echo "Generating or updating POT file: $POT_FILE"
           mkdir -p "$(dirname "$POT_FILE")"
-          TEMP_LUA_FILES=$(find . -type f -name "*.lua")
+          TEMP_LUA_FILES=$(find . -type f -name "*.lua" | sort)
           if [ -z "$TEMP_LUA_FILES" ]; then
             echo "No Lua files found!" >&2
             exit 1
@@ -102,13 +102,13 @@ jobs:
           POT_FILE="./l10n/koreader.pot"
           if [ -f "$POT_FILE" ]; then
             find l10n -type f -name "*.po" -print0 | while IFS= read -r -d $'\0' po_file; do
-                echo "Checking $f"
-                msgfmt --check --verbose "$po_file" || echo "Errors in $po_file"
                 echo "Updating: $po_file"
-                msgmerge --no-fuzzy-matching --no-wrap --update "$po_file" "$POT_FILE"
+                msgmerge --no-fuzzy-matching --no-location --no-wrap --backup=off --update "$po_file" "$POT_FILE"
                 if [ $? -ne 0 ]; then
                     echo "Failed to update $po_file!"
                 fi
+                echo "Checking $po_file"
+                msgfmt --check-format --verbose "$po_file" || echo "Errors in $po_file"
             done
             echo "All .po files updated."
           else

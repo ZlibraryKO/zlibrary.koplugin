@@ -1,7 +1,3 @@
-#
-#, fuzzy
-msgid ""
-msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-21 22:36+0800\n"
@@ -29,19 +25,19 @@ msgid "Z-library recommended"
 msgstr "Polecane w Z-library"
 
 msgid "Set base URL"
-msgstr "Ustaw podstawowy URL"
+msgstr "Ustaw podstawowy adres URL"
 
 msgid "Invalid Base URL."
-msgstr "Nieprawidłowy podstawowy URL."
+msgstr "Nieprawidłowy podstawowy adres URL."
 
 msgid "Set username"
 msgstr "Ustaw nazwę użytkownika"
 
 msgid "Verify credentials"
-msgstr "Weryfikuj dane logowania"
+msgstr "Zweryfikuj dane logowania"
 
 msgid "Login successful!"
-msgstr "Logowanie udane!"
+msgstr "Logowanie zakończone sukcesem!"
 
 msgid "Set download directory"
 msgstr "Ustaw katalog pobierania"
@@ -59,10 +55,10 @@ msgid "Most popular"
 msgstr "Najpopularniejsze"
 
 msgid "No internet connection detected."
-msgstr "Nie wykryto połączenia z internetem."
+msgstr "Brak połączenia z internetem."
 
 msgid "Failed to retrieve user session after login."
-msgstr "Nie udało się pobrać sesji użytkownika po zalogowaniu."
+msgstr "Nie udało się pobrać sesji użytkownika po logowaniu."
 
 msgid "No books found, please try again"
 msgstr "Nie znaleziono książek, spróbuj ponownie"
@@ -94,17 +90,14 @@ msgstr "Najpierw ustaw nazwę użytkownika i hasło."
 msgid "Logging in..."
 msgstr "Logowanie..."
 
-msgid ""
-"Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
-msgstr ""
-"Wyszukiwanie nie powiodło się z powodu tymczasowego problemu (HTTP 400). Czy "
-"chcesz spróbować ponownie?"
+msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+msgstr "Wyszukiwanie nie powiodło się z powodu tymczasowego problemu (HTTP 400). Czy chcesz spróbować ponownie?"
 
 msgid "Retrying search for \""
-msgstr "Ponowne wyszukiwanie dla \""
+msgstr "Ponawianie wyszukiwania dla \""
 
 msgid "Searching for \""
-msgstr "Wyszukiwanie dla \""
+msgstr "Wyszukiwanie: \""
 
 msgid "Search failed"
 msgstr "Wyszukiwanie nie powiodło się"
@@ -119,9 +112,8 @@ msgid "No more results found."
 msgstr "Nie znaleziono więcej wyników."
 
 msgid "No download link available for this book."
-msgstr "Brak dostępnego linku do pobrania tej książki."
+msgstr "Brak dostępnego linku do pobrania dla tej książki."
 
-#, lua-format
 msgid "Cannot create downloads directory: %s"
 msgstr "Nie można utworzyć katalogu pobierania: %s"
 
@@ -132,41 +124,37 @@ msgid "Download failed: Unknown error"
 msgstr "Pobieranie nie powiodło się: Nieznany błąd"
 
 msgid "Download limit reached. Please try again later or check your account."
-msgstr ""
-"Osiągnięto limit pobierania. Spróbuj ponownie później lub sprawdź swoje "
-"konto."
+msgstr "Osiągnięto limit pobrań. Spróbuj ponownie później lub sprawdź swoje konto."
 
 msgid "Z-library server URL not configured."
-msgstr "URL serwera Z-library nie skonfigurowany."
+msgstr "Adres URL serwera Z-library nie został skonfigurowany."
 
 msgid "Failed to fetch recommended books (no response body)."
 msgstr "Nie udało się pobrać polecanych książek (brak treści odpowiedzi)."
 
 msgid "Failed to parse recommended books response."
-msgstr "Nie udało się przeanalizować odpowiedzi polecanych książek."
+msgstr "Nie udało się przetworzyć odpowiedzi z polecanymi książkami."
 
 msgid "API returned an error for recommended books."
 msgstr "API zwróciło błąd dla polecanych książek."
 
 msgid "Failed to fetch most popular books (no response body)."
-msgstr ""
-"Nie udało się pobrać najpopularniejszych książek (brak treści odpowiedzi)."
+msgstr "Nie udało się pobrać najpopularniejszych książek (brak treści odpowiedzi)."
 
 msgid "Failed to parse most popular books response."
-msgstr "Nie udało się przeanalizować odpowiedzi najpopularniejszych książek."
+msgstr "Nie udało się przetworzyć odpowiedzi z najpopularniejszymi książkami."
 
 msgid "API returned an error for most popular books."
 msgstr "API zwróciło błąd dla najpopularniejszych książek."
 
 msgid "Z-library server URL not configured or book identifiers missing."
-msgstr ""
-"URL serwera Z-library nie skonfigurowany lub brakuje identyfikatorów książek."
+msgstr "Adres URL serwera Z-library nie został skonfigurowany lub brakuje identyfikatorów książek."
 
 msgid "Failed to fetch book details (no response body)."
 msgstr "Nie udało się pobrać szczegółów książki (brak treści odpowiedzi)."
 
 msgid "Failed to parse book details response."
-msgstr "Nie udało się przeanalizować odpowiedzi szczegółów książki."
+msgstr "Nie udało się przetworzyć odpowiedzi z danymi książki."
 
 msgid "API returned an error for book details."
 msgstr "API zwróciło błąd dla szczegółów książki."
@@ -177,32 +165,29 @@ msgstr "Nie udało się przetworzyć szczegółów książki."
 msgid "Select Z-library Download Directory"
 msgstr "Wybierz katalog pobierania Z-library"
 
-#, lua-format
 msgid "Download directory set to: %s"
-msgstr "Katalog pobierania ustawiony na: %s"
+msgstr "Ustawiono katalog pobierania: %s"
 
 msgid "No directory selected."
 msgstr "Nie wybrano katalogu."
 
-#, lua-format
 msgid "%d items selected for %s."
-msgstr "%d elementów wybranych dla %s."
+msgstr "Wybrano %d elementów dla %s."
 
-#, lua-format
 msgid "Filter cleared for %s."
-msgstr "Filtr wyczyszczony dla %s."
+msgstr "Filtr dla %s został usunięty."
 
 msgid "Setting saved successfully!"
 msgstr "Ustawienie zapisane pomyślnie!"
 
 msgid "Setting cleared."
-msgstr "Ustawienie wyczyszczone."
+msgstr "Ustawienie zostało usunięte."
 
 msgid "Search Z-library"
 msgstr "Szukaj w Z-library"
 
 msgid "Please enter a search term."
-msgstr "Proszę wprowadzić wyszukiwane hasło."
+msgstr "Wprowadź termin wyszukiwania."
 
 msgid "Unknown Title"
 msgstr "Nieznany tytuł"
@@ -214,38 +199,34 @@ msgid "Author"
 msgstr "Autor"
 
 msgid "Full Author"
-msgstr "Pełny autor"
+msgstr "Pełne dane autora"
 
 msgid "Year"
 msgstr "Rok"
 
-#, lua-format
 msgid "Format: %s (tap to download)"
 msgstr "Format: %s (dotknij, aby pobrać)"
 
-#, lua-format
 msgid "Format: %s (Download not available)"
-msgstr "Format: %s (Pobieranie niedostępne)"
+msgstr "Format: %s (pobieranie niedostępne)"
 
 msgid "Download Book (Unknown Format)"
-msgstr "Pobierz książkę (Nieznany format)"
+msgstr "Pobierz książkę (nieznany format)"
 
 msgid "Publisher"
 msgstr "Wydawca"
 
 msgid "Description (tap to view)"
-msgstr "Opis (dotknij, aby wyświetlić)"
+msgstr "Opis (dotknij, aby zobaczyć)"
 
 msgid "Book Details"
 msgstr "Szczegóły książki"
 
-#, lua-format
 msgid "Download \"%s\"?"
 msgstr "Pobrać \"%s\"?"
 
-#, lua-format
 msgid "\"%s\" downloaded successfully. Open it now?"
-msgstr "\"%s\" pobrano pomyślnie. Otworzyć teraz?"
+msgstr "\"%s\" został pomyślnie pobrany. Otworzyć teraz?"
 
 msgid "Open book"
 msgstr "Otwórz książkę"
@@ -253,86 +234,158 @@ msgstr "Otwórz książkę"
 msgid "Untitled"
 msgstr "Bez tytułu"
 
-msgid ""
-"No recommended books found, please try again. Sometimes this requires a "
-"couple of retries."
-msgstr ""
-"Nie znaleziono polecanych książek, spróbuj ponownie. Czasami wymaga to kilku "
-"prób."
+msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
+msgstr "Nie znaleziono polecanych książek, spróbuj ponownie. Czasem potrzebnych jest kilka prób."
 
 msgid "Z-library Recommended Books"
 msgstr "Polecane książki Z-library"
 
 msgid "No most popular books found. The list was empty, please try again."
-msgstr ""
-"Nie znaleziono najpopularniejszych książek. Lista była pusta, spróbuj "
-"ponownie."
+msgstr "Nie znaleziono najpopularniejszych książek. Lista była pusta, spróbuj ponownie."
 
 msgid "Z-library Most Popular Books"
 msgstr "Najpopularniejsze książki Z-library"
 
 msgid "Fetch most recommended book from Z-library?"
-msgstr "Pobrać najbardziej polecane książki z Z-library?"
+msgstr "Pobrać najbardziej polecaną książkę z Z-library?"
 
 msgid "Fetch most popular books from Z-library?"
 msgstr "Pobrać najpopularniejsze książki z Z-library?"
 
 msgid "Settings"
-msgstr ""
+msgstr "Ustawienia"
 
 msgid "Set password"
-msgstr ""
+msgstr "Ustaw hasło"
 
 msgid "Search"
-msgstr ""
+msgstr "Szukaj"
 
 msgid "Retry"
-msgstr ""
+msgstr "Spróbuj ponownie"
 
 msgid "Cancel"
-msgstr ""
+msgstr "Anuluj"
 
 msgid "Downloading..."
-msgstr ""
+msgstr "Pobieranie..."
 
 msgid "Close"
-msgstr ""
+msgstr "Zamknij"
 
 msgid "Set"
-msgstr ""
+msgstr "Ustaw"
 
-#, fuzzy
 msgid "Unknown Author"
-msgstr "Nieznany tytuł"
+msgstr "Nieznany autor"
 
 msgid "Rating"
-msgstr ""
+msgstr "Ocena"
 
-#, fuzzy
 msgid "Search Results"
-msgstr "Wyszukiwanie nie powiodło się"
+msgstr "Wyniki wyszukiwania"
 
 msgid "Title"
-msgstr ""
+msgstr "Tytuł"
 
 msgid "Language"
-msgstr ""
+msgstr "Język"
 
 msgid "Size"
-msgstr ""
+msgstr "Rozmiar"
 
 msgid "Series"
-msgstr ""
+msgstr "Seria"
 
 msgid "Pages"
-msgstr ""
+msgstr "Strony"
 
-#, fuzzy
 msgid "Description"
-msgstr "Opis (dotknij, aby wyświetlić)"
+msgstr "Opis"
 
 msgid "Back"
-msgstr ""
+msgstr "Wstecz"
 
 msgid "OK"
-msgstr ""
+msgstr "OK"
+
+msgid "Set email"
+msgstr "Ustaw adres e-mail"
+
+msgid "Check for updates"
+msgstr "Sprawdź aktualizacje"
+
+msgid "Error: Plugin path not found. Cannot check for updates."
+msgstr "Błąd: Nie znaleziono ścieżki do wtyczki. Nie można sprawdzić aktualizacji."
+
+msgid "Loading more results (Page %s)..."
+msgstr "Ładowanie kolejnych wyników (strona %s)..."
+
+msgid "Downloading…"
+msgstr "Pobieranie…"
+
+msgid "Update failed: Could not determine where to install the plugin."
+msgstr "Aktualizacja nie powiodła się: Nie można określić miejsca instalacji wtyczki."
+
+msgid "Installing update..."
+msgstr "Instalowanie aktualizacji..."
+
+msgid "Update installation failed."
+msgstr "Instalacja aktualizacji nie powiodła się."
+
+msgid "Update installed successfully. Please restart KOReader for changes to take effect."
+msgstr "Aktualizacja została pomyślnie zainstalowana. Uruchom ponownie KOReader, aby zmiany zaczęły obowiązywać."
+
+msgid "No internet connection detected. Please connect to the internet and try again."
+msgstr "Brak połączenia z internetem. Połącz się z internetem i spróbuj ponownie."
+
+msgid "Update check failed: Could not determine plugin location."
+msgstr "Sprawdzenie aktualizacji nie powiodło się: Nie można określić lokalizacji wtyczki."
+
+msgid "Checking for updates..."
+msgstr "Sprawdzanie aktualizacji..."
+
+msgid "Failed to check for updates. Please check your internet connection."
+msgstr "Nie udało się sprawdzić aktualizacji. Sprawdź połączenie z internetem."
+
+msgid "Could not find update information (invalid data format)."
+msgstr "Nie znaleziono informacji o aktualizacji (nieprawidłowy format danych)."
+
+msgid "Could not find update version information."
+msgstr "Nie znaleziono informacji o wersji aktualizacji."
+
+msgid "Could not understand the update version format."
+msgstr "Nie można rozpoznać formatu wersji aktualizacji."
+
+msgid "Could not find update files."
+msgstr "Nie znaleziono plików aktualizacji."
+
+msgid "Could not find a download link for the update."
+msgstr "Nie znaleziono linku do pobrania aktualizacji."
+
+msgid "You are already on the latest version (%s) or newer."
+msgstr "Używasz już najnowszej wersji (%s) lub nowszej."
+
+msgid "Could not determine your current version, but the latest is %s. If you recently updated, you might be up-to-date."
+msgstr "Nie można określić aktualnej wersji, ale najnowsza to %s. Jeśli ostatnio zaktualizowałeś, prawdopodobnie masz aktualną wersję."
+
+msgid "New version available: %s (you have %s). Download and install?"
+msgstr "Dostępna nowa wersja: %s (obecnie masz %s). Pobrać i zainstalować?"
+
+msgid "an older version"
+msgstr "starsza wersja"
+
+msgid "Update available"
+msgstr "Dostępna aktualizacja"
+
+msgid "Update"
+msgstr "Aktualizuj"
+
+msgid "Downloading update..."
+msgstr "Pobieranie aktualizacji..."
+
+msgid "Download failed. Please try again later."
+msgstr "Pobieranie nie powiodło się. Spróbuj ponownie później."
+
+msgid "Download"
+msgstr "Pobierz"

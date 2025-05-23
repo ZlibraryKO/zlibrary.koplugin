@@ -1,7 +1,3 @@
-#
-#, fuzzy
-msgid ""
-msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-21 22:36+0800\n"
@@ -14,19 +10,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 msgid "Z-library"
-msgstr "مكتبة-Z"
+msgstr "Z-library"
 
 msgid "[[A plugin to search and download books from Z-library.]]"
-msgstr "[[إضافة للبحث وتحميل الكتب من مكتبة-Z.]]"
+msgstr "[[مكون إضافي للبحث عن الكتب وتنزيلها من Z-library.]]"
 
 msgid "Z-library search"
-msgstr "البحث في مكتبة-Z"
+msgstr "البحث في Z-library"
 
 msgid "Z-library most popular"
-msgstr "الأكثر شعبية في مكتبة-Z"
+msgstr "الأكثر شعبية في Z-library"
 
 msgid "Z-library recommended"
-msgstr "موصى به في مكتبة-Z"
+msgstr "الموصى به في Z-library"
 
 msgid "Set base URL"
 msgstr "تعيين عنوان URL الأساسي"
@@ -44,13 +40,13 @@ msgid "Login successful!"
 msgstr "تم تسجيل الدخول بنجاح!"
 
 msgid "Set download directory"
-msgstr "تعيين مجلد التنزيل"
+msgstr "تعيين دليل التنزيل"
 
 msgid "Select search languages"
-msgstr "اختيار لغات البحث"
+msgstr "تحديد لغات البحث"
 
 msgid "Select search formats"
-msgstr "اختيار تنسيقات البحث"
+msgstr "تحديد تنسيقات البحث"
 
 msgid "Recommended"
 msgstr "موصى به"
@@ -59,7 +55,7 @@ msgid "Most popular"
 msgstr "الأكثر شعبية"
 
 msgid "No internet connection detected."
-msgstr "لم يتم اكتشاف اتصال بالإنترنت."
+msgstr "لم يتم الكشف عن اتصال بالإنترنت."
 
 msgid "Failed to retrieve user session after login."
 msgstr "فشل استرداد جلسة المستخدم بعد تسجيل الدخول."
@@ -68,31 +64,31 @@ msgid "No books found, please try again"
 msgstr "لم يتم العثور على كتب، يرجى المحاولة مرة أخرى"
 
 msgid "Fetching recommended books..."
-msgstr "جارٍ جلب الكتب الموصى بها..."
+msgstr "جلب الكتب الموصى بها..."
 
 msgid "Failed to fetch recommended books"
-msgstr "فشل في جلب الكتب الموصى بها"
+msgstr "فشل جلب الكتب الموصى بها"
 
 msgid "Fetching most popular books..."
-msgstr "جارٍ جلب الكتب الأكثر شعبية..."
+msgstr "جلب الكتب الأكثر شعبية..."
 
 msgid "Failed to fetch most popular books"
-msgstr "فشل في جلب الكتب الأكثر شعبية"
+msgstr "فشل جلب الكتب الأكثر شعبية"
 
 msgid "Fetching book details..."
-msgstr "جارٍ جلب تفاصيل الكتاب..."
+msgstr "جلب تفاصيل الكتاب..."
 
 msgid "Failed to fetch book details"
-msgstr "فشل في جلب تفاصيل الكتاب"
+msgstr "فشل جلب تفاصيل الكتاب"
 
 msgid "Could not retrieve book details."
 msgstr "تعذر استرداد تفاصيل الكتاب."
 
 msgid "Please set both username and password first."
-msgstr "يرجى تعيين اسم المستخدم وكلمة المرور أولاً."
+msgstr "الرجاء تعيين اسم المستخدم وكلمة المرور أولاً."
 
 msgid "Logging in..."
-msgstr "جارٍ تسجيل الدخول..."
+msgstr "تسجيل الدخول..."
 
 msgid ""
 "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
@@ -102,13 +98,13 @@ msgid "Retrying search for \""
 msgstr "إعادة محاولة البحث عن \""
 
 msgid "Searching for \""
-msgstr "جارٍ البحث عن \""
+msgstr "البحث عن \""
 
 msgid "Search failed"
 msgstr "فشل البحث"
 
 msgid "No results found for \""
-msgstr "لم يتم العثور على نتائج لـ \""
+msgstr "لا توجد نتائج لـ \""
 
 msgid "Failed to load more results"
 msgstr "فشل تحميل المزيد من النتائج"
@@ -121,71 +117,70 @@ msgstr "لا يوجد رابط تنزيل متاح لهذا الكتاب."
 
 #, lua-format
 msgid "Cannot create downloads directory: %s"
-msgstr "لا يمكن إنشاء مجلد التنزيلات: %s"
+msgstr "لا يمكن إنشاء دليل التنزيلات: %s"
 
 msgid "Could not open reader UI."
-msgstr "تعذر فتح واجهة القارئ."
+msgstr "تعذر فتح واجهة المستخدم للقارئ."
 
 msgid "Download failed: Unknown error"
 msgstr "فشل التنزيل: خطأ غير معروف"
 
 msgid "Download limit reached. Please try again later or check your account."
-msgstr ""
-"تم الوصول إلى حد التنزيل. يرجى المحاولة مرة أخرى لاحقًا أو التحقق من حسابك."
+msgstr "تم الوصول إلى حد التنزيل. يرجى المحاولة مرة أخرى لاحقًا أو التحقق من حسابك."
 
 msgid "Z-library server URL not configured."
-msgstr "لم يتم تكوين عنوان URL لخادم مكتبة-Z."
+msgstr "عنوان URL لخادم Z-library غير مكون."
 
 msgid "Failed to fetch recommended books (no response body)."
-msgstr "فشل في جلب الكتب الموصى بها (لا يوجد نص استجابة)."
+msgstr "فشل جلب الكتب الموصى بها (لا يوجد نص استجابة)."
 
 msgid "Failed to parse recommended books response."
-msgstr "فشل في تحليل استجابة الكتب الموصى بها."
+msgstr "فشل تحليل استجابة الكتب الموصى بها."
 
 msgid "API returned an error for recommended books."
-msgstr "أرجعت واجهة برمجة التطبيقات خطأ للكتب الموصى بها."
+msgstr "أرجع API خطأ للكتب الموصى بها."
 
 msgid "Failed to fetch most popular books (no response body)."
-msgstr "فشل في جلب الكتب الأكثر شعبية (لا يوجد نص استجابة)."
+msgstr "فشل جلب الكتب الأكثر شعبية (لا يوجد نص استجابة)."
 
 msgid "Failed to parse most popular books response."
-msgstr "فشل في تحليل استجابة الكتب الأكثر شعبية."
+msgstr "فشل تحليل استجابة الكتب الأكثر شعبية."
 
 msgid "API returned an error for most popular books."
-msgstr "أرجعت واجهة برمجة التطبيقات خطأ للكتب الأكثر شعبية."
+msgstr "أرجع API خطأ للكتب الأكثر شعبية."
 
 msgid "Z-library server URL not configured or book identifiers missing."
-msgstr "لم يتم تكوين عنوان URL لخادم مكتبة-Z أو معرفات الكتاب مفقودة."
+msgstr "عنوان URL لخادم Z-library غير مكون أو معرفات الكتب مفقودة."
 
 msgid "Failed to fetch book details (no response body)."
-msgstr "فشل في جلب تفاصيل الكتاب (لا يوجد نص استجابة)."
+msgstr "فشل جلب تفاصيل الكتاب (لا يوجد نص استجابة)."
 
 msgid "Failed to parse book details response."
-msgstr "فشل في تحليل استجابة تفاصيل الكتاب."
+msgstr "فشل تحليل استجابة تفاصيل الكتاب."
 
 msgid "API returned an error for book details."
-msgstr "أرجعت واجهة برمجة التطبيقات خطأ لتفاصيل الكتاب."
+msgstr "أرجع API خطأ لتفاصيل الكتاب."
 
 msgid "Failed to process book details."
-msgstr "فشل في معالجة تفاصيل الكتاب."
+msgstr "فشل معالجة تفاصيل الكتاب."
 
 msgid "Select Z-library Download Directory"
-msgstr "اختر مجلد تنزيل مكتبة-Z"
+msgstr "تحديد دليل تنزيل Z-library"
 
 #, lua-format
 msgid "Download directory set to: %s"
-msgstr "تم تعيين مجلد التنزيل إلى: %s"
+msgstr "تم تعيين دليل التنزيل إلى: %s"
 
 msgid "No directory selected."
-msgstr "لم يتم اختيار مجلد."
+msgstr "لم يتم تحديد دليل."
 
 #, lua-format
 msgid "%d items selected for %s."
-msgstr "%d عناصر محددة لـ %s."
+msgstr "تم تحديد %d عنصر لـ %s."
 
 #, lua-format
 msgid "Filter cleared for %s."
-msgstr "تم مسح التصفية لـ %s."
+msgstr "تم مسح الفلتر لـ %s."
 
 msgid "Setting saved successfully!"
 msgstr "تم حفظ الإعداد بنجاح!"
@@ -194,10 +189,10 @@ msgid "Setting cleared."
 msgstr "تم مسح الإعداد."
 
 msgid "Search Z-library"
-msgstr "البحث في مكتبة-Z"
+msgstr "البحث في Z-library"
 
 msgid "Please enter a search term."
-msgstr "يرجى إدخال مصطلح البحث."
+msgstr "الرجاء إدخال مصطلح بحث."
 
 msgid "Unknown Title"
 msgstr "عنوان غير معروف"
@@ -216,20 +211,20 @@ msgstr "السنة"
 
 #, lua-format
 msgid "Format: %s (tap to download)"
-msgstr "التنسيق: %s (انقر للتنزيل)"
+msgstr "التنسيق: %s (اضغط للتنزيل)"
 
 #, lua-format
 msgid "Format: %s (Download not available)"
 msgstr "التنسيق: %s (التنزيل غير متاح)"
 
 msgid "Download Book (Unknown Format)"
-msgstr "تنزيل الكتاب (تنسيق غير معروف)"
+msgstr "تنزيل كتاب (تنسيق غير معروف)"
 
 msgid "Publisher"
 msgstr "الناشر"
 
 msgid "Description (tap to view)"
-msgstr "الوصف (انقر للعرض)"
+msgstr "الوصف (اضغط للمشاهدة)"
 
 msgid "Book Details"
 msgstr "تفاصيل الكتاب"
@@ -246,85 +241,172 @@ msgid "Open book"
 msgstr "فتح الكتاب"
 
 msgid "Untitled"
-msgstr "بدون عنوان"
+msgstr "بلا عنوان"
 
 msgid ""
 "No recommended books found, please try again. Sometimes this requires a "
 "couple of retries."
-msgstr ""
-"لم يتم العثور على كتب موصى بها، يرجى المحاولة مرة أخرى. أحيانًا يتطلب هذا بضع "
-"محاولات."
+msgstr "لم يتم العثور على كتب موصى بها، يرجى المحاولة مرة أخرى. أحيانًا يتطلب هذا بضع محاولات."
 
 msgid "Z-library Recommended Books"
-msgstr "الكتب الموصى بها في مكتبة-Z"
+msgstr "الكتب الموصى بها في Z-library"
 
 msgid "No most popular books found. The list was empty, please try again."
-msgstr ""
-"لم يتم العثور على الكتب الأكثر شعبية. القائمة كانت فارغة، يرجى المحاولة مرة "
-"أخرى."
+msgstr "لم يتم العثور على كتب أكثر شعبية. القائمة كانت فارغة، يرجى المحاولة مرة أخرى."
 
 msgid "Z-library Most Popular Books"
-msgstr "الكتب الأكثر شعبية في مكتبة-Z"
+msgstr "الكتب الأكثر شعبية في Z-library"
 
 msgid "Fetch most recommended book from Z-library?"
-msgstr "جلب الكتب الأكثر توصية من مكتبة-Z؟"
+msgstr "جلب الكتاب الأكثر توصية من Z-library؟"
 
 msgid "Fetch most popular books from Z-library?"
-msgstr "جلب الكتب الأكثر شعبية من مكتبة-Z؟"
+msgstr "جلب الكتب الأكثر شعبية من Z-library؟"
 
 msgid "Settings"
-msgstr ""
+msgstr "الإعدادات"
 
 msgid "Set password"
-msgstr ""
+msgstr "تعيين كلمة المرور"
 
 msgid "Search"
-msgstr ""
+msgstr "بحث"
 
 msgid "Retry"
-msgstr ""
+msgstr "إعادة المحاولة"
 
 msgid "Cancel"
-msgstr ""
+msgstr "إلغاء"
+
+msgid "Downloading..."
+msgstr "جارٍ التنزيل..."
 
 msgid "Close"
-msgstr ""
+msgstr "إغلاق"
 
 msgid "Set"
-msgstr ""
+msgstr "تعيين"
 
-#, fuzzy
 msgid "Unknown Author"
-msgstr "عنوان غير معروف"
+msgstr "مؤلف غير معروف"
 
 msgid "Rating"
-msgstr ""
+msgstr "التقييم"
 
-#, fuzzy
 msgid "Search Results"
-msgstr "فشل البحث"
+msgstr "نتائج البحث"
 
 msgid "Title"
-msgstr ""
+msgstr "العنوان"
 
 msgid "Language"
-msgstr ""
+msgstr "اللغة"
 
 msgid "Size"
-msgstr ""
+msgstr "الحجم"
 
 msgid "Series"
-msgstr ""
+msgstr "السلسلة"
 
 msgid "Pages"
-msgstr ""
+msgstr "الصفحات"
 
-#, fuzzy
 msgid "Description"
-msgstr "الوصف (انقر للعرض)"
+msgstr "الوصف"
 
 msgid "Back"
-msgstr ""
+msgstr "رجوع"
 
 msgid "OK"
-msgstr ""
+msgstr "موافق"
+
+msgid "Set email"
+msgstr "تعيين البريد الإلكتروني"
+
+msgid "Check for updates"
+msgstr "التحقق من التحديثات"
+
+msgid "Error: Plugin path not found. Cannot check for updates."
+msgstr "خطأ: لم يتم العثور على مسار المكون الإضافي. لا يمكن التحقق من التحديثات."
+
+#, lua-format
+msgid "Loading more results (Page %s)..."
+msgstr "جارٍ تحميل المزيد من النتائج (الصفحة %s)..."
+
+msgid "Downloading…"
+msgstr "جارٍ التنزيل..."
+
+msgid "Update failed: Could not determine where to install the plugin."
+msgstr "فشل التحديث: تعذر تحديد مكان تثبيت المكون الإضافي."
+
+msgid "Installing update..."
+msgstr "جارٍ تثبيت التحديث..."
+
+msgid "Update installation failed."
+msgstr "فشل تثبيت التحديث."
+
+msgid ""
+"Update installed successfully. Please restart KOReader for changes to take "
+"effect."
+msgstr "تم تثبيت التحديث بنجاح. يرجى إعادة تشغيل KOReader لتطبيق التغييرات."
+
+msgid ""
+"No internet connection detected. Please connect to the internet and try "
+"again."
+msgstr "لم يتم الكشف عن اتصال بالإنترنت. يرجى الاتصال بالإنترنت والمحاولة مرة أخرى."
+
+msgid "Update check failed: Could not determine plugin location."
+msgstr "فشل التحقق من التحديث: تعذر تحديد موقع المكون الإضافي."
+
+msgid "Checking for updates..."
+msgstr "التحقق من التحديثات..."
+
+msgid "Failed to check for updates. Please check your internet connection."
+msgstr "فشل التحقق من التحديثات. يرجى التحقق من اتصالك بالإنترنت."
+
+msgid "Could not find update information (invalid data format)."
+msgstr "تعذر العثور على معلومات التحديث (تنسيق بيانات غير صالح)."
+
+msgid "Could not find update version information."
+msgstr "تعذر العثور على معلومات إصدار التحديث."
+
+msgid "Could not understand the update version format."
+msgstr "تعذر فهم تنسيق إصدار التحديث."
+
+msgid "Could not find update files."
+msgstr "تعذر العثور على ملفات التحديث."
+
+msgid "Could not find a download link for the update."
+msgstr "تعذر العثور على رابط تنزيل للتحديث."
+
+#, lua-format
+msgid "You are already on the latest version (%s) or newer."
+msgstr "أنت بالفعل على أحدث إصدار (%s) أو أحدث."
+
+#, lua-format
+msgid ""
+"Could not determine your current version, but the latest is %s. If you "
+"recently updated, you might be up-to-date."
+msgstr "تعذر تحديد إصدارك الحالي، لكن الأحدث هو %s. إذا قمت بالتحديث مؤخرًا، فقد تكون محدثًا."
+
+#, lua-format
+msgid "New version available: %s (you have %s). Download and install?"
+msgstr "إصدار جديد متاح: %s (لديك %s). تنزيل وتثبيت؟"
+
+msgid "an older version"
+msgstr "إصدار أقدم"
+
+msgid "Update available"
+msgstr "تحديث متاح"
+
+msgid "Update"
+msgstr "تحديث"
+
+msgid "Downloading update..."
+msgstr "جارٍ تنزيل التحديث..."
+
+msgid "Download failed. Please try again later."
+msgstr "فشل التنزيل. يرجى المحاولة مرة أخرى لاحقًا."
+
+msgid "Download"
+msgstr "تنزيل"

@@ -1,14 +1,10 @@
-#
-#, fuzzy
-msgid ""
-msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-21 22:36+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: Chinese\n"
+"Language-Team: Chinese <zh@li.org>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23,16 +19,16 @@ msgid "Z-library search"
 msgstr "Z-圖書館搜索"
 
 msgid "Z-library most popular"
-msgstr "Z-圖書館最受歡迎"
+msgstr "Z-圖書館熱門書籍"
 
 msgid "Z-library recommended"
-msgstr "Z-圖書館推薦"
+msgstr "Z-圖書館推薦書籍"
 
 msgid "Set base URL"
-msgstr "設置基礎URL"
+msgstr "設置基礎網址"
 
 msgid "Invalid Base URL."
-msgstr "無效的基礎URL。"
+msgstr "無效的基礎網址。"
 
 msgid "Set username"
 msgstr "設置用戶名"
@@ -56,13 +52,13 @@ msgid "Recommended"
 msgstr "推薦"
 
 msgid "Most popular"
-msgstr "最受歡迎"
+msgstr "最熱門"
 
 msgid "No internet connection detected."
 msgstr "未檢測到網絡連接。"
 
 msgid "Failed to retrieve user session after login."
-msgstr "登入後無法檢索用戶會話。"
+msgstr "登入後無法獲取用戶會話。"
 
 msgid "No books found, please try again"
 msgstr "未找到書籍，請重試"
@@ -74,10 +70,10 @@ msgid "Failed to fetch recommended books"
 msgstr "獲取推薦書籍失敗"
 
 msgid "Fetching most popular books..."
-msgstr "正在獲取最受歡迎書籍..."
+msgstr "正在獲取熱門書籍..."
 
 msgid "Failed to fetch most popular books"
-msgstr "獲取最受歡迎書籍失敗"
+msgstr "獲取熱門書籍失敗"
 
 msgid "Fetching book details..."
 msgstr "正在獲取書籍詳情..."
@@ -86,7 +82,7 @@ msgid "Failed to fetch book details"
 msgstr "獲取書籍詳情失敗"
 
 msgid "Could not retrieve book details."
-msgstr "無法檢索書籍詳情。"
+msgstr "無法獲取書籍詳情。"
 
 msgid "Please set both username and password first."
 msgstr "請先設置用戶名和密碼。"
@@ -96,7 +92,7 @@ msgstr "正在登入..."
 
 msgid ""
 "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
-msgstr "由於臨時問題導致搜索失敗(HTTP 400)。您想重試嗎？"
+msgstr "由於臨時問題搜索失敗(HTTP 400)。是否要重試？"
 
 msgid "Retrying search for \""
 msgstr "正在重試搜索\""
@@ -114,12 +110,11 @@ msgid "Failed to load more results"
 msgstr "加載更多結果失敗"
 
 msgid "No more results found."
-msgstr "未找到更多結果。"
+msgstr "沒有更多結果。"
 
 msgid "No download link available for this book."
-msgstr "此書籍無可用下載鏈接。"
+msgstr "此書籍無下載鏈接。"
 
-#, lua-format
 msgid "Cannot create downloads directory: %s"
 msgstr "無法創建下載目錄: %s"
 
@@ -127,16 +122,16 @@ msgid "Could not open reader UI."
 msgstr "無法打開閱讀器界面。"
 
 msgid "Download failed: Unknown error"
-msgstr "下載失敗: 未知錯誤"
+msgstr "下載失敗：未知錯誤"
 
 msgid "Download limit reached. Please try again later or check your account."
 msgstr "達到下載限制。請稍後重試或檢查您的帳戶。"
 
 msgid "Z-library server URL not configured."
-msgstr "未配置Z-圖書館服務器URL。"
+msgstr "未配置Z-圖書館服務器網址。"
 
 msgid "Failed to fetch recommended books (no response body)."
-msgstr "獲取推薦書籍失敗(無響應體)。"
+msgstr "獲取推薦書籍失敗(無響應內容)。"
 
 msgid "Failed to parse recommended books response."
 msgstr "解析推薦書籍響應失敗。"
@@ -145,19 +140,19 @@ msgid "API returned an error for recommended books."
 msgstr "API返回推薦書籍錯誤。"
 
 msgid "Failed to fetch most popular books (no response body)."
-msgstr "獲取最受歡迎書籍失敗(無響應體)。"
+msgstr "獲取熱門書籍失敗(無響應內容)。"
 
 msgid "Failed to parse most popular books response."
-msgstr "解析最受歡迎書籍響應失敗。"
+msgstr "解析熱門書籍響應失敗。"
 
 msgid "API returned an error for most popular books."
-msgstr "API返回最受歡迎書籍錯誤。"
+msgstr "API返回熱門書籍錯誤。"
 
 msgid "Z-library server URL not configured or book identifiers missing."
-msgstr "未配置Z-圖書館服務器URL或缺少書籍標識符。"
+msgstr "未配置Z-圖書館服務器網址或缺少書籍標識符。"
 
 msgid "Failed to fetch book details (no response body)."
-msgstr "獲取書籍詳情失敗(無響應體)。"
+msgstr "獲取書籍詳情失敗(無響應內容)。"
 
 msgid "Failed to parse book details response."
 msgstr "解析書籍詳情響應失敗。"
@@ -171,20 +166,17 @@ msgstr "處理書籍詳情失敗。"
 msgid "Select Z-library Download Directory"
 msgstr "選擇Z-圖書館下載目錄"
 
-#, lua-format
 msgid "Download directory set to: %s"
 msgstr "下載目錄設置為: %s"
 
 msgid "No directory selected."
 msgstr "未選擇目錄。"
 
-#, lua-format
 msgid "%d items selected for %s."
-msgstr "已為%s選擇%d個項目。"
+msgstr "%d個%s選擇的項目。"
 
-#, lua-format
 msgid "Filter cleared for %s."
-msgstr "已清除%s的過濾器。"
+msgstr "已清除%s的篩選器。"
 
 msgid "Setting saved successfully!"
 msgstr "設置保存成功！"
@@ -213,11 +205,9 @@ msgstr "完整作者"
 msgid "Year"
 msgstr "年份"
 
-#, lua-format
 msgid "Format: %s (tap to download)"
 msgstr "格式: %s (點擊下載)"
 
-#, lua-format
 msgid "Format: %s (Download not available)"
 msgstr "格式: %s (無法下載)"
 
@@ -233,11 +223,9 @@ msgstr "描述(點擊查看)"
 msgid "Book Details"
 msgstr "書籍詳情"
 
-#, lua-format
 msgid "Download \"%s\"?"
-msgstr "下載\"%s\"?"
+msgstr "下載\"%s\"？"
 
-#, lua-format
 msgid "\"%s\" downloaded successfully. Open it now?"
 msgstr "\"%s\"下載成功。現在打開嗎？"
 
@@ -250,79 +238,163 @@ msgstr "無標題"
 msgid ""
 "No recommended books found, please try again. Sometimes this requires a "
 "couple of retries."
-msgstr "未找到推薦書籍，請重試。有時需要多次重試。"
+msgstr "未找到推薦書籍，請重試。有時需要多次嘗試。"
 
 msgid "Z-library Recommended Books"
 msgstr "Z-圖書館推薦書籍"
 
 msgid "No most popular books found. The list was empty, please try again."
-msgstr "未找到最受歡迎書籍。列表為空，請重試。"
+msgstr "未找到熱門書籍。列表為空，請重試。"
 
 msgid "Z-library Most Popular Books"
-msgstr "Z-圖書館最受歡迎書籍"
+msgstr "Z-圖書館熱門書籍"
 
 msgid "Fetch most recommended book from Z-library?"
 msgstr "從Z-圖書館獲取最推薦書籍？"
 
 msgid "Fetch most popular books from Z-library?"
-msgstr "從Z-圖書館獲取最受歡迎書籍？"
+msgstr "從Z-圖書館獲取熱門書籍？"
 
 msgid "Settings"
-msgstr ""
+msgstr "設置"
 
 msgid "Set password"
-msgstr ""
+msgstr "設置密碼"
 
 msgid "Search"
-msgstr ""
+msgstr "搜索"
 
 msgid "Retry"
-msgstr ""
+msgstr "重試"
 
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 msgid "Downloading..."
-msgstr ""
+msgstr "正在下載..."
 
 msgid "Close"
-msgstr ""
+msgstr "關閉"
 
 msgid "Set"
-msgstr ""
+msgstr "設置"
 
-#, fuzzy
 msgid "Unknown Author"
-msgstr "未知標題"
+msgstr "未知作者"
 
 msgid "Rating"
-msgstr ""
+msgstr "評分"
 
-#, fuzzy
 msgid "Search Results"
-msgstr "搜索失敗"
+msgstr "搜索結果"
 
 msgid "Title"
-msgstr ""
+msgstr "標題"
 
 msgid "Language"
-msgstr ""
+msgstr "語言"
 
 msgid "Size"
-msgstr ""
+msgstr "大小"
 
 msgid "Series"
-msgstr ""
+msgstr "系列"
 
 msgid "Pages"
-msgstr ""
+msgstr "頁數"
 
-#, fuzzy
 msgid "Description"
-msgstr "描述(點擊查看)"
+msgstr "描述"
 
 msgid "Back"
-msgstr ""
+msgstr "返回"
 
 msgid "OK"
-msgstr ""
+msgstr "確定"
+
+msgid "Set email"
+msgstr "設置電子郵件"
+
+msgid "Check for updates"
+msgstr "檢查更新"
+
+msgid "Error: Plugin path not found. Cannot check for updates."
+msgstr "錯誤：未找到插件路徑。無法檢查更新。"
+
+msgid "Loading more results (Page %s)..."
+msgstr "正在加載更多結果(第%s頁)..."
+
+msgid "Downloading…"
+msgstr "正在下載…"
+
+msgid "Update failed: Could not determine where to install the plugin."
+msgstr "更新失敗：無法確定插件安裝位置。"
+
+msgid "Installing update..."
+msgstr "正在安裝更新..."
+
+msgid "Update installation failed."
+msgstr "更新安裝失敗。"
+
+msgid ""
+"Update installed successfully. Please restart KOReader for changes to take "
+"effect."
+msgstr "更新安裝成功。請重啟KOReader使更改生效。"
+
+msgid ""
+"No internet connection detected. Please connect to the internet and try "
+"again."
+msgstr "未檢測到網絡連接。請連接網絡後重試。"
+
+msgid "Update check failed: Could not determine plugin location."
+msgstr "更新檢查失敗：無法確定插件位置。"
+
+msgid "Checking for updates..."
+msgstr "正在檢查更新..."
+
+msgid "Failed to check for updates. Please check your internet connection."
+msgstr "檢查更新失敗。請檢查您的網絡連接。"
+
+msgid "Could not find update information (invalid data format)."
+msgstr "找不到更新信息(無效的數據格式)。"
+
+msgid "Could not find update version information."
+msgstr "找不到更新版本信息。"
+
+msgid "Could not understand the update version format."
+msgstr "無法理解更新版本格式。"
+
+msgid "Could not find update files."
+msgstr "找不到更新文件。"
+
+msgid "Could not find a download link for the update."
+msgstr "找不到更新的下載鏈接。"
+
+msgid "You are already on the latest version (%s) or newer."
+msgstr "您已經是最新版本(%s)或更新版本。"
+
+msgid ""
+"Could not determine your current version, but the latest is %s. If you "
+"recently updated, you might be up-to-date."
+msgstr "無法確定您的當前版本，但最新版本是%s。如果您最近更新過，可能已經是最新版本。"
+
+msgid "New version available: %s (you have %s). Download and install?"
+msgstr "有新版本可用: %s (您當前版本為%s)。要下載並安裝嗎？"
+
+msgid "an older version"
+msgstr "舊版本"
+
+msgid "Update available"
+msgstr "有可用更新"
+
+msgid "Update"
+msgstr "更新"
+
+msgid "Downloading update..."
+msgstr "正在下載更新..."
+
+msgid "Download failed. Please try again later."
+msgstr "下載失敗。請稍後重試。"
+
+msgid "Download"
+msgstr "下載"

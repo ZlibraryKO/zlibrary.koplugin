@@ -1,13 +1,9 @@
-#
-#, fuzzy
-msgid ""
-msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-21 22:36+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language-Team: Russian <ru@li.org>\n"
 "Language: Russian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,16 +19,16 @@ msgid "Z-library search"
 msgstr "Поиск в Z-библиотеке"
 
 msgid "Z-library most popular"
-msgstr "Самые популярные в Z-библиотеке"
+msgstr "Популярное в Z-библиотеке"
 
 msgid "Z-library recommended"
-msgstr "Рекомендуемые в Z-библиотеке"
+msgstr "Рекомендуемое в Z-библиотеке"
 
 msgid "Set base URL"
 msgstr "Установить базовый URL"
 
 msgid "Invalid Base URL."
-msgstr "Неверный базовый URL."
+msgstr "Некорректный базовый URL."
 
 msgid "Set username"
 msgstr "Установить имя пользователя"
@@ -56,7 +52,7 @@ msgid "Recommended"
 msgstr "Рекомендуемые"
 
 msgid "Most popular"
-msgstr "Самые популярные"
+msgstr "Популярные"
 
 msgid "No internet connection detected."
 msgstr "Интернет-соединение не обнаружено."
@@ -68,16 +64,16 @@ msgid "No books found, please try again"
 msgstr "Книги не найдены, попробуйте еще раз"
 
 msgid "Fetching recommended books..."
-msgstr "Получение рекомендуемых книг..."
+msgstr "Загрузка рекомендуемых книг..."
 
 msgid "Failed to fetch recommended books"
-msgstr "Не удалось получить рекомендуемые книги"
+msgstr "Не удалось загрузить рекомендуемые книги"
 
 msgid "Fetching most popular books..."
-msgstr "Получение самых популярных книг..."
+msgstr "Загрузка популярных книг..."
 
 msgid "Failed to fetch most popular books"
-msgstr "Не удалось получить самые популярные книги"
+msgstr "Не удалось загрузить популярные книги"
 
 msgid "Fetching book details..."
 msgstr "Получение деталей книги..."
@@ -92,11 +88,12 @@ msgid "Please set both username and password first."
 msgstr "Пожалуйста, сначала укажите имя пользователя и пароль."
 
 msgid "Logging in..."
-msgstr "Вход в систему..."
+msgstr "Выполняется вход..."
 
 msgid ""
 "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
-msgstr "Поиск не удался из-за временной проблемы (HTTP 400). Хотите повторить?"
+msgstr ""
+"Поиск не удался из-за временной проблемы (HTTP 400). Хотите повторить попытку?"
 
 msgid "Retrying search for \""
 msgstr "Повторный поиск для \""
@@ -111,13 +108,13 @@ msgid "No results found for \""
 msgstr "Ничего не найдено для \""
 
 msgid "Failed to load more results"
-msgstr "Не удалось загрузить больше результатов"
+msgstr "Не удалось загрузить дополнительные результаты"
 
 msgid "No more results found."
 msgstr "Больше результатов не найдено."
 
 msgid "No download link available for this book."
-msgstr "Для этой книги нет ссылки для скачивания."
+msgstr "Для этой книги нет доступной ссылки для скачивания."
 
 #, lua-format
 msgid "Cannot create downloads directory: %s"
@@ -130,7 +127,8 @@ msgid "Download failed: Unknown error"
 msgstr "Ошибка загрузки: Неизвестная ошибка"
 
 msgid "Download limit reached. Please try again later or check your account."
-msgstr "Достигнут лимит загрузок. Попробуйте позже или проверьте свой аккаунт."
+msgstr ""
+"Достигнут лимит загрузок. Попробуйте позже или проверьте свой аккаунт."
 
 msgid "Z-library server URL not configured."
 msgstr "URL сервера Z-библиотеки не настроен."
@@ -145,7 +143,7 @@ msgid "API returned an error for recommended books."
 msgstr "API вернул ошибку для рекомендуемых книг."
 
 msgid "Failed to fetch most popular books (no response body)."
-msgstr "Не удалось получить самые популярные книги (нет тела ответа)."
+msgstr "Не удалось получить популярные книги (нет тела ответа)."
 
 msgid "Failed to parse most popular books response."
 msgstr "Не удалось обработать ответ с популярными книгами."
@@ -154,8 +152,7 @@ msgid "API returned an error for most popular books."
 msgstr "API вернул ошибку для популярных книг."
 
 msgid "Z-library server URL not configured or book identifiers missing."
-msgstr ""
-"URL сервера Z-библиотеки не настроен или отсутствуют идентификаторы книги."
+msgstr "URL сервера Z-библиотеки не настроен или отсутствуют идентификаторы книги."
 
 msgid "Failed to fetch book details (no response body)."
 msgstr "Не удалось получить детали книги (нет тела ответа)."
@@ -170,7 +167,7 @@ msgid "Failed to process book details."
 msgstr "Не удалось обработать детали книги."
 
 msgid "Select Z-library Download Directory"
-msgstr "Выбрать папку для загрузок из Z-библиотеки"
+msgstr "Выберите папку для загрузок из Z-библиотеки"
 
 #, lua-format
 msgid "Download directory set to: %s"
@@ -185,13 +182,13 @@ msgstr "Выбрано %d элементов для %s."
 
 #, lua-format
 msgid "Filter cleared for %s."
-msgstr "Фильтр очищен для %s."
+msgstr "Фильтр сброшен для %s."
 
 msgid "Setting saved successfully!"
 msgstr "Настройки успешно сохранены!"
 
 msgid "Setting cleared."
-msgstr "Настройка очищена."
+msgstr "Настройка сброшена."
 
 msgid "Search Z-library"
 msgstr "Поиск в Z-библиотеке"
@@ -223,7 +220,7 @@ msgid "Format: %s (Download not available)"
 msgstr "Формат: %s (Скачивание недоступно)"
 
 msgid "Download Book (Unknown Format)"
-msgstr "Скачать книгу (неизвестный формат)"
+msgstr "Скачать книгу (Неизвестный формат)"
 
 msgid "Publisher"
 msgstr "Издательство"
@@ -259,7 +256,7 @@ msgid "Z-library Recommended Books"
 msgstr "Рекомендуемые книги Z-библиотеки"
 
 msgid "No most popular books found. The list was empty, please try again."
-msgstr "Самые популярные книги не найдены. Список пуст, попробуйте еще раз."
+msgstr "Популярные книги не найдены. Список пуст, попробуйте еще раз."
 
 msgid "Z-library Most Popular Books"
 msgstr "Самые популярные книги Z-библиотеки"
@@ -271,61 +268,156 @@ msgid "Fetch most popular books from Z-library?"
 msgstr "Загрузить самые популярные книги из Z-библиотеки?"
 
 msgid "Settings"
-msgstr ""
+msgstr "Настройки"
 
 msgid "Set password"
-msgstr ""
+msgstr "Установить пароль"
 
 msgid "Search"
-msgstr ""
+msgstr "Поиск"
 
 msgid "Retry"
-msgstr ""
+msgstr "Повторить"
 
 msgid "Cancel"
-msgstr ""
+msgstr "Отмена"
 
 msgid "Downloading..."
-msgstr ""
+msgstr "Загрузка..."
 
 msgid "Close"
-msgstr ""
+msgstr "Закрыть"
 
 msgid "Set"
-msgstr ""
+msgstr "Установить"
 
-#, fuzzy
 msgid "Unknown Author"
-msgstr "Неизвестное название"
+msgstr "Неизвестный автор"
 
 msgid "Rating"
-msgstr ""
+msgstr "Рейтинг"
 
-#, fuzzy
 msgid "Search Results"
-msgstr "Поиск не удался"
+msgstr "Результаты поиска"
 
 msgid "Title"
-msgstr ""
+msgstr "Название"
 
 msgid "Language"
-msgstr ""
+msgstr "Язык"
 
 msgid "Size"
-msgstr ""
+msgstr "Размер"
 
 msgid "Series"
-msgstr ""
+msgstr "Серия"
 
 msgid "Pages"
-msgstr ""
+msgstr "Страницы"
 
-#, fuzzy
 msgid "Description"
-msgstr "Описание (нажмите для просмотра)"
+msgstr "Описание"
 
 msgid "Back"
-msgstr ""
+msgstr "Назад"
 
 msgid "OK"
+msgstr "OK"
+
+msgid "Set email"
+msgstr "Установить email"
+
+msgid "Check for updates"
+msgstr "Проверить обновления"
+
+msgid "Error: Plugin path not found. Cannot check for updates."
+msgstr "Ошибка: Путь к плагину не найден. Невозможно проверить обновления."
+
+#, lua-format
+msgid "Loading more results (Page %s)..."
+msgstr "Загрузка дополнительных результатов (Страница %s)..."
+
+msgid "Downloading…"
+msgstr "Загрузка…"
+
+msgid "Update failed: Could not determine where to install the plugin."
+msgstr "Ошибка обновления: Не удалось определить место установки плагина."
+
+msgid "Installing update..."
+msgstr "Установка обновления..."
+
+msgid "Update installation failed."
+msgstr "Ошибка установки обновления."
+
+msgid ""
+"Update installed successfully. Please restart KOReader for changes to take "
+"effect."
 msgstr ""
+"Обновление успешно установлено. Перезапустите KOReader для применения "
+"изменений."
+
+msgid ""
+"No internet connection detected. Please connect to the internet and try "
+"again."
+msgstr ""
+"Интернет-соединение не обнаружено. Пожалуйста, подключитесь к интернету и "
+"попробуйте снова."
+
+msgid "Update check failed: Could not determine plugin location."
+msgstr "Ошибка проверки обновлений: Не удалось определить расположение плагина."
+
+msgid "Checking for updates..."
+msgstr "Проверка обновлений..."
+
+msgid "Failed to check for updates. Please check your internet connection."
+msgstr ""
+"Не удалось проверить обновления. Пожалуйста, проверьте интернет-соединение."
+
+msgid "Could not find update information (invalid data format)."
+msgstr "Не удалось найти информацию об обновлении (неверный формат данных)."
+
+msgid "Could not find update version information."
+msgstr "Не удалось найти информацию о версии обновления."
+
+msgid "Could not understand the update version format."
+msgstr "Не удалось распознать формат версии обновления."
+
+msgid "Could not find update files."
+msgstr "Не удалось найти файлы обновления."
+
+msgid "Could not find a download link for the update."
+msgstr "Не удалось найти ссылку для скачивания обновления."
+
+#, lua-format
+msgid "You are already on the latest version (%s) or newer."
+msgstr "У вас уже установлена последняя версия (%s) или новее."
+
+#, lua-format
+msgid ""
+"Could not determine your current version, but the latest is %s. If you "
+"recently updated, you might be up-to-date."
+msgstr ""
+"Не удалось определить текущую версию, но последняя - %s. Если вы недавно "
+"обновлялись, возможно у вас актуальная версия."
+
+#, lua-format
+msgid "New version available: %s (you have %s). Download and install?"
+msgstr "Доступна новая версия: %s (у вас %s). Скачать и установить?"
+
+msgid "an older version"
+msgstr "более старая версия"
+
+msgid "Update available"
+msgstr "Доступно обновление"
+
+msgid "Update"
+msgstr "Обновить"
+
+msgid "Downloading update..."
+msgstr "Загрузка обновления..."
+
+msgid "Download failed. Please try again later."
+msgstr "Ошибка загрузки. Пожалуйста, попробуйте позже."
+
+msgid "Download"
+msgstr "Скачать"

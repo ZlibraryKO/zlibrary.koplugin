@@ -458,7 +458,7 @@ function Api.getBookDetails(user_id, user_key, book_id, book_hash)
 
     if http_result.error then
         logger.warn("Api.getBookDetails - HTTP request error: ", http_result.error)
-        return { error = T("Failed to fetch book details: ") .. http_result.error }
+        return { error = string("%s: %s", T("Failed to fetch book details"), http_result.error) }
     end
 
     if not http_result.body then

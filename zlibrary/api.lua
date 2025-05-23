@@ -42,6 +42,10 @@ function Api.makeHttpRequest(options)
 
     local sink_to_use = options.sink
     local timeout = options.timeout or Config.REQUEST_TIMEOUT
+    if timeout <= 0 then
+        -- system default socket timeouts
+        timeout = nil
+    end
     if not sink_to_use then
         response_body_table = {}
         sink_to_use = ltn12.sink.table(response_body_table)
@@ -55,7 +59,7 @@ function Api.makeHttpRequest(options)
         sink = sink_to_use,
         redirect = options.redirect or false
     }
-    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Timeout: %s, Redirect: %s", request_params.url, request_params.method, timeout, tostring(request_params.redirect)))
+    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Timeout: %s, Redirect: %s", request_params.url, request_params.method, tostring(timeout), tostring(request_params.redirect)))
 
     socketutil:set_timeout(timeout)
     local req_ok, r_val, r_code, r_headers_tbl, r_status_str = pcall(http.request, request_params)

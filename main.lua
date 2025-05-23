@@ -187,7 +187,7 @@ function Zlibrary:_fetchBookList(options)
         return
     end
 
-    local loading_msg = Ui.showLoadingMessage(T(options.loading_text_key))
+    local loading_msg = Ui.showLoadingMessage(options.loading_text_key)
 
     UIManager:nextTick(function()
         local login_ok = self:login()
@@ -213,13 +213,13 @@ function Zlibrary:_fetchBookList(options)
         on_success = function(api_result)
             Ui.closeMessage(loading_msg)
             if api_result.error then
-                Ui.showErrorMessage(string.format("%s: %s", T(options.error_prefix_key), tostring(api_result.error)))
+                Ui.showErrorMessage(string.format("%s: %s", options.error_prefix_key, tostring(api_result.error)))
                 return
             end
 
             if not api_result.books or #api_result.books == 0 then
                 if options.no_items_text_key then
-                    Ui.showInfoMessage(T(options.no_items_text_key))
+                    Ui.showInfoMessage(options.no_items_text_key)
                 else
                     Ui.showInfoMessage(T("No books found, please try again"))
                 end
@@ -236,7 +236,7 @@ function Zlibrary:_fetchBookList(options)
 
         on_error_handler = function(err_msg)
             Ui.closeMessage(loading_msg)
-            Ui.showErrorMessage(string.format("%s: %s", T(options.error_prefix_key), tostring(err_msg)))
+            Ui.showErrorMessage(string.format("%s: %s", options.error_prefix_key, tostring(err_msg)))
         end
 
         AsyncHelper.run(task, on_success, on_error_handler, loading_msg)

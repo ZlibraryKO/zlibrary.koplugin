@@ -282,19 +282,10 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-msgid "Loading more results (Page "
-msgstr ""
-
-msgid ")..."
-msgstr ""
-
 msgid "Downloading..."
 msgstr ""
 
 msgid "Close"
-msgstr ""
-
-msgid "[X]"
 msgstr ""
 
 msgid "Set"
@@ -328,9 +319,6 @@ msgid "Description"
 msgstr ""
 
 msgid "Back"
-msgstr ""
-
-msgid "Download"
 msgstr ""
 
 msgid "OK"

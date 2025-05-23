@@ -286,20 +286,10 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#, fuzzy
-msgid "Loading more results (Page "
-msgstr "더 이상 결과가 없습니다."
-
-msgid ")..."
-msgstr ""
-
 msgid "Downloading..."
 msgstr ""
 
 msgid "Close"
-msgstr ""
-
-msgid "[X]"
 msgstr ""
 
 msgid "Set"
@@ -337,10 +327,6 @@ msgstr "설명 (탭하여 보기)"
 
 msgid "Back"
 msgstr ""
-
-#, fuzzy
-msgid "Download"
-msgstr "\"%s\"을(를) 다운로드하시겠습니까?"
 
 msgid "OK"
 msgstr ""

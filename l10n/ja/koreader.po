@@ -286,20 +286,10 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#, fuzzy
-msgid "Loading more results (Page "
-msgstr "これ以上の結果は見つかりませんでした。"
-
-msgid ")..."
-msgstr ""
-
 msgid "Downloading..."
 msgstr ""
 
 msgid "Close"
-msgstr ""
-
-msgid "[X]"
 msgstr ""
 
 msgid "Set"
@@ -337,10 +327,6 @@ msgstr "説明 (タップで表示)"
 
 msgid "Back"
 msgstr ""
-
-#, fuzzy
-msgid "Download"
-msgstr "\"%s\" をダウンロードしますか？"
 
 msgid "OK"
 msgstr ""

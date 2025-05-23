@@ -292,20 +292,10 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#, fuzzy
-msgid "Loading more results (Page "
-msgstr "Nie znaleziono więcej wyników."
-
-msgid ")..."
-msgstr ""
-
 msgid "Downloading..."
 msgstr ""
 
 msgid "Close"
-msgstr ""
-
-msgid "[X]"
 msgstr ""
 
 msgid "Set"
@@ -343,10 +333,6 @@ msgstr "Opis (dotknij, aby wyświetlić)"
 
 msgid "Back"
 msgstr ""
-
-#, fuzzy
-msgid "Download"
-msgstr "Pobrać \"%s\"?"
 
 msgid "OK"
 msgstr ""

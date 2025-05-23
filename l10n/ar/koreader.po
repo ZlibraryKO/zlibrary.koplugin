@@ -287,20 +287,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#, fuzzy
-msgid "Loading more results (Page "
-msgstr "لم يتم العثور على المزيد من النتائج."
-
-msgid ")..."
-msgstr ""
-
-msgid "Downloading..."
-msgstr ""
-
 msgid "Close"
-msgstr ""
-
-msgid "[X]"
 msgstr ""
 
 msgid "Set"
@@ -338,10 +325,6 @@ msgstr "الوصف (انقر للعرض)"
 
 msgid "Back"
 msgstr ""
-
-#, fuzzy
-msgid "Download"
-msgstr "تنزيل \"%s\"؟"
 
 msgid "OK"
 msgstr ""

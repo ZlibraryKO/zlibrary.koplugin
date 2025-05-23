@@ -4,6 +4,7 @@ local logger = require("logger")
 local json = require("json")
 local ltn12 = require("ltn12")
 local http = require("socket.http")
+local socketutil = require("socketutil")
 local T = require("gettext")
 
 local Api = {}
@@ -40,6 +41,7 @@ function Api.makeHttpRequest(options)
     local result = { body = nil, status_code = nil, error = nil, headers = nil }
 
     local sink_to_use = options.sink
+    local timeout = options.timeout or Config.REQUEST_TIMEOUT
     if not sink_to_use then
         response_body_table = {}
         sink_to_use = ltn12.sink.table(response_body_table)
@@ -51,12 +53,13 @@ function Api.makeHttpRequest(options)
         headers = options.headers,
         source = options.source,
         sink = sink_to_use,
-        timeout = options.timeout or Config.REQUEST_TIMEOUT,
         redirect = options.redirect or false
     }
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Timeout: %s, Redirect: %s", request_params.url, request_params.method, request_params.timeout, tostring(request_params.redirect)))
 
+    socketutil:set_timeout(timeout)
     local req_ok, r_val, r_code, r_headers_tbl, r_status_str = pcall(http.request, request_params)
+    socketutil:reset_timeout()
 
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - pcall result: ok=%s, r_val=%s (type %s), r_code=%s (type %s), r_headers_tbl type=%s, r_status_str=%s",
         tostring(req_ok), tostring(r_val), type(r_val), tostring(r_code), type(r_code), type(r_headers_tbl), tostring(r_status_str)))

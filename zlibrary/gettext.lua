@@ -1,9 +1,14 @@
-local DataStorage = require("datastorage")
 local util = require("util")
 local GetText = require("gettext")
 
+local full_source_path = debug.getinfo(1, "S").source
+if full_source_path:sub(1,1) == "@" then
+    full_source_path = full_source_path:sub(2)
+end
+local plugin_path, _ = util.splitFilePathName(full_source_path)
+
 local NewGetText = {
-    dirname = string.format("%s/plugins/zlibrary.koplugin/l10n", DataStorage:getDataDir())
+    dirname = string.format("%s/l10n", plugin_path)
 }
 
 local changeLang = function(new_lang)

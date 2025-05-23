@@ -38,7 +38,7 @@ local function _show_ota_final_message(text, is_error)
 end
 
 local function getCurrentPluginVersion(plugin_base_path)
-    local meta_file_full_path = plugin_base_path .. "_meta.lua" -- Removed slash from "/_meta.lua"
+    local meta_file_full_path = plugin_base_path .. "_meta.lua"
     logger.info("Zlibrary:Ota.getCurrentPluginVersion - Attempting to read version from: " .. meta_file_full_path)
 
     local file, err_open = io.open(meta_file_full_path, "r")
@@ -183,7 +183,7 @@ function Ota.installUpdate(zip_filepath, plugin_base_path)
 
     _show_ota_status_loading(T("Installing update..."))
 
-    local target_unzip_dir = "." -- Extract relative to KOReader root directory
+    local target_unzip_dir = "."
     local excluded_file_path_in_zip = plugin_base_path .. "zlibrary_credentials.lua"
 
     local unzip_command = string.format("unzip -o '%s' -d '%s' -x '%s'", zip_filepath, target_unzip_dir, excluded_file_path_in_zip)
@@ -311,7 +311,7 @@ function Ota.startUpdateProcess(plugin_path_from_main)
         cancel_text = T("Cancel"),
         ok_callback = function()
             _show_ota_status_loading(T("Downloading update..."))
-            local temp_path_base = plugin_path_from_main .. "tmp_download" -- Removed slash from "/tmp_download"
+            local temp_path_base = plugin_path_from_main .. "tmp_download"
             if not util.directoryExists(temp_path_base) then
                 util.makePath(temp_path_base)
             end

@@ -46,8 +46,6 @@ function Api.makeHttpRequest(options)
         sink_to_use = ltn12.sink.table(response_body_table)
     end
 
-    -- local request_timeout = options.timeout or Config.REQUEST_TIMEOUT
-
     local request_params = {
         url = options.url,
         method = options.method or "GET",
@@ -55,11 +53,6 @@ function Api.makeHttpRequest(options)
         source = options.source,
         sink = sink_to_use,
         redirect = options.redirect or false,
-        -- create = function()
-        --     local sock = socket.tcp()
-        --     sock:settimeout(request_timeout)
-        --     return sock
-        -- end
     }
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Socket Timeout: %s, Redirect: %s", request_params.url, request_params.method, request_timeout, tostring(request_params.redirect)))
 

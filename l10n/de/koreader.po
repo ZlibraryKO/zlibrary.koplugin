@@ -14,7 +14,7 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: German\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 msgid "Z-library"
@@ -241,11 +241,11 @@ msgstr "Buchdetails"
 
 #, lua-format
 msgid "Download \"%s\"?"
-msgstr "\%s\ herunterladen?"
+msgstr "\"%s\" herunterladen?"
 
 #, lua-format
 msgid "\"%s\" downloaded successfully. Open it now?"
-msgstr "\"%s"\ erfolgreich heruntergeladen. Jetzt öffnen?"
+msgstr "\"%s\"erfolgreich heruntergeladen. Jetzt öffnen?"
 
 msgid "Open book"
 msgstr "Buch öffnen"

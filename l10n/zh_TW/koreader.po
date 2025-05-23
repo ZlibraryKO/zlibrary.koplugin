@@ -1,7 +1,3 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
@@ -270,3 +266,77 @@ msgstr "從Z-圖書館獲取最推薦書籍？"
 
 msgid "Fetch most popular books from Z-library?"
 msgstr "從Z-圖書館獲取最受歡迎書籍？"
+
+msgid "Settings"
+msgstr ""
+
+msgid "Set password"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Retry"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+#, fuzzy
+msgid "Loading more results (Page "
+msgstr "未找到更多結果。"
+
+msgid ")..."
+msgstr ""
+
+msgid "Downloading..."
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "[X]"
+msgstr ""
+
+msgid "Set"
+msgstr ""
+
+#, fuzzy
+msgid "Unknown Author"
+msgstr "未知標題"
+
+msgid "Rating: "
+msgstr ""
+
+#, fuzzy
+msgid "Search Results: "
+msgstr "搜索失敗: "
+
+msgid "Title: "
+msgstr ""
+
+msgid "Language: "
+msgstr ""
+
+msgid "Size: "
+msgstr ""
+
+msgid "Series: "
+msgstr ""
+
+msgid "Pages: "
+msgstr ""
+
+#, fuzzy
+msgid "Description"
+msgstr "描述(點擊查看)"
+
+msgid "Back"
+msgstr ""
+
+#, fuzzy
+msgid "Download"
+msgstr "下載\"%s\"?"
+
+msgid "OK"
+msgstr ""

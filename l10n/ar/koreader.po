@@ -1,7 +1,3 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
@@ -100,8 +96,7 @@ msgstr "جارٍ تسجيل الدخول..."
 
 msgid ""
 "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
-msgstr ""
-"فشل البحث بسبب مشكلة مؤقتة (HTTP 400). هل ترغب في إعادة المحاولة؟"
+msgstr "فشل البحث بسبب مشكلة مؤقتة (HTTP 400). هل ترغب في إعادة المحاولة؟"
 
 msgid "Retrying search for \""
 msgstr "إعادة محاولة البحث عن \""
@@ -135,7 +130,8 @@ msgid "Download failed: Unknown error"
 msgstr "فشل التنزيل: خطأ غير معروف"
 
 msgid "Download limit reached. Please try again later or check your account."
-msgstr "تم الوصول إلى حد التنزيل. يرجى المحاولة مرة أخرى لاحقًا أو التحقق من حسابك."
+msgstr ""
+"تم الوصول إلى حد التنزيل. يرجى المحاولة مرة أخرى لاحقًا أو التحقق من حسابك."
 
 msgid "Z-library server URL not configured."
 msgstr "لم يتم تكوين عنوان URL لخادم مكتبة-Z."
@@ -256,14 +252,16 @@ msgid ""
 "No recommended books found, please try again. Sometimes this requires a "
 "couple of retries."
 msgstr ""
-"لم يتم العثور على كتب موصى بها، يرجى المحاولة مرة أخرى. أحيانًا يتطلب هذا "
-"بضع محاولات."
+"لم يتم العثور على كتب موصى بها، يرجى المحاولة مرة أخرى. أحيانًا يتطلب هذا بضع "
+"محاولات."
 
 msgid "Z-library Recommended Books"
 msgstr "الكتب الموصى بها في مكتبة-Z"
 
 msgid "No most popular books found. The list was empty, please try again."
-msgstr "لم يتم العثور على الكتب الأكثر شعبية. القائمة كانت فارغة، يرجى المحاولة مرة أخرى."
+msgstr ""
+"لم يتم العثور على الكتب الأكثر شعبية. القائمة كانت فارغة، يرجى المحاولة مرة "
+"أخرى."
 
 msgid "Z-library Most Popular Books"
 msgstr "الكتب الأكثر شعبية في مكتبة-Z"
@@ -274,3 +272,76 @@ msgstr "جلب الكتب الأكثر توصية من مكتبة-Z؟"
 msgid "Fetch most popular books from Z-library?"
 msgstr "جلب الكتب الأكثر شعبية من مكتبة-Z؟"
 
+msgid "Settings"
+msgstr ""
+
+msgid "Set password"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Retry"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+#, fuzzy
+msgid "Loading more results (Page "
+msgstr "لم يتم العثور على المزيد من النتائج."
+
+msgid ")..."
+msgstr ""
+
+msgid "Downloading..."
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "[X]"
+msgstr ""
+
+msgid "Set"
+msgstr ""
+
+#, fuzzy
+msgid "Unknown Author"
+msgstr "عنوان غير معروف"
+
+msgid "Rating: "
+msgstr ""
+
+#, fuzzy
+msgid "Search Results: "
+msgstr "فشل البحث: "
+
+msgid "Title: "
+msgstr ""
+
+msgid "Language: "
+msgstr ""
+
+msgid "Size: "
+msgstr ""
+
+msgid "Series: "
+msgstr ""
+
+msgid "Pages: "
+msgstr ""
+
+#, fuzzy
+msgid "Description"
+msgstr "الوصف (انقر للعرض)"
+
+msgid "Back"
+msgstr ""
+
+#, fuzzy
+msgid "Download"
+msgstr "تنزيل \"%s\"؟"
+
+msgid "OK"
+msgstr ""

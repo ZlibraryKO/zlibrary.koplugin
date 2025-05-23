@@ -1,7 +1,3 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
@@ -98,7 +94,8 @@ msgstr "Пожалуйста, сначала укажите имя пользо�
 msgid "Logging in..."
 msgstr "Вход в систему..."
 
-msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+msgid ""
+"Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
 msgstr "Поиск не удался из-за временной проблемы (HTTP 400). Хотите повторить?"
 
 msgid "Retrying search for \""
@@ -157,7 +154,8 @@ msgid "API returned an error for most popular books."
 msgstr "API вернул ошибку для популярных книг."
 
 msgid "Z-library server URL not configured or book identifiers missing."
-msgstr "URL сервера Z-библиотеки не настроен или отсутствуют идентификаторы книги."
+msgstr ""
+"URL сервера Z-библиотеки не настроен или отсутствуют идентификаторы книги."
 
 msgid "Failed to fetch book details (no response body)."
 msgstr "Не удалось получить детали книги (нет тела ответа)."
@@ -250,8 +248,12 @@ msgstr "Открыть книгу"
 msgid "Untitled"
 msgstr "Без названия"
 
-msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
-msgstr "Рекомендуемые книги не найдены, попробуйте еще раз. Иногда требуется несколько попыток."
+msgid ""
+"No recommended books found, please try again. Sometimes this requires a "
+"couple of retries."
+msgstr ""
+"Рекомендуемые книги не найдены, попробуйте еще раз. Иногда требуется "
+"несколько попыток."
 
 msgid "Z-library Recommended Books"
 msgstr "Рекомендуемые книги Z-библиотеки"
@@ -267,3 +269,77 @@ msgstr "Загрузить самые рекомендуемые книги из
 
 msgid "Fetch most popular books from Z-library?"
 msgstr "Загрузить самые популярные книги из Z-библиотеки?"
+
+msgid "Settings"
+msgstr ""
+
+msgid "Set password"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Retry"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+#, fuzzy
+msgid "Loading more results (Page "
+msgstr "Больше результатов не найдено."
+
+msgid ")..."
+msgstr ""
+
+msgid "Downloading..."
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "[X]"
+msgstr ""
+
+msgid "Set"
+msgstr ""
+
+#, fuzzy
+msgid "Unknown Author"
+msgstr "Неизвестное название"
+
+msgid "Rating: "
+msgstr ""
+
+#, fuzzy
+msgid "Search Results: "
+msgstr "Поиск не удался: "
+
+msgid "Title: "
+msgstr ""
+
+msgid "Language: "
+msgstr ""
+
+msgid "Size: "
+msgstr ""
+
+msgid "Series: "
+msgstr ""
+
+msgid "Pages: "
+msgstr ""
+
+#, fuzzy
+msgid "Description"
+msgstr "Описание (нажмите для просмотра)"
+
+msgid "Back"
+msgstr ""
+
+#, fuzzy
+msgid "Download"
+msgstr "Скачать \"%s\"?"
+
+msgid "OK"
+msgstr ""

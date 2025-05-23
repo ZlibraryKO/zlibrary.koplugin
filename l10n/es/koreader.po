@@ -1,7 +1,3 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
@@ -136,7 +132,9 @@ msgid "Download failed: Unknown error"
 msgstr "Descarga fallida: Error desconocido"
 
 msgid "Download limit reached. Please try again later or check your account."
-msgstr "Límite de descarga alcanzado. Por favor, inténtelo de nuevo más tarde o revise su cuenta."
+msgstr ""
+"Límite de descarga alcanzado. Por favor, inténtelo de nuevo más tarde o "
+"revise su cuenta."
 
 msgid "Z-library server URL not configured."
 msgstr "URL del servidor Z-library no configurada."
@@ -160,7 +158,9 @@ msgid "API returned an error for most popular books."
 msgstr "La API devolvió un error para los libros más populares."
 
 msgid "Z-library server URL not configured or book identifiers missing."
-msgstr "URL del servidor Z-library no configurada o identificadores de libro faltantes."
+msgstr ""
+"URL del servidor Z-library no configurada o identificadores de libro "
+"faltantes."
 
 msgid "Failed to fetch book details (no response body)."
 msgstr "Error al obtener detalles del libro (sin cuerpo de respuesta)."
@@ -264,7 +264,9 @@ msgid "Z-library Recommended Books"
 msgstr "Libros recomendados de Z-library"
 
 msgid "No most popular books found. The list was empty, please try again."
-msgstr "No se encontraron libros más populares. La lista estaba vacía, por favor intente de nuevo."
+msgstr ""
+"No se encontraron libros más populares. La lista estaba vacía, por favor "
+"intente de nuevo."
 
 msgid "Z-library Most Popular Books"
 msgstr "Libros más populares de Z-library"
@@ -275,3 +277,76 @@ msgstr "¿Obtener el libro más recomendado de Z-library?"
 msgid "Fetch most popular books from Z-library?"
 msgstr "¿Obtener los libros más populares de Z-library?"
 
+msgid "Settings"
+msgstr ""
+
+msgid "Set password"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Retry"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+#, fuzzy
+msgid "Loading more results (Page "
+msgstr "No se encontraron más resultados."
+
+msgid ")..."
+msgstr ""
+
+msgid "Downloading..."
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "[X]"
+msgstr ""
+
+msgid "Set"
+msgstr ""
+
+#, fuzzy
+msgid "Unknown Author"
+msgstr "Título desconocido"
+
+msgid "Rating: "
+msgstr ""
+
+#, fuzzy
+msgid "Search Results: "
+msgstr "Búsqueda fallida: "
+
+msgid "Title: "
+msgstr ""
+
+msgid "Language: "
+msgstr ""
+
+msgid "Size: "
+msgstr ""
+
+msgid "Series: "
+msgstr ""
+
+msgid "Pages: "
+msgstr ""
+
+#, fuzzy
+msgid "Description"
+msgstr "Descripción (tocar para ver)"
+
+msgid "Back"
+msgstr ""
+
+#, fuzzy
+msgid "Download"
+msgstr "¿Descargar \"%s\"?"
+
+msgid "OK"
+msgstr ""

@@ -1,7 +1,3 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
@@ -21,7 +17,8 @@ msgid "Z-library"
 msgstr "Z-library"
 
 msgid "[[A plugin to search and download books from Z-library.]]"
-msgstr "[[Un plugin pour rechercher et télécharger des livres depuis Z-library.]]"
+msgstr ""
+"[[Un plugin pour rechercher et télécharger des livres depuis Z-library.]]"
 
 msgid "Z-library search"
 msgstr "Recherche Z-library"
@@ -101,8 +98,8 @@ msgstr "Connexion en cours..."
 msgid ""
 "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
 msgstr ""
-"La recherche a échoué en raison d'un problème temporaire (HTTP 400). "
-"Voulez-vous réessayer ?"
+"La recherche a échoué en raison d'un problème temporaire (HTTP 400). Voulez-"
+"vous réessayer ?"
 
 msgid "Retrying search for \""
 msgstr "Nouvelle tentative de recherche pour \""
@@ -136,13 +133,16 @@ msgid "Download failed: Unknown error"
 msgstr "Échec du téléchargement : Erreur inconnue"
 
 msgid "Download limit reached. Please try again later or check your account."
-msgstr "Limite de téléchargement atteinte. Veuillez réessayer plus tard ou vérifier votre compte."
+msgstr ""
+"Limite de téléchargement atteinte. Veuillez réessayer plus tard ou vérifier "
+"votre compte."
 
 msgid "Z-library server URL not configured."
 msgstr "L'URL du serveur Z-library n'est pas configurée."
 
 msgid "Failed to fetch recommended books (no response body)."
-msgstr "Échec de la récupération des livres recommandés (pas de corps de réponse)."
+msgstr ""
+"Échec de la récupération des livres recommandés (pas de corps de réponse)."
 
 msgid "Failed to parse recommended books response."
 msgstr "Échec de l'analyse de la réponse des livres recommandés."
@@ -151,7 +151,9 @@ msgid "API returned an error for recommended books."
 msgstr "L'API a renvoyé une erreur pour les livres recommandés."
 
 msgid "Failed to fetch most popular books (no response body)."
-msgstr "Échec de la récupération des livres les plus populaires (pas de corps de réponse)."
+msgstr ""
+"Échec de la récupération des livres les plus populaires (pas de corps de "
+"réponse)."
 
 msgid "Failed to parse most popular books response."
 msgstr "Échec de l'analyse de la réponse des livres les plus populaires."
@@ -160,10 +162,13 @@ msgid "API returned an error for most popular books."
 msgstr "L'API a renvoyé une erreur pour les livres les plus populaires."
 
 msgid "Z-library server URL not configured or book identifiers missing."
-msgstr "L'URL du serveur Z-library n'est pas configurée ou les identifiants de livre sont manquants."
+msgstr ""
+"L'URL du serveur Z-library n'est pas configurée ou les identifiants de livre "
+"sont manquants."
 
 msgid "Failed to fetch book details (no response body)."
-msgstr "Échec de la récupération des détails du livre (pas de corps de réponse)."
+msgstr ""
+"Échec de la récupération des détails du livre (pas de corps de réponse)."
 
 msgid "Failed to parse book details response."
 msgstr "Échec de l'analyse de la réponse des détails du livre."
@@ -275,3 +280,76 @@ msgstr "Récupérer le livre le plus recommandé de Z-library ?"
 msgid "Fetch most popular books from Z-library?"
 msgstr "Récupérer les livres les plus populaires de Z-library ?"
 
+msgid "Settings"
+msgstr ""
+
+msgid "Set password"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Retry"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+#, fuzzy
+msgid "Loading more results (Page "
+msgstr "Plus aucun résultat trouvé."
+
+msgid ")..."
+msgstr ""
+
+msgid "Downloading..."
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "[X]"
+msgstr ""
+
+msgid "Set"
+msgstr ""
+
+#, fuzzy
+msgid "Unknown Author"
+msgstr "Titre inconnu"
+
+msgid "Rating: "
+msgstr ""
+
+#, fuzzy
+msgid "Search Results: "
+msgstr "Recherche échouée : "
+
+msgid "Title: "
+msgstr ""
+
+msgid "Language: "
+msgstr ""
+
+msgid "Size: "
+msgstr ""
+
+msgid "Series: "
+msgstr ""
+
+msgid "Pages: "
+msgstr ""
+
+#, fuzzy
+msgid "Description"
+msgstr "Description (appuyez pour voir)"
+
+msgid "Back"
+msgstr ""
+
+#, fuzzy
+msgid "Download"
+msgstr "Télécharger \"%s\" ?"
+
+msgid "OK"
+msgstr ""

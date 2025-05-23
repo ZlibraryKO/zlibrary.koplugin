@@ -1,7 +1,3 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
@@ -21,7 +17,8 @@ msgid "Z-library"
 msgstr "Z-library"
 
 msgid "[[A plugin to search and download books from Z-library.]]"
-msgstr "[[Ein Plugin zum Suchen und Herunterladen von Büchern aus der Z-library.]]"
+msgstr ""
+"[[Ein Plugin zum Suchen und Herunterladen von Büchern aus der Z-library.]]"
 
 msgid "Z-library search"
 msgstr "Z-library-Suche"
@@ -136,7 +133,9 @@ msgid "Download failed: Unknown error"
 msgstr "Download fehlgeschlagen: Unbekannter Fehler"
 
 msgid "Download limit reached. Please try again later or check your account."
-msgstr "Download-Limit erreicht. Bitte versuchen Sie es später erneut oder überprüfen Sie Ihr Konto."
+msgstr ""
+"Download-Limit erreicht. Bitte versuchen Sie es später erneut oder "
+"überprüfen Sie Ihr Konto."
 
 msgid "Z-library server URL not configured."
 msgstr "Z-library Server-URL nicht konfiguriert."
@@ -264,7 +263,9 @@ msgid "Z-library Recommended Books"
 msgstr "Z-library empfohlene Bücher"
 
 msgid "No most popular books found. The list was empty, please try again."
-msgstr "Keine beliebtesten Bücher gefunden. Die Liste war leer, bitte versuchen Sie es erneut."
+msgstr ""
+"Keine beliebtesten Bücher gefunden. Die Liste war leer, bitte versuchen Sie "
+"es erneut."
 
 msgid "Z-library Most Popular Books"
 msgstr "Z-library beliebteste Bücher"
@@ -275,3 +276,76 @@ msgstr "Meistempfohlenes Buch von Z-library abrufen?"
 msgid "Fetch most popular books from Z-library?"
 msgstr "Beliebteste Bücher von Z-library abrufen?"
 
+msgid "Settings"
+msgstr ""
+
+msgid "Set password"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Retry"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+#, fuzzy
+msgid "Loading more results (Page "
+msgstr "Keine weiteren Ergebnisse gefunden."
+
+msgid ")..."
+msgstr ""
+
+msgid "Downloading..."
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "[X]"
+msgstr ""
+
+msgid "Set"
+msgstr ""
+
+#, fuzzy
+msgid "Unknown Author"
+msgstr "Unbekannter Titel"
+
+msgid "Rating: "
+msgstr ""
+
+#, fuzzy
+msgid "Search Results: "
+msgstr "Suche fehlgeschlagen: "
+
+msgid "Title: "
+msgstr ""
+
+msgid "Language: "
+msgstr ""
+
+msgid "Size: "
+msgstr ""
+
+msgid "Series: "
+msgstr ""
+
+msgid "Pages: "
+msgstr ""
+
+#, fuzzy
+msgid "Description"
+msgstr "Beschreibung (zum Anzeigen tippen)"
+
+msgid "Back"
+msgstr ""
+
+#, fuzzy
+msgid "Download"
+msgstr "\"%s\" herunterladen?"
+
+msgid "OK"
+msgstr ""

@@ -45,7 +45,7 @@
 2.  打开 “搜索” 菜单。
 3.  选择 “Z-library”（可能在该菜单的第二页）。
 4.  选择 “设置”。
-5.  输入你的 Z-library 用户名、密码以及 Z-library 实例的基础 URL。
+5.  输入你的 Z-library 邮箱、密码以及 Z-library 实例的基础 URL。
 6.  如有需要，可调整其他设置。
 
 **2. 通过凭据文件（高级方式）：**
@@ -63,7 +63,7 @@
 
 return {
     -- baseUrl = "https://your.zlibrary.domain",
-    -- username = "your_username",
+    -- email = "your_email",
     -- password = "your_password",
 }
 ```

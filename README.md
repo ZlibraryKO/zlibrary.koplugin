@@ -47,7 +47,7 @@ There are two ways to configure your Z-library credentials:
 2.  Access the "Search" menu.
 3.  Select "Z-library" (it's probably on the second page of this menu).
 4.  Select "Settings".
-5.  Enter your Z-library username, password, and the base URL for your Z-library instance.
+5.  Enter your Z-library email, password, and the base URL for your Z-library instance.
 6.  Adjust other settings if needed.
 
 **2. Via a Credentials File (Advanced):**
@@ -65,7 +65,7 @@ Create the `zlibrary_credentials.lua` file with the following content, uncomment
 
 return {
     -- baseUrl = "https://your.zlibrary.domain",
-    -- username = "your_username",
+    -- email = "your_email",
     -- password = "your_password",
 }
 ```

@@ -1,3 +1,5 @@
+msgid ""
+msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-21 22:36+0800\n"
@@ -24,14 +26,20 @@ msgstr "Популярное в Z-библиотеке"
 msgid "Z-library recommended"
 msgstr "Рекомендуемое в Z-библиотеке"
 
+msgid "Settings"
+msgstr "Настройки"
+
 msgid "Set base URL"
 msgstr "Установить базовый URL"
 
 msgid "Invalid Base URL."
 msgstr "Некорректный базовый URL."
 
-msgid "Set username"
-msgstr "Установить имя пользователя"
+msgid "Set email"
+msgstr "Установить email"
+
+msgid "Set password"
+msgstr "Установить пароль"
 
 msgid "Verify credentials"
 msgstr "Проверить учетные данные"
@@ -47,6 +55,15 @@ msgstr "Выбрать языки для поиска"
 
 msgid "Select search formats"
 msgstr "Выбрать форматы для поиска"
+
+msgid "Check for updates"
+msgstr "Проверить обновления"
+
+msgid "Error: Plugin path not found. Cannot check for updates."
+msgstr "Ошибка: Путь к плагину не найден. Невозможно проверить обновления."
+
+msgid "Search"
+msgstr "Поиск"
 
 msgid "Recommended"
 msgstr "Рекомендуемые"
@@ -90,10 +107,14 @@ msgstr "Пожалуйста, сначала укажите имя пользо�
 msgid "Logging in..."
 msgstr "Выполняется вход..."
 
-msgid ""
-"Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
-msgstr ""
-"Поиск не удался из-за временной проблемы (HTTP 400). Хотите повторить попытку?"
+msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+msgstr "Поиск не удался из-за временной проблемы (HTTP 400). Хотите повторить попытку?"
+
+msgid "Retry"
+msgstr "Повторить"
+
+msgid "Cancel"
+msgstr "Отмена"
 
 msgid "Retrying search for \""
 msgstr "Повторный поиск для \""
@@ -106,6 +127,10 @@ msgstr "Поиск не удался"
 
 msgid "No results found for \""
 msgstr "Ничего не найдено для \""
+
+#, lua-format
+msgid "Loading more results (Page %s)..."
+msgstr "Загрузка дополнительных результатов (Страница %s)..."
 
 msgid "Failed to load more results"
 msgstr "Не удалось загрузить дополнительные результаты"
@@ -120,6 +145,9 @@ msgstr "Для этой книги нет доступной ссылки для
 msgid "Cannot create downloads directory: %s"
 msgstr "Не удалось создать папку для загрузок: %s"
 
+msgid "Downloading"
+msgstr ""
+
 msgid "Could not open reader UI."
 msgstr "Не удалось открыть интерфейс читалки."
 
@@ -127,8 +155,7 @@ msgid "Download failed: Unknown error"
 msgstr "Ошибка загрузки: Неизвестная ошибка"
 
 msgid "Download limit reached. Please try again later or check your account."
-msgstr ""
-"Достигнут лимит загрузок. Попробуйте позже или проверьте свой аккаунт."
+msgstr "Достигнут лимит загрузок. Попробуйте позже или проверьте свой аккаунт."
 
 msgid "Z-library server URL not configured."
 msgstr "URL сервера Z-библиотеки не настроен."
@@ -166,180 +193,6 @@ msgstr "API вернул ошибку для деталей книги."
 msgid "Failed to process book details."
 msgstr "Не удалось обработать детали книги."
 
-msgid "Select Z-library Download Directory"
-msgstr "Выберите папку для загрузок из Z-библиотеки"
-
-#, lua-format
-msgid "Download directory set to: %s"
-msgstr "Папка для загрузок установлена: %s"
-
-msgid "No directory selected."
-msgstr "Папка не выбрана."
-
-#, lua-format
-msgid "%d items selected for %s."
-msgstr "Выбрано %d элементов для %s."
-
-#, lua-format
-msgid "Filter cleared for %s."
-msgstr "Фильтр сброшен для %s."
-
-msgid "Setting saved successfully!"
-msgstr "Настройки успешно сохранены!"
-
-msgid "Setting cleared."
-msgstr "Настройка сброшена."
-
-msgid "Search Z-library"
-msgstr "Поиск в Z-библиотеке"
-
-msgid "Please enter a search term."
-msgstr "Пожалуйста, введите поисковый запрос."
-
-msgid "Unknown Title"
-msgstr "Неизвестное название"
-
-msgid "Full Title"
-msgstr "Полное название"
-
-msgid "Author"
-msgstr "Автор"
-
-msgid "Full Author"
-msgstr "Полное имя автора"
-
-msgid "Year"
-msgstr "Год"
-
-#, lua-format
-msgid "Format: %s (tap to download)"
-msgstr "Формат: %s (нажмите для скачивания)"
-
-#, lua-format
-msgid "Format: %s (Download not available)"
-msgstr "Формат: %s (Скачивание недоступно)"
-
-msgid "Download Book (Unknown Format)"
-msgstr "Скачать книгу (Неизвестный формат)"
-
-msgid "Publisher"
-msgstr "Издательство"
-
-msgid "Description (tap to view)"
-msgstr "Описание (нажмите для просмотра)"
-
-msgid "Book Details"
-msgstr "Детали книги"
-
-#, lua-format
-msgid "Download \"%s\"?"
-msgstr "Скачать \"%s\"?"
-
-#, lua-format
-msgid "\"%s\" downloaded successfully. Open it now?"
-msgstr "\"%s\" успешно скачана. Открыть сейчас?"
-
-msgid "Open book"
-msgstr "Открыть книгу"
-
-msgid "Untitled"
-msgstr "Без названия"
-
-msgid ""
-"No recommended books found, please try again. Sometimes this requires a "
-"couple of retries."
-msgstr ""
-"Рекомендуемые книги не найдены, попробуйте еще раз. Иногда требуется "
-"несколько попыток."
-
-msgid "Z-library Recommended Books"
-msgstr "Рекомендуемые книги Z-библиотеки"
-
-msgid "No most popular books found. The list was empty, please try again."
-msgstr "Популярные книги не найдены. Список пуст, попробуйте еще раз."
-
-msgid "Z-library Most Popular Books"
-msgstr "Самые популярные книги Z-библиотеки"
-
-msgid "Fetch most recommended book from Z-library?"
-msgstr "Загрузить самые рекомендуемые книги из Z-библиотеки?"
-
-msgid "Fetch most popular books from Z-library?"
-msgstr "Загрузить самые популярные книги из Z-библиотеки?"
-
-msgid "Settings"
-msgstr "Настройки"
-
-msgid "Set password"
-msgstr "Установить пароль"
-
-msgid "Search"
-msgstr "Поиск"
-
-msgid "Retry"
-msgstr "Повторить"
-
-msgid "Cancel"
-msgstr "Отмена"
-
-msgid "Downloading..."
-msgstr "Загрузка..."
-
-msgid "Close"
-msgstr "Закрыть"
-
-msgid "Set"
-msgstr "Установить"
-
-msgid "Unknown Author"
-msgstr "Неизвестный автор"
-
-msgid "Rating"
-msgstr "Рейтинг"
-
-msgid "Search Results"
-msgstr "Результаты поиска"
-
-msgid "Title"
-msgstr "Название"
-
-msgid "Language"
-msgstr "Язык"
-
-msgid "Size"
-msgstr "Размер"
-
-msgid "Series"
-msgstr "Серия"
-
-msgid "Pages"
-msgstr "Страницы"
-
-msgid "Description"
-msgstr "Описание"
-
-msgid "Back"
-msgstr "Назад"
-
-msgid "OK"
-msgstr "OK"
-
-msgid "Set email"
-msgstr "Установить email"
-
-msgid "Check for updates"
-msgstr "Проверить обновления"
-
-msgid "Error: Plugin path not found. Cannot check for updates."
-msgstr "Ошибка: Путь к плагину не найден. Невозможно проверить обновления."
-
-#, lua-format
-msgid "Loading more results (Page %s)..."
-msgstr "Загрузка дополнительных результатов (Страница %s)..."
-
-msgid "Downloading…"
-msgstr "Загрузка…"
-
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "Ошибка обновления: Не удалось определить место установки плагина."
 
@@ -349,19 +202,11 @@ msgstr "Установка обновления..."
 msgid "Update installation failed."
 msgstr "Ошибка установки обновления."
 
-msgid ""
-"Update installed successfully. Please restart KOReader for changes to take "
-"effect."
-msgstr ""
-"Обновление успешно установлено. Перезапустите KOReader для применения "
-"изменений."
+msgid "Update installed successfully. Please restart KOReader for changes to take effect."
+msgstr "Обновление успешно установлено. Перезапустите KOReader для применения изменений."
 
-msgid ""
-"No internet connection detected. Please connect to the internet and try "
-"again."
-msgstr ""
-"Интернет-соединение не обнаружено. Пожалуйста, подключитесь к интернету и "
-"попробуйте снова."
+msgid "No internet connection detected. Please connect to the internet and try again."
+msgstr "Интернет-соединение не обнаружено. Пожалуйста, подключитесь к интернету и попробуйте снова."
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "Ошибка проверки обновлений: Не удалось определить расположение плагина."
@@ -370,8 +215,7 @@ msgid "Checking for updates..."
 msgstr "Проверка обновлений..."
 
 msgid "Failed to check for updates. Please check your internet connection."
-msgstr ""
-"Не удалось проверить обновления. Пожалуйста, проверьте интернет-соединение."
+msgstr "Не удалось проверить обновления. Пожалуйста, проверьте интернет-соединение."
 
 msgid "Could not find update information (invalid data format)."
 msgstr "Не удалось найти информацию об обновлении (неверный формат данных)."
@@ -393,12 +237,8 @@ msgid "You are already on the latest version (%s) or newer."
 msgstr "У вас уже установлена последняя версия (%s) или новее."
 
 #, lua-format
-msgid ""
-"Could not determine your current version, but the latest is %s. If you "
-"recently updated, you might be up-to-date."
-msgstr ""
-"Не удалось определить текущую версию, но последняя - %s. Если вы недавно "
-"обновлялись, возможно у вас актуальная версия."
+msgid "Could not determine your current version, but the latest is %s. If you recently updated, you might be up-to-date."
+msgstr "Не удалось определить текущую версию, но последняя - %s. Если вы недавно обновлялись, возможно у вас актуальная версия."
 
 #, lua-format
 msgid "New version available: %s (you have %s). Download and install?"
@@ -419,5 +259,150 @@ msgstr "Загрузка обновления..."
 msgid "Download failed. Please try again later."
 msgstr "Ошибка загрузки. Пожалуйста, попробуйте позже."
 
+msgid "Close"
+msgstr "Закрыть"
+
+msgid "Select Z-library Download Directory"
+msgstr "Выберите папку для загрузок из Z-библиотеки"
+
+#, lua-format
+msgid "Download directory set to: %s"
+msgstr "Папка для загрузок установлена: %s"
+
+msgid "No directory selected."
+msgstr "Папка не выбрана."
+
+#, lua-format
+msgid "%d items selected for %s."
+msgstr "Выбрано %d элементов для %s."
+
+#, lua-format
+msgid "Filter cleared for %s."
+msgstr "Фильтр сброшен для %s."
+
+msgid "Set"
+msgstr "Установить"
+
+msgid "Setting saved successfully!"
+msgstr "Настройки успешно сохранены!"
+
+msgid "Setting cleared."
+msgstr "Настройка сброшена."
+
+msgid "Search Z-library"
+msgstr "Поиск в Z-библиотеке"
+
+msgid "Please enter a search term."
+msgstr "Пожалуйста, введите поисковый запрос."
+
+msgid "Unknown Title"
+msgstr "Неизвестное название"
+
+msgid "Unknown Author"
+msgstr "Неизвестный автор"
+
+msgid "Rating"
+msgstr "Рейтинг"
+
+msgid "Search Results"
+msgstr "Результаты поиска"
+
+msgid "Title"
+msgstr "Название"
+
+msgid "Full Title"
+msgstr "Полное название"
+
+msgid "Author"
+msgstr "Автор"
+
+msgid "Full Author"
+msgstr "Полное имя автора"
+
+msgid "Year"
+msgstr "Год"
+
+msgid "Language"
+msgstr "Язык"
+
+#, lua-format
+msgid "Format: %s (tap to download)"
+msgstr "Формат: %s (нажмите для скачивания)"
+
+#, lua-format
+msgid "Format: %s (Download not available)"
+msgstr "Формат: %s (Скачивание недоступно)"
+
+msgid "Download Book (Unknown Format)"
+msgstr "Скачать книгу (Неизвестный формат)"
+
+msgid "Size"
+msgstr "Размер"
+
+msgid "Publisher"
+msgstr "Издательство"
+
+msgid "Series"
+msgstr "Серия"
+
+msgid "Pages"
+msgstr "Страницы"
+
+msgid "Description (tap to view)"
+msgstr "Описание (нажмите для просмотра)"
+
+msgid "Description"
+msgstr "Описание"
+
+msgid "Back"
+msgstr "Назад"
+
+msgid "Book Details"
+msgstr "Детали книги"
+
+#, lua-format
+msgid "Download \"%s\"?"
+msgstr "Скачать \"%s\"?"
+
 msgid "Download"
 msgstr "Скачать"
+
+#, lua-format
+msgid "\"%s\" downloaded successfully. Open it now?"
+msgstr "\"%s\" успешно скачана. Открыть сейчас?"
+
+msgid "Open book"
+msgstr "Открыть книгу"
+
+msgid "Untitled"
+msgstr "Без названия"
+
+msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
+msgstr "Рекомендуемые книги не найдены, попробуйте еще раз. Иногда требуется несколько попыток."
+
+msgid "Z-library Recommended Books"
+msgstr "Рекомендуемые книги Z-библиотеки"
+
+msgid "No most popular books found. The list was empty, please try again."
+msgstr "Популярные книги не найдены. Список пуст, попробуйте еще раз."
+
+msgid "Z-library Most Popular Books"
+msgstr "Самые популярные книги Z-библиотеки"
+
+msgid "Fetch most recommended book from Z-library?"
+msgstr "Загрузить самые рекомендуемые книги из Z-библиотеки?"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Fetch most popular books from Z-library?"
+msgstr "Загрузить самые популярные книги из Z-библиотеки?"
+
+#~ msgid "Set username"
+#~ msgstr "Установить имя пользователя"
+
+#~ msgid "Downloading..."
+#~ msgstr "Загрузка..."
+
+#~ msgid "Downloading…"
+#~ msgstr "Загрузка…"

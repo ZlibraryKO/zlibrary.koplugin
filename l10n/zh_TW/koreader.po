@@ -1,3 +1,5 @@
+msgid ""
+msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-21 22:36+0800\n"
@@ -24,14 +26,20 @@ msgstr "Z-圖書館熱門書籍"
 msgid "Z-library recommended"
 msgstr "Z-圖書館推薦書籍"
 
+msgid "Settings"
+msgstr "設置"
+
 msgid "Set base URL"
 msgstr "設置基礎網址"
 
 msgid "Invalid Base URL."
 msgstr "無效的基礎網址。"
 
-msgid "Set username"
-msgstr "設置用戶名"
+msgid "Set email"
+msgstr "設置電子郵件"
+
+msgid "Set password"
+msgstr "設置密碼"
 
 msgid "Verify credentials"
 msgstr "驗證憑證"
@@ -47,6 +55,15 @@ msgstr "選擇搜索語言"
 
 msgid "Select search formats"
 msgstr "選擇搜索格式"
+
+msgid "Check for updates"
+msgstr "檢查更新"
+
+msgid "Error: Plugin path not found. Cannot check for updates."
+msgstr "錯誤：未找到插件路徑。無法檢查更新。"
+
+msgid "Search"
+msgstr "搜索"
 
 msgid "Recommended"
 msgstr "推薦"
@@ -90,9 +107,14 @@ msgstr "請先設置用戶名和密碼。"
 msgid "Logging in..."
 msgstr "正在登入..."
 
-msgid ""
-"Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
 msgstr "由於臨時問題搜索失敗(HTTP 400)。是否要重試？"
+
+msgid "Retry"
+msgstr "重試"
+
+msgid "Cancel"
+msgstr "取消"
 
 msgid "Retrying search for \""
 msgstr "正在重試搜索\""
@@ -106,6 +128,10 @@ msgstr "搜索失敗"
 msgid "No results found for \""
 msgstr "未找到\""
 
+#, lua-format
+msgid "Loading more results (Page %s)..."
+msgstr "正在加載更多結果(第%s頁)..."
+
 msgid "Failed to load more results"
 msgstr "加載更多結果失敗"
 
@@ -115,8 +141,12 @@ msgstr "沒有更多結果。"
 msgid "No download link available for this book."
 msgstr "此書籍無下載鏈接。"
 
+#, lua-format
 msgid "Cannot create downloads directory: %s"
 msgstr "無法創建下載目錄: %s"
+
+msgid "Downloading"
+msgstr ""
 
 msgid "Could not open reader UI."
 msgstr "無法打開閱讀器界面。"
@@ -163,170 +193,6 @@ msgstr "API返回書籍詳情錯誤。"
 msgid "Failed to process book details."
 msgstr "處理書籍詳情失敗。"
 
-msgid "Select Z-library Download Directory"
-msgstr "選擇Z-圖書館下載目錄"
-
-msgid "Download directory set to: %s"
-msgstr "下載目錄設置為: %s"
-
-msgid "No directory selected."
-msgstr "未選擇目錄。"
-
-msgid "%d items selected for %s."
-msgstr "%d個%s選擇的項目。"
-
-msgid "Filter cleared for %s."
-msgstr "已清除%s的篩選器。"
-
-msgid "Setting saved successfully!"
-msgstr "設置保存成功！"
-
-msgid "Setting cleared."
-msgstr "設置已清除。"
-
-msgid "Search Z-library"
-msgstr "搜索Z-圖書館"
-
-msgid "Please enter a search term."
-msgstr "請輸入搜索詞。"
-
-msgid "Unknown Title"
-msgstr "未知標題"
-
-msgid "Full Title"
-msgstr "完整標題"
-
-msgid "Author"
-msgstr "作者"
-
-msgid "Full Author"
-msgstr "完整作者"
-
-msgid "Year"
-msgstr "年份"
-
-msgid "Format: %s (tap to download)"
-msgstr "格式: %s (點擊下載)"
-
-msgid "Format: %s (Download not available)"
-msgstr "格式: %s (無法下載)"
-
-msgid "Download Book (Unknown Format)"
-msgstr "下載書籍(未知格式)"
-
-msgid "Publisher"
-msgstr "出版商"
-
-msgid "Description (tap to view)"
-msgstr "描述(點擊查看)"
-
-msgid "Book Details"
-msgstr "書籍詳情"
-
-msgid "Download \"%s\"?"
-msgstr "下載\"%s\"？"
-
-msgid "\"%s\" downloaded successfully. Open it now?"
-msgstr "\"%s\"下載成功。現在打開嗎？"
-
-msgid "Open book"
-msgstr "打開書籍"
-
-msgid "Untitled"
-msgstr "無標題"
-
-msgid ""
-"No recommended books found, please try again. Sometimes this requires a "
-"couple of retries."
-msgstr "未找到推薦書籍，請重試。有時需要多次嘗試。"
-
-msgid "Z-library Recommended Books"
-msgstr "Z-圖書館推薦書籍"
-
-msgid "No most popular books found. The list was empty, please try again."
-msgstr "未找到熱門書籍。列表為空，請重試。"
-
-msgid "Z-library Most Popular Books"
-msgstr "Z-圖書館熱門書籍"
-
-msgid "Fetch most recommended book from Z-library?"
-msgstr "從Z-圖書館獲取最推薦書籍？"
-
-msgid "Fetch most popular books from Z-library?"
-msgstr "從Z-圖書館獲取熱門書籍？"
-
-msgid "Settings"
-msgstr "設置"
-
-msgid "Set password"
-msgstr "設置密碼"
-
-msgid "Search"
-msgstr "搜索"
-
-msgid "Retry"
-msgstr "重試"
-
-msgid "Cancel"
-msgstr "取消"
-
-msgid "Downloading..."
-msgstr "正在下載..."
-
-msgid "Close"
-msgstr "關閉"
-
-msgid "Set"
-msgstr "設置"
-
-msgid "Unknown Author"
-msgstr "未知作者"
-
-msgid "Rating"
-msgstr "評分"
-
-msgid "Search Results"
-msgstr "搜索結果"
-
-msgid "Title"
-msgstr "標題"
-
-msgid "Language"
-msgstr "語言"
-
-msgid "Size"
-msgstr "大小"
-
-msgid "Series"
-msgstr "系列"
-
-msgid "Pages"
-msgstr "頁數"
-
-msgid "Description"
-msgstr "描述"
-
-msgid "Back"
-msgstr "返回"
-
-msgid "OK"
-msgstr "確定"
-
-msgid "Set email"
-msgstr "設置電子郵件"
-
-msgid "Check for updates"
-msgstr "檢查更新"
-
-msgid "Error: Plugin path not found. Cannot check for updates."
-msgstr "錯誤：未找到插件路徑。無法檢查更新。"
-
-msgid "Loading more results (Page %s)..."
-msgstr "正在加載更多結果(第%s頁)..."
-
-msgid "Downloading…"
-msgstr "正在下載…"
-
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "更新失敗：無法確定插件安裝位置。"
 
@@ -336,14 +202,10 @@ msgstr "正在安裝更新..."
 msgid "Update installation failed."
 msgstr "更新安裝失敗。"
 
-msgid ""
-"Update installed successfully. Please restart KOReader for changes to take "
-"effect."
+msgid "Update installed successfully. Please restart KOReader for changes to take effect."
 msgstr "更新安裝成功。請重啟KOReader使更改生效。"
 
-msgid ""
-"No internet connection detected. Please connect to the internet and try "
-"again."
+msgid "No internet connection detected. Please connect to the internet and try again."
 msgstr "未檢測到網絡連接。請連接網絡後重試。"
 
 msgid "Update check failed: Could not determine plugin location."
@@ -370,14 +232,15 @@ msgstr "找不到更新文件。"
 msgid "Could not find a download link for the update."
 msgstr "找不到更新的下載鏈接。"
 
+#, lua-format
 msgid "You are already on the latest version (%s) or newer."
 msgstr "您已經是最新版本(%s)或更新版本。"
 
-msgid ""
-"Could not determine your current version, but the latest is %s. If you "
-"recently updated, you might be up-to-date."
+#, lua-format
+msgid "Could not determine your current version, but the latest is %s. If you recently updated, you might be up-to-date."
 msgstr "無法確定您的當前版本，但最新版本是%s。如果您最近更新過，可能已經是最新版本。"
 
+#, lua-format
 msgid "New version available: %s (you have %s). Download and install?"
 msgstr "有新版本可用: %s (您當前版本為%s)。要下載並安裝嗎？"
 
@@ -396,5 +259,150 @@ msgstr "正在下載更新..."
 msgid "Download failed. Please try again later."
 msgstr "下載失敗。請稍後重試。"
 
+msgid "Close"
+msgstr "關閉"
+
+msgid "Select Z-library Download Directory"
+msgstr "選擇Z-圖書館下載目錄"
+
+#, lua-format
+msgid "Download directory set to: %s"
+msgstr "下載目錄設置為: %s"
+
+msgid "No directory selected."
+msgstr "未選擇目錄。"
+
+#, lua-format
+msgid "%d items selected for %s."
+msgstr "%d個%s選擇的項目。"
+
+#, lua-format
+msgid "Filter cleared for %s."
+msgstr "已清除%s的篩選器。"
+
+msgid "Set"
+msgstr "設置"
+
+msgid "Setting saved successfully!"
+msgstr "設置保存成功！"
+
+msgid "Setting cleared."
+msgstr "設置已清除。"
+
+msgid "Search Z-library"
+msgstr "搜索Z-圖書館"
+
+msgid "Please enter a search term."
+msgstr "請輸入搜索詞。"
+
+msgid "Unknown Title"
+msgstr "未知標題"
+
+msgid "Unknown Author"
+msgstr "未知作者"
+
+msgid "Rating"
+msgstr "評分"
+
+msgid "Search Results"
+msgstr "搜索結果"
+
+msgid "Title"
+msgstr "標題"
+
+msgid "Full Title"
+msgstr "完整標題"
+
+msgid "Author"
+msgstr "作者"
+
+msgid "Full Author"
+msgstr "完整作者"
+
+msgid "Year"
+msgstr "年份"
+
+msgid "Language"
+msgstr "語言"
+
+#, lua-format
+msgid "Format: %s (tap to download)"
+msgstr "格式: %s (點擊下載)"
+
+#, lua-format
+msgid "Format: %s (Download not available)"
+msgstr "格式: %s (無法下載)"
+
+msgid "Download Book (Unknown Format)"
+msgstr "下載書籍(未知格式)"
+
+msgid "Size"
+msgstr "大小"
+
+msgid "Publisher"
+msgstr "出版商"
+
+msgid "Series"
+msgstr "系列"
+
+msgid "Pages"
+msgstr "頁數"
+
+msgid "Description (tap to view)"
+msgstr "描述(點擊查看)"
+
+msgid "Description"
+msgstr "描述"
+
+msgid "Back"
+msgstr "返回"
+
+msgid "Book Details"
+msgstr "書籍詳情"
+
+#, lua-format
+msgid "Download \"%s\"?"
+msgstr "下載\"%s\"？"
+
 msgid "Download"
 msgstr "下載"
+
+#, lua-format
+msgid "\"%s\" downloaded successfully. Open it now?"
+msgstr "\"%s\"下載成功。現在打開嗎？"
+
+msgid "Open book"
+msgstr "打開書籍"
+
+msgid "Untitled"
+msgstr "無標題"
+
+msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
+msgstr "未找到推薦書籍，請重試。有時需要多次嘗試。"
+
+msgid "Z-library Recommended Books"
+msgstr "Z-圖書館推薦書籍"
+
+msgid "No most popular books found. The list was empty, please try again."
+msgstr "未找到熱門書籍。列表為空，請重試。"
+
+msgid "Z-library Most Popular Books"
+msgstr "Z-圖書館熱門書籍"
+
+msgid "Fetch most recommended book from Z-library?"
+msgstr "從Z-圖書館獲取最推薦書籍？"
+
+msgid "OK"
+msgstr "確定"
+
+msgid "Fetch most popular books from Z-library?"
+msgstr "從Z-圖書館獲取熱門書籍？"
+
+#~ msgid "Set username"
+#~ msgstr "設置用戶名"
+
+#~ msgid "Downloading..."
+#~ msgstr "正在下載..."
+
+#~ msgid "Downloading…"
+#~ msgstr "正在下載…"

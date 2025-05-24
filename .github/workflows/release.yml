@@ -91,9 +91,7 @@ jobs:
             --language=Lua \
             --from-code=UTF-8 \
             --keyword=T \
-            --no-location \
             --omit-header \
-            --join-existing \
             --output="$POT_FILE"
           echo "POT file successfully updated at $POT_FILE"
       

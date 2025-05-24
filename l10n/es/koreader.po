@@ -1,3 +1,5 @@
+msgid ""
+msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-21 22:36+0800\n"
@@ -24,14 +26,20 @@ msgstr "Más populares de Z-library"
 msgid "Z-library recommended"
 msgstr "Recomendados de Z-library"
 
+msgid "Settings"
+msgstr "Configuración"
+
 msgid "Set base URL"
 msgstr "Establecer URL base"
 
 msgid "Invalid Base URL."
 msgstr "URL base no válida."
 
-msgid "Set username"
-msgstr "Establecer nombre de usuario"
+msgid "Set email"
+msgstr "Establecer correo electrónico"
+
+msgid "Set password"
+msgstr "Establecer contraseña"
 
 msgid "Verify credentials"
 msgstr "Verificar credenciales"
@@ -47,6 +55,15 @@ msgstr "Seleccionar idiomas de búsqueda"
 
 msgid "Select search formats"
 msgstr "Seleccionar formatos de búsqueda"
+
+msgid "Check for updates"
+msgstr "Buscar actualizaciones"
+
+msgid "Error: Plugin path not found. Cannot check for updates."
+msgstr "Error: Ruta del plugin no encontrada. No se pueden buscar actualizaciones."
+
+msgid "Search"
+msgstr "Buscar"
 
 msgid "Recommended"
 msgstr "Recomendados"
@@ -90,11 +107,14 @@ msgstr "Por favor, establezca primero el nombre de usuario y la contraseña."
 msgid "Logging in..."
 msgstr "Iniciando sesión..."
 
-msgid ""
-"Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
-msgstr ""
-"La búsqueda falló debido a un problema temporal (HTTP 400). ¿Le gustaría "
-"reintentar?"
+msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+msgstr "La búsqueda falló debido a un problema temporal (HTTP 400). ¿Le gustaría reintentar?"
+
+msgid "Retry"
+msgstr "Reintentar"
+
+msgid "Cancel"
+msgstr "Cancelar"
 
 msgid "Retrying search for \""
 msgstr "Reintentando búsqueda para \""
@@ -108,6 +128,10 @@ msgstr "Búsqueda fallida"
 msgid "No results found for \""
 msgstr "No se encontraron resultados para \""
 
+#, lua-format
+msgid "Loading more results (Page %s)..."
+msgstr "Cargando más resultados (Página %s)..."
+
 msgid "Failed to load more results"
 msgstr "No se pudieron cargar más resultados"
 
@@ -120,6 +144,9 @@ msgstr "No hay enlace de descarga disponible para este libro."
 #, lua-format
 msgid "Cannot create downloads directory: %s"
 msgstr "No se puede crear el directorio de descargas: %s"
+
+msgid "Downloading"
+msgstr ""
 
 msgid "Could not open reader UI."
 msgstr "No se pudo abrir la interfaz de usuario del lector."
@@ -166,180 +193,6 @@ msgstr "La API devolvió un error para los detalles del libro."
 msgid "Failed to process book details."
 msgstr "Error al procesar los detalles del libro."
 
-msgid "Select Z-library Download Directory"
-msgstr "Seleccionar directorio de descarga de Z-library"
-
-#, lua-format
-msgid "Download directory set to: %s"
-msgstr "Directorio de descarga establecido en: %s"
-
-msgid "No directory selected."
-msgstr "Ningún directorio seleccionado."
-
-#, lua-format
-msgid "%d items selected for %s."
-msgstr "%d elementos seleccionados para %s."
-
-#, lua-format
-msgid "Filter cleared for %s."
-msgstr "Filtro borrado para %s."
-
-msgid "Setting saved successfully!"
-msgstr "¡Configuración guardada exitosamente!"
-
-msgid "Setting cleared."
-msgstr "Configuración borrada."
-
-msgid "Search Z-library"
-msgstr "Buscar en Z-library"
-
-msgid "Please enter a search term."
-msgstr "Por favor, introduzca un término de búsqueda."
-
-msgid "Unknown Title"
-msgstr "Título desconocido"
-
-msgid "Full Title"
-msgstr "Título completo"
-
-msgid "Author"
-msgstr "Autor"
-
-msgid "Full Author"
-msgstr "Autor completo"
-
-msgid "Year"
-msgstr "Año"
-
-#, lua-format
-msgid "Format: %s (tap to download)"
-msgstr "Formato: %s (tocar para descargar)"
-
-#, lua-format
-msgid "Format: %s (Download not available)"
-msgstr "Formato: %s (Descarga no disponible)"
-
-msgid "Download Book (Unknown Format)"
-msgstr "Descargar libro (formato desconocido)"
-
-msgid "Publisher"
-msgstr "Editorial"
-
-msgid "Description (tap to view)"
-msgstr "Descripción (tocar para ver)"
-
-msgid "Book Details"
-msgstr "Detalles del libro"
-
-#, lua-format
-msgid "Download \"%s\"?"
-msgstr "¿Descargar \"%s\"?"
-
-#, lua-format
-msgid "\"%s\" downloaded successfully. Open it now?"
-msgstr "\"%s\" descargado correctamente. ¿Abrirlo ahora?"
-
-msgid "Open book"
-msgstr "Abrir libro"
-
-msgid "Untitled"
-msgstr "Sin título"
-
-msgid ""
-"No recommended books found, please try again. Sometimes this requires a "
-"couple of retries."
-msgstr ""
-"No se encontraron libros recomendados, por favor, intente de nuevo. A veces "
-"esto requiere un par de reintentos."
-
-msgid "Z-library Recommended Books"
-msgstr "Libros recomendados de Z-library"
-
-msgid "No most popular books found. The list was empty, please try again."
-msgstr "No se encontraron libros más populares. La lista estaba vacía, por favor intente de nuevo."
-
-msgid "Z-library Most Popular Books"
-msgstr "Libros más populares de Z-library"
-
-msgid "Fetch most recommended book from Z-library?"
-msgstr "¿Obtener el libro más recomendado de Z-library?"
-
-msgid "Fetch most popular books from Z-library?"
-msgstr "¿Obtener los libros más populares de Z-library?"
-
-msgid "Settings"
-msgstr "Configuración"
-
-msgid "Set password"
-msgstr "Establecer contraseña"
-
-msgid "Search"
-msgstr "Buscar"
-
-msgid "Retry"
-msgstr "Reintentar"
-
-msgid "Cancel"
-msgstr "Cancelar"
-
-msgid "Downloading..."
-msgstr "Descargando..."
-
-msgid "Close"
-msgstr "Cerrar"
-
-msgid "Set"
-msgstr "Establecer"
-
-msgid "Unknown Author"
-msgstr "Autor desconocido"
-
-msgid "Rating"
-msgstr "Calificación"
-
-msgid "Search Results"
-msgstr "Resultados de búsqueda"
-
-msgid "Title"
-msgstr "Título"
-
-msgid "Language"
-msgstr "Idioma"
-
-msgid "Size"
-msgstr "Tamaño"
-
-msgid "Series"
-msgstr "Serie"
-
-msgid "Pages"
-msgstr "Páginas"
-
-msgid "Description"
-msgstr "Descripción"
-
-msgid "Back"
-msgstr "Atrás"
-
-msgid "OK"
-msgstr "OK"
-
-msgid "Set email"
-msgstr "Establecer correo electrónico"
-
-msgid "Check for updates"
-msgstr "Buscar actualizaciones"
-
-msgid "Error: Plugin path not found. Cannot check for updates."
-msgstr "Error: Ruta del plugin no encontrada. No se pueden buscar actualizaciones."
-
-#, lua-format
-msgid "Loading more results (Page %s)..."
-msgstr "Cargando más resultados (Página %s)..."
-
-msgid "Downloading…"
-msgstr "Descargando…"
-
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "Actualización fallida: No se pudo determinar dónde instalar el plugin."
 
@@ -349,19 +202,11 @@ msgstr "Instalando actualización..."
 msgid "Update installation failed."
 msgstr "La instalación de la actualización falló."
 
-msgid ""
-"Update installed successfully. Please restart KOReader for changes to take "
-"effect."
-msgstr ""
-"Actualización instalada con éxito. Por favor, reinicie KOReader para que "
-"los cambios surtan efecto."
+msgid "Update installed successfully. Please restart KOReader for changes to take effect."
+msgstr "Actualización instalada con éxito. Por favor, reinicie KOReader para que los cambios surtan efecto."
 
-msgid ""
-"No internet connection detected. Please connect to the internet and try "
-"again."
-msgstr ""
-"No se detectó conexión a internet. Por favor, conéctese a internet e "
-"intente de nuevo."
+msgid "No internet connection detected. Please connect to the internet and try again."
+msgstr "No se detectó conexión a internet. Por favor, conéctese a internet e intente de nuevo."
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "Error al verificar la actualización: No se pudo determinar la ubicación del plugin."
@@ -392,12 +237,8 @@ msgid "You are already on the latest version (%s) or newer."
 msgstr "Ya está en la última versión (%s) o una más reciente."
 
 #, lua-format
-msgid ""
-"Could not determine your current version, but the latest is %s. If you "
-"recently updated, you might be up-to-date."
-msgstr ""
-"No se pudo determinar su versión actual, pero la última es %s. Si actualizó "
-"recientemente, es posible que esté al día."
+msgid "Could not determine your current version, but the latest is %s. If you recently updated, you might be up-to-date."
+msgstr "No se pudo determinar su versión actual, pero la última es %s. Si actualizó recientemente, es posible que esté al día."
 
 #, lua-format
 msgid "New version available: %s (you have %s). Download and install?"
@@ -418,5 +259,150 @@ msgstr "Descargando actualización..."
 msgid "Download failed. Please try again later."
 msgstr "Descarga fallida. Por favor, intente de nuevo más tarde."
 
+msgid "Close"
+msgstr "Cerrar"
+
+msgid "Select Z-library Download Directory"
+msgstr "Seleccionar directorio de descarga de Z-library"
+
+#, lua-format
+msgid "Download directory set to: %s"
+msgstr "Directorio de descarga establecido en: %s"
+
+msgid "No directory selected."
+msgstr "Ningún directorio seleccionado."
+
+#, lua-format
+msgid "%d items selected for %s."
+msgstr "%d elementos seleccionados para %s."
+
+#, lua-format
+msgid "Filter cleared for %s."
+msgstr "Filtro borrado para %s."
+
+msgid "Set"
+msgstr "Establecer"
+
+msgid "Setting saved successfully!"
+msgstr "¡Configuración guardada exitosamente!"
+
+msgid "Setting cleared."
+msgstr "Configuración borrada."
+
+msgid "Search Z-library"
+msgstr "Buscar en Z-library"
+
+msgid "Please enter a search term."
+msgstr "Por favor, introduzca un término de búsqueda."
+
+msgid "Unknown Title"
+msgstr "Título desconocido"
+
+msgid "Unknown Author"
+msgstr "Autor desconocido"
+
+msgid "Rating"
+msgstr "Calificación"
+
+msgid "Search Results"
+msgstr "Resultados de búsqueda"
+
+msgid "Title"
+msgstr "Título"
+
+msgid "Full Title"
+msgstr "Título completo"
+
+msgid "Author"
+msgstr "Autor"
+
+msgid "Full Author"
+msgstr "Autor completo"
+
+msgid "Year"
+msgstr "Año"
+
+msgid "Language"
+msgstr "Idioma"
+
+#, lua-format
+msgid "Format: %s (tap to download)"
+msgstr "Formato: %s (tocar para descargar)"
+
+#, lua-format
+msgid "Format: %s (Download not available)"
+msgstr "Formato: %s (Descarga no disponible)"
+
+msgid "Download Book (Unknown Format)"
+msgstr "Descargar libro (formato desconocido)"
+
+msgid "Size"
+msgstr "Tamaño"
+
+msgid "Publisher"
+msgstr "Editorial"
+
+msgid "Series"
+msgstr "Serie"
+
+msgid "Pages"
+msgstr "Páginas"
+
+msgid "Description (tap to view)"
+msgstr "Descripción (tocar para ver)"
+
+msgid "Description"
+msgstr "Descripción"
+
+msgid "Back"
+msgstr "Atrás"
+
+msgid "Book Details"
+msgstr "Detalles del libro"
+
+#, lua-format
+msgid "Download \"%s\"?"
+msgstr "¿Descargar \"%s\"?"
+
 msgid "Download"
 msgstr "Descargar"
+
+#, lua-format
+msgid "\"%s\" downloaded successfully. Open it now?"
+msgstr "\"%s\" descargado correctamente. ¿Abrirlo ahora?"
+
+msgid "Open book"
+msgstr "Abrir libro"
+
+msgid "Untitled"
+msgstr "Sin título"
+
+msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
+msgstr "No se encontraron libros recomendados, por favor, intente de nuevo. A veces esto requiere un par de reintentos."
+
+msgid "Z-library Recommended Books"
+msgstr "Libros recomendados de Z-library"
+
+msgid "No most popular books found. The list was empty, please try again."
+msgstr "No se encontraron libros más populares. La lista estaba vacía, por favor intente de nuevo."
+
+msgid "Z-library Most Popular Books"
+msgstr "Libros más populares de Z-library"
+
+msgid "Fetch most recommended book from Z-library?"
+msgstr "¿Obtener el libro más recomendado de Z-library?"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Fetch most popular books from Z-library?"
+msgstr "¿Obtener los libros más populares de Z-library?"
+
+#~ msgid "Set username"
+#~ msgstr "Establecer nombre de usuario"
+
+#~ msgid "Downloading..."
+#~ msgstr "Descargando..."
+
+#~ msgid "Downloading…"
+#~ msgstr "Descargando…"

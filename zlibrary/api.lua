@@ -51,7 +51,7 @@ function Api.makeHttpRequest(options)
     else
        options.timeout = nil
     end
-    
+
     local request_params = {
         url = options.url,
         method = options.method or "GET",
@@ -97,6 +97,25 @@ function Api.makeHttpRequest(options)
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - END - Status: %s, Headers found: %s, Error: %s",
         result.status_code, tostring(result.headers ~= nil), tostring(result.error)))
     return result
+end
+
+function Api.retryHandler(result_error)
+    if (type(result_error) ~= 'string') then 
+        return false
+    end
+    local retryKeywords = {
+        timeout = true,
+        wantread = true,
+        wantwrite = true,
+        interrupted = true
+    }
+    for keyword in pairs(retryKeywords) do
+        local pattern = "%f[%a]"..keyword.."%f[%A]"
+        if string.find(result_error, pattern) then
+            return true
+        end
+    end
+    return false
 end
 
 function Api.login(email, password)

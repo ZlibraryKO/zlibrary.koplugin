@@ -342,7 +342,13 @@ function Zlibrary:login()
     Ui.closeMessage(loading_msg)
 
     if result.error then
-        Ui.showErrorMessage(result.error)
+        if not Api.retryHandler(result.error) then 
+            Ui.showErrorMessage(result.error)
+        else
+            Ui.showErrorMessage(result.error, function()
+                return Zlibrary:login()
+            end)
+        end
         return false
     end
 

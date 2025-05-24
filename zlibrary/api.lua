@@ -42,12 +42,16 @@ function Api.makeHttpRequest(options)
     local result = { body = nil, status_code = nil, error = nil, headers = nil }
 
     local sink_to_use = options.sink
-    options.timeout = options.timeout or Config.REQUEST_TIMEOUT
     if not sink_to_use then
         response_body_table = {}
         sink_to_use = ltn12.sink.table(response_body_table)
     end
-
+    if options.timeout ~= 0 then 
+       options.timeout = options.timeout or Config.REQUEST_TIMEOUT
+    else
+       options.timeout = nil
+    end
+    
     local request_params = {
         url = options.url,
         method = options.method or "GET",

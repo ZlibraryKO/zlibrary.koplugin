@@ -16,8 +16,22 @@ function Ui.showInfoMessage(text)
     UIManager:show(InfoMessage:new{ text = text })
 end
 
-function Ui.showErrorMessage(text)
-    UIManager:show(InfoMessage:new{ text = text, timeout = 5 })
+function Ui.showErrorMessage(text, retry_func)
+    text = text or ""
+    if type(retry_func) ~= 'function' then 
+        UIManager:show(InfoMessage:new{ text = text, timeout = 5 })
+    else
+         local confirm_box
+         confirm_box = ConfirmBox:new{
+            text = text .. "\n" ..T("Would you like to retry?"),
+            ok_text = T("Retry"),
+            cancel_text = T("Cancel"),
+            ok_callback = function()
+                retry_func()
+            end
+        }
+        UIManager:show(confirm_box)
+    end
 end
 
 function Ui.showLoadingMessage(text)

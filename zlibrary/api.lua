@@ -5,6 +5,7 @@ local json = require("json")
 local ltn12 = require("ltn12")
 local http = require("socket.http")
 local socket = require("socket")
+local socketutil = require("socketutil")
 local T = require("gettext")
 
 local Api = {}
@@ -45,6 +46,11 @@ function Api.makeHttpRequest(options)
         response_body_table = {}
         sink_to_use = ltn12.sink.table(response_body_table)
     end
+    if options.timeout ~= 0 then 
+       options.timeout = options.timeout or Config.REQUEST_TIMEOUT
+    else
+       options.timeout = nil
+    end
 
     local request_params = {
         url = options.url,
@@ -56,7 +62,9 @@ function Api.makeHttpRequest(options)
     }
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Redirect: %s", request_params.url, request_params.method, tostring(request_params.redirect)))
 
+    socketutil:set_timeout(options.timeout)
     local req_ok, r_val, r_code, r_headers_tbl, r_status_str = pcall(http.request, request_params)
+    socketutil:reset_timeout()
 
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - pcall result: ok=%s, r_val=%s (type %s), r_code=%s (type %s), r_headers_tbl type=%s, r_status_str=%s",
         tostring(req_ok), tostring(r_val), type(r_val), tostring(r_code), type(r_code), type(r_headers_tbl), tostring(r_status_str)))
@@ -89,6 +97,25 @@ function Api.makeHttpRequest(options)
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - END - Status: %s, Headers found: %s, Error: %s",
         result.status_code, tostring(result.headers ~= nil), tostring(result.error)))
     return result
+end
+
+function Api.retryHandler(result_error)
+    if (type(result_error) ~= 'string') then 
+        return false
+    end
+    local retryKeywords = {
+        timeout = true,
+        wantread = true,
+        wantwrite = true,
+        interrupted = true
+    }
+    for keyword in pairs(retryKeywords) do
+        local pattern = "%f[%a]"..keyword.."%f[%A]"
+        if string.find(result_error, pattern) then
+            return true
+        end
+    end
+    return false
 end
 
 function Api.login(email, password)

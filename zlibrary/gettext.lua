@@ -1,8 +1,11 @@
 local util = require("util")
 local GetText = require("gettext")
 
+-- Change this parameter to true to dump the parsed data of the po file. For debugging only.
+local debug_dump = false
+
 local full_source_path = debug.getinfo(1, "S").source
-if full_source_path:sub(1,1) == "@" then
+if full_source_path:sub(1, 1) == "@" then
     full_source_path = full_source_path:sub(2)
 end
 local lib_path, _ = util.splitFilePathName(full_source_path)
@@ -23,13 +26,19 @@ local changeLang = function(new_lang)
     end
     GetText.changeLang(new_lang)
 
-    if (GetText.translation and next(GetText.translation) ~= nil) or 
-            (GetText.context and next(GetText.context) ~= nil) then
+    if (GetText.translation and next(GetText.translation) ~= nil) or (GetText.context and next(GetText.context) ~= nil) then
         NewGetText = util.tableDeepCopy(GetText)
         for k, v in pairs(NewGetText.translation) do
             if k and original_translation[k] then
                 NewGetText.translation[k] = nil
             end
+        end
+
+        -- dump
+        if debug_dump == true then
+            local dump_path = string.format("%s/%s/%s", NewGetText.dirname, new_lang, "dump_tmp.lua")
+            require("luasettings"):open(dump_path):saveSetting("po", NewGetText.translation):flush()
+            require("logger").info( string.format("dump %s.po to %s",new_lang, dump_path))
         end
     end
 
@@ -52,7 +61,7 @@ else
     elseif os.getenv("LANG") then
         changeLang(os.getenv("LANG"))
     end
-    
+
     local isAndroid, android = pcall(require, "android")
     if isAndroid then
         local ffi = require("ffi")

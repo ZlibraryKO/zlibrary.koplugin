@@ -16,7 +16,7 @@ local ReaderUI = require("apps/reader/readerui")
 local AsyncHelper = require("zlibrary.async_helper")
 local logger = require("logger")
 local ConfirmBox = require("ui/widget/confirmbox")
-local Ota = require("zlibrary.ota") -- Added for OTA updates
+local Ota = require("zlibrary.ota")
 
 local Zlibrary = WidgetContainer:extend{
     name = T("Z-library"),

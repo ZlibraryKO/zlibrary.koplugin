@@ -1,9 +1,10 @@
 local Config = require("zlibrary.config")
-local util = require("frontend.util")
+local util = require("util")
 local logger = require("logger")
 local json = require("json")
 local ltn12 = require("ltn12")
 local http = require("socket.http")
+local socket = require("socket")
 local socketutil = require("socketutil")
 local T = require("gettext")
 
@@ -41,11 +42,7 @@ function Api.makeHttpRequest(options)
     local result = { body = nil, status_code = nil, error = nil, headers = nil }
 
     local sink_to_use = options.sink
-    local timeout = options.timeout or Config.REQUEST_TIMEOUT
-    if timeout <= 0 then
-        -- system default socket timeouts
-        timeout = nil
-    end
+    options.timeout = options.timeout or Config.REQUEST_TIMEOUT
     if not sink_to_use then
         response_body_table = {}
         sink_to_use = ltn12.sink.table(response_body_table)
@@ -57,11 +54,11 @@ function Api.makeHttpRequest(options)
         headers = options.headers,
         source = options.source,
         sink = sink_to_use,
-        redirect = options.redirect or false
+        redirect = options.redirect or false,
     }
-    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Timeout: %s, Redirect: %s", request_params.url, request_params.method, tostring(timeout), tostring(request_params.redirect)))
+    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Redirect: %s", request_params.url, request_params.method, tostring(request_params.redirect)))
 
-    socketutil:set_timeout(timeout)
+    socketutil:set_timeout(options.timeout)
     local req_ok, r_val, r_code, r_headers_tbl, r_status_str = pcall(http.request, request_params)
     socketutil:reset_timeout()
 

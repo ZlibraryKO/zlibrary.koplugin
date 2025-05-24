@@ -6,7 +6,7 @@ local Dispatcher = require("dispatcher")  -- luacheck:ignore
 local lfs = require("libs/libkoreader-lfs")
 local UIManager = require("ui/uimanager")
 local NetworkMgr = require("ui/network/manager")
-local util = require("frontend.util")
+local util = require("util")
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
 local T = require("gettext")
 local Config = require("zlibrary.config")
@@ -16,6 +16,7 @@ local ReaderUI = require("apps/reader/readerui")
 local AsyncHelper = require("zlibrary.async_helper")
 local logger = require("logger")
 local ConfirmBox = require("ui/widget/confirmbox")
+local Ota = require("zlibrary.ota")
 
 local Zlibrary = WidgetContainer:extend{
     name = T("Z-library"),
@@ -101,11 +102,11 @@ function Zlibrary:addToMainMenu(menu_items)
                             separator = true,
                         },
                         {
-                            text = T("Set username"),
+                            text = T("Set email"),
                             keep_menu_open = true,
                             callback = function()
                                 Ui.showGenericInputDialog(
-                                    T("Set username"),
+                                    T("Set email"),
                                     Config.SETTINGS_USERNAME_KEY,
                                     Config.getSetting(Config.SETTINGS_USERNAME_KEY),
                                     false
@@ -154,6 +155,19 @@ function Zlibrary:addToMainMenu(menu_items)
                             keep_menu_open = true,
                             callback = function()
                                 Ui.showExtensionSelectionDialog(self.ui)
+                            end,
+                        },
+                        {
+                            text = T("Check for updates"),
+                            keep_menu_open = false,
+                            separator = true,
+                            callback = function()
+                                if self.plugin_path then
+                                    Ota.startUpdateProcess(self.plugin_path)
+                                else
+                                    logger.err("ZLibrary: Plugin path not available for OTA update.")
+                                    Ui.showErrorMessage(T("Error: Plugin path not found. Cannot check for updates."))
+                                end
                             end,
                         },
                     }

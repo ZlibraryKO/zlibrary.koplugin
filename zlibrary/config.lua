@@ -1,5 +1,4 @@
-local util = require("frontend.util")
-local DataStorage = require("datastorage")
+local util = require("util")
 local logger = require("logger")
 local lfs = require("libs/libkoreader-lfs")
 
@@ -21,7 +20,7 @@ Config.REQUEST_TIMEOUT = 15 -- seconds
 Config.SEARCH_RESULTS_LIMIT = 30
 
 function Config.loadCredentialsFromFile(plugin_path)
-    local cred_file_path = plugin_path .. "/" .. Config.CREDENTIALS_FILENAME
+    local cred_file_path = plugin_path .. Config.CREDENTIALS_FILENAME
     if lfs.attributes(cred_file_path, "mode") == "file" then
         local func, err = loadfile(cred_file_path)
         if func then
@@ -34,6 +33,10 @@ function Config.loadCredentialsFromFile(plugin_path)
                 end
                 if result.username then
                     Config.saveSetting(Config.SETTINGS_USERNAME_KEY, result.username)
+                    logger.info("Overriding Username from " .. Config.CREDENTIALS_FILENAME)
+                end
+                if result.email then
+                    Config.saveSetting(Config.SETTINGS_USERNAME_KEY, result.email)
                     logger.info("Overriding Username from " .. Config.CREDENTIALS_FILENAME)
                 end
                 if result.password then

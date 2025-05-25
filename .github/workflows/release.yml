@@ -150,12 +150,12 @@ jobs:
             echo "Info: 'l10n' directory not found. Skipping files from 'l10n'."
           fi
 
-          # Add README*.md if it exists and is a file
-          for readme_file in README*; do
-            if [ -f "$readme_file" ]; then
-              FILE_LINES="${FILE_LINES}${readme_file}\\n"
+          # Add README*.md *.md if it exists and is a file
+          while IFS= read -r -d $'\0' md_file; do
+            if [ -f "$md_file" ]; then
+              FILE_LINES="${FILE_LINES}${md_file}"$'\n'
             fi
-          done
+          done < <(find . -maxdepth 2 -type f -name '*.md' -print0)
           
           # Add LICENSE if it exists and is a file
           if [ -f "LICENSE" ]; then

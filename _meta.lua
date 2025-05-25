@@ -1,4 +1,4 @@
-local T = require("gettext")
+local T = require("zlibrary.gettext")
 return {
     name = "zlibrary",
     fullname = T("Z-library"),

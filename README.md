@@ -81,6 +81,11 @@ To easily access this plugin, you can set up a gesture to open the search menu:
 3.  Select your desired gesture in two steps.
 4.  Under **General**, find **Z-library search** on the last page and check the box.
 
+
+## Localization Support
+
+This plugin provides basic multilingual support for more information see  [l10n/README.MD](l10n/README.md).
+
 ## Usage
 
 1.  Ensure you are in the KOReader file browser.

@@ -24,12 +24,6 @@ local changeLang = function(new_lang)
 
     GetText.dirname = NewGetText.dirname
 
-    if type(GetText.wrapUntranslated_nowrap) == "function" then
-        GetText.wrapUntranslated = GetText.wrapUntranslated_nowrap
-    else
-        GetText.wrapUntranslated = function(msgid) return msgid end
-    end
-
     local ok, err = pcall(GetText.changeLang, new_lang)
     if not ok then
         logger.warn( string.format("Failed to parse the PO file for lang %s: %s", tostring(new_lang), tostring(err)))
@@ -58,12 +52,12 @@ local changeLang = function(new_lang)
 
     -- debug_dump
     if debug_dump == true then
-        local dump_path = string.format("%s/%s/%s", NewGetText.dirname, new_lang, "debug_dump.lua")
+        local dump_path = string.format("%s/%s/%s", NewGetText.dirname, tostring(new_lang), "debug_dump.lua")
         if NewGetText.translation then
             require("luasettings"):open(dump_path):saveSetting("po", NewGetText.translation):flush()
-            logger.info( string.format("debug_dump: %s.po to %s",new_lang, dump_path))
+            logger.info( string.format("debug_dump: %s.po to %s", tostring(new_lang), dump_path))
         else
-            logger.warn( string.format("debug_dump: NewGetText.translation is nil for lang %s", new_lang))
+            logger.warn( string.format("debug_dump: NewGetText.translation is nil for lang %s", tostring(new_lang)))
         end
     end
 end

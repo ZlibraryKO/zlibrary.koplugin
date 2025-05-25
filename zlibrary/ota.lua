@@ -8,6 +8,7 @@ local util = require("util")
 local NetworkMgr = require("ui/network/manager")
 local Api = require("zlibrary.api")
 local Ui = require("zlibrary.ui")
+local DataStorage = require("datastorage")
 
 local Ota = {}
 
@@ -183,7 +184,8 @@ function Ota.installUpdate(zip_filepath, plugin_base_path)
 
     _show_ota_status_loading(T("Installing update..."))
 
-    local target_unzip_dir = "."
+---@diagnostic disable-next-line: missing-parameter
+    local target_unzip_dir = DataStorage.getDataDir()
     local excluded_file_path_in_zip = plugin_base_path .. "zlibrary_credentials.lua"
 
     local unzip_command = string.format("unzip -o '%s' -d '%s' -x '%s'", zip_filepath, target_unzip_dir, excluded_file_path_in_zip)
@@ -311,10 +313,7 @@ function Ota.startUpdateProcess(plugin_path_from_main)
         cancel_text = T("Cancel"),
         ok_callback = function()
             _show_ota_status_loading(T("Downloading update..."))
-            local temp_path_base = plugin_path_from_main .. "tmp_download"
-            if not util.directoryExists(temp_path_base) then
-                util.makePath(temp_path_base)
-            end
+            local temp_path_base = plugin_path_from_main
             local temp_zip_path = temp_path_base .. "/" .. asset_name
 
             logger.info("Zlibrary:Ota.startUpdateProcess - Temporary download path: " .. temp_zip_path)

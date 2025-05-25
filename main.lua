@@ -39,8 +39,7 @@ function Zlibrary:init()
     if full_source_path:sub(1,1) == "@" then
         full_source_path = full_source_path:sub(2)
     end
-    self.plugin_path, _ = util.splitFilePathName(full_source_path)
-    logger.info("Plugin path:", self.plugin_path)
+    self.plugin_path, _ = util.splitFilePathName(full_source_path):gsub("/+", "/")
 
     Config.loadCredentialsFromFile(self.plugin_path)
 

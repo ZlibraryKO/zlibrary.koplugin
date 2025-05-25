@@ -55,6 +55,17 @@ local changeLang = function(new_lang)
             end
         end
     end
+
+    -- debug_dump
+    if debug_dump == true then
+        local dump_path = string.format("%s/%s/%s", NewGetText.dirname, new_lang, "debug_dump.lua")
+        if NewGetText.translation then
+            require("luasettings"):open(dump_path):saveSetting("po", NewGetText.translation):flush()
+            logger.info( string.format("debug_dump: %s.po to %s",new_lang, dump_path))
+        else
+            logger.warn( string.format("debug_dump: NewGetText.translation is nil for lang %s", new_lang))
+        end
+    end
 end
 
 local setting_language = G_reader_settings:readSetting("language")
@@ -82,17 +93,6 @@ else
         if lang and country then
             changeLang(lang .. "_" .. country)
         end
-    end
-end
-
--- debug_dump
-if debug_dump == true then
-    local dump_path = string.format("%s/%s/%s", NewGetText.dirname, new_lang, "dump_tmp.lua")
-    if NewGetText.translation then
-        require("luasettings"):open(dump_path):saveSetting("po", NewGetText.translation):flush()
-        logger.info( string.format("debug_dump: %s.po to %s",new_lang, dump_path))
-    else
-        logger.warn( string.format("debug_dump: NewGetText.translation is nil for lang %s", new_lang))
     end
 end
 

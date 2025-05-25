@@ -26,7 +26,7 @@ local changeLang = function(new_lang)
 
     local ok, err = pcall(GetText.changeLang, new_lang)
     if not ok then
-        logger.warn( string.format("Failed to parse the PO file for lang %s: %s", tostring(new_lang), tostring(err)))
+        logger.warn(string.format("Failed to parse the PO file for lang %s: %s", tostring(new_lang), tostring(err)))
     end
 
     if (GetText.translation and next(GetText.translation) ~= nil) or (GetText.context and next(GetText.context) ~= nil) then
@@ -38,11 +38,7 @@ local changeLang = function(new_lang)
     GetText.dirname = original_l10n_dirname
     GetText.wrapUntranslated = original_wrapUntranslated_func
 
-    -- reuse koreader-translation
-    if NewGetText.wrapUntranslated and NewGetText.translation then
-        NewGetText.wrapUntranslated = function(msgid)
-            return GetText(msgid)
-        end
+    if NewGetText.translation then
         for k, v in pairs(NewGetText.translation) do
             if k and GetText.translation[k] then
                 NewGetText.translation[k] = nil
@@ -52,12 +48,12 @@ local changeLang = function(new_lang)
 
     -- debug_dump
     if debug_dump == true then
-        local dump_path = string.format("%s/%s/%s", NewGetText.dirname, tostring(new_lang), "debug_dump.lua")
+        local dump_path = string.format("%s/%s/%s", NewGetText.dirname, new_lang, "debug_dump.lua")
         if NewGetText.translation then
             require("luasettings"):open(dump_path):saveSetting("po", NewGetText.translation):flush()
-            logger.info( string.format("debug_dump: %s.po to %s", tostring(new_lang), dump_path))
+            logger.info(string.format("debug_dump: %s.po to %s", new_lang, dump_path))
         else
-            logger.warn( string.format("debug_dump: NewGetText.translation is nil for lang %s", tostring(new_lang)))
+            logger.warn(string.format("debug_dump: NewGetText.translation is nil for lang %s", tostring(new_lang)))
         end
     end
 end
@@ -90,4 +86,57 @@ else
     end
 end
 
-return NewGetText.wrapUntranslated and NewGetText or GetText
+local function createGetTextProxy(new_gettext, gettext)
+    if not new_gettext.wrapUntranslated then
+        return gettext
+    end
+
+    local function getCompareStr(key, args)
+        if key == "gettext" then
+            return args[1]
+        elseif key == "pgettext" then
+            return args[2]
+        elseif key == "ngettext" then
+            local n = args[3]
+            return (gettext.getPlural and gettext.getPlural(n) == 0) and args[1] or args[2]
+        elseif key == "npgettext" then
+            local n = args[4]
+            return (gettext.getPlural and gettext.getPlural(n) == 0) and args[2] or args[3]
+        end
+        return nil
+    end
+
+    local mt = {
+        __index = function(_, key)
+            local value = new_gettext[key]
+            if type(value) ~= "function" then
+                return value
+            end
+
+            return function(...)
+                local args = {...}
+                local msgstr = value(...)
+                local compare_str = getCompareStr(key, args)
+
+                if msgstr and compare_str and msgstr == compare_str then
+                    local fallback_func = gettext[key]
+                    if type(fallback_func) == "function" then
+                        msgstr = fallback_func(...)
+                    end
+                end
+                return msgstr
+            end
+        end,
+        __call = function(_, msgid)
+            local msgstr = new_gettext(msgid)
+            if msgstr and msgstr == msgid then
+                msgstr = gettext(msgid)
+            end
+            return msgstr
+        end
+    }
+
+    return setmetatable({}, mt)
+end
+
+return createGetTextProxy(NewGetText, GetText)

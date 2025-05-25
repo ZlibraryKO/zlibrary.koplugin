@@ -1,5 +1,6 @@
 local util = require("util")
 local GetText = require("gettext")
+local logger = require("logger")
 
 -- Change this parameter to true to dump the parsed data of the po file. For debugging only.
 local debug_dump = false
@@ -19,33 +20,41 @@ local changeLang = function(new_lang)
     local original_l10n_dirname = GetText.dirname
     local original_context = GetText.context
     local original_translation = GetText.translation
+    local original_wrapUntranslated_func = GetText.wrapUntranslated
 
     GetText.dirname = NewGetText.dirname
-    GetText.wrapUntranslated = function(msgid)
-        return GetText(msgid)
+
+    if type(GetText.wrapUntranslated_nowrap) == "function" then
+        GetText.wrapUntranslated = GetText.wrapUntranslated_nowrap
+    else
+        GetText.wrapUntranslated = function(msgid) return msgid end
     end
-    GetText.changeLang(new_lang)
+
+    local ok, err = pcall(GetText.changeLang, new_lang)
+    if not ok then
+        logger.warn( string.format("Failed to parse the PO file for lang %s: %s", tostring(new_lang), tostring(err)))
+    end
 
     if (GetText.translation and next(GetText.translation) ~= nil) or (GetText.context and next(GetText.context) ~= nil) then
         NewGetText = util.tableDeepCopy(GetText)
-        for k, v in pairs(NewGetText.translation) do
-            if k and original_translation[k] then
-                NewGetText.translation[k] = nil
-            end
-        end
-
-        -- dump
-        if debug_dump == true then
-            local dump_path = string.format("%s/%s/%s", NewGetText.dirname, new_lang, "dump_tmp.lua")
-            require("luasettings"):open(dump_path):saveSetting("po", NewGetText.translation):flush()
-            require("logger").info( string.format("dump %s.po to %s",new_lang, dump_path))
-        end
     end
 
     GetText.context = original_context
     GetText.translation = original_translation
     GetText.dirname = original_l10n_dirname
-    GetText.wrapUntranslated = GetText.wrapUntranslated_nowrap
+    GetText.wrapUntranslated = original_wrapUntranslated_func
+
+    -- reuse koreader-translation
+    if NewGetText.wrapUntranslated and NewGetText.translation then
+        NewGetText.wrapUntranslated = function(msgid)
+            return GetText(msgid)
+        end
+        for k, v in pairs(NewGetText.translation) do
+            if k and GetText.translation[k] then
+                NewGetText.translation[k] = nil
+            end
+        end
+    end
 end
 
 local setting_language = G_reader_settings:readSetting("language")
@@ -76,5 +85,15 @@ else
     end
 end
 
-return NewGetText.wrapUntranslated and NewGetText or GetText
+-- debug_dump
+if debug_dump == true then
+    local dump_path = string.format("%s/%s/%s", NewGetText.dirname, new_lang, "dump_tmp.lua")
+    if NewGetText.translation then
+        require("luasettings"):open(dump_path):saveSetting("po", NewGetText.translation):flush()
+        logger.info( string.format("debug_dump: %s.po to %s",new_lang, dump_path))
+    else
+        logger.warn( string.format("debug_dump: NewGetText.translation is nil for lang %s", new_lang))
+    end
+end
 
+return NewGetText.wrapUntranslated and NewGetText or GetText

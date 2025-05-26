@@ -23,12 +23,20 @@ local changeLang = function(new_lang)
     GetText.dirname = NewGetText.dirname
 
     local ok, err = pcall(GetText.changeLang, new_lang)
-    if not ok then
+    if ok then
+        if (GetText.translation and next(GetText.translation) ~= nil) or (GetText.context and next(GetText.context) ~= nil) then
+                NewGetText = util.tableDeepCopy(GetText)
+                --  reduce memory usage and prioritize using KOReader-translation
+                if NewGetText.translation then
+                    for k, v in pairs(NewGetText.translation) do
+                        if k and original_translation[k] then
+                            NewGetText.translation[k] = nil
+                        end
+                    end
+                end
+        end
+    else
         logger.warn(string.format("Failed to parse the PO file for lang %s: %s", tostring(new_lang), tostring(err)))
-    end
-
-    if (GetText.translation and next(GetText.translation) ~= nil) or (GetText.context and next(GetText.context) ~= nil) then
-        NewGetText = util.tableDeepCopy(GetText)
     end
 
     GetText.context = original_context
@@ -37,22 +45,13 @@ local changeLang = function(new_lang)
     GetText.wrapUntranslated = original_wrapUntranslated_func
     GetText.current_lang = original_current_lang
 
-    if NewGetText.translation then
-        for k, v in pairs(NewGetText.translation) do
-            if k and GetText.translation[k] then
-                NewGetText.translation[k] = nil
-            end
-        end
-    end
     original_translation = nil
     original_context = nil
 end
 
 local function createGetTextProxy(new_gettext, gettext)
     if not (new_gettext.wrapUntranslated and new_gettext.translation and new_gettext.current_lang) then
-        gettext.debug_dump = function()
-            logger.warn(string.format("debug_dump: NewGetText was not loaded correctly for lang %s", tostring(gettext.current_lang)))
-        end
+        logger.warn(string.format("debug_dump: NewGetText was not loaded correctly for lang %s", tostring(gettext.current_lang)))
         return gettext
     end
 
@@ -63,10 +62,10 @@ local function createGetTextProxy(new_gettext, gettext)
             return args[2]
         elseif key == "ngettext" then
             local n = args[3]
-            return (gettext.getPlural and gettext.getPlural(n) == 0) and args[1] or args[2]
+            return (new_gettext.getPlural and new_gettext.getPlural(n) == 0) and args[1] or args[2]
         elseif key == "npgettext" then
             local n = args[4]
-            return (gettext.getPlural and gettext.getPlural(n) == 0) and args[2] or args[3]
+            return (new_gettext.getPlural and new_gettext.getPlural(n) == 0) and args[2] or args[3]
         end
         return nil
     end
@@ -103,6 +102,7 @@ local function createGetTextProxy(new_gettext, gettext)
 
     return setmetatable({
         -- dump the parsed data of the po file. For debugging only.
+        -- If NewGetText is not loaded, this will be nil value when called
         debug_dump = function()
             local new_lang = new_gettext.current_lang
             local dump_path = string.format("%s/%s/%s", new_gettext.dirname, new_lang, "debug_logs.lua")

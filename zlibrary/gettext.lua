@@ -10,7 +10,7 @@ local lib_path, _ = util.splitFilePathName(full_source_path)
 local plugin_path = lib_path:gsub("/+", "/"):gsub("[\\/]zlibrary[\\/]", "")
 
 local NewGetText = {
-    dirname = string.format("%s/l10n", plugin_path),
+    dirname = string.format("%s/l10n", plugin_path)
 }
 
 local changeLang = function(new_lang)
@@ -18,6 +18,7 @@ local changeLang = function(new_lang)
     local original_context = GetText.context
     local original_translation = GetText.translation
     local original_wrapUntranslated_func = GetText.wrapUntranslated
+    local original_current_lang = GetText.current_lang
 
     GetText.dirname = NewGetText.dirname
 
@@ -34,6 +35,7 @@ local changeLang = function(new_lang)
     GetText.translation = original_translation
     GetText.dirname = original_l10n_dirname
     GetText.wrapUntranslated = original_wrapUntranslated_func
+    GetText.current_lang = original_current_lang
 
     if NewGetText.translation then
         for k, v in pairs(NewGetText.translation) do
@@ -42,10 +44,12 @@ local changeLang = function(new_lang)
             end
         end
     end
+    original_translation = nil
+    original_context = nil
 end
 
 local function createGetTextProxy(new_gettext, gettext)
-    if not (new_gettext.wrapUntranslated and new_gettext.translation and new_gettext.current_lang)then
+    if not (new_gettext.wrapUntranslated and new_gettext.translation and new_gettext.current_lang) then
         gettext.debug_dump = function()
             logger.warn(string.format("debug_dump: NewGetText was not loaded correctly for lang %s", tostring(gettext.current_lang)))
         end
@@ -108,32 +112,9 @@ local function createGetTextProxy(new_gettext, gettext)
     }, mt)
 end
 
-local setting_language = G_reader_settings:readSetting("language")
-if setting_language then
-    changeLang(setting_language)
-else
-    if os.getenv("LANGUAGE") then
-        changeLang(os.getenv("LANGUAGE"))
-    elseif os.getenv("LC_ALL") then
-        changeLang(os.getenv("LC_ALL"))
-    elseif os.getenv("LC_MESSAGES") then
-        changeLang(os.getenv("LC_MESSAGES"))
-    elseif os.getenv("LANG") then
-        changeLang(os.getenv("LANG"))
-    end
-
-    local isAndroid, android = pcall(require, "android")
-    if isAndroid then
-        local ffi = require("ffi")
-        local buf = ffi.new("char[?]", 16)
-        android.lib.AConfiguration_getLanguage(android.app.config, buf)
-        local lang = ffi.string(buf)
-        android.lib.AConfiguration_getCountry(android.app.config, buf)
-        local country = ffi.string(buf)
-        if lang and country then
-            changeLang(lang .. "_" .. country)
-        end
-    end
+local current_lang = GetText.current_lang or G_reader_settings:readSetting("language")
+if current_lang then
+    changeLang(current_lang)
 end
 
 return createGetTextProxy(NewGetText, GetText)

@@ -2,9 +2,6 @@ local util = require("util")
 local GetText = require("gettext")
 local logger = require("logger")
 
--- Change this parameter to true to dump the parsed data of the po file. For debugging only.
-local debug_dump = false
-
 local full_source_path = debug.getinfo(1, "S").source
 if full_source_path:sub(1, 1) == "@" then
     full_source_path = full_source_path:sub(2)
@@ -45,45 +42,6 @@ local changeLang = function(new_lang)
             end
         end
     end
-
-    -- debug_dump
-    if debug_dump == true then
-        local dump_path = string.format("%s/%s/%s", NewGetText.dirname, new_lang, "debug_dump.lua")
-        if NewGetText.translation then
-            require("luasettings"):open(dump_path):saveSetting("po", NewGetText.translation):flush()
-            logger.info(string.format("debug_dump: %s.po to %s", new_lang, dump_path))
-        else
-            logger.warn(string.format("debug_dump: NewGetText.translation is nil for lang %s", tostring(new_lang)))
-        end
-    end
-end
-
-local setting_language = G_reader_settings:readSetting("language")
-if setting_language then
-    changeLang(setting_language)
-else
-    if os.getenv("LANGUAGE") then
-        changeLang(os.getenv("LANGUAGE"))
-    elseif os.getenv("LC_ALL") then
-        changeLang(os.getenv("LC_ALL"))
-    elseif os.getenv("LC_MESSAGES") then
-        changeLang(os.getenv("LC_MESSAGES"))
-    elseif os.getenv("LANG") then
-        changeLang(os.getenv("LANG"))
-    end
-
-    local isAndroid, android = pcall(require, "android")
-    if isAndroid then
-        local ffi = require("ffi")
-        local buf = ffi.new("char[?]", 16)
-        android.lib.AConfiguration_getLanguage(android.app.config, buf)
-        local lang = ffi.string(buf)
-        android.lib.AConfiguration_getCountry(android.app.config, buf)
-        local country = ffi.string(buf)
-        if lang and country then
-            changeLang(lang .. "_" .. country)
-        end
-    end
 end
 
 local function createGetTextProxy(new_gettext, gettext)
@@ -113,14 +71,14 @@ local function createGetTextProxy(new_gettext, gettext)
                 return value
             end
 
+            local fallback_func = gettext[key]
             return function(...)
                 local args = {...}
                 local msgstr = value(...)
                 local compare_str = getCompareStr(key, args)
 
                 if msgstr and compare_str and msgstr == compare_str then
-                    local fallback_func = gettext[key]
-                    if type(fallback_func) == "function" then
+                     if type(fallback_func) == "function" then
                         msgstr = fallback_func(...)
                     end
                 end
@@ -136,7 +94,47 @@ local function createGetTextProxy(new_gettext, gettext)
         end
     }
 
-    return setmetatable({}, mt)
+    return setmetatable({
+        -- dump the parsed data of the po file. For debugging only.
+        debug_dump = function()
+            local new_lang = new_gettext.current_lang
+            if new_gettext.translation and new_gettext.dirname and new_lang then
+                local dump_path = string.format("%s/%s/%s", new_gettext.dirname, new_lang, "debug_dump.lua")
+                require("luasettings"):open(dump_path):saveSetting("po", new_gettext):flush()
+                logger.info(string.format("debug_dump: %s.po to %s", new_lang, dump_path))
+            else
+                logger.warn(string.format("debug_dump: NewGetText was not loaded correctly for lang %s", tostring(new_lang)))
+            end
+      end
+    }, mt)
+end
+
+local setting_language = G_reader_settings:readSetting("language")
+if setting_language then
+    changeLang(setting_language)
+else
+    if os.getenv("LANGUAGE") then
+        changeLang(os.getenv("LANGUAGE"))
+    elseif os.getenv("LC_ALL") then
+        changeLang(os.getenv("LC_ALL"))
+    elseif os.getenv("LC_MESSAGES") then
+        changeLang(os.getenv("LC_MESSAGES"))
+    elseif os.getenv("LANG") then
+        changeLang(os.getenv("LANG"))
+    end
+
+    local isAndroid, android = pcall(require, "android")
+    if isAndroid then
+        local ffi = require("ffi")
+        local buf = ffi.new("char[?]", 16)
+        android.lib.AConfiguration_getLanguage(android.app.config, buf)
+        local lang = ffi.string(buf)
+        android.lib.AConfiguration_getCountry(android.app.config, buf)
+        local country = ffi.string(buf)
+        if lang and country then
+            changeLang(lang .. "_" .. country)
+        end
+    end
 end
 
 return createGetTextProxy(NewGetText, GetText)

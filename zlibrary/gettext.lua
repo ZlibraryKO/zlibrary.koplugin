@@ -7,10 +7,10 @@ if full_source_path:sub(1, 1) == "@" then
     full_source_path = full_source_path:sub(2)
 end
 local lib_path, _ = util.splitFilePathName(full_source_path)
-local plugin_path = lib_path:gsub("[\\/]zlibrary[\\/]", "")
+local plugin_path = lib_path:gsub("/+", "/"):gsub("[\\/]zlibrary[\\/]", "")
 
 local NewGetText = {
-    dirname = string.format("%s/l10n", plugin_path)
+    dirname = string.format("%s/l10n", plugin_path),
 }
 
 local changeLang = function(new_lang)
@@ -45,7 +45,10 @@ local changeLang = function(new_lang)
 end
 
 local function createGetTextProxy(new_gettext, gettext)
-    if not new_gettext.wrapUntranslated then
+    if not (new_gettext.wrapUntranslated and new_gettext.translation and new_gettext.current_lang)then
+        gettext.debug_dump = function()
+            logger.warn(string.format("debug_dump: NewGetText was not loaded correctly for lang %s", tostring(gettext.current_lang)))
+        end
         return gettext
     end
 
@@ -98,13 +101,9 @@ local function createGetTextProxy(new_gettext, gettext)
         -- dump the parsed data of the po file. For debugging only.
         debug_dump = function()
             local new_lang = new_gettext.current_lang
-            if new_gettext.translation and new_gettext.dirname and new_lang then
-                local dump_path = string.format("%s/%s/%s", new_gettext.dirname, new_lang, "debug_dump.lua")
-                require("luasettings"):open(dump_path):saveSetting("po", new_gettext):flush()
-                logger.info(string.format("debug_dump: %s.po to %s", new_lang, dump_path))
-            else
-                logger.warn(string.format("debug_dump: NewGetText was not loaded correctly for lang %s", tostring(new_lang)))
-            end
+            local dump_path = string.format("%s/%s/%s", new_gettext.dirname, new_lang, "debug_logs.lua")
+            require("luasettings"):open(dump_path):saveSetting("po", new_gettext):flush()
+            logger.info(string.format("debug_dump: %s.po to %s", new_lang, dump_path))
       end
     }, mt)
 end

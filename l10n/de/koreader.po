@@ -147,7 +147,7 @@ msgid "Cannot create downloads directory: %s"
 msgstr "Download-Verzeichnis kann nicht erstellt werden: %s"
 
 msgid "Downloading"
-msgstr ""
+msgstr "Wird heruntergeladen"
 
 msgid "Could not open reader UI."
 msgstr "Lese-Benutzeroberfläche konnte nicht geöffnet werden."

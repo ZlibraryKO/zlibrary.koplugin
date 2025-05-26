@@ -27,9 +27,9 @@ local changeLang = function(new_lang)
         if (GetText.translation and next(GetText.translation) ~= nil) or (GetText.context and next(GetText.context) ~= nil) then
                 NewGetText = util.tableDeepCopy(GetText)
                 --  reduce memory usage and prioritize using KOReader-translation
-                if NewGetText.translation then
+                if NewGetText.translation and original_translation then
                     for k, v in pairs(NewGetText.translation) do
-                        if k and original_translation[k] then
+                        if original_translation[k] then
                             NewGetText.translation[k] = nil
                         end
                     end

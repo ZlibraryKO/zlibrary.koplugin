@@ -186,7 +186,7 @@ function Ota.installUpdate(zip_filepath, plugin_base_path)
 
 ---@diagnostic disable-next-line: missing-parameter
     local target_unzip_dir = DataStorage.getDataDir()
-    local excluded_file_path_in_zip = plugin_base_path .. "zlibrary_credentials.lua"
+    local excluded_file_path_in_zip = "plugins/zlibrary.koplugin/zlibrary_credentials.lua"
 
     local unzip_command = string.format("unzip -o '%s' -d '%s' -x '%s'", zip_filepath, target_unzip_dir, excluded_file_path_in_zip)
     logger.info("Zlibrary:Ota.installUpdate - Executing: " .. unzip_command)

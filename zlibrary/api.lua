@@ -5,7 +5,7 @@ local json = require("json")
 local ltn12 = require("ltn12")
 local http = require("socket.http")
 local socket = require("socket")
-local T = require("gettext")
+local T = require("zlibrary.gettext")
 
 local Api = {}
 
@@ -348,7 +348,7 @@ function Api.getRecommendedBooks(user_id, user_key)
 
     if http_result.error then
         logger.warn("Api.getRecommendedBooks - HTTP request error: ", http_result.error)
-        return { error = T("Failed to fetch recommended books: ") .. http_result.error }
+        return { error = string.format("%s: %s", T("Failed to fetch recommended books"), http_result.error) }
     end
 
     if not http_result.body then
@@ -403,7 +403,7 @@ function Api.getMostPopularBooks(user_id, user_key)
 
     if http_result.error then
         logger.warn("Api.getMostPopularBooks - HTTP request error: ", http_result.error)
-        return { error = T("Failed to fetch most popular books: ") .. http_result.error }
+        return { error = string.format("%s: %s", T("Failed to fetch most popular books"), http_result.error) }
     end
 
     if not http_result.body then
@@ -458,7 +458,7 @@ function Api.getBookDetails(user_id, user_key, book_id, book_hash)
 
     if http_result.error then
         logger.warn("Api.getBookDetails - HTTP request error: ", http_result.error)
-        return { error = T("Failed to fetch book details: ") .. http_result.error }
+        return { error = string("%s: %s", T("Failed to fetch book details"), http_result.error) }
     end
 
     if not http_result.body then

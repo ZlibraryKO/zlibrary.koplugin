@@ -1,0 +1,412 @@
+"Project-Id-Version: v1.0.15\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-21 22:36+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Z-library"
+msgstr ""
+
+msgid "[[A plugin to search and download books from Z-library.]]"
+msgstr ""
+
+msgid "Z-library search"
+msgstr ""
+
+msgid "Z-library most popular"
+msgstr ""
+
+msgid "Z-library recommended"
+msgstr ""
+
+msgid "Set base URL"
+msgstr ""
+
+msgid "Invalid Base URL."
+msgstr ""
+
+msgid "Set username"
+msgstr ""
+
+msgid "Verify credentials"
+msgstr ""
+
+msgid "Login successful!"
+msgstr ""
+
+msgid "Set download directory"
+msgstr ""
+
+msgid "Select search languages"
+msgstr ""
+
+msgid "Select search formats"
+msgstr ""
+
+msgid "Recommended"
+msgstr ""
+
+msgid "Most popular"
+msgstr ""
+
+msgid "No internet connection detected."
+msgstr ""
+
+msgid "Failed to retrieve user session after login."
+msgstr ""
+
+msgid "No books found, please try again"
+msgstr ""
+
+msgid "Fetching recommended books..."
+msgstr ""
+
+msgid "Failed to fetch recommended books"
+msgstr ""
+
+msgid "Fetching most popular books..."
+msgstr ""
+
+msgid "Failed to fetch most popular books"
+msgstr ""
+
+msgid "Fetching book details..."
+msgstr ""
+
+msgid "Failed to fetch book details"
+msgstr ""
+
+msgid "Could not retrieve book details."
+msgstr ""
+
+msgid "Please set both username and password first."
+msgstr ""
+
+msgid "Logging in..."
+msgstr ""
+
+msgid ""
+"Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+msgstr ""
+
+msgid "Retrying search for \""
+msgstr ""
+
+msgid "Searching for \""
+msgstr ""
+
+msgid "Search failed"
+msgstr ""
+
+msgid "No results found for \""
+msgstr ""
+
+msgid "Failed to load more results"
+msgstr ""
+
+msgid "No more results found."
+msgstr ""
+
+msgid "No download link available for this book."
+msgstr ""
+
+#, lua-format
+msgid "Cannot create downloads directory: %s"
+msgstr ""
+
+msgid "Could not open reader UI."
+msgstr ""
+
+msgid "Download failed: Unknown error"
+msgstr ""
+
+msgid "Download limit reached. Please try again later or check your account."
+msgstr ""
+
+msgid "Z-library server URL not configured."
+msgstr ""
+
+msgid "Failed to fetch recommended books (no response body)."
+msgstr ""
+
+msgid "Failed to parse recommended books response."
+msgstr ""
+
+msgid "API returned an error for recommended books."
+msgstr ""
+
+msgid "Failed to fetch most popular books (no response body)."
+msgstr ""
+
+msgid "Failed to parse most popular books response."
+msgstr ""
+
+msgid "API returned an error for most popular books."
+msgstr ""
+
+msgid "Z-library server URL not configured or book identifiers missing."
+msgstr ""
+
+msgid "Failed to fetch book details (no response body)."
+msgstr ""
+
+msgid "Failed to parse book details response."
+msgstr ""
+
+msgid "API returned an error for book details."
+msgstr ""
+
+msgid "Failed to process book details."
+msgstr ""
+
+msgid "Select Z-library Download Directory"
+msgstr ""
+
+#, lua-format
+msgid "Download directory set to: %s"
+msgstr ""
+
+msgid "No directory selected."
+msgstr ""
+
+#, lua-format
+msgid "%d items selected for %s."
+msgstr ""
+
+#, lua-format
+msgid "Filter cleared for %s."
+msgstr ""
+
+msgid "Setting saved successfully!"
+msgstr ""
+
+msgid "Setting cleared."
+msgstr ""
+
+msgid "Search Z-library"
+msgstr ""
+
+msgid "Please enter a search term."
+msgstr ""
+
+msgid "Unknown Title"
+msgstr ""
+
+msgid "Full Title"
+msgstr ""
+
+msgid "Author"
+msgstr ""
+
+msgid "Full Author"
+msgstr ""
+
+msgid "Year"
+msgstr ""
+
+#, lua-format
+msgid "Format: %s (tap to download)"
+msgstr ""
+
+#, lua-format
+msgid "Format: %s (Download not available)"
+msgstr ""
+
+msgid "Download Book (Unknown Format)"
+msgstr ""
+
+msgid "Publisher"
+msgstr ""
+
+msgid "Description (tap to view)"
+msgstr ""
+
+msgid "Book Details"
+msgstr ""
+
+#, lua-format
+msgid "Download \"%s\"?"
+msgstr ""
+
+#, lua-format
+msgid "\"%s\" downloaded successfully. Open it now?"
+msgstr ""
+
+msgid "Open book"
+msgstr ""
+
+msgid "Untitled"
+msgstr ""
+
+msgid ""
+"No recommended books found, please try again. Sometimes this requires a "
+"couple of retries."
+msgstr ""
+
+msgid "Z-library Recommended Books"
+msgstr ""
+
+msgid "No most popular books found. The list was empty, please try again."
+msgstr ""
+
+msgid "Z-library Most Popular Books"
+msgstr ""
+
+msgid "Fetch most recommended book from Z-library?"
+msgstr ""
+
+msgid "Fetch most popular books from Z-library?"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Set password"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Retry"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Downloading..."
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Set"
+msgstr ""
+
+msgid "Unknown Author"
+msgstr ""
+
+msgid "Rating"
+msgstr ""
+
+msgid "Search Results"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Language"
+msgstr ""
+
+msgid "Size"
+msgstr ""
+
+msgid "Series"
+msgstr ""
+
+msgid "Pages"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "OK"
+msgstr ""
+
+msgid "Set email"
+msgstr ""
+
+msgid "Check for updates"
+msgstr ""
+
+msgid "Error: Plugin path not found. Cannot check for updates."
+msgstr ""
+
+#, lua-format
+msgid "Loading more results (Page %s)..."
+msgstr ""
+
+msgid "Downloading…"
+msgstr ""
+
+msgid "Update failed: Could not determine where to install the plugin."
+msgstr ""
+
+msgid "Installing update..."
+msgstr ""
+
+msgid "Update installation failed."
+msgstr ""
+
+msgid ""
+"Update installed successfully. Please restart KOReader for changes to take "
+"effect."
+msgstr ""
+
+msgid ""
+"No internet connection detected. Please connect to the internet and try "
+"again."
+msgstr ""
+
+msgid "Update check failed: Could not determine plugin location."
+msgstr ""
+
+msgid "Checking for updates..."
+msgstr ""
+
+msgid "Failed to check for updates. Please check your internet connection."
+msgstr ""
+
+msgid "Could not find update information (invalid data format)."
+msgstr ""
+
+msgid "Could not find update version information."
+msgstr ""
+
+msgid "Could not understand the update version format."
+msgstr ""
+
+msgid "Could not find update files."
+msgstr ""
+
+msgid "Could not find a download link for the update."
+msgstr ""
+
+#, lua-format
+msgid "You are already on the latest version (%s) or newer."
+msgstr ""
+
+#, lua-format
+msgid ""
+"Could not determine your current version, but the latest is %s. If you "
+"recently updated, you might be up-to-date."
+msgstr ""
+
+#, lua-format
+msgid "New version available: %s (you have %s). Download and install?"
+msgstr ""
+
+msgid "an older version"
+msgstr ""
+
+msgid "Update available"
+msgstr ""
+
+msgid "Update"
+msgstr ""
+
+msgid "Downloading update..."
+msgstr ""
+
+msgid "Download failed. Please try again later."
+msgstr ""
+
+msgid "Download"
+msgstr ""

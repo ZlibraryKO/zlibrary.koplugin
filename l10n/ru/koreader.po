@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-21 22:36+0800\n"
+"POT-Creation-Date: 2025-05-27 11:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "Language: Russian\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 msgid "Z-library"
 msgstr "Z-библиотека"
@@ -146,8 +146,8 @@ msgstr "Для этой книги нет доступной ссылки для
 msgid "Cannot create downloads directory: %s"
 msgstr "Не удалось создать папку для загрузок: %s"
 
-msgid "Downloading"
-msgstr ""
+msgid "Downloading…"
+msgstr "Загрузка…"
 
 msgid "Could not open reader UI."
 msgstr "Не удалось открыть интерфейс читалки."
@@ -211,6 +211,10 @@ msgstr "Интернет-соединение не обнаружено. Пож�
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "Ошибка проверки обновлений: Не удалось определить расположение плагина."
+
+#, lua-format
+msgid "Unsupported plugin path for OTA update: %s. Only 'plugins/zlibrary.koplugin' is supported."
+msgstr "Неподдерживаемый путь к плагину для OTA обновления: %s. Поддерживается только 'plugins/zlibrary.koplugin'."
 
 msgid "Checking for updates..."
 msgstr "Проверка обновлений..."
@@ -404,6 +408,3 @@ msgstr "Загрузить самые популярные книги из Z-б�
 
 #~ msgid "Downloading..."
 #~ msgstr "Загрузка..."
-
-#~ msgid "Downloading…"
-#~ msgstr "Загрузка…"

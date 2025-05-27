@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-21 22:36+0800\n"
+"POT-Creation-Date: 2025-05-27 11:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: Korean\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "Z-library"
 msgstr "Z-라이브러리"
@@ -146,8 +146,8 @@ msgstr "이 도서에 대한 다운로드 링크가 없습니다."
 msgid "Cannot create downloads directory: %s"
 msgstr "다운로드 디렉토리를 생성할 수 없습니다: %s"
 
-msgid "Downloading"
-msgstr ""
+msgid "Downloading…"
+msgstr "다운로드 중…"
 
 msgid "Could not open reader UI."
 msgstr "리더 UI를 열 수 없습니다."
@@ -211,6 +211,10 @@ msgstr "인터넷 연결이 감지되지 않았습니다. 인터넷에 연결한
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "업데이트 확인 실패: 플러그인 위치를 확인할 수 없습니다."
+
+#, lua-format
+msgid "Unsupported plugin path for OTA update: %s. Only 'plugins/zlibrary.koplugin' is supported."
+msgstr "OTA 업데이트를 위한 지원되지 않는 플러그인 경로: %s. 'plugins/zlibrary.koplugin'만 지원됩니다."
 
 msgid "Checking for updates..."
 msgstr "업데이트 확인 중..."
@@ -404,6 +408,3 @@ msgstr "Z-라이브러리에서 인기 도서를 가져오시겠습니까?"
 
 #~ msgid "Downloading..."
 #~ msgstr "다운로드 중..."
-
-#~ msgid "Downloading…"
-#~ msgstr "다운로드 중…"

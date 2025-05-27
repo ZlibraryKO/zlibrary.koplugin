@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-21 22:36+0800\n"
+"POT-Creation-Date: 2025-05-27 11:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
 "Language: Chinese\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "Z-library"
 msgstr "Z-图书馆"
@@ -146,8 +146,8 @@ msgstr "本书无可用下载链接。"
 msgid "Cannot create downloads directory: %s"
 msgstr "无法创建下载目录：%s"
 
-msgid "Downloading"
-msgstr ""
+msgid "Downloading…"
+msgstr "正在下载..."
 
 msgid "Could not open reader UI."
 msgstr "无法打开阅读器界面。"
@@ -211,6 +211,10 @@ msgstr "未检测到网络连接。请连接网络后重试。"
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "更新检查失败：无法确定插件位置。"
+
+#, lua-format
+msgid "Unsupported plugin path for OTA update: %s. Only 'plugins/zlibrary.koplugin' is supported."
+msgstr "不支持的 OTA 更新插件路径：%s。仅支持 'plugins/zlibrary.koplugin'。"
 
 msgid "Checking for updates..."
 msgstr "正在检查更新..."
@@ -403,7 +407,4 @@ msgstr "从Z-图书馆获取热门书籍？"
 #~ msgstr "设置用户名"
 
 #~ msgid "Downloading..."
-#~ msgstr "正在下载..."
-
-#~ msgid "Downloading…"
 #~ msgstr "正在下载..."

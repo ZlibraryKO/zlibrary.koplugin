@@ -91,7 +91,6 @@ jobs:
             --language=Lua \
             --from-code=UTF-8 \
             --keyword=T \
-            --omit-header \
             --output="$POT_FILE"
           echo "POT file successfully updated at $POT_FILE"
       

@@ -8,6 +8,7 @@ local util = require("util")
 local NetworkMgr = require("ui/network/manager")
 local Api = require("zlibrary.api")
 local Ui = require("zlibrary.ui")
+local DataStorage = require("datastorage")
 
 local Ota = {}
 
@@ -39,28 +40,28 @@ end
 
 local function getCurrentPluginVersion(plugin_base_path)
     local meta_file_full_path = plugin_base_path .. "_meta.lua"
-    logger.info("Zlibrary:Ota.getCurrentPluginVersion - Attempting to read version from: " .. meta_file_full_path)
+    logger.info("Zlibrary:Ota.getCurrentPluginVersion - Attempting to load version via dofile from: " .. meta_file_full_path)
 
-    local file, err_open = io.open(meta_file_full_path, "r")
-    if not file then
-        logger.err("Zlibrary:Ota.getCurrentPluginVersion - Failed to open _meta.lua: " .. tostring(err_open))
+    local ok, result = pcall(dofile, meta_file_full_path)
+
+    if not ok then
+        logger.err("Zlibrary:Ota.getCurrentPluginVersion - Error executing _meta.lua: " .. tostring(result))
         return nil
     end
 
-    local content, err_read = file:read("*a")
-    file:close()
-
-    if not content then
-        logger.err("Zlibrary:Ota.getCurrentPluginVersion - Failed to read _meta.lua: " .. tostring(err_read))
-        return nil
-    end
-
-    local version_str = string.match(content, '%s*version%s*=%s*["\']([%d%.]+)["\']')
-    if version_str then
-        logger.info("Zlibrary:Ota.getCurrentPluginVersion - Found version: " .. version_str)
-        return version_str
+    if type(result) == "table" and result.version and type(result.version) == "string" then
+        logger.info("Zlibrary:Ota.getCurrentPluginVersion - Found version: " .. result.version)
+        return result.version
     else
-        logger.warn("Zlibrary:Ota.getCurrentPluginVersion - Version string not found in _meta.lua content.")
+        local details = "Unknown issue."
+        if type(result) ~= "table" then
+            details = "_meta.lua did not return a table. Returned type: " .. type(result) .. ", value: " .. tostring(result)
+        elseif not result.version then
+            details = "_meta.lua returned a table, but the 'version' key is missing."
+        elseif type(result.version) ~= "string" then
+            details = "_meta.lua returned a table, but 'version' is not a string. Type: " .. type(result.version)
+        end
+        logger.warn("Zlibrary:Ota.getCurrentPluginVersion - Version not found or invalid in _meta.lua. " .. details)
         return nil
     end
 end
@@ -183,8 +184,8 @@ function Ota.installUpdate(zip_filepath, plugin_base_path)
 
     _show_ota_status_loading(T("Installing update..."))
 
-    local target_unzip_dir = "."
-    local excluded_file_path_in_zip = plugin_base_path .. "zlibrary_credentials.lua"
+    local target_unzip_dir = DataStorage:getDataDir()
+    local excluded_file_path_in_zip = "plugins/zlibrary.koplugin/zlibrary_credentials.lua"
 
     local unzip_command = string.format("unzip -o '%s' -d '%s' -x '%s'", zip_filepath, target_unzip_dir, excluded_file_path_in_zip)
     logger.info("Zlibrary:Ota.installUpdate - Executing: " .. unzip_command)
@@ -228,6 +229,13 @@ function Ota.startUpdateProcess(plugin_path_from_main)
     if not plugin_path_from_main then
         logger.err("Zlibrary:Ota.startUpdateProcess - Plugin path not provided.")
         _show_ota_final_message(T("Update check failed: Could not determine plugin location."), true)
+        return
+    end
+
+    if not string.match(plugin_path_from_main, "plugins/zlibrary.koplugin/?$") then
+        local err_msg = string.format(T("Unsupported plugin path for OTA update: %s. Only 'plugins/zlibrary.koplugin' is supported."), plugin_path_from_main)
+        logger.err("Zlibrary:Ota.startUpdateProcess - " .. err_msg)
+        _show_ota_final_message(err_msg, true)
         return
     end
 
@@ -311,10 +319,7 @@ function Ota.startUpdateProcess(plugin_path_from_main)
         cancel_text = T("Cancel"),
         ok_callback = function()
             _show_ota_status_loading(T("Downloading update..."))
-            local temp_path_base = plugin_path_from_main .. "tmp_download"
-            if not util.directoryExists(temp_path_base) then
-                util.makePath(temp_path_base)
-            end
+            local temp_path_base = DataStorage:getDataDir() .. "/cache"
             local temp_zip_path = temp_path_base .. "/" .. asset_name
 
             logger.info("Zlibrary:Ota.startUpdateProcess - Temporary download path: " .. temp_zip_path)

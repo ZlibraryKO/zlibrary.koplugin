@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-21 22:36+0800\n"
+"POT-Creation-Date: 2025-05-27 11:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: Spanish\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Z-library"
 msgstr "Z-library"
@@ -146,8 +146,8 @@ msgstr "No hay enlace de descarga disponible para este libro."
 msgid "Cannot create downloads directory: %s"
 msgstr "No se puede crear el directorio de descargas: %s"
 
-msgid "Downloading"
-msgstr ""
+msgid "Downloading…"
+msgstr "Descargando…"
 
 msgid "Could not open reader UI."
 msgstr "No se pudo abrir la interfaz de usuario del lector."
@@ -211,6 +211,10 @@ msgstr "No se detectó conexión a internet. Por favor, conéctese a internet e 
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "Error al verificar la actualización: No se pudo determinar la ubicación del plugin."
+
+#, lua-format
+msgid "Unsupported plugin path for OTA update: %s. Only 'plugins/zlibrary.koplugin' is supported."
+msgstr "Ruta de plugin no compatible para actualización OTA: %s. Solo se admite 'plugins/zlibrary.koplugin'."
 
 msgid "Checking for updates..."
 msgstr "Buscando actualizaciones..."
@@ -404,6 +408,3 @@ msgstr "¿Obtener los libros más populares de Z-library?"
 
 #~ msgid "Downloading..."
 #~ msgstr "Descargando..."
-
-#~ msgid "Downloading…"
-#~ msgstr "Descargando…"

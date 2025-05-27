@@ -1,0 +1,410 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: v1.0.15\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-27 11:39+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: Japanese\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Z-library"
+msgstr "Z-library"
+
+msgid "[[A plugin to search and download books from Z-library.]]"
+msgstr "[[Z-libraryから本を検索・ダウンロードするためのプラグイン。]]"
+
+msgid "Z-library search"
+msgstr "Z-library検索"
+
+msgid "Z-library most popular"
+msgstr "Z-libraryの人気書籍"
+
+msgid "Z-library recommended"
+msgstr "Z-libraryのおすすめ"
+
+msgid "Settings"
+msgstr "設定"
+
+msgid "Set base URL"
+msgstr "ベースURLを設定"
+
+msgid "Invalid Base URL."
+msgstr "無効なベースURLです。"
+
+msgid "Set email"
+msgstr "メールアドレスを設定"
+
+msgid "Set password"
+msgstr "パスワードを設定"
+
+msgid "Verify credentials"
+msgstr "認証情報を確認"
+
+msgid "Login successful!"
+msgstr "ログインに成功しました！"
+
+msgid "Set download directory"
+msgstr "ダウンロードディレクトリを設定"
+
+msgid "Select search languages"
+msgstr "検索言語を選択"
+
+msgid "Select search formats"
+msgstr "検索フォーマットを選択"
+
+msgid "Check for updates"
+msgstr "アップデートを確認"
+
+msgid "Error: Plugin path not found. Cannot check for updates."
+msgstr "エラー：プラグインのパスが見つかりません。アップデートを確認できません。"
+
+msgid "Search"
+msgstr "検索"
+
+msgid "Recommended"
+msgstr "おすすめ"
+
+msgid "Most popular"
+msgstr "人気順"
+
+msgid "No internet connection detected."
+msgstr "インターネット接続が検出されません。"
+
+msgid "Failed to retrieve user session after login."
+msgstr "ログイン後にユーザーセッションの取得に失敗しました。"
+
+msgid "No books found, please try again"
+msgstr "書籍が見つかりませんでした。もう一度お試しください。"
+
+msgid "Fetching recommended books..."
+msgstr "おすすめの書籍を取得中..."
+
+msgid "Failed to fetch recommended books"
+msgstr "おすすめの書籍の取得に失敗しました"
+
+msgid "Fetching most popular books..."
+msgstr "人気の書籍を取得中..."
+
+msgid "Failed to fetch most popular books"
+msgstr "人気の書籍の取得に失敗しました"
+
+msgid "Fetching book details..."
+msgstr "書籍の詳細を取得中..."
+
+msgid "Failed to fetch book details"
+msgstr "書籍の詳細の取得に失敗しました"
+
+msgid "Could not retrieve book details."
+msgstr "書籍の詳細を取得できませんでした。"
+
+msgid "Please set both username and password first."
+msgstr "まずユーザー名とパスワードを設定してください。"
+
+msgid "Logging in..."
+msgstr "ログイン中..."
+
+msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+msgstr "一時的な問題により検索に失敗しました（HTTP 400）。再試行しますか？"
+
+msgid "Retry"
+msgstr "再試行"
+
+msgid "Cancel"
+msgstr "キャンセル"
+
+msgid "Retrying search for \""
+msgstr "再検索中: \""
+
+msgid "Searching for \""
+msgstr "検索中: \""
+
+msgid "Search failed"
+msgstr "検索に失敗しました"
+
+msgid "No results found for \""
+msgstr "\" に該当する結果が見つかりませんでした"
+
+#, lua-format
+msgid "Loading more results (Page %s)..."
+msgstr "さらに結果を読み込み中（%sページ）..."
+
+msgid "Failed to load more results"
+msgstr "追加結果の読み込みに失敗しました"
+
+msgid "No more results found."
+msgstr "これ以上の結果は見つかりませんでした。"
+
+msgid "No download link available for this book."
+msgstr "この書籍にはダウンロードリンクがありません。"
+
+#, lua-format
+msgid "Cannot create downloads directory: %s"
+msgstr "ダウンロードディレクトリを作成できません: %s"
+
+msgid "Downloading…"
+msgstr "ダウンロード中…"
+
+msgid "Could not open reader UI."
+msgstr "リーダーUIを開けませんでした。"
+
+msgid "Download failed: Unknown error"
+msgstr "ダウンロードに失敗しました：不明なエラー"
+
+msgid "Download limit reached. Please try again later or check your account."
+msgstr "ダウンロード上限に達しました。後でもう一度お試しいただくか、アカウントをご確認ください。"
+
+msgid "Z-library server URL not configured."
+msgstr "Z-libraryサーバーのURLが設定されていません。"
+
+msgid "Failed to fetch recommended books (no response body)."
+msgstr "おすすめの書籍の取得に失敗しました（応答がありません）。"
+
+msgid "Failed to parse recommended books response."
+msgstr "おすすめの書籍の応答の解析に失敗しました。"
+
+msgid "API returned an error for recommended books."
+msgstr "おすすめの書籍に対してAPIがエラーを返しました。"
+
+msgid "Failed to fetch most popular books (no response body)."
+msgstr "人気の書籍の取得に失敗しました（応答がありません）。"
+
+msgid "Failed to parse most popular books response."
+msgstr "人気の書籍の応答の解析に失敗しました。"
+
+msgid "API returned an error for most popular books."
+msgstr "人気の書籍に対してAPIがエラーを返しました。"
+
+msgid "Z-library server URL not configured or book identifiers missing."
+msgstr "Z-libraryのサーバーURLが設定されていないか、書籍識別子が不足しています。"
+
+msgid "Failed to fetch book details (no response body)."
+msgstr "書籍の詳細の取得に失敗しました（応答がありません）。"
+
+msgid "Failed to parse book details response."
+msgstr "書籍の詳細応答の解析に失敗しました。"
+
+msgid "API returned an error for book details."
+msgstr "書籍の詳細に対してAPIがエラーを返しました。"
+
+msgid "Failed to process book details."
+msgstr "書籍の詳細の処理に失敗しました。"
+
+msgid "Update failed: Could not determine where to install the plugin."
+msgstr "アップデートに失敗しました：プラグインのインストール先が不明です。"
+
+msgid "Installing update..."
+msgstr "アップデートをインストール中..."
+
+msgid "Update installation failed."
+msgstr "アップデートのインストールに失敗しました。"
+
+msgid "Update installed successfully. Please restart KOReader for changes to take effect."
+msgstr "アップデートが正常にインストールされました。変更を有効にするにはKOReaderを再起動してください。"
+
+msgid "No internet connection detected. Please connect to the internet and try again."
+msgstr "インターネット接続が検出されません。接続して再試行してください。"
+
+msgid "Update check failed: Could not determine plugin location."
+msgstr "アップデートの確認に失敗しました：プラグインの場所が不明です。"
+
+#, lua-format
+msgid "Unsupported plugin path for OTA update: %s. Only 'plugins/zlibrary.koplugin' is supported."
+msgstr "OTAアップデートに対応していないプラグインパス: %s。'plugins/zlibrary.koplugin'のみサポートされています。"
+
+msgid "Checking for updates..."
+msgstr "アップデートを確認中..."
+
+msgid "Failed to check for updates. Please check your internet connection."
+msgstr "アップデートの確認に失敗しました。インターネット接続を確認してください。"
+
+msgid "Could not find update information (invalid data format)."
+msgstr "アップデート情報が見つかりません（無効なデータ形式）。"
+
+msgid "Could not find update version information."
+msgstr "アップデートのバージョン情報が見つかりませんでした。"
+
+msgid "Could not understand the update version format."
+msgstr "アップデートのバージョン形式が不明です。"
+
+msgid "Could not find update files."
+msgstr "アップデートファイルが見つかりませんでした。"
+
+msgid "Could not find a download link for the update."
+msgstr "アップデートのダウンロードリンクが見つかりませんでした。"
+
+#, lua-format
+msgid "You are already on the latest version (%s) or newer."
+msgstr "すでに最新バージョン（%s）またはそれ以上を使用しています。"
+
+#, lua-format
+msgid "Could not determine your current version, but the latest is %s. If you recently updated, you might be up-to-date."
+msgstr "現在のバージョンが特定できませんが、最新は%sです。最近アップデートした場合は、すでに最新かもしれません。"
+
+#, lua-format
+msgid "New version available: %s (you have %s). Download and install?"
+msgstr "新しいバージョンが利用可能です：%s（現在のバージョン：%s）。ダウンロードしてインストールしますか？"
+
+msgid "an older version"
+msgstr "旧バージョン"
+
+msgid "Update available"
+msgstr "アップデートがあります"
+
+msgid "Update"
+msgstr "アップデート"
+
+msgid "Downloading update..."
+msgstr "アップデートをダウンロード中..."
+
+msgid "Download failed. Please try again later."
+msgstr "ダウンロードに失敗しました。後でもう一度お試しください。"
+
+msgid "Close"
+msgstr "閉じる"
+
+msgid "Select Z-library Download Directory"
+msgstr "Z-libraryのダウンロードディレクトリを選択"
+
+#, lua-format
+msgid "Download directory set to: %s"
+msgstr "ダウンロードディレクトリが設定されました: %s"
+
+msgid "No directory selected."
+msgstr "ディレクトリが選択されていません。"
+
+#, lua-format
+msgid "%d items selected for %s."
+msgstr "%dに対して%s件が選択されました。"
+
+#, lua-format
+msgid "Filter cleared for %s."
+msgstr "%sのフィルターがクリアされました。"
+
+msgid "Set"
+msgstr "設定"
+
+msgid "Setting saved successfully!"
+msgstr "設定が正常に保存されました！"
+
+msgid "Setting cleared."
+msgstr "設定がクリアされました。"
+
+msgid "Search Z-library"
+msgstr "Z-libraryを検索"
+
+msgid "Please enter a search term."
+msgstr "検索語を入力してください。"
+
+msgid "Unknown Title"
+msgstr "不明なタイトル"
+
+msgid "Unknown Author"
+msgstr "不明な著者"
+
+msgid "Rating"
+msgstr "評価"
+
+msgid "Search Results"
+msgstr "検索結果"
+
+msgid "Title"
+msgstr "タイトル"
+
+msgid "Full Title"
+msgstr "完全なタイトル"
+
+msgid "Author"
+msgstr "著者"
+
+msgid "Full Author"
+msgstr "完全な著者名"
+
+msgid "Year"
+msgstr "出版年"
+
+msgid "Language"
+msgstr "言語"
+
+#, lua-format
+msgid "Format: %s (tap to download)"
+msgstr "フォーマット: %s（タップしてダウンロード）"
+
+#, lua-format
+msgid "Format: %s (Download not available)"
+msgstr "フォーマット: %s（ダウンロード不可）"
+
+msgid "Download Book (Unknown Format)"
+msgstr "書籍をダウンロード（不明な形式）"
+
+msgid "Size"
+msgstr "サイズ"
+
+msgid "Publisher"
+msgstr "出版社"
+
+msgid "Series"
+msgstr "シリーズ"
+
+msgid "Pages"
+msgstr "ページ数"
+
+msgid "Description (tap to view)"
+msgstr "説明（タップして表示）"
+
+msgid "Description"
+msgstr "説明"
+
+msgid "Back"
+msgstr "戻る"
+
+msgid "Book Details"
+msgstr "書籍の詳細"
+
+#, lua-format
+msgid "Download \"%s\"?"
+msgstr "\"%s\" をダウンロードしますか？"
+
+msgid "Download"
+msgstr "ダウンロード"
+
+#, lua-format
+msgid "\"%s\" downloaded successfully. Open it now?"
+msgstr "\"%s\" のダウンロードが完了しました。今すぐ開きますか？"
+
+msgid "Open book"
+msgstr "書籍を開く"
+
+msgid "Untitled"
+msgstr "無題"
+
+msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
+msgstr "おすすめの書籍が見つかりませんでした。再試行が必要な場合があります。"
+
+msgid "Z-library Recommended Books"
+msgstr "Z-libraryのおすすめ書籍"
+
+msgid "No most popular books found. The list was empty, please try again."
+msgstr "人気の書籍が見つかりませんでした。リストが空でした。再試行してください。"
+
+msgid "Z-library Most Popular Books"
+msgstr "Z-libraryの人気書籍"
+
+msgid "Fetch most recommended book from Z-library?"
+msgstr "Z-libraryから最もおすすめの書籍を取得しますか？"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Fetch most popular books from Z-library?"
+msgstr "Z-libraryから人気の書籍を取得しますか？"
+
+#~ msgid "Set username"
+#~ msgstr "ユーザー名を設定"
+
+#~ msgid "Downloading..."
+#~ msgstr "ダウンロード中..."

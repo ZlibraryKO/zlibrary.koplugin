@@ -1,10 +1,11 @@
 local Config = require("zlibrary.config")
-local util = require("frontend.util")
+local util = require("util")
 local logger = require("logger")
 local json = require("json")
 local ltn12 = require("ltn12")
 local http = require("socket.http")
-local T = require("gettext")
+local socket = require("socket")
+local T = require("zlibrary.gettext")
 
 local Api = {}
 
@@ -51,10 +52,9 @@ function Api.makeHttpRequest(options)
         headers = options.headers,
         source = options.source,
         sink = sink_to_use,
-        timeout = options.timeout or Config.REQUEST_TIMEOUT,
-        redirect = options.redirect or false
+        redirect = options.redirect or false,
     }
-    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Timeout: %s, Redirect: %s", request_params.url, request_params.method, request_params.timeout, tostring(request_params.redirect)))
+    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Redirect: %s", request_params.url, request_params.method, tostring(request_params.redirect)))
 
     local req_ok, r_val, r_code, r_headers_tbl, r_status_str = pcall(http.request, request_params)
 
@@ -348,7 +348,7 @@ function Api.getRecommendedBooks(user_id, user_key)
 
     if http_result.error then
         logger.warn("Api.getRecommendedBooks - HTTP request error: ", http_result.error)
-        return { error = T("Failed to fetch recommended books: ") .. http_result.error }
+        return { error = string.format("%s: %s", T("Failed to fetch recommended books"), http_result.error) }
     end
 
     if not http_result.body then
@@ -403,7 +403,7 @@ function Api.getMostPopularBooks(user_id, user_key)
 
     if http_result.error then
         logger.warn("Api.getMostPopularBooks - HTTP request error: ", http_result.error)
-        return { error = T("Failed to fetch most popular books: ") .. http_result.error }
+        return { error = string.format("%s: %s", T("Failed to fetch most popular books"), http_result.error) }
     end
 
     if not http_result.body then
@@ -458,7 +458,7 @@ function Api.getBookDetails(user_id, user_key, book_id, book_hash)
 
     if http_result.error then
         logger.warn("Api.getBookDetails - HTTP request error: ", http_result.error)
-        return { error = T("Failed to fetch book details: ") .. http_result.error }
+        return { error = string("%s: %s", T("Failed to fetch book details"), http_result.error) }
     end
 
     if not http_result.body then

@@ -2,15 +2,19 @@ local UIManager = require("ui/uimanager")
 local InfoMessage = require("ui/widget/infomessage")
 local ConfirmBox = require("ui/widget/confirmbox")
 local TextViewer = require("ui/widget/textviewer")
-local T = require("gettext")
+local T = require("zlibrary.gettext")
 local DownloadMgr = require("ui/downloadmgr")
 local InputDialog = require("ui/widget/inputdialog")
 local Menu = require("ui/widget/menu")
 local Config = require("zlibrary.config")
-local util = require("frontend.util")
+local util = require("util")
 local logger = require("logger")
 
 local Ui = {}
+
+local function _colon_concat(a, b)
+    return a .. ": " .. b
+end
 
 function Ui.showInfoMessage(text)
     UIManager:show(InfoMessage:new{ text = text })
@@ -83,7 +87,7 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
         menu_items[i] = {
             text = option_info.name,
             mandatory_func = function()
-                return current_selection_state[option_value] and T("[X]") or "[ ]"
+                return current_selection_state[option_value] and "[X]" or "[ ]"
             end,
             callback = function()
                 current_selection_state[option_value] = not current_selection_state[option_value]
@@ -240,7 +244,7 @@ function Ui.createBookMenuItem(book_data, parent_zlibrary_instance)
         end
     end
     if book_data.size and book_data.size ~= "N/A" then table.insert(additional_info_parts, book_data.size) end
-    if book_data.rating and book_data.rating ~= "N/A" then table.insert(additional_info_parts, T("Rating: ") .. book_data.rating) end
+    if book_data.rating and book_data.rating ~= "N/A" then table.insert(additional_info_parts, _colon_concat(T("Rating"), book_data.rating)) end
 
     if #additional_info_parts > 0 then
         combined_text = combined_text .. " | " .. table.concat(additional_info_parts, " | ")
@@ -258,7 +262,7 @@ end
 
 function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_items, on_goto_page_handler)
     local menu = Menu:new{
-        title = T("Search Results: ") .. query_string,
+        title = _colon_concat(T("Search Results"), query_string),
         item_table = initial_menu_items,
         parent = parent_ui_ref,
         items_per_page = 10,
@@ -288,7 +292,7 @@ function Ui.showBookDetails(parent_zlibrary, book)
     local title_text_for_html = (type(book.title) == "string" and book.title) or ""
     local full_title = util.htmlEntitiesToUtf8(title_text_for_html)
     table.insert(details_menu_items, {
-        text = T("Title: ") .. full_title,
+        text = _colon_concat(T("Title"), full_title),
         enabled = true,
         callback = function()
             Ui.showSimpleMessageDialog(T("Full Title"), full_title)
@@ -299,7 +303,7 @@ function Ui.showBookDetails(parent_zlibrary, book)
     local author_text_for_html = (type(book.author) == "string" and book.author) or ""
     local full_author = util.htmlEntitiesToUtf8(author_text_for_html)
     table.insert(details_menu_items, {
-        text = T("Author: ") .. full_author,
+        text = _colon_concat(T("Author"), full_author),
         enabled = true,
         callback = function()
             Ui.showSimpleMessageDialog(T("Full Author"), full_author)
@@ -307,8 +311,8 @@ function Ui.showBookDetails(parent_zlibrary, book)
         keep_menu_open = true,
     })
 
-    if book.year and book.year ~= "N/A" and tostring(book.year) ~= "0" then table.insert(details_menu_items, { text = T("Year: ") .. book.year, enabled = false }) end
-    if book.lang and book.lang ~= "N/A" then table.insert(details_menu_items, { text = T("Language: ") .. book.lang, enabled = false }) end
+    if book.year and book.year ~= "N/A" and tostring(book.year) ~= "0" then table.insert(details_menu_items, { text = _colon_concat(T("Year"), book.year), enabled = false }) end
+    if book.lang and book.lang ~= "N/A" then table.insert(details_menu_items, { text = _colon_concat(T("Language"), book.lang), enabled = false }) end
 
     if book.format and book.format ~= "N/A" then
         if book.download then
@@ -332,17 +336,17 @@ function Ui.showBookDetails(parent_zlibrary, book)
         })
     end
 
-    if book.size and book.size ~= "N/A" then table.insert(details_menu_items, { text = T("Size: ") .. book.size, enabled = false }) end
-    if book.rating and book.rating ~= "N/A" then table.insert(details_menu_items, { text = T("Rating: ") .. book.rating, enabled = false }) end
+    if book.size and book.size ~= "N/A" then table.insert(details_menu_items, { text = _colon_concat(T("Size"), book.size), enabled = false }) end
+    if book.rating and book.rating ~= "N/A" then table.insert(details_menu_items, { text = _colon_concat(T("Rating"), book.rating), enabled = false }) end
     if book.publisher and book.publisher ~= "" then
         local publisher_for_html = (type(book.publisher) == "string" and book.publisher) or ""
-        table.insert(details_menu_items, { text = T("Publisher: ") .. util.htmlEntitiesToUtf8(publisher_for_html), enabled = false })
+        table.insert(details_menu_items, { text = _colon_concat(T("Publisher"), util.htmlEntitiesToUtf8(publisher_for_html)), enabled = false })
     end
     if book.series and book.series ~= "" then
         local series_for_html = (type(book.series) == "string" and book.series) or ""
-        table.insert(details_menu_items, { text = T("Series: ") .. util.htmlEntitiesToUtf8(series_for_html), enabled = false })
+        table.insert(details_menu_items, { text = _colon_concat(T("Series"), util.htmlEntitiesToUtf8(series_for_html)), enabled = false })
     end
-    if book.pages and book.pages ~= 0 then table.insert(details_menu_items, { text = T("Pages: ") .. book.pages, enabled = false }) end
+    if book.pages and book.pages ~= 0 then table.insert(details_menu_items, { text = _colon_concat(T("Pages"), book.pages), enabled = false }) end
 
     if book.description and book.description ~= "" then
         table.insert(details_menu_items, {

@@ -45,7 +45,7 @@
 2.  打开 “搜索” 菜单。
 3.  选择 “Z-library”（可能在该菜单的第二页）。
 4.  选择 “设置”。
-5.  输入你的 Z-library 用户名、密码以及 Z-library 实例的基础 URL。
+5.  输入你的 Z-library 邮箱、密码以及 Z-library 实例的基础 URL。
 6.  如有需要，可调整其他设置。
 
 **2. 通过凭据文件（高级方式）：**
@@ -63,7 +63,7 @@
 
 return {
     -- baseUrl = "https://your.zlibrary.domain",
-    -- username = "your_username",
+    -- email = "your_email",
     -- password = "your_password",
 }
 ```
@@ -76,7 +76,11 @@ return {
 1.  打开顶部菜单并点击 **齿轮图标 (⚙️)**。
 2.  导航至 **点击与手势** > **手势管理器**。
 3.  在菜单内选择你想使用的手势。
-4.  在 **通用** 分类中，找到最后一页的 **Z-library 搜索** 并勾选它。
+4.  在 **一般** 分类中，找到最后一页的 **Z-library 搜索** 并勾选它。
+
+## 本地化支持（可选）
+
+该插件提供基础的多语言支持，更多信息请参阅 [l10n/README.MD](l10n/README.md)。
 
 ## 使用方法
 

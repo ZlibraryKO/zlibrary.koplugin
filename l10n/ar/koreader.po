@@ -1,0 +1,410 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: v1.0.15\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-27 11:39+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: Arabic\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
+
+msgid "Z-library"
+msgstr "Z-library"
+
+msgid "[[A plugin to search and download books from Z-library.]]"
+msgstr "[[مكون إضافي للبحث عن الكتب وتنزيلها من Z-library.]]"
+
+msgid "Z-library search"
+msgstr "البحث في Z-library"
+
+msgid "Z-library most popular"
+msgstr "الأكثر شعبية في Z-library"
+
+msgid "Z-library recommended"
+msgstr "الموصى به في Z-library"
+
+msgid "Settings"
+msgstr "الإعدادات"
+
+msgid "Set base URL"
+msgstr "تعيين عنوان URL الأساسي"
+
+msgid "Invalid Base URL."
+msgstr "عنوان URL الأساسي غير صالح."
+
+msgid "Set email"
+msgstr "تعيين البريد الإلكتروني"
+
+msgid "Set password"
+msgstr "تعيين كلمة المرور"
+
+msgid "Verify credentials"
+msgstr "التحقق من بيانات الاعتماد"
+
+msgid "Login successful!"
+msgstr "تم تسجيل الدخول بنجاح!"
+
+msgid "Set download directory"
+msgstr "تعيين دليل التنزيل"
+
+msgid "Select search languages"
+msgstr "تحديد لغات البحث"
+
+msgid "Select search formats"
+msgstr "تحديد تنسيقات البحث"
+
+msgid "Check for updates"
+msgstr "التحقق من التحديثات"
+
+msgid "Error: Plugin path not found. Cannot check for updates."
+msgstr "خطأ: لم يتم العثور على مسار المكون الإضافي. لا يمكن التحقق من التحديثات."
+
+msgid "Search"
+msgstr "بحث"
+
+msgid "Recommended"
+msgstr "موصى به"
+
+msgid "Most popular"
+msgstr "الأكثر شعبية"
+
+msgid "No internet connection detected."
+msgstr "لم يتم الكشف عن اتصال بالإنترنت."
+
+msgid "Failed to retrieve user session after login."
+msgstr "فشل استرداد جلسة المستخدم بعد تسجيل الدخول."
+
+msgid "No books found, please try again"
+msgstr "لم يتم العثور على كتب، يرجى المحاولة مرة أخرى"
+
+msgid "Fetching recommended books..."
+msgstr "جلب الكتب الموصى بها..."
+
+msgid "Failed to fetch recommended books"
+msgstr "فشل جلب الكتب الموصى بها"
+
+msgid "Fetching most popular books..."
+msgstr "جلب الكتب الأكثر شعبية..."
+
+msgid "Failed to fetch most popular books"
+msgstr "فشل جلب الكتب الأكثر شعبية"
+
+msgid "Fetching book details..."
+msgstr "جلب تفاصيل الكتاب..."
+
+msgid "Failed to fetch book details"
+msgstr "فشل جلب تفاصيل الكتاب"
+
+msgid "Could not retrieve book details."
+msgstr "تعذر استرداد تفاصيل الكتاب."
+
+msgid "Please set both username and password first."
+msgstr "الرجاء تعيين اسم المستخدم وكلمة المرور أولاً."
+
+msgid "Logging in..."
+msgstr "تسجيل الدخول..."
+
+msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+msgstr "فشل البحث بسبب مشكلة مؤقتة (HTTP 400). هل ترغب في إعادة المحاولة؟"
+
+msgid "Retry"
+msgstr "إعادة المحاولة"
+
+msgid "Cancel"
+msgstr "إلغاء"
+
+msgid "Retrying search for \""
+msgstr "إعادة محاولة البحث عن \""
+
+msgid "Searching for \""
+msgstr "البحث عن \""
+
+msgid "Search failed"
+msgstr "فشل البحث"
+
+msgid "No results found for \""
+msgstr "لا توجد نتائج لـ \""
+
+#, lua-format
+msgid "Loading more results (Page %s)..."
+msgstr "جارٍ تحميل المزيد من النتائج (الصفحة %s)..."
+
+msgid "Failed to load more results"
+msgstr "فشل تحميل المزيد من النتائج"
+
+msgid "No more results found."
+msgstr "لم يتم العثور على المزيد من النتائج."
+
+msgid "No download link available for this book."
+msgstr "لا يوجد رابط تنزيل متاح لهذا الكتاب."
+
+#, lua-format
+msgid "Cannot create downloads directory: %s"
+msgstr "لا يمكن إنشاء دليل التنزيلات: %s"
+
+msgid "Downloading…"
+msgstr "جارٍ التنزيل..."
+
+msgid "Could not open reader UI."
+msgstr "تعذر فتح واجهة المستخدم للقارئ."
+
+msgid "Download failed: Unknown error"
+msgstr "فشل التنزيل: خطأ غير معروف"
+
+msgid "Download limit reached. Please try again later or check your account."
+msgstr "تم الوصول إلى حد التنزيل. يرجى المحاولة مرة أخرى لاحقًا أو التحقق من حسابك."
+
+msgid "Z-library server URL not configured."
+msgstr "عنوان URL لخادم Z-library غير مكون."
+
+msgid "Failed to fetch recommended books (no response body)."
+msgstr "فشل جلب الكتب الموصى بها (لا يوجد نص استجابة)."
+
+msgid "Failed to parse recommended books response."
+msgstr "فشل تحليل استجابة الكتب الموصى بها."
+
+msgid "API returned an error for recommended books."
+msgstr "أرجع API خطأ للكتب الموصى بها."
+
+msgid "Failed to fetch most popular books (no response body)."
+msgstr "فشل جلب الكتب الأكثر شعبية (لا يوجد نص استجابة)."
+
+msgid "Failed to parse most popular books response."
+msgstr "فشل تحليل استجابة الكتب الأكثر شعبية."
+
+msgid "API returned an error for most popular books."
+msgstr "أرجع API خطأ للكتب الأكثر شعبية."
+
+msgid "Z-library server URL not configured or book identifiers missing."
+msgstr "عنوان URL لخادم Z-library غير مكون أو معرفات الكتب مفقودة."
+
+msgid "Failed to fetch book details (no response body)."
+msgstr "فشل جلب تفاصيل الكتاب (لا يوجد نص استجابة)."
+
+msgid "Failed to parse book details response."
+msgstr "فشل تحليل استجابة تفاصيل الكتاب."
+
+msgid "API returned an error for book details."
+msgstr "أرجع API خطأ لتفاصيل الكتاب."
+
+msgid "Failed to process book details."
+msgstr "فشل معالجة تفاصيل الكتاب."
+
+msgid "Update failed: Could not determine where to install the plugin."
+msgstr "فشل التحديث: تعذر تحديد مكان تثبيت المكون الإضافي."
+
+msgid "Installing update..."
+msgstr "جارٍ تثبيت التحديث..."
+
+msgid "Update installation failed."
+msgstr "فشل تثبيت التحديث."
+
+msgid "Update installed successfully. Please restart KOReader for changes to take effect."
+msgstr "تم تثبيت التحديث بنجاح. يرجى إعادة تشغيل KOReader لتطبيق التغييرات."
+
+msgid "No internet connection detected. Please connect to the internet and try again."
+msgstr "لم يتم الكشف عن اتصال بالإنترنت. يرجى الاتصال بالإنترنت والمحاولة مرة أخرى."
+
+msgid "Update check failed: Could not determine plugin location."
+msgstr "فشل التحقق من التحديث: تعذر تحديد موقع المكون الإضافي."
+
+#, lua-format
+msgid "Unsupported plugin path for OTA update: %s. Only 'plugins/zlibrary.koplugin' is supported."
+msgstr "مسار المكون الإضافي غير مدعوم لتحديث OTA: %s. فقط 'plugins/zlibrary.koplugin' مدعوم."
+
+msgid "Checking for updates..."
+msgstr "التحقق من التحديثات..."
+
+msgid "Failed to check for updates. Please check your internet connection."
+msgstr "فشل التحقق من التحديثات. يرجى التحقق من اتصالك بالإنترنت."
+
+msgid "Could not find update information (invalid data format)."
+msgstr "تعذر العثور على معلومات التحديث (تنسيق بيانات غير صالح)."
+
+msgid "Could not find update version information."
+msgstr "تعذر العثور على معلومات إصدار التحديث."
+
+msgid "Could not understand the update version format."
+msgstr "تعذر فهم تنسيق إصدار التحديث."
+
+msgid "Could not find update files."
+msgstr "تعذر العثور على ملفات التحديث."
+
+msgid "Could not find a download link for the update."
+msgstr "تعذر العثور على رابط تنزيل للتحديث."
+
+#, lua-format
+msgid "You are already on the latest version (%s) or newer."
+msgstr "أنت بالفعل على أحدث إصدار (%s) أو أحدث."
+
+#, lua-format
+msgid "Could not determine your current version, but the latest is %s. If you recently updated, you might be up-to-date."
+msgstr "تعذر تحديد إصدارك الحالي، لكن الأحدث هو %s. إذا قمت بالتحديث مؤخرًا، فقد تكون محدثًا."
+
+#, lua-format
+msgid "New version available: %s (you have %s). Download and install?"
+msgstr "إصدار جديد متاح: %s (لديك %s). تنزيل وتثبيت؟"
+
+msgid "an older version"
+msgstr "إصدار أقدم"
+
+msgid "Update available"
+msgstr "تحديث متاح"
+
+msgid "Update"
+msgstr "تحديث"
+
+msgid "Downloading update..."
+msgstr "جارٍ تنزيل التحديث..."
+
+msgid "Download failed. Please try again later."
+msgstr "فشل التنزيل. يرجى المحاولة مرة أخرى لاحقًا."
+
+msgid "Close"
+msgstr "إغلاق"
+
+msgid "Select Z-library Download Directory"
+msgstr "تحديد دليل تنزيل Z-library"
+
+#, lua-format
+msgid "Download directory set to: %s"
+msgstr "تم تعيين دليل التنزيل إلى: %s"
+
+msgid "No directory selected."
+msgstr "لم يتم تحديد دليل."
+
+#, lua-format
+msgid "%d items selected for %s."
+msgstr "تم تحديد %d عنصر لـ %s."
+
+#, lua-format
+msgid "Filter cleared for %s."
+msgstr "تم مسح الفلتر لـ %s."
+
+msgid "Set"
+msgstr "تعيين"
+
+msgid "Setting saved successfully!"
+msgstr "تم حفظ الإعداد بنجاح!"
+
+msgid "Setting cleared."
+msgstr "تم مسح الإعداد."
+
+msgid "Search Z-library"
+msgstr "البحث في Z-library"
+
+msgid "Please enter a search term."
+msgstr "الرجاء إدخال مصطلح بحث."
+
+msgid "Unknown Title"
+msgstr "عنوان غير معروف"
+
+msgid "Unknown Author"
+msgstr "مؤلف غير معروف"
+
+msgid "Rating"
+msgstr "التقييم"
+
+msgid "Search Results"
+msgstr "نتائج البحث"
+
+msgid "Title"
+msgstr "العنوان"
+
+msgid "Full Title"
+msgstr "العنوان الكامل"
+
+msgid "Author"
+msgstr "المؤلف"
+
+msgid "Full Author"
+msgstr "المؤلف الكامل"
+
+msgid "Year"
+msgstr "السنة"
+
+msgid "Language"
+msgstr "اللغة"
+
+#, lua-format
+msgid "Format: %s (tap to download)"
+msgstr "التنسيق: %s (اضغط للتنزيل)"
+
+#, lua-format
+msgid "Format: %s (Download not available)"
+msgstr "التنسيق: %s (التنزيل غير متاح)"
+
+msgid "Download Book (Unknown Format)"
+msgstr "تنزيل كتاب (تنسيق غير معروف)"
+
+msgid "Size"
+msgstr "الحجم"
+
+msgid "Publisher"
+msgstr "الناشر"
+
+msgid "Series"
+msgstr "السلسلة"
+
+msgid "Pages"
+msgstr "الصفحات"
+
+msgid "Description (tap to view)"
+msgstr "الوصف (اضغط للمشاهدة)"
+
+msgid "Description"
+msgstr "الوصف"
+
+msgid "Back"
+msgstr "رجوع"
+
+msgid "Book Details"
+msgstr "تفاصيل الكتاب"
+
+#, lua-format
+msgid "Download \"%s\"?"
+msgstr "تنزيل \"%s\"؟"
+
+msgid "Download"
+msgstr "تنزيل"
+
+#, lua-format
+msgid "\"%s\" downloaded successfully. Open it now?"
+msgstr "تم تنزيل \"%s\" بنجاح. هل تريد فتحه الآن؟"
+
+msgid "Open book"
+msgstr "فتح الكتاب"
+
+msgid "Untitled"
+msgstr "بلا عنوان"
+
+msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
+msgstr "لم يتم العثور على كتب موصى بها، يرجى المحاولة مرة أخرى. أحيانًا يتطلب هذا بضع محاولات."
+
+msgid "Z-library Recommended Books"
+msgstr "الكتب الموصى بها في Z-library"
+
+msgid "No most popular books found. The list was empty, please try again."
+msgstr "لم يتم العثور على كتب أكثر شعبية. القائمة كانت فارغة، يرجى المحاولة مرة أخرى."
+
+msgid "Z-library Most Popular Books"
+msgstr "الكتب الأكثر شعبية في Z-library"
+
+msgid "Fetch most recommended book from Z-library?"
+msgstr "جلب الكتاب الأكثر توصية من Z-library؟"
+
+msgid "OK"
+msgstr "موافق"
+
+msgid "Fetch most popular books from Z-library?"
+msgstr "جلب الكتب الأكثر شعبية من Z-library؟"
+
+#~ msgid "Set username"
+#~ msgstr "تعيين اسم المستخدم"
+
+#~ msgid "Downloading..."
+#~ msgstr "جارٍ التنزيل..."

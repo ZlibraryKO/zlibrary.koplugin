@@ -1,0 +1,410 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: v1.0.15\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-27 11:39+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: Dutch\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Z-library"
+msgstr "Z-library"
+
+msgid "[[A plugin to search and download books from Z-library.]]"
+msgstr "[[Een plugin om boeken te zoeken en te downloaden van Z-library.]]"
+
+msgid "Z-library search"
+msgstr "Z-library zoeken"
+
+msgid "Z-library most popular"
+msgstr "Z-library meest populair"
+
+msgid "Z-library recommended"
+msgstr "Z-library aanbevolen"
+
+msgid "Settings"
+msgstr "Instellingen"
+
+msgid "Set base URL"
+msgstr "Stel basis-URL in"
+
+msgid "Invalid Base URL."
+msgstr "Ongeldige basis-URL."
+
+msgid "Set email"
+msgstr "E-mailadres instellen"
+
+msgid "Set password"
+msgstr "Wachtwoord instellen"
+
+msgid "Verify credentials"
+msgstr "Inloggegevens verifiëren"
+
+msgid "Login successful!"
+msgstr "Succesvol ingelogd!"
+
+msgid "Set download directory"
+msgstr "Downloadmap instellen"
+
+msgid "Select search languages"
+msgstr "Selecteer zoektaal"
+
+msgid "Select search formats"
+msgstr "Selecteer zoekformaten"
+
+msgid "Check for updates"
+msgstr "Controleren op updates"
+
+msgid "Error: Plugin path not found. Cannot check for updates."
+msgstr "Fout: plug-inpad niet gevonden. Kan niet op updates controleren."
+
+msgid "Search"
+msgstr "Zoeken"
+
+msgid "Recommended"
+msgstr "Aanbevolen"
+
+msgid "Most popular"
+msgstr "Meest populair"
+
+msgid "No internet connection detected."
+msgstr "Geen internetverbinding gedetecteerd."
+
+msgid "Failed to retrieve user session after login."
+msgstr "Kan gebruikerssessie niet ophalen na inloggen."
+
+msgid "No books found, please try again"
+msgstr "Geen boeken gevonden, probeer het opnieuw"
+
+msgid "Fetching recommended books..."
+msgstr "Aanbevolen boeken ophalen..."
+
+msgid "Failed to fetch recommended books"
+msgstr "Kan aanbevolen boeken niet ophalen"
+
+msgid "Fetching most popular books..."
+msgstr "Meest populaire boeken ophalen..."
+
+msgid "Failed to fetch most popular books"
+msgstr "Kan meest populaire boeken niet ophalen"
+
+msgid "Fetching book details..."
+msgstr "Boekdetails ophalen..."
+
+msgid "Failed to fetch book details"
+msgstr "Kan boekdetails niet ophalen"
+
+msgid "Could not retrieve book details."
+msgstr "Kan boekdetails niet ophalen."
+
+msgid "Please set both username and password first."
+msgstr "Stel eerst zowel gebruikersnaam als wachtwoord in."
+
+msgid "Logging in..."
+msgstr "Bezig met inloggen..."
+
+msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+msgstr "Zoekopdracht mislukt vanwege een tijdelijk probleem (HTTP 400). Opnieuw proberen?"
+
+msgid "Retry"
+msgstr "Opnieuw proberen"
+
+msgid "Cancel"
+msgstr "Annuleren"
+
+msgid "Retrying search for \""
+msgstr "Zoekopdracht opnieuw proberen voor \""
+
+msgid "Searching for \""
+msgstr "Zoeken naar \""
+
+msgid "Search failed"
+msgstr "Zoekopdracht mislukt"
+
+msgid "No results found for \""
+msgstr "Geen resultaten gevonden voor \""
+
+#, lua-format
+msgid "Loading more results (Page %s)..."
+msgstr "Meer resultaten laden (Pagina %s)..."
+
+msgid "Failed to load more results"
+msgstr "Kan geen extra resultaten laden"
+
+msgid "No more results found."
+msgstr "Geen extra resultaten gevonden."
+
+msgid "No download link available for this book."
+msgstr "Geen downloadlink beschikbaar voor dit boek."
+
+#, lua-format
+msgid "Cannot create downloads directory: %s"
+msgstr "Kan downloadmap niet aanmaken: %s"
+
+msgid "Downloading…"
+msgstr "Bezig met downloaden…"
+
+msgid "Could not open reader UI."
+msgstr "Kan de reader-interface niet openen."
+
+msgid "Download failed: Unknown error"
+msgstr "Download mislukt: Onbekende fout"
+
+msgid "Download limit reached. Please try again later or check your account."
+msgstr "Downloadlimiet bereikt. Probeer het later opnieuw of controleer je account."
+
+msgid "Z-library server URL not configured."
+msgstr "Z-library server-URL is niet geconfigureerd."
+
+msgid "Failed to fetch recommended books (no response body)."
+msgstr "Kan aanbevolen boeken niet ophalen (geen response body)."
+
+msgid "Failed to parse recommended books response."
+msgstr "Kan reactie met aanbevolen boeken niet parseren."
+
+msgid "API returned an error for recommended books."
+msgstr "API retourneerde een fout voor aanbevolen boeken."
+
+msgid "Failed to fetch most popular books (no response body)."
+msgstr "Kan meest populaire boeken niet ophalen (geen response body)."
+
+msgid "Failed to parse most popular books response."
+msgstr "Kan reactie met meest populaire boeken niet parseren."
+
+msgid "API returned an error for most popular books."
+msgstr "API retourneerde een fout voor meest populaire boeken."
+
+msgid "Z-library server URL not configured or book identifiers missing."
+msgstr "Z-library server-URL niet ingesteld of boek-ID's ontbreken."
+
+msgid "Failed to fetch book details (no response body)."
+msgstr "Kan boekdetails niet ophalen (geen response body)."
+
+msgid "Failed to parse book details response."
+msgstr "Kan reactie met boekdetails niet parseren."
+
+msgid "API returned an error for book details."
+msgstr "API retourneerde een fout voor boekdetails."
+
+msgid "Failed to process book details."
+msgstr "Kan boekdetails niet verwerken."
+
+msgid "Update failed: Could not determine where to install the plugin."
+msgstr "Update mislukt: Kan de installatieplek van de plugin niet bepalen."
+
+msgid "Installing update..."
+msgstr "Update installeren..."
+
+msgid "Update installation failed."
+msgstr "Update-installatie mislukt."
+
+msgid "Update installed successfully. Please restart KOReader for changes to take effect."
+msgstr "Update succesvol geïnstalleerd. Herstart KOReader om de wijzigingen toe te passen."
+
+msgid "No internet connection detected. Please connect to the internet and try again."
+msgstr "Geen internetverbinding gedetecteerd. Maak verbinding met internet en probeer opnieuw."
+
+msgid "Update check failed: Could not determine plugin location."
+msgstr "Updatecontrole mislukt: Kan de locatie van de plugin niet bepalen."
+
+#, lua-format
+msgid "Unsupported plugin path for OTA update: %s. Only 'plugins/zlibrary.koplugin' is supported."
+msgstr "Niet-ondersteund plug-inpad voor OTA-update: %s. Alleen 'plugins/zlibrary.koplugin' wordt ondersteund."
+
+msgid "Checking for updates..."
+msgstr "Bezig met zoeken naar updates..."
+
+msgid "Failed to check for updates. Please check your internet connection."
+msgstr "Kan niet controleren op updates. Controleer je internetverbinding."
+
+msgid "Could not find update information (invalid data format)."
+msgstr "Kan geen update-informatie vinden (ongeldig gegevensformaat)."
+
+msgid "Could not find update version information."
+msgstr "Kan geen informatie over updateversie vinden."
+
+msgid "Could not understand the update version format."
+msgstr "Kan het updateversieformaat niet begrijpen."
+
+msgid "Could not find update files."
+msgstr "Kan updatebestanden niet vinden."
+
+msgid "Could not find a download link for the update."
+msgstr "Kan geen downloadlink voor de update vinden."
+
+#, lua-format
+msgid "You are already on the latest version (%s) or newer."
+msgstr "Je hebt al de nieuwste versie (%s) of een nieuwere."
+
+#, lua-format
+msgid "Could not determine your current version, but the latest is %s. If you recently updated, you might be up-to-date."
+msgstr "Kan je huidige versie niet bepalen, maar de nieuwste is %s. Als je onlangs hebt bijgewerkt, ben je mogelijk up-to-date."
+
+#, lua-format
+msgid "New version available: %s (you have %s). Download and install?"
+msgstr "Nieuwe versie beschikbaar: %s (je hebt %s). Downloaden en installeren?"
+
+msgid "an older version"
+msgstr "een oudere versie"
+
+msgid "Update available"
+msgstr "Update beschikbaar"
+
+msgid "Update"
+msgstr "Update"
+
+msgid "Downloading update..."
+msgstr "Update wordt gedownload..."
+
+msgid "Download failed. Please try again later."
+msgstr "Download mislukt. Probeer het later opnieuw."
+
+msgid "Close"
+msgstr "Sluiten"
+
+msgid "Select Z-library Download Directory"
+msgstr "Selecteer Z-library downloadmap"
+
+#, lua-format
+msgid "Download directory set to: %s"
+msgstr "Downloadmap ingesteld op: %s"
+
+msgid "No directory selected."
+msgstr "Geen map geselecteerd."
+
+#, lua-format
+msgid "%d items selected for %s."
+msgstr "%d items geselecteerd voor %s."
+
+#, lua-format
+msgid "Filter cleared for %s."
+msgstr "Filter gewist voor %s."
+
+msgid "Set"
+msgstr "Instellen"
+
+msgid "Setting saved successfully!"
+msgstr "Instelling succesvol opgeslagen!"
+
+msgid "Setting cleared."
+msgstr "Instelling gewist."
+
+msgid "Search Z-library"
+msgstr "Zoek in Z-library"
+
+msgid "Please enter a search term."
+msgstr "Voer een zoekterm in."
+
+msgid "Unknown Title"
+msgstr "Onbekende titel"
+
+msgid "Unknown Author"
+msgstr "Onbekende auteur"
+
+msgid "Rating"
+msgstr "Beoordeling"
+
+msgid "Search Results"
+msgstr "Zoekresultaten"
+
+msgid "Title"
+msgstr "Titel"
+
+msgid "Full Title"
+msgstr "Volledige titel"
+
+msgid "Author"
+msgstr "Auteur"
+
+msgid "Full Author"
+msgstr "Volledige auteur"
+
+msgid "Year"
+msgstr "Jaar"
+
+msgid "Language"
+msgstr "Taal"
+
+#, lua-format
+msgid "Format: %s (tap to download)"
+msgstr "Formaat: %s (tik om te downloaden)"
+
+#, lua-format
+msgid "Format: %s (Download not available)"
+msgstr "Formaat: %s (Download niet beschikbaar)"
+
+msgid "Download Book (Unknown Format)"
+msgstr "Boek downloaden (onbekend formaat)"
+
+msgid "Size"
+msgstr "Grootte"
+
+msgid "Publisher"
+msgstr "Uitgever"
+
+msgid "Series"
+msgstr "Serie"
+
+msgid "Pages"
+msgstr "Pagina's"
+
+msgid "Description (tap to view)"
+msgstr "Beschrijving (tik om te bekijken)"
+
+msgid "Description"
+msgstr "Beschrijving"
+
+msgid "Back"
+msgstr "Terug"
+
+msgid "Book Details"
+msgstr "Boekdetails"
+
+#, lua-format
+msgid "Download \"%s\"?"
+msgstr "\"%s\" downloaden?"
+
+msgid "Download"
+msgstr "Downloaden"
+
+#, lua-format
+msgid "\"%s\" downloaded successfully. Open it now?"
+msgstr "\"%s\" is succesvol gedownload. Nu openen?"
+
+msgid "Open book"
+msgstr "Boek openen"
+
+msgid "Untitled"
+msgstr "Zonder titel"
+
+msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
+msgstr "Geen aanbevolen boeken gevonden, probeer het opnieuw. Soms zijn meerdere pogingen nodig."
+
+msgid "Z-library Recommended Books"
+msgstr "Aanbevolen boeken van Z-library"
+
+msgid "No most popular books found. The list was empty, please try again."
+msgstr "Geen meest populaire boeken gevonden. De lijst was leeg, probeer het opnieuw."
+
+msgid "Z-library Most Popular Books"
+msgstr "Meest populaire boeken van Z-library"
+
+msgid "Fetch most recommended book from Z-library?"
+msgstr "Meest aanbevolen boek ophalen van Z-library?"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Fetch most popular books from Z-library?"
+msgstr "Meest populaire boeken ophalen van Z-library?"
+
+#~ msgid "Set username"
+#~ msgstr "Gebruikersnaam instellen"
+
+#~ msgid "Downloading..."
+#~ msgstr "Bezig met downloaden..."

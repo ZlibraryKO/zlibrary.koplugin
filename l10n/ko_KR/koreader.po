@@ -1,0 +1,410 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: v1.0.15\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-27 11:39+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: Korean\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Z-library"
+msgstr "Z-라이브러리"
+
+msgid "[[A plugin to search and download books from Z-library.]]"
+msgstr "[[Z-라이브러리에서 책을 검색하고 다운로드할 수 있는 플러그인입니다.]]"
+
+msgid "Z-library search"
+msgstr "Z-라이브러리 검색"
+
+msgid "Z-library most popular"
+msgstr "Z-라이브러리 인기 도서"
+
+msgid "Z-library recommended"
+msgstr "Z-라이브러리 추천 도서"
+
+msgid "Settings"
+msgstr "설정"
+
+msgid "Set base URL"
+msgstr "기본 URL 설정"
+
+msgid "Invalid Base URL."
+msgstr "잘못된 기본 URL입니다."
+
+msgid "Set email"
+msgstr "이메일 설정"
+
+msgid "Set password"
+msgstr "비밀번호 설정"
+
+msgid "Verify credentials"
+msgstr "자격 증명 확인"
+
+msgid "Login successful!"
+msgstr "로그인 성공!"
+
+msgid "Set download directory"
+msgstr "다운로드 디렉토리 설정"
+
+msgid "Select search languages"
+msgstr "검색 언어 선택"
+
+msgid "Select search formats"
+msgstr "검색 형식 선택"
+
+msgid "Check for updates"
+msgstr "업데이트 확인"
+
+msgid "Error: Plugin path not found. Cannot check for updates."
+msgstr "오류: 플러그인 경로를 찾을 수 없습니다. 업데이트를 확인할 수 없습니다."
+
+msgid "Search"
+msgstr "검색"
+
+msgid "Recommended"
+msgstr "추천"
+
+msgid "Most popular"
+msgstr "인기순"
+
+msgid "No internet connection detected."
+msgstr "인터넷 연결이 감지되지 않았습니다."
+
+msgid "Failed to retrieve user session after login."
+msgstr "로그인 후 사용자 세션을 가져오는 데 실패했습니다."
+
+msgid "No books found, please try again"
+msgstr "책을 찾을 수 없습니다. 다시 시도해 주세요."
+
+msgid "Fetching recommended books..."
+msgstr "추천 도서 가져오는 중..."
+
+msgid "Failed to fetch recommended books"
+msgstr "추천 도서를 가져오지 못했습니다"
+
+msgid "Fetching most popular books..."
+msgstr "인기 도서 가져오는 중..."
+
+msgid "Failed to fetch most popular books"
+msgstr "인기 도서를 가져오지 못했습니다"
+
+msgid "Fetching book details..."
+msgstr "도서 세부정보 가져오는 중..."
+
+msgid "Failed to fetch book details"
+msgstr "도서 세부정보를 가져오지 못했습니다"
+
+msgid "Could not retrieve book details."
+msgstr "도서 세부정보를 가져올 수 없습니다."
+
+msgid "Please set both username and password first."
+msgstr "먼저 사용자 이름과 비밀번호를 모두 설정하세요."
+
+msgid "Logging in..."
+msgstr "로그인 중..."
+
+msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+msgstr "일시적인 문제로 검색에 실패했습니다(HTTP 400). 다시 시도하시겠습니까?"
+
+msgid "Retry"
+msgstr "다시 시도"
+
+msgid "Cancel"
+msgstr "취소"
+
+msgid "Retrying search for \""
+msgstr "\" 검색을 다시 시도하는 중"
+
+msgid "Searching for \""
+msgstr "\" 검색 중"
+
+msgid "Search failed"
+msgstr "검색 실패"
+
+msgid "No results found for \""
+msgstr "\"에 대한 결과가 없습니다"
+
+#, lua-format
+msgid "Loading more results (Page %s)..."
+msgstr "추가 결과 불러오는 중 (페이지 %s)..."
+
+msgid "Failed to load more results"
+msgstr "추가 결과를 불러오지 못했습니다"
+
+msgid "No more results found."
+msgstr "더 이상 결과가 없습니다."
+
+msgid "No download link available for this book."
+msgstr "이 도서에 대한 다운로드 링크가 없습니다."
+
+#, lua-format
+msgid "Cannot create downloads directory: %s"
+msgstr "다운로드 디렉토리를 생성할 수 없습니다: %s"
+
+msgid "Downloading…"
+msgstr "다운로드 중…"
+
+msgid "Could not open reader UI."
+msgstr "리더 UI를 열 수 없습니다."
+
+msgid "Download failed: Unknown error"
+msgstr "다운로드 실패: 알 수 없는 오류"
+
+msgid "Download limit reached. Please try again later or check your account."
+msgstr "다운로드 제한에 도달했습니다. 나중에 다시 시도하거나 계정을 확인하세요."
+
+msgid "Z-library server URL not configured."
+msgstr "Z-라이브러리 서버 URL이 구성되지 않았습니다."
+
+msgid "Failed to fetch recommended books (no response body)."
+msgstr "추천 도서를 가져오지 못했습니다(응답 본문 없음)."
+
+msgid "Failed to parse recommended books response."
+msgstr "추천 도서 응답을 분석하지 못했습니다."
+
+msgid "API returned an error for recommended books."
+msgstr "추천 도서에 대해 API 오류가 반환되었습니다."
+
+msgid "Failed to fetch most popular books (no response body)."
+msgstr "인기 도서를 가져오지 못했습니다(응답 본문 없음)."
+
+msgid "Failed to parse most popular books response."
+msgstr "인기 도서 응답을 분석하지 못했습니다."
+
+msgid "API returned an error for most popular books."
+msgstr "인기 도서에 대해 API 오류가 반환되었습니다."
+
+msgid "Z-library server URL not configured or book identifiers missing."
+msgstr "Z-라이브러리 서버 URL이 설정되지 않았거나 도서 식별자가 없습니다."
+
+msgid "Failed to fetch book details (no response body)."
+msgstr "도서 세부정보를 가져오지 못했습니다(응답 본문 없음)."
+
+msgid "Failed to parse book details response."
+msgstr "도서 세부정보 응답을 분석하지 못했습니다."
+
+msgid "API returned an error for book details."
+msgstr "도서 세부정보에 대해 API 오류가 반환되었습니다."
+
+msgid "Failed to process book details."
+msgstr "도서 세부정보를 처리하지 못했습니다."
+
+msgid "Update failed: Could not determine where to install the plugin."
+msgstr "업데이트 실패: 플러그인 설치 위치를 확인할 수 없습니다."
+
+msgid "Installing update..."
+msgstr "업데이트 설치 중..."
+
+msgid "Update installation failed."
+msgstr "업데이트 설치에 실패했습니다."
+
+msgid "Update installed successfully. Please restart KOReader for changes to take effect."
+msgstr "업데이트가 성공적으로 설치되었습니다. 변경 사항을 적용하려면 KOReader를 재시작하세요."
+
+msgid "No internet connection detected. Please connect to the internet and try again."
+msgstr "인터넷 연결이 감지되지 않았습니다. 인터넷에 연결한 후 다시 시도해 주세요."
+
+msgid "Update check failed: Could not determine plugin location."
+msgstr "업데이트 확인 실패: 플러그인 위치를 확인할 수 없습니다."
+
+#, lua-format
+msgid "Unsupported plugin path for OTA update: %s. Only 'plugins/zlibrary.koplugin' is supported."
+msgstr "OTA 업데이트를 위한 지원되지 않는 플러그인 경로: %s. 'plugins/zlibrary.koplugin'만 지원됩니다."
+
+msgid "Checking for updates..."
+msgstr "업데이트 확인 중..."
+
+msgid "Failed to check for updates. Please check your internet connection."
+msgstr "업데이트 확인에 실패했습니다. 인터넷 연결을 확인해 주세요."
+
+msgid "Could not find update information (invalid data format)."
+msgstr "업데이트 정보를 찾을 수 없습니다(잘못된 데이터 형식)."
+
+msgid "Could not find update version information."
+msgstr "업데이트 버전 정보를 찾을 수 없습니다."
+
+msgid "Could not understand the update version format."
+msgstr "업데이트 버전 형식을 이해할 수 없습니다."
+
+msgid "Could not find update files."
+msgstr "업데이트 파일을 찾을 수 없습니다."
+
+msgid "Could not find a download link for the update."
+msgstr "업데이트에 대한 다운로드 링크를 찾을 수 없습니다."
+
+#, lua-format
+msgid "You are already on the latest version (%s) or newer."
+msgstr "이미 최신 버전(%s) 이상을 사용 중입니다."
+
+#, lua-format
+msgid "Could not determine your current version, but the latest is %s. If you recently updated, you might be up-to-date."
+msgstr "현재 버전을 확인할 수 없지만 최신 버전은 %s입니다. 최근에 업데이트했다면 최신 상태일 수 있습니다."
+
+#, lua-format
+msgid "New version available: %s (you have %s). Download and install?"
+msgstr "새 버전 이용 가능: %s (현재 버전: %s). 다운로드하고 설치하시겠습니까?"
+
+msgid "an older version"
+msgstr "이전 버전"
+
+msgid "Update available"
+msgstr "업데이트 가능"
+
+msgid "Update"
+msgstr "업데이트"
+
+msgid "Downloading update..."
+msgstr "업데이트 다운로드 중..."
+
+msgid "Download failed. Please try again later."
+msgstr "다운로드에 실패했습니다. 나중에 다시 시도해 주세요."
+
+msgid "Close"
+msgstr "닫기"
+
+msgid "Select Z-library Download Directory"
+msgstr "Z-라이브러리 다운로드 디렉토리 선택"
+
+#, lua-format
+msgid "Download directory set to: %s"
+msgstr "다운로드 디렉토리가 다음으로 설정됨: %s"
+
+msgid "No directory selected."
+msgstr "디렉토리가 선택되지 않았습니다."
+
+#, lua-format
+msgid "%d items selected for %s."
+msgstr "%d개 항목이 %s에 선택되었습니다."
+
+#, lua-format
+msgid "Filter cleared for %s."
+msgstr "%s에 대한 필터가 제거되었습니다."
+
+msgid "Set"
+msgstr "설정"
+
+msgid "Setting saved successfully!"
+msgstr "설정이 성공적으로 저장되었습니다!"
+
+msgid "Setting cleared."
+msgstr "설정이 초기화되었습니다."
+
+msgid "Search Z-library"
+msgstr "Z-라이브러리 검색"
+
+msgid "Please enter a search term."
+msgstr "검색어를 입력하세요."
+
+msgid "Unknown Title"
+msgstr "제목 미상"
+
+msgid "Unknown Author"
+msgstr "저자 미상"
+
+msgid "Rating"
+msgstr "평점"
+
+msgid "Search Results"
+msgstr "검색 결과"
+
+msgid "Title"
+msgstr "제목"
+
+msgid "Full Title"
+msgstr "전체 제목"
+
+msgid "Author"
+msgstr "저자"
+
+msgid "Full Author"
+msgstr "전체 저자명"
+
+msgid "Year"
+msgstr "연도"
+
+msgid "Language"
+msgstr "언어"
+
+#, lua-format
+msgid "Format: %s (tap to download)"
+msgstr "형식: %s (탭하여 다운로드)"
+
+#, lua-format
+msgid "Format: %s (Download not available)"
+msgstr "형식: %s (다운로드 불가)"
+
+msgid "Download Book (Unknown Format)"
+msgstr "도서 다운로드 (알 수 없는 형식)"
+
+msgid "Size"
+msgstr "크기"
+
+msgid "Publisher"
+msgstr "출판사"
+
+msgid "Series"
+msgstr "시리즈"
+
+msgid "Pages"
+msgstr "페이지 수"
+
+msgid "Description (tap to view)"
+msgstr "설명 (탭하여 보기)"
+
+msgid "Description"
+msgstr "설명"
+
+msgid "Back"
+msgstr "뒤로"
+
+msgid "Book Details"
+msgstr "도서 세부정보"
+
+#, lua-format
+msgid "Download \"%s\"?"
+msgstr "\"%s\"을(를) 다운로드하시겠습니까?"
+
+msgid "Download"
+msgstr "다운로드"
+
+#, lua-format
+msgid "\"%s\" downloaded successfully. Open it now?"
+msgstr "\"%s\"이(가) 성공적으로 다운로드되었습니다. 지금 열까요?"
+
+msgid "Open book"
+msgstr "도서 열기"
+
+msgid "Untitled"
+msgstr "제목 없음"
+
+msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
+msgstr "추천 도서를 찾을 수 없습니다. 다시 시도해 주세요. 때때로 여러 번 시도해야 할 수도 있습니다."
+
+msgid "Z-library Recommended Books"
+msgstr "Z-라이브러리 추천 도서"
+
+msgid "No most popular books found. The list was empty, please try again."
+msgstr "인기 도서를 찾을 수 없습니다. 목록이 비어 있습니다. 다시 시도해 주세요."
+
+msgid "Z-library Most Popular Books"
+msgstr "Z-라이브러리 인기 도서"
+
+msgid "Fetch most recommended book from Z-library?"
+msgstr "Z-라이브러리에서 가장 추천받는 도서를 가져오시겠습니까?"
+
+msgid "OK"
+msgstr "확인"
+
+msgid "Fetch most popular books from Z-library?"
+msgstr "Z-라이브러리에서 인기 도서를 가져오시겠습니까?"
+
+#~ msgid "Set username"
+#~ msgstr "사용자 이름 설정"
+
+#~ msgid "Downloading..."
+#~ msgstr "다운로드 중..."

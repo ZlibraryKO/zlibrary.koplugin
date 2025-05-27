@@ -15,6 +15,10 @@ jobs:
       contents: write
 
     steps:
+      - name: Install gettext tools
+        run: |
+          sudo apt install -y gettext
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -72,8 +76,43 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "zip_name=zlibrary_plugin_v${VERSION}.zip" >> "$GITHUB_OUTPUT"
         shell: bash
+         
+      - name: Generate/Update POT file
+        run: |
+          POT_FILE="./l10n/koreader.pot"
+          echo "Generating or updating POT file: $POT_FILE"
+          mkdir -p "$(dirname "$POT_FILE")"
+          TEMP_LUA_FILES=$(find . -type f -name "*.lua" | sort)
+          if [ -z "$TEMP_LUA_FILES" ]; then
+            echo "No Lua files found!" >&2
+            exit 1
+          fi
+          echo "$TEMP_LUA_FILES" | xargs xgettext \
+            --language=Lua \
+            --from-code=UTF-8 \
+            --keyword=T \
+            --output="$POT_FILE"
+          echo "POT file successfully updated at $POT_FILE"
+      
+      - name: Update existing PO files
+        run: |
+          POT_FILE="./l10n/koreader.pot"
+          if [ -f "$POT_FILE" ]; then
+            find l10n -type f -name "*.po" -print0 | while IFS= read -r -d $'\0' po_file; do
+                echo "Updating: $po_file"
+                msgmerge --no-fuzzy-matching --no-location --no-wrap --backup=off --update "$po_file" "$POT_FILE"
+                if [ $? -ne 0 ]; then
+                    echo "Failed to update $po_file!"
+                fi
+                echo "Checking $po_file"
+                msgfmt --check-format --verbose "$po_file" || echo "Errors in $po_file"
+            done
+            echo "All .po files updated."
+          else
+            echo "POT file not found: $POT_FILE" >&2
+          fi
 
-      - name: List Lua files to be zipped
+      - name: List files to be zipped
         id: list_files
         run: |
           echo "Looking for files in ${{ github.workspace }}/${{ steps.plugin_vars.outputs.plugin_dir }}"
@@ -100,12 +139,22 @@ jobs:
             echo "Info: 'zlibrary' directory not found. Skipping files from 'zlibrary'."
           fi
           
-          # Add README*.md if it exists and is a file
-          for readme_file in README*; do
-            if [ -f "$readme_file" ]; then
-              FILE_LINES="${FILE_LINES}${readme_file}\\n"
+          # Add .po files
+          if [ -d "l10n" ]; then
+             TEMP_ZLIB_PO_FILES=$(find ./l10n -maxdepth 2 -type f \( -name '*.po' -o -name '*.pot' \))
+             if [ -n "$TEMP_ZLIB_PO_FILES" ]; then
+               FILE_LINES="${FILE_LINES}${TEMP_ZLIB_PO_FILES}"$'\n'
+             fi
+          else
+            echo "Info: 'l10n' directory not found. Skipping files from 'l10n'."
+          fi
+
+          # Add README*.md *.md if it exists and is a file
+          while IFS= read -r -d $'\0' md_file; do
+            if [ -f "$md_file" ]; then
+              FILE_LINES="${FILE_LINES}${md_file}"$'\n'
             fi
-          done
+          done < <(find . -maxdepth 2 -type f -name '*.md' -print0)
           
           # Add LICENSE if it exists and is a file
           if [ -f "LICENSE" ]; then
@@ -201,7 +250,7 @@ jobs:
           prerelease: false
           files: ./${{ steps.plugin_vars.outputs.zip_name }}
 
-      - name: Commit and Push _meta.lua changes
+      - name: Commit and Push l10n _meta.lua changes
         run: |
           echo "Preparing to commit _meta.lua version bump..."
           git config --global user.name 'github-actions[bot]'
@@ -209,10 +258,12 @@ jobs:
           
           PLUGIN_META_FILE="${{ steps.plugin_vars.outputs.plugin_dir }}/_meta.lua"
           git add "$PLUGIN_META_FILE"
+
+          git add "${{ steps.plugin_vars.outputs.plugin_dir }}/l10n/"
           
           # Check if there are changes to commit
           if git diff --staged --quiet; then
-            echo "No changes to $PLUGIN_META_FILE to commit."
+            echo "No changes to $PLUGIN_META_FILE or l10n to commit."
           else
             echo "Committing updated $PLUGIN_META_FILE with version ${{ steps.bump_version.outputs.version }}"
             git commit -m "chore: Bump version to ${{ steps.bump_version.outputs.version }} [skip ci]"

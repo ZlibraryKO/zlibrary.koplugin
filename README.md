@@ -47,7 +47,7 @@ There are two ways to configure your Z-library credentials:
 2.  Access the "Search" menu.
 3.  Select "Z-library" (it's probably on the second page of this menu).
 4.  Select "Settings".
-5.  Enter your Z-library username, password, and the base URL for your Z-library instance.
+5.  Enter your Z-library email, password, and the base URL for your Z-library instance.
 6.  Adjust other settings if needed.
 
 **2. Via a Credentials File (Advanced):**
@@ -65,7 +65,7 @@ Create the `zlibrary_credentials.lua` file with the following content, uncomment
 
 return {
     -- baseUrl = "https://your.zlibrary.domain",
-    -- username = "your_username",
+    -- email = "your_email",
     -- password = "your_password",
 }
 ```
@@ -80,6 +80,11 @@ To easily access this plugin, you can set up a gesture to open the search menu:
 2.  Navigate to **Taps and gestures** > **Gesture manager**.
 3.  Select your desired gesture in two steps.
 4.  Under **General**, find **Z-library search** on the last page and check the box.
+
+
+## Localization Support
+
+This plugin provides basic multilingual support for more information see  [l10n/README.MD](l10n/README.md).
 
 ## Usage
 

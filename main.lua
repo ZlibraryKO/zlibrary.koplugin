@@ -17,6 +17,7 @@ local AsyncHelper = require("zlibrary.async_helper")
 local logger = require("logger")
 local ConfirmBox = require("ui/widget/confirmbox")
 local Ota = require("zlibrary.ota")
+local MultiSearchDialog = require("zlibrary.multisearch_dialog")
 
 local Zlibrary = WidgetContainer:extend{
     name = T("Z-library"),
@@ -53,7 +54,7 @@ end
 
 function Zlibrary:onZlibrarySearch()
     if not self.ui.view then
-        Ui.showSearchDialog(self)
+        self:showMultiSearchDialog()
     end
     return true
 end
@@ -257,6 +258,63 @@ function Zlibrary:_fetchBookList(options)
         end
 
         AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
+    end)
+end
+
+function Zlibrary:showMultiSearchDialog()
+    local search_dialog
+    local showMultiSearchBooksMenu = function(ui_self, books, plugin_self)
+        local menu_items = {}
+        for _, book in ipairs(books) do
+            local title = book.title or T("Untitled")
+            local author = book.author or T("Unknown Author")
+            local menu_text = string.format("%s - %s", title, author)
+            table.insert(menu_items, {
+                text = menu_text,
+                callback = function()
+                    self:onSelectRecommendedBook(book)
+                end
+            })
+        end
+        if #menu_items == 0 then
+            Ui.showInfoMessage(T("No books found. The list was empty, please try again."))
+            return
+        end
+        search_dialog.menu_items = menu_items
+        search_dialog:refreshContainer(menu_items)
+    end
+    
+    search_dialog = MultiSearchDialog:new{
+        search_func = function()
+            Ui.showSearchDialog(self)
+        end,
+        refresh_func_list = {
+            ["Recommended"] = function()
+                self:_fetchBookList({
+                    api_method = Api.getRecommendedBooks,
+                    loading_text_key = T("Fetching recommended books..."),
+                    error_prefix_key = T("Failed to fetch recommended books"),
+                    log_context = "onShowRecommendedBooks",
+                    results_member_name = "current_recommended_books",
+                    display_menu_func = showMultiSearchBooksMenu
+                })
+            end,
+            ["Most popular"] = function()
+                self:_fetchBookList({
+                    api_method = Api.getMostPopularBooks,
+                    loading_text_key = T("Fetching most popular books..."),
+                    error_prefix_key = T("Failed to fetch most popular books"),
+                    log_context = "onShowMostPopularBooks",
+                    results_member_name = "current_most_popular_books",
+                    display_menu_func = showMultiSearchBooksMenu
+                })
+            end
+        }
+    }
+
+    UIManager:show(search_dialog)
+    UIManager:nextTick(function()
+        UIManager:setDirty(search_dialog, "ui")
     end)
 end
 

@@ -20,7 +20,7 @@ msgid "[[A plugin to search and download books from Z-library.]]"
 msgstr "[[Um plugin para buscar e baixar livros da Z-library.]]"
 
 msgid "Z-library search"
-msgstr "[[Um plugin para buscar e baixar livros da Z-library.]]"
+msgstr "Busca na Z-library"
 
 msgid "Z-library most popular"
 msgstr "Mais populares da Z-library"

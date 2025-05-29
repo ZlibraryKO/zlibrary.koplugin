@@ -5,7 +5,7 @@ local Geom = require("ui/geometry")
 local UIManager = require("ui/uimanager")
 local DataStorage = require("datastorage")
 local LuaSettings = require("luasettings")
-local Menu = require("ui/widget/menu")
+local Menu = require("zlibrary.menu")
 local TitleBar = require("ui/widget/titlebar")
 local ToggleSwitch = require("ui/widget/toggleswitch")
 local VerticalGroup = require("ui/widget/verticalgroup")
@@ -192,7 +192,7 @@ function SearchDialog:createMenuContainer(books, height)
             height = height,
             item_table = menu_items,
             is_popout = false,
-            -- no_title = true,
+            no_title = true,
             show_captions = true,
             is_borderless = true,
             multilines_show_more_text = true,

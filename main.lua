@@ -54,7 +54,7 @@ end
 
 function Zlibrary:onZlibrarySearch()
     if not self.ui.view then
-        self:showMultiSearchDialog()
+        self:showMultiSearchDialog(1)
     end
     return true
 end
@@ -261,61 +261,53 @@ function Zlibrary:_fetchBookList(options)
     end)
 end
 
-function Zlibrary:showMultiSearchDialog()
+function Zlibrary:showMultiSearchDialog(position)
+    position = position or 1
     local search_dialog
-    local showMultiSearchBooksMenu = function(ui_self, books, plugin_self)
-        local menu_items = {}
-        for _, book in ipairs(books) do
-            local title = book.title or T("Untitled")
-            local author = book.author or T("Unknown Author")
-            local menu_text = string.format("%s - %s", title, author)
-            table.insert(menu_items, {
-                text = menu_text,
-                callback = function()
-                    self:onSelectRecommendedBook(book)
-                end
-            })
-        end
-        if #menu_items == 0 then
-            Ui.showInfoMessage(T("No books found. The list was empty, please try again."))
-            return
-        end
-        search_dialog.menu_items = menu_items
-        search_dialog:refreshContainer(menu_items)
+    local ShowBooksMenuCallback = function(ui_self, books, plugin_self)
+        search_dialog:refreshContainer(books)
     end
-    
+
     search_dialog = MultiSearchDialog:new{
+        parent_zlibrary = self,
+        parent_ui_ref = Ui,
         search_func = function()
             Ui.showSearchDialog(self)
         end,
-        refresh_func_list = {
-            ["Recommended"] = function()
+        position = position,
+        switch_list ={T("Recommended"), T("Most popular"), T("Favorites"), T("Downloaded")},
+        switch_values = {"recommended", "popular", "favorites", "downloaded"},
+        switch_refresh_fns = {
+            ["recommended"] = function()
                 self:_fetchBookList({
                     api_method = Api.getRecommendedBooks,
                     loading_text_key = T("Fetching recommended books..."),
                     error_prefix_key = T("Failed to fetch recommended books"),
                     log_context = "onShowRecommendedBooks",
                     results_member_name = "current_recommended_books",
-                    display_menu_func = showMultiSearchBooksMenu
+                    display_menu_func = ShowBooksMenuCallback
                 })
             end,
-            ["Most popular"] = function()
+            ["popular"] = function()
                 self:_fetchBookList({
                     api_method = Api.getMostPopularBooks,
                     loading_text_key = T("Fetching most popular books..."),
                     error_prefix_key = T("Failed to fetch most popular books"),
                     log_context = "onShowMostPopularBooks",
                     results_member_name = "current_most_popular_books",
-                    display_menu_func = showMultiSearchBooksMenu
+                    display_menu_func = ShowBooksMenuCallback
                 })
+            end,
+            ["favorites"] = function() 
+                Ui.showErrorMessage("extend test favorites undefined")
+            end,
+            ["downloaded"] =function()
+                Ui.showErrorMessage("extend test downloaded undefined")
             end
         }
     }
-
-    UIManager:show(search_dialog)
-    UIManager:nextTick(function()
-        UIManager:setDirty(search_dialog, "ui")
-    end)
+    
+    search_dialog:fetchAndShow()
 end
 
 function Zlibrary:onShowRecommendedBooks()

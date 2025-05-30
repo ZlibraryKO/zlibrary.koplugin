@@ -31,8 +31,6 @@ end
 
 function Zlibrary:onDispatcherRegisterActions()
     Dispatcher:registerAction("zlibrary_search", { category="none", event="ZlibrarySearch", title=T("Z-library search"), general=true,})
-    Dispatcher:registerAction("zlibrary_most_popular", { category="none", event="ZlibraryMostPopular", title=T("Z-library most popular"), general=true,})
-    Dispatcher:registerAction("zlibrary_recommended", { category="none", event="ZlibraryRecommended", title=T("Z-library recommended"), general=true,})
 end
 
 function Zlibrary:init()
@@ -53,23 +51,7 @@ function Zlibrary:init()
 end
 
 function Zlibrary:onZlibrarySearch()
-    if not self.ui.view then
-        self:showMultiSearchDialog(1)
-    end
-    return true
-end
-
-function Zlibrary:onZlibraryMostPopular()
-    Ui.confirmShowMostPopularBooks(function()
-        self:onShowMostPopularBooks()
-    end)
-    return true
-end
-
-function Zlibrary:onZlibraryRecommended()
-    Ui.confirmShowRecommendedBooks(function()
-        self:onShowRecommendedBooks()
-    end)
+    self:showMultiSearchDialog(1)
     return true
 end
 
@@ -262,48 +244,44 @@ function Zlibrary:_fetchBookList(options)
 end
 
 function Zlibrary:showMultiSearchDialog(position)
-    position = position or 1
     local search_dialog
-    local ShowBooksMenuCallback = function(ui_self, books, plugin_self)
-        search_dialog:refreshContainer(books)
+    local ShowBooksMultiSearch = function(ui_self, books, plugin_self)
+        search_dialog:refreshMenuItems(books)
     end
 
     search_dialog = MultiSearchDialog:new{
         parent_zlibrary = self,
         parent_ui_ref = Ui,
-        search_func = function()
+        title = T("Z-library search"),
+        position = position,
+        search_tap_callback = function()
             Ui.showSearchDialog(self)
         end,
-        position = position,
-        switch_list ={T("Recommended"), T("Most popular"), T("Favorites"), T("Downloaded")},
-        switch_values = {"recommended", "popular", "favorites", "downloaded"},
-        switch_refresh_fns = {
-            ["recommended"] = function()
+        toggle_content = {{
+            text = T("Recommended"),
+            cache_key = "recommended",
+            callback = function(widget)
                 self:_fetchBookList({
                     api_method = Api.getRecommendedBooks,
                     loading_text_key = T("Fetching recommended books..."),
                     error_prefix_key = T("Failed to fetch recommended books"),
                     log_context = "onShowRecommendedBooks",
                     results_member_name = "current_recommended_books",
-                    display_menu_func = ShowBooksMenuCallback
+                    display_menu_func = ShowBooksMultiSearch
                 })
-            end,
-            ["popular"] = function()
+            end},{
+            text = T("Most popular"),
+            cache_key = "popular",
+            callback = function(widget)
                 self:_fetchBookList({
                     api_method = Api.getMostPopularBooks,
                     loading_text_key = T("Fetching most popular books..."),
                     error_prefix_key = T("Failed to fetch most popular books"),
                     log_context = "onShowMostPopularBooks",
                     results_member_name = "current_most_popular_books",
-                    display_menu_func = ShowBooksMenuCallback
+                    display_menu_func = ShowBooksMultiSearch
                 })
-            end,
-            ["favorites"] = function() 
-                Ui.showErrorMessage("extend test favorites undefined")
-            end,
-            ["downloaded"] =function()
-                Ui.showErrorMessage("extend test downloaded undefined")
-            end
+            end}
         }
     }
     

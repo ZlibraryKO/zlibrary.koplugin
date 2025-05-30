@@ -17,6 +17,7 @@ local AsyncHelper = require("zlibrary.async_helper")
 local logger = require("logger")
 local ConfirmBox = require("ui/widget/confirmbox")
 local Ota = require("zlibrary.ota")
+local MultiSearchDialog = require("zlibrary.multisearch_dialog")
 
 local Zlibrary = WidgetContainer:extend{
     name = T("Z-library"),
@@ -30,8 +31,6 @@ end
 
 function Zlibrary:onDispatcherRegisterActions()
     Dispatcher:registerAction("zlibrary_search", { category="none", event="ZlibrarySearch", title=T("Z-library search"), general=true,})
-    Dispatcher:registerAction("zlibrary_most_popular", { category="none", event="ZlibraryMostPopular", title=T("Z-library most popular"), general=true,})
-    Dispatcher:registerAction("zlibrary_recommended", { category="none", event="ZlibraryRecommended", title=T("Z-library recommended"), general=true,})
 end
 
 function Zlibrary:init()
@@ -52,23 +51,7 @@ function Zlibrary:init()
 end
 
 function Zlibrary:onZlibrarySearch()
-    if not self.ui.view then
-        Ui.showSearchDialog(self)
-    end
-    return true
-end
-
-function Zlibrary:onZlibraryMostPopular()
-    Ui.confirmShowMostPopularBooks(function()
-        self:onShowMostPopularBooks()
-    end)
-    return true
-end
-
-function Zlibrary:onZlibraryRecommended()
-    Ui.confirmShowRecommendedBooks(function()
-        self:onShowRecommendedBooks()
-    end)
+    self:showMultiSearchDialog(1)
     return true
 end
 
@@ -184,13 +167,13 @@ function Zlibrary:addToMainMenu(menu_items)
                 {
                     text = T("Recommended"),
                     callback = function()
-                        self:onShowRecommendedBooks()
+                        self:showMultiSearchDialog(1)
                     end,
                 },
                 {
                     text = T("Most popular"),
                     callback = function()
-                        self:onShowMostPopularBooks()
+                        self:showMultiSearchDialog(2)
                     end,
                 },
             }
@@ -258,6 +241,51 @@ function Zlibrary:_fetchBookList(options)
 
         AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
     end)
+end
+
+function Zlibrary:showMultiSearchDialog(position)
+    local search_dialog
+    local ShowBooksMultiSearch = function(ui_self, books, plugin_self)
+        search_dialog:refreshMenuItems(books)
+    end
+
+    search_dialog = MultiSearchDialog:new{
+        parent_zlibrary = self,
+        parent_ui_ref = Ui,
+        title = T("Z-library search"),
+        position = position,
+        search_tap_callback = function()
+            Ui.showSearchDialog(self)
+        end,
+        toggle_items = {{
+            text = T("Recommended"),
+            cache_key = "recommended",
+            callback = function(widget)
+                self:_fetchBookList({
+                    api_method = Api.getRecommendedBooks,
+                    loading_text_key = T("Fetching recommended books..."),
+                    error_prefix_key = T("Failed to fetch recommended books"),
+                    log_context = "onShowRecommendedBooks",
+                    results_member_name = "current_recommended_books",
+                    display_menu_func = ShowBooksMultiSearch
+                })
+            end},{
+            text = T("Most popular"),
+            cache_key = "popular",
+            callback = function(widget)
+                self:_fetchBookList({
+                    api_method = Api.getMostPopularBooks,
+                    loading_text_key = T("Fetching most popular books..."),
+                    error_prefix_key = T("Failed to fetch most popular books"),
+                    log_context = "onShowMostPopularBooks",
+                    results_member_name = "current_most_popular_books",
+                    display_menu_func = ShowBooksMultiSearch
+                })
+            end}
+        }
+    }
+    
+    search_dialog:fetchAndShow()
 end
 
 function Zlibrary:onShowRecommendedBooks()

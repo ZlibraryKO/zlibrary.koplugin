@@ -6,8 +6,10 @@ local UIManager = require("ui/uimanager")
 local DataStorage = require("datastorage")
 local LuaSettings = require("luasettings")
 local Menu = require("zlibrary.menu")
+local IconButton = require("ui/widget/iconbutton")
 local TitleBar = require("ui/widget/titlebar")
 local ToggleSwitch = require("ui/widget/toggleswitch")
+local HorizontalGroup = require("ui/widget/horizontalgroup")
 local VerticalGroup = require("ui/widget/verticalgroup")
 local FrameContainer = require("ui/widget/container/framecontainer")
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
@@ -25,18 +27,17 @@ local SearchDialog = WidgetContainer:extend{
     search_tap_callback = nil,
     parent_zlibrary = nil,
     parent_ui_ref = nil,
-    _books = nil,
+    books = nil,
     _cache = nil
 }
 
 function SearchDialog:init()
     self.position = self.position or 1
     self.title = self.title or T("Z-library search")
-    self._books = self._books or {}
+    self.books = self.books or {}
 
     local toggle_text_list, toggle_values = {}, {}
-    if type(self.toggle_content) ~= "table" and #self.toggle_content < 1 then
-        logger.err("SearchDialog ToggleSwitch not configured")
+    if not (type(self.toggle_content) == "table" and #self.toggle_content > 0) then
         error("SearchDialog ToggleSwitch not configured")
     end
     for i, v in ipairs(self.toggle_content) do
@@ -54,7 +55,6 @@ function SearchDialog:init()
         with_bottom_line = true,
         left_icon = "appbar.search",
         left_icon_size_ratio = 0.9,
-        left_icon_allow_flash = true,
         left_icon_tap_callback = function()
             if type(self.search_tap_callback) ~= 'function' then
                 logger.warn("SearchDialog search_tap_callback is undefined")
@@ -66,28 +66,45 @@ function SearchDialog:init()
             UIManager:close(self)
         end
     }
-    local titlebar_size = titlebar:getSize()
-    
+
+    local force_refresh_button = IconButton:new{
+        icon = "cre.render.reload",
+        padding_right = 2,
+        callback = function()
+            self:forceRefreshMenuItems()
+        end
+    }
+
+    local has_multiple_items = #self.toggle_content ~= 1
     local filter = ToggleSwitch:new{
-        width = self.width,
+        width = self.width - force_refresh_button.width - 2,
         font_size = 20,
         alternate = false,
+        enabled = has_multiple_items,
         toggle = toggle_text_list,
         values = toggle_values,
         config = {
             onConfigChoose = function(_, _values, name, event, args, _position)
                 -- compatible with older versions
                 local position = type(_position) == "number" and _position or tonumber(name)
-                self:ToggleSwitchCallBack(position) 
+                self:ToggleSwitchCallBack(position)
             end
         }
     }
+
+    local filter_group = HorizontalGroup:new{
+        width = self.width,
+        align = "center",
+        filter,
+        force_refresh_button
+    }
     filter:setPosition(self.position)
 
+    local titlebar_size = titlebar:getSize()
     local filter_size = filter:getSize()
     local menu_container_height = self.height - titlebar_size.h - filter_size.h
 
-    self.menu_container = self:createMenuContainer(self._books, menu_container_height)
+    self.menu_container = self:createMenuContainer(self.books, menu_container_height)
     self.container_parent = VerticalGroup:new{
         dimen = Geom:new{
             w = self.width,
@@ -106,13 +123,13 @@ function SearchDialog:init()
         VerticalGroup:new{
             align = "left",
             titlebar,
-            filter,
+            filter_group,
             self.container_parent
         }
     }
     self[1] = frame
     self.menu_container.onMenuChoice = function(_, item)
-        local book = self._books[item.book_index]
+        local book = self.books[item.book_index]
         self.parent_zlibrary:onSelectRecommendedBook(book)
     end
     self._cache = LuaSettings:open(string.format("%s/cache/zlibrary.cache.db", DataStorage:getDataDir()))
@@ -122,11 +139,11 @@ function SearchDialog:getCache(key, cache_expiry)
     if not (key and self._cache and self._cache.data) then
         return
     end
-    cache_expiry = cache_expiry or 600
+    cache_expiry = cache_expiry or 3600
     local uptime_key = key .. "_ut"
     local uptime = self._cache.data[uptime_key]
     if not uptime or os.time() - uptime > cache_expiry then
-        self._cache.data[key] = nil
+        self._cache:delSetting(key)
         return
     end
     return self._cache.data[key]
@@ -198,18 +215,22 @@ function SearchDialog:refreshMenuItems(books, is_cache)
     local toggle_item = self.toggle_content[self.position]
     if not is_cache and toggle_item and toggle_item["cache_key"] then
         local cache_key = toggle_item["cache_key"]
-        self:addCache(cache_key, self._books)
+        self:addCache(cache_key, self.books)
     end
 end
 
 function SearchDialog:fetchAndShow()
     UIManager:show(self)
-    self:ToggleSwitchCallBack(self.position)
+    if not (self.books and #self.books > 0) then
+        self:ToggleSwitchCallBack(self.position)
+    else
+        self:refreshMenuItems(self.books)
+    end
 end
 
 function SearchDialog:createMenuContainer(books, height)
-    self._books = books or self._books
-    local menu_items = self:_getMenuItems(self._books)
+    self.books = books or self.books
+    local menu_items = self:_getMenuItems(self.books)
     if not self.menu_container then
         self.menu_container = Menu:new{
             width = self.width - Screen:scaleBySize(6),
@@ -233,6 +254,18 @@ function SearchDialog:resetMenuItems()
         self.menu_container.item_table = {}
         Menu.updateItems(self.menu_container)
     end
+end
+
+function SearchDialog:forceRefreshMenuItems()
+    if not (self._cache and self._cache.delSetting) then
+        return
+    end
+    local toggle_item = self.toggle_content[self.position]
+    if toggle_item and toggle_item["cache_key"] then
+        local cache_key = toggle_item["cache_key"]
+        self._cache:delSetting(cache_key)
+    end
+    self:ToggleSwitchCallBack(self.position)
 end
 
 return SearchDialog

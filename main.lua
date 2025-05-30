@@ -167,13 +167,13 @@ function Zlibrary:addToMainMenu(menu_items)
                 {
                     text = T("Recommended"),
                     callback = function()
-                        self:onShowRecommendedBooks()
+                        self:showMultiSearchDialog(1)
                     end,
                 },
                 {
                     text = T("Most popular"),
                     callback = function()
-                        self:onShowMostPopularBooks()
+                        self:showMultiSearchDialog(2)
                     end,
                 },
             }

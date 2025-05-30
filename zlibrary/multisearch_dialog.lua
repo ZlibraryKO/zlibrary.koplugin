@@ -1,6 +1,7 @@
 local Screen = require("device").screen
 local Blitbuffer = require("ffi/blitbuffer")
 local Font = require("ui/font")
+local Size = require("ui/size")
 local Geom = require("ui/geometry")
 local UIManager = require("ui/uimanager")
 local DataStorage = require("datastorage")
@@ -18,12 +19,11 @@ local T = require("zlibrary.gettext")
 local logger = require("logger")
 
 local SearchDialog = WidgetContainer:extend{
-    width = Screen:getWidth(),
-    height = Screen:getHeight(),
-    padding = Screen:scaleBySize(5),
-    toggle_content = nil,
+    title = T("Z-library search"),
+    width = nil,
+    height = nil,
+    toggle_items = nil,
     position = nil,
-    title = nil,
     search_tap_callback = nil,
     parent_zlibrary = nil,
     parent_ui_ref = nil,
@@ -32,29 +32,38 @@ local SearchDialog = WidgetContainer:extend{
 }
 
 function SearchDialog:init()
+    self.width = Screen:getWidth()
+    self.height = Screen:getHeight()
     self.position = self.position or 1
-    self.title = self.title or T("Z-library search")
     self.books = self.books or {}
 
     local toggle_text_list, toggle_values = {}, {}
-    if not (type(self.toggle_content) == "table" and #self.toggle_content > 0) then
+    if not (type(self.toggle_items) == "table" and #self.toggle_items > 0) then
         error("SearchDialog ToggleSwitch not configured")
     end
-    for i, v in ipairs(self.toggle_content) do
+    for i, v in ipairs(self.toggle_items) do
         if type(v) == 'table' and v["text"] then
             table.insert(toggle_text_list, v["text"])
             table.insert(toggle_values, i)
         end
     end
-    if self.position > #self.toggle_content then
-        self.position = #self.toggle_content
+
+    local toggle_items_count = #self.toggle_items
+    if self.position > toggle_items_count then
+        self.position = toggle_items_count
     end
+    
+    local frame_padding = Size.padding.default
+    local frame_bordersize = Size.border.thin
+    local frame_inner_width = self.width - 2 * frame_padding - 2 * frame_bordersize
+    local frame_inner_hight = self.height - 2 * frame_padding - 2 * frame_bordersize
 
     local titlebar = TitleBar:new{
         title = self.title,
         with_bottom_line = true,
         left_icon = "appbar.search",
         left_icon_size_ratio = 0.9,
+        left_icon_allow_flash = true,
         left_icon_tap_callback = function()
             if type(self.search_tap_callback) ~= 'function' then
                 logger.warn("SearchDialog search_tap_callback is undefined")
@@ -67,17 +76,21 @@ function SearchDialog:init()
         end
     }
 
+    local icon_size = Size.item.height_default + 2 * Size.padding.default + 2 * Size.border.thin
     local force_refresh_button = IconButton:new{
         icon = "cre.render.reload",
-        padding_right = 2,
+        height = icon_size,
+        width = icon_size,
+        padding_right = Size.padding.button,
         callback = function()
             self:forceRefreshMenuItems()
         end
     }
 
-    local has_multiple_items = #self.toggle_content ~= 1
+    local has_multiple_items = toggle_items_count ~= 1
+    local filter_width = frame_inner_width - force_refresh_button.width - force_refresh_button.padding_right
     local filter = ToggleSwitch:new{
-        width = self.width - force_refresh_button.width - 2,
+        width = filter_width,
         font_size = 20,
         alternate = false,
         enabled = has_multiple_items,
@@ -93,7 +106,9 @@ function SearchDialog:init()
     }
 
     local filter_group = HorizontalGroup:new{
-        width = self.width,
+        dimen = Geom:new{
+            w = frame_inner_width
+        },
         align = "center",
         filter,
         force_refresh_button
@@ -102,12 +117,11 @@ function SearchDialog:init()
 
     local titlebar_size = titlebar:getSize()
     local filter_size = filter:getSize()
-    local menu_container_height = self.height - titlebar_size.h - filter_size.h
-
+    local menu_container_height = frame_inner_hight - titlebar_size.h - filter_size.h
     self.menu_container = self:createMenuContainer(self.books, menu_container_height)
     self.container_parent = VerticalGroup:new{
         dimen = Geom:new{
-            w = self.width,
+            w = frame_inner_width,
             h = menu_container_height
         },
         self.menu_container
@@ -117,9 +131,9 @@ function SearchDialog:init()
         width = self.width,
         height = self.height,
         background = Blitbuffer.COLOR_WHITE,
-        bordersize = 2,
+        bordersize = frame_bordersize,
         bordercolor = Blitbuffer.COLOR_BLACK,
-        padding = 2,
+        padding = frame_padding,
         VerticalGroup:new{
             align = "left",
             titlebar,
@@ -139,7 +153,7 @@ function SearchDialog:getCache(key, cache_expiry)
     if not (key and self._cache and self._cache.data) then
         return
     end
-    cache_expiry = cache_expiry or 3600
+    cache_expiry = cache_expiry or 86400
     local uptime_key = key .. "_ut"
     local uptime = self._cache.data[uptime_key]
     if not uptime or os.time() - uptime > cache_expiry then
@@ -163,7 +177,7 @@ function SearchDialog:ToggleSwitchCallBack(_position)
         logger.warn("SearchDialog.ToggleSwitchCallBack invalid parameter")
         return
     end
-    local toggle_item = self.toggle_content[_position]
+    local toggle_item = self.toggle_items[_position]
     if type(toggle_item) ~= "table" then
         return
     end
@@ -212,7 +226,7 @@ function SearchDialog:refreshMenuItems(books, is_cache)
     self.menu_container = self:createMenuContainer(books, old_height)
     Menu.updateItems(self.menu_container)
 
-    local toggle_item = self.toggle_content[self.position]
+    local toggle_item = self.toggle_items[self.position]
     if not is_cache and toggle_item and toggle_item["cache_key"] then
         local cache_key = toggle_item["cache_key"]
         self:addCache(cache_key, self.books)
@@ -260,7 +274,7 @@ function SearchDialog:forceRefreshMenuItems()
     if not (self._cache and self._cache.delSetting) then
         return
     end
-    local toggle_item = self.toggle_content[self.position]
+    local toggle_item = self.toggle_items[self.position]
     if toggle_item and toggle_item["cache_key"] then
         local cache_key = toggle_item["cache_key"]
         self._cache:delSetting(cache_key)

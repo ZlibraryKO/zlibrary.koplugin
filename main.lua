@@ -257,7 +257,7 @@ function Zlibrary:showMultiSearchDialog(position)
         search_tap_callback = function()
             Ui.showSearchDialog(self)
         end,
-        toggle_content = {{
+        toggle_items = {{
             text = T("Recommended"),
             cache_key = "recommended",
             callback = function(widget)

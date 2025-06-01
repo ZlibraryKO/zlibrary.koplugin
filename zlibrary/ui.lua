@@ -189,11 +189,15 @@ function Ui.showGenericInputDialog(title, setting_key, current_value_or_default,
     dialog:onShowKeyboard()
 end
 
-function Ui.showSearchDialog(parent_zlibrary)
+function Ui.showSearchDialog(parent_zlibrary, def_input)
     local dialog
+    -- save last search input
+    if Ui._last_search_input and not def_input then
+        def_input = Ui._last_search_input
+    end
     dialog = InputDialog:new{
         title = T("Search Z-library"),
-        input = "",
+        input = def_input,
         buttons = {{
             {
                 text = T("Cancel"),
@@ -210,6 +214,7 @@ function Ui.showSearchDialog(parent_zlibrary)
                         Ui.showErrorMessage(T("Please enter a search term."))
                         return
                     end
+                    Ui._last_search_input = query
 
                     local login_ok = parent_zlibrary:login()
 

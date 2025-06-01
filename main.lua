@@ -17,6 +17,7 @@ local AsyncHelper = require("zlibrary.async_helper")
 local logger = require("logger")
 local ConfirmBox = require("ui/widget/confirmbox")
 local Ota = require("zlibrary.ota")
+local MultiSearchDialog = require("zlibrary.multisearch_dialog")
 
 local Zlibrary = WidgetContainer:extend{
     name = T("Z-library"),
@@ -30,8 +31,6 @@ end
 
 function Zlibrary:onDispatcherRegisterActions()
     Dispatcher:registerAction("zlibrary_search", { category="none", event="ZlibrarySearch", title=T("Z-library search"), general=true,})
-    Dispatcher:registerAction("zlibrary_most_popular", { category="none", event="ZlibraryMostPopular", title=T("Z-library most popular"), general=true,})
-    Dispatcher:registerAction("zlibrary_recommended", { category="none", event="ZlibraryRecommended", title=T("Z-library recommended"), general=true,})
 end
 
 function Zlibrary:init()
@@ -52,23 +51,12 @@ function Zlibrary:init()
 end
 
 function Zlibrary:onZlibrarySearch()
-    if not self.ui.view then
-        Ui.showSearchDialog(self)
+    local def_search_input
+    if self.ui and self.ui.doc_settings and self.ui.doc_settings.data.doc_props then
+      local doc_props = self.ui.doc_settings.data.doc_props
+      def_search_input = doc_props.authors or doc_props.title
     end
-    return true
-end
-
-function Zlibrary:onZlibraryMostPopular()
-    Ui.confirmShowMostPopularBooks(function()
-        self:onShowMostPopularBooks()
-    end)
-    return true
-end
-
-function Zlibrary:onZlibraryRecommended()
-    Ui.confirmShowRecommendedBooks(function()
-        self:onShowRecommendedBooks()
-    end)
+    self:showMultiSearchDialog(nil, def_search_input)
     return true
 end
 
@@ -184,13 +172,15 @@ function Zlibrary:addToMainMenu(menu_items)
                 {
                     text = T("Recommended"),
                     callback = function()
-                        self:onShowRecommendedBooks()
+                        local search_tab_recommended = 1
+                        self:showMultiSearchDialog(search_tab_recommended)
                     end,
                 },
                 {
                     text = T("Most popular"),
                     callback = function()
-                        self:onShowMostPopularBooks()
+                        local search_tab_most_popular = 2
+                        self:showMultiSearchDialog(search_tab_most_popular)
                     end,
                 },
             }
@@ -258,6 +248,52 @@ function Zlibrary:_fetchBookList(options)
 
         AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
     end)
+end
+
+function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
+    local search_dialog
+    local ShowBooksMultiSearch = function(ui_self, books, plugin_self)
+        search_dialog:refreshMenuItems(books)
+    end
+    search_dialog = MultiSearchDialog:new{
+        title = T("Z-library search"),
+        def_position = def_position,
+        def_search_input = def_search_input,
+        on_select_book_callback = function(book)
+            self:onSelectRecommendedBook(book)
+        end,
+        on_search_callback = function(def_input)
+            Ui.showSearchDialog(self, def_input)
+        end,
+        toggle_items = {{
+            text = T("Recommended"),
+            cache_key = "recommended",
+            callback = function(widget)
+                self:_fetchBookList({
+                    api_method = Api.getRecommendedBooks,
+                    loading_text_key = T("Fetching recommended books..."),
+                    error_prefix_key = T("Failed to fetch recommended books"),
+                    log_context = "onShowRecommendedBooks",
+                    results_member_name = "current_recommended_books",
+                    display_menu_func = ShowBooksMultiSearch
+                })
+            end},{
+            text = T("Most popular"),
+            cache_key = "popular",
+            callback = function(widget)
+                self:_fetchBookList({
+                    api_method = Api.getMostPopularBooks,
+                    loading_text_key = T("Fetching most popular books..."),
+                    error_prefix_key = T("Failed to fetch most popular books"),
+                    log_context = "onShowMostPopularBooks",
+                    results_member_name = "current_most_popular_books",
+                    display_menu_func = ShowBooksMultiSearch
+                })
+            end}
+        }
+    }
+    
+    search_dialog:fetchAndShow()
 end
 
 function Zlibrary:onShowRecommendedBooks()

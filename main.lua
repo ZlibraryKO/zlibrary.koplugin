@@ -51,7 +51,12 @@ function Zlibrary:init()
 end
 
 function Zlibrary:onZlibrarySearch()
-    self:showMultiSearchDialog(1)
+    local def_search_input
+    if self.ui and self.ui.doc_settings and self.ui.doc_settings.data.doc_props then
+      local doc_props = self.ui.doc_settings.data.doc_props
+      def_search_input = doc_props.authors or doc_props.title
+    end
+    self:showMultiSearchDialog(nil, def_search_input)
     return true
 end
 
@@ -243,19 +248,20 @@ function Zlibrary:_fetchBookList(options)
     end)
 end
 
-function Zlibrary:showMultiSearchDialog(position)
+function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
     local search_dialog
     local ShowBooksMultiSearch = function(ui_self, books, plugin_self)
         search_dialog:refreshMenuItems(books)
     end
-
     search_dialog = MultiSearchDialog:new{
-        parent_zlibrary = self,
-        parent_ui_ref = Ui,
         title = T("Z-library search"),
-        position = position,
-        search_tap_callback = function()
-            Ui.showSearchDialog(self)
+        def_position = def_position,
+        def_search_input = def_search_input,
+        on_select_book_callback = function(book)
+            self:onSelectRecommendedBook(book)
+        end,
+        on_search_callback = function(def_input)
+            Ui.showSearchDialog(self, def_input)
         end,
         toggle_items = {{
             text = T("Recommended"),

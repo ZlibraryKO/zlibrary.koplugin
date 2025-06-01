@@ -23,23 +23,34 @@ local SearchDialog = WidgetContainer:extend{
     width = nil,
     height = nil,
     toggle_items = nil,
-    position = nil,
-    search_tap_callback = nil,
-    parent_zlibrary = nil,
-    parent_ui_ref = nil,
+    def_position = nil,
+    def_search_input = nil,
+    on_search_callback = nil,
+    on_select_book_callback = nil,
     books = nil,
+    _position = nil,
     _cache = nil
 }
 
 function SearchDialog:init()
     self.width = Screen:getWidth()
     self.height = Screen:getHeight()
-    self.position = self.position or 1
+    self.def_position = self.def_position or 1
     self.books = self.books or {}
+
+    if type(self.on_select_book_callback) ~= "function" then
+        logger.warn("MultiSearchDialog on_select_book_callback is undefined")
+        self.on_select_book_callback = function(book) end
+    end
+
+    if type(self.on_search_callback) ~= 'function' then
+        logger.warn("MultiSearchDialog on_search_callback is undefined")
+        self.on_search_callback = function(def_input) end
+    end
 
     local toggle_text_list, toggle_values = {}, {}
     if not (type(self.toggle_items) == "table" and #self.toggle_items > 0) then
-        error("SearchDialog ToggleSwitch not configured")
+        error("MultiSearchDialog ToggleSwitch not configured")
     end
     for i, v in ipairs(self.toggle_items) do
         if type(v) == 'table' and v["text"] then
@@ -49,8 +60,8 @@ function SearchDialog:init()
     end
 
     local toggle_items_count = #self.toggle_items
-    if self.position > toggle_items_count then
-        self.position = toggle_items_count
+    if self.def_position > toggle_items_count then
+        self.def_position = toggle_items_count
     end
     
     local frame_padding = Size.padding.default
@@ -65,11 +76,7 @@ function SearchDialog:init()
         left_icon_size_ratio = 0.9,
         left_icon_allow_flash = true,
         left_icon_tap_callback = function()
-            if type(self.search_tap_callback) ~= 'function' then
-                logger.warn("SearchDialog search_tap_callback is undefined")
-                return
-            end
-            self.search_tap_callback()
+            self.on_search_callback(self.def_search_input)
         end,
         close_callback = function()
             UIManager:close(self)
@@ -113,8 +120,9 @@ function SearchDialog:init()
         filter,
         force_refresh_button
     }
-    filter:setPosition(self.position)
-
+    filter:setPosition(self.def_position)
+    self._position = self.def_position
+    
     local titlebar_size = titlebar:getSize()
     local filter_size = filter:getSize()
     local menu_container_height = frame_inner_hight - titlebar_size.h - filter_size.h
@@ -144,7 +152,7 @@ function SearchDialog:init()
     self[1] = frame
     self.menu_container.onMenuChoice = function(_, item)
         local book = self.books[item.book_index]
-        self.parent_zlibrary:onSelectRecommendedBook(book)
+        self.on_select_book_callback(book)
     end
     self._cache = LuaSettings:open(string.format("%s/cache/zlibrary.cache.db", DataStorage:getDataDir()))
 end
@@ -153,7 +161,7 @@ function SearchDialog:getCache(key, cache_expiry)
     if not (key and self._cache and self._cache.data) then
         return
     end
-    cache_expiry = cache_expiry or 86400
+    cache_expiry = cache_expiry or 172800
     local uptime_key = key .. "_ut"
     local uptime = self._cache.data[uptime_key]
     if not uptime or os.time() - uptime > cache_expiry then
@@ -174,7 +182,7 @@ end
 
 function SearchDialog:ToggleSwitchCallBack(_position)
     if not (type(_position) == 'number' and _position > 0) then
-        logger.warn("SearchDialog.ToggleSwitchCallBack invalid parameter")
+        logger.warn("MultiSearchDialog.ToggleSwitchCallBack invalid parameter")
         return
     end
     local toggle_item = self.toggle_items[_position]
@@ -182,7 +190,7 @@ function SearchDialog:ToggleSwitchCallBack(_position)
         return
     end
 
-    self.position = _position
+    self._position = _position
     self:resetMenuItems()
 
     local cache_key = toggle_item["cache_key"]
@@ -226,7 +234,7 @@ function SearchDialog:refreshMenuItems(books, is_cache)
     self.menu_container = self:createMenuContainer(books, old_height)
     Menu.updateItems(self.menu_container)
 
-    local toggle_item = self.toggle_items[self.position]
+    local toggle_item = self.toggle_items[self._position]
     if not is_cache and toggle_item and toggle_item["cache_key"] then
         local cache_key = toggle_item["cache_key"]
         self:addCache(cache_key, self.books)
@@ -236,7 +244,7 @@ end
 function SearchDialog:fetchAndShow()
     UIManager:show(self)
     if not (self.books and #self.books > 0) then
-        self:ToggleSwitchCallBack(self.position)
+        self:ToggleSwitchCallBack(self.def_position)
     else
         self:refreshMenuItems(self.books)
     end
@@ -274,12 +282,12 @@ function SearchDialog:forceRefreshMenuItems()
     if not (self._cache and self._cache.delSetting) then
         return
     end
-    local toggle_item = self.toggle_items[self.position]
+    local toggle_item = self.toggle_items[self._position]
     if toggle_item and toggle_item["cache_key"] then
         local cache_key = toggle_item["cache_key"]
         self._cache:delSetting(cache_key)
     end
-    self:ToggleSwitchCallBack(self.position)
+    self:ToggleSwitchCallBack(self._position)
 end
 
 return SearchDialog

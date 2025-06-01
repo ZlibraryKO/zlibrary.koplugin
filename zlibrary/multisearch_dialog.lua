@@ -19,6 +19,8 @@ local util = require("util")
 local T = require("zlibrary.gettext")
 local logger = require("logger")
 
+local DEF_CACHE_EXPIRY = 172800
+
 local SearchDialog = WidgetContainer:extend{
     title = T("Z-library search"),
     width = nil,
@@ -169,7 +171,7 @@ function SearchDialog:getCache(key, cache_expiry)
 
     local data = self._cache.data
     -- default cache lifetime: 2 days
-    local expiry = tonumber(cache_expiry) or 172800
+    local expiry = tonumber(cache_expiry) or DEF_CACHE_EXPIRY
     local uptime_key = key .. "_ut"
     local uptime = data[uptime_key]
 

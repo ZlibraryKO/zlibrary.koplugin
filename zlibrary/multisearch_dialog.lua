@@ -8,6 +8,7 @@ local DataStorage = require("datastorage")
 local LuaSettings = require("luasettings")
 local Menu = require("zlibrary.menu")
 local IconButton = require("ui/widget/iconbutton")
+local ButtonDialog = require("ui/widget/buttondialog")
 local TitleBar = require("ui/widget/titlebar")
 local ToggleSwitch = require("ui/widget/toggleswitch")
 local HorizontalGroup = require("ui/widget/horizontalgroup")
@@ -29,23 +30,26 @@ local SearchDialog = WidgetContainer:extend{
     on_select_book_callback = nil,
     books = nil,
     _position = nil,
-    _cache = nil
+    _cache = nil,
+    _has_cache = nil
 }
 
 function SearchDialog:init()
     self.width = Screen:getWidth()
     self.height = Screen:getHeight()
-    self.def_position = self.def_position or 1
+    self._position = self.def_position or 1
     self.books = self.books or {}
 
     if type(self.on_select_book_callback) ~= "function" then
         logger.warn("MultiSearchDialog on_select_book_callback is undefined")
-        self.on_select_book_callback = function(book) end
+        self.on_select_book_callback = function(book)
+        end
     end
 
     if type(self.on_search_callback) ~= 'function' then
         logger.warn("MultiSearchDialog on_search_callback is undefined")
-        self.on_search_callback = function(def_input) end
+        self.on_search_callback = function(def_input)
+        end
     end
 
     local toggle_text_list, toggle_values = {}, {}
@@ -60,10 +64,10 @@ function SearchDialog:init()
     end
 
     local toggle_items_count = #self.toggle_items
-    if self.def_position > toggle_items_count then
-        self.def_position = toggle_items_count
+    if self._position > toggle_items_count then
+        self._position = toggle_items_count
     end
-    
+
     local frame_padding = Size.padding.default
     local frame_bordersize = Size.border.thin
     local frame_inner_width = self.width - 2 * frame_padding - 2 * frame_bordersize
@@ -120,9 +124,8 @@ function SearchDialog:init()
         filter,
         force_refresh_button
     }
-    filter:setPosition(self.def_position)
-    self._position = self.def_position
-    
+    filter:setPosition(self._position)
+
     local titlebar_size = titlebar:getSize()
     local filter_size = filter:getSize()
     local menu_container_height = frame_inner_hight - titlebar_size.h - filter_size.h
@@ -151,33 +154,51 @@ function SearchDialog:init()
     }
     self[1] = frame
     self.menu_container.onMenuChoice = function(_, item)
-        local book = self.books[item.book_index]
-        self.on_select_book_callback(book)
+        self:onMenuChoice(item)
+    end
+    self.menu_container.onMenuHold= function(_, item)
+        self:onMenuHold(item)
     end
     self._cache = LuaSettings:open(string.format("%s/cache/zlibrary.cache.db", DataStorage:getDataDir()))
 end
 
 function SearchDialog:getCache(key, cache_expiry)
-    if not (key and self._cache and self._cache.data) then
-        return
+    if not (type(key) == "string" and self._cache and self._cache.data) then
+        return nil
     end
-    cache_expiry = cache_expiry or 172800
+
+    local data = self._cache.data
+    -- default cache lifetime: 2 days
+    local expiry = tonumber(cache_expiry) or 172800
     local uptime_key = key .. "_ut"
-    local uptime = self._cache.data[uptime_key]
-    if not uptime or os.time() - uptime > cache_expiry then
-        self._cache:delSetting(key)
-        return
+    local uptime = data[uptime_key]
+
+    if expiry <= 0 then
+        return nil
     end
-    return self._cache.data[key]
+    if not uptime or (os.time() - uptime > expiry) then
+        self._cache:delSetting(key)
+        return nil
+    end
+
+    local value = data[key]
+    if not value then
+        return nil
+    end
+
+    self._has_cache = true
+    return value
 end
 
 function SearchDialog:addCache(key, object)
-    if not (key and self._cache and type(object) == "table" and next(object)) then
-        return
+    if not (type(key) == "string" and self._cache and type(object) == "table" and next(object)) then
+        return 
     end
     local uptime_key = key .. "_ut"
     self._cache:saveSetting(key, object)
     self._cache:saveSetting(uptime_key, os.time()):flush()
+    self._has_cache = true
+    return true
 end
 
 function SearchDialog:ToggleSwitchCallBack(_position)
@@ -185,13 +206,13 @@ function SearchDialog:ToggleSwitchCallBack(_position)
         logger.warn("MultiSearchDialog.ToggleSwitchCallBack invalid parameter")
         return
     end
+
+    self._position = _position
+    self:resetMenuItems()
     local toggle_item = self.toggle_items[_position]
     if type(toggle_item) ~= "table" then
         return
     end
-
-    self._position = _position
-    self:resetMenuItems()
 
     local cache_key = toggle_item["cache_key"]
     if cache_key then
@@ -244,9 +265,13 @@ end
 function SearchDialog:fetchAndShow()
     UIManager:show(self)
     if not (self.books and #self.books > 0) then
-        self:ToggleSwitchCallBack(self.def_position)
+        self:ToggleSwitchCallBack(self._position)
     else
         self:refreshMenuItems(self.books)
+    end
+    -- automatically enter search
+    if not self.def_position and self._has_cache then
+        self.on_search_callback(self.def_search_input)
     end
 end
 
@@ -288,6 +313,47 @@ function SearchDialog:forceRefreshMenuItems()
         self._cache:delSetting(cache_key)
     end
     self:ToggleSwitchCallBack(self._position)
+end
+
+function SearchDialog:onMenuChoice(item)
+    local book = self.books[item.book_index]
+    self.on_select_book_callback(book)
+end
+
+function SearchDialog:onMenuHold(item)
+    local book = self.books[item.book_index]
+    if type(book) ~= "table" and not book.author and not book.title then
+        return
+    end
+    
+    local dialog
+    local buttons = {}
+    if book.title then 
+        local button_text = string.format("%s: %s", T("Title"), book.title)
+        table.insert(buttons, {{
+            text = button_text,
+            callback = function()
+                UIManager:close(dialog)
+                self.on_search_callback(tostring(book.title))
+            end
+        }})
+    end
+    if book.author then 
+        local button_text = string.format("%s: %s", T("Author"), book.author)
+        table.insert(buttons, {{
+            text = button_text,
+            callback = function()
+                UIManager:close(dialog)
+                self.on_search_callback(tostring(book.author))
+            end
+        }})
+    end
+    dialog = ButtonDialog:new{
+        buttons = buttons,
+        title = T("Search"),
+        title_align = "center"
+    }
+    UIManager:show(dialog)
 end
 
 return SearchDialog

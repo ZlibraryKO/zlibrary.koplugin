@@ -1,6 +1,5 @@
 local Screen = require("device").screen
 local Blitbuffer = require("ffi/blitbuffer")
-local Font = require("ui/font")
 local Size = require("ui/size")
 local Geom = require("ui/geometry")
 local UIManager = require("ui/uimanager")
@@ -19,6 +18,7 @@ local util = require("util")
 local T = require("zlibrary.gettext")
 local logger = require("logger")
 
+-- default cache lifetime: 2 days
 local DEF_CACHE_EXPIRY = 172800
 
 local SearchDialog = WidgetContainer:extend{
@@ -33,6 +33,7 @@ local SearchDialog = WidgetContainer:extend{
     books = nil,
     _position = nil,
     _cache = nil,
+    _cache_path = nil,
     _has_cache = nil
 }
 
@@ -161,19 +162,28 @@ function SearchDialog:init()
     self.menu_container.onMenuHold= function(_, item)
         self:onMenuHold(item)
     end
-    self._cache = LuaSettings:open(string.format("%s/cache/zlibrary.cache.db", DataStorage:getDataDir()))
+    self._cache_path = string.format("%s/cache/zlibrary/search_cache.db", DataStorage:getDataDir())
+end
+
+function SearchDialog:ensureCacheInit()
+    if not util.fileExists(self._cache_path) then
+        local dir = util.splitFilePathName(self._cache_path)
+        if not util.pathExists(dir) then util.makePath(dir) end
+    end
+    if not self._cache then 
+        self._cache = LuaSettings:open(self._cache_path)
+    end
 end
 
 function SearchDialog:getCache(key, cache_expiry)
-    if not (type(key) == "string" and self._cache and self._cache.data) then
+    if type(key) ~= "string" or key == "" then
         return nil
     end
-
-    local data = self._cache.data
-    -- default cache lifetime: 2 days
+    self:ensureCacheInit()
+    
     local expiry = tonumber(cache_expiry) or DEF_CACHE_EXPIRY
     local uptime_key = key .. "_ut"
-    local uptime = data[uptime_key]
+    local uptime = self._cache:readSetting(uptime_key)
 
     if expiry <= 0 then
         return nil
@@ -183,7 +193,7 @@ function SearchDialog:getCache(key, cache_expiry)
         return nil
     end
 
-    local value = data[key]
+    local value = self._cache:readSetting(key)
     if not value then
         return nil
     end
@@ -193,9 +203,10 @@ function SearchDialog:getCache(key, cache_expiry)
 end
 
 function SearchDialog:addCache(key, object)
-    if not (type(key) == "string" and self._cache and type(object) == "table" and next(object)) then
+    if not (type(key) == "string" and type(object) == "table" and next(object)) then
         return 
     end
+    self:ensureCacheInit()
     local uptime_key = key .. "_ut"
     self._cache:saveSetting(key, object)
     self._cache:saveSetting(uptime_key, os.time()):flush()
@@ -306,7 +317,8 @@ function SearchDialog:resetMenuItems()
 end
 
 function SearchDialog:forceRefreshMenuItems()
-    if not (self._cache and self._cache.delSetting) then
+    self:ensureCacheInit()
+    if not self._cache.delSetting then
         return
     end
     local toggle_item = self.toggle_items[self._position]
@@ -352,7 +364,7 @@ function SearchDialog:onMenuHold(item)
     end
     dialog = ButtonDialog:new{
         buttons = buttons,
-        title = T("Search"),
+        title = string.format("\u{f002} %s", T("Search")),
         title_align = "center"
     }
     UIManager:show(dialog)

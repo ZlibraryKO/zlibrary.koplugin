@@ -248,4 +248,20 @@ function Config.getSearchOrder()
     return Config.getSetting(Config.SETTINGS_SEARCH_ORDERS_KEY, {})
 end
 
+function Config.getSearchOrderName()
+    local search_order_name = T("Default")
+    local selected_order = Config.getSearchOrder()
+    local search_order = selected_order and selected_order[1]
+
+    if search_order then
+        for _, v in ipairs(Config.SUPPORTED_ORDERS) do
+            if v.value == search_order then
+                search_order_name = v.name
+                break
+            end
+        end
+    end
+    return search_order_name
+end
+
 return Config

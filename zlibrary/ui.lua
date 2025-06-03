@@ -224,18 +224,7 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
     end
     
     local dialog
-    local search_order_name = T("Default")
-    local selected_order = Config.getSearchOrder()
-    local search_order = selected_order and selected_order[1]
-
-    if search_order then
-        for _, v in ipairs(Config.SUPPORTED_ORDERS) do
-            if v.value == search_order then
-                search_order_name = v.name
-                break
-            end
-        end
-    end
+    local search_order_name = Config.getSearchOrderName()
     
     dialog = InputDialog:new{
         title = T("Search Z-library"),
@@ -313,8 +302,10 @@ function Ui.createBookMenuItem(book_data, parent_zlibrary_instance)
 end
 
 function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_items, on_goto_page_handler)
+    local search_order_name = Config.getSearchOrderName()
     local menu = Menu:new{
         title = _colon_concat(T("Search Results"), query_string),
+        subtitle = string.format("%s: %s", T("Sort by"), search_order_name),
         item_table = initial_menu_items,
         parent = parent_ui_ref,
         items_per_page = 10,

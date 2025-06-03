@@ -43,6 +43,16 @@ function Ui.showFullTextDialog(title, full_text)
     })
 end
 
+function Ui.showCoverDialog(title, img_path)
+    local ImageViewer = require("ui/widget/imageviewer")
+    UIManager:show(ImageViewer:new{
+        file = img_path,
+        modal = true,
+        with_title_bar = false,
+        buttons_visible = true,
+    })
+end
+
 function Ui.showSimpleMessageDialog(title, text)
     UIManager:show(ConfirmBox:new{
         title = title,
@@ -415,14 +425,7 @@ function Ui.showBookDetails(parent_zlibrary, book)
                             return
                         end
                 end
-                local ImageViewer = require("ui/widget/imageviewer")
-                local image_viewer = ImageViewer:new{
-                    file = cover_cache_path,
-                    modal = true,
-                    with_title_bar = false,
-                    buttons_visible = true,
-                }
-                UIManager:show(image_viewer)
+                Ui.showCoverDialog(full_title, cover_cache_path)
             end})
     end
     if book.description and book.description ~= "" then

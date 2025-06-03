@@ -53,12 +53,12 @@ function Ui.showSimpleMessageDialog(title, text)
 end
 
 function Ui.showDownloadDirectoryDialog()
-    local current_dir = G_reader_settings:readSetting(Config.SETTINGS_DOWNLOAD_DIR_KEY)
+    local current_dir = Config.getSetting(Config.SETTINGS_DOWNLOAD_DIR_KEY)
     DownloadMgr:new{
         title = T("Select Z-library Download Directory"),
         onConfirm = function(path)
             if path then
-                G_reader_settings:saveSetting(Config.SETTINGS_DOWNLOAD_DIR_KEY, path)
+                Config.saveSetting(Config.SETTINGS_DOWNLOAD_DIR_KEY, path)
                 Ui.showInfoMessage(string.format(T("Download directory set to: %s"), path))
             else
                 Ui.showErrorMessage(T("No directory selected."))
@@ -68,7 +68,7 @@ function Ui.showDownloadDirectoryDialog()
 end
 
 local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_list, ok_callback, is_single)
-    local selected_values_table = G_reader_settings:readSetting(setting_key) or {}
+    local selected_values_table = Config.getSetting(setting_key, {})
     local selected_values_set = {}
     for _, value in ipairs(selected_values_table) do
         selected_values_set[value] = true
@@ -131,10 +131,10 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
                 end)
 
                 if #new_selected_values > 0 then
-                    G_reader_settings:saveSetting(setting_key, new_selected_values)
+                    Config.saveSetting(setting_key, new_selected_values)
                     return #new_selected_values
                 else
-                    G_reader_settings:delSetting(setting_key)
+                    Config.deleteSetting(setting_key)
                 end
             end)
 
@@ -146,12 +146,16 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
                     Ui.showInfoMessage(string.format(T("%d items selected for %s."), err, title))
                 end
             else
-                logger.err("Zlibrary:Ui._showMultiSelectionDialog - Error during onClose for %s: %s", title, tostring(err))
+                logger.err("Zlibrary:Ui._editConfigOptionsDialog - Error during onClose for %s: %s", title, tostring(err))
                 Ui.showInfoMessage(string.format(T("Filter cleared for %s."), title))
             end
         end,
     }
     UIManager:show(selection_menu)
+end
+
+local function  _showRadioSelectionDialog(parent_ui, title, setting_key, options_list, ok_callback)
+    _showMultiSelectionDialog(parent_ui, title, setting_key, options_list, ok_callback, true)
 end
 
 function Ui.showLanguageSelectionDialog(parent_ui)
@@ -163,7 +167,7 @@ function Ui.showExtensionSelectionDialog(parent_ui)
 end
 
 function Ui.showOrdersSelectionDialog(parent_ui, ok_callback)
-    _showMultiSelectionDialog(parent_ui, T("Select search order"), Config.SETTINGS_SEARCH_ORDERS_KEY, Config.SUPPORTED_ORDERS, ok_callback, true)
+    _showRadioSelectionDialog(parent_ui, T("Select search order"), Config.SETTINGS_SEARCH_ORDERS_KEY, Config.SUPPORTED_ORDERS, ok_callback)
 end
 
 function Ui.showGenericInputDialog(title, setting_key, current_value_or_default, is_password, validate_and_save_callback)

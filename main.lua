@@ -135,7 +135,7 @@ function Zlibrary:addToMainMenu(menu_items)
                             end,
                         },
                         {
-                            text = T("Search")..T("Settings"),
+                            text = T("Search options"),
                             keep_menu_open = true,
                             separator = true,
                             sub_item_table = {{

@@ -1,6 +1,7 @@
 local util = require("util")
 local logger = require("logger")
 local lfs = require("libs/libkoreader-lfs")
+local T = require("zlibrary.gettext")
 
 local Config = {}
 
@@ -11,6 +12,7 @@ Config.SETTINGS_USER_ID_KEY = "zlib_user_id"
 Config.SETTINGS_USER_KEY_KEY = "zlib_user_key"
 Config.SETTINGS_SEARCH_LANGUAGES_KEY = "zlibrary_search_languages"
 Config.SETTINGS_SEARCH_EXTENSIONS_KEY = "zlibrary_search_extensions"
+Config.SETTINGS_SEARCH_ORDERS_KEY = "zlibrary_search_order"
 Config.SETTINGS_DOWNLOAD_DIR_KEY = "zlibrary_download_dir"
 Config.CREDENTIALS_FILENAME = "zlibrary_credentials.lua"
 
@@ -100,6 +102,17 @@ Config.SUPPORTED_EXTENSIONS = {
     { name = "PDF", value = "PDF" },
     { name = "RTF", value = "RTF" },
     { name = "TXT", value = "TXT" },
+}
+
+Config.SUPPORTED_ORDERS = {
+    { name = T("Most Popular"), value = "popular" },
+    { name = T("Best Match"), value = "bestmatch" },
+    { name = T("Recently Added"), value = "date" },
+    { name = string.format("%s %s", T("By Title"), "(A-Z)"), value = "titleA" },
+    { name = string.format("%s %s", T("By Title"), "(Z-A)"), value = "title" },
+    { name = T("Year"), value = "year" },
+    { name = string.format("%s %s", T("File Size"), "↓"), value = "filesize" },
+    { name = string.format("%s %s", T("File Size"), "↑"), value = "filesizeA" }
 }
 
 function Config.getBaseUrl()
@@ -229,6 +242,10 @@ end
 
 function Config.getSearchExtensions()
     return Config.getSetting(Config.SETTINGS_SEARCH_EXTENSIONS_KEY, {})
+end
+
+function Config.getSearchOrder()
+    return Config.getSetting(Config.SETTINGS_SEARCH_ORDERS_KEY, {})
 end
 
 return Config

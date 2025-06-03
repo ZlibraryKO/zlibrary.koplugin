@@ -160,7 +160,7 @@ function Api.login(email, password)
     return result
 end
 
-function Api.search(query, user_id, user_key, languages, extensions, page)
+function Api.search(query, user_id, user_key, languages, extensions, order, page)
     logger.info(string.format("Zlibrary:Api.search - START - Query: %s, Page: %s", query, tostring(page)))
     local result = { results = nil, total_count = nil, error = nil }
 
@@ -188,6 +188,9 @@ function Api.search(query, user_id, user_key, languages, extensions, page)
         for i, ext in ipairs(extensions) do
             table.insert(body_data_parts, string.format("extensions[%d]=%s", i - 1, util.urlEncode(ext)))
         end
+    end
+    if order and #order > 0 then
+            table.insert(body_data_parts, "order=" .. util.urlEncode(order[1]))
     end
 
     local body = table.concat(body_data_parts, "&")

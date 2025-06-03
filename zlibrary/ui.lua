@@ -205,43 +205,63 @@ function Ui.showGenericInputDialog(title, setting_key, current_value_or_default,
 end
 
 function Ui.showSearchDialog(parent_zlibrary, def_input)
-    local dialog
     -- save last search input
     if Ui._last_search_input and not def_input then
         def_input = Ui._last_search_input
     end
+    
+    local dialog
+    local search_order_name = T("Default")
+    local selected_order = Config.getSearchOrder()
+    local search_order = selected_order and selected_order[1]
+
+    if search_order then
+        for _, v in ipairs(Config.SUPPORTED_ORDERS) do
+            if v.value == search_order then
+                search_order_name = v.name
+                break
+            end
+        end
+    end
+
+    local buttons = {{{
+            text = string.format("%s: %s \u{25BC}", T("Sort by"), search_order_name),
+            callback = function()
+                UIManager:close(dialog)
+                Ui.showOrdersSelectionDialog(parent_zlibrary)
+            end
+        }},{{
+        text = T("Search"),
+        callback = function()
+            local query = dialog:getInputText()
+            UIManager:close(dialog)
+
+            if not query or not query:match("%S") then
+                Ui.showErrorMessage(T("Please enter a search term."))
+                return
+            end
+            Ui._last_search_input = query
+
+            local login_ok = parent_zlibrary:login()
+
+            if not login_ok then
+                return
+            end
+
+            local trimmed_query = util.trim(query)
+                parent_zlibrary:performSearch(trimmed_query)
+            end,
+        }},{{
+            text = T("Cancel"),
+            id = "close",
+            callback = function() UIManager:close(dialog) end,
+        }},
+    }
+
     dialog = InputDialog:new{
         title = T("Search Z-library"),
         input = def_input,
-        buttons = {{
-            {
-                text = T("Cancel"),
-                id = "close",
-                callback = function() UIManager:close(dialog) end,
-            },
-            {
-                text = T("Search"),
-                callback = function()
-                    local query = dialog:getInputText()
-                    UIManager:close(dialog)
-
-                    if not query or not query:match("%S") then
-                        Ui.showErrorMessage(T("Please enter a search term."))
-                        return
-                    end
-                    Ui._last_search_input = query
-
-                    local login_ok = parent_zlibrary:login()
-
-                    if not login_ok then
-                        return
-                    end
-
-                    local trimmed_query = util.trim(query)
-                    parent_zlibrary:performSearch(trimmed_query)
-                end,
-            },
-        }},
+        buttons = buttons
     }
     UIManager:show(dialog)
     dialog:onShowKeyboard()

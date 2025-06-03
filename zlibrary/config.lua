@@ -105,14 +105,14 @@ Config.SUPPORTED_EXTENSIONS = {
 }
 
 Config.SUPPORTED_ORDERS = {
-    { name = T("Most Popular"), value = "popular" },
-    { name = T("Best Match"), value = "bestmatch" },
-    { name = T("Recently Added"), value = "date" },
-    { name = string.format("%s %s", T("By Title"), "(A-Z)"), value = "titleA" },
-    { name = string.format("%s %s", T("By Title"), "(Z-A)"), value = "title" },
+    { name = T("Most popular"), value = "popular" },
+    { name = T("Best match"), value = "bestmatch" },
+    { name = T("Recently added"), value = "date" },
+    { name = string.format("%s %s", T("Title"), "(A-Z)"), value = "titleA" },
+    { name = string.format("%s %s", T("Title"), "(Z-A)"), value = "title" },
     { name = T("Year"), value = "year" },
-    { name = string.format("%s %s", T("File Size"), "↓"), value = "filesize" },
-    { name = string.format("%s %s", T("File Size"), "↑"), value = "filesizeA" }
+    { name = string.format("%s %s", T("File size"), "↓"), value = "filesize" },
+    { name = string.format("%s %s", T("File size"), "↑"), value = "filesizeA" }
 }
 
 function Config.getBaseUrl()

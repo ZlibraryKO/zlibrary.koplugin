@@ -141,7 +141,7 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
             UIManager:close(selection_menu)
             if ok then
                 if type(ok_callback) == "function" then
-                    ok_callback()
+                    ok_callback(err)
                 else
                     Ui.showInfoMessage(string.format(T("%d items selected for %s."), err, title))
                 end
@@ -240,7 +240,7 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
             text = string.format("%s: %s \u{25BC}", T("Sort by"), search_order_name),
             callback = function()
                 UIManager:close(dialog)
-                Ui.showOrdersSelectionDialog(parent_zlibrary, function()
+                Ui.showOrdersSelectionDialog(parent_zlibrary, function(count)
                     Ui.showSearchDialog(parent_zlibrary, def_input)
                 end)
             end
@@ -354,7 +354,7 @@ function Ui.showBookDetails(parent_zlibrary, book)
         text = _colon_concat(T("Author"), full_author),
         enabled = true,
         callback = function()
-            Ui.showSimpleMessageDialog(T("Full Author"), full_author)
+            Ui.showSearchDialog(parent_zlibrary, full_author)
         end,
         keep_menu_open = true,
     })

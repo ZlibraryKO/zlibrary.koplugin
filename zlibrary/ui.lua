@@ -49,7 +49,8 @@ function Ui.showCoverDialog(title, img_path)
         file = img_path,
         modal = true,
         with_title_bar = false,
-        buttons_visible = true,
+        buttons_visible = false,
+        scale_factor = 1
     })
 end
 
@@ -364,6 +365,34 @@ function Ui.showBookDetails(parent_zlibrary, book)
         keep_menu_open = true,
     })
 
+    if book.cover and book.cover ~= "" and book.hash then
+        table.insert(details_menu_items, {
+            text = T("Cover (tap to view)"),
+            enabled = true,
+            callback = function()
+                local function getImgExtension(url)
+                    local clean_url = url:match("^([^%?]+)") or url
+                    return clean_url:match("[%.]([^%.]+)$") or "jpg"
+                end
+                local cover_ext = getImgExtension(book.cover)
+                local Api = require("zlibrary.api")
+                local DataStorage = require("datastorage")
+                local cover_file_name = string.format("%s_%s.%s", book.hash, book.id, cover_ext)
+                local cover_cache_path = string.format("%s/cache/zlibrary/%s", DataStorage:getDataDir(), cover_file_name)
+                if not util.fileExists(cover_cache_path) then
+                        local download_result = Api.downloadBookCover(book.cover, cover_cache_path)
+                        if download_result.error or not download_result.success then
+                            if util.fileExists(cover_cache_path) then
+                                pcall(os.remove, cover_cache_path)
+                            end
+                            Ui.showErrorMessage(tostring(download_result.error))
+                            return
+                        end
+                end
+                Ui.showCoverDialog(full_title, cover_cache_path)
+            end})
+    end
+
     if book.year and book.year ~= "N/A" and tostring(book.year) ~= "0" then table.insert(details_menu_items, { text = _colon_concat(T("Year"), book.year), enabled = false }) end
     if book.lang and book.lang ~= "N/A" then table.insert(details_menu_items, { text = _colon_concat(T("Language"), book.lang), enabled = false }) end
 
@@ -400,34 +429,7 @@ function Ui.showBookDetails(parent_zlibrary, book)
         table.insert(details_menu_items, { text = _colon_concat(T("Series"), util.htmlEntitiesToUtf8(series_for_html)), enabled = false })
     end
     if book.pages and book.pages ~= 0 then table.insert(details_menu_items, { text = _colon_concat(T("Pages"), book.pages), enabled = false }) end
-    
-    if book.cover and book.cover ~= "" and book.hash then
-        table.insert(details_menu_items, {
-            text = T("Cover (tap to view)"),
-            enabled = true,
-            callback = function()
-                local function getImgExtension(url)
-                    local clean_url = url:match("^([^%?]+)") or url
-                    return clean_url:match("[%.]([^%.]+)$") or "jpg"
-                end
-                local cover_ext = getImgExtension(book.cover)
-                local Ota = require("zlibrary.ota")
-                local DataStorage = require("datastorage")
-                local cover_file_name = string.format("%s.%s", book.hash, cover_ext)
-                local cover_cache_path = string.format("%s/cache/zlibrary/%s", DataStorage:getDataDir(), cover_file_name)
-                if not util.fileExists(cover_cache_path) then
-                        local download_result = Ota.downloadUpdate(book.cover, cover_cache_path)
-                        if download_result.error or not download_result.success then
-                            if util.fileExists(cover_cache_path) then
-                                os.remove(cover_cache_path)
-                            end
-                            Ui.showErrorMessage(tostring(download_result.error))
-                            return
-                        end
-                end
-                Ui.showCoverDialog(full_title, cover_cache_path)
-            end})
-    end
+
     if book.description and book.description ~= "" then
         table.insert(details_menu_items, {
             text = T("Description (tap to view)"),

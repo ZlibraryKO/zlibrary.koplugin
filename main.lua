@@ -511,7 +511,7 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
             local user_session_more = Config.getUserSession()
             local selected_languages_more = Config.getSearchLanguages()
             local selected_extensions_more = Config.getSearchExtensions()
-            local selected_order_more = Config.getSearchOrders()
+            local selected_order_more = Config.getSearchOrder()
 
             local task_load_more = function()
                 return Api.search(self.current_search_query, user_session_more.user_id, user_session_more.user_key, selected_languages_more, selected_extensions_more, selected_order_more, next_api_page_to_fetch)

@@ -67,7 +67,7 @@ function Ui.showDownloadDirectoryDialog()
     }:chooseDir(current_dir)
 end
 
-local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_list, is_single)
+local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_list, ok_callback, is_single)
     local selected_values_table = G_reader_settings:readSetting(setting_key) or {}
     local selected_values_set = {}
     for _, value in ipairs(selected_values_table) do
@@ -132,16 +132,23 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
 
                 if #new_selected_values > 0 then
                     G_reader_settings:saveSetting(setting_key, new_selected_values)
-                    Ui.showInfoMessage(string.format(T("%d items selected for %s."), #new_selected_values, title))
+                    return #new_selected_values
                 else
                     G_reader_settings:delSetting(setting_key)
-                    Ui.showInfoMessage(string.format(T("Filter cleared for %s."), title))
                 end
             end)
-            if not ok then
-                logger.err("Zlibrary:Ui._showMultiSelectionDialog - Error during onClose for %s: %s", title, tostring(err))
-            end
+
             UIManager:close(selection_menu)
+            if ok then
+                if type(ok_callback) == "function" then
+                    ok_callback()
+                else
+                    Ui.showInfoMessage(string.format(T("%d items selected for %s."), err, title))
+                end
+            else
+                logger.err("Zlibrary:Ui._showMultiSelectionDialog - Error during onClose for %s: %s", title, tostring(err))
+                Ui.showInfoMessage(string.format(T("Filter cleared for %s."), title))
+            end
         end,
     }
     UIManager:show(selection_menu)
@@ -155,8 +162,8 @@ function Ui.showExtensionSelectionDialog(parent_ui)
     _showMultiSelectionDialog(parent_ui, T("Select search formats"), Config.SETTINGS_SEARCH_EXTENSIONS_KEY, Config.SUPPORTED_EXTENSIONS)
 end
 
-function Ui.showOrdersSelectionDialog(parent_ui)
-    _showMultiSelectionDialog(parent_ui, T("Select search order"), Config.SETTINGS_SEARCH_ORDERS_KEY, Config.SUPPORTED_ORDERS, true)
+function Ui.showOrdersSelectionDialog(parent_ui, ok_callback)
+    _showMultiSelectionDialog(parent_ui, T("Select search order"), Config.SETTINGS_SEARCH_ORDERS_KEY, Config.SUPPORTED_ORDERS, ok_callback, true)
 end
 
 function Ui.showGenericInputDialog(title, setting_key, current_value_or_default, is_password, validate_and_save_callback)
@@ -225,12 +232,17 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
             end
         end
     end
-
-    local buttons = {{{
+    
+    dialog = InputDialog:new{
+        title = T("Search Z-library"),
+        input = def_input,
+        buttons = {{{
             text = string.format("%s: %s \u{25BC}", T("Sort by"), search_order_name),
             callback = function()
                 UIManager:close(dialog)
-                Ui.showOrdersSelectionDialog(parent_zlibrary)
+                Ui.showOrdersSelectionDialog(parent_zlibrary, function()
+                    Ui.showSearchDialog(parent_zlibrary, def_input)
+                end)
             end
         }},{{
         text = T("Search"),
@@ -257,13 +269,7 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
             text = T("Cancel"),
             id = "close",
             callback = function() UIManager:close(dialog) end,
-        }},
-    }
-
-    dialog = InputDialog:new{
-        title = T("Search Z-library"),
-        input = def_input,
-        buttons = buttons
+        }}}
     }
     UIManager:show(dialog)
     dialog:onShowKeyboard()

@@ -110,15 +110,17 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
             local ok, err = pcall(function()
                 local new_selected_values = {}
                 for value, is_selected in pairs(current_selection_state) do
-                    if not is_selected then
-                        goto continue
-                    end
-                    if is_single and  selected_values_table[1] == value then
-                        goto continue
-                    end
-                    table.insert(new_selected_values, value)
-                    ::continue::
+                    if is_selected then table.insert(new_selected_values, value) end
                 end
+                if is_single and #new_selected_values > 1 then
+                    local original_option = selected_values_table[1]
+                    for i = #new_selected_values, 1, -1 do
+                        if new_selected_values[i] == original_option then
+                            table.remove(new_selected_values, i)
+                        end
+                    end
+                end
+
                 table.sort(new_selected_values, function(a, b)
                     local name_a, name_b
                     for _, info in ipairs(options_list) do

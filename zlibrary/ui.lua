@@ -346,7 +346,7 @@ function Ui.showBookDetails(parent_zlibrary, book)
     local author_text_for_html = (type(book.author) == "string" and book.author) or ""
     local full_author = util.htmlEntitiesToUtf8(author_text_for_html)
     table.insert(details_menu_items, {
-        text = _colon_concat(T("Author"), full_author),
+        text = string.format("%s: %s %s", T("Author"), full_author, T("(tap search more)")),
         enabled = true,
         callback = function()
             Ui.showSearchDialog(parent_zlibrary, full_author)
@@ -390,7 +390,41 @@ function Ui.showBookDetails(parent_zlibrary, book)
         table.insert(details_menu_items, { text = _colon_concat(T("Series"), util.htmlEntitiesToUtf8(series_for_html)), enabled = false })
     end
     if book.pages and book.pages ~= 0 then table.insert(details_menu_items, { text = _colon_concat(T("Pages"), book.pages), enabled = false }) end
-
+    
+    if book.cover and book.cover ~= "" and book.hash then
+        table.insert(details_menu_items, {
+            text = T("Cover (tap to view)"),
+            enabled = true,
+            callback = function()
+                local function getImgExtension(url)
+                    local clean_url = url:match("^([^%?]+)") or url
+                    return clean_url:match("[%.]([^%.]+)$") or "jpg"
+                end
+                local cover_ext = getImgExtension(book.cover)
+                local Ota = require("zlibrary.ota")
+                local DataStorage = require("datastorage")
+                local cover_file_name = string.format("%s.%s", book.hash, cover_ext)
+                local cover_cache_path = string.format("%s/cache/zlibrary/%s", DataStorage:getDataDir(), cover_file_name)
+                if not util.fileExists(cover_cache_path) then
+                        local download_result = Ota.downloadUpdate(book.cover, cover_cache_path)
+                        if download_result.error or not download_result.success then
+                            if util.fileExists(cover_cache_path) then
+                                os.remove(cover_cache_path)
+                            end
+                            Ui.showErrorMessage(tostring(download_result.error))
+                            return
+                        end
+                end
+                local ImageViewer = require("ui/widget/imageviewer")
+                local image_viewer = ImageViewer:new{
+                    file = cover_cache_path,
+                    modal = true,
+                    with_title_bar = false,
+                    buttons_visible = true,
+                }
+                UIManager:show(image_viewer)
+            end})
+    end
     if book.description and book.description ~= "" then
         table.insert(details_menu_items, {
             text = T("Description (tap to view)"),

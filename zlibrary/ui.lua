@@ -5,10 +5,10 @@ local TextViewer = require("ui/widget/textviewer")
 local T = require("zlibrary.gettext")
 local DownloadMgr = require("ui/downloadmgr")
 local InputDialog = require("ui/widget/inputdialog")
-local Menu = require("ui/widget/menu")
-local Config = require("zlibrary.config")
+local Menu = require("zlibrary.menu")
 local util = require("util")
 local logger = require("logger")
+local Config = require("zlibrary.config")
 
 local Ui = {}
 
@@ -339,17 +339,28 @@ function Ui.appendSearchResultsToMenu(menu_instance, new_menu_items)
     menu_instance:switchItemTable(menu_instance.title, menu_instance.item_table, -1, nil, menu_instance.subtitle)
 end
 
-function Ui.showBookDetails(parent_zlibrary, book)
+function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
     local details_menu_items = {}
     local details_menu
 
+    local is_cache = (type(clear_cache_callback) == "function")
     local title_text_for_html = (type(book.title) == "string" and book.title) or ""
     local full_title = util.htmlEntitiesToUtf8(title_text_for_html)
     table.insert(details_menu_items, {
         text = _colon_concat(T("Title"), full_title),
         enabled = true,
         callback = function()
-            Ui.showSimpleMessageDialog(T("Full Title"), full_title)
+            if book.description and book.description ~= "" then
+                local desc_for_html = (type(book.description) == "string" and book.description) or ""
+                local full_description = util.htmlEntitiesToUtf8(util.trim(desc_for_html))
+                full_description = string.gsub(full_description, "<[Bb][Rr]%s*/?>", "\n")
+                full_description = string.gsub(full_description, "</[Pp]>", "\n\n")
+                full_description = string.gsub(full_description, "<[^>]+>", "")     
+                full_description = string.gsub(full_description, "(\n\r?%s*){2,}", "\n\n")
+                Ui.showFullTextDialog(T("Description"), full_description)
+            else
+                Ui.showSimpleMessageDialog(T("Full Title"), full_title)
+            end
         end,
         keep_menu_open = true,
     })
@@ -367,29 +378,10 @@ function Ui.showBookDetails(parent_zlibrary, book)
 
     if book.cover and book.cover ~= "" and book.hash then
         table.insert(details_menu_items, {
-            text = T("Cover (tap to view)"),
+            text = string.format("%s %s", T("Cover"), T("(tap to view)")),
             enabled = true,
             callback = function()
-                local function getImgExtension(url)
-                    local clean_url = url:match("^([^%?]+)") or url
-                    return clean_url:match("[%.]([^%.]+)$") or "jpg"
-                end
-                local cover_ext = getImgExtension(book.cover)
-                local Api = require("zlibrary.api")
-                local DataStorage = require("datastorage")
-                local cover_file_name = string.format("%s_%s.%s", book.hash, book.id, cover_ext)
-                local cover_cache_path = string.format("%s/cache/zlibrary/%s", DataStorage:getDataDir(), cover_file_name)
-                if not util.fileExists(cover_cache_path) then
-                        local download_result = Api.downloadBookCover(book.cover, cover_cache_path)
-                        if download_result.error or not download_result.success then
-                            if util.fileExists(cover_cache_path) then
-                                pcall(os.remove, cover_cache_path)
-                            end
-                            Ui.showErrorMessage(tostring(download_result.error))
-                            return
-                        end
-                end
-                Ui.showCoverDialog(full_title, cover_cache_path)
+                parent_zlibrary:downloadAndShowCover(book)
             end})
     end
 
@@ -430,23 +422,6 @@ function Ui.showBookDetails(parent_zlibrary, book)
     end
     if book.pages and book.pages ~= 0 then table.insert(details_menu_items, { text = _colon_concat(T("Pages"), book.pages), enabled = false }) end
 
-    if book.description and book.description ~= "" then
-        table.insert(details_menu_items, {
-            text = T("Description (tap to view)"),
-            enabled = true,
-            callback = function()
-                local desc_for_html = (type(book.description) == "string" and book.description) or ""
-                local full_description = util.htmlEntitiesToUtf8(util.trim(desc_for_html))
-                full_description = string.gsub(full_description, "<[Bb][Rr]%s*/?>", "\n")
-                full_description = string.gsub(full_description, "</[Pp]>", "\n\n")
-                full_description = string.gsub(full_description, "<[^>]+>", "")     
-                full_description = string.gsub(full_description, "(\n\r?%s*){2,}", "\n\n")
-                Ui.showFullTextDialog(T("Description"), full_description)
-            end,
-            keep_menu_open = true,
-        })
-    end
-
     table.insert(details_menu_items, { text = "---" })
 
     table.insert(details_menu_items, {
@@ -458,10 +433,19 @@ function Ui.showBookDetails(parent_zlibrary, book)
 
     details_menu = Menu:new{
         title = T("Book Details"),
+        subtitle = is_cache and "\u{F1C0}",
+        title_bar_left_icon = is_cache and "cre.render.reload",
         item_table = details_menu_items,
         parent = parent_zlibrary.ui,
         show_captions = true,
     }
+    function details_menu:onLeftButtonTap()
+        if is_cache then 
+            UIManager:close(self)
+            clear_cache_callback() 
+        end
+    end
+
     UIManager:show(details_menu)
 end
 

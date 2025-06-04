@@ -17,6 +17,7 @@ local AsyncHelper = require("zlibrary.async_helper")
 local logger = require("logger")
 local ConfirmBox = require("ui/widget/confirmbox")
 local Ota = require("zlibrary.ota")
+local Cache = require("zlibrary.cache")
 local MultiSearchDialog = require("zlibrary.multisearch_dialog")
 
 local Zlibrary = WidgetContainer:extend{
@@ -333,6 +334,24 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
         Ui.showErrorMessage(T("No internet connection detected."))
         return
     end
+    
+    if not (book_stub.id and book_stub.hash) then
+        logger.warn("Zlibrary.onSelectRecommendedBook - parameter error")
+        return
+    end
+
+    local book_cache = Cache:new{
+            name = string.format("%s_%s", book_stub.id, book_stub.hash)
+    }
+    local book_details_cache = book_cache:get("details")
+
+    if type(book_details_cache) == "table" and book_details_cache.title then 
+        Ui.showBookDetails(self, book_details_cache, function()
+                book_cache:clear()
+                self:onSelectRecommendedBook(book_stub)
+        end)
+        return
+    end
 
     local loading_msg = Ui.showLoadingMessage(T("Fetching book details..."))
     local user_session = Config.getUserSession()
@@ -360,6 +379,7 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
         
         Ui.showBookDetails(self, api_result.book)
 
+        book_cache:insert("details", api_result.book)
     end
 
     on_error_handler = function(err_msg)
@@ -646,6 +666,40 @@ function Zlibrary:downloadBook(book)
 
         AsyncHelper.run(task_download, on_success_download, on_error_download, loading_msg)
     end)
+end
+
+function Zlibrary:downloadAndShowCover(book)
+    local cover_url = book.cover
+    local book_id = book.id
+    local book_hash = book.hash
+    local book_title = book.title
+
+    if not (cover_url and book_id and book_hash) then
+        logger.warn("Zlibrary:downloadAndShowCover - parameter error")
+        return
+    end
+
+    local function getImgExtension(url)
+       local clean_url = url:match("^([^%?]+)") or url
+       return clean_url:match("[%.]([^%.]+)$") or "jpg"
+    end
+
+    local cover_ext = getImgExtension(cover_url)
+    local cache_path = Cache:makePath(book_id, book_hash)
+    local cover_cache_path = string.format("%s.%s", cache_path, cover_ext)
+
+    if not util.fileExists(cover_cache_path) then
+        local download_result = Api.downloadBookCover(cover_url, cover_cache_path)
+        if download_result.error or not download_result.success then
+            if util.fileExists(cover_cache_path) then
+                    pcall(os.remove, cover_cache_path)
+            end
+            Ui.showErrorMessage(tostring(download_result.error))
+            return
+        end
+    end
+    
+    Ui.showCoverDialog(book_title, cover_cache_path)
 end
 
 return Zlibrary

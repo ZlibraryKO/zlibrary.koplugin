@@ -3,8 +3,6 @@ local Blitbuffer = require("ffi/blitbuffer")
 local Size = require("ui/size")
 local Geom = require("ui/geometry")
 local UIManager = require("ui/uimanager")
-local DataStorage = require("datastorage")
-local LuaSettings = require("luasettings")
 local Menu = require("zlibrary.menu")
 local IconButton = require("ui/widget/iconbutton")
 local ButtonDialog = require("ui/widget/buttondialog")
@@ -14,12 +12,9 @@ local HorizontalGroup = require("ui/widget/horizontalgroup")
 local VerticalGroup = require("ui/widget/verticalgroup")
 local FrameContainer = require("ui/widget/container/framecontainer")
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
-local util = require("util")
 local T = require("zlibrary.gettext")
+local Cache = require("zlibrary.cache")
 local logger = require("logger")
-
--- default cache lifetime: 2 days
-local DEF_CACHE_EXPIRY = 172800
 
 local SearchDialog = WidgetContainer:extend{
     title = T("Z-library search"),
@@ -33,8 +28,6 @@ local SearchDialog = WidgetContainer:extend{
     books = nil,
     _position = nil,
     _cache = nil,
-    _cache_path = nil,
-    _has_cache = nil
 }
 
 function SearchDialog:init()
@@ -162,56 +155,9 @@ function SearchDialog:init()
     self.menu_container.onMenuHold= function(_, item)
         self:onMenuHold(item)
     end
-    self._cache_path = string.format("%s/cache/zlibrary/search_cache.db", DataStorage:getDataDir())
-end
-
-function SearchDialog:ensureCacheInit()
-    if not util.fileExists(self._cache_path) then
-        local dir = util.splitFilePathName(self._cache_path)
-        if not util.pathExists(dir) then util.makePath(dir) end
-    end
-    if not self._cache then 
-        self._cache = LuaSettings:open(self._cache_path)
-    end
-end
-
-function SearchDialog:getCache(key, cache_expiry)
-    if type(key) ~= "string" or key == "" then
-        return nil
-    end
-    self:ensureCacheInit()
-    
-    local expiry = tonumber(cache_expiry) or DEF_CACHE_EXPIRY
-    local uptime_key = key .. "_ut"
-    local uptime = self._cache:readSetting(uptime_key)
-
-    if expiry <= 0 then
-        return nil
-    end
-    if not uptime or (os.time() - uptime > expiry) then
-        self._cache:delSetting(key)
-        return nil
-    end
-
-    local value = self._cache:readSetting(key)
-    if not value then
-        return nil
-    end
-
-    self._has_cache = true
-    return value
-end
-
-function SearchDialog:addCache(key, object)
-    if not (type(key) == "string" and type(object) == "table" and next(object)) then
-        return 
-    end
-    self:ensureCacheInit()
-    local uptime_key = key .. "_ut"
-    self._cache:saveSetting(key, object)
-    self._cache:saveSetting(uptime_key, os.time()):flush()
-    self._has_cache = true
-    return true
+    self._cache = Cache:new{
+        name = "multi_search"
+    }
 end
 
 function SearchDialog:ToggleSwitchCallBack(_position)
@@ -230,7 +176,7 @@ function SearchDialog:ToggleSwitchCallBack(_position)
     local cache_key = toggle_item["cache_key"]
     if cache_key then
         local cache_expiry = toggle_item["cache_expiry"]
-        local cache_books = self:getCache(cache_key, cache_expiry)
+        local cache_books = self._cache:get(cache_key, cache_expiry)
         if cache_books then
             -- use cached data
             self:refreshMenuItems(cache_books, true)
@@ -271,7 +217,7 @@ function SearchDialog:refreshMenuItems(books, is_cache)
     local toggle_item = self.toggle_items[self._position]
     if not is_cache and toggle_item and toggle_item["cache_key"] then
         local cache_key = toggle_item["cache_key"]
-        self:addCache(cache_key, self.books)
+        self._cache:insert(cache_key, self.books)
     end
 end
 
@@ -283,7 +229,7 @@ function SearchDialog:fetchAndShow()
         self:refreshMenuItems(self.books)
     end
     -- automatically enter search
-    if not self.def_position and self._has_cache then
+    if not self.def_position and self._cache:hasValidCache() then
         self.on_search_callback(self.def_search_input)
     end
 end
@@ -317,14 +263,10 @@ function SearchDialog:resetMenuItems()
 end
 
 function SearchDialog:forceRefreshMenuItems()
-    self:ensureCacheInit()
-    if not self._cache.delSetting then
-        return
-    end
-    local toggle_item = self.toggle_items[self._position]
+   local toggle_item = self.toggle_items[self._position]
     if toggle_item and toggle_item["cache_key"] then
         local cache_key = toggle_item["cache_key"]
-        self._cache:delSetting(cache_key)
+        self._cache:remove(cache_key)
     end
     self:ToggleSwitchCallBack(self._position)
 end

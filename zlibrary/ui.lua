@@ -241,14 +241,6 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
         title = T("Search Z-library"),
         input = def_input,
         buttons = {{{
-            text = string.format("%s: %s \u{25BC}", T("Sort by"), search_order_name),
-            callback = function()
-                UIManager:close(dialog)
-                Ui.showOrdersSelectionDialog(parent_zlibrary, function(count)
-                    Ui.showSearchDialog(parent_zlibrary, def_input)
-                end)
-            end
-        }},{{
         text = T("Search"),
         callback = function()
             local query = dialog:getInputText()
@@ -269,6 +261,14 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
             local trimmed_query = util.trim(query)
                 parent_zlibrary:performSearch(trimmed_query)
             end,
+        }},{{
+            text = string.format("%s: %s \u{25BC}", T("Sort by"), search_order_name),
+            callback = function()
+                UIManager:close(dialog)
+                Ui.showOrdersSelectionDialog(parent_zlibrary, function(count)
+                    Ui.showSearchDialog(parent_zlibrary, def_input)
+                end)
+            end
         }},{{
             text = T("Cancel"),
             id = "close",
@@ -368,7 +368,7 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
     local author_text_for_html = (type(book.author) == "string" and book.author) or ""
     local full_author = util.htmlEntitiesToUtf8(author_text_for_html)
     table.insert(details_menu_items, {
-        text = string.format("%s: %s %s", T("Author"), full_author, T("(tap search more)")),
+        text = string.format("%s: %s %s", T("Author"), full_author, T("(search more)")),
         enabled = true,
         callback = function()
             Ui.showSearchDialog(parent_zlibrary, full_author)

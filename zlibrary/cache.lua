@@ -48,7 +48,7 @@ function Cache:_ensureInit()
     local fileExists = util.fileExists(self.path)
     if not fileExists then
         local dir = util.splitFilePathName(self.path)
-        if not util.pathExists(dir) then
+        if not util.directoryExists(dir) then
             util.makePath(dir)
         end
     end

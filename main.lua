@@ -17,6 +17,7 @@ local AsyncHelper = require("zlibrary.async_helper")
 local logger = require("logger")
 local ConfirmBox = require("ui/widget/confirmbox")
 local Ota = require("zlibrary.ota")
+local Cache = require("zlibrary.cache")
 local MultiSearchDialog = require("zlibrary.multisearch_dialog")
 
 local Zlibrary = WidgetContainer:extend{
@@ -135,18 +136,28 @@ function Zlibrary:addToMainMenu(menu_items)
                             end,
                         },
                         {
-                            text = T("Select search languages"),
+                            text = T("Search options"),
                             keep_menu_open = true,
-                            callback = function()
-                                Ui.showLanguageSelectionDialog(self.ui)
-                            end,
-                        },
-                        {
-                            text = T("Select search formats"),
-                            keep_menu_open = true,
-                            callback = function()
-                                Ui.showExtensionSelectionDialog(self.ui)
-                            end,
+                            separator = true,
+                            sub_item_table = {{
+                                text = T("Select search languages"),
+                                keep_menu_open = true,
+                                callback = function()
+                                    Ui.showLanguageSelectionDialog(self.ui)
+                                end
+                            }, {
+                                text = T("Select search formats"),
+                                keep_menu_open = true,
+                                callback = function()
+                                    Ui.showExtensionSelectionDialog(self.ui)
+                                end
+                            }, {
+                                text = T("Select search order"),
+                                keep_menu_open = true,
+                                callback = function()
+                                    Ui.showOrdersSelectionDialog(self.ui)
+                                end
+                            }}
                         },
                         {
                             text = T("Check for updates"),
@@ -323,6 +334,24 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
         Ui.showErrorMessage(T("No internet connection detected."))
         return
     end
+    
+    if not (book_stub.id and book_stub.hash) then
+        logger.warn("Zlibrary.onSelectRecommendedBook - parameter error")
+        return
+    end
+
+    local book_cache = Cache:new{
+            name = string.format("%s_%s", book_stub.id, book_stub.hash)
+    }
+    local book_details_cache = book_cache:get("details")
+
+    if type(book_details_cache) == "table" and book_details_cache.title then 
+        Ui.showBookDetails(self, book_details_cache, function()
+                book_cache:clear()
+                self:onSelectRecommendedBook(book_stub)
+        end)
+        return
+    end
 
     local loading_msg = Ui.showLoadingMessage(T("Fetching book details..."))
     local user_session = Config.getUserSession()
@@ -350,6 +379,7 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
         
         Ui.showBookDetails(self, api_result.book)
 
+        book_cache:insert("details", api_result.book)
     end
 
     on_error_handler = function(err_msg)
@@ -389,7 +419,7 @@ function Zlibrary:login()
     return true
 end
 
-function Zlibrary:handleSearchError(err_msg, query, user_session, selected_languages, selected_extensions, current_page, loading_msg_to_close, original_on_success, original_on_error)
+function Zlibrary:handleSearchError(err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page, loading_msg_to_close, original_on_success, original_on_error)
     if string.match(tostring(err_msg), "HTTP Error: 400") then
         local confirm_box = ConfirmBox:new{
             text = T("Search failed due to a temporary issue (HTTP 400). Would you like to retry?"),
@@ -399,10 +429,10 @@ function Zlibrary:handleSearchError(err_msg, query, user_session, selected_langu
                 Ui.closeMessage(loading_msg_to_close)
                 local new_loading_msg = Ui.showLoadingMessage(T("Retrying search for \"") .. query .. "\"...")
                 local retry_task = function()
-                    return Api.search(query, user_session.user_id, user_session.user_key, selected_languages, selected_extensions, current_page)
+                    return Api.search(query, user_session.user_id, user_session.user_key, selected_languages, selected_extensions, selected_order, current_page)
                 end
                 AsyncHelper.run(retry_task, original_on_success, function(new_err_msg)
-                    self:handleSearchError(new_err_msg, query, user_session, selected_languages, selected_extensions, current_page, new_loading_msg, original_on_success, original_on_error)
+                    self:handleSearchError(new_err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page, new_loading_msg, original_on_success, original_on_error)
                 end, new_loading_msg)
             end,
             cancel_callback = function()
@@ -428,10 +458,11 @@ function Zlibrary:performSearch(query)
     local user_session = Config.getUserSession()
     local selected_languages = Config.getSearchLanguages()
     local selected_extensions = Config.getSearchExtensions()
+    local selected_order = Config.getSearchOrder()
     local current_page_to_search = 1
 
     local task = function()
-        return Api.search(query, user_session.user_id, user_session.user_key, selected_languages, selected_extensions, current_page_to_search)
+        return Api.search(query, user_session.user_id, user_session.user_key, selected_languages, selected_extensions, selected_order, current_page_to_search)
     end
 
     local on_success
@@ -439,7 +470,7 @@ function Zlibrary:performSearch(query)
 
     on_success = function(api_result)
         if api_result.error then
-            self:handleSearchError(api_result.error, query, user_session, selected_languages, selected_extensions, current_page_to_search, loading_msg, on_success, function(final_err_msg) Ui.showErrorMessage(_colon_concat(T("Search failed"), tostring(final_err_msg))) end)
+            self:handleSearchError(api_result.error, query, user_session, selected_languages, selected_extensions, selected_order, current_page_to_search, loading_msg, on_success, function(final_err_msg) Ui.showErrorMessage(_colon_concat(T("Search failed"), tostring(final_err_msg))) end)
             return
         end
 
@@ -460,7 +491,7 @@ function Zlibrary:performSearch(query)
     end
 
     on_error_handler = function(err_msg)
-        self:handleSearchError(err_msg, query, user_session, selected_languages, selected_extensions, current_page_to_search, loading_msg, on_success, function(final_err_msg) Ui.showErrorMessage(_colon_concat(T("Search failed"), tostring(final_err_msg))) end)
+        self:handleSearchError(err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page_to_search, loading_msg, on_success, function(final_err_msg) Ui.showErrorMessage(_colon_concat(T("Search failed"), tostring(final_err_msg))) end)
     end
 
     AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
@@ -500,9 +531,10 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
             local user_session_more = Config.getUserSession()
             local selected_languages_more = Config.getSearchLanguages()
             local selected_extensions_more = Config.getSearchExtensions()
+            local selected_order_more = Config.getSearchOrder()
 
             local task_load_more = function()
-                return Api.search(self.current_search_query, user_session_more.user_id, user_session_more.user_key, selected_languages_more, selected_extensions_more, next_api_page_to_fetch)
+                return Api.search(self.current_search_query, user_session_more.user_id, user_session_more.user_key, selected_languages_more, selected_extensions_more, selected_order_more, next_api_page_to_fetch)
             end
 
             local on_success_load_more
@@ -510,7 +542,7 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
 
             on_success_load_more = function(api_result_more)
                 if api_result_more.error then
-                    self:handleSearchError(api_result_more.error, self.current_search_query, user_session_more, selected_languages_more, selected_extensions_more, next_api_page_to_fetch, loading_msg_more, on_success_load_more, function(final_err_msg) Ui.showErrorMessage(_colon_concat(T("Failed to load more results"), tostring(final_err_msg))) end)
+                    self:handleSearchError(api_result_more.error, self.current_search_query, user_session_more, selected_languages_more, selected_extensions_more, selected_order_more, next_api_page_to_fetch, loading_msg_more, on_success_load_more, function(final_err_msg) Ui.showErrorMessage(_colon_concat(T("Failed to load more results"), tostring(final_err_msg))) end)
                     return
                 end
 
@@ -534,7 +566,7 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
             end
 
             on_error_load_more = function(err_msg_more)
-                self:handleSearchError(err_msg_more, self.current_search_query, user_session_more, selected_languages_more, selected_extensions_more, next_api_page_to_fetch, loading_msg_more, on_success_load_more, function(final_err_msg) Ui.showErrorMessage(_colon_concat(T("Failed to load more results"), tostring(final_err_msg))) end)
+                self:handleSearchError(err_msg_more, self.current_search_query, user_session_more, selected_languages_more, selected_extensions_more, selected_order_more, next_api_page_to_fetch, loading_msg_more, on_success_load_more, function(final_err_msg) Ui.showErrorMessage(_colon_concat(T("Failed to load more results"), tostring(final_err_msg))) end)
             end
 
             AsyncHelper.run(task_load_more, on_success_load_more, on_error_load_more, loading_msg_more)
@@ -634,6 +666,40 @@ function Zlibrary:downloadBook(book)
 
         AsyncHelper.run(task_download, on_success_download, on_error_download, loading_msg)
     end)
+end
+
+function Zlibrary:downloadAndShowCover(book)
+    local cover_url = book.cover
+    local book_id = book.id
+    local book_hash = book.hash
+    local book_title = book.title
+
+    if not (cover_url and book_id and book_hash) then
+        logger.warn("Zlibrary:downloadAndShowCover - parameter error")
+        return
+    end
+
+    local function getImgExtension(url)
+       local clean_url = url:match("^([^%?]+)") or url
+       return clean_url:match("[%.]([^%.]+)$") or "jpg"
+    end
+
+    local cover_ext = getImgExtension(cover_url)
+    local cache_path = Cache:makePath(book_id, book_hash)
+    local cover_cache_path = string.format("%s.%s", cache_path, cover_ext)
+
+    if not util.fileExists(cover_cache_path) then
+        local download_result = Api.downloadBookCover(cover_url, cover_cache_path)
+        if download_result.error or not download_result.success then
+            if util.fileExists(cover_cache_path) then
+                    pcall(os.remove, cover_cache_path)
+            end
+            Ui.showErrorMessage(tostring(download_result.error))
+            return
+        end
+    end
+    
+    Ui.showCoverDialog(book_title, cover_cache_path)
 end
 
 return Zlibrary

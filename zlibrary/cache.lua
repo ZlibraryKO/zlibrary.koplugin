@@ -50,6 +50,9 @@ function Cache:_ensureInit()
         local dir = util.splitFilePathName(self.path)
         if not util.directoryExists(dir) then
             util.makePath(dir)
+            if not util.directoryExists(dir) then 
+                os.execute(string.format('"mkdir -p "%s"', dir))
+            end
         end
     end
 

@@ -495,7 +495,6 @@ function Ui.showRecommendedBooksMenu(ui_self, books, plugin_self)
         is_borderless = true,
         title_bar_fm_style = true,
         multilines_show_more_text = true,
-        items_mandatory_font_size = Menu.getItemFontSize(80)
     })
     UIManager:show(menu)
 end

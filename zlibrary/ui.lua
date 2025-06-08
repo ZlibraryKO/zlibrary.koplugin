@@ -348,7 +348,7 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
     local full_title = util.htmlEntitiesToUtf8(title_text_for_html)
     table.insert(details_menu_items, {
         text = _colon_concat(T("Title"), full_title),
-        enabled = true,
+        mandatory = "\u{25B7}",
         callback = function()
             if book.description and book.description ~= "" then
                 local desc_for_html = (type(book.description) == "string" and book.description) or ""
@@ -362,24 +362,22 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
                 Ui.showSimpleMessageDialog(T("Full Title"), full_title)
             end
         end,
-        keep_menu_open = true,
     })
 
     local author_text_for_html = (type(book.author) == "string" and book.author) or ""
     local full_author = util.htmlEntitiesToUtf8(author_text_for_html)
     table.insert(details_menu_items, {
-        text = string.format("%s: %s %s", T("Author"), full_author, T("(search more)")),
-        enabled = true,
+        text = string.format("%s: %s", T("Author"), full_author),
+        mandatory = "\u{25B7}",
         callback = function()
             Ui.showSearchDialog(parent_zlibrary, full_author)
         end,
-        keep_menu_open = true,
     })
 
     if book.cover and book.cover ~= "" and book.hash then
         table.insert(details_menu_items, {
             text = string.format("%s %s", T("Cover"), T("(tap to view)")),
-            enabled = true,
+            mandatory = "\u{25B7}",
             callback = function()
                 parent_zlibrary:downloadAndShowCover(book)
             end})
@@ -392,10 +390,10 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
         if book.download then
             table.insert(details_menu_items, {
                 text = string.format(T("Format: %s (tap to download)"), book.format),
+                mandatory = "\u{25B7}",
                 callback = function()
                     parent_zlibrary:downloadBook(book)
                 end,
-                keep_menu_open = true,
             })
         else
             table.insert(details_menu_items, { text = string.format(T("Format: %s (Download not available)"), book.format), enabled = false })
@@ -403,10 +401,10 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
     elseif book.download then
         table.insert(details_menu_items, {
             text = T("Download Book (Unknown Format)"),
+            mandatory = "\u{25B7}",
             callback = function()
                 parent_zlibrary:downloadBook(book)
             end,
-            keep_menu_open = true,
         })
     end
 
@@ -426,11 +424,12 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
 
     table.insert(details_menu_items, {
         text = T("Back"),
+        mandatory = "\u{21A9}",
         callback = function()
             if details_menu then UIManager:close(details_menu) end
         end,
     })
-
+    
     details_menu = Menu:new{
         title = T("Book Details"),
         subtitle = is_cache and "\u{F1C0}",
@@ -438,6 +437,7 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
         item_table = details_menu_items,
         parent = parent_zlibrary.ui,
         show_captions = true,
+        multilines_show_more_text = true
     }
     function details_menu:onLeftButtonTap()
         if is_cache then 
@@ -485,7 +485,6 @@ function Ui.showRecommendedBooksMenu(ui_self, books, plugin_self)
         Ui.showInfoMessage(T("No recommended books found, please try again. Sometimes this requires a couple of retries."))
         return
     end
-
     local menu = Menu:new({
         title = T("Z-library Recommended Books"),
         item_table = menu_items,
@@ -495,7 +494,8 @@ function Ui.showRecommendedBooksMenu(ui_self, books, plugin_self)
         is_popout = false,
         is_borderless = true,
         title_bar_fm_style = true,
-        multilines_show_more_text = true
+        multilines_show_more_text = true,
+        items_mandatory_font_size = Menu.getItemFontSize(80)
     })
     UIManager:show(menu)
 end

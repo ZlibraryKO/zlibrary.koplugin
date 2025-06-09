@@ -1,6 +1,7 @@
 local util = require("util")
 local logger = require("logger")
 local lfs = require("libs/libkoreader-lfs")
+local T = require("zlibrary.gettext")
 
 local Config = {}
 
@@ -11,6 +12,7 @@ Config.SETTINGS_USER_ID_KEY = "zlib_user_id"
 Config.SETTINGS_USER_KEY_KEY = "zlib_user_key"
 Config.SETTINGS_SEARCH_LANGUAGES_KEY = "zlibrary_search_languages"
 Config.SETTINGS_SEARCH_EXTENSIONS_KEY = "zlibrary_search_extensions"
+Config.SETTINGS_SEARCH_ORDERS_KEY = "zlibrary_search_order"
 Config.SETTINGS_DOWNLOAD_DIR_KEY = "zlibrary_download_dir"
 Config.CREDENTIALS_FILENAME = "zlibrary_credentials.lua"
 
@@ -100,6 +102,17 @@ Config.SUPPORTED_EXTENSIONS = {
     { name = "PDF", value = "PDF" },
     { name = "RTF", value = "RTF" },
     { name = "TXT", value = "TXT" },
+}
+
+Config.SUPPORTED_ORDERS = {
+    { name = T("Most popular"), value = "popular" },
+    { name = T("Best match"), value = "bestmatch" },
+    { name = T("Recently added"), value = "date" },
+    { name = string.format("%s %s", T("Title"), "(A-Z)"), value = "titleA" },
+    { name = string.format("%s %s", T("Title"), "(Z-A)"), value = "title" },
+    { name = T("Year"), value = "year" },
+    { name = string.format("%s %s", T("File size"), "↓"), value = "filesize" },
+    { name = string.format("%s %s", T("File size"), "↑"), value = "filesizeA" }
 }
 
 function Config.getBaseUrl()
@@ -229,6 +242,26 @@ end
 
 function Config.getSearchExtensions()
     return Config.getSetting(Config.SETTINGS_SEARCH_EXTENSIONS_KEY, {})
+end
+
+function Config.getSearchOrder()
+    return Config.getSetting(Config.SETTINGS_SEARCH_ORDERS_KEY, {})
+end
+
+function Config.getSearchOrderName()
+    local search_order_name = T("Default")
+    local selected_order = Config.getSearchOrder()
+    local search_order = selected_order and selected_order[1]
+
+    if search_order then
+        for _, v in ipairs(Config.SUPPORTED_ORDERS) do
+            if v.value == search_order then
+                search_order_name = v.name
+                break
+            end
+        end
+    end
+    return search_order_name
 end
 
 return Config

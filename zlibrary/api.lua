@@ -160,7 +160,7 @@ function Api.login(email, password)
     return result
 end
 
-function Api.search(query, user_id, user_key, languages, extensions, page)
+function Api.search(query, user_id, user_key, languages, extensions, order, page)
     logger.info(string.format("Zlibrary:Api.search - START - Query: %s, Page: %s", query, tostring(page)))
     local result = { results = nil, total_count = nil, error = nil }
 
@@ -188,6 +188,9 @@ function Api.search(query, user_id, user_key, languages, extensions, page)
         for i, ext in ipairs(extensions) do
             table.insert(body_data_parts, string.format("extensions[%d]=%s", i - 1, util.urlEncode(ext)))
         end
+    end
+    if order and #order > 0 then
+            table.insert(body_data_parts, "order=" .. util.urlEncode(order[1]))
     end
 
     local body = table.concat(body_data_parts, "&")
@@ -325,6 +328,53 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
     end
 end
 
+function Api.downloadBookCover(download_url, target_filepath)
+    logger.info(string.format("Zlibrary:Api.downloadBookCover - START - URL: %s, Target: %s", download_url, target_filepath))
+    local result = { success = false, error = nil }
+    local file, err_open = io.open(target_filepath, "wb")
+    if not file then
+        result.error = "Failed to open target file: " .. (err_open or "Unknown error")
+        logger.err(string.format("Zlibrary:Api.downloadBookCover - END (File open error) - Error: %s", result.error))
+        return result
+    end
+
+    local headers = { ["User-Agent"] = Config.USER_AGENT }
+
+    local http_result = Api.makeHttpRequest{
+        url = download_url,
+        method = "GET",
+        headers = headers,
+        sink = ltn12.sink.file(file),
+        timeout = 100,
+        redirect = true
+    }
+
+    if http_result.error and not (http_result.status_code and http_result.headers) then
+        result.error = "Download failed: " .. http_result.error
+        pcall(os.remove, target_filepath)
+        logger.err(string.format("Zlibrary:Api.downloadBookCover - END (Request error) - Error: %s", result.error))
+        return result
+    end
+
+    if http_result.error then
+        result.error = "Download network request failed: " .. http_result.error
+        pcall(os.remove, target_filepath)
+        logger.err("Zlibrary:Api.downloadBookCover - END (HTTP error from Api.makeHttpRequest) - Error: " .. result.error .. ", Status: " .. tostring(http_result.status_code))
+        return result
+    end
+
+    if http_result.status_code ~= 200 then
+        result.error = string.format("Download HTTP Error: %s", http_result.status_code)
+        pcall(os.remove, target_filepath)
+        logger.err("Zlibrary:Api.downloadBookCover - END (HTTP status error) - Error: " .. result.error)
+        return result
+    end
+
+    logger.info("Zlibrary:Api.downloadBookCover - END (Success)")
+    result.success = true
+    return result
+end
+
 function Api.getRecommendedBooks(user_id, user_key)
     local url = Config.getRecommendedBooksUrl()
     if not url then
@@ -458,7 +508,7 @@ function Api.getBookDetails(user_id, user_key, book_id, book_hash)
 
     if http_result.error then
         logger.warn("Api.getBookDetails - HTTP request error: ", http_result.error)
-        return { error = string("%s: %s", T("Failed to fetch book details"), http_result.error) }
+        return { error = string.format("%s: %s", T("Failed to fetch book details"), http_result.error) }
     end
 
     if not http_result.body then

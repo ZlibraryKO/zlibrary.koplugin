@@ -4,9 +4,9 @@ local M = Menu:extend{
 }
 -- fix no_title = true koreader crash
 function M:mergeTitleBarIntoLayout()
-    if self.no_title then 
+    if self.no_title then
         return
-    end 
+    end
    Menu.mergeTitleBarIntoLayout(self)
 end
 

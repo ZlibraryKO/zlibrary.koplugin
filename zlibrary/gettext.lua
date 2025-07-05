@@ -25,7 +25,9 @@ local changeLang = function(new_lang)
     local ok, err = pcall(GetText.changeLang, new_lang)
     if ok then
         if (GetText.translation and next(GetText.translation) ~= nil) or (GetText.context and next(GetText.context) ~= nil) then
-                NewGetText = util.tableDeepCopy(GetText)
+            local copied_gettext = util.tableDeepCopy(GetText)
+            if copied_gettext then
+                NewGetText = copied_gettext
                 --  reduce memory usage and prioritize using KOReader-translation
                 if NewGetText.translation and original_translation then
                     for k, v in pairs(NewGetText.translation) do
@@ -34,6 +36,7 @@ local changeLang = function(new_lang)
                         end
                     end
                 end
+            end
         end
     else
         logger.warn(string.format("Failed to parse the PO file for lang %s: %s", tostring(new_lang), tostring(err)))
@@ -50,8 +53,8 @@ local changeLang = function(new_lang)
 end
 
 local function createGetTextProxy(new_gettext, gettext)
-    if not (new_gettext.wrapUntranslated and new_gettext.translation and new_gettext.current_lang) then
-        logger.warn(string.format("debug_dump: NewGetText was not loaded correctly for lang %s", tostring(gettext.current_lang)))
+    if not new_gettext.current_lang or new_gettext.current_lang == "C" or 
+       not (new_gettext.wrapUntranslated and new_gettext.translation) then
         return gettext
     end
 

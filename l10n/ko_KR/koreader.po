@@ -403,6 +403,9 @@ msgstr "확인"
 msgid "Fetch most popular books from Z-library?"
 msgstr "Z-라이브러리에서 인기 도서를 가져오시겠습니까?"
 
+msgid "Turn off Wi-Fi after closing this dialog"
+msgstr "이 대화 상자를 닫은 후 Wi-Fi 끄기"
+
 #~ msgid "Set username"
 #~ msgstr "사용자 이름 설정"
 

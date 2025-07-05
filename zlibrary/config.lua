@@ -15,12 +15,27 @@ Config.SETTINGS_SEARCH_EXTENSIONS_KEY = "zlibrary_search_extensions"
 Config.SETTINGS_SEARCH_ORDERS_KEY = "zlibrary_search_order"
 Config.SETTINGS_DOWNLOAD_DIR_KEY = "zlibrary_download_dir"
 Config.SETTINGS_TURN_OFF_WIFI_AFTER_DOWNLOAD_KEY = "zlibrary_turn_off_wifi_after_download"
+Config.SETTINGS_TIMEOUT_LOGIN_KEY = "zlibrary_timeout_login"
+Config.SETTINGS_TIMEOUT_SEARCH_KEY = "zlibrary_timeout_search"
+Config.SETTINGS_TIMEOUT_BOOK_DETAILS_KEY = "zlibrary_timeout_book_details"
+Config.SETTINGS_TIMEOUT_RECOMMENDED_KEY = "zlibrary_timeout_recommended"
+Config.SETTINGS_TIMEOUT_POPULAR_KEY = "zlibrary_timeout_popular"
+Config.SETTINGS_TIMEOUT_DOWNLOAD_KEY = "zlibrary_timeout_download"
+Config.SETTINGS_TIMEOUT_COVER_KEY = "zlibrary_timeout_cover"
 Config.CREDENTIALS_FILENAME = "zlibrary_credentials.lua"
 
 Config.DEFAULT_DOWNLOAD_DIR_FALLBACK = G_reader_settings:readSetting("home_dir")
              or require("apps/filemanager/filemanagerutil").getDefaultDir()
-Config.REQUEST_TIMEOUT = 15 -- seconds
 Config.SEARCH_RESULTS_LIMIT = 30
+
+-- Timeout configuration for different operations (block_timeout, total_timeout)
+Config.TIMEOUT_LOGIN = { 10, 15 }        -- Login operations
+Config.TIMEOUT_SEARCH = { 15, 15 }       -- Search operations
+Config.TIMEOUT_BOOK_DETAILS = { 15, 5 }  -- Book details operations
+Config.TIMEOUT_RECOMMENDED = { 30, 15 }  -- Recommended books operations
+Config.TIMEOUT_POPULAR = { 30, 15 }      -- Popular books operations
+Config.TIMEOUT_DOWNLOAD = { 15, -1 }    -- Book download operations (infinite total timeout if data flows)
+Config.TIMEOUT_COVER = { 5, 15 }        -- Cover image operations
 
 function Config.loadCredentialsFromFile(plugin_path)
     local cred_file_path = plugin_path .. Config.CREDENTIALS_FILENAME
@@ -279,6 +294,83 @@ end
 
 function Config.setTestMode(enabled)
     Config.saveSetting("zlibrary_test_mode", enabled)
+end
+
+-- Timeout configuration functions
+function Config.getTimeoutConfig(timeout_key, default_timeout)
+    local saved_timeout = Config.getSetting(timeout_key)
+    if saved_timeout and type(saved_timeout) == "table" and #saved_timeout == 2 then
+        return saved_timeout
+    end
+    return default_timeout
+end
+
+function Config.setTimeoutConfig(timeout_key, block_timeout, total_timeout)
+    Config.saveSetting(timeout_key, {block_timeout, total_timeout})
+end
+
+function Config.getLoginTimeout()
+    return Config.getTimeoutConfig(Config.SETTINGS_TIMEOUT_LOGIN_KEY, Config.TIMEOUT_LOGIN)
+end
+
+function Config.getSearchTimeout()
+    return Config.getTimeoutConfig(Config.SETTINGS_TIMEOUT_SEARCH_KEY, Config.TIMEOUT_SEARCH)
+end
+
+function Config.getBookDetailsTimeout()
+    return Config.getTimeoutConfig(Config.SETTINGS_TIMEOUT_BOOK_DETAILS_KEY, Config.TIMEOUT_BOOK_DETAILS)
+end
+
+function Config.getRecommendedTimeout()
+    return Config.getTimeoutConfig(Config.SETTINGS_TIMEOUT_RECOMMENDED_KEY, Config.TIMEOUT_RECOMMENDED)
+end
+
+function Config.getPopularTimeout()
+    return Config.getTimeoutConfig(Config.SETTINGS_TIMEOUT_POPULAR_KEY, Config.TIMEOUT_POPULAR)
+end
+
+function Config.getDownloadTimeout()
+    return Config.getTimeoutConfig(Config.SETTINGS_TIMEOUT_DOWNLOAD_KEY, Config.TIMEOUT_DOWNLOAD)
+end
+
+function Config.getCoverTimeout()
+    return Config.getTimeoutConfig(Config.SETTINGS_TIMEOUT_COVER_KEY, Config.TIMEOUT_COVER)
+end
+
+function Config.formatTimeoutForDisplay(timeout_pair)
+    local block_timeout = timeout_pair[1]
+    local total_timeout = timeout_pair[2]
+    
+    local total_display = total_timeout == -1 and T("infinite") or (tostring(total_timeout) .. "s")
+    return string.format(T("Block: %ds, Total: %s"), block_timeout, total_display)
+end
+
+function Config.setLoginTimeout(block_timeout, total_timeout)
+    Config.setTimeoutConfig(Config.SETTINGS_TIMEOUT_LOGIN_KEY, block_timeout, total_timeout)
+end
+
+function Config.setSearchTimeout(block_timeout, total_timeout)
+    Config.setTimeoutConfig(Config.SETTINGS_TIMEOUT_SEARCH_KEY, block_timeout, total_timeout)
+end
+
+function Config.setBookDetailsTimeout(block_timeout, total_timeout)
+    Config.setTimeoutConfig(Config.SETTINGS_TIMEOUT_BOOK_DETAILS_KEY, block_timeout, total_timeout)
+end
+
+function Config.setRecommendedTimeout(block_timeout, total_timeout)
+    Config.setTimeoutConfig(Config.SETTINGS_TIMEOUT_RECOMMENDED_KEY, block_timeout, total_timeout)
+end
+
+function Config.setPopularTimeout(block_timeout, total_timeout)
+    Config.setTimeoutConfig(Config.SETTINGS_TIMEOUT_POPULAR_KEY, block_timeout, total_timeout)
+end
+
+function Config.setDownloadTimeout(block_timeout, total_timeout)
+    Config.setTimeoutConfig(Config.SETTINGS_TIMEOUT_DOWNLOAD_KEY, block_timeout, total_timeout)
+end
+
+function Config.setCoverTimeout(block_timeout, total_timeout)
+    Config.setTimeoutConfig(Config.SETTINGS_TIMEOUT_COVER_KEY, block_timeout, total_timeout)
 end
 
 return Config

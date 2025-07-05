@@ -4,6 +4,7 @@ local logger = require("logger")
 local json = require("json")
 local ltn12 = require("ltn12")
 local http = require("socket.http")
+local socketutil = require("socketutil")
 local T = require("zlibrary.gettext")
 
 local Api = {}
@@ -62,7 +63,17 @@ function Api.makeHttpRequest(options)
     local sink_to_use = options.sink
     if not sink_to_use then
         response_body_table = {}
-        sink_to_use = ltn12.sink.table(response_body_table)
+        sink_to_use = socketutil.table_sink(response_body_table)
+    end
+
+    if options.timeout then
+        if type(options.timeout) == "table" then
+            socketutil:set_timeout(options.timeout[1], options.timeout[2])
+            logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Setting timeout to %s/%s seconds", options.timeout[1], options.timeout[2]))
+        else
+            socketutil:set_timeout(options.timeout)
+            logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Setting timeout to %s seconds", options.timeout))
+        end
     end
 
     local request_params = {
@@ -73,15 +84,30 @@ function Api.makeHttpRequest(options)
         sink = sink_to_use,
         redirect = options.redirect or false,
     }
-    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Redirect: %s", request_params.url, request_params.method, tostring(request_params.redirect)))
+    
+    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Redirect: %s, Timeout: %s", request_params.url, request_params.method, tostring(request_params.redirect), tostring(options.timeout)))
 
     local req_ok, r_val, r_code, r_headers_tbl, r_status_str = pcall(http.request, request_params)
+
+    if options.timeout then
+        socketutil:reset_timeout()
+        logger.dbg("Zlibrary:Api.makeHttpRequest - Reset timeout to default")
+    end
 
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - pcall result: ok=%s, r_val=%s (type %s), r_code=%s (type %s), r_headers_tbl type=%s, r_status_str=%s",
         tostring(req_ok), tostring(r_val), type(r_val), tostring(r_code), type(r_code), type(r_headers_tbl), tostring(r_status_str)))
 
     if not req_ok then
-        result.error = "Network request failed: " .. tostring(r_val)
+        local error_msg = tostring(r_val)
+        if string.find(error_msg, "timeout") or 
+           string.find(error_msg, "wantread") or 
+           string.find(error_msg, "closed") or 
+           string.find(error_msg, "connection") or
+           string.find(error_msg, "sink timeout") then
+            result.error = T("Request timed out - please check your connection and try again")
+        else
+            result.error = T("Network request failed") .. ": " .. error_msg
+        end
         logger.err(string.format("Zlibrary:Api.makeHttpRequest - END (pcall error) - Error: %s", result.error))
         return result
     end
@@ -94,14 +120,22 @@ function Api.makeHttpRequest(options)
     end
 
     if type(result.status_code) ~= "number" then
-        result.error = "Invalid HTTP response: status code missing or not a number. Got: " .. tostring(result.status_code)
+        local status_str = tostring(result.status_code)
+        if string.find(status_str, "wantread") or 
+           string.find(status_str, "timeout") or 
+           string.find(status_str, "closed") or
+           string.find(status_str, "sink timeout") then
+            result.error = T("Request timed out - please check your connection and try again")
+        else
+            result.error = T("Network connection error - please check your internet connection and try again")
+        end
         logger.err(string.format("Zlibrary:Api.makeHttpRequest - END (Invalid response code type) - Error: %s", result.error))
         return result
     end
 
     if result.status_code ~= 200 and result.status_code ~= 206 then
         if not result.error then
-            result.error = string.format("HTTP Error: %s (%s)", result.status_code, r_status_str or "Unknown Status")
+            result.error = string.format("%s: %s (%s)", T("HTTP Error"), result.status_code, r_status_str or T("Unknown Status"))
         end
     end
 
@@ -116,7 +150,7 @@ function Api.login(email, password)
 
     local rpc_url = Config.getRpcUrl()
     if not rpc_url then
-        result.error = "The Zlibrary server address (URL) is not set. Please configure it in the Zlibrary plugin settings."
+        result.error = T("The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings.")
         logger.err(string.format("Zlibrary:Api.login - END (Configuration error) - Error: %s", result.error))
         return result
     end
@@ -147,10 +181,11 @@ function Api.login(email, password)
         },
         source = ltn12.source.string(body),
         redirect = true,
+        timeout = Config.getLoginTimeout(),
     }
 
     if http_result.error then
-        result.error = "Login request failed: " .. http_result.error
+        result.error = http_result.error
         logger.err(string.format("Zlibrary:Api.login - END (HTTP error) - Error: %s", result.error))
         return result
     end
@@ -158,7 +193,7 @@ function Api.login(email, password)
     local data, _, err_msg = json.decode(http_result.body)
 
     if not data or type(data) ~= "table" then
-        result.error = "Login failed: Invalid response format. " .. (err_msg or "")
+        result.error = T("Login failed: Invalid response format") .. (err_msg and (". " .. err_msg) or "")
         logger.err(string.format("Zlibrary:Api.login - END (JSON error) - Error: %s", result.error))
         return result
     end
@@ -168,7 +203,7 @@ function Api.login(email, password)
     local user_key = session.user_key or ""
 
     if user_id == "" or user_key == "" then
-        result.error = "Login failed: " .. (session.message or "Credentials rejected or invalid response.")
+        result.error = T("Login failed") .. ": " .. (session.message or T("Credentials rejected or invalid response"))
         logger.warn(string.format("Zlibrary:Api.login - END (Credentials error) - Error: %s", result.error))
         return result
     end
@@ -185,7 +220,7 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
 
     local search_url = Config.getSearchUrl()
     if not search_url then
-        result.error = "The Zlibrary server address (URL) is not set. Please configure it in the Zlibrary plugin settings."
+        result.error = T("The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings.")
         logger.err(string.format("Zlibrary:Api.search - END (Configuration error) - Error: %s", result.error))
         return result
     end
@@ -232,17 +267,18 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
         headers = headers,
         source = ltn12.source.string(body),
         redirect = true,
+        timeout = Config.getSearchTimeout(),
     }
 
     if http_result.error then
-        result.error = "Search request failed: " .. http_result.error
+        result.error = http_result.error
         result.status_code = http_result.status_code
         logger.err(string.format("Zlibrary:Api.search - END (HTTP error) - Error: %s, Status: %s", result.error, tostring(result.status_code)))
         return result
     end
 
     if not http_result.body then
-        result.error = "Search request failed: Empty response body."
+        result.error = T("No response received from server - please try again")
         logger.err(string.format("Zlibrary:Api.search - END (Empty body) - Error: %s", result.error))
         return result
     end
@@ -250,13 +286,13 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
     local data, _, err_msg = json.decode(http_result.body)
 
     if not data or type(data) ~= "table" then
-        result.error = "Search request failed: Invalid JSON response. " .. (err_msg or "")
+        result.error = T("Invalid response format from server") .. (err_msg and (": " .. err_msg) or "")
         logger.err(string.format("Zlibrary:Api.search - END (JSON error) - Error: %s, Body: %s", result.error, http_result.body))
         return result
     end
 
     if data.error then
-        result.error = "Search API error: " .. (data.error.message or data.error)
+        result.error = T("Search API error") .. ": " .. (data.error.message or data.error)
         logger.warn(string.format("Zlibrary:Api.search - END (API error in response) - Error: %s", result.error))
         return result
     end
@@ -305,7 +341,7 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
     local result = { success = false, error = nil }
     local file, err_open = io.open(target_filepath, "wb")
     if not file then
-        result.error = "Failed to open target file: " .. (err_open or "Unknown error")
+        result.error = T("Failed to open target file") .. ": " .. (err_open or T("Unknown error"))
         logger.err(string.format("Zlibrary:Api.downloadBook - END (File open error) - Error: %s", result.error))
         return result
     end
@@ -322,13 +358,13 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
         url = download_url,
         method = "GET",
         headers = headers,
-        sink = ltn12.sink.file(file),
-        timeout = 300,
+        sink = socketutil.file_sink(file),
+        timeout = Config.getDownloadTimeout(),
         redirect = true
     }
 
     if http_result.error and not (http_result.status_code and http_result.headers) then
-        result.error = "Download failed: " .. http_result.error
+        result.error = http_result.error
         pcall(os.remove, target_filepath)
         logger.err(string.format("Zlibrary:Api.downloadBook - END (Request error) - Error: %s", result.error))
         return result
@@ -336,14 +372,14 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
 
     local content_type = http_result.headers and http_result.headers["content-type"]
     if content_type and string.find(string.lower(content_type), "text/html") then
-        result.error = "Download limit reached or file is an HTML page."
+        result.error = T("Download limit reached or file is an HTML page")
         pcall(os.remove, target_filepath)
         logger.warn(string.format("Zlibrary:Api.downloadBook - END (HTML content detected) - URL: %s, Status: %s, Content-Type: %s", download_url, tostring(http_result.status_code), content_type))
         return result
     end
 
     if http_result.error or (http_result.status_code and http_result.status_code ~= 200) then
-        result.error = "Download failed: " .. (http_result.error or string.format("HTTP Error: %s", http_result.status_code))
+        result.error = http_result.error or string.format("%s: %s", T("HTTP Error"), http_result.status_code)
         pcall(os.remove, target_filepath)
         logger.err(string.format("Zlibrary:Api.downloadBook - END (Download error) - Error: %s, Status: %s", result.error, tostring(http_result.status_code)))
         return result
@@ -359,7 +395,7 @@ function Api.downloadBookCover(download_url, target_filepath)
     local result = { success = false, error = nil }
     local file, err_open = io.open(target_filepath, "wb")
     if not file then
-        result.error = "Failed to open target file: " .. (err_open or "Unknown error")
+        result.error = T("Failed to open target file") .. ": " .. (err_open or T("Unknown error"))
         logger.err(string.format("Zlibrary:Api.downloadBookCover - END (File open error) - Error: %s", result.error))
         return result
     end
@@ -370,27 +406,27 @@ function Api.downloadBookCover(download_url, target_filepath)
         url = download_url,
         method = "GET",
         headers = headers,
-        sink = ltn12.sink.file(file),
-        timeout = 100,
+        sink = socketutil.file_sink(file),
+        timeout = Config.getCoverTimeout(),
         redirect = true
     }
 
     if http_result.error and not (http_result.status_code and http_result.headers) then
-        result.error = "Download failed: " .. http_result.error
+        result.error = http_result.error
         pcall(os.remove, target_filepath)
         logger.err(string.format("Zlibrary:Api.downloadBookCover - END (Request error) - Error: %s", result.error))
         return result
     end
 
     if http_result.error then
-        result.error = "Download network request failed: " .. http_result.error
+        result.error = http_result.error
         pcall(os.remove, target_filepath)
         logger.err("Zlibrary:Api.downloadBookCover - END (HTTP error from Api.makeHttpRequest) - Error: " .. result.error .. ", Status: " .. tostring(http_result.status_code))
         return result
     end
 
     if http_result.status_code ~= 200 then
-        result.error = string.format("Download HTTP Error: %s", http_result.status_code)
+        result.error = string.format("%s: %s", T("Download HTTP Error"), http_result.status_code)
         pcall(os.remove, target_filepath)
         logger.err("Zlibrary:Api.downloadBookCover - END (HTTP status error) - Error: " .. result.error)
         return result
@@ -420,11 +456,12 @@ function Api.getRecommendedBooks(user_id, user_key)
         url = url,
         method = "GET",
         headers = headers,
+        timeout = Config.getRecommendedTimeout(),
     }
 
     if http_result.error then
         logger.warn("Api.getRecommendedBooks - HTTP request error: ", http_result.error)
-        return { error = string.format("%s: %s", T("Failed to fetch recommended books"), http_result.error) }
+        return { error = http_result.error }
     end
 
     if not http_result.body then
@@ -475,11 +512,12 @@ function Api.getMostPopularBooks(user_id, user_key)
         url = url,
         method = "GET",
         headers = headers,
+        timeout = Config.getPopularTimeout(),
     }
 
     if http_result.error then
         logger.warn("Api.getMostPopularBooks - HTTP request error: ", http_result.error)
-        return { error = string.format("%s: %s", T("Failed to fetch most popular books"), http_result.error) }
+        return { error = http_result.error }
     end
 
     if not http_result.body then
@@ -530,11 +568,12 @@ function Api.getBookDetails(user_id, user_key, book_id, book_hash)
         url = url,
         method = "GET",
         headers = headers,
+        timeout = Config.getBookDetailsTimeout(),
     }
 
     if http_result.error then
         logger.warn("Api.getBookDetails - HTTP request error: ", http_result.error)
-        return { error = string.format("%s: %s", T("Failed to fetch book details"), http_result.error) }
+        return { error = http_result.error }
     end
 
     if not http_result.body then

@@ -636,7 +636,7 @@ function Zlibrary:downloadBook(book)
         local function on_success_download(api_result)
             if api_result and api_result.success then
                 local has_wifi_toggle = Device:hasWifiToggle()
-                local default_turn_off_wifi = not Config.getKeepWifiEnabledAfterDownload()
+                local default_turn_off_wifi = Config.getTurnOffWifiAfterDownload()
                 
                 Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, function(should_turn_off_wifi)
                     if should_turn_off_wifi then

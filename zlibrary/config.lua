@@ -14,7 +14,7 @@ Config.SETTINGS_SEARCH_LANGUAGES_KEY = "zlibrary_search_languages"
 Config.SETTINGS_SEARCH_EXTENSIONS_KEY = "zlibrary_search_extensions"
 Config.SETTINGS_SEARCH_ORDERS_KEY = "zlibrary_search_order"
 Config.SETTINGS_DOWNLOAD_DIR_KEY = "zlibrary_download_dir"
-Config.SETTINGS_KEEP_WIFI_ENABLED_AFTER_DOWNLOAD_KEY = "zlibrary_keep_wifi_enabled_after_download"
+Config.SETTINGS_TURN_OFF_WIFI_AFTER_DOWNLOAD_KEY = "zlibrary_turn_off_wifi_after_download"
 Config.CREDENTIALS_FILENAME = "zlibrary_credentials.lua"
 
 Config.DEFAULT_DOWNLOAD_DIR_FALLBACK = G_reader_settings:readSetting("home_dir")
@@ -265,8 +265,12 @@ function Config.getSearchOrderName()
     return search_order_name
 end
 
-function Config.getKeepWifiEnabledAfterDownload()
-    return Config.getSetting(Config.SETTINGS_KEEP_WIFI_ENABLED_AFTER_DOWNLOAD_KEY, true)
+function Config.getTurnOffWifiAfterDownload()
+    return Config.getSetting(Config.SETTINGS_TURN_OFF_WIFI_AFTER_DOWNLOAD_KEY, false)
+end
+
+function Config.setTurnOffWifiAfterDownload(turn_off)
+    Config.saveSetting(Config.SETTINGS_TURN_OFF_WIFI_AFTER_DOWNLOAD_KEY, turn_off)
 end
 
 return Config

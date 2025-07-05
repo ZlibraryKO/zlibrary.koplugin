@@ -8,6 +8,28 @@ local T = require("zlibrary.gettext")
 
 local Api = {}
 
+-- Check if an API error indicates authentication issues
+function Api.isAuthenticationError(error_message)
+    if not error_message then
+        return false
+    end
+    
+    local error_str = tostring(error_message)
+    -- Check for explicit authentication messages
+    if string.find(error_str, "Please login", 1, true) ~= nil or 
+       string.find(error_str, "Invalid credentials", 1, true) ~= nil then
+        return true
+    end
+    
+    -- Check for HTTP 400 errors which often indicate authentication issues
+    -- for endpoints that require authentication
+    if string.find(error_str, "HTTP Error: 400", 1, true) ~= nil then
+        return true
+    end
+    
+    return false
+end
+
 local function _transformApiBookData(api_book)
     if not api_book or type(api_book) ~= "table" then
         return nil

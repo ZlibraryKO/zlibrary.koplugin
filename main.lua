@@ -28,10 +28,6 @@ local Zlibrary = WidgetContainer:extend{
     dialog_manager = nil,
 }
 
-local function _colon_concat(a, b)
-    return a .. ": " .. b
-end
-
 function Zlibrary:onDispatcherRegisterActions()
     Dispatcher:registerAction("zlibrary_search", { category="none", event="ZlibrarySearch", title=T("Z-library search"), general=true,})
 end
@@ -126,10 +122,19 @@ function Zlibrary:addToMainMenu(menu_items)
                             text = T("Verify credentials"),
                             keep_menu_open = true,
                             callback = function()
-                                local success = self:login()
-                                if (success) then
-                                    Ui.showInfoMessage(T("Login successful!"))
-                                end
+                                self:login(function(success)
+                                    if success then
+                                        Ui.showInfoMessage(T("Login successful!"))
+                                    end
+                                end)
+                            end,
+                        },
+                        {
+                            text = T("Clear session"),
+                            keep_menu_open = true,
+                            callback = function()
+                                Config.clearUserSession()
+                                Ui.showInfoMessage(T("Session cleared. You will need to login again."))
                             end,
                             separator = true,
                         },
@@ -210,37 +215,40 @@ function Zlibrary:_fetchBookList(options)
         return
     end
 
-    local loading_msg = Ui.showLoadingMessage(options.loading_text_key)
-
-    UIManager:nextTick(function()
-        local login_ok = self:login()
-        if not login_ok then
-            Ui.closeMessage(loading_msg)
-            return
-        end
-
+    local function attemptFetch(retry_on_auth_error)
+        retry_on_auth_error = retry_on_auth_error == nil and true or retry_on_auth_error
+        
         local user_session = Config.getUserSession()
-        if not user_session or not user_session.user_id or not user_session.user_key then
-            Ui.closeMessage(loading_msg)
-            Ui.showErrorMessage(T("Failed to retrieve user session after login."))
-            return
-        end
+        local loading_msg = Ui.showLoadingMessage(options.loading_text_key)
 
         local task = function()
-            return options.api_method(user_session.user_id, user_session.user_key)
+            return options.api_method(user_session and user_session.user_id, user_session and user_session.user_key)
         end
 
         local on_success
         local on_error_handler
 
         on_success = function(api_result)
-            Ui.closeMessage(loading_msg)
             if api_result.error then
+                -- Check if this is an authentication error
+                if retry_on_auth_error and Api.isAuthenticationError(api_result.error) then
+                    Ui.closeMessage(loading_msg)
+                    -- Login and retry
+                    self:login(function(login_ok)
+                        if login_ok then
+                            attemptFetch(false) -- Don't retry again to avoid infinite loop
+                        end
+                    end)
+                    return
+                end
+                
+                Ui.closeMessage(loading_msg)
                 Ui.showErrorMessage(_colon_concat(options.error_prefix_key, tostring(api_result.error)))
                 return
             end
 
             if not api_result.books or #api_result.books == 0 then
+                Ui.closeMessage(loading_msg)
                 if options.no_items_text_key then
                     Ui.showInfoMessage(options.no_items_text_key)
                 else
@@ -249,6 +257,7 @@ function Zlibrary:_fetchBookList(options)
                 return
             end
 
+            Ui.closeMessage(loading_msg)
             logger.info(string.format("Zlibrary:%s - Fetch successful. Results: %d", options.log_context, #api_result.books))
             self[options.results_member_name] = api_result.books
 
@@ -258,11 +267,27 @@ function Zlibrary:_fetchBookList(options)
         end
 
         on_error_handler = function(err_msg)
+            -- Check if this is an authentication error even in the error handler
+            if retry_on_auth_error and Api.isAuthenticationError(err_msg) then
+                Ui.closeMessage(loading_msg)
+                -- Login and retry
+                self:login(function(login_ok)
+                    if login_ok then
+                        attemptFetch(false) -- Don't retry again to avoid infinite loop
+                    end
+                end)
+                return
+            end
+            
             Ui.closeMessage(loading_msg)
-            Ui.showErrorMessage(_colon_concat(options.error_prefix_key, tostring(err_msg)))
+            Ui.showErrorMessage(Ui.colonConcat(options.error_prefix_key, tostring(err_msg)))
         end
 
         AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
+    end
+
+    UIManager:nextTick(function()
+        attemptFetch()
     end)
 end
 
@@ -359,47 +384,80 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
         return
     end
 
-    local loading_msg = Ui.showLoadingMessage(T("Fetching book details..."))
-    local user_session = Config.getUserSession()
+    local function attemptBookDetails(retry_on_auth_error)
+        retry_on_auth_error = retry_on_auth_error == nil and true or retry_on_auth_error
+        
+        local user_session = Config.getUserSession()
+        local loading_msg = Ui.showLoadingMessage(T("Fetching book details..."))
 
-    local task = function()
-        return Api.getBookDetails(user_session.user_id, user_session.user_key, book_stub.id, book_stub.hash)
-    end
-
-    local on_success
-    local on_error_handler
-
-    on_success = function(api_result)
-        Ui.closeMessage(loading_msg)
-        if api_result.error then
-            Ui.showErrorMessage(_colon_concat(T("Failed to fetch book details"), tostring(api_result.error)))
-            return
+        local task = function()
+            return Api.getBookDetails(user_session and user_session.user_id, user_session and user_session.user_key, book_stub.id, book_stub.hash)
         end
 
-        if not api_result.book then
-            Ui.showErrorMessage(T("Could not retrieve book details."))
-            return
+        local on_success
+        local on_error_handler
+
+        on_success = function(api_result)
+            if api_result.error then
+                -- Check if this is an authentication error
+                if retry_on_auth_error and Api.isAuthenticationError(api_result.error) then
+                    Ui.closeMessage(loading_msg)
+                    -- Login and retry
+                    self:login(function(login_ok)
+                        if login_ok then
+                            attemptBookDetails(false) -- Don't retry again to avoid infinite loop
+                        end
+                    end)
+                    return
+                end
+                
+                Ui.closeMessage(loading_msg)
+                Ui.showErrorMessage(Ui.colonConcat(T("Failed to fetch book details"), tostring(api_result.error)))
+                return
+            end
+
+            if not api_result.book then
+                Ui.closeMessage(loading_msg)
+                Ui.showErrorMessage(T("Could not retrieve book details."))
+                return
+            end
+
+            Ui.closeMessage(loading_msg)
+            logger.info(string.format("Zlibrary:onSelectRecommendedBook - Fetch successful for book ID: %s", api_result.book.id))
+
+            Ui.showBookDetails(self, api_result.book)
+
+            book_cache:insert("details", api_result.book)
         end
 
-        logger.info(string.format("Zlibrary:onSelectRecommendedBook - Fetch successful for book ID: %s", api_result.book.id))
+        on_error_handler = function(err_msg)
+            -- Check if this is an authentication error even in the error handler
+            if retry_on_auth_error and Api.isAuthenticationError(err_msg) then
+                Ui.closeMessage(loading_msg)
+                -- Login and retry
+                self:login(function(login_ok)
+                    if login_ok then
+                        attemptBookDetails(false) -- Don't retry again to avoid infinite loop
+                    end
+                end)
+                return
+            end
+            
+            Ui.closeMessage(loading_msg)
+            Ui.showErrorMessage(Ui.colonConcat(T("Failed to fetch book details"), tostring(err_msg)))
+        end
 
-        Ui.showBookDetails(self, api_result.book)
-
-        book_cache:insert("details", api_result.book)
+        AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
     end
 
-    on_error_handler = function(err_msg)
-        Ui.closeMessage(loading_msg)
-        Ui.showErrorMessage(_colon_concat(T("Failed to fetch book details"), tostring(err_msg)))
-    end
-
-    AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
+    attemptBookDetails()
 end
 
-function Zlibrary:login()
+function Zlibrary:login(callback)
     if not NetworkMgr:isOnline() then
         Ui.showErrorMessage(T("No internet connection detected."))
-        return false
+        if callback then callback(false) end
+        return
     end
 
     local email = Config.getSetting(Config.SETTINGS_USERNAME_KEY)
@@ -407,22 +465,36 @@ function Zlibrary:login()
 
     if not email or not password then
         Ui.showErrorMessage(T("Please set both username and password first."))
-        return false
+        if callback then callback(false) end
+        return
     end
 
     local loading_msg = Ui.showLoadingMessage(T("Logging in..."))
 
-    local result = Api.login(email, password)
-
-    Ui.closeMessage(loading_msg)
-
-    if result.error then
-        Ui.showErrorMessage(result.error)
-        return false
+    local task = function()
+        return Api.login(email, password)
     end
 
-    Config.saveUserSession(result.user_id, result.user_key)
-    return true
+    local on_success = function(result)
+        Ui.closeMessage(loading_msg)
+
+        if result.error then
+            Ui.showErrorMessage(result.error)
+            if callback then callback(false) end
+            return
+        end
+
+        Config.saveUserSession(result.user_id, result.user_key)
+        if callback then callback(true) end
+    end
+
+    local on_error_handler = function(err_msg)
+        Ui.closeMessage(loading_msg)
+        Ui.showErrorMessage(tostring(err_msg))
+        if callback then callback(false) end
+    end
+
+    AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
 end
 
 function Zlibrary:handleSearchError(err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page, loading_msg_to_close, original_on_success, original_on_error)
@@ -458,48 +530,80 @@ function Zlibrary:performSearch(query)
         return
     end
 
-    local loading_msg = Ui.showLoadingMessage(T("Searching for \"") .. query .. "\"...")
+    local function attemptSearch(retry_on_auth_error)
+        retry_on_auth_error = retry_on_auth_error == nil and true or retry_on_auth_error
+        
+        local user_session = Config.getUserSession()
+        local loading_msg = Ui.showLoadingMessage(T("Searching for \"") .. query .. "\"...")
 
-    local user_session = Config.getUserSession()
-    local selected_languages = Config.getSearchLanguages()
-    local selected_extensions = Config.getSearchExtensions()
-    local selected_order = Config.getSearchOrder()
-    local current_page_to_search = 1
+        local selected_languages = Config.getSearchLanguages()
+        local selected_extensions = Config.getSearchExtensions()
+        local selected_order = Config.getSearchOrder()
+        local current_page_to_search = 1
 
-    local task = function()
-        return Api.search(query, user_session.user_id, user_session.user_key, selected_languages, selected_extensions, selected_order, current_page_to_search)
-    end
-
-    local on_success
-    local on_error_handler
-
-    on_success = function(api_result)
-        if api_result.error then
-            self:handleSearchError(api_result.error, query, user_session, selected_languages, selected_extensions, selected_order, current_page_to_search, loading_msg, on_success, function(final_err_msg) Ui.showErrorMessage(_colon_concat(T("Search failed"), tostring(final_err_msg))) end)
-            return
+        local task = function()
+            return Api.search(query, user_session and user_session.user_id, user_session and user_session.user_key, selected_languages, selected_extensions, selected_order, current_page_to_search)
         end
 
-        if not api_result.results or #api_result.results == 0 then
-            Ui.showInfoMessage(T("No results found for \"") .. query .. "\".")
-            return
+        local on_success
+        local on_error_handler
+
+        on_success = function(api_result)
+            if api_result.error then
+                -- Check if this is an authentication error
+                if retry_on_auth_error and Api.isAuthenticationError(api_result.error) then
+                    Ui.closeMessage(loading_msg)
+                    -- Login and retry
+                    self:login(function(login_ok)
+                        if login_ok then
+                            attemptSearch(false) -- Don't retry again to avoid infinite loop
+                        end
+                    end)
+                    return
+                end
+                
+                self:handleSearchError(api_result.error, query, user_session, selected_languages, selected_extensions, selected_order, current_page_to_search, loading_msg, on_success, function(final_err_msg) Ui.showErrorMessage(Ui.colonConcat(T("Search failed"), tostring(final_err_msg))) end)
+                return
+            end
+
+            if not api_result.results or #api_result.results == 0 then
+                Ui.closeMessage(loading_msg)
+                Ui.showInfoMessage(T("No results found for \"") .. query .. "\".")
+                return
+            end
+
+            Ui.closeMessage(loading_msg)
+            logger.info(string.format("Zlibrary:performSearch - Fetch successful. Results: %d", #api_result.results))
+            self.current_search_query = query
+            self.current_search_api_page_loaded = current_page_to_search
+            self.all_search_results_data = api_result.results
+            self.has_more_api_results = true
+
+            UIManager:nextTick(function()
+                self:displaySearchResults(self.all_search_results_data, self.current_search_query)
+            end)
         end
 
-        logger.info(string.format("Zlibrary:performSearch - Fetch successful. Results: %d", #api_result.results))
-        self.current_search_query = query
-        self.current_search_api_page_loaded = current_page_to_search
-        self.all_search_results_data = api_result.results
-        self.has_more_api_results = true
+        on_error_handler = function(err_msg)
+            -- Check if this is an authentication error even in the error handler
+            if retry_on_auth_error and Api.isAuthenticationError(err_msg) then
+                Ui.closeMessage(loading_msg)
+                -- Login and retry
+                self:login(function(login_ok)
+                    if login_ok then
+                        attemptSearch(false) -- Don't retry again to avoid infinite loop
+                    end
+                end)
+                return
+            end
+            
+            self:handleSearchError(err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page_to_search, loading_msg, on_success, function(final_err_msg) Ui.showErrorMessage(Ui.colonConcat(T("Search failed"), tostring(final_err_msg))) end)
+        end
 
-        UIManager:nextTick(function()
-            self:displaySearchResults(self.all_search_results_data, self.current_search_query)
-        end)
+        AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
     end
 
-    on_error_handler = function(err_msg)
-        self:handleSearchError(err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page_to_search, loading_msg, on_success, function(final_err_msg) Ui.showErrorMessage(_colon_concat(T("Search failed"), tostring(final_err_msg))) end)
-    end
-
-    AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
+    attemptSearch()
 end
 
 function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
@@ -546,8 +650,20 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
             local on_error_load_more
 
             on_success_load_more = function(api_result_more)
+                Ui.closeMessage(loading_msg_more)
                 if api_result_more.error then
-                    self:handleSearchError(api_result_more.error, self.current_search_query, user_session_more, selected_languages_more, selected_extensions_more, selected_order_more, next_api_page_to_fetch, loading_msg_more, on_success_load_more, function(final_err_msg) Ui.showErrorMessage(_colon_concat(T("Failed to load more results"), tostring(final_err_msg))) end)
+                    -- Check if this is an authentication error
+                    if Api.isAuthenticationError(api_result_more.error) then
+                        -- Login and retry
+                        self:login(function(login_ok)
+                            if login_ok then
+                                -- Re-run the original handler which will now have a valid session
+                                on_goto_page_handler(menu_instance, new_page_number)
+                            end
+                        end)
+                        return
+                    end
+                    self:handleSearchError(api_result_more.error, self.current_search_query, user_session_more, selected_languages_more, selected_extensions_more, selected_order_more, next_api_page_to_fetch, loading_msg_more, on_success_load_more, function(final_err_msg) Ui.showErrorMessage(Ui.colonConcat(T("Failed to load more results"), tostring(final_err_msg))) end)
                     return
                 end
 
@@ -571,7 +687,20 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
             end
 
             on_error_load_more = function(err_msg_more)
-                self:handleSearchError(err_msg_more, self.current_search_query, user_session_more, selected_languages_more, selected_extensions_more, selected_order_more, next_api_page_to_fetch, loading_msg_more, on_success_load_more, function(final_err_msg) Ui.showErrorMessage(_colon_concat(T("Failed to load more results"), tostring(final_err_msg))) end)
+                Ui.closeMessage(loading_msg_more)
+                -- Check if this is an authentication error even in the error handler
+                if Api.isAuthenticationError(err_msg_more) then
+                    -- Login and retry
+                    self:login(function(login_ok)
+                        if login_ok then
+                            -- Re-run the original handler which will now have a valid session
+                            on_goto_page_handler(menu_instance, new_page_number)
+                        end
+                    end)
+                    return
+                end
+                
+                self:handleSearchError(err_msg_more, self.current_search_query, user_session_more, selected_languages_more, selected_extensions_more, selected_order_more, next_api_page_to_fetch, loading_msg_more, on_success_load_more, function(final_err_msg) Ui.showErrorMessage(Ui.colonConcat(T("Failed to load more results"), tostring(final_err_msg))) end)
             end
 
             AsyncHelper.run(task_load_more, on_success_load_more, on_error_load_more, loading_msg_more)
@@ -627,62 +756,96 @@ function Zlibrary:downloadBook(book)
     local target_filepath = target_dir .. "/" .. filename
     logger.info(string.format("Zlibrary:downloadBook - Target filepath: %s", target_filepath))
 
-    local user_session = Config.getUserSession()
-    local referer_url = book.href and Config.getBookUrl(book.href) or nil
+    local function attemptDownload(retry_on_auth_error)
+        retry_on_auth_error = retry_on_auth_error == nil and true or retry_on_auth_error
+        
+        local user_session = Config.getUserSession()
+        local referer_url = book.href and Config.getBookUrl(book.href) or nil
 
-    Ui.confirmDownload(filename, function()
-        local loading_msg = Ui.showLoadingMessage(T("Downloading…"))
+        Ui.confirmDownload(filename, function()
+            local loading_msg = Ui.showLoadingMessage(T("Downloading…"))
 
-        local function task_download()
-            return Api.downloadBook(download_url, target_filepath, user_session.user_id, user_session.user_key, referer_url)
-        end
+            local function task_download()
+                return Api.downloadBook(download_url, target_filepath, user_session and user_session.user_id, user_session and user_session.user_key, referer_url)
+            end
 
-        local function on_success_download(api_result)
-            if api_result and api_result.success then
-                local has_wifi_toggle = Device:hasWifiToggle()
-                local default_turn_off_wifi = Config.getTurnOffWifiAfterDownload()
-
-                Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, function(should_turn_off_wifi)
-                    if should_turn_off_wifi then
-                        NetworkMgr:disableWifi(function()
-                            logger.info("Zlibrary:downloadBook - Wi-Fi disabled after download as requested by user")
+            local function on_success_download(api_result)
+                if api_result and api_result.error then
+                    -- Check if this is an authentication error
+                    if retry_on_auth_error and Api.isAuthenticationError(api_result.error) then
+                        Ui.closeMessage(loading_msg)
+                        -- Login and retry
+                        self:login(function(login_ok)
+                            if login_ok then
+                                attemptDownload(false) -- Don't retry again to avoid infinite loop
+                            end
                         end)
+                        return
                     end
-
-                    if ReaderUI then
-                        -- Close any lingering dialogs before opening the reader
-                        logger.info("Zlibrary:downloadBook - Cleaning up dialogs before opening reader")
-                        self.dialog_manager:closeAllDialogs()
-                        ReaderUI:showReader(target_filepath)
-                    else
-                        Ui.showErrorMessage(T("Could not open reader UI."))
-                        logger.warn("Zlibrary:downloadBook - ReaderUI not available.")
-                    end
-                end)
-            else
-                local fail_msg = (api_result and api_result.message) or T("Download failed: Unknown error")
-                if api_result and api_result.error and string.find(api_result.error, "Download limit reached or file is an HTML page", 1, true) then
-                    fail_msg = T("Download limit reached. Please try again later or check your account.")
-                elseif api_result and api_result.error then
-                    fail_msg = api_result.error
                 end
-                Ui.showErrorMessage(fail_msg)
+
+                Ui.closeMessage(loading_msg)
+                if api_result and api_result.success then
+                    local has_wifi_toggle = Device:hasWifiToggle()
+                    local default_turn_off_wifi = Config.getTurnOffWifiAfterDownload()
+
+                    Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, function(should_turn_off_wifi)
+                        if should_turn_off_wifi then
+                            NetworkMgr:disableWifi(function()
+                                logger.info("Zlibrary:downloadBook - Wi-Fi disabled after download as requested by user")
+                            end)
+                        end
+
+                        if ReaderUI then
+                            -- Close any lingering dialogs before opening the reader
+                            logger.info("Zlibrary:downloadBook - Cleaning up dialogs before opening reader")
+                            self.dialog_manager:closeAllDialogs()
+                            ReaderUI:showReader(target_filepath)
+                        else
+                            Ui.showErrorMessage(T("Could not open reader UI."))
+                            logger.warn("Zlibrary:downloadBook - ReaderUI not available.")
+                        end
+                    end)
+                else
+                    local fail_msg = (api_result and api_result.message) or T("Download failed: Unknown error")
+                    if api_result and api_result.error and string.find(api_result.error, "Download limit reached or file is an HTML page", 1, true) then
+                        fail_msg = T("Download limit reached. Please try again later or check your account.")
+                    elseif api_result and api_result.error then
+                        fail_msg = api_result.error
+                    end
+                    Ui.showErrorMessage(fail_msg)
+                    pcall(os.remove, target_filepath)
+                end
+            end
+
+            local function on_error_download(err_msg)
+                -- Check if this is an authentication error even in the error handler
+                if retry_on_auth_error and Api.isAuthenticationError(err_msg) then
+                    Ui.closeMessage(loading_msg)
+                    -- Login and retry
+                    self:login(function(login_ok)
+                        if login_ok then
+                            attemptDownload(false) -- Don't retry again to avoid infinite loop
+                        end
+                    end)
+                    return
+                end
+                
+                Ui.closeMessage(loading_msg)
+                local error_string = tostring(err_msg)
+                if string.find(error_string, "Download limit reached or file is an HTML page", 1, true) then
+                    Ui.showErrorMessage(T("Download limit reached. Please try again later or check your account."))
+                else
+                    Ui.showErrorMessage(error_string)
+                end
                 pcall(os.remove, target_filepath)
             end
-        end
 
-        local function on_error_download(err_msg)
-            local error_string = tostring(err_msg)
-            if string.find(error_string, "Download limit reached or file is an HTML page", 1, true) then
-                Ui.showErrorMessage(T("Download limit reached. Please try again later or check your account."))
-            else
-                Ui.showErrorMessage(error_string)
-            end
-            pcall(os.remove, target_filepath)
-        end
+            AsyncHelper.run(task_download, on_success_download, on_error_download, loading_msg)
+        end)
+    end
 
-        AsyncHelper.run(task_download, on_success_download, on_error_download, loading_msg)
-    end)
+    attemptDownload()
 end
 
 function Zlibrary:downloadAndShowCover(book)

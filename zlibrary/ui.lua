@@ -41,6 +41,10 @@ local function _colon_concat(a, b)
     return a .. ": " .. b
 end
 
+function Ui.colonConcat(a, b)
+    return _colon_concat(a, b)
+end
+
 function Ui.showInfoMessage(text)
     if _plugin_instance and _plugin_instance.dialog_manager then
         _plugin_instance.dialog_manager:showInfoMessage(text)
@@ -297,15 +301,9 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
             end
             Ui._last_search_input = query
 
-            local login_ok = parent_zlibrary:login()
-
-            if not login_ok then
-                return
-            end
-
             local trimmed_query = util.trim(query)
-                parent_zlibrary:performSearch(trimmed_query)
-            end,
+            parent_zlibrary:performSearch(trimmed_query)
+        end,
         }},{{
             text = string.format("%s: %s \u{25BC}", T("Sort by"), search_order_name),
             callback = function()

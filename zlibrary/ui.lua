@@ -473,7 +473,6 @@ function Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, ok
                     text = turn_off_wifi and ("☑ " .. T("Turn off Wi-Fi after closing this dialog")) or ("☐ " .. T("Turn off Wi-Fi after closing this dialog")),
                     callback = function()
                         turn_off_wifi = not turn_off_wifi
-                        -- Save the user's preference directly (no inversion needed)
                         Config.setTurnOffWifiAfterDownload(turn_off_wifi)
                         UIManager:close(dialog)
                         showDialog()

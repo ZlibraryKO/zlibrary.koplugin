@@ -26,7 +26,6 @@ local Zlibrary = WidgetContainer:extend{
     name = T("Z-library"),
     is_doc_only = false,
     plugin_path = nil,
-    -- Dialog manager for tracking and cleanup
     dialog_manager = nil,
 }
 
@@ -47,10 +46,7 @@ function Zlibrary:init()
 
     Config.loadCredentialsFromFile(self.plugin_path)
 
-    -- Initialize dialog manager
     self.dialog_manager = DialogManager:new()
-
-    -- Initialize dialog tracking in UI module
     Ui.setPluginInstance(self)
 
     self:onDispatcherRegisterActions()

@@ -273,4 +273,12 @@ function Config.setTurnOffWifiAfterDownload(turn_off)
     Config.saveSetting(Config.SETTINGS_TURN_OFF_WIFI_AFTER_DOWNLOAD_KEY, turn_off)
 end
 
+function Config.isTestModeEnabled()
+    return Config.getSetting("zlibrary_test_mode", false)
+end
+
+function Config.setTestMode(enabled)
+    Config.saveSetting("zlibrary_test_mode", enabled)
+end
+
 return Config

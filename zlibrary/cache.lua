@@ -1,6 +1,5 @@
 local util = require("util")
 local md5 = require("ffi/sha2").md5
-local logger = require("logger")
 local DataStorage = require("datastorage")
 local LuaSettings = require("luasettings")
 

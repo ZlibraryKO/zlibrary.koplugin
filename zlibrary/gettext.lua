@@ -53,8 +53,8 @@ local changeLang = function(new_lang)
 end
 
 local function createGetTextProxy(new_gettext, gettext)
-    if not (new_gettext.wrapUntranslated and new_gettext.translation and new_gettext.current_lang) then
-        logger.warn(string.format("debug_dump: NewGetText was not loaded correctly for lang %s", tostring(gettext.current_lang)))
+    if not new_gettext.current_lang or new_gettext.current_lang == "C" or 
+       not (new_gettext.wrapUntranslated and new_gettext.translation) then
         return gettext
     end
 

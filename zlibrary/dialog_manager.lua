@@ -9,9 +9,6 @@ when transitioning between UI states or on plugin exit.
 local UIManager = require("ui/uimanager")
 local logger = require("logger")
 
-local UIManager = require("ui/uimanager")
-local logger = require("logger")
-
 local DialogManager = {}
 
 function DialogManager:new(o)

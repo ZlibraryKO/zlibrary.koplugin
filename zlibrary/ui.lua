@@ -12,16 +12,49 @@ local Config = require("zlibrary.config")
 
 local Ui = {}
 
+local _plugin_instance = nil
+
+function Ui.setPluginInstance(plugin_instance)
+    _plugin_instance = plugin_instance
+end
+
+local function _showAndTrackDialog(dialog)
+    if _plugin_instance and _plugin_instance.dialog_manager then
+        return _plugin_instance.dialog_manager:showAndTrackDialog(dialog)
+    else
+        UIManager:show(dialog)
+        return dialog
+    end
+end
+
+local function _closeAndUntrackDialog(dialog)
+    if _plugin_instance and _plugin_instance.dialog_manager then
+        _plugin_instance.dialog_manager:closeAndUntrackDialog(dialog)
+    else
+        if dialog then
+            UIManager:close(dialog)
+        end
+    end
+end
+
 local function _colon_concat(a, b)
     return a .. ": " .. b
 end
 
 function Ui.showInfoMessage(text)
-    UIManager:show(InfoMessage:new{ text = text })
+    if _plugin_instance and _plugin_instance.dialog_manager then
+        _plugin_instance.dialog_manager:showInfoMessage(text)
+    else
+        UIManager:show(InfoMessage:new{ text = text })
+    end
 end
 
 function Ui.showErrorMessage(text)
-    UIManager:show(InfoMessage:new{ text = text, timeout = 5 })
+    if _plugin_instance and _plugin_instance.dialog_manager then
+        _plugin_instance.dialog_manager:showErrorMessage(text)
+    else
+        UIManager:show(InfoMessage:new{ text = text, timeout = 5 })
+    end
 end
 
 function Ui.showLoadingMessage(text)
@@ -37,30 +70,42 @@ function Ui.closeMessage(message_widget)
 end
 
 function Ui.showFullTextDialog(title, full_text)
-    UIManager:show(TextViewer:new{
+    local dialog = TextViewer:new{
         title = title,
         text = full_text,
-    })
+    }
+    _showAndTrackDialog(dialog)
 end
 
 function Ui.showCoverDialog(title, img_path)
     local ImageViewer = require("ui/widget/imageviewer")
-    UIManager:show(ImageViewer:new{
+    local dialog = ImageViewer:new{
         file = img_path,
         modal = true,
         with_title_bar = false,
         buttons_visible = false,
         scale_factor = 1
-    })
+    }
+    _showAndTrackDialog(dialog)
 end
 
 function Ui.showSimpleMessageDialog(title, text)
-    UIManager:show(ConfirmBox:new{
-        title = title,
-        text = text, 
-        cancel_text = T("Close"),
-        no_ok_button = true,
-    })
+    if _plugin_instance and _plugin_instance.dialog_manager then
+        _plugin_instance.dialog_manager:showConfirmDialog({
+            title = title,
+            text = text,
+            cancel_text = T("Close"),
+            no_ok_button = true,
+        })
+    else
+        local dialog = ConfirmBox:new{
+            title = title,
+            text = text,
+            cancel_text = T("Close"),
+            no_ok_button = true,
+        }
+        UIManager:show(dialog)
+    end
 end
 
 function Ui.showDownloadDirectoryDialog()
@@ -162,7 +207,7 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
             end
         end,
     }
-    UIManager:show(selection_menu)
+    _showAndTrackDialog(selection_menu)
 end
 
 local function  _showRadioSelectionDialog(parent_ui, title, setting_key, options_list, ok_callback)
@@ -192,7 +237,7 @@ function Ui.showGenericInputDialog(title, setting_key, current_value_or_default,
             {
                 text = T("Cancel"),
                 id = "close",
-                callback = function() UIManager:close(dialog) end,
+                callback = function() _closeAndUntrackDialog(dialog) end,
             },
             {
                 text = T("Set"),
@@ -218,13 +263,13 @@ function Ui.showGenericInputDialog(title, setting_key, current_value_or_default,
                     end
 
                     if close_dialog_after_action then
-                        UIManager:close(dialog)
+                        _closeAndUntrackDialog(dialog)
                     end
                 end,
             },
         }},
     }
-    UIManager:show(dialog)
+    _showAndTrackDialog(dialog)
     dialog:onShowKeyboard()
 end
 
@@ -233,10 +278,10 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
     if Ui._last_search_input and not def_input then
         def_input = Ui._last_search_input
     end
-    
+
     local dialog
     local search_order_name = Config.getSearchOrderName()
-    
+
     dialog = InputDialog:new{
         title = T("Search Z-library"),
         input = def_input,
@@ -244,7 +289,7 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
         text = T("Search"),
         callback = function()
             local query = dialog:getInputText()
-            UIManager:close(dialog)
+            _closeAndUntrackDialog(dialog)
 
             if not query or not query:match("%S") then
                 Ui.showErrorMessage(T("Please enter a search term."))
@@ -264,7 +309,7 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
         }},{{
             text = string.format("%s: %s \u{25BC}", T("Sort by"), search_order_name),
             callback = function()
-                UIManager:close(dialog)
+                _closeAndUntrackDialog(dialog)
                 Ui.showOrdersSelectionDialog(parent_zlibrary, function(count)
                     Ui.showSearchDialog(parent_zlibrary, def_input)
                 end)
@@ -272,10 +317,10 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
         }},{{
             text = T("Cancel"),
             id = "close",
-            callback = function() UIManager:close(dialog) end,
+            callback = function() _closeAndUntrackDialog(dialog) end,
         }}}
     }
-    UIManager:show(dialog)
+    _showAndTrackDialog(dialog)
     dialog:onShowKeyboard()
 end
 
@@ -327,7 +372,7 @@ function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_it
         title_bar_fm_style = true,
         multilines_show_more_text = true
     }
-    UIManager:show(menu)
+    _showAndTrackDialog(menu)
     return menu
 end
 
@@ -355,7 +400,7 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
                 local full_description = util.htmlEntitiesToUtf8(util.trim(desc_for_html))
                 full_description = string.gsub(full_description, "<[Bb][Rr]%s*/?>", "\n")
                 full_description = string.gsub(full_description, "</[Pp]>", "\n\n")
-                full_description = string.gsub(full_description, "<[^>]+>", "")     
+                full_description = string.gsub(full_description, "<[^>]+>", "")
                 full_description = string.gsub(full_description, "(\n\r?%s*){2,}", "\n\n")
                 Ui.showFullTextDialog(T("Description"), full_description)
             else
@@ -429,7 +474,7 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
             if details_menu then UIManager:close(details_menu) end
         end,
     })
-    
+
     details_menu = Menu:new{
         title = T("Book Details"),
         subtitle = is_cache and "\u{F1C0}",
@@ -440,22 +485,32 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
         multilines_show_more_text = true
     }
     function details_menu:onLeftButtonTap()
-        if is_cache then 
+        if is_cache then
             UIManager:close(self)
-            clear_cache_callback() 
+            clear_cache_callback()
         end
     end
 
-    UIManager:show(details_menu)
+    _showAndTrackDialog(details_menu)
 end
 
 function Ui.confirmDownload(filename, ok_callback)
-    UIManager:show(ConfirmBox:new{
-        text = string.format(T("Download \"%s\"?"), filename),
-        ok_text = T("Download"),
-        ok_callback = ok_callback,
-        cancel_text = T("Cancel")
-    })
+    if _plugin_instance and _plugin_instance.dialog_manager then
+        _plugin_instance.dialog_manager:showConfirmDialog({
+            text = string.format(T("Download \"%s\"?"), filename),
+            ok_text = T("Download"),
+            ok_callback = ok_callback,
+            cancel_text = T("Cancel")
+        })
+    else
+        local dialog = ConfirmBox:new{
+            text = string.format(T("Download \"%s\"?"), filename),
+            ok_text = T("Download"),
+            ok_callback = ok_callback,
+            cancel_text = T("Cancel")
+        }
+        UIManager:show(dialog)
+    end
 end
 
 function Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, ok_open_callback)
@@ -466,7 +521,7 @@ function Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, ok
 
         local dialog
         local other_buttons = nil
-        
+
         if has_wifi_toggle then
             other_buttons = {{
                 {
@@ -480,7 +535,7 @@ function Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, ok
                 },
             }}
         end
-        
+
         dialog = ConfirmBox:new{
             text = full_text,
             ok_text = T("Open book"),
@@ -492,7 +547,7 @@ function Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, ok
             other_buttons_first = true,
         }
 
-        UIManager:show(dialog)
+        _showAndTrackDialog(dialog)
     end
 
     showDialog()
@@ -527,7 +582,7 @@ function Ui.showRecommendedBooksMenu(ui_self, books, plugin_self)
         title_bar_fm_style = true,
         multilines_show_more_text = true,
     })
-    UIManager:show(menu)
+    _showAndTrackDialog(menu)
 end
 
 function Ui.showMostPopularBooksMenu(ui_self, books, plugin_self)
@@ -560,25 +615,45 @@ function Ui.showMostPopularBooksMenu(ui_self, books, plugin_self)
         title_bar_fm_style = true,
         multilines_show_more_text = true
     })
-    UIManager:show(menu)
+    _showAndTrackDialog(menu)
 end
 
 function Ui.confirmShowRecommendedBooks(ok_callback)
-    UIManager:show(ConfirmBox:new{
-        text = T("Fetch most recommended book from Z-library?"),
-        ok_text = T("OK"),
-        cancel_text = T("Cancel"),
-        ok_callback = ok_callback,
-    })
+    if _plugin_instance and _plugin_instance.dialog_manager then
+        _plugin_instance.dialog_manager:showConfirmDialog({
+            text = T("Fetch most recommended book from Z-library?"),
+            ok_text = T("OK"),
+            cancel_text = T("Cancel"),
+            ok_callback = ok_callback,
+        })
+    else
+        local dialog = ConfirmBox:new{
+            text = T("Fetch most recommended book from Z-library?"),
+            ok_text = T("OK"),
+            cancel_text = T("Cancel"),
+            ok_callback = ok_callback,
+        }
+        UIManager:show(dialog)
+    end
 end
 
 function Ui.confirmShowMostPopularBooks(ok_callback)
-    UIManager:show(ConfirmBox:new{
-        text = T("Fetch most popular books from Z-library?"),
-        ok_text = T("OK"),
-        cancel_text = T("Cancel"),
-        ok_callback = ok_callback,
-    })
+    if _plugin_instance and _plugin_instance.dialog_manager then
+        _plugin_instance.dialog_manager:showConfirmDialog({
+            text = T("Fetch most popular books from Z-library?"),
+            ok_text = T("OK"),
+            cancel_text = T("Cancel"),
+            ok_callback = ok_callback,
+        })
+    else
+        local dialog = ConfirmBox:new{
+            text = T("Fetch most popular books from Z-library?"),
+            ok_text = T("OK"),
+            cancel_text = T("Cancel"),
+            ok_callback = ok_callback,
+        }
+        UIManager:show(dialog)
+    end
 end
 
 function Ui.createSingleBookMenu(ui_self, title, menu_items)
@@ -591,7 +666,7 @@ function Ui.createSingleBookMenu(ui_self, title, menu_items)
         items_per_page = 10,
         show_captions = true,
     }
-    UIManager:show(menu)
+    _showAndTrackDialog(menu)
     return menu
 end
 

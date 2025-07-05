@@ -281,10 +281,10 @@ function SearchDialog:onMenuHold(item)
     if type(book) ~= "table" and not book.author and not book.title then
         return
     end
-    
+
     local dialog
     local buttons = {}
-    if book.title then 
+    if book.title then
         local button_text = string.format("%s: %s", T("Title"), book.title)
         table.insert(buttons, {{
             text = button_text,
@@ -294,7 +294,7 @@ function SearchDialog:onMenuHold(item)
             end
         }})
     end
-    if book.author then 
+    if book.author then
         local button_text = string.format("%s: %s", T("Author"), book.author)
         table.insert(buttons, {{
             text = button_text,

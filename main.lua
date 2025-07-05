@@ -20,11 +20,13 @@ local Ota = require("zlibrary.ota")
 local Cache = require("zlibrary.cache")
 local Device = require("device")
 local MultiSearchDialog = require("zlibrary.multisearch_dialog")
+local DialogManager = require("zlibrary.dialog_manager")
 
 local Zlibrary = WidgetContainer:extend{
     name = T("Z-library"),
     is_doc_only = false,
     plugin_path = nil,
+    dialog_manager = nil,
 }
 
 local function _colon_concat(a, b)
@@ -43,6 +45,9 @@ function Zlibrary:init()
     self.plugin_path, _ = util.splitFilePathName(full_source_path):gsub("/+", "/")
 
     Config.loadCredentialsFromFile(self.plugin_path)
+
+    self.dialog_manager = DialogManager:new()
+    Ui.setPluginInstance(self)
 
     self:onDispatcherRegisterActions()
     if self.ui and self.ui.menu then
@@ -304,7 +309,8 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
             end}
         }
     }
-    
+
+    self.dialog_manager:trackDialog(search_dialog)
     search_dialog:fetchAndShow()
 end
 
@@ -335,7 +341,7 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
         Ui.showErrorMessage(T("No internet connection detected."))
         return
     end
-    
+
     if not (book_stub.id and book_stub.hash) then
         logger.warn("Zlibrary.onSelectRecommendedBook - parameter error")
         return
@@ -346,7 +352,7 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
     }
     local book_details_cache = book_cache:get("details")
 
-    if type(book_details_cache) == "table" and book_details_cache.title then 
+    if type(book_details_cache) == "table" and book_details_cache.title then
         Ui.showBookDetails(self, book_details_cache, function()
                 book_cache:clear()
                 self:onSelectRecommendedBook(book_stub)
@@ -377,7 +383,7 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
         end
 
         logger.info(string.format("Zlibrary:onSelectRecommendedBook - Fetch successful for book ID: %s", api_result.book.id))
-        
+
         Ui.showBookDetails(self, api_result.book)
 
         book_cache:insert("details", api_result.book)
@@ -422,7 +428,7 @@ end
 
 function Zlibrary:handleSearchError(err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page, loading_msg_to_close, original_on_success, original_on_error)
     if string.match(tostring(err_msg), "HTTP Error: 400") then
-        local confirm_box = ConfirmBox:new{
+        self.dialog_manager:showConfirmDialog({
             text = T("Search failed due to a temporary issue (HTTP 400). Would you like to retry?"),
             ok_text = T("Retry"),
             cancel_text = T("Cancel"),
@@ -440,8 +446,7 @@ function Zlibrary:handleSearchError(err_msg, query, user_session, selected_langu
                 Ui.closeMessage(loading_msg_to_close)
                 original_on_error(err_msg)
             end
-        }
-        UIManager:show(confirm_box)
+        })
     else
         Ui.closeMessage(loading_msg_to_close)
         original_on_error(err_msg)
@@ -637,15 +642,18 @@ function Zlibrary:downloadBook(book)
             if api_result and api_result.success then
                 local has_wifi_toggle = Device:hasWifiToggle()
                 local default_turn_off_wifi = Config.getTurnOffWifiAfterDownload()
-                
+
                 Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, function(should_turn_off_wifi)
                     if should_turn_off_wifi then
                         NetworkMgr:disableWifi(function()
                             logger.info("Zlibrary:downloadBook - Wi-Fi disabled after download as requested by user")
                         end)
                     end
-                    
+
                     if ReaderUI then
+                        -- Close any lingering dialogs before opening the reader
+                        logger.info("Zlibrary:downloadBook - Cleaning up dialogs before opening reader")
+                        self.dialog_manager:closeAllDialogs()
                         ReaderUI:showReader(target_filepath)
                     else
                         Ui.showErrorMessage(T("Could not open reader UI."))
@@ -708,8 +716,22 @@ function Zlibrary:downloadAndShowCover(book)
             return
         end
     end
-    
+
     Ui.showCoverDialog(book_title, cover_cache_path)
+end
+
+function Zlibrary:onExit()
+    if self.dialog_manager and self.dialog_manager:getDialogCount() > 0 then
+        logger.info("Zlibrary:onExit - Cleaning up " .. self.dialog_manager:getDialogCount() .. " remaining dialogs")
+        self.dialog_manager:closeAllDialogs()
+    end
+end
+
+function Zlibrary:onCloseWidget()
+    if self.dialog_manager and self.dialog_manager:getDialogCount() > 0 then
+        logger.info("Zlibrary:onCloseWidget - Cleaning up " .. self.dialog_manager:getDialogCount() .. " remaining dialogs")
+        self.dialog_manager:closeAllDialogs()
+    end
 end
 
 return Zlibrary

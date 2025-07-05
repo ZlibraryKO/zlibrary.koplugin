@@ -671,35 +671,271 @@ function Ui.createSingleBookMenu(ui_self, title, menu_items)
 end
 
 function Ui.showSearchErrorDialog(err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page, loading_msg_to_close, original_on_success, original_on_error)
-    if string.match(tostring(err_msg), "HTTP Error: 400") then
+    local retry_callback = function()
+        local new_loading_msg = Ui.showLoadingMessage(T("Retrying search for \"") .. query .. "\"...")
+        local retry_task = function()
+            return Api.search(query, user_session.user_id, user_session.user_key, selected_languages, selected_extensions, selected_order, current_page)
+        end
+        AsyncHelper.run(retry_task, original_on_success, function(new_err_msg)
+            Ui.showSearchErrorDialog(new_err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page, new_loading_msg, original_on_success, original_on_error)
+        end, new_loading_msg)
+    end
+    
+    local cancel_callback = function(err)
+        original_on_error(err)
+    end
+    
+    Ui.showRetryErrorDialog(err_msg, T("Search"), retry_callback, cancel_callback, loading_msg_to_close)
+end
+
+function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel_callback, loading_msg_to_close)
+    local error_string = tostring(err_msg)
+    
+
+    local is_http_400 = string.match(error_string, "HTTP Error: 400")
+    local is_timeout = string.find(error_string, T("Request timed out")) or 
+                      string.find(error_string, "timeout") or 
+                      string.find(error_string, "timed out") or
+                      string.find(error_string, "sink timeout")
+    local is_network_error = string.find(error_string, T("Network connection error")) or
+                            string.find(error_string, T("Network request failed"))
+    
+    if is_http_400 or is_timeout or is_network_error then
+        local retry_message
+        if is_timeout then
+            retry_message = string.format(T("%s failed due to a timeout. Would you like to retry?"), operation_name)
+        elseif is_network_error then
+            retry_message = string.format(T("%s failed due to a network error. Would you like to retry?"), operation_name)
+        else
+            retry_message = string.format(T("%s failed due to a temporary issue. Would you like to retry?"), operation_name)
+        end
+        
         if _plugin_instance and _plugin_instance.dialog_manager then
             _plugin_instance.dialog_manager:showConfirmDialog({
-                text = T("Search failed due to a temporary issue (HTTP 400). Would you like to retry?"),
+                text = retry_message,
                 ok_text = T("Retry"),
                 cancel_text = T("Cancel"),
                 ok_callback = function()
-                    Ui.closeMessage(loading_msg_to_close)
-                    local new_loading_msg = Ui.showLoadingMessage(T("Retrying search for \"") .. query .. "\"...")
-                    local retry_task = function()
-                        return Api.search(query, user_session.user_id, user_session.user_key, selected_languages, selected_extensions, selected_order, current_page)
+                    if loading_msg_to_close then
+                        Ui.closeMessage(loading_msg_to_close)
                     end
-                    AsyncHelper.run(retry_task, original_on_success, function(new_err_msg)
-                        Ui.showSearchErrorDialog(new_err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page, new_loading_msg, original_on_success, original_on_error)
-                    end, new_loading_msg)
+                    retry_callback()
                 end,
                 cancel_callback = function()
-                    Ui.closeMessage(loading_msg_to_close)
-                    original_on_error(err_msg)
+                    if loading_msg_to_close then
+                        Ui.closeMessage(loading_msg_to_close)
+                    end
+                    cancel_callback(err_msg)
                 end
             })
         else
-            Ui.closeMessage(loading_msg_to_close)
-            original_on_error(err_msg)
+            if loading_msg_to_close then
+                Ui.closeMessage(loading_msg_to_close)
+            end
+            cancel_callback(err_msg)
         end
     else
-        Ui.closeMessage(loading_msg_to_close)
-        original_on_error(err_msg)
+        if loading_msg_to_close then
+            Ui.closeMessage(loading_msg_to_close)
+        end
+        cancel_callback(err_msg)
     end
+end
+
+function Ui.showTimeoutConfigDialog(parent_ui, timeout_name, timeout_key, getter_func, setter_func)
+    local current_timeout = getter_func()
+    local block_timeout = current_timeout[1]
+    local total_timeout = current_timeout[2]
+    
+    local dialog_items = {}
+    local dialog_menu
+    
+    local function refreshDialog()
+        local updated_timeout = getter_func()
+        block_timeout = updated_timeout[1]
+        total_timeout = updated_timeout[2]
+        
+        dialog_items[1].text = string.format(T("Block timeout: %s seconds"), tostring(block_timeout))
+        dialog_items[2].text = string.format(T("Total timeout: %s"), total_timeout == -1 and T("infinite") or (tostring(total_timeout) .. " " .. T("seconds")))
+        
+        if dialog_menu then
+            dialog_menu:switchItemTable(dialog_menu.title, dialog_items)
+        end
+    end
+    
+    table.insert(dialog_items, {
+        text = string.format(T("Block timeout: %s seconds"), tostring(block_timeout)),
+        mandatory = "\u{25B7}",
+        callback = function()
+            Ui.showGenericInputDialog(
+                string.format(T("Set %s block timeout (seconds)"), timeout_name),
+                nil,
+                tostring(block_timeout),
+                false,
+                function(input_text)
+                    local new_block_timeout = tonumber(input_text)
+                    if new_block_timeout and new_block_timeout >= 1 then
+                        setter_func(new_block_timeout, total_timeout)
+                        refreshDialog()
+                        return true
+                    else
+                        Ui.showErrorMessage(T("Please enter a valid number (minimum 1 second)"))
+                        return false
+                    end
+                end
+            )
+        end
+    })
+    
+    table.insert(dialog_items, {
+        text = string.format(T("Total timeout: %s"), total_timeout == -1 and T("infinite") or (tostring(total_timeout) .. " " .. T("seconds"))),
+        mandatory = "\u{25B7}",
+        callback = function()
+            Ui.showGenericInputDialog(
+                string.format(T("Set %s total timeout (seconds, -1 for infinite)"), timeout_name),
+                nil,
+                tostring(total_timeout),
+                false,
+                function(input_text)
+                    local new_total_timeout = tonumber(input_text)
+                    if new_total_timeout and (new_total_timeout >= 1 or new_total_timeout == -1) then
+                        setter_func(block_timeout, new_total_timeout)
+                        refreshDialog()
+                        return true
+                    else
+                        Ui.showErrorMessage(T("Please enter a valid number (minimum 1 second or -1 for infinite)"))
+                        return false
+                    end
+                end
+            )
+        end
+    })
+    
+    table.insert(dialog_items, {
+        text = "---"
+    })
+    
+    table.insert(dialog_items, {
+        text = T("Reset to defaults"),
+        mandatory = "\u{1F5D8}",
+        callback = function()
+            if _plugin_instance and _plugin_instance.dialog_manager then
+                _plugin_instance.dialog_manager:showConfirmDialog({
+                    text = string.format(T("Reset %s timeouts to default values?"), timeout_name),
+                    ok_text = T("Reset"),
+                    cancel_text = T("Cancel"),
+                    ok_callback = function()
+                        Config.deleteSetting(timeout_key)
+                        refreshDialog()
+                        Ui.showInfoMessage(T("Timeout settings reset to defaults"))
+                    end
+                })
+            end
+        end
+    })
+    
+    dialog_menu = Menu:new{
+        title = string.format(T("%s Timeout Settings"), timeout_name),
+        subtitle = Config.formatTimeoutForDisplay(current_timeout),
+        item_table = dialog_items,
+        parent = parent_ui,
+        show_captions = true,
+    }
+    _showAndTrackDialog(dialog_menu)
+end
+
+function Ui.showAllTimeoutConfigDialog(parent_ui)
+    local timeout_items = {
+        {
+            text = T("Login timeouts"),
+            mandatory = Config.formatTimeoutForDisplay(Config.getLoginTimeout()),
+            callback = function()
+                Ui.showTimeoutConfigDialog(parent_ui, T("Login"), Config.SETTINGS_TIMEOUT_LOGIN_KEY, 
+                    Config.getLoginTimeout, Config.setLoginTimeout)
+            end
+        },
+        {
+            text = T("Search timeouts"),
+            mandatory = Config.formatTimeoutForDisplay(Config.getSearchTimeout()),
+            callback = function()
+                Ui.showTimeoutConfigDialog(parent_ui, T("Search"), Config.SETTINGS_TIMEOUT_SEARCH_KEY,
+                    Config.getSearchTimeout, Config.setSearchTimeout)
+            end
+        },
+        {
+            text = T("Book details timeouts"),
+            mandatory = Config.formatTimeoutForDisplay(Config.getBookDetailsTimeout()),
+            callback = function()
+                Ui.showTimeoutConfigDialog(parent_ui, T("Book details"), Config.SETTINGS_TIMEOUT_BOOK_DETAILS_KEY,
+                    Config.getBookDetailsTimeout, Config.setBookDetailsTimeout)
+            end
+        },
+        {
+            text = T("Recommended books timeouts"),
+            mandatory = Config.formatTimeoutForDisplay(Config.getRecommendedTimeout()),
+            callback = function()
+                Ui.showTimeoutConfigDialog(parent_ui, T("Recommended books"), Config.SETTINGS_TIMEOUT_RECOMMENDED_KEY,
+                    Config.getRecommendedTimeout, Config.setRecommendedTimeout)
+            end
+        },
+        {
+            text = T("Popular books timeouts"),
+            mandatory = Config.formatTimeoutForDisplay(Config.getPopularTimeout()),
+            callback = function()
+                Ui.showTimeoutConfigDialog(parent_ui, T("Popular books"), Config.SETTINGS_TIMEOUT_POPULAR_KEY,
+                    Config.getPopularTimeout, Config.setPopularTimeout)
+            end
+        },
+        {
+            text = T("Download timeouts"),
+            mandatory = Config.formatTimeoutForDisplay(Config.getDownloadTimeout()),
+            callback = function()
+                Ui.showTimeoutConfigDialog(parent_ui, T("Download"), Config.SETTINGS_TIMEOUT_DOWNLOAD_KEY,
+                    Config.getDownloadTimeout, Config.setDownloadTimeout)
+            end
+        },
+        {
+            text = T("Cover download timeouts"),
+            mandatory = Config.formatTimeoutForDisplay(Config.getCoverTimeout()),
+            callback = function()
+                Ui.showTimeoutConfigDialog(parent_ui, T("Cover download"), Config.SETTINGS_TIMEOUT_COVER_KEY,
+                    Config.getCoverTimeout, Config.setCoverTimeout)
+            end
+        },
+        {
+            text = "---"
+        },
+        {
+            text = T("Reset all timeouts to defaults"),
+            callback = function()
+                if _plugin_instance and _plugin_instance.dialog_manager then
+                    _plugin_instance.dialog_manager:showConfirmDialog({
+                        text = T("Reset all timeout settings to default values?"),
+                        ok_text = T("Reset All"),
+                        cancel_text = T("Cancel"),
+                        ok_callback = function()
+                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_LOGIN_KEY)
+                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_SEARCH_KEY)
+                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_BOOK_DETAILS_KEY)
+                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_RECOMMENDED_KEY)
+                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_POPULAR_KEY)
+                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_DOWNLOAD_KEY)
+                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_COVER_KEY)
+                            Ui.showInfoMessage(T("All timeout settings reset to defaults"))
+                        end
+                    })
+                end
+            end
+        }
+    }
+    
+    local menu = Menu:new{
+        title = T("Timeout Settings"),
+        item_table = timeout_items,
+        parent = parent_ui,
+        show_captions = true,
+    }
+    _showAndTrackDialog(menu)
 end
 
 return Ui

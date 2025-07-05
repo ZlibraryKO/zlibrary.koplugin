@@ -403,6 +403,9 @@ msgstr "OK"
 msgid "Fetch most popular books from Z-library?"
 msgstr "Recuperare i libri più popolari da Z-library?"
 
+msgid "Turn off Wi-Fi after closing this dialog"
+msgstr "Disattivare il Wi-Fi dopo aver chiuso questa finestra"
+
 #~ msgid "Set username"
 #~ msgstr "Imposta nome utente"
 

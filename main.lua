@@ -311,8 +311,7 @@ function Zlibrary:_fetchBookList(options)
                 -- Retry callback
                 attemptFetch(false)
             end, function(final_err_msg)
-                -- Cancel callback
-                Ui.showErrorMessage(Ui.colonConcat(options.error_prefix_key, tostring(final_err_msg)))
+                -- Cancel callback - user already knows about the error
             end, loading_msg)
         end
 
@@ -458,8 +457,7 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
                 -- Retry callback
                 attemptBookDetails()
             end, function(final_err_msg)
-                -- Cancel callback
-                Ui.showErrorMessage(Ui.colonConcat(T("Failed to fetch book details"), tostring(final_err_msg)))
+                -- Cancel callback - user already knows about the error
             end, loading_msg)
         end
 
@@ -549,7 +547,7 @@ function Zlibrary:performSearch(query)
                 
                 -- Use the retry dialog for timeouts and HTTP 400 errors
                 Ui.showSearchErrorDialog(api_result.error, query, user_session, selected_languages, selected_extensions, selected_order, current_page_to_search, loading_msg, on_success, function(final_err_msg)
-                    Ui.showErrorMessage(Ui.colonConcat(T("Search failed"), tostring(final_err_msg)))
+                    -- Cancel callback - user already knows about the error
                 end)
                 return
             end
@@ -585,7 +583,7 @@ function Zlibrary:performSearch(query)
             
             -- Use the retry dialog for timeouts and HTTP 400 errors
             Ui.showSearchErrorDialog(err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page_to_search, loading_msg, on_success, function(final_err_msg)
-                Ui.showErrorMessage(Ui.colonConcat(T("Search failed"), tostring(final_err_msg)))
+                -- Cancel callback - user already knows about the error
             end)
         end
 
@@ -821,8 +819,7 @@ function Zlibrary:downloadBook(book)
                 loading_msg = new_loading_msg
                 AsyncHelper.run(task_download, on_success_download, on_error_download, loading_msg)
             end, function(final_err_msg)
-                -- Cancel callback
-                Ui.showErrorMessage(tostring(final_err_msg))
+                -- Cancel callback - user already knows about the error
                 pcall(os.remove, target_filepath)
             end, loading_msg)
         end

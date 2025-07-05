@@ -4,7 +4,6 @@ local logger = require("logger")
 local json = require("json")
 local ltn12 = require("ltn12")
 local http = require("socket.http")
-local socket = require("socket")
 local T = require("zlibrary.gettext")
 
 local Api = {}

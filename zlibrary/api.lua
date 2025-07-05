@@ -4,10 +4,29 @@ local logger = require("logger")
 local json = require("json")
 local ltn12 = require("ltn12")
 local http = require("socket.http")
-local socket = require("socket")
 local T = require("zlibrary.gettext")
 
 local Api = {}
+
+function Api.isAuthenticationError(error_message)
+    if not error_message then
+        return false
+    end
+    
+    local error_str = tostring(error_message)
+
+    if string.find(error_str, "Please login", 1, true) ~= nil or 
+       string.find(error_str, "Invalid credentials", 1, true) ~= nil then
+        return true
+    end
+    
+
+    if string.find(error_str, "Download limit reached", 1, true) ~= nil then
+        return true
+    end
+    
+    return false
+end
 
 local function _transformApiBookData(api_book)
     if not api_book or type(api_book) ~= "table" then
@@ -276,6 +295,13 @@ end
 
 function Api.downloadBook(download_url, target_filepath, user_id, user_key, referer_url)
     logger.info(string.format("Zlibrary:Api.downloadBook - START - URL: %s, Target: %s", download_url, target_filepath))
+
+    if Config.isTestModeEnabled() then
+        logger.info("Zlibrary:Api.downloadBook - Test mode enabled, creating fake successful download")
+        logger.info(string.format("Zlibrary:Api.downloadBook - END (Test mode success) - Target: %s", target_filepath))
+        return { success = true, error = nil }
+    end
+
     local result = { success = false, error = nil }
     local file, err_open = io.open(target_filepath, "wb")
     if not file then

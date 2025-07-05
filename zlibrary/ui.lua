@@ -9,6 +9,8 @@ local Menu = require("zlibrary.menu")
 local util = require("util")
 local logger = require("logger")
 local Config = require("zlibrary.config")
+local Api = require("zlibrary.api")
+local AsyncHelper = require("zlibrary.async_helper")
 
 local Ui = {}
 
@@ -39,6 +41,10 @@ end
 
 local function _colon_concat(a, b)
     return a .. ": " .. b
+end
+
+function Ui.colonConcat(a, b)
+    return _colon_concat(a, b)
 end
 
 function Ui.showInfoMessage(text)
@@ -297,15 +303,9 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
             end
             Ui._last_search_input = query
 
-            local login_ok = parent_zlibrary:login()
-
-            if not login_ok then
-                return
-            end
-
             local trimmed_query = util.trim(query)
-                parent_zlibrary:performSearch(trimmed_query)
-            end,
+            parent_zlibrary:performSearch(trimmed_query)
+        end,
         }},{{
             text = string.format("%s: %s \u{25BC}", T("Sort by"), search_order_name),
             callback = function()
@@ -668,6 +668,38 @@ function Ui.createSingleBookMenu(ui_self, title, menu_items)
     }
     _showAndTrackDialog(menu)
     return menu
+end
+
+function Ui.showSearchErrorDialog(err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page, loading_msg_to_close, original_on_success, original_on_error)
+    if string.match(tostring(err_msg), "HTTP Error: 400") then
+        if _plugin_instance and _plugin_instance.dialog_manager then
+            _plugin_instance.dialog_manager:showConfirmDialog({
+                text = T("Search failed due to a temporary issue (HTTP 400). Would you like to retry?"),
+                ok_text = T("Retry"),
+                cancel_text = T("Cancel"),
+                ok_callback = function()
+                    Ui.closeMessage(loading_msg_to_close)
+                    local new_loading_msg = Ui.showLoadingMessage(T("Retrying search for \"") .. query .. "\"...")
+                    local retry_task = function()
+                        return Api.search(query, user_session.user_id, user_session.user_key, selected_languages, selected_extensions, selected_order, current_page)
+                    end
+                    AsyncHelper.run(retry_task, original_on_success, function(new_err_msg)
+                        Ui.showSearchErrorDialog(new_err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page, new_loading_msg, original_on_success, original_on_error)
+                    end, new_loading_msg)
+                end,
+                cancel_callback = function()
+                    Ui.closeMessage(loading_msg_to_close)
+                    original_on_error(err_msg)
+                end
+            })
+        else
+            Ui.closeMessage(loading_msg_to_close)
+            original_on_error(err_msg)
+        end
+    else
+        Ui.closeMessage(loading_msg_to_close)
+        original_on_error(err_msg)
+    end
 end
 
 return Ui

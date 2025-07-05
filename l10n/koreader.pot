@@ -545,3 +545,7 @@ msgstr ""
 #: zlibrary/ui.lua:481
 msgid "Fetch most popular books from Z-library?"
 msgstr ""
+
+#: zlibrary/ui.lua:478
+msgid "Turn off Wi-Fi after closing this dialog"
+msgstr ""

@@ -403,6 +403,9 @@ msgstr "OK"
 msgid "Fetch most popular books from Z-library?"
 msgstr "Meistgelesene Bücher von Z-library abrufen?"
 
+msgid "Turn off Wi-Fi after closing this dialog"
+msgstr "WLAN nach Schließen dieses Dialogs ausschalten"
+
 #~ msgid "Downloading"
 #~ msgstr "Wird heruntergeladen"
 

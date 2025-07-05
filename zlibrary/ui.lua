@@ -458,13 +458,44 @@ function Ui.confirmDownload(filename, ok_callback)
     })
 end
 
-function Ui.confirmOpenBook(filename, ok_open_callback)
-    UIManager:show(ConfirmBox:new{
-        text = string.format(T("\"%s\" downloaded successfully. Open it now?"), filename),
-        ok_text = T("Open book"),
-        ok_callback = ok_open_callback,
-        cancel_text = T("Close")
-    })
+function Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, ok_open_callback)
+    local turn_off_wifi = default_turn_off_wifi
+
+    local function showDialog()
+        local full_text = string.format(T("\"%s\" downloaded successfully. Open it now?"), filename)
+
+        local dialog
+        local other_buttons = nil
+        
+        if has_wifi_toggle then
+            other_buttons = {{
+                {
+                    text = turn_off_wifi and ("☑ " .. T("Turn off Wi-Fi after closing this dialog")) or ("☐ " .. T("Turn off Wi-Fi after closing this dialog")),
+                    callback = function()
+                        turn_off_wifi = not turn_off_wifi
+                        Config.setTurnOffWifiAfterDownload(turn_off_wifi)
+                        UIManager:close(dialog)
+                        showDialog()
+                    end,
+                },
+            }}
+        end
+        
+        dialog = ConfirmBox:new{
+            text = full_text,
+            ok_text = T("Open book"),
+            ok_callback = function()
+                ok_open_callback(turn_off_wifi)
+            end,
+            cancel_text = T("Close"),
+            other_buttons = other_buttons,
+            other_buttons_first = true,
+        }
+
+        UIManager:show(dialog)
+    end
+
+    showDialog()
 end
 
 function Ui.showRecommendedBooksMenu(ui_self, books, plugin_self)

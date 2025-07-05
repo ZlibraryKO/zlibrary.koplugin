@@ -403,6 +403,9 @@ msgstr "确定"
 msgid "Fetch most popular books from Z-library?"
 msgstr "从Z-图书馆获取热门书籍？"
 
+msgid "Turn off Wi-Fi after closing this dialog"
+msgstr "关闭此对话框后关闭Wi-Fi"
+
 #~ msgid "Set username"
 #~ msgstr "设置用户名"
 

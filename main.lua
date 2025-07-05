@@ -18,6 +18,7 @@ local logger = require("logger")
 local ConfirmBox = require("ui/widget/confirmbox")
 local Ota = require("zlibrary.ota")
 local Cache = require("zlibrary.cache")
+local Device = require("device")
 local MultiSearchDialog = require("zlibrary.multisearch_dialog")
 
 local Zlibrary = WidgetContainer:extend{
@@ -634,7 +635,16 @@ function Zlibrary:downloadBook(book)
 
         local function on_success_download(api_result)
             if api_result and api_result.success then
-                Ui.confirmOpenBook(filename, function()
+                local has_wifi_toggle = Device:hasWifiToggle()
+                local default_turn_off_wifi = Config.getTurnOffWifiAfterDownload()
+                
+                Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, function(should_turn_off_wifi)
+                    if should_turn_off_wifi then
+                        NetworkMgr:disableWifi(function()
+                            logger.info("Zlibrary:downloadBook - Wi-Fi disabled after download as requested by user")
+                        end)
+                    end
+                    
                     if ReaderUI then
                         ReaderUI:showReader(target_filepath)
                     else

@@ -712,7 +712,7 @@ msgstr ""
 
 #: zlibrary/ui.lua:736
 #, lua-format
-msgid "%s failed due to a timeout. Would you like to retry?"
+msgid "%s failed due to a timeout%s. Would you like to retry?"
 msgstr ""
 
 #: zlibrary/ui.lua:738

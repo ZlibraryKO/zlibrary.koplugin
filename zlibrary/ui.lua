@@ -703,7 +703,32 @@ function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel
     if is_http_400 or is_timeout or is_network_error then
         local retry_message
         if is_timeout then
-            retry_message = string.format(T("%s failed due to a timeout. Would you like to retry?"), operation_name)
+            -- Get timeout info to show to user
+            local timeout_info = ""
+            local operation_lower = string.lower(tostring(operation_name))
+            if string.find(operation_lower, "search") then
+                local search_timeout = Config.getSearchTimeout()
+                timeout_info = string.format(" (%ds)", search_timeout[1])
+            elseif string.find(operation_lower, "login") then
+                local login_timeout = Config.getLoginTimeout()
+                timeout_info = string.format(" (%ds)", login_timeout[1])
+            elseif string.find(operation_lower, "recommend") then
+                local rec_timeout = Config.getRecommendedTimeout()
+                timeout_info = string.format(" (%ds)", rec_timeout[1])
+            elseif string.find(operation_lower, "popular") then
+                local pop_timeout = Config.getPopularTimeout()
+                timeout_info = string.format(" (%ds)", pop_timeout[1])
+            elseif string.find(operation_lower, "cover") then
+                local cover_timeout = Config.getCoverTimeout()
+                timeout_info = string.format(" (%ds)", cover_timeout[1])
+            elseif string.find(operation_lower, "download") then
+                local download_timeout = Config.getDownloadTimeout()
+                timeout_info = string.format(" (%ds)", download_timeout[1])
+            elseif string.find(operation_lower, "book") or string.find(operation_lower, "details") then
+                local book_timeout = Config.getBookDetailsTimeout()
+                timeout_info = string.format(" (%ds)", book_timeout[1])
+            end
+            retry_message = string.format(T("%s failed due to a timeout%s. Would you like to retry?"), operation_name, timeout_info)
         elseif is_network_error then
             retry_message = string.format(T("%s failed due to a network error. Would you like to retry?"), operation_name)
         else

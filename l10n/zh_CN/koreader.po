@@ -519,8 +519,8 @@ msgid "Network connection error"
 msgstr ""
 
 #, lua-format
-msgid "%s failed due to a timeout. Would you like to retry?"
-msgstr "%s因超时失败。您要重试吗？"
+msgid "%s failed due to a timeout%s. Would you like to retry?"
+msgstr "%s因超时%s失败。您要重试吗？"
 
 #, lua-format
 msgid "%s failed due to a network error. Would you like to retry?"

@@ -519,8 +519,8 @@ msgid "Network connection error"
 msgstr ""
 
 #, lua-format
-msgid "%s failed due to a timeout. Would you like to retry?"
-msgstr "%s이(가) 타임아웃으로 실패했습니다. 다시 시도하시겠습니까?"
+msgid "%s failed due to a timeout%s. Would you like to retry?"
+msgstr "%s이(가) 타임아웃%s으로 실패했습니다. 다시 시도하시겠습니까?"
 
 #, lua-format
 msgid "%s failed due to a network error. Would you like to retry?"

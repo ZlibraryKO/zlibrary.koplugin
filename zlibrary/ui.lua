@@ -767,7 +767,7 @@ function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel
     end
 end
 
-function Ui.showTimeoutConfigDialog(parent_ui, timeout_name, timeout_key, getter_func, setter_func)
+function Ui.showTimeoutConfigDialog(parent_ui, timeout_name, timeout_key, getter_func, setter_func, refresh_parent_callback)
     local current_timeout = getter_func()
     local block_timeout = current_timeout[1]
     local total_timeout = current_timeout[2]
@@ -784,7 +784,8 @@ function Ui.showTimeoutConfigDialog(parent_ui, timeout_name, timeout_key, getter
         dialog_items[2].text = string.format(T("Total timeout: %s"), total_timeout == -1 and T("infinite") or (tostring(total_timeout) .. " " .. T("seconds")))
         
         if dialog_menu then
-            dialog_menu:switchItemTable(dialog_menu.title, dialog_items)
+            dialog_menu.subtitle = Config.formatTimeoutForDisplay(updated_timeout)
+            dialog_menu:switchItemTable(dialog_menu.title, dialog_items, -1, nil, dialog_menu.subtitle)
         end
     end
     
@@ -859,6 +860,8 @@ function Ui.showTimeoutConfigDialog(parent_ui, timeout_name, timeout_key, getter
         end
     })
     
+
+    
     dialog_menu = Menu:new{
         title = string.format(T("%s Timeout Settings"), timeout_name),
         subtitle = Config.formatTimeoutForDisplay(current_timeout),
@@ -866,65 +869,100 @@ function Ui.showTimeoutConfigDialog(parent_ui, timeout_name, timeout_key, getter
         parent = parent_ui,
         show_captions = true,
     }
+    
+    local original_onClose = dialog_menu.onClose
+    dialog_menu.onClose = function(self)
+        if original_onClose then
+            original_onClose(self)
+        end
+        _closeAndUntrackDialog(self)
+        if refresh_parent_callback then
+            refresh_parent_callback()
+        end
+    end
+    
     _showAndTrackDialog(dialog_menu)
 end
 
 function Ui.showAllTimeoutConfigDialog(parent_ui)
-    local timeout_items = {
+    local timeout_items = {}
+    local main_menu
+    
+    local function refreshMainDialog()
+        if main_menu then
+            main_menu:updateItems(nil, true)
+        end
+    end
+    
+    timeout_items = {
         {
             text = T("Login timeouts"),
-            mandatory = Config.formatTimeoutForDisplay(Config.getLoginTimeout()),
+            mandatory_func = function()
+                return Config.formatTimeoutForDisplay(Config.getLoginTimeout())
+            end,
             callback = function()
                 Ui.showTimeoutConfigDialog(parent_ui, T("Login"), Config.SETTINGS_TIMEOUT_LOGIN_KEY, 
-                    Config.getLoginTimeout, Config.setLoginTimeout)
+                    Config.getLoginTimeout, Config.setLoginTimeout, refreshMainDialog)
             end
         },
         {
             text = T("Search timeouts"),
-            mandatory = Config.formatTimeoutForDisplay(Config.getSearchTimeout()),
+            mandatory_func = function()
+                return Config.formatTimeoutForDisplay(Config.getSearchTimeout())
+            end,
             callback = function()
                 Ui.showTimeoutConfigDialog(parent_ui, T("Search"), Config.SETTINGS_TIMEOUT_SEARCH_KEY,
-                    Config.getSearchTimeout, Config.setSearchTimeout)
+                    Config.getSearchTimeout, Config.setSearchTimeout, refreshMainDialog)
             end
         },
         {
             text = T("Book details timeouts"),
-            mandatory = Config.formatTimeoutForDisplay(Config.getBookDetailsTimeout()),
+            mandatory_func = function()
+                return Config.formatTimeoutForDisplay(Config.getBookDetailsTimeout())
+            end,
             callback = function()
                 Ui.showTimeoutConfigDialog(parent_ui, T("Book details"), Config.SETTINGS_TIMEOUT_BOOK_DETAILS_KEY,
-                    Config.getBookDetailsTimeout, Config.setBookDetailsTimeout)
+                    Config.getBookDetailsTimeout, Config.setBookDetailsTimeout, refreshMainDialog)
             end
         },
         {
             text = T("Recommended books timeouts"),
-            mandatory = Config.formatTimeoutForDisplay(Config.getRecommendedTimeout()),
+            mandatory_func = function()
+                return Config.formatTimeoutForDisplay(Config.getRecommendedTimeout())
+            end,
             callback = function()
                 Ui.showTimeoutConfigDialog(parent_ui, T("Recommended books"), Config.SETTINGS_TIMEOUT_RECOMMENDED_KEY,
-                    Config.getRecommendedTimeout, Config.setRecommendedTimeout)
+                    Config.getRecommendedTimeout, Config.setRecommendedTimeout, refreshMainDialog)
             end
         },
         {
             text = T("Popular books timeouts"),
-            mandatory = Config.formatTimeoutForDisplay(Config.getPopularTimeout()),
+            mandatory_func = function()
+                return Config.formatTimeoutForDisplay(Config.getPopularTimeout())
+            end,
             callback = function()
                 Ui.showTimeoutConfigDialog(parent_ui, T("Popular books"), Config.SETTINGS_TIMEOUT_POPULAR_KEY,
-                    Config.getPopularTimeout, Config.setPopularTimeout)
+                    Config.getPopularTimeout, Config.setPopularTimeout, refreshMainDialog)
             end
         },
         {
             text = T("Download timeouts"),
-            mandatory = Config.formatTimeoutForDisplay(Config.getDownloadTimeout()),
+            mandatory_func = function()
+                return Config.formatTimeoutForDisplay(Config.getDownloadTimeout())
+            end,
             callback = function()
                 Ui.showTimeoutConfigDialog(parent_ui, T("Download"), Config.SETTINGS_TIMEOUT_DOWNLOAD_KEY,
-                    Config.getDownloadTimeout, Config.setDownloadTimeout)
+                    Config.getDownloadTimeout, Config.setDownloadTimeout, refreshMainDialog)
             end
         },
         {
             text = T("Cover download timeouts"),
-            mandatory = Config.formatTimeoutForDisplay(Config.getCoverTimeout()),
+            mandatory_func = function()
+                return Config.formatTimeoutForDisplay(Config.getCoverTimeout())
+            end,
             callback = function()
                 Ui.showTimeoutConfigDialog(parent_ui, T("Cover download"), Config.SETTINGS_TIMEOUT_COVER_KEY,
-                    Config.getCoverTimeout, Config.setCoverTimeout)
+                    Config.getCoverTimeout, Config.setCoverTimeout, refreshMainDialog)
             end
         },
         {
@@ -947,6 +985,7 @@ function Ui.showAllTimeoutConfigDialog(parent_ui)
                             Config.deleteSetting(Config.SETTINGS_TIMEOUT_DOWNLOAD_KEY)
                             Config.deleteSetting(Config.SETTINGS_TIMEOUT_COVER_KEY)
                             Ui.showInfoMessage(T("All timeout settings reset to defaults"))
+                            refreshMainDialog()
                         end
                     })
                 end
@@ -954,13 +993,13 @@ function Ui.showAllTimeoutConfigDialog(parent_ui)
         }
     }
     
-    local menu = Menu:new{
+    main_menu = Menu:new{
         title = T("Timeout Settings"),
         item_table = timeout_items,
         parent = parent_ui,
         show_captions = true,
     }
-    _showAndTrackDialog(menu)
+    _showAndTrackDialog(main_menu)
 end
 
 return Ui

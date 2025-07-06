@@ -503,9 +503,11 @@ function Zlibrary:login(callback)
     end
 
     local on_error_handler = function(err_msg)
-        Ui.closeMessage(loading_msg)
-        Ui.showErrorMessage(tostring(err_msg))
-        if callback then callback(false) end
+        Ui.showRetryErrorDialog(err_msg, T("Login"), function()
+            self:login(callback)
+        end, function(final_err_msg)
+            if callback then callback(false) end
+        end, loading_msg)
     end
 
     AsyncHelper.run(task, on_success, on_error_handler, loading_msg)

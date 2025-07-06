@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-05 21:46+0200\n"
+"POT-Creation-Date: 2025-07-06 09:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -138,11 +138,11 @@ msgstr "Najpierw ustaw nazwę użytkownika i hasło."
 msgid "Logging in..."
 msgstr "Logowanie..."
 
+msgid "Login"
+msgstr "Logowanie"
+
 msgid "Searching for \""
 msgstr "Wyszukiwanie: \""
-
-msgid "Search failed"
-msgstr "Wyszukiwanie nie powiodło się"
 
 msgid "No results found for \""
 msgstr "Nie znaleziono wyników dla \""
@@ -403,6 +403,28 @@ msgstr "Ustawienie zapisane pomyślnie!"
 msgid "Setting cleared."
 msgstr "Ustawienie zostało usunięte."
 
+msgid "Set languages"
+msgstr "Ustaw języki"
+
+#, lua-format
+msgid "Language: %s"
+msgstr "Język: %s"
+
+#, lua-format
+msgid "Languages (%d)"
+msgstr "Języki (%d)"
+
+msgid "Set formats"
+msgstr "Ustaw formaty"
+
+#, lua-format
+msgid "Format: %s"
+msgstr "Format: %s"
+
+#, lua-format
+msgid "Formats (%d)"
+msgstr "Formaty (%d)"
+
 msgid "Search Z-library"
 msgstr "Szukaj w Z-library"
 
@@ -500,20 +522,11 @@ msgstr "OK"
 msgid "Fetch most popular books from Z-library?"
 msgstr "Pobrać najpopularniejsze książki z Z-library?"
 
-msgid "Request timed out"
-msgstr ""
-
-msgid "Search failed due to a timeout. Would you like to retry?"
-msgstr ""
-
-msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
-msgstr "Wyszukiwanie nie powiodło się z powodu tymczasowego problemu (HTTP 400). Czy chcesz spróbować ponownie?"
-
-msgid "Retry"
-msgstr "Spróbuj ponownie"
-
 msgid "Retrying search for \""
 msgstr "Ponawianie wyszukiwania dla \""
+
+msgid "Request timed out"
+msgstr ""
 
 msgid "Network connection error"
 msgstr ""
@@ -530,10 +543,14 @@ msgstr "%s nie powiodło się z powodu błędu sieci. Czy chcesz spróbować pon
 msgid "%s failed due to a temporary issue. Would you like to retry?"
 msgstr "%s nie powiodło się z powodu tymczasowego problemu. Czy chcesz spróbować ponownie?"
 
+msgid "Retry"
+msgstr "Spróbuj ponownie"
+
 #, lua-format
 msgid "Block timeout: %s seconds"
 msgstr "Limit czasu bloku: %s sekund"
 
+#, lua-format
 msgid "Total timeout: %s"
 msgstr "Całkowity limit czasu: %s"
 
@@ -567,14 +584,12 @@ msgstr "Przywróć"
 msgid "Timeout settings reset to defaults"
 msgstr "Ustawienia limitu czasu przywrócone do wartości domyślnych"
 
+#, lua-format
 msgid "%s Timeout Settings"
 msgstr "Ustawienia limitu czasu %s"
 
 msgid "Login timeouts"
 msgstr "Limity czasu logowania"
-
-msgid "Login"
-msgstr "Logowanie"
 
 msgid "Search timeouts"
 msgstr "Limity czasu wyszukiwania"
@@ -614,6 +629,12 @@ msgstr "Wszystkie ustawienia limitu czasu przywrócone do wartości domyślnych"
 
 msgid "Timeout Settings"
 msgstr "Ustawienia limitu czasu"
+
+#~ msgid "Search failed"
+#~ msgstr "Wyszukiwanie nie powiodło się"
+
+#~ msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+#~ msgstr "Wyszukiwanie nie powiodło się z powodu tymczasowego problemu (HTTP 400). Czy chcesz spróbować ponownie?"
 
 #~ msgid "Z-library most popular"
 #~ msgstr "Najpopularniejsze w Z-library"

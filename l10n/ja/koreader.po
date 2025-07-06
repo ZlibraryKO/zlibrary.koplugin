@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-05 21:46+0200\n"
+"POT-Creation-Date: 2025-07-06 09:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -138,11 +138,11 @@ msgstr "まずユーザー名とパスワードを設定してください。"
 msgid "Logging in..."
 msgstr "ログイン中..."
 
+msgid "Login"
+msgstr "ログイン"
+
 msgid "Searching for \""
 msgstr "検索中: \""
-
-msgid "Search failed"
-msgstr "検索に失敗しました"
 
 msgid "No results found for \""
 msgstr "\" に該当する結果が見つかりませんでした"
@@ -403,6 +403,28 @@ msgstr "設定が正常に保存されました！"
 msgid "Setting cleared."
 msgstr "設定がクリアされました。"
 
+msgid "Set languages"
+msgstr "言語を設定"
+
+#, lua-format
+msgid "Language: %s"
+msgstr "言語: %s"
+
+#, lua-format
+msgid "Languages (%d)"
+msgstr "言語 (%d)"
+
+msgid "Set formats"
+msgstr "形式を設定"
+
+#, lua-format
+msgid "Format: %s"
+msgstr "形式: %s"
+
+#, lua-format
+msgid "Formats (%d)"
+msgstr "形式 (%d)"
+
 msgid "Search Z-library"
 msgstr "Z-libraryを検索"
 
@@ -500,20 +522,11 @@ msgstr "OK"
 msgid "Fetch most popular books from Z-library?"
 msgstr "Z-libraryから人気の書籍を取得しますか？"
 
-msgid "Request timed out"
-msgstr ""
-
-msgid "Search failed due to a timeout. Would you like to retry?"
-msgstr ""
-
-msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
-msgstr "一時的な問題により検索に失敗しました（HTTP 400）。再試行しますか？"
-
-msgid "Retry"
-msgstr "再試行"
-
 msgid "Retrying search for \""
 msgstr "再検索中: \""
+
+msgid "Request timed out"
+msgstr ""
 
 msgid "Network connection error"
 msgstr ""
@@ -529,6 +542,9 @@ msgstr "%sがネットワークエラーのため失敗しました。再試行�
 #, lua-format
 msgid "%s failed due to a temporary issue. Would you like to retry?"
 msgstr "%sが一時的な問題のため失敗しました。再試行しますか？"
+
+msgid "Retry"
+msgstr "再試行"
 
 #, lua-format
 msgid "Block timeout: %s seconds"
@@ -575,9 +591,6 @@ msgstr "%sタイムアウト設定"
 msgid "Login timeouts"
 msgstr "ログインタイムアウト"
 
-msgid "Login"
-msgstr "ログイン"
-
 msgid "Search timeouts"
 msgstr "検索タイムアウト"
 
@@ -616,6 +629,12 @@ msgstr "すべてのタイムアウト設定をデフォルトにリセットし
 
 msgid "Timeout Settings"
 msgstr "タイムアウト設定"
+
+#~ msgid "Search failed"
+#~ msgstr "検索に失敗しました"
+
+#~ msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+#~ msgstr "一時的な問題により検索に失敗しました（HTTP 400）。再試行しますか？"
 
 #~ msgid "Z-library most popular"
 #~ msgstr "Z-libraryの人気書籍"

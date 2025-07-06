@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-05 21:46+0200\n"
+"POT-Creation-Date: 2025-07-06 09:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -138,11 +138,11 @@ msgstr "먼저 사용자 이름과 비밀번호를 모두 설정하세요."
 msgid "Logging in..."
 msgstr "로그인 중..."
 
+msgid "Login"
+msgstr "로그인"
+
 msgid "Searching for \""
 msgstr "\" 검색 중"
-
-msgid "Search failed"
-msgstr "검색 실패"
 
 msgid "No results found for \""
 msgstr "\"에 대한 결과가 없습니다"
@@ -403,6 +403,28 @@ msgstr "설정이 성공적으로 저장되었습니다!"
 msgid "Setting cleared."
 msgstr "설정이 초기화되었습니다."
 
+msgid "Set languages"
+msgstr "언어 설정"
+
+#, lua-format
+msgid "Language: %s"
+msgstr "언어: %s"
+
+#, lua-format
+msgid "Languages (%d)"
+msgstr "언어 (%d)"
+
+msgid "Set formats"
+msgstr "형식 설정"
+
+#, lua-format
+msgid "Format: %s"
+msgstr "형식: %s"
+
+#, lua-format
+msgid "Formats (%d)"
+msgstr "형식 (%d)"
+
 msgid "Search Z-library"
 msgstr "Z-라이브러리 검색"
 
@@ -500,20 +522,11 @@ msgstr "확인"
 msgid "Fetch most popular books from Z-library?"
 msgstr "Z-라이브러리에서 인기 도서를 가져오시겠습니까?"
 
-msgid "Request timed out"
-msgstr ""
-
-msgid "Search failed due to a timeout. Would you like to retry?"
-msgstr ""
-
-msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
-msgstr "일시적인 문제로 검색에 실패했습니다(HTTP 400). 다시 시도하시겠습니까?"
-
-msgid "Retry"
-msgstr "다시 시도"
-
 msgid "Retrying search for \""
 msgstr "\" 검색을 다시 시도하는 중"
+
+msgid "Request timed out"
+msgstr ""
 
 msgid "Network connection error"
 msgstr ""
@@ -529,6 +542,9 @@ msgstr "%s이(가) 네트워크 오류로 실패했습니다. 다시 시도하�
 #, lua-format
 msgid "%s failed due to a temporary issue. Would you like to retry?"
 msgstr "%s이(가) 일시적인 문제로 실패했습니다. 다시 시도하시겠습니까?"
+
+msgid "Retry"
+msgstr "다시 시도"
 
 #, lua-format
 msgid "Block timeout: %s seconds"
@@ -575,9 +591,6 @@ msgstr "%s 타임아웃 설정"
 msgid "Login timeouts"
 msgstr "로그인 타임아웃"
 
-msgid "Login"
-msgstr "로그인"
-
 msgid "Search timeouts"
 msgstr "검색 타임아웃"
 
@@ -616,6 +629,12 @@ msgstr "모든 타임아웃 설정이 기본값으로 재설정되었습니다"
 
 msgid "Timeout Settings"
 msgstr "타임아웃 설정"
+
+#~ msgid "Search failed"
+#~ msgstr "검색 실패"
+
+#~ msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+#~ msgstr "일시적인 문제로 검색에 실패했습니다(HTTP 400). 다시 시도하시겠습니까?"
 
 #~ msgid "Z-library most popular"
 #~ msgstr "Z-라이브러리 인기 도서"

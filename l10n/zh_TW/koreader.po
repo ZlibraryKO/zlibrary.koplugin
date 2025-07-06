@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-05 21:46+0200\n"
+"POT-Creation-Date: 2025-07-06 09:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese <zh@li.org>\n"
@@ -138,11 +138,11 @@ msgstr "請先設置用戶名和密碼。"
 msgid "Logging in..."
 msgstr "正在登入..."
 
+msgid "Login"
+msgstr "登入"
+
 msgid "Searching for \""
 msgstr "正在搜索\""
-
-msgid "Search failed"
-msgstr "搜索失敗"
 
 msgid "No results found for \""
 msgstr "未找到\""
@@ -403,6 +403,28 @@ msgstr "設置保存成功！"
 msgid "Setting cleared."
 msgstr "設置已清除。"
 
+msgid "Set languages"
+msgstr "設定語言"
+
+#, lua-format
+msgid "Language: %s"
+msgstr "語言: %s"
+
+#, lua-format
+msgid "Languages (%d)"
+msgstr "語言 (%d)"
+
+msgid "Set formats"
+msgstr "設定格式"
+
+#, lua-format
+msgid "Format: %s"
+msgstr "格式: %s"
+
+#, lua-format
+msgid "Formats (%d)"
+msgstr "格式 (%d)"
+
 msgid "Search Z-library"
 msgstr "搜索Z-圖書館"
 
@@ -500,20 +522,11 @@ msgstr "確定"
 msgid "Fetch most popular books from Z-library?"
 msgstr "從Z-圖書館獲取熱門書籍？"
 
-msgid "Request timed out"
-msgstr ""
-
-msgid "Search failed due to a timeout. Would you like to retry?"
-msgstr ""
-
-msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
-msgstr "由於臨時問題搜索失敗(HTTP 400)。是否要重試？"
-
-msgid "Retry"
-msgstr "重試"
-
 msgid "Retrying search for \""
 msgstr "正在重試搜索\""
+
+msgid "Request timed out"
+msgstr ""
 
 msgid "Network connection error"
 msgstr ""
@@ -529,6 +542,9 @@ msgstr "%s因網路錯誤失敗。您要重試嗎？"
 #, lua-format
 msgid "%s failed due to a temporary issue. Would you like to retry?"
 msgstr "%s因臨時問題失敗。您要重試嗎？"
+
+msgid "Retry"
+msgstr "重試"
 
 #, lua-format
 msgid "Block timeout: %s seconds"
@@ -575,9 +591,6 @@ msgstr "%s逾時設定"
 msgid "Login timeouts"
 msgstr "登入逾時"
 
-msgid "Login"
-msgstr "登入"
-
 msgid "Search timeouts"
 msgstr "搜尋逾時"
 
@@ -616,6 +629,12 @@ msgstr "所有逾時設定已重設為預設值"
 
 msgid "Timeout Settings"
 msgstr "逾時設定"
+
+#~ msgid "Search failed"
+#~ msgstr "搜索失敗"
+
+#~ msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+#~ msgstr "由於臨時問題搜索失敗(HTTP 400)。是否要重試？"
 
 #~ msgid "Z-library most popular"
 #~ msgstr "Z-圖書館熱門書籍"

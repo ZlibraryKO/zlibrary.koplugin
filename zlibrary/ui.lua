@@ -90,7 +90,7 @@ function Ui.showCoverDialog(title, img_path)
         modal = true,
         with_title_bar = false,
         buttons_visible = false,
-        scale_factor = 1
+        scale_factor = 0
     }
     _showAndTrackDialog(dialog)
 end
@@ -287,6 +287,32 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
 
     local dialog
     local search_order_name = Config.getSearchOrderName()
+    
+    local selected_languages = Config.getSearchLanguages()
+    local selected_extensions = Config.getSearchExtensions()
+    
+    local lang_text = T("Set languages")
+    if #selected_languages > 0 then
+        if #selected_languages == 1 then
+            lang_text = string.format(T("Language: %s"), selected_languages[1])
+        else
+            lang_text = string.format(T("Languages (%d)"), #selected_languages)
+        end
+    end
+    
+    local format_text = T("Set formats")
+    if #selected_extensions > 0 then
+        if #selected_extensions == 1 then
+            for _, ext_info in ipairs(Config.SUPPORTED_EXTENSIONS) do
+                if ext_info.value == selected_extensions[1] then
+                    format_text = string.format(T("Format: %s"), ext_info.name)
+                    break
+                end
+            end
+        else
+            format_text = string.format(T("Formats (%d)"), #selected_extensions)
+        end
+    end
 
     dialog = InputDialog:new{
         title = T("Search Z-library"),
@@ -311,6 +337,22 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
             callback = function()
                 _closeAndUntrackDialog(dialog)
                 Ui.showOrdersSelectionDialog(parent_zlibrary, function(count)
+                    Ui.showSearchDialog(parent_zlibrary, def_input)
+                end)
+            end
+        }},{{
+            text = lang_text,
+            callback = function()
+                _closeAndUntrackDialog(dialog)
+                _showMultiSelectionDialog(parent_zlibrary, T("Select search languages"), Config.SETTINGS_SEARCH_LANGUAGES_KEY, Config.SUPPORTED_LANGUAGES, function(count)
+                    Ui.showSearchDialog(parent_zlibrary, def_input)
+                end)
+            end
+        },{
+            text = format_text,
+            callback = function()
+                _closeAndUntrackDialog(dialog)
+                _showMultiSelectionDialog(parent_zlibrary, T("Select search formats"), Config.SETTINGS_SEARCH_EXTENSIONS_KEY, Config.SUPPORTED_EXTENSIONS, function(count)
                     Ui.showSearchDialog(parent_zlibrary, def_input)
                 end)
             end

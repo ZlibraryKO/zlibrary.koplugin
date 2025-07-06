@@ -162,6 +162,14 @@ function Zlibrary:addToMainMenu(menu_items)
                             }}
                         },
                         {
+                            text = T("Timeout settings"),
+                            keep_menu_open = true,
+                            separator = true,
+                            callback = function()
+                                Ui.showAllTimeoutConfigDialog(self.ui)
+                            end,
+                        },
+                        {
                             text = T("Check for updates"),
                             keep_menu_open = false,
                             separator = true,
@@ -298,8 +306,13 @@ function Zlibrary:_fetchBookList(options)
                 return
             end
             
-            Ui.closeMessage(loading_msg)
-            Ui.showErrorMessage(Ui.colonConcat(options.error_prefix_key, tostring(err_msg)))
+            -- Use retry dialog for timeout and network errors
+            Ui.showRetryErrorDialog(err_msg, options.operation_name or T("Operation"), function()
+                -- Retry callback
+                attemptFetch(false)
+            end, function(final_err_msg)
+                -- Cancel callback - user already knows about the error
+            end, loading_msg)
         end
 
         AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
@@ -331,6 +344,7 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
                     api_method = Api.getRecommendedBooks,
                     loading_text_key = T("Fetching recommended books..."),
                     error_prefix_key = T("Failed to fetch recommended books"),
+                    operation_name = T("Recommended books"),
                     log_context = "onShowRecommendedBooks",
                     results_member_name = "current_recommended_books",
                     display_menu_func = ShowBooksMultiSearch,
@@ -344,6 +358,7 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
                     api_method = Api.getMostPopularBooks,
                     loading_text_key = T("Fetching most popular books..."),
                     error_prefix_key = T("Failed to fetch most popular books"),
+                    operation_name = T("Most popular books"),
                     log_context = "onShowMostPopularBooks",
                     results_member_name = "current_most_popular_books",
                     display_menu_func = ShowBooksMultiSearch,
@@ -362,6 +377,7 @@ function Zlibrary:onShowRecommendedBooks()
         api_method = Api.getRecommendedBooks,
         loading_text_key = T("Fetching recommended books..."),
         error_prefix_key = T("Failed to fetch recommended books"),
+        operation_name = T("Recommended books"),
         log_context = "onShowRecommendedBooks",
         results_member_name = "current_recommended_books",
         display_menu_func = Ui.showRecommendedBooksMenu,
@@ -374,6 +390,7 @@ function Zlibrary:onShowMostPopularBooks()
         api_method = Api.getMostPopularBooks,
         loading_text_key = T("Fetching most popular books..."),
         error_prefix_key = T("Failed to fetch most popular books"),
+        operation_name = T("Most popular books"),
         log_context = "onShowMostPopularBooks",
         results_member_name = "current_most_popular_books",
         display_menu_func = Ui.showMostPopularBooksMenu,
@@ -434,9 +451,14 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
             book_cache:insert("details", api_result.book)
         end
 
-        local on_error_handler = function(err_msg)
-            Ui.closeMessage(loading_msg)
-            Ui.showErrorMessage(Ui.colonConcat(T("Failed to fetch book details"), tostring(err_msg)))
+        local function on_error_handler(err_msg)
+            -- Use retry dialog for timeout and network errors
+            Ui.showRetryErrorDialog(err_msg, T("Book details"), function()
+                -- Retry callback
+                attemptBookDetails()
+            end, function(final_err_msg)
+                -- Cancel callback - user already knows about the error
+            end, loading_msg)
         end
 
         AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
@@ -481,9 +503,11 @@ function Zlibrary:login(callback)
     end
 
     local on_error_handler = function(err_msg)
-        Ui.closeMessage(loading_msg)
-        Ui.showErrorMessage(tostring(err_msg))
-        if callback then callback(false) end
+        Ui.showRetryErrorDialog(err_msg, T("Login"), function()
+            self:login(callback)
+        end, function(final_err_msg)
+            if callback then callback(false) end
+        end, loading_msg)
     end
 
     AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
@@ -510,7 +534,8 @@ function Zlibrary:performSearch(query)
             return Api.search(query, user_session and user_session.user_id, user_session and user_session.user_key, selected_languages, selected_extensions, selected_order, current_page_to_search)
         end
 
-        local on_success = function(api_result)
+        local on_success
+        on_success = function(api_result)
             if api_result.error then
                 if retry_on_auth_error and Api.isAuthenticationError(api_result.error) then
                     Ui.closeMessage(loading_msg)
@@ -522,8 +547,10 @@ function Zlibrary:performSearch(query)
                     return
                 end
                 
-                Ui.closeMessage(loading_msg)
-                Ui.showErrorMessage(Ui.colonConcat(T("Search failed"), tostring(api_result.error)))
+                -- Use the retry dialog for timeouts and HTTP 400 errors
+                Ui.showSearchErrorDialog(api_result.error, query, user_session, selected_languages, selected_extensions, selected_order, current_page_to_search, loading_msg, on_success, function(final_err_msg)
+                    -- Cancel callback - user already knows about the error
+                end)
                 return
             end
 
@@ -556,8 +583,10 @@ function Zlibrary:performSearch(query)
                 return
             end
             
-            Ui.closeMessage(loading_msg)
-            Ui.showErrorMessage(Ui.colonConcat(T("Search failed"), tostring(err_msg)))
+            -- Use the retry dialog for timeouts and HTTP 400 errors
+            Ui.showSearchErrorDialog(err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page_to_search, loading_msg, on_success, function(final_err_msg)
+                -- Cancel callback - user already knows about the error
+            end)
         end
 
         AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
@@ -777,14 +806,24 @@ function Zlibrary:downloadBook(book)
                 return
             end
             
-            Ui.closeMessage(loading_msg)
             local error_string = tostring(err_msg)
             if string.find(error_string, "Download limit reached or file is an HTML page", 1, true) then
+                Ui.closeMessage(loading_msg)
                 Ui.showErrorMessage(T("Download limit reached. Please try again later or check your account."))
-            else
-                Ui.showErrorMessage(error_string)
+                pcall(os.remove, target_filepath)
+                return
             end
-            pcall(os.remove, target_filepath)
+            
+            -- Use retry dialog for timeout and network errors
+            Ui.showRetryErrorDialog(err_msg, T("Download"), function()
+                -- Retry callback
+                local new_loading_msg = Ui.showLoadingMessage(T("Retrying download..."))
+                loading_msg = new_loading_msg
+                AsyncHelper.run(task_download, on_success_download, on_error_download, loading_msg)
+            end, function(final_err_msg)
+                -- Cancel callback - user already knows about the error
+                pcall(os.remove, target_filepath)
+            end, loading_msg)
         end
 
         AsyncHelper.run(task_download, on_success_download, on_error_download, loading_msg)

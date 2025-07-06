@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-28 19:46+0000\n"
+"POT-Creation-Date: 2025-07-05 21:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -20,12 +20,6 @@ msgstr "[[Плагин для поиска и скачивания книг из
 
 msgid "Z-library search"
 msgstr "Поиск в Z-библиотеке"
-
-msgid "Z-library most popular"
-msgstr "Популярное в Z-библиотеке"
-
-msgid "Z-library recommended"
-msgstr "Рекомендуемое в Z-библиотеке"
 
 msgid "Settings"
 msgstr "Настройки"
@@ -51,17 +45,44 @@ msgstr "Вход выполнен успешно!"
 msgid "Set download directory"
 msgstr "Установить папку для загрузок"
 
+msgid "Search options"
+msgstr ""
+
 msgid "Select search languages"
 msgstr "Выбрать языки для поиска"
 
 msgid "Select search formats"
 msgstr "Выбрать форматы для поиска"
 
+msgid "Select search order"
+msgstr ""
+
+msgid "Timeout settings"
+msgstr "Настройки таймаута"
+
 msgid "Check for updates"
 msgstr "Проверить обновления"
 
 msgid "Error: Plugin path not found. Cannot check for updates."
 msgstr "Ошибка: Путь к плагину не найден. Невозможно проверить обновления."
+
+msgid "Developer options"
+msgstr ""
+
+msgid "Clear user session"
+msgstr ""
+
+msgid "Session cleared. You will need to login again."
+msgstr ""
+
+msgid "Test mode"
+msgstr ""
+
+msgid "Test mode disabled. Normal download behavior restored."
+msgstr ""
+
+msgid "Test mode enabled. Downloads will always succeed."
+msgstr ""
 
 msgid "Search"
 msgstr "Поиск"
@@ -75,11 +96,11 @@ msgstr "Популярные"
 msgid "No internet connection detected."
 msgstr "Интернет-соединение не обнаружено."
 
-msgid "Failed to retrieve user session after login."
-msgstr "Не удалось получить сессию пользователя после входа."
-
 msgid "No books found, please try again"
 msgstr "Книги не найдены, попробуйте еще раз"
+
+msgid "Operation"
+msgstr ""
 
 msgid "Fetching recommended books..."
 msgstr "Загрузка рекомендуемых книг..."
@@ -87,11 +108,17 @@ msgstr "Загрузка рекомендуемых книг..."
 msgid "Failed to fetch recommended books"
 msgstr "Не удалось загрузить рекомендуемые книги"
 
+msgid "Recommended books"
+msgstr ""
+
 msgid "Fetching most popular books..."
 msgstr "Загрузка популярных книг..."
 
 msgid "Failed to fetch most popular books"
 msgstr "Не удалось загрузить популярные книги"
+
+msgid "Most popular books"
+msgstr ""
 
 msgid "Fetching book details..."
 msgstr "Получение деталей книги..."
@@ -102,23 +129,14 @@ msgstr "Не удалось получить детали книги"
 msgid "Could not retrieve book details."
 msgstr "Не удалось получить информацию о книге."
 
+msgid "Book details"
+msgstr ""
+
 msgid "Please set both username and password first."
 msgstr "Пожалуйста, сначала укажите имя пользователя и пароль."
 
 msgid "Logging in..."
 msgstr "Выполняется вход..."
-
-msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
-msgstr "Поиск не удался из-за временной проблемы (HTTP 400). Хотите повторить попытку?"
-
-msgid "Retry"
-msgstr "Повторить"
-
-msgid "Cancel"
-msgstr "Отмена"
-
-msgid "Retrying search for \""
-msgstr "Повторный поиск для \""
 
 msgid "Searching for \""
 msgstr "Поиск \""
@@ -158,6 +176,60 @@ msgstr "Ошибка загрузки: Неизвестная ошибка"
 msgid "Download limit reached. Please try again later or check your account."
 msgstr "Достигнут лимит загрузок. Попробуйте позже или проверьте свой аккаунт."
 
+msgid "Download"
+msgstr "Скачать"
+
+msgid "Retrying download..."
+msgstr ""
+
+msgid "Request timed out - please check your connection and try again"
+msgstr ""
+
+msgid "Network request failed"
+msgstr ""
+
+msgid "Network connection error - please check your internet connection and try again"
+msgstr ""
+
+msgid "HTTP Error"
+msgstr ""
+
+msgid "Unknown Status"
+msgstr ""
+
+msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
+msgstr ""
+
+msgid "Login failed: Invalid response format"
+msgstr ""
+
+msgid "Login failed"
+msgstr ""
+
+msgid "Credentials rejected or invalid response"
+msgstr ""
+
+msgid "No response received from server - please try again"
+msgstr ""
+
+msgid "Invalid response format from server"
+msgstr ""
+
+msgid "Search API error"
+msgstr ""
+
+msgid "Failed to open target file"
+msgstr ""
+
+msgid "Unknown error"
+msgstr ""
+
+msgid "Download limit reached or file is an HTML page"
+msgstr ""
+
+msgid "Download HTTP Error"
+msgstr ""
+
 msgid "Z-library server URL not configured."
 msgstr "URL сервера Z-библиотеки не настроен."
 
@@ -193,6 +265,40 @@ msgstr "API вернул ошибку для деталей книги."
 
 msgid "Failed to process book details."
 msgstr "Не удалось обработать детали книги."
+
+msgid "Best match"
+msgstr ""
+
+msgid "Recently added"
+msgstr ""
+
+msgid "Title"
+msgstr "Название"
+
+msgid "Year"
+msgstr "Год"
+
+msgid "File size"
+msgstr ""
+
+msgid "Default"
+msgstr ""
+
+msgid "infinite"
+msgstr "бесконечно"
+
+#, lua-format
+msgid "Block: %ds, Total: %s"
+msgstr "Блок: %ds, Всего: %s"
+
+msgid "Untitled"
+msgstr "Без названия"
+
+msgid "Unknown Author"
+msgstr "Неизвестный автор"
+
+msgid "Author"
+msgstr "Автор"
 
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "Ошибка обновления: Не удалось определить место установки плагина."
@@ -258,6 +364,9 @@ msgstr "Доступно обновление"
 msgid "Update"
 msgstr "Обновить"
 
+msgid "Cancel"
+msgstr "Отмена"
+
 msgid "Downloading update..."
 msgstr "Загрузка обновления..."
 
@@ -300,11 +409,11 @@ msgstr "Поиск в Z-библиотеке"
 msgid "Please enter a search term."
 msgstr "Пожалуйста, введите поисковый запрос."
 
+msgid "Sort by"
+msgstr ""
+
 msgid "Unknown Title"
 msgstr "Неизвестное название"
-
-msgid "Unknown Author"
-msgstr "Неизвестный автор"
 
 msgid "Rating"
 msgstr "Рейтинг"
@@ -312,20 +421,17 @@ msgstr "Рейтинг"
 msgid "Search Results"
 msgstr "Результаты поиска"
 
-msgid "Title"
-msgstr "Название"
+msgid "Description"
+msgstr "Описание"
 
 msgid "Full Title"
 msgstr "Полное название"
 
-msgid "Author"
-msgstr "Автор"
+msgid "Cover"
+msgstr ""
 
-msgid "Full Author"
-msgstr "Полное имя автора"
-
-msgid "Year"
-msgstr "Год"
+msgid "(tap to view)"
+msgstr ""
 
 msgid "Language"
 msgstr "Язык"
@@ -353,12 +459,6 @@ msgstr "Серия"
 msgid "Pages"
 msgstr "Страницы"
 
-msgid "Description (tap to view)"
-msgstr "Описание (нажмите для просмотра)"
-
-msgid "Description"
-msgstr "Описание"
-
 msgid "Back"
 msgstr "Назад"
 
@@ -369,18 +469,15 @@ msgstr "Детали книги"
 msgid "Download \"%s\"?"
 msgstr "Скачать \"%s\"?"
 
-msgid "Download"
-msgstr "Скачать"
-
 #, lua-format
 msgid "\"%s\" downloaded successfully. Open it now?"
 msgstr "\"%s\" успешно скачана. Открыть сейчас?"
 
+msgid "Turn off Wi-Fi after closing this dialog"
+msgstr "Отключить Wi-Fi после закрытия этого диалога"
+
 msgid "Open book"
 msgstr "Открыть книгу"
-
-msgid "Untitled"
-msgstr "Без названия"
 
 msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
 msgstr "Рекомендуемые книги не найдены, попробуйте еще раз. Иногда требуется несколько попыток."
@@ -403,8 +500,137 @@ msgstr "OK"
 msgid "Fetch most popular books from Z-library?"
 msgstr "Загрузить самые популярные книги из Z-библиотеки?"
 
-msgid "Turn off Wi-Fi after closing this dialog"
-msgstr "Отключить Wi-Fi после закрытия этого диалога"
+msgid "Request timed out"
+msgstr ""
+
+msgid "Search failed due to a timeout. Would you like to retry?"
+msgstr ""
+
+msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+msgstr "Поиск не удался из-за временной проблемы (HTTP 400). Хотите повторить попытку?"
+
+msgid "Retry"
+msgstr "Повторить"
+
+msgid "Retrying search for \""
+msgstr "Повторный поиск для \""
+
+msgid "Network connection error"
+msgstr ""
+
+#, lua-format
+msgid "%s failed due to a timeout%s. Would you like to retry?"
+msgstr "%s не удалось из-за таймаута%s. Хотите повторить попытку?"
+
+#, lua-format
+msgid "%s failed due to a network error. Would you like to retry?"
+msgstr "%s не удалось из-за сетевой ошибки. Хотите повторить попытку?"
+
+#, lua-format
+msgid "%s failed due to a temporary issue. Would you like to retry?"
+msgstr "%s не удалось из-за временной проблемы. Хотите повторить попытку?"
+
+#, lua-format
+msgid "Block timeout: %s seconds"
+msgstr "Таймаут блока: %s секунд"
+
+#, lua-format
+msgid "Total timeout: %s"
+msgstr "Общий таймаут: %s"
+
+msgid "seconds"
+msgstr "секунд"
+
+#, lua-format
+msgid "Set %s block timeout (seconds)"
+msgstr "Установить таймаут блока %s (секунды)"
+
+msgid "Please enter a valid number (minimum 1 second)"
+msgstr "Пожалуйста, введите действительное число (минимум 1 секунда)"
+
+#, lua-format
+msgid "Set %s total timeout (seconds, -1 for infinite)"
+msgstr "Установить общий таймаут %s (секунды, -1 для бесконечности)"
+
+msgid "Please enter a valid number (minimum 1 second or -1 for infinite)"
+msgstr "Пожалуйста, введите действительное число (минимум 1 секунда или -1 для бесконечности)"
+
+msgid "Reset to defaults"
+msgstr "Сбросить к значениям по умолчанию"
+
+#, lua-format
+msgid "Reset %s timeouts to default values?"
+msgstr "Сбросить таймауты %s к значениям по умолчанию?"
+
+msgid "Reset"
+msgstr "Сбросить"
+
+msgid "Timeout settings reset to defaults"
+msgstr "Настройки таймаута сброшены к значениям по умолчанию"
+
+#, lua-format
+msgid "%s Timeout Settings"
+msgstr "Настройки таймаута %s"
+
+msgid "Login timeouts"
+msgstr "Таймауты входа"
+
+msgid "Login"
+msgstr "Вход"
+
+msgid "Search timeouts"
+msgstr "Таймауты поиска"
+
+msgid "Book details timeouts"
+msgstr "Таймауты деталей книги"
+
+msgid "Recommended books timeouts"
+msgstr "Таймауты рекомендуемых книг"
+
+msgid "Popular books timeouts"
+msgstr "Таймауты популярных книг"
+
+msgid "Popular books"
+msgstr "Популярные книги"
+
+msgid "Download timeouts"
+msgstr "Таймауты загрузки"
+
+msgid "Cover download timeouts"
+msgstr "Таймауты загрузки обложки"
+
+msgid "Cover download"
+msgstr "Загрузка обложки"
+
+msgid "Reset all timeouts to defaults"
+msgstr "Сбросить все таймауты к значениям по умолчанию"
+
+msgid "Reset all timeout settings to default values?"
+msgstr "Сбросить все настройки таймаута к значениям по умолчанию?"
+
+msgid "Reset All"
+msgstr "Сбросить все"
+
+msgid "All timeout settings reset to defaults"
+msgstr "Все настройки таймаута сброшены к значениям по умолчанию"
+
+msgid "Timeout Settings"
+msgstr "Настройки таймаута"
+
+#~ msgid "Z-library most popular"
+#~ msgstr "Популярное в Z-библиотеке"
+
+#~ msgid "Z-library recommended"
+#~ msgstr "Рекомендуемое в Z-библиотеке"
+
+#~ msgid "Failed to retrieve user session after login."
+#~ msgstr "Не удалось получить сессию пользователя после входа."
+
+#~ msgid "Full Author"
+#~ msgstr "Полное имя автора"
+
+#~ msgid "Description (tap to view)"
+#~ msgstr "Описание (нажмите для просмотра)"
 
 #~ msgid "Set username"
 #~ msgstr "Установить имя пользователя"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-28 19:46+0000\n"
+"POT-Creation-Date: 2025-07-05 21:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
@@ -20,12 +20,6 @@ msgstr "[[用于从Z-图书馆搜索和下载书籍的插件。]]"
 
 msgid "Z-library search"
 msgstr "Z-图书馆搜索"
-
-msgid "Z-library most popular"
-msgstr "Z-图书馆热门书籍"
-
-msgid "Z-library recommended"
-msgstr "Z-图书馆推荐书籍"
 
 msgid "Settings"
 msgstr "设置"
@@ -51,17 +45,44 @@ msgstr "登录成功！"
 msgid "Set download directory"
 msgstr "设置下载目录"
 
+msgid "Search options"
+msgstr ""
+
 msgid "Select search languages"
 msgstr "选择搜索语言"
 
 msgid "Select search formats"
 msgstr "选择搜索格式"
 
+msgid "Select search order"
+msgstr ""
+
+msgid "Timeout settings"
+msgstr "超时设置"
+
 msgid "Check for updates"
 msgstr "检查更新"
 
 msgid "Error: Plugin path not found. Cannot check for updates."
 msgstr "错误：未找到插件路径。无法检查更新。"
+
+msgid "Developer options"
+msgstr ""
+
+msgid "Clear user session"
+msgstr ""
+
+msgid "Session cleared. You will need to login again."
+msgstr ""
+
+msgid "Test mode"
+msgstr ""
+
+msgid "Test mode disabled. Normal download behavior restored."
+msgstr ""
+
+msgid "Test mode enabled. Downloads will always succeed."
+msgstr ""
 
 msgid "Search"
 msgstr "搜索"
@@ -75,11 +96,11 @@ msgstr "最受欢迎"
 msgid "No internet connection detected."
 msgstr "未检测到网络连接。"
 
-msgid "Failed to retrieve user session after login."
-msgstr "登录后无法获取用户会话。"
-
 msgid "No books found, please try again"
 msgstr "未找到书籍，请重试"
+
+msgid "Operation"
+msgstr ""
 
 msgid "Fetching recommended books..."
 msgstr "正在获取推荐书籍..."
@@ -87,11 +108,17 @@ msgstr "正在获取推荐书籍..."
 msgid "Failed to fetch recommended books"
 msgstr "获取推荐书籍失败"
 
+msgid "Recommended books"
+msgstr ""
+
 msgid "Fetching most popular books..."
 msgstr "正在获取热门书籍..."
 
 msgid "Failed to fetch most popular books"
 msgstr "获取热门书籍失败"
+
+msgid "Most popular books"
+msgstr ""
 
 msgid "Fetching book details..."
 msgstr "正在获取书籍详情..."
@@ -102,23 +129,14 @@ msgstr "获取书籍详情失败"
 msgid "Could not retrieve book details."
 msgstr "无法获取书籍详情。"
 
+msgid "Book details"
+msgstr ""
+
 msgid "Please set both username and password first."
 msgstr "请先设置用户名和密码。"
 
 msgid "Logging in..."
 msgstr "正在登录..."
-
-msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
-msgstr "搜索因临时问题失败(HTTP 400)。是否重试？"
-
-msgid "Retry"
-msgstr "重试"
-
-msgid "Cancel"
-msgstr "取消"
-
-msgid "Retrying search for \""
-msgstr "正在重试搜索\""
 
 msgid "Searching for \""
 msgstr "正在搜索\""
@@ -158,6 +176,60 @@ msgstr "下载失败：未知错误"
 msgid "Download limit reached. Please try again later or check your account."
 msgstr "达到下载限制。请稍后重试或检查您的账户。"
 
+msgid "Download"
+msgstr "下载"
+
+msgid "Retrying download..."
+msgstr ""
+
+msgid "Request timed out - please check your connection and try again"
+msgstr ""
+
+msgid "Network request failed"
+msgstr ""
+
+msgid "Network connection error - please check your internet connection and try again"
+msgstr ""
+
+msgid "HTTP Error"
+msgstr ""
+
+msgid "Unknown Status"
+msgstr ""
+
+msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
+msgstr ""
+
+msgid "Login failed: Invalid response format"
+msgstr ""
+
+msgid "Login failed"
+msgstr ""
+
+msgid "Credentials rejected or invalid response"
+msgstr ""
+
+msgid "No response received from server - please try again"
+msgstr ""
+
+msgid "Invalid response format from server"
+msgstr ""
+
+msgid "Search API error"
+msgstr ""
+
+msgid "Failed to open target file"
+msgstr ""
+
+msgid "Unknown error"
+msgstr ""
+
+msgid "Download limit reached or file is an HTML page"
+msgstr ""
+
+msgid "Download HTTP Error"
+msgstr ""
+
 msgid "Z-library server URL not configured."
 msgstr "未配置Z-图书馆服务器网址。"
 
@@ -193,6 +265,40 @@ msgstr "API返回了书籍详情的错误。"
 
 msgid "Failed to process book details."
 msgstr "处理书籍详情失败。"
+
+msgid "Best match"
+msgstr ""
+
+msgid "Recently added"
+msgstr ""
+
+msgid "Title"
+msgstr "标题"
+
+msgid "Year"
+msgstr "年份"
+
+msgid "File size"
+msgstr ""
+
+msgid "Default"
+msgstr ""
+
+msgid "infinite"
+msgstr "无限"
+
+#, lua-format
+msgid "Block: %ds, Total: %s"
+msgstr "块：%d秒，总计：%s"
+
+msgid "Untitled"
+msgstr "无标题"
+
+msgid "Unknown Author"
+msgstr "未知作者"
+
+msgid "Author"
+msgstr "作者"
 
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "更新失败：无法确定插件安装位置。"
@@ -258,6 +364,9 @@ msgstr "有可用更新"
 msgid "Update"
 msgstr "更新"
 
+msgid "Cancel"
+msgstr "取消"
+
 msgid "Downloading update..."
 msgstr "正在下载更新..."
 
@@ -300,11 +409,11 @@ msgstr "搜索Z-图书馆"
 msgid "Please enter a search term."
 msgstr "请输入搜索词。"
 
+msgid "Sort by"
+msgstr ""
+
 msgid "Unknown Title"
 msgstr "未知标题"
-
-msgid "Unknown Author"
-msgstr "未知作者"
 
 msgid "Rating"
 msgstr "评分"
@@ -312,20 +421,17 @@ msgstr "评分"
 msgid "Search Results"
 msgstr "搜索结果"
 
-msgid "Title"
-msgstr "标题"
+msgid "Description"
+msgstr "描述"
 
 msgid "Full Title"
 msgstr "完整标题"
 
-msgid "Author"
-msgstr "作者"
+msgid "Cover"
+msgstr ""
 
-msgid "Full Author"
-msgstr "完整作者"
-
-msgid "Year"
-msgstr "年份"
+msgid "(tap to view)"
+msgstr ""
 
 msgid "Language"
 msgstr "语言"
@@ -353,12 +459,6 @@ msgstr "系列"
 msgid "Pages"
 msgstr "页数"
 
-msgid "Description (tap to view)"
-msgstr "描述(点击查看)"
-
-msgid "Description"
-msgstr "描述"
-
 msgid "Back"
 msgstr "返回"
 
@@ -369,18 +469,15 @@ msgstr "书籍详情"
 msgid "Download \"%s\"?"
 msgstr "下载\"%s\"？"
 
-msgid "Download"
-msgstr "下载"
-
 #, lua-format
 msgid "\"%s\" downloaded successfully. Open it now?"
 msgstr "\"%s\"下载成功。现在打开吗？"
 
+msgid "Turn off Wi-Fi after closing this dialog"
+msgstr "关闭此对话框后关闭Wi-Fi"
+
 msgid "Open book"
 msgstr "打开书籍"
-
-msgid "Untitled"
-msgstr "无标题"
 
 msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
 msgstr "未找到推荐书籍，请重试。有时需要多次尝试。"
@@ -403,8 +500,137 @@ msgstr "确定"
 msgid "Fetch most popular books from Z-library?"
 msgstr "从Z-图书馆获取热门书籍？"
 
-msgid "Turn off Wi-Fi after closing this dialog"
-msgstr "关闭此对话框后关闭Wi-Fi"
+msgid "Request timed out"
+msgstr ""
+
+msgid "Search failed due to a timeout. Would you like to retry?"
+msgstr ""
+
+msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+msgstr "搜索因临时问题失败(HTTP 400)。是否重试？"
+
+msgid "Retry"
+msgstr "重试"
+
+msgid "Retrying search for \""
+msgstr "正在重试搜索\""
+
+msgid "Network connection error"
+msgstr ""
+
+#, lua-format
+msgid "%s failed due to a timeout%s. Would you like to retry?"
+msgstr "%s因超时%s失败。您要重试吗？"
+
+#, lua-format
+msgid "%s failed due to a network error. Would you like to retry?"
+msgstr "%s因网络错误失败。您要重试吗？"
+
+#, lua-format
+msgid "%s failed due to a temporary issue. Would you like to retry?"
+msgstr "%s因临时问题失败。您要重试吗？"
+
+#, lua-format
+msgid "Block timeout: %s seconds"
+msgstr "块超时：%s秒"
+
+#, lua-format
+msgid "Total timeout: %s"
+msgstr "总超时：%s"
+
+msgid "seconds"
+msgstr "秒"
+
+#, lua-format
+msgid "Set %s block timeout (seconds)"
+msgstr "设置%s块超时（秒）"
+
+msgid "Please enter a valid number (minimum 1 second)"
+msgstr "请输入有效数字（最少1秒）"
+
+#, lua-format
+msgid "Set %s total timeout (seconds, -1 for infinite)"
+msgstr "设置%s总超时（秒，-1表示无限）"
+
+msgid "Please enter a valid number (minimum 1 second or -1 for infinite)"
+msgstr "请输入有效数字（最少1秒或-1表示无限）"
+
+msgid "Reset to defaults"
+msgstr "重置为默认值"
+
+#, lua-format
+msgid "Reset %s timeouts to default values?"
+msgstr "将%s超时重置为默认值？"
+
+msgid "Reset"
+msgstr "重置"
+
+msgid "Timeout settings reset to defaults"
+msgstr "超时设置已重置为默认值"
+
+#, lua-format
+msgid "%s Timeout Settings"
+msgstr "%s超时设置"
+
+msgid "Login timeouts"
+msgstr "登录超时"
+
+msgid "Login"
+msgstr "登录"
+
+msgid "Search timeouts"
+msgstr "搜索超时"
+
+msgid "Book details timeouts"
+msgstr "图书详情超时"
+
+msgid "Recommended books timeouts"
+msgstr "推荐图书超时"
+
+msgid "Popular books timeouts"
+msgstr "热门图书超时"
+
+msgid "Popular books"
+msgstr "热门图书"
+
+msgid "Download timeouts"
+msgstr "下载超时"
+
+msgid "Cover download timeouts"
+msgstr "封面下载超时"
+
+msgid "Cover download"
+msgstr "封面下载"
+
+msgid "Reset all timeouts to defaults"
+msgstr "将所有超时重置为默认值"
+
+msgid "Reset all timeout settings to default values?"
+msgstr "将所有超时设置重置为默认值？"
+
+msgid "Reset All"
+msgstr "全部重置"
+
+msgid "All timeout settings reset to defaults"
+msgstr "所有超时设置已重置为默认值"
+
+msgid "Timeout Settings"
+msgstr "超时设置"
+
+#~ msgid "Z-library most popular"
+#~ msgstr "Z-图书馆热门书籍"
+
+#~ msgid "Z-library recommended"
+#~ msgstr "Z-图书馆推荐书籍"
+
+#~ msgid "Failed to retrieve user session after login."
+#~ msgstr "登录后无法获取用户会话。"
+
+#~ msgid "Full Author"
+#~ msgstr "完整作者"
+
+#~ msgid "Description (tap to view)"
+#~ msgstr "描述(点击查看)"
 
 #~ msgid "Set username"
 #~ msgstr "设置用户名"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-28 19:46+0000\n"
+"POT-Creation-Date: 2025-07-05 21:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,12 +20,6 @@ msgstr "[[Z-libraryから本を検索・ダウンロードするためのプラ�
 
 msgid "Z-library search"
 msgstr "Z-library検索"
-
-msgid "Z-library most popular"
-msgstr "Z-libraryの人気書籍"
-
-msgid "Z-library recommended"
-msgstr "Z-libraryのおすすめ"
 
 msgid "Settings"
 msgstr "設定"
@@ -51,17 +45,44 @@ msgstr "ログインに成功しました！"
 msgid "Set download directory"
 msgstr "ダウンロードディレクトリを設定"
 
+msgid "Search options"
+msgstr ""
+
 msgid "Select search languages"
 msgstr "検索言語を選択"
 
 msgid "Select search formats"
 msgstr "検索フォーマットを選択"
 
+msgid "Select search order"
+msgstr ""
+
+msgid "Timeout settings"
+msgstr "タイムアウト設定"
+
 msgid "Check for updates"
 msgstr "アップデートを確認"
 
 msgid "Error: Plugin path not found. Cannot check for updates."
 msgstr "エラー：プラグインのパスが見つかりません。アップデートを確認できません。"
+
+msgid "Developer options"
+msgstr ""
+
+msgid "Clear user session"
+msgstr ""
+
+msgid "Session cleared. You will need to login again."
+msgstr ""
+
+msgid "Test mode"
+msgstr ""
+
+msgid "Test mode disabled. Normal download behavior restored."
+msgstr ""
+
+msgid "Test mode enabled. Downloads will always succeed."
+msgstr ""
 
 msgid "Search"
 msgstr "検索"
@@ -75,11 +96,11 @@ msgstr "人気順"
 msgid "No internet connection detected."
 msgstr "インターネット接続が検出されません。"
 
-msgid "Failed to retrieve user session after login."
-msgstr "ログイン後にユーザーセッションの取得に失敗しました。"
-
 msgid "No books found, please try again"
 msgstr "書籍が見つかりませんでした。もう一度お試しください。"
+
+msgid "Operation"
+msgstr ""
 
 msgid "Fetching recommended books..."
 msgstr "おすすめの書籍を取得中..."
@@ -87,11 +108,17 @@ msgstr "おすすめの書籍を取得中..."
 msgid "Failed to fetch recommended books"
 msgstr "おすすめの書籍の取得に失敗しました"
 
+msgid "Recommended books"
+msgstr ""
+
 msgid "Fetching most popular books..."
 msgstr "人気の書籍を取得中..."
 
 msgid "Failed to fetch most popular books"
 msgstr "人気の書籍の取得に失敗しました"
+
+msgid "Most popular books"
+msgstr ""
 
 msgid "Fetching book details..."
 msgstr "書籍の詳細を取得中..."
@@ -102,23 +129,14 @@ msgstr "書籍の詳細の取得に失敗しました"
 msgid "Could not retrieve book details."
 msgstr "書籍の詳細を取得できませんでした。"
 
+msgid "Book details"
+msgstr ""
+
 msgid "Please set both username and password first."
 msgstr "まずユーザー名とパスワードを設定してください。"
 
 msgid "Logging in..."
 msgstr "ログイン中..."
-
-msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
-msgstr "一時的な問題により検索に失敗しました（HTTP 400）。再試行しますか？"
-
-msgid "Retry"
-msgstr "再試行"
-
-msgid "Cancel"
-msgstr "キャンセル"
-
-msgid "Retrying search for \""
-msgstr "再検索中: \""
 
 msgid "Searching for \""
 msgstr "検索中: \""
@@ -158,6 +176,60 @@ msgstr "ダウンロードに失敗しました：不明なエラー"
 msgid "Download limit reached. Please try again later or check your account."
 msgstr "ダウンロード上限に達しました。後でもう一度お試しいただくか、アカウントをご確認ください。"
 
+msgid "Download"
+msgstr "ダウンロード"
+
+msgid "Retrying download..."
+msgstr ""
+
+msgid "Request timed out - please check your connection and try again"
+msgstr ""
+
+msgid "Network request failed"
+msgstr ""
+
+msgid "Network connection error - please check your internet connection and try again"
+msgstr ""
+
+msgid "HTTP Error"
+msgstr ""
+
+msgid "Unknown Status"
+msgstr ""
+
+msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
+msgstr ""
+
+msgid "Login failed: Invalid response format"
+msgstr ""
+
+msgid "Login failed"
+msgstr ""
+
+msgid "Credentials rejected or invalid response"
+msgstr ""
+
+msgid "No response received from server - please try again"
+msgstr ""
+
+msgid "Invalid response format from server"
+msgstr ""
+
+msgid "Search API error"
+msgstr ""
+
+msgid "Failed to open target file"
+msgstr ""
+
+msgid "Unknown error"
+msgstr ""
+
+msgid "Download limit reached or file is an HTML page"
+msgstr ""
+
+msgid "Download HTTP Error"
+msgstr ""
+
 msgid "Z-library server URL not configured."
 msgstr "Z-libraryサーバーのURLが設定されていません。"
 
@@ -193,6 +265,40 @@ msgstr "書籍の詳細に対してAPIがエラーを返しました。"
 
 msgid "Failed to process book details."
 msgstr "書籍の詳細の処理に失敗しました。"
+
+msgid "Best match"
+msgstr ""
+
+msgid "Recently added"
+msgstr ""
+
+msgid "Title"
+msgstr "タイトル"
+
+msgid "Year"
+msgstr "出版年"
+
+msgid "File size"
+msgstr ""
+
+msgid "Default"
+msgstr ""
+
+msgid "infinite"
+msgstr "無限"
+
+#, lua-format
+msgid "Block: %ds, Total: %s"
+msgstr "ブロック：%d秒、合計：%s"
+
+msgid "Untitled"
+msgstr "無題"
+
+msgid "Unknown Author"
+msgstr "不明な著者"
+
+msgid "Author"
+msgstr "著者"
 
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "アップデートに失敗しました：プラグインのインストール先が不明です。"
@@ -258,6 +364,9 @@ msgstr "アップデートがあります"
 msgid "Update"
 msgstr "アップデート"
 
+msgid "Cancel"
+msgstr "キャンセル"
+
 msgid "Downloading update..."
 msgstr "アップデートをダウンロード中..."
 
@@ -300,11 +409,11 @@ msgstr "Z-libraryを検索"
 msgid "Please enter a search term."
 msgstr "検索語を入力してください。"
 
+msgid "Sort by"
+msgstr ""
+
 msgid "Unknown Title"
 msgstr "不明なタイトル"
-
-msgid "Unknown Author"
-msgstr "不明な著者"
 
 msgid "Rating"
 msgstr "評価"
@@ -312,20 +421,17 @@ msgstr "評価"
 msgid "Search Results"
 msgstr "検索結果"
 
-msgid "Title"
-msgstr "タイトル"
+msgid "Description"
+msgstr "説明"
 
 msgid "Full Title"
 msgstr "完全なタイトル"
 
-msgid "Author"
-msgstr "著者"
+msgid "Cover"
+msgstr ""
 
-msgid "Full Author"
-msgstr "完全な著者名"
-
-msgid "Year"
-msgstr "出版年"
+msgid "(tap to view)"
+msgstr ""
 
 msgid "Language"
 msgstr "言語"
@@ -353,12 +459,6 @@ msgstr "シリーズ"
 msgid "Pages"
 msgstr "ページ数"
 
-msgid "Description (tap to view)"
-msgstr "説明（タップして表示）"
-
-msgid "Description"
-msgstr "説明"
-
 msgid "Back"
 msgstr "戻る"
 
@@ -369,18 +469,15 @@ msgstr "書籍の詳細"
 msgid "Download \"%s\"?"
 msgstr "\"%s\" をダウンロードしますか？"
 
-msgid "Download"
-msgstr "ダウンロード"
-
 #, lua-format
 msgid "\"%s\" downloaded successfully. Open it now?"
 msgstr "\"%s\" のダウンロードが完了しました。今すぐ開きますか？"
 
+msgid "Turn off Wi-Fi after closing this dialog"
+msgstr "このダイアログを閉じた後にWi-Fiをオフにする"
+
 msgid "Open book"
 msgstr "書籍を開く"
-
-msgid "Untitled"
-msgstr "無題"
 
 msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
 msgstr "おすすめの書籍が見つかりませんでした。再試行が必要な場合があります。"
@@ -403,8 +500,137 @@ msgstr "OK"
 msgid "Fetch most popular books from Z-library?"
 msgstr "Z-libraryから人気の書籍を取得しますか？"
 
-msgid "Turn off Wi-Fi after closing this dialog"
-msgstr "このダイアログを閉じた後にWi-Fiをオフにする"
+msgid "Request timed out"
+msgstr ""
+
+msgid "Search failed due to a timeout. Would you like to retry?"
+msgstr ""
+
+msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+msgstr "一時的な問題により検索に失敗しました（HTTP 400）。再試行しますか？"
+
+msgid "Retry"
+msgstr "再試行"
+
+msgid "Retrying search for \""
+msgstr "再検索中: \""
+
+msgid "Network connection error"
+msgstr ""
+
+#, lua-format
+msgid "%s failed due to a timeout%s. Would you like to retry?"
+msgstr "%sがタイムアウト%sのため失敗しました。再試行しますか？"
+
+#, lua-format
+msgid "%s failed due to a network error. Would you like to retry?"
+msgstr "%sがネットワークエラーのため失敗しました。再試行しますか？"
+
+#, lua-format
+msgid "%s failed due to a temporary issue. Would you like to retry?"
+msgstr "%sが一時的な問題のため失敗しました。再試行しますか？"
+
+#, lua-format
+msgid "Block timeout: %s seconds"
+msgstr "ブロックタイムアウト：%s秒"
+
+#, lua-format
+msgid "Total timeout: %s"
+msgstr "合計タイムアウト：%s"
+
+msgid "seconds"
+msgstr "秒"
+
+#, lua-format
+msgid "Set %s block timeout (seconds)"
+msgstr "%sブロックタイムアウトを設定（秒）"
+
+msgid "Please enter a valid number (minimum 1 second)"
+msgstr "有効な数値を入力してください（最小1秒）"
+
+#, lua-format
+msgid "Set %s total timeout (seconds, -1 for infinite)"
+msgstr "%s合計タイムアウトを設定（秒、-1で無限）"
+
+msgid "Please enter a valid number (minimum 1 second or -1 for infinite)"
+msgstr "有効な数値を入力してください（最小1秒または-1で無限）"
+
+msgid "Reset to defaults"
+msgstr "デフォルトにリセット"
+
+#, lua-format
+msgid "Reset %s timeouts to default values?"
+msgstr "%sタイムアウトをデフォルト値にリセットしますか？"
+
+msgid "Reset"
+msgstr "リセット"
+
+msgid "Timeout settings reset to defaults"
+msgstr "タイムアウト設定をデフォルトにリセットしました"
+
+#, lua-format
+msgid "%s Timeout Settings"
+msgstr "%sタイムアウト設定"
+
+msgid "Login timeouts"
+msgstr "ログインタイムアウト"
+
+msgid "Login"
+msgstr "ログイン"
+
+msgid "Search timeouts"
+msgstr "検索タイムアウト"
+
+msgid "Book details timeouts"
+msgstr "書籍詳細タイムアウト"
+
+msgid "Recommended books timeouts"
+msgstr "おすすめ書籍タイムアウト"
+
+msgid "Popular books timeouts"
+msgstr "人気書籍タイムアウト"
+
+msgid "Popular books"
+msgstr "人気書籍"
+
+msgid "Download timeouts"
+msgstr "ダウンロードタイムアウト"
+
+msgid "Cover download timeouts"
+msgstr "カバーダウンロードタイムアウト"
+
+msgid "Cover download"
+msgstr "カバーダウンロード"
+
+msgid "Reset all timeouts to defaults"
+msgstr "すべてのタイムアウトをデフォルトにリセット"
+
+msgid "Reset all timeout settings to default values?"
+msgstr "すべてのタイムアウト設定をデフォルト値にリセットしますか？"
+
+msgid "Reset All"
+msgstr "すべてリセット"
+
+msgid "All timeout settings reset to defaults"
+msgstr "すべてのタイムアウト設定をデフォルトにリセットしました"
+
+msgid "Timeout Settings"
+msgstr "タイムアウト設定"
+
+#~ msgid "Z-library most popular"
+#~ msgstr "Z-libraryの人気書籍"
+
+#~ msgid "Z-library recommended"
+#~ msgstr "Z-libraryのおすすめ"
+
+#~ msgid "Failed to retrieve user session after login."
+#~ msgstr "ログイン後にユーザーセッションの取得に失敗しました。"
+
+#~ msgid "Full Author"
+#~ msgstr "完全な著者名"
+
+#~ msgid "Description (tap to view)"
+#~ msgstr "説明（タップして表示）"
 
 #~ msgid "Set username"
 #~ msgstr "ユーザー名を設定"

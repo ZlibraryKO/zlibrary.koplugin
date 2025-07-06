@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-28 19:46+0000\n"
+"POT-Creation-Date: 2025-07-05 21:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,12 +20,6 @@ msgstr "[[Wtyczka do wyszukiwania i pobierania książek z Z-library.]]"
 
 msgid "Z-library search"
 msgstr "Wyszukiwanie w Z-library"
-
-msgid "Z-library most popular"
-msgstr "Najpopularniejsze w Z-library"
-
-msgid "Z-library recommended"
-msgstr "Polecane w Z-library"
 
 msgid "Settings"
 msgstr "Ustawienia"
@@ -51,17 +45,44 @@ msgstr "Logowanie zakończone sukcesem!"
 msgid "Set download directory"
 msgstr "Ustaw katalog pobierania"
 
+msgid "Search options"
+msgstr ""
+
 msgid "Select search languages"
 msgstr "Wybierz języki wyszukiwania"
 
 msgid "Select search formats"
 msgstr "Wybierz formaty wyszukiwania"
 
+msgid "Select search order"
+msgstr ""
+
+msgid "Timeout settings"
+msgstr "Ustawienia limitu czasu"
+
 msgid "Check for updates"
 msgstr "Sprawdź aktualizacje"
 
 msgid "Error: Plugin path not found. Cannot check for updates."
 msgstr "Błąd: Nie znaleziono ścieżki do wtyczki. Nie można sprawdzić aktualizacji."
+
+msgid "Developer options"
+msgstr ""
+
+msgid "Clear user session"
+msgstr ""
+
+msgid "Session cleared. You will need to login again."
+msgstr ""
+
+msgid "Test mode"
+msgstr ""
+
+msgid "Test mode disabled. Normal download behavior restored."
+msgstr ""
+
+msgid "Test mode enabled. Downloads will always succeed."
+msgstr ""
 
 msgid "Search"
 msgstr "Szukaj"
@@ -75,11 +96,11 @@ msgstr "Najpopularniejsze"
 msgid "No internet connection detected."
 msgstr "Brak połączenia z internetem."
 
-msgid "Failed to retrieve user session after login."
-msgstr "Nie udało się pobrać sesji użytkownika po logowaniu."
-
 msgid "No books found, please try again"
 msgstr "Nie znaleziono książek, spróbuj ponownie"
+
+msgid "Operation"
+msgstr ""
 
 msgid "Fetching recommended books..."
 msgstr "Pobieranie polecanych książek..."
@@ -87,11 +108,17 @@ msgstr "Pobieranie polecanych książek..."
 msgid "Failed to fetch recommended books"
 msgstr "Nie udało się pobrać polecanych książek"
 
+msgid "Recommended books"
+msgstr ""
+
 msgid "Fetching most popular books..."
 msgstr "Pobieranie najpopularniejszych książek..."
 
 msgid "Failed to fetch most popular books"
 msgstr "Nie udało się pobrać najpopularniejszych książek"
+
+msgid "Most popular books"
+msgstr ""
 
 msgid "Fetching book details..."
 msgstr "Pobieranie szczegółów książki..."
@@ -102,23 +129,14 @@ msgstr "Nie udało się pobrać szczegółów książki"
 msgid "Could not retrieve book details."
 msgstr "Nie można pobrać szczegółów książki."
 
+msgid "Book details"
+msgstr ""
+
 msgid "Please set both username and password first."
 msgstr "Najpierw ustaw nazwę użytkownika i hasło."
 
 msgid "Logging in..."
 msgstr "Logowanie..."
-
-msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
-msgstr "Wyszukiwanie nie powiodło się z powodu tymczasowego problemu (HTTP 400). Czy chcesz spróbować ponownie?"
-
-msgid "Retry"
-msgstr "Spróbuj ponownie"
-
-msgid "Cancel"
-msgstr "Anuluj"
-
-msgid "Retrying search for \""
-msgstr "Ponawianie wyszukiwania dla \""
 
 msgid "Searching for \""
 msgstr "Wyszukiwanie: \""
@@ -158,6 +176,60 @@ msgstr "Pobieranie nie powiodło się: Nieznany błąd"
 msgid "Download limit reached. Please try again later or check your account."
 msgstr "Osiągnięto limit pobrań. Spróbuj ponownie później lub sprawdź swoje konto."
 
+msgid "Download"
+msgstr "Pobierz"
+
+msgid "Retrying download..."
+msgstr ""
+
+msgid "Request timed out - please check your connection and try again"
+msgstr ""
+
+msgid "Network request failed"
+msgstr ""
+
+msgid "Network connection error - please check your internet connection and try again"
+msgstr ""
+
+msgid "HTTP Error"
+msgstr ""
+
+msgid "Unknown Status"
+msgstr ""
+
+msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
+msgstr ""
+
+msgid "Login failed: Invalid response format"
+msgstr ""
+
+msgid "Login failed"
+msgstr ""
+
+msgid "Credentials rejected or invalid response"
+msgstr ""
+
+msgid "No response received from server - please try again"
+msgstr ""
+
+msgid "Invalid response format from server"
+msgstr ""
+
+msgid "Search API error"
+msgstr ""
+
+msgid "Failed to open target file"
+msgstr ""
+
+msgid "Unknown error"
+msgstr ""
+
+msgid "Download limit reached or file is an HTML page"
+msgstr ""
+
+msgid "Download HTTP Error"
+msgstr ""
+
 msgid "Z-library server URL not configured."
 msgstr "Adres URL serwera Z-library nie został skonfigurowany."
 
@@ -193,6 +265,40 @@ msgstr "API zwróciło błąd dla szczegółów książki."
 
 msgid "Failed to process book details."
 msgstr "Nie udało się przetworzyć szczegółów książki."
+
+msgid "Best match"
+msgstr ""
+
+msgid "Recently added"
+msgstr ""
+
+msgid "Title"
+msgstr "Tytuł"
+
+msgid "Year"
+msgstr "Rok"
+
+msgid "File size"
+msgstr ""
+
+msgid "Default"
+msgstr ""
+
+msgid "infinite"
+msgstr "nieskończony"
+
+#, lua-format
+msgid "Block: %ds, Total: %s"
+msgstr "Blok: %ds, Łącznie: %s"
+
+msgid "Untitled"
+msgstr "Bez tytułu"
+
+msgid "Unknown Author"
+msgstr "Nieznany autor"
+
+msgid "Author"
+msgstr "Autor"
 
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "Aktualizacja nie powiodła się: Nie można określić miejsca instalacji wtyczki."
@@ -258,6 +364,9 @@ msgstr "Dostępna aktualizacja"
 msgid "Update"
 msgstr "Aktualizuj"
 
+msgid "Cancel"
+msgstr "Anuluj"
+
 msgid "Downloading update..."
 msgstr "Pobieranie aktualizacji..."
 
@@ -300,11 +409,11 @@ msgstr "Szukaj w Z-library"
 msgid "Please enter a search term."
 msgstr "Wprowadź termin wyszukiwania."
 
+msgid "Sort by"
+msgstr ""
+
 msgid "Unknown Title"
 msgstr "Nieznany tytuł"
-
-msgid "Unknown Author"
-msgstr "Nieznany autor"
 
 msgid "Rating"
 msgstr "Ocena"
@@ -312,20 +421,17 @@ msgstr "Ocena"
 msgid "Search Results"
 msgstr "Wyniki wyszukiwania"
 
-msgid "Title"
-msgstr "Tytuł"
+msgid "Description"
+msgstr "Opis"
 
 msgid "Full Title"
 msgstr "Pełny tytuł"
 
-msgid "Author"
-msgstr "Autor"
+msgid "Cover"
+msgstr ""
 
-msgid "Full Author"
-msgstr "Pełne dane autora"
-
-msgid "Year"
-msgstr "Rok"
+msgid "(tap to view)"
+msgstr ""
 
 msgid "Language"
 msgstr "Język"
@@ -353,12 +459,6 @@ msgstr "Seria"
 msgid "Pages"
 msgstr "Strony"
 
-msgid "Description (tap to view)"
-msgstr "Opis (dotknij, aby zobaczyć)"
-
-msgid "Description"
-msgstr "Opis"
-
 msgid "Back"
 msgstr "Wstecz"
 
@@ -369,18 +469,15 @@ msgstr "Szczegóły książki"
 msgid "Download \"%s\"?"
 msgstr "Pobrać \"%s\"?"
 
-msgid "Download"
-msgstr "Pobierz"
-
 #, lua-format
 msgid "\"%s\" downloaded successfully. Open it now?"
 msgstr "\"%s\" został pomyślnie pobrany. Otworzyć teraz?"
 
+msgid "Turn off Wi-Fi after closing this dialog"
+msgstr "Wyłącz Wi-Fi po zamknięciu tego okna"
+
 msgid "Open book"
 msgstr "Otwórz książkę"
-
-msgid "Untitled"
-msgstr "Bez tytułu"
 
 msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
 msgstr "Nie znaleziono polecanych książek, spróbuj ponownie. Czasem potrzebnych jest kilka prób."
@@ -403,8 +500,135 @@ msgstr "OK"
 msgid "Fetch most popular books from Z-library?"
 msgstr "Pobrać najpopularniejsze książki z Z-library?"
 
-msgid "Turn off Wi-Fi after closing this dialog"
-msgstr "Wyłącz Wi-Fi po zamknięciu tego okna"
+msgid "Request timed out"
+msgstr ""
+
+msgid "Search failed due to a timeout. Would you like to retry?"
+msgstr ""
+
+msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+msgstr "Wyszukiwanie nie powiodło się z powodu tymczasowego problemu (HTTP 400). Czy chcesz spróbować ponownie?"
+
+msgid "Retry"
+msgstr "Spróbuj ponownie"
+
+msgid "Retrying search for \""
+msgstr "Ponawianie wyszukiwania dla \""
+
+msgid "Network connection error"
+msgstr ""
+
+#, lua-format
+msgid "%s failed due to a timeout%s. Would you like to retry?"
+msgstr "%s nie powiodło się z powodu przekroczenia limitu czasu%s. Czy chcesz spróbować ponownie?"
+
+#, lua-format
+msgid "%s failed due to a network error. Would you like to retry?"
+msgstr "%s nie powiodło się z powodu błędu sieci. Czy chcesz spróbować ponownie?"
+
+#, lua-format
+msgid "%s failed due to a temporary issue. Would you like to retry?"
+msgstr "%s nie powiodło się z powodu tymczasowego problemu. Czy chcesz spróbować ponownie?"
+
+#, lua-format
+msgid "Block timeout: %s seconds"
+msgstr "Limit czasu bloku: %s sekund"
+
+msgid "Total timeout: %s"
+msgstr "Całkowity limit czasu: %s"
+
+msgid "seconds"
+msgstr "sekund"
+
+#, lua-format
+msgid "Set %s block timeout (seconds)"
+msgstr "Ustaw limit czasu bloku %s (sekundy)"
+
+msgid "Please enter a valid number (minimum 1 second)"
+msgstr "Proszę wprowadzić prawidłową liczbę (minimum 1 sekunda)"
+
+#, lua-format
+msgid "Set %s total timeout (seconds, -1 for infinite)"
+msgstr "Ustaw całkowity limit czasu %s (sekundy, -1 dla nieskończoności)"
+
+msgid "Please enter a valid number (minimum 1 second or -1 for infinite)"
+msgstr "Proszę wprowadzić prawidłową liczbę (minimum 1 sekunda lub -1 dla nieskończoności)"
+
+msgid "Reset to defaults"
+msgstr "Przywróć domyślne"
+
+#, lua-format
+msgid "Reset %s timeouts to default values?"
+msgstr "Przywrócić limity czasu %s do wartości domyślnych?"
+
+msgid "Reset"
+msgstr "Przywróć"
+
+msgid "Timeout settings reset to defaults"
+msgstr "Ustawienia limitu czasu przywrócone do wartości domyślnych"
+
+msgid "%s Timeout Settings"
+msgstr "Ustawienia limitu czasu %s"
+
+msgid "Login timeouts"
+msgstr "Limity czasu logowania"
+
+msgid "Login"
+msgstr "Logowanie"
+
+msgid "Search timeouts"
+msgstr "Limity czasu wyszukiwania"
+
+msgid "Book details timeouts"
+msgstr "Limity czasu szczegółów książki"
+
+msgid "Recommended books timeouts"
+msgstr "Limity czasu rekomendowanych książek"
+
+msgid "Popular books timeouts"
+msgstr "Limity czasu popularnych książek"
+
+msgid "Popular books"
+msgstr "Popularne książki"
+
+msgid "Download timeouts"
+msgstr "Limity czasu pobierania"
+
+msgid "Cover download timeouts"
+msgstr "Limity czasu pobierania okładki"
+
+msgid "Cover download"
+msgstr "Pobieranie okładki"
+
+msgid "Reset all timeouts to defaults"
+msgstr "Przywróć wszystkie limity czasu do wartości domyślnych"
+
+msgid "Reset all timeout settings to default values?"
+msgstr "Przywrócić wszystkie ustawienia limitu czasu do wartości domyślnych?"
+
+msgid "Reset All"
+msgstr "Przywróć wszystkie"
+
+msgid "All timeout settings reset to defaults"
+msgstr "Wszystkie ustawienia limitu czasu przywrócone do wartości domyślnych"
+
+msgid "Timeout Settings"
+msgstr "Ustawienia limitu czasu"
+
+#~ msgid "Z-library most popular"
+#~ msgstr "Najpopularniejsze w Z-library"
+
+#~ msgid "Z-library recommended"
+#~ msgstr "Polecane w Z-library"
+
+#~ msgid "Failed to retrieve user session after login."
+#~ msgstr "Nie udało się pobrać sesji użytkownika po logowaniu."
+
+#~ msgid "Full Author"
+#~ msgstr "Pełne dane autora"
+
+#~ msgid "Description (tap to view)"
+#~ msgstr "Opis (dotknij, aby zobaczyć)"
 
 #~ msgid "Set username"
 #~ msgstr "Ustaw nazwę użytkownika"

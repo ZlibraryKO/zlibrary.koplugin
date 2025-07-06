@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-28 19:46+0000\n"
+"POT-Creation-Date: 2025-07-05 21:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,12 +20,6 @@ msgstr "[[Z-라이브러리에서 책을 검색하고 다운로드할 수 있는
 
 msgid "Z-library search"
 msgstr "Z-라이브러리 검색"
-
-msgid "Z-library most popular"
-msgstr "Z-라이브러리 인기 도서"
-
-msgid "Z-library recommended"
-msgstr "Z-라이브러리 추천 도서"
 
 msgid "Settings"
 msgstr "설정"
@@ -51,17 +45,44 @@ msgstr "로그인 성공!"
 msgid "Set download directory"
 msgstr "다운로드 디렉토리 설정"
 
+msgid "Search options"
+msgstr ""
+
 msgid "Select search languages"
 msgstr "검색 언어 선택"
 
 msgid "Select search formats"
 msgstr "검색 형식 선택"
 
+msgid "Select search order"
+msgstr ""
+
+msgid "Timeout settings"
+msgstr "타임아웃 설정"
+
 msgid "Check for updates"
 msgstr "업데이트 확인"
 
 msgid "Error: Plugin path not found. Cannot check for updates."
 msgstr "오류: 플러그인 경로를 찾을 수 없습니다. 업데이트를 확인할 수 없습니다."
+
+msgid "Developer options"
+msgstr ""
+
+msgid "Clear user session"
+msgstr ""
+
+msgid "Session cleared. You will need to login again."
+msgstr ""
+
+msgid "Test mode"
+msgstr ""
+
+msgid "Test mode disabled. Normal download behavior restored."
+msgstr ""
+
+msgid "Test mode enabled. Downloads will always succeed."
+msgstr ""
 
 msgid "Search"
 msgstr "검색"
@@ -75,11 +96,11 @@ msgstr "인기순"
 msgid "No internet connection detected."
 msgstr "인터넷 연결이 감지되지 않았습니다."
 
-msgid "Failed to retrieve user session after login."
-msgstr "로그인 후 사용자 세션을 가져오는 데 실패했습니다."
-
 msgid "No books found, please try again"
 msgstr "책을 찾을 수 없습니다. 다시 시도해 주세요."
+
+msgid "Operation"
+msgstr ""
 
 msgid "Fetching recommended books..."
 msgstr "추천 도서 가져오는 중..."
@@ -87,11 +108,17 @@ msgstr "추천 도서 가져오는 중..."
 msgid "Failed to fetch recommended books"
 msgstr "추천 도서를 가져오지 못했습니다"
 
+msgid "Recommended books"
+msgstr ""
+
 msgid "Fetching most popular books..."
 msgstr "인기 도서 가져오는 중..."
 
 msgid "Failed to fetch most popular books"
 msgstr "인기 도서를 가져오지 못했습니다"
+
+msgid "Most popular books"
+msgstr ""
 
 msgid "Fetching book details..."
 msgstr "도서 세부정보 가져오는 중..."
@@ -102,23 +129,14 @@ msgstr "도서 세부정보를 가져오지 못했습니다"
 msgid "Could not retrieve book details."
 msgstr "도서 세부정보를 가져올 수 없습니다."
 
+msgid "Book details"
+msgstr ""
+
 msgid "Please set both username and password first."
 msgstr "먼저 사용자 이름과 비밀번호를 모두 설정하세요."
 
 msgid "Logging in..."
 msgstr "로그인 중..."
-
-msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
-msgstr "일시적인 문제로 검색에 실패했습니다(HTTP 400). 다시 시도하시겠습니까?"
-
-msgid "Retry"
-msgstr "다시 시도"
-
-msgid "Cancel"
-msgstr "취소"
-
-msgid "Retrying search for \""
-msgstr "\" 검색을 다시 시도하는 중"
 
 msgid "Searching for \""
 msgstr "\" 검색 중"
@@ -158,6 +176,60 @@ msgstr "다운로드 실패: 알 수 없는 오류"
 msgid "Download limit reached. Please try again later or check your account."
 msgstr "다운로드 제한에 도달했습니다. 나중에 다시 시도하거나 계정을 확인하세요."
 
+msgid "Download"
+msgstr "다운로드"
+
+msgid "Retrying download..."
+msgstr ""
+
+msgid "Request timed out - please check your connection and try again"
+msgstr ""
+
+msgid "Network request failed"
+msgstr ""
+
+msgid "Network connection error - please check your internet connection and try again"
+msgstr ""
+
+msgid "HTTP Error"
+msgstr ""
+
+msgid "Unknown Status"
+msgstr ""
+
+msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
+msgstr ""
+
+msgid "Login failed: Invalid response format"
+msgstr ""
+
+msgid "Login failed"
+msgstr ""
+
+msgid "Credentials rejected or invalid response"
+msgstr ""
+
+msgid "No response received from server - please try again"
+msgstr ""
+
+msgid "Invalid response format from server"
+msgstr ""
+
+msgid "Search API error"
+msgstr ""
+
+msgid "Failed to open target file"
+msgstr ""
+
+msgid "Unknown error"
+msgstr ""
+
+msgid "Download limit reached or file is an HTML page"
+msgstr ""
+
+msgid "Download HTTP Error"
+msgstr ""
+
 msgid "Z-library server URL not configured."
 msgstr "Z-라이브러리 서버 URL이 구성되지 않았습니다."
 
@@ -193,6 +265,40 @@ msgstr "도서 세부정보에 대해 API 오류가 반환되었습니다."
 
 msgid "Failed to process book details."
 msgstr "도서 세부정보를 처리하지 못했습니다."
+
+msgid "Best match"
+msgstr ""
+
+msgid "Recently added"
+msgstr ""
+
+msgid "Title"
+msgstr "제목"
+
+msgid "Year"
+msgstr "연도"
+
+msgid "File size"
+msgstr ""
+
+msgid "Default"
+msgstr ""
+
+msgid "infinite"
+msgstr "무한"
+
+#, lua-format
+msgid "Block: %ds, Total: %s"
+msgstr "블록: %d초, 총: %s"
+
+msgid "Untitled"
+msgstr "제목 없음"
+
+msgid "Unknown Author"
+msgstr "저자 미상"
+
+msgid "Author"
+msgstr "저자"
 
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "업데이트 실패: 플러그인 설치 위치를 확인할 수 없습니다."
@@ -258,6 +364,9 @@ msgstr "업데이트 가능"
 msgid "Update"
 msgstr "업데이트"
 
+msgid "Cancel"
+msgstr "취소"
+
 msgid "Downloading update..."
 msgstr "업데이트 다운로드 중..."
 
@@ -300,11 +409,11 @@ msgstr "Z-라이브러리 검색"
 msgid "Please enter a search term."
 msgstr "검색어를 입력하세요."
 
+msgid "Sort by"
+msgstr ""
+
 msgid "Unknown Title"
 msgstr "제목 미상"
-
-msgid "Unknown Author"
-msgstr "저자 미상"
 
 msgid "Rating"
 msgstr "평점"
@@ -312,20 +421,17 @@ msgstr "평점"
 msgid "Search Results"
 msgstr "검색 결과"
 
-msgid "Title"
-msgstr "제목"
+msgid "Description"
+msgstr "설명"
 
 msgid "Full Title"
 msgstr "전체 제목"
 
-msgid "Author"
-msgstr "저자"
+msgid "Cover"
+msgstr ""
 
-msgid "Full Author"
-msgstr "전체 저자명"
-
-msgid "Year"
-msgstr "연도"
+msgid "(tap to view)"
+msgstr ""
 
 msgid "Language"
 msgstr "언어"
@@ -353,12 +459,6 @@ msgstr "시리즈"
 msgid "Pages"
 msgstr "페이지 수"
 
-msgid "Description (tap to view)"
-msgstr "설명 (탭하여 보기)"
-
-msgid "Description"
-msgstr "설명"
-
 msgid "Back"
 msgstr "뒤로"
 
@@ -369,18 +469,15 @@ msgstr "도서 세부정보"
 msgid "Download \"%s\"?"
 msgstr "\"%s\"을(를) 다운로드하시겠습니까?"
 
-msgid "Download"
-msgstr "다운로드"
-
 #, lua-format
 msgid "\"%s\" downloaded successfully. Open it now?"
 msgstr "\"%s\"이(가) 성공적으로 다운로드되었습니다. 지금 열까요?"
 
+msgid "Turn off Wi-Fi after closing this dialog"
+msgstr "이 대화 상자를 닫은 후 Wi-Fi 끄기"
+
 msgid "Open book"
 msgstr "도서 열기"
-
-msgid "Untitled"
-msgstr "제목 없음"
 
 msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
 msgstr "추천 도서를 찾을 수 없습니다. 다시 시도해 주세요. 때때로 여러 번 시도해야 할 수도 있습니다."
@@ -403,8 +500,137 @@ msgstr "확인"
 msgid "Fetch most popular books from Z-library?"
 msgstr "Z-라이브러리에서 인기 도서를 가져오시겠습니까?"
 
-msgid "Turn off Wi-Fi after closing this dialog"
-msgstr "이 대화 상자를 닫은 후 Wi-Fi 끄기"
+msgid "Request timed out"
+msgstr ""
+
+msgid "Search failed due to a timeout. Would you like to retry?"
+msgstr ""
+
+msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+msgstr "일시적인 문제로 검색에 실패했습니다(HTTP 400). 다시 시도하시겠습니까?"
+
+msgid "Retry"
+msgstr "다시 시도"
+
+msgid "Retrying search for \""
+msgstr "\" 검색을 다시 시도하는 중"
+
+msgid "Network connection error"
+msgstr ""
+
+#, lua-format
+msgid "%s failed due to a timeout%s. Would you like to retry?"
+msgstr "%s이(가) 타임아웃%s으로 실패했습니다. 다시 시도하시겠습니까?"
+
+#, lua-format
+msgid "%s failed due to a network error. Would you like to retry?"
+msgstr "%s이(가) 네트워크 오류로 실패했습니다. 다시 시도하시겠습니까?"
+
+#, lua-format
+msgid "%s failed due to a temporary issue. Would you like to retry?"
+msgstr "%s이(가) 일시적인 문제로 실패했습니다. 다시 시도하시겠습니까?"
+
+#, lua-format
+msgid "Block timeout: %s seconds"
+msgstr "블록 타임아웃: %s초"
+
+#, lua-format
+msgid "Total timeout: %s"
+msgstr "총 타임아웃: %s"
+
+msgid "seconds"
+msgstr "초"
+
+#, lua-format
+msgid "Set %s block timeout (seconds)"
+msgstr "%s 블록 타임아웃 설정 (초)"
+
+msgid "Please enter a valid number (minimum 1 second)"
+msgstr "유효한 숫자를 입력하세요 (최소 1초)"
+
+#, lua-format
+msgid "Set %s total timeout (seconds, -1 for infinite)"
+msgstr "%s 총 타임아웃 설정 (초, -1은 무한)"
+
+msgid "Please enter a valid number (minimum 1 second or -1 for infinite)"
+msgstr "유효한 숫자를 입력하세요 (최소 1초 또는 -1은 무한)"
+
+msgid "Reset to defaults"
+msgstr "기본값으로 재설정"
+
+#, lua-format
+msgid "Reset %s timeouts to default values?"
+msgstr "%s 타임아웃을 기본값으로 재설정하시겠습니까?"
+
+msgid "Reset"
+msgstr "재설정"
+
+msgid "Timeout settings reset to defaults"
+msgstr "타임아웃 설정이 기본값으로 재설정되었습니다"
+
+#, lua-format
+msgid "%s Timeout Settings"
+msgstr "%s 타임아웃 설정"
+
+msgid "Login timeouts"
+msgstr "로그인 타임아웃"
+
+msgid "Login"
+msgstr "로그인"
+
+msgid "Search timeouts"
+msgstr "검색 타임아웃"
+
+msgid "Book details timeouts"
+msgstr "도서 상세정보 타임아웃"
+
+msgid "Recommended books timeouts"
+msgstr "추천 도서 타임아웃"
+
+msgid "Popular books timeouts"
+msgstr "인기 도서 타임아웃"
+
+msgid "Popular books"
+msgstr "인기 도서"
+
+msgid "Download timeouts"
+msgstr "다운로드 타임아웃"
+
+msgid "Cover download timeouts"
+msgstr "표지 다운로드 타임아웃"
+
+msgid "Cover download"
+msgstr "표지 다운로드"
+
+msgid "Reset all timeouts to defaults"
+msgstr "모든 타임아웃을 기본값으로 재설정"
+
+msgid "Reset all timeout settings to default values?"
+msgstr "모든 타임아웃 설정을 기본값으로 재설정하시겠습니까?"
+
+msgid "Reset All"
+msgstr "모두 재설정"
+
+msgid "All timeout settings reset to defaults"
+msgstr "모든 타임아웃 설정이 기본값으로 재설정되었습니다"
+
+msgid "Timeout Settings"
+msgstr "타임아웃 설정"
+
+#~ msgid "Z-library most popular"
+#~ msgstr "Z-라이브러리 인기 도서"
+
+#~ msgid "Z-library recommended"
+#~ msgstr "Z-라이브러리 추천 도서"
+
+#~ msgid "Failed to retrieve user session after login."
+#~ msgstr "로그인 후 사용자 세션을 가져오는 데 실패했습니다."
+
+#~ msgid "Full Author"
+#~ msgstr "전체 저자명"
+
+#~ msgid "Description (tap to view)"
+#~ msgstr "설명 (탭하여 보기)"
 
 #~ msgid "Set username"
 #~ msgstr "사용자 이름 설정"

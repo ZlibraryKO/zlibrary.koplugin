@@ -782,7 +782,17 @@ function Zlibrary:downloadBook(book)
                         Ui.showErrorMessage(T("Could not open reader UI."))
                         logger.warn("Zlibrary:downloadBook - ReaderUI not available.")
                     end
-                end)
+                end,
+                function(should_turn_off_wifi)
+                    if should_turn_off_wifi then
+                        NetworkMgr:disableWifi(function()
+                            logger.info("Zlibrary:downloadBook - Wi-Fi disabled after download as requested by user")
+                        end)
+                        logger.info("Zlibrary:downloadBook - Cleaning up dialogs cause wifi is turned off")
+                        self.dialog_manager:closeAllDialogs()
+                    end
+                end
+            )
             else
                 local fail_msg = (api_result and api_result.message) or T("Download failed: Unknown error")
                 if api_result and api_result.error and string.find(api_result.error, "Download limit reached or file is an HTML page", 1, true) then

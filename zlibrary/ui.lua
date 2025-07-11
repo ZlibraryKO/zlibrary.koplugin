@@ -555,7 +555,7 @@ function Ui.confirmDownload(filename, ok_callback)
     end
 end
 
-function Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, ok_open_callback)
+function Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, ok_open_callback, cancel_callback)
     local turn_off_wifi = default_turn_off_wifi
 
     local function showDialog()
@@ -585,6 +585,9 @@ function Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, ok
                 ok_open_callback(turn_off_wifi)
             end,
             cancel_text = T("Close"),
+            cancel_callback = function()
+                cancel_callback(turn_off_wifi)
+            end,
             other_buttons = other_buttons,
             other_buttons_first = true,
         }

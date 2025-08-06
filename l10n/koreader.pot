@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-11 06:40+0000\n"
+"POT-Creation-Date: 2025-08-06 08:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -258,7 +258,7 @@ msgid ""
 "again"
 msgstr ""
 
-#: zlibrary/api.lua:138 zlibrary/api.lua:382
+#: zlibrary/api.lua:138 zlibrary/api.lua:379
 msgid "HTTP Error"
 msgstr ""
 
@@ -266,97 +266,97 @@ msgstr ""
 msgid "Unknown Status"
 msgstr ""
 
-#: zlibrary/api.lua:153 zlibrary/api.lua:223
+#: zlibrary/api.lua:153 zlibrary/api.lua:222
 msgid ""
 "The Z-library server address (URL) is not set. Please configure it in the Z-"
 "library plugin settings."
 msgstr ""
 
-#: zlibrary/api.lua:196
+#: zlibrary/api.lua:195
 msgid "Login failed: Invalid response format"
 msgstr ""
 
-#: zlibrary/api.lua:206
+#: zlibrary/api.lua:205
 msgid "Login failed"
 msgstr ""
 
-#: zlibrary/api.lua:206
+#: zlibrary/api.lua:205
 msgid "Credentials rejected or invalid response"
 msgstr ""
 
-#: zlibrary/api.lua:281
+#: zlibrary/api.lua:279
 msgid "No response received from server - please try again"
 msgstr ""
 
-#: zlibrary/api.lua:289
+#: zlibrary/api.lua:287
 msgid "Invalid response format from server"
 msgstr ""
 
-#: zlibrary/api.lua:295
+#: zlibrary/api.lua:293
 msgid "Search API error"
 msgstr ""
 
-#: zlibrary/api.lua:344 zlibrary/api.lua:398
+#: zlibrary/api.lua:342 zlibrary/api.lua:395
 msgid "Failed to open target file"
 msgstr ""
 
-#: zlibrary/api.lua:344 zlibrary/api.lua:398
+#: zlibrary/api.lua:342 zlibrary/api.lua:395
 msgid "Unknown error"
 msgstr ""
 
-#: zlibrary/api.lua:375
+#: zlibrary/api.lua:372
 msgid "Download limit reached or file is an HTML page"
 msgstr ""
 
-#: zlibrary/api.lua:429
+#: zlibrary/api.lua:425
 msgid "Download HTTP Error"
 msgstr ""
 
-#: zlibrary/api.lua:444 zlibrary/api.lua:500
+#: zlibrary/api.lua:440 zlibrary/api.lua:496
 msgid "Z-library server URL not configured."
 msgstr ""
 
-#: zlibrary/api.lua:469
+#: zlibrary/api.lua:465
 msgid "Failed to fetch recommended books (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:475
+#: zlibrary/api.lua:471
 msgid "Failed to parse recommended books response."
 msgstr ""
 
-#: zlibrary/api.lua:480
+#: zlibrary/api.lua:476
 msgid "API returned an error for recommended books."
 msgstr ""
 
-#: zlibrary/api.lua:525
+#: zlibrary/api.lua:521
 msgid "Failed to fetch most popular books (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:531
+#: zlibrary/api.lua:527
 msgid "Failed to parse most popular books response."
 msgstr ""
 
-#: zlibrary/api.lua:536
+#: zlibrary/api.lua:532
 msgid "API returned an error for most popular books."
 msgstr ""
 
-#: zlibrary/api.lua:556
+#: zlibrary/api.lua:552
 msgid "Z-library server URL not configured or book identifiers missing."
 msgstr ""
 
-#: zlibrary/api.lua:581
+#: zlibrary/api.lua:577
 msgid "Failed to fetch book details (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:587
+#: zlibrary/api.lua:583
 msgid "Failed to parse book details response."
 msgstr ""
 
-#: zlibrary/api.lua:592
+#: zlibrary/api.lua:588
 msgid "API returned an error for book details."
 msgstr ""
 
-#: zlibrary/api.lua:598
+#: zlibrary/api.lua:594
 msgid "Failed to process book details."
 msgstr ""
 
@@ -407,110 +407,110 @@ msgstr ""
 msgid "Author"
 msgstr ""
 
-#: zlibrary/ota.lua:181
+#: zlibrary/ota.lua:179
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr ""
 
-#: zlibrary/ota.lua:185
+#: zlibrary/ota.lua:183
 msgid "Installing update..."
 msgstr ""
 
-#: zlibrary/ota.lua:203
+#: zlibrary/ota.lua:201
 msgid "Update installation failed."
 msgstr ""
 
-#: zlibrary/ota.lua:216
+#: zlibrary/ota.lua:214
 msgid ""
 "Update installed successfully. Please restart KOReader for changes to take "
 "effect."
 msgstr ""
 
-#: zlibrary/ota.lua:225
+#: zlibrary/ota.lua:223
 msgid ""
 "No internet connection detected. Please connect to the internet and try "
 "again."
 msgstr ""
 
-#: zlibrary/ota.lua:231
+#: zlibrary/ota.lua:229
 msgid "Update check failed: Could not determine plugin location."
 msgstr ""
 
-#: zlibrary/ota.lua:236
+#: zlibrary/ota.lua:234
 #, lua-format
 msgid ""
 "Unsupported plugin path for OTA update: %s. Only 'plugins/zlibrary.koplugin' "
 "is supported."
 msgstr ""
 
-#: zlibrary/ota.lua:242
+#: zlibrary/ota.lua:240
 msgid "Checking for updates..."
 msgstr ""
 
-#: zlibrary/ota.lua:248
+#: zlibrary/ota.lua:246
 msgid "Failed to check for updates. Please check your internet connection."
 msgstr ""
 
-#: zlibrary/ota.lua:255
+#: zlibrary/ota.lua:253
 msgid "Could not find update information (invalid data format)."
 msgstr ""
 
-#: zlibrary/ota.lua:264
+#: zlibrary/ota.lua:262
 msgid "Could not find update version information."
 msgstr ""
 
-#: zlibrary/ota.lua:271
+#: zlibrary/ota.lua:269
 msgid "Could not understand the update version format."
 msgstr ""
 
-#: zlibrary/ota.lua:278
+#: zlibrary/ota.lua:276
 msgid "Could not find update files."
 msgstr ""
 
-#: zlibrary/ota.lua:284
+#: zlibrary/ota.lua:282
 msgid "Could not find a download link for the update."
 msgstr ""
 
-#: zlibrary/ota.lua:301
+#: zlibrary/ota.lua:299
 #, lua-format
 msgid "You are already on the latest version (%s) or newer."
 msgstr ""
 
-#: zlibrary/ota.lua:303
+#: zlibrary/ota.lua:301
 #, lua-format
 msgid ""
 "Could not determine your current version, but the latest is %s. If you "
 "recently updated, you might be up-to-date."
 msgstr ""
 
-#: zlibrary/ota.lua:310
+#: zlibrary/ota.lua:308
 #, lua-format
 msgid "New version available: %s (you have %s). Download and install?"
 msgstr ""
 
-#: zlibrary/ota.lua:312
+#: zlibrary/ota.lua:310
 msgid "an older version"
 msgstr ""
 
-#: zlibrary/ota.lua:316
+#: zlibrary/ota.lua:314
 msgid "Update available"
 msgstr ""
 
-#: zlibrary/ota.lua:318
+#: zlibrary/ota.lua:316
 msgid "Update"
 msgstr ""
 
-#: zlibrary/ota.lua:319 zlibrary/ui.lua:244 zlibrary/ui.lua:360
+#: zlibrary/ota.lua:317 zlibrary/ui.lua:244 zlibrary/ui.lua:360
 #: zlibrary/ui.lua:545 zlibrary/ui.lua:552 zlibrary/ui.lua:671
 #: zlibrary/ui.lua:678 zlibrary/ui.lua:690 zlibrary/ui.lua:697
 #: zlibrary/ui.lua:787 zlibrary/ui.lua:897 zlibrary/ui.lua:1023
 msgid "Cancel"
 msgstr ""
 
-#: zlibrary/ota.lua:321
+#: zlibrary/ota.lua:319
 msgid "Downloading update..."
 msgstr ""
 
-#: zlibrary/ota.lua:331
+#: zlibrary/ota.lua:329
 msgid "Download failed. Please try again later."
 msgstr ""
 

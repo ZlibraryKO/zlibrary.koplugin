@@ -802,12 +802,14 @@ function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel
             if loading_msg_to_close then
                 Ui.closeMessage(loading_msg_to_close)
             end
+            Ui.showErrorMessage(error_string)
             cancel_callback(err_msg)
         end
     else
         if loading_msg_to_close then
             Ui.closeMessage(loading_msg_to_close)
         end
+        Ui.showErrorMessage(error_string)
         cancel_callback(err_msg)
     end
 end

@@ -95,7 +95,6 @@ function Ota.fetchLatestReleaseInfo()
             ["Accept"] = "application/vnd.github.v3+json",
         },
         timeout = 20,
-        redirect = true,
     }
 
     local http_result = Api.makeHttpRequest(http_options)
@@ -148,7 +147,6 @@ function Ota.downloadUpdate(url, destination_path)
         headers = { ["User-Agent"] = "KOReader-ZLibrary-Plugin" },
         sink = sink,
         timeout = 300,
-        redirect = true,
     }
 
     local http_result = Api.makeHttpRequest(http_options)

@@ -477,7 +477,7 @@ function Zlibrary:login(callback)
     local email = Config.getSetting(Config.SETTINGS_USERNAME_KEY)
     local password = Config.getSetting(Config.SETTINGS_PASSWORD_KEY)
 
-    if not email or not password then
+    if not email or email == "" or not password or password == "" then
         Ui.showErrorMessage(T("Please set both username and password first."))
         if callback then callback(false) end
         return

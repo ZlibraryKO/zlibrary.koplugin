@@ -82,10 +82,10 @@ function Api.makeHttpRequest(options)
         headers = options.headers,
         source = options.source,
         sink = sink_to_use,
-        redirect = options.redirect or false,
+        redirect = true,
     }
-    
-    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Redirect: %s, Timeout: %s", request_params.url, request_params.method, tostring(request_params.redirect), tostring(options.timeout)))
+
+    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Timeout: %s", request_params.url, request_params.method, tostring(options.timeout)))
 
     local req_ok, r_val, r_code, r_headers_tbl, r_status_str = pcall(http.request, request_params)
 
@@ -180,7 +180,6 @@ function Api.login(email, password)
             ["Content-Length"] = tostring(#body),
         },
         source = ltn12.source.string(body),
-        redirect = true,
         timeout = Config.getLoginTimeout(),
     }
 
@@ -266,7 +265,6 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
         method = "POST",
         headers = headers,
         source = ltn12.source.string(body),
-        redirect = true,
         timeout = Config.getSearchTimeout(),
     }
 
@@ -360,7 +358,6 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
         headers = headers,
         sink = socketutil.file_sink(file),
         timeout = Config.getDownloadTimeout(),
-        redirect = true
     }
 
     if http_result.error and not (http_result.status_code and http_result.headers) then
@@ -408,7 +405,6 @@ function Api.downloadBookCover(download_url, target_filepath)
         headers = headers,
         sink = socketutil.file_sink(file),
         timeout = Config.getCoverTimeout(),
-        redirect = true
     }
 
     if http_result.error and not (http_result.status_code and http_result.headers) then

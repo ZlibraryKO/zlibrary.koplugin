@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-06 08:38+0000\n"
+"POT-Creation-Date: 2025-08-06 09:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -114,7 +114,7 @@ msgid "Test mode enabled. Downloads will always succeed."
 msgstr ""
 
 #: main.lua:222 zlibrary/multisearch_dialog.lua:309 zlibrary/ui.lua:321
-#: zlibrary/ui.lua:733 zlibrary/ui.lua:959
+#: zlibrary/ui.lua:733 zlibrary/ui.lua:961
 msgid "Search"
 msgstr ""
 
@@ -146,7 +146,7 @@ msgstr ""
 msgid "Failed to fetch recommended books"
 msgstr ""
 
-#: main.lua:347 main.lua:380 zlibrary/ui.lua:979
+#: main.lua:347 main.lua:380 zlibrary/ui.lua:981
 msgid "Recommended books"
 msgstr ""
 
@@ -174,7 +174,7 @@ msgstr ""
 msgid "Could not retrieve book details."
 msgstr ""
 
-#: main.lua:456 zlibrary/ui.lua:969
+#: main.lua:456 zlibrary/ui.lua:971
 msgid "Book details"
 msgstr ""
 
@@ -186,7 +186,7 @@ msgstr ""
 msgid "Logging in..."
 msgstr ""
 
-#: main.lua:506 zlibrary/ui.lua:949
+#: main.lua:506 zlibrary/ui.lua:951
 msgid "Login"
 msgstr ""
 
@@ -236,7 +236,7 @@ msgstr ""
 msgid "Download limit reached. Please try again later or check your account."
 msgstr ""
 
-#: main.lua:828 zlibrary/ui.lua:543 zlibrary/ui.lua:550 zlibrary/ui.lua:999
+#: main.lua:828 zlibrary/ui.lua:543 zlibrary/ui.lua:550 zlibrary/ui.lua:1001
 msgid "Download"
 msgstr ""
 
@@ -385,7 +385,7 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: zlibrary/config.lua:344 zlibrary/ui.lua:829 zlibrary/ui.lua:862
+#: zlibrary/config.lua:344 zlibrary/ui.lua:831 zlibrary/ui.lua:864
 msgid "infinite"
 msgstr ""
 
@@ -502,7 +502,7 @@ msgstr ""
 #: zlibrary/ota.lua:317 zlibrary/ui.lua:244 zlibrary/ui.lua:360
 #: zlibrary/ui.lua:545 zlibrary/ui.lua:552 zlibrary/ui.lua:671
 #: zlibrary/ui.lua:678 zlibrary/ui.lua:690 zlibrary/ui.lua:697
-#: zlibrary/ui.lua:787 zlibrary/ui.lua:897 zlibrary/ui.lua:1023
+#: zlibrary/ui.lua:787 zlibrary/ui.lua:899 zlibrary/ui.lua:1025
 msgid "Cancel"
 msgstr ""
 
@@ -743,112 +743,112 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-#: zlibrary/ui.lua:828 zlibrary/ui.lua:838
+#: zlibrary/ui.lua:830 zlibrary/ui.lua:840
 #, lua-format
 msgid "Block timeout: %s seconds"
 msgstr ""
 
-#: zlibrary/ui.lua:829 zlibrary/ui.lua:862
+#: zlibrary/ui.lua:831 zlibrary/ui.lua:864
 #, lua-format
 msgid "Total timeout: %s"
 msgstr ""
 
-#: zlibrary/ui.lua:829 zlibrary/ui.lua:862
+#: zlibrary/ui.lua:831 zlibrary/ui.lua:864
 msgid "seconds"
 msgstr ""
 
-#: zlibrary/ui.lua:842
+#: zlibrary/ui.lua:844
 #, lua-format
 msgid "Set %s block timeout (seconds)"
 msgstr ""
 
-#: zlibrary/ui.lua:853
+#: zlibrary/ui.lua:855
 msgid "Please enter a valid number (minimum 1 second)"
 msgstr ""
 
-#: zlibrary/ui.lua:866
+#: zlibrary/ui.lua:868
 #, lua-format
 msgid "Set %s total timeout (seconds, -1 for infinite)"
 msgstr ""
 
-#: zlibrary/ui.lua:877
+#: zlibrary/ui.lua:879
 msgid "Please enter a valid number (minimum 1 second or -1 for infinite)"
 msgstr ""
 
-#: zlibrary/ui.lua:890
+#: zlibrary/ui.lua:892
 msgid "Reset to defaults"
 msgstr ""
 
-#: zlibrary/ui.lua:895
+#: zlibrary/ui.lua:897
 #, lua-format
 msgid "Reset %s timeouts to default values?"
 msgstr ""
 
-#: zlibrary/ui.lua:896
+#: zlibrary/ui.lua:898
 msgid "Reset"
 msgstr ""
 
-#: zlibrary/ui.lua:901
+#: zlibrary/ui.lua:903
 msgid "Timeout settings reset to defaults"
 msgstr ""
 
-#: zlibrary/ui.lua:911
+#: zlibrary/ui.lua:913
 #, lua-format
 msgid "%s Timeout Settings"
 msgstr ""
 
-#: zlibrary/ui.lua:944
+#: zlibrary/ui.lua:946
 msgid "Login timeouts"
 msgstr ""
 
-#: zlibrary/ui.lua:954
+#: zlibrary/ui.lua:956
 msgid "Search timeouts"
 msgstr ""
 
-#: zlibrary/ui.lua:964
+#: zlibrary/ui.lua:966
 msgid "Book details timeouts"
 msgstr ""
 
-#: zlibrary/ui.lua:974
+#: zlibrary/ui.lua:976
 msgid "Recommended books timeouts"
 msgstr ""
 
-#: zlibrary/ui.lua:984
+#: zlibrary/ui.lua:986
 msgid "Popular books timeouts"
 msgstr ""
 
-#: zlibrary/ui.lua:989
+#: zlibrary/ui.lua:991
 msgid "Popular books"
 msgstr ""
 
-#: zlibrary/ui.lua:994
+#: zlibrary/ui.lua:996
 msgid "Download timeouts"
 msgstr ""
 
-#: zlibrary/ui.lua:1004
+#: zlibrary/ui.lua:1006
 msgid "Cover download timeouts"
 msgstr ""
 
-#: zlibrary/ui.lua:1009
+#: zlibrary/ui.lua:1011
 msgid "Cover download"
 msgstr ""
 
-#: zlibrary/ui.lua:1017
+#: zlibrary/ui.lua:1019
 msgid "Reset all timeouts to defaults"
 msgstr ""
 
-#: zlibrary/ui.lua:1021
+#: zlibrary/ui.lua:1023
 msgid "Reset all timeout settings to default values?"
 msgstr ""
 
-#: zlibrary/ui.lua:1022
+#: zlibrary/ui.lua:1024
 msgid "Reset All"
 msgstr ""
 
-#: zlibrary/ui.lua:1032
+#: zlibrary/ui.lua:1034
 msgid "All timeout settings reset to defaults"
 msgstr ""
 
-#: zlibrary/ui.lua:1042
+#: zlibrary/ui.lua:1044
 msgid "Timeout Settings"
 msgstr ""

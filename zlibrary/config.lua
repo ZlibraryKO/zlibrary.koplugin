@@ -46,8 +46,12 @@ function Config.loadCredentialsFromFile(plugin_path)
             if success and type(result) == "table" then
                 logger.info("Successfully loaded credentials from " .. Config.CREDENTIALS_FILENAME)
                 if result.baseUrl then
-                    Config.saveSetting(Config.SETTINGS_BASE_URL_KEY, result.baseUrl)
-                    logger.info("Overriding Base URL from " .. Config.CREDENTIALS_FILENAME)
+                    local success, err_msg = Config.setAndValidateBaseUrl(result.baseUrl)
+                    if success then
+                        logger.info("Overriding Base URL from " .. Config.CREDENTIALS_FILENAME)
+                    else
+                        logger.warn("Invalid Base URL from " .. Config.CREDENTIALS_FILENAME .. ": " .. (err_msg or "Unknown error"))
+                    end
                 end
                 if result.username then
                     Config.saveSetting(Config.SETTINGS_USERNAME_KEY, result.username)
@@ -148,6 +152,20 @@ function Config.setAndValidateBaseUrl(url_string)
 
     if not (string.sub(url_string, 1, 8) == "https://" or string.sub(url_string, 1, 7) == "http://") then
         url_string = "https://" .. url_string
+    end
+
+    local _, _, protocol, domain = string.find(url_string, "^(https?://)(.+)")
+    if domain then
+        if not string.match(domain, "^%d+%.%d+%.%d+%.%d+$") then
+            local domain_parts = {}
+            for part in string.gmatch(domain, "[^%.]+") do
+                table.insert(domain_parts, part)
+            end
+            if #domain_parts > 2 then
+                local base_domain = table.concat({domain_parts[#domain_parts-1], domain_parts[#domain_parts]}, ".")
+                url_string = protocol .. base_domain
+            end
+        end
     end
 
     if not string.find(url_string, "%.") then

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-06 09:25+0000\n"
+"POT-Creation-Date: 2025-08-14 18:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -122,7 +122,7 @@ msgstr ""
 msgid "Recommended"
 msgstr ""
 
-#: main.lua:235 main.lua:354 zlibrary/config.lua:124
+#: main.lua:235 main.lua:354 zlibrary/config.lua:128
 msgid "Most popular"
 msgstr ""
 
@@ -360,36 +360,36 @@ msgstr ""
 msgid "Failed to process book details."
 msgstr ""
 
-#: zlibrary/config.lua:125
+#: zlibrary/config.lua:129
 msgid "Best match"
 msgstr ""
 
-#: zlibrary/config.lua:126
+#: zlibrary/config.lua:130
 msgid "Recently added"
 msgstr ""
 
-#: zlibrary/config.lua:127 zlibrary/config.lua:128
+#: zlibrary/config.lua:131 zlibrary/config.lua:132
 #: zlibrary/multisearch_dialog.lua:288 zlibrary/ui.lua:437
 msgid "Title"
 msgstr ""
 
-#: zlibrary/config.lua:129 zlibrary/ui.lua:473
+#: zlibrary/config.lua:133 zlibrary/ui.lua:473
 msgid "Year"
 msgstr ""
 
-#: zlibrary/config.lua:130 zlibrary/config.lua:131
+#: zlibrary/config.lua:134 zlibrary/config.lua:135
 msgid "File size"
 msgstr ""
 
-#: zlibrary/config.lua:268
+#: zlibrary/config.lua:286
 msgid "Default"
 msgstr ""
 
-#: zlibrary/config.lua:344 zlibrary/ui.lua:831 zlibrary/ui.lua:864
+#: zlibrary/config.lua:362 zlibrary/ui.lua:831 zlibrary/ui.lua:864
 msgid "infinite"
 msgstr ""
 
-#: zlibrary/config.lua:345
+#: zlibrary/config.lua:363
 #, lua-format
 msgid "Block: %ds, Total: %s"
 msgstr ""

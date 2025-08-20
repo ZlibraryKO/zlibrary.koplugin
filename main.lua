@@ -745,10 +745,17 @@ function Zlibrary:downloadBook(book)
         local user_session = Config.getUserSession()
         local referer_url = book.href and Config.getBookUrl(book.href) or nil
 
-        local loading_msg = Ui.showLoadingMessage(T("Downloading…"))
+        local loading_msg = Ui.showBookDownloadProgress(book) or Ui.showLoadingMessage(T("Downloading…"))
 
         local function task_download()
-            return Api.downloadBook(download_url, target_filepath, user_session and user_session.user_id, user_session and user_session.user_key, referer_url)
+            local progress_callback
+            if type(loading_msg.reportProgress) == "function" then
+                progress_callback = function(progress)
+                    loading_msg:reportProgress(progress)
+                end
+            end
+            return Api.downloadBook(download_url, target_filepath, user_session and user_session.user_id,
+                user_session and user_session.user_key, referer_url, progress_callback)
         end
 
         local function on_success_download(api_result)

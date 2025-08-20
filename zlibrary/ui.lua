@@ -69,6 +69,24 @@ function Ui.showLoadingMessage(text)
     return message
 end
 
+function Ui.showBookDownloadProgress(book)
+    if not (type(book) == "table" and book.filesize) then
+        return
+    end
+    -- Greater than or equal to KOReader version 2025.08
+    local ok, ProgressbarDialog = pcall(require, "ui/widget/progressbardialog")
+    if ok and ProgressbarDialog then
+        local progressbar_dialog = ProgressbarDialog:new{
+            title = T("Downloading…"),
+            subtitle = string.format("%s %s", book.title, book.size),
+            progress_max = book.filesize,
+            refresh_time_seconds = 1
+        }
+        progressbar_dialog:show()
+        return progressbar_dialog
+    end
+end
+
 function Ui.closeMessage(message_widget)
     if message_widget then
         UIManager:close(message_widget)

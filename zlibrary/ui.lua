@@ -73,18 +73,20 @@ function Ui.showBookDownloadProgress(book)
     if not (type(book) == "table" and book.filesize) then
         return
     end
-    -- Greater than or equal to KOReader version 2025.08
+    -- prioritize using the official version
     local ok, ProgressbarDialog = pcall(require, "ui/widget/progressbardialog")
-    if ok and ProgressbarDialog then
-        local progressbar_dialog = ProgressbarDialog:new{
-            title = T("Downloading…"),
-            subtitle = string.format("%s %s", book.title, book.size),
-            progress_max = book.filesize,
-            refresh_time_seconds = 1
-        }
-        progressbar_dialog:show()
-        return progressbar_dialog
+    if not (ok and ProgressbarDialog) then
+        ProgressbarDialog = require("zlibrary.progressbardialog")
     end
+    
+    local progressbar_dialog = ProgressbarDialog:new{
+        title = T("Downloading…"),
+        subtitle = string.format("%s %s", book.title, book.size),
+        progress_max = book.filesize,
+        refresh_time_seconds = 1
+    }
+    progressbar_dialog:show()
+    return progressbar_dialog    
 end
 
 function Ui.closeMessage(message_widget)

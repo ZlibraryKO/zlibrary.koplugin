@@ -55,6 +55,27 @@ local function _transformApiBookData(api_book)
     }
 end
 
+local function _chainSinkWithProgressCallback(sink, progressCallback)
+    if type(socketutil.chainSinkWithProgressCallback) == "function" then
+        return socketutil.chainSinkWithProgressCallback(sink, progressCallback)
+    end
+
+    if sink == nil or type(progressCallback) ~= "function" then
+        return sink
+    end
+
+    local downloaded_bytes = 0
+    local progress_reporter_filter = function(chunk, err)
+        if chunk ~= nil then
+            downloaded_bytes = downloaded_bytes + chunk:len()
+            progressCallback(downloaded_bytes)
+        end
+        return chunk, err
+    end
+
+    return ltn12.sink.chain(progress_reporter_filter, sink)
+end
+
 function Api.makeHttpRequest(options)
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - START - URL: %s, Method: %s", options.url, options.method or "GET"))
 
@@ -353,10 +374,7 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
         headers["Referer"] = referer_url
     end
 
-    local handle = socketutil.file_sink(file)
-    if type(progress_callback) == "function" and type(socketutil.chainSinkWithProgressCallback) == "function" then
-        handle = socketutil.chainSinkWithProgressCallback(handle, progress_callback)
-    end
+    local handle = _chainSinkWithProgressCallback(socketutil.file_sink(file), progress_callback)
 
     local http_result = Api.makeHttpRequest{
         url = download_url,

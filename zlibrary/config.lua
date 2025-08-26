@@ -2,6 +2,7 @@ local util = require("util")
 local logger = require("logger")
 local lfs = require("libs/libkoreader-lfs")
 local T = require("zlibrary.gettext")
+local Cache = require("zlibrary.cache")
 
 local Config = {}
 
@@ -135,8 +136,33 @@ Config.SUPPORTED_ORDERS = {
     { name = string.format("%s %s", T("File size"), "↑"), value = "filesizeA" }
 }
 
+function Config.getCacheRealUrl()
+    local runtime_cache = Cache:new{
+        name = "_runtime_cache"
+    }
+    local api_real_url = runtime_cache:get("api_real_url", 600)
+    return api_real_url and api_real_url[1]
+end
+
+function Config.clearCacheRealUrl()
+    local runtime_cache = Cache:new{
+        name = "_runtime_cache"
+    }
+    return runtime_cache:remove("api_real_url")
+end
+
+function Config.setCacheRealUrl(url_string)
+    local runtime_cache = Cache:new{
+        name = "_runtime_cache"
+    }
+    if string.sub(url_string, -1) == "/" then
+        url_string = string.sub(url_string, 1, -2)
+    end
+    return runtime_cache:insert("api_real_url", {url_string})
+end
+
 function Config.getBaseUrl()
-    local configured_url = Config.getSetting(Config.SETTINGS_BASE_URL_KEY)
+    local configured_url = Config.getCacheRealUrl() or Config.getSetting(Config.SETTINGS_BASE_URL_KEY)
     if configured_url == nil or configured_url == "" then
         return nil
     end
@@ -176,6 +202,7 @@ function Config.setAndValidateBaseUrl(url_string)
         url_string = string.sub(url_string, 1, -2)
     end
 
+    Config.clearCacheRealUrl()
     Config.saveSetting(Config.SETTINGS_BASE_URL_KEY, url_string)
     return true, nil
 end

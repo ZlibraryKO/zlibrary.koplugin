@@ -54,7 +54,71 @@ local function _transformApiBookData(api_book)
     }
 end
 
-function Api.makeHttpRequest(options)
+local function _checkAndHandleRedirect(current_url)
+    if not current_url or current_url == "" then
+        return
+    end
+
+    local max_redirects = 5
+    local current_redirect = 0
+    local real_url = current_url
+    local original_method = "HEAD"
+    local method = original_method
+    local status_code 
+    local final_url 
+
+    repeat
+        local request_params = {
+            url = real_url,
+            method = "HEAD",
+            redirect = false
+        }
+        
+        socketutil:set_timeout(5, 15)
+        local req_ok, r_val, r_code, r_headers_tbl, r_status_str = pcall(http.request, request_params)
+        socketutil:reset_timeout()
+
+        if not req_ok then
+            return
+        end
+
+        if type(r_code) == "number" and r_code >= 300 and r_code < 400 then
+            current_redirect = current_redirect + 1
+            if current_redirect > max_redirects then
+                return
+            end
+
+            local location = r_headers_tbl and (r_headers_tbl.location or r_headers_tbl.Location)
+            if not location then
+                return 
+            end
+            
+            local socket_url = require("socket.url")
+            final_url = socket_url.absolute(real_url, location)
+            if final_url and final_url == real_url then
+                return final_url
+            end
+
+            -- RFC 7231
+            if r_code == 303 then
+                method = "GET"
+            elseif r_code == 307 or r_code == 308 then
+                method = original_method
+            elseif r_code == 301 or r_code == 302 then
+                method = (original_method == "POST") and "GET" or original_method
+            end
+        end
+
+        real_url = final_url
+        status_code = r_code
+    until not (type(status_code) == "number" and status_code >= 300 and status_code < 400)
+
+    if type(status_code) == "number" and status_code >= 200 and status_code < 400 then
+        return final_url
+    end
+end
+
+function Api.makeHttpRequest(options, is_retry)
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - START - URL: %s, Method: %s", options.url, options.method or "GET"))
 
     local response_body_table = {}
@@ -131,6 +195,15 @@ function Api.makeHttpRequest(options)
         end
         logger.err(string.format("Zlibrary:Api.makeHttpRequest - END (Invalid response code type) - Error: %s", result.error))
         return result
+    end
+
+    if not is_retry and result.status_code >= 200 and result.status_code < 400 then
+        local real_url = _checkAndHandleRedirect(options.url)
+        if real_url then
+            options.url = real_url
+            Config.setCacheRealUrl(real_url)
+            return Api.makeHttpRequest(options, true)
+        end
     end
 
     if result.status_code ~= 200 and result.status_code ~= 206 then

@@ -745,7 +745,7 @@ function Zlibrary:downloadBook(book)
         local user_session = Config.getUserSession()
         local referer_url = book.href and Config.getBookUrl(book.href) or nil
 
-        local loading_msg = Ui.showBookDownloadProgress(book) or Ui.showLoadingMessage(T("Downloading…"))
+        local loading_msg = Ui.showBookDownloadProgress(book)
 
         local function task_download()
             local progress_callback

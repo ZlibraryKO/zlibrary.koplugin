@@ -1,38 +1,6 @@
 --[[--
 A dialog that shows a progress bar with a title and subtitle.
 Modified from koreader/frontend/ui/widget/progressbardialog, following the original license.
-
-@usage
-local progressbar_dialog = ProgressbarDialog:new {
-    title = nil,
-    subtitle = nil,
-    progress_max = nil
-    refresh_time_seconds = 3,
-}
-Note: provide at least one of title, subtitle or progress_max
-@param title string the title of the dialog
-@param subtitle string the subtitle of the dialog
-@param progress_max number the maximum progress (e.g. size of the file in bytes for file downloads)
-                    reportProgress() should be called with the current
-                    progress (value between 0-progress_max) to update the progress bar
-                    optional: if `progress_max` is nil, the progress bar will be hidden
-@param refresh_time_seconds number refresh time in seconds
-
--- Attach progress callback and call show()
-progressbar_dialog:show()
-
--- Call close() when download is done
-progressbar_dialog:close()
-
--- To report progress, you can either:
--- manually call reportProgress with the current progress (value between 0-progress_max)
-progressbar_dialog:reportProgress( <progress value> )
-
--- or when using luasocket sinks, chain the callback:
-local sink = ltn12.sink.file(io.open(local_path, "w"))
-sink = socketutil.chainSinkWithProgressCallback(sink, function(progress)
-    progressbar_dialog:reportProgress(progress)
-end)
 --]]
 
 local Blitbuffer = require("ffi/blitbuffer")

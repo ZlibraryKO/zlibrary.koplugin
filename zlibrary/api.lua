@@ -70,7 +70,7 @@ local function _checkAndHandleRedirect(current_url)
     repeat
         local request_params = {
             url = real_url,
-            method = "HEAD",
+            method = method,
             redirect = false
         }
         

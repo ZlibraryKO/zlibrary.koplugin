@@ -760,7 +760,7 @@ function Zlibrary:downloadBook(book)
 
         local function on_success_download(api_result)
             if api_result and api_result.error and retry_on_auth_error and Api.isAuthenticationError(api_result.error) then
-                Ui.closeMessage(loading_msg, "ui")
+                Ui.closeMessage(loading_msg)
                 self:login(function(login_ok)
                     if login_ok then
                         attemptDownload(false)
@@ -769,7 +769,7 @@ function Zlibrary:downloadBook(book)
                 return
             end
 
-            Ui.closeMessage(loading_msg, "ui")
+            Ui.closeMessage(loading_msg)
             if api_result and api_result.success then
                 local has_wifi_toggle = Device:hasWifiToggle()
                 local default_turn_off_wifi = Config.getTurnOffWifiAfterDownload()
@@ -814,7 +814,7 @@ function Zlibrary:downloadBook(book)
 
         local function on_error_download(err_msg)
             if retry_on_auth_error and Api.isAuthenticationError(err_msg) then
-                Ui.closeMessage(loading_msg, "ui")
+                Ui.closeMessage(loading_msg)
                 self:login(function(login_ok)
                     if login_ok then
                         attemptDownload(false)
@@ -825,7 +825,7 @@ function Zlibrary:downloadBook(book)
             
             local error_string = tostring(err_msg)
             if string.find(error_string, "Download limit reached or file is an HTML page", 1, true) then
-                Ui.closeMessage(loading_msg, "ui")
+                Ui.closeMessage(loading_msg)
                 Ui.showErrorMessage(T("Download limit reached. Please try again later or check your account."))
                 pcall(os.remove, target_filepath)
                 return

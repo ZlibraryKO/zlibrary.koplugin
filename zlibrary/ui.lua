@@ -71,9 +71,9 @@ end
 
 function Ui.showBookDownloadProgress(book)
     if not (type(book) == "table" and book.filesize) then
-        return
+        return Ui.showLoadingMessage(T("Downloading…"))
     end
-    -- prioritize using the official version
+    -- priority official for latest
     local ok, ProgressbarDialog = pcall(require, "ui/widget/progressbardialog")
     if not (ok and ProgressbarDialog) then
         ProgressbarDialog = require("zlibrary.progressbardialog")
@@ -85,8 +85,12 @@ function Ui.showBookDownloadProgress(book)
         progress_max = book.filesize,
         refresh_time_seconds = 1
     }
+    -- fix progress bar fill color on Koreader 2025.08
+    if progressbar_dialog.progress_bar then  
+        progressbar_dialog.progress_bar.fillcolor = require("ffi/blitbuffer").COLOR_BLACK
+    end
     progressbar_dialog:show()
-    return progressbar_dialog    
+    return progressbar_dialog
 end
 
 function Ui.closeMessage(message_widget)

@@ -41,6 +41,7 @@ local function _transformApiBookData(api_book)
         year = api_book.year or "N/A",
         format = api_book.extension or "N/A",
         size = api_book.filesizeString or api_book.filesize or "N/A",
+        filesize = api_book.filesize,
         lang = api_book.language or "N/A",
         rating = api_book.interestScore or "N/A",
         href = api_book.href,
@@ -52,6 +53,27 @@ local function _transformApiBookData(api_book)
         pages = api_book.pages,
         identifier = api_book.identifier,
     }
+end
+
+local function _chainSinkWithProgressCallback(sink, progressCallback)
+    if type(socketutil.chainSinkWithProgressCallback) == "function" then
+        return socketutil.chainSinkWithProgressCallback(sink, progressCallback)
+    end
+
+    if sink == nil or type(progressCallback) ~= "function" then
+        return sink
+    end
+
+    local downloaded_bytes = 0
+    local progress_reporter_filter = function(chunk, err)
+        if chunk ~= nil then
+            downloaded_bytes = downloaded_bytes + chunk:len()
+            progressCallback(downloaded_bytes)
+        end
+        return chunk, err
+    end
+
+    return ltn12.sink.chain(progress_reporter_filter, sink)
 end
 
 function Api.makeHttpRequest(options)
@@ -327,7 +349,7 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
     return result
 end
 
-function Api.downloadBook(download_url, target_filepath, user_id, user_key, referer_url)
+function Api.downloadBook(download_url, target_filepath, user_id, user_key, referer_url, progress_callback)
     logger.info(string.format("Zlibrary:Api.downloadBook - START - URL: %s, Target: %s", download_url, target_filepath))
 
     if Config.isTestModeEnabled() then
@@ -352,11 +374,13 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
         headers["Referer"] = referer_url
     end
 
+    local handle = _chainSinkWithProgressCallback(socketutil.file_sink(file), progress_callback)
+
     local http_result = Api.makeHttpRequest{
         url = download_url,
         method = "GET",
         headers = headers,
-        sink = socketutil.file_sink(file),
+        sink = handle,
         timeout = Config.getDownloadTimeout(),
     }
 

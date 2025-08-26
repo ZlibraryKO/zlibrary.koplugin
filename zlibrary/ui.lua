@@ -69,9 +69,37 @@ function Ui.showLoadingMessage(text)
     return message
 end
 
+function Ui.showBookDownloadProgress(book)
+    if not (type(book) == "table" and book.filesize) then
+        return Ui.showLoadingMessage(T("Downloading…"))
+    end
+    -- priority official for latest
+    local ok, ProgressbarDialog = pcall(require, "ui/widget/progressbardialog")
+    if not (ok and ProgressbarDialog) then
+        ProgressbarDialog = require("zlibrary.progressbardialog")
+    end
+    
+    local progressbar_dialog = ProgressbarDialog:new{
+        title = T("Downloading…"),
+        subtitle = string.format("%s %s", book.title, book.size),
+        progress_max = book.filesize,
+        refresh_time_seconds = 1
+    }
+    -- fix progress bar fill color on Koreader 2025.08
+    if progressbar_dialog.progress_bar then  
+        progressbar_dialog.progress_bar.fillcolor = require("ffi/blitbuffer").COLOR_BLACK
+    end
+    progressbar_dialog:show()
+    return progressbar_dialog
+end
+
 function Ui.closeMessage(message_widget)
     if message_widget then
-        UIManager:close(message_widget)
+        if type(message_widget.close) == "function" then
+            message_widget:close()
+        else
+            UIManager:close(message_widget)
+        end
     end
 end
 

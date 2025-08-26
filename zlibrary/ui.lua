@@ -93,9 +93,9 @@ function Ui.showBookDownloadProgress(book)
     return progressbar_dialog
 end
 
-function Ui.closeMessage(message_widget)
+function Ui.closeMessage(message_widget, refreshtype)
     if message_widget then
-        UIManager:close(message_widget)
+        UIManager:close(message_widget, refreshtype)
     end
 end
 

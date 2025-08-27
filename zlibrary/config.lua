@@ -140,7 +140,7 @@ function Config.getCacheRealUrl()
     local runtime_cache = Cache:new{
         name = "_runtime_cache"
     }
-    local api_real_url = runtime_cache:get("api_real_url", 600)
+    local api_real_url = runtime_cache:get("api_real_url", 1200)
     return api_real_url and api_real_url[1]
 end
 
@@ -151,18 +151,28 @@ function Config.clearCacheRealUrl()
     return runtime_cache:remove("api_real_url")
 end
 
-function Config.setCacheRealUrl(url_string)
+function Config.setCacheRealUrl(original_url, real_url)
+    if not (original_url and real_url) then
+        return
+    end
+    
+    local base_url = Config.getBaseUrl(true)
+    if not (base_url and string.find(original_url, base_url, 1, true)) then
+        return
+    end
+
+    if string.sub(real_url, -1) == "/" then
+        real_url = string.sub(real_url, 1, -2)
+    end
+    
     local runtime_cache = Cache:new{
         name = "_runtime_cache"
     }
-    if string.sub(url_string, -1) == "/" then
-        url_string = string.sub(url_string, 1, -2)
-    end
-    return runtime_cache:insert("api_real_url", {url_string})
+    return runtime_cache:insert("api_real_url", {real_url})
 end
 
-function Config.getBaseUrl()
-    local configured_url = Config.getCacheRealUrl() or Config.getSetting(Config.SETTINGS_BASE_URL_KEY)
+function Config.getBaseUrl(is_original)
+    local configured_url = (not is_original and Config.getCacheRealUrl()) or Config.getSetting(Config.SETTINGS_BASE_URL_KEY)
     if configured_url == nil or configured_url == "" then
         return nil
     end
@@ -202,8 +212,8 @@ function Config.setAndValidateBaseUrl(url_string)
         url_string = string.sub(url_string, 1, -2)
     end
 
-    Config.clearCacheRealUrl()
     Config.saveSetting(Config.SETTINGS_BASE_URL_KEY, url_string)
+    Config.clearCacheRealUrl()
     return true, nil
 end
 

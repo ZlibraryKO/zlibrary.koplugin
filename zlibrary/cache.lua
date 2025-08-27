@@ -105,7 +105,9 @@ function Cache:remove(key)
     if not self._cache.delSetting then
         return nil
     end
+    local uptime_key = key .. "_ut"
     self._cache:delSetting(key)
+    self._cache:delSetting(uptime_key):flush()
     return true
 end
 

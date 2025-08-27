@@ -5,6 +5,7 @@ local json = require("json")
 local ltn12 = require("ltn12")
 local http = require("socket.http")
 local socketutil = require("socketutil")
+local socket_url = require("socket.url")
 local T = require("zlibrary.gettext")
 
 local Api = {}
@@ -74,7 +75,7 @@ local function _checkAndHandleRedirect(current_url)
             redirect = false
         }
         
-        socketutil:set_timeout(5, 15)
+        socketutil:set_timeout(5, 10)
         local req_ok, r_val, r_code, r_headers_tbl, r_status_str = pcall(http.request, request_params)
         socketutil:reset_timeout()
 
@@ -89,11 +90,11 @@ local function _checkAndHandleRedirect(current_url)
             end
 
             local location = r_headers_tbl and (r_headers_tbl.location or r_headers_tbl.Location)
-            if not location then
+            location = string.gsub(location or "", "%s", "")
+            if location == "" then 
                 return 
             end
             
-            local socket_url = require("socket.url")
             final_url = socket_url.absolute(real_url, location)
             if final_url and final_url == real_url then
                 return final_url
@@ -107,9 +108,10 @@ local function _checkAndHandleRedirect(current_url)
             elseif r_code == 301 or r_code == 302 then
                 method = (original_method == "POST") and "GET" or original_method
             end
+            
+            real_url = final_url
         end
 
-        real_url = final_url
         status_code = r_code
     until not (type(status_code) == "number" and status_code >= 300 and status_code < 400)
 
@@ -118,9 +120,24 @@ local function _checkAndHandleRedirect(current_url)
     end
 end
 
-function Api.makeHttpRequest(options, is_retry)
-    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - START - URL: %s, Method: %s", options.url, options.method or "GET"))
+local function _retryBaseUrlRedirect(options, real_url)
+    Config.setCacheRealUrl(options.url, real_url)
 
+    local real_url_parsed = socket_url.parse(real_url)
+    local original_url_parsed = socket_url.parse(options.url)
+    if real_url_parsed and original_url_parsed then
+        real_url_parsed.path = original_url_parsed.path
+        real_url_parsed.query = original_url_parsed.query
+        real_url_parsed.fragment = original_url_parsed.fragment
+        
+        options.url = socket_url.build(real_url_parsed)
+        return Api.makeHttpRequest(options, true)
+    end
+end
+
+function Api.makeHttpRequest(options, skip_redirect_check)
+    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - START - URL: %s, Method: %s", options.url, options.method or "GET"))
+    
     local response_body_table = {}
     local result = { body = nil, status_code = nil, error = nil, headers = nil }
 
@@ -146,13 +163,13 @@ function Api.makeHttpRequest(options, is_retry)
         headers = options.headers,
         source = options.source,
         sink = sink_to_use,
-        redirect = true,
+        redirect = true
     }
 
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Timeout: %s", request_params.url, request_params.method, tostring(options.timeout)))
 
     local req_ok, r_val, r_code, r_headers_tbl, r_status_str = pcall(http.request, request_params)
-
+    
     if options.timeout then
         socketutil:reset_timeout()
         logger.dbg("Zlibrary:Api.makeHttpRequest - Reset timeout to default")
@@ -197,12 +214,11 @@ function Api.makeHttpRequest(options, is_retry)
         return result
     end
 
-    if not is_retry and result.status_code >= 200 and result.status_code < 400 then
+    if not skip_redirect_check and result.status_code >= 200 and result.status_code < 400 then
+        
         local real_url = _checkAndHandleRedirect(options.url)
         if real_url then
-            options.url = real_url
-            Config.setCacheRealUrl(real_url)
-            return Api.makeHttpRequest(options, true)
+            return _retryBaseUrlRedirect(options, real_url)
         end
     end
 
@@ -520,14 +536,14 @@ function Api.getRecommendedBooks(user_id, user_key)
     if user_id and user_key then
         headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
     end
-
+    
     local http_result = Api.makeHttpRequest{
         url = url,
         method = "GET",
         headers = headers,
         timeout = Config.getRecommendedTimeout(),
     }
-
+    
     if http_result.error then
         logger.warn("Api.getRecommendedBooks - HTTP request error: ", http_result.error)
         return { error = http_result.error }

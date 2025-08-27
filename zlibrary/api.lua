@@ -55,87 +55,30 @@ local function _transformApiBookData(api_book)
     }
 end
 
-local function _checkAndHandleRedirect(current_url)
-    if not current_url or current_url == "" then
-        return
-    end
-
-    local max_redirects = 5
-    local current_redirect = 0
-    local real_url = current_url
-    local original_method = "HEAD"
-    local method = original_method
-    local status_code 
-    local final_url 
-
-    repeat
-        local request_params = {
-            url = real_url,
-            method = method,
-            redirect = false
-        }
-        
-        socketutil:set_timeout(5, 10)
-        local req_ok, r_val, r_code, r_headers_tbl, r_status_str = pcall(http.request, request_params)
-        socketutil:reset_timeout()
-
-        if not req_ok then
+local function _checkAndHandleRedirect(status_code, current_url)
+    if type(current_url) ~= "string" or current_url == "" or (status_code ~= 301 and 
+                    status_code ~= 302 and status_code ~= 303 and status_code ~= 307) then
             return
-        end
+    end
 
-        if type(r_code) == "number" and r_code >= 300 and r_code < 400 then
-            current_redirect = current_redirect + 1
-            if current_redirect > max_redirects then
-                return
-            end
-
-            local location = r_headers_tbl and (r_headers_tbl.location or r_headers_tbl.Location)
-            location = string.gsub(location or "", "%s", "")
-            if location == "" then 
-                return 
-            end
+    local http_result = Api.makeHttpRequest({
+        url = current_url,
+        method = "HEAD",
+        timeout = {5, 10}
+    }, true)
+    
+    local real_url = http_result.headers and (http_result.headers.location or http_result.headers.Location)
+    if type(real_url) == "string" then
+        local real_url_host = socket_url.parse(real_url).host
+        if real_url_host and real_url_host ~= socket_url.parse(current_url).host then
             
-            final_url = socket_url.absolute(real_url, location)
-            if final_url and final_url == real_url then
-                return final_url
-            end
-
-            -- RFC 7231
-            if r_code == 303 then
-                method = "GET"
-            elseif r_code == 307 or r_code == 308 then
-                method = original_method
-            elseif r_code == 301 or r_code == 302 then
-                method = (original_method == "POST") and "GET" or original_method
-            end
-            
-            real_url = final_url
+            Config.setCacheRealUrl(current_url, real_url)
+            return true, real_url
         end
-
-        status_code = r_code
-    until not (type(status_code) == "number" and status_code >= 300 and status_code < 400)
-
-    if type(status_code) == "number" and status_code >= 200 and status_code < 400 then
-        return final_url
     end
 end
 
-local function _retryBaseUrlRedirect(options, real_url)
-    Config.setCacheRealUrl(options.url, real_url)
-
-    local real_url_parsed = socket_url.parse(real_url)
-    local original_url_parsed = socket_url.parse(options.url)
-    if real_url_parsed and original_url_parsed then
-        real_url_parsed.path = original_url_parsed.path
-        real_url_parsed.query = original_url_parsed.query
-        real_url_parsed.fragment = original_url_parsed.fragment
-        
-        options.url = socket_url.build(real_url_parsed)
-        return Api.makeHttpRequest(options, true)
-    end
-end
-
-function Api.makeHttpRequest(options, skip_redirect_check)
+function Api.makeHttpRequest(options)
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - START - URL: %s, Method: %s", options.url, options.method or "GET"))
     
     local response_body_table = {}
@@ -214,14 +157,6 @@ function Api.makeHttpRequest(options, skip_redirect_check)
         return result
     end
 
-    if not skip_redirect_check and result.status_code >= 200 and result.status_code < 400 then
-        
-        local real_url = _checkAndHandleRedirect(options.url)
-        if real_url then
-            return _retryBaseUrlRedirect(options, real_url)
-        end
-    end
-
     if result.status_code ~= 200 and result.status_code ~= 206 then
         if not result.error then
             result.error = string.format("%s: %s (%s)", T("HTTP Error"), result.status_code, r_status_str or T("Unknown Status"))
@@ -233,7 +168,7 @@ function Api.makeHttpRequest(options, skip_redirect_check)
     return result
 end
 
-function Api.login(email, password)
+function Api.login(email, password, is_retry)
     logger.info(string.format("Zlibrary:Api.login - START"))
     local result = { user_id = nil, user_key = nil, error = nil }
 
@@ -272,6 +207,11 @@ function Api.login(email, password)
         timeout = Config.getLoginTimeout(),
     }
 
+    local should_redirect = _checkAndHandleRedirect(http_result.status_code, rpc_url)
+    if not is_retry and should_redirect then
+        return Api.login(email, password, true)
+    end
+
     if http_result.error then
         result.error = http_result.error
         logger.err(string.format("Zlibrary:Api.login - END (HTTP error) - Error: %s", result.error))
@@ -302,7 +242,7 @@ function Api.login(email, password)
     return result
 end
 
-function Api.search(query, user_id, user_key, languages, extensions, order, page)
+function Api.search(query, user_id, user_key, languages, extensions, order, page, is_retry)
     logger.info(string.format("Zlibrary:Api.search - START - Query: %s, Page: %s", query, tostring(page)))
     local result = { results = nil, total_count = nil, error = nil }
 
@@ -356,6 +296,11 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
         source = ltn12.source.string(body),
         timeout = Config.getSearchTimeout(),
     }
+
+    local should_redirect = _checkAndHandleRedirect(http_result.status_code, search_url)
+    if not is_retry and should_redirect then
+        return Api.search(query, user_id, user_key, languages, extensions, order, page, true)
+    end
 
     if http_result.error then
         result.error = http_result.error

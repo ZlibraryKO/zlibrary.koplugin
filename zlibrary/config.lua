@@ -140,7 +140,7 @@ function Config.getCacheRealUrl()
     local runtime_cache = Cache:new{
         name = "_runtime_cache"
     }
-    local api_real_url = runtime_cache:get("api_real_url", 1200)
+    local api_real_url = runtime_cache:get("api_real_url", 1800)
     return api_real_url and api_real_url[1]
 end
 

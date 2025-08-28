@@ -64,17 +64,19 @@ local function _checkAndHandleRedirect(status_code, current_url)
     local http_result = Api.makeHttpRequest({
         url = current_url,
         method = "HEAD",
-        timeout = {5, 10}
+        timeout = {5, 10},
     }, true)
     
     local real_url = http_result.headers and (http_result.headers.location or http_result.headers.Location)
-    if type(real_url) == "string" then
-        local real_url_host = socket_url.parse(real_url).host
-        if real_url_host and real_url_host ~= socket_url.parse(current_url).host then
+    if type(real_url) ~= "string" or real_url == "" then
+        return
+    end
+
+    local real_url_host = socket_url.parse(real_url).host
+    if real_url_host and real_url_host ~= socket_url.parse(current_url).host then
             
-            Config.setCacheRealUrl(current_url, real_url)
-            return true, real_url
-        end
+        Config.setCacheRealUrl(current_url, real_url)
+        return true, real_url
     end
 end
 
@@ -106,7 +108,7 @@ function Api.makeHttpRequest(options)
         headers = options.headers,
         source = options.source,
         sink = sink_to_use,
-        redirect = true
+        redirect = options.headers ~= nil and options.headers or true,
     }
 
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Timeout: %s", request_params.url, request_params.method, tostring(options.timeout)))
@@ -205,6 +207,8 @@ function Api.login(email, password, is_retry)
         },
         source = ltn12.source.string(body),
         timeout = Config.getLoginTimeout(),
+        -- Avoid redirects - 301/302 convert POST to GET per RFC.
+        redirect = false,
     }
 
     local should_redirect = _checkAndHandleRedirect(http_result.status_code, rpc_url)
@@ -295,6 +299,7 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
         headers = headers,
         source = ltn12.source.string(body),
         timeout = Config.getSearchTimeout(),
+        redirect = false,
     }
 
     local should_redirect = _checkAndHandleRedirect(http_result.status_code, search_url)

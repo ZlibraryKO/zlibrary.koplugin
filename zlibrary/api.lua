@@ -56,28 +56,37 @@ local function _transformApiBookData(api_book)
 end
 
 local function _checkAndHandleRedirect(status_code, current_url)
+
+    local result = { has_redirect = nil, real_url = nil, status_code = nil, error = nil }
     if type(current_url) ~= "string" or current_url == "" or (status_code ~= 301 and 
                     status_code ~= 302 and status_code ~= 303 and status_code ~= 307) then
-            return
+            return result
     end
-
+    
     local http_result = Api.makeHttpRequest({
         url = current_url,
         method = "HEAD",
         timeout = {5, 10},
     }, true)
     
+    result.has_redirect = true
+    result.status_code = http_result.status_code
+
     local real_url = http_result.headers and (http_result.headers.location or http_result.headers.Location)
     if type(real_url) ~= "string" or real_url == "" then
-        return
+        result.error = string.format("Redirect failed: empty Location header. %s", tostring(http_result.error))
+        return result
     end
 
     local real_url_host = socket_url.parse(real_url).host
     if real_url_host and real_url_host ~= socket_url.parse(current_url).host then
             
         Config.setCacheRealUrl(current_url, real_url)
-        return true, real_url
+        result.real_url = real_url
+    else
+        result.error = string.format("Invalid or unchanged Location header. %s", tostring(http_result.error))
     end
+    return result
 end
 
 function Api.makeHttpRequest(options)
@@ -211,9 +220,13 @@ function Api.login(email, password, is_retry)
         redirect = false,
     }
 
-    local should_redirect = _checkAndHandleRedirect(http_result.status_code, rpc_url)
-    if not is_retry and should_redirect then
-        return Api.login(email, password, true)
+    if not is_retry then
+        local check_result = _checkAndHandleRedirect(http_result.status_code, rpc_url)
+        if check_result.has_redirect and check_result.real_url then
+            return Api.login(email, password, true)
+        elseif check_result.has_redirect and check_result.error then
+            http_result = check_result
+        end  
     end
 
     if http_result.error then
@@ -302,9 +315,13 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
         redirect = false,
     }
 
-    local should_redirect = _checkAndHandleRedirect(http_result.status_code, search_url)
-    if not is_retry and should_redirect then
-        return Api.search(query, user_id, user_key, languages, extensions, order, page, true)
+    if not is_retry then
+        local check_result = _checkAndHandleRedirect(http_result.status_code, search_url)
+        if check_result.has_redirect and check_result.real_url then
+            return Api.search(query, user_id, user_key, languages, extensions, order, page, true)
+        elseif check_result.has_redirect and check_result.error then
+            http_result = check_result
+        end  
     end
 
     if http_result.error then

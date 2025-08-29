@@ -27,6 +27,7 @@ Config.CREDENTIALS_FILENAME = "zlibrary_credentials.lua"
 
 Config.DEFAULT_DOWNLOAD_DIR_FALLBACK = G_reader_settings:readSetting("home_dir")
              or require("apps/filemanager/filemanagerutil").getDefaultDir()
+Config.USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
 Config.SEARCH_RESULTS_LIMIT = 30
 
 -- Timeout configuration for different operations (block_timeout, total_timeout)

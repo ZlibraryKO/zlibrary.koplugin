@@ -55,10 +55,10 @@ local function _transformApiBookData(api_book)
     }
 end
 
-local function _checkAndHandleRedirect(status_code, current_url)
+local function _checkAndHandleRedirect(skip_check, status_code, current_url)
 
     local result = { has_redirect = nil, real_url = nil, status_code = nil, error = nil }
-    if type(current_url) ~= "string" or current_url == "" or (status_code ~= 301 and 
+    if skip_check or type(current_url) ~= "string" or current_url == "" or (status_code ~= 301 and 
                     status_code ~= 302 and status_code ~= 303 and status_code ~= 307) then
             return result
     end
@@ -66,6 +66,7 @@ local function _checkAndHandleRedirect(status_code, current_url)
     local http_result = Api.makeHttpRequest({
         url = current_url,
         method = "HEAD",
+        headers = { ["User-Agent"] = Config.USER_AGENT },
         timeout = {5, 10},
         redirect = true,
     }, true)
@@ -123,7 +124,7 @@ function Api.makeHttpRequest(options)
         source = options.source,
         sink = sink_to_use,
         -- zlibrary mirror redirects may break API paths; disabled by default.
-        redirect = options.redirect ~= nil and options.redirect or false,
+        redirect = options.redirect or false,
     }
 
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Timeout: %s", request_params.url, request_params.method, tostring(options.timeout)))
@@ -174,16 +175,15 @@ function Api.makeHttpRequest(options)
         return result
     end
 
-    if request_params.method == "GET" and type(options.getRedirectedUrl) == "function" then
-        local check_result = _checkAndHandleRedirect(result.status_code, options.url)
-        if check_result.has_redirect then
-            if check_result.real_url then
-                options.getRedirectedUrl = nil
-                options.url = options.getRedirectedUrl()
-                return Api.makeHttpRequest(options)
-            elseif check_result.error then
-                result = check_result
-            end
+    local is_skip_check = not (request_params.method == "GET" and type(options.getRedirectedUrl) == "function")
+    local check_result = _checkAndHandleRedirect(is_skip_check, result.status_code, options.url)
+    if check_result.has_redirect then
+        if check_result.real_url then
+            options.getRedirectedUrl = nil
+            options.url = options.getRedirectedUrl()
+            return Api.makeHttpRequest(options)
+        elseif check_result.error then
+            result = check_result
         end
     end
 
@@ -239,15 +239,13 @@ function Api.login(email, password, is_retry)
         redirect = false,
     }
 
-    if not is_retry then
-        local check_result = _checkAndHandleRedirect(http_result.status_code, rpc_url)
-        if check_result.has_redirect then
-            if check_result.real_url then
-                return Api.login(email, password, true)
-            elseif check_result.error then
-                http_result = check_result
-            end
-        end  
+    local check_result = _checkAndHandleRedirect(is_retry, http_result.status_code, rpc_url)
+    if check_result.has_redirect then
+        if check_result.real_url then
+            return Api.login(email, password, true)
+        elseif check_result.error then
+            http_result = check_result
+        end
     end
 
     if http_result.error then
@@ -335,16 +333,14 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
         timeout = Config.getSearchTimeout(),
     }
 
-    if not is_retry then
-        local check_result = _checkAndHandleRedirect(http_result.status_code, search_url)
-        if check_result.has_redirect then
-            if check_result.real_url then
-                return Api.search(query, user_id, user_key, languages, extensions, order, page, true)
-            elseif check_result.error then
-                http_result = check_result
-            end
-        end  
-    end
+    local check_result = _checkAndHandleRedirect(is_retry, http_result.status_code, search_url)
+    if check_result.has_redirect then
+        if check_result.real_url then
+            return Api.search(query, user_id, user_key, languages, extensions, order, page, true)
+        elseif check_result.error then
+            http_result = check_result
+        end
+    end  
 
     if http_result.error then
         result.error = http_result.error

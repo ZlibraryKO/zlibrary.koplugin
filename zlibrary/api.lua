@@ -67,6 +67,7 @@ local function _checkAndHandleRedirect(status_code, current_url)
         url = current_url,
         method = "HEAD",
         timeout = {5, 10},
+        redirect = true,
     }, true)
     
     result.has_redirect = true
@@ -78,10 +79,14 @@ local function _checkAndHandleRedirect(status_code, current_url)
         return result
     end
 
-    local real_url_host = socket_url.parse(real_url).host
-    if real_url_host and real_url_host ~= socket_url.parse(current_url).host then
-            
-        Config.setCacheRealUrl(current_url, real_url)
+    local real_url_parse = socket_url.parse(real_url)
+    local real_url_host = real_url_parse.host
+    if real_url_host and real_url_parse.scheme and real_url_host ~= socket_url.parse(current_url).host then
+
+        Config.setCacheRealUrl(current_url, socket_url.build({
+                scheme = real_url_parse.scheme,
+                host = real_url_host
+        }))
         result.real_url = real_url
     else
         result.error = string.format("Invalid or unchanged Location header. %s", tostring(http_result.error))
@@ -117,7 +122,8 @@ function Api.makeHttpRequest(options)
         headers = options.headers,
         source = options.source,
         sink = sink_to_use,
-        redirect = options.headers ~= nil and options.headers or true,
+        -- zlibrary mirror redirects may break API paths; disabled by default.
+        redirect = options.redirect ~= nil and options.redirect or false,
     }
 
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Timeout: %s", request_params.url, request_params.method, tostring(options.timeout)))
@@ -166,6 +172,19 @@ function Api.makeHttpRequest(options)
         end
         logger.err(string.format("Zlibrary:Api.makeHttpRequest - END (Invalid response code type) - Error: %s", result.error))
         return result
+    end
+
+    if request_params.method == "GET" and type(options.getRedirectedUrl) == "function" then
+        local check_result = _checkAndHandleRedirect(result.status_code, options.url)
+        if check_result.has_redirect then
+            if check_result.real_url then
+                options.getRedirectedUrl = nil
+                options.url = options.getRedirectedUrl()
+                return Api.makeHttpRequest(options)
+            elseif check_result.error then
+                result = check_result
+            end
+        end
     end
 
     if result.status_code ~= 200 and result.status_code ~= 206 then
@@ -222,10 +241,12 @@ function Api.login(email, password, is_retry)
 
     if not is_retry then
         local check_result = _checkAndHandleRedirect(http_result.status_code, rpc_url)
-        if check_result.has_redirect and check_result.real_url then
-            return Api.login(email, password, true)
-        elseif check_result.has_redirect and check_result.error then
-            http_result = check_result
+        if check_result.has_redirect then
+            if check_result.real_url then
+                return Api.login(email, password, true)
+            elseif check_result.error then
+                http_result = check_result
+            end
         end  
     end
 
@@ -312,15 +333,16 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
         headers = headers,
         source = ltn12.source.string(body),
         timeout = Config.getSearchTimeout(),
-        redirect = false,
     }
 
     if not is_retry then
         local check_result = _checkAndHandleRedirect(http_result.status_code, search_url)
-        if check_result.has_redirect and check_result.real_url then
-            return Api.search(query, user_id, user_key, languages, extensions, order, page, true)
-        elseif check_result.has_redirect and check_result.error then
-            http_result = check_result
+        if check_result.has_redirect then
+            if check_result.real_url then
+                return Api.search(query, user_id, user_key, languages, extensions, order, page, true)
+            elseif check_result.error then
+                http_result = check_result
+            end
         end  
     end
 
@@ -414,6 +436,7 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
         headers = headers,
         sink = socketutil.file_sink(file),
         timeout = Config.getDownloadTimeout(),
+        redirect = true,
     }
 
     if http_result.error and not (http_result.status_code and http_result.headers) then
@@ -461,6 +484,7 @@ function Api.downloadBookCover(download_url, target_filepath)
         headers = headers,
         sink = socketutil.file_sink(file),
         timeout = Config.getCoverTimeout(),
+        redirect = true,
     }
 
     if http_result.error and not (http_result.status_code and http_result.headers) then
@@ -509,6 +533,7 @@ function Api.getRecommendedBooks(user_id, user_key)
         method = "GET",
         headers = headers,
         timeout = Config.getRecommendedTimeout(),
+        getRedirectedUrl = Config.getRecommendedBooksUrl,
     }
     
     if http_result.error then
@@ -565,6 +590,7 @@ function Api.getMostPopularBooks(user_id, user_key)
         method = "GET",
         headers = headers,
         timeout = Config.getPopularTimeout(),
+        getRedirectedUrl = Config.getMostPopularBooksUrl,
     }
 
     if http_result.error then
@@ -621,6 +647,9 @@ function Api.getBookDetails(user_id, user_key, book_id, book_hash)
         method = "GET",
         headers = headers,
         timeout = Config.getBookDetailsTimeout(),
+        getRedirectedUrl = function()
+            return Config.getBookDetailsUrl(book_id, book_hash)
+        end,
     }
 
     if http_result.error then

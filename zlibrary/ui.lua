@@ -69,15 +69,17 @@ function Ui.showLoadingMessage(text)
     return message
 end
 
-function Ui.showBookDownloadProgress(book)
+function Ui.showBookDownloadProgress(book, custom_title)
+    local title = custom_title or T("Downloading…")
     if not (type(book) == "table" and book.filesize) then
-        return
+        return Ui.showLoadingMessage(title)
     end
+
     -- KOReader 2025.08 or later required
     local ok, ProgressbarDialog = pcall(require, "ui/widget/progressbardialog")
     if ok and ProgressbarDialog then
         local progressbar_dialog = ProgressbarDialog:new{
-            title = T("Downloading…"),
+            title = title,
             subtitle = string.format("%s %s", book.title, book.size),
             progress_max = book.filesize,
             refresh_time_seconds = 1
@@ -86,8 +88,16 @@ function Ui.showBookDownloadProgress(book)
         if progressbar_dialog.progress_bar then  
             progressbar_dialog.progress_bar.fillcolor = require("ffi/blitbuffer").COLOR_BLACK
         end
+
+        local report_callback = function(progress)
+            progressbar_dialog:reportProgress(progress)
+        end
+        
         progressbar_dialog:show()
-        return progressbar_dialog
+        return progressbar_dialog, report_callback
+    else
+        
+        return Ui.showLoadingMessage(title)
     end
 end
 

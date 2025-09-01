@@ -546,6 +546,13 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
     table.insert(details_menu_items, { text = "---" })
 
     table.insert(details_menu_items, {
+        text = T("More Similar Books"),
+        mandatory = "\u{F002}",
+        callback = function()
+            parent_zlibrary:searchSimilarBooks(book)
+        end,
+    })
+    table.insert(details_menu_items, {
         text = T("Back"),
         mandatory = "\u{21A9}",
         callback = function()
@@ -687,6 +694,39 @@ function Ui.showMostPopularBooksMenu(ui_self, books, plugin_self)
 
     local menu = Menu:new({
         title = T("Z-library Most Popular Books"),
+        item_table = menu_items,
+        items_per_page = 10,
+        show_captions = true,
+        parent = ui_self.document_menu_parent_holder,
+        is_popout = false,
+        is_borderless = true,
+        title_bar_fm_style = true,
+        multilines_show_more_text = true
+    })
+    _showAndTrackDialog(menu)
+end
+
+function Ui.showSimilarBooksMenu(ui_self, books, plugin_self)
+    local menu_items = {}
+    for _, book in ipairs(books) do
+        local title = book.title or T("Untitled")
+        local author = book.author or T("Unknown Author")
+        local menu_text = string.format("%s - %s", title, author)
+        table.insert(menu_items, {
+            text = menu_text,
+            callback = function()
+                plugin_self:onSelectRecommendedBook(book)
+            end,
+        })
+    end
+
+    if #menu_items == 0 then
+        Ui.showInfoMessage(T("No similar books found. The list was empty, please try again."))
+        return
+    end
+
+    local menu = Menu:new({
+        title = T("Z-library Similar Books"),
         item_table = menu_items,
         items_per_page = 10,
         show_captions = true,

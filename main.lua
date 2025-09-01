@@ -243,11 +243,13 @@ function Zlibrary:addToMainMenu(menu_items)
     end
 end
 
-function Zlibrary:_fetchBookList(options)
+function Zlibrary:_fetchBookList(options, ...)
     if not NetworkMgr:isOnline() then
         Ui.showErrorMessage(T("No internet connection detected."))
         return
     end
+
+    local api_extra_params = {...}
 
     local function attemptFetch(retry_on_auth_error)
         retry_on_auth_error = retry_on_auth_error == nil and true or retry_on_auth_error
@@ -256,7 +258,7 @@ function Zlibrary:_fetchBookList(options)
         local loading_msg = Ui.showLoadingMessage(options.loading_text_key)
 
         local task = function()
-            return options.api_method(user_session and user_session.user_id, user_session and user_session.user_key)
+            return options.api_method(user_session and user_session.user_id, user_session and user_session.user_key, table.unpack(api_extra_params))
         end
 
         local on_success = function(api_result)
@@ -336,6 +338,9 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
         on_search_callback = function(def_input)
             Ui.showSearchDialog(self, def_input)
         end,
+        on_similar_books_callback = function(book)
+            self:searchSimilarBooks(book)
+        end,
         toggle_items = {{
             text = T("Recommended"),
             cache_key = "recommended",
@@ -396,6 +401,23 @@ function Zlibrary:onShowMostPopularBooks()
         display_menu_func = Ui.showMostPopularBooksMenu,
         requires_auth = false
     })
+end
+
+function Zlibrary:searchSimilarBooks(book_stub)
+    if not (book_stub.id and book_stub.hash) then
+        logger.warn("Zlibrary.searchSimilarBooks - parameter error")
+        return
+    end
+    self:_fetchBookList({
+        api_method = Api.getSimilarBooks,
+        loading_text_key = T("Fetching similar books..."),
+        error_prefix_key = T("Failed to fetch similar books"),
+        operation_name = T("Similar Books"),
+        log_context = "searchSimilarBooks",
+        results_member_name = "current_similar_books",
+        display_menu_func = Ui.showSimilarBooksMenu,
+        requires_auth = true
+    }, book_stub.id, book_stub.hash)
 end
 
 function Zlibrary:onSelectRecommendedBook(book_stub)

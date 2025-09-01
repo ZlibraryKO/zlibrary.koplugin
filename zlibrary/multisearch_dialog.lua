@@ -25,6 +25,7 @@ local SearchDialog = WidgetContainer:extend{
     def_search_input = nil,
     on_search_callback = nil,
     on_select_book_callback = nil,
+    on_similar_books_callback = nil,
     books = nil,
     _position = nil,
     _cache = nil,
@@ -45,6 +46,12 @@ function SearchDialog:init()
     if type(self.on_search_callback) ~= 'function' then
         logger.warn("MultiSearchDialog on_search_callback is undefined")
         self.on_search_callback = function(def_input)
+        end
+    end
+
+    if type(self.on_similar_books_callback) ~= 'function' then
+        logger.warn("MultiSearchDialog on_similar_books_callback is undefined")
+        self.on_similar_books_callback = function(book)
         end
     end
 
@@ -301,6 +308,15 @@ function SearchDialog:onMenuHold(item)
             callback = function()
                 UIManager:close(dialog)
                 self.on_search_callback(tostring(book.author))
+            end
+        }})
+    end
+    if book.id and book.hash then
+        table.insert(buttons, {{
+            text = T("More Similar Books"),
+            callback = function()
+                UIManager:close(dialog)
+                self.on_similar_books_callback(book)
             end
         }})
     end

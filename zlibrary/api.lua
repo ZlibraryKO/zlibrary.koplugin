@@ -603,4 +603,63 @@ function Api.getBookDetails(user_id, user_key, book_id, book_hash)
     return { book = transformed_book }
 end
 
+function Api.getSimilarBooks(user_id, user_key, book_id, book_hash)
+    local url = Config.getSimilarBooksUrl(book_id, book_hash)
+    if not url then
+        logger.warn("Api.getSimilarBooks - Base URL not configured")
+        return { error = T("Z-library server URL not configured.") }
+    end
+
+    local headers = {
+        ['Content-Type'] = 'application/x-www-form-urlencoded',
+        ["User-Agent"] = Config.USER_AGENT,
+    }
+    if user_id and user_key then
+        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
+    end
+
+    local http_result = Api.makeHttpRequest{
+        url = url,
+        method = "GET",
+        headers = headers,
+        timeout = Config.getPopularTimeout(),
+        getRedirectedUrl = function()
+            return Config.getSimilarBooksUrl(book_id, book_hash)
+        end,
+    }
+
+    if http_result.error then
+        logger.warn("Api.getSimilarBooks - HTTP request error: ", http_result.error)
+        return { error = http_result.error }
+    end
+
+    if not http_result.body then
+        logger.warn("Api.getSimilarBooks - No response body")
+        return { error = T("Failed to fetch similar books (no response body).") }
+    end
+
+    local success, data = pcall(json.decode, http_result.body)
+    if not success or not data then
+        logger.warn("Api.getSimilarBooks - Failed to decode JSON: ", http_result.body)
+        return { error = T("Failed to parse similar books response.") }
+    end
+
+    if data.success ~= 1 or not data.books then
+        logger.warn("Api.getSimilarBooks - API error: ", http_result.body)
+        return { error = data.message or T("API returned an error for similar books.") }
+    end
+
+    local transformed_books = {}
+    for _, book_data in ipairs(data.books) do
+        local transformed_book = _transformApiBookData(book_data)
+        if transformed_book then
+            table.insert(transformed_books, transformed_book)
+        else
+            logger.warn("Api.getSimilarBooks - Failed to transform book data: ", book_data.id)
+        end
+    end
+
+    return { books = transformed_books }
+end
+
 return Api

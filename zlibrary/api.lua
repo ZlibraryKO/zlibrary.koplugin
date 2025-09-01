@@ -41,6 +41,7 @@ local function _transformApiBookData(api_book)
         year = api_book.year or "N/A",
         format = api_book.extension or "N/A",
         size = api_book.filesizeString or api_book.filesize or "N/A",
+        filesize = api_book.filesize,
         lang = api_book.language or "N/A",
         rating = api_book.interestScore or "N/A",
         href = api_book.href,
@@ -327,7 +328,7 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
     return result
 end
 
-function Api.downloadBook(download_url, target_filepath, user_id, user_key, referer_url)
+function Api.downloadBook(download_url, target_filepath, user_id, user_key, referer_url, progress_callback)
     logger.info(string.format("Zlibrary:Api.downloadBook - START - URL: %s, Target: %s", download_url, target_filepath))
 
     if Config.isTestModeEnabled() then
@@ -352,11 +353,16 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
         headers["Referer"] = referer_url
     end
 
+    local handle = socketutil.file_sink(file)
+    if type(progress_callback) == "function" and type(socketutil.chainSinkWithProgressCallback) == "function" then
+        handle = socketutil.chainSinkWithProgressCallback(handle, progress_callback)
+    end
+
     local http_result = Api.makeHttpRequest{
         url = download_url,
         method = "GET",
         headers = headers,
-        sink = socketutil.file_sink(file),
+        sink = handle,
         timeout = Config.getDownloadTimeout(),
     }
 

@@ -745,10 +745,12 @@ function Zlibrary:downloadBook(book)
         local user_session = Config.getUserSession()
         local referer_url = book.href and Config.getBookUrl(book.href) or nil
 
-        local loading_msg = Ui.showLoadingMessage(T("Downloading…"))
+        local loading_msg, progress_callback = Ui.showBookDownloadProgress(book)
 
         local function task_download()
-            return Api.downloadBook(download_url, target_filepath, user_session and user_session.user_id, user_session and user_session.user_key, referer_url)
+            
+            return Api.downloadBook(download_url, target_filepath, user_session and user_session.user_id,
+                user_session and user_session.user_key, referer_url, progress_callback)
         end
 
         local function on_success_download(api_result)
@@ -827,8 +829,7 @@ function Zlibrary:downloadBook(book)
             -- Use retry dialog for timeout and network errors
             Ui.showRetryErrorDialog(err_msg, T("Download"), function()
                 -- Retry callback
-                local new_loading_msg = Ui.showLoadingMessage(T("Retrying download..."))
-                loading_msg = new_loading_msg
+                loading_msg, progress_callback = Ui.showBookDownloadProgress(book, T("Retrying download..."))
                 AsyncHelper.run(task_download, on_success_download, on_error_download, loading_msg)
             end, function(final_err_msg)
                 -- Cancel callback - user already knows about the error

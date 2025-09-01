@@ -179,8 +179,8 @@ function Api.makeHttpRequest(options)
     local check_result = _checkAndHandleRedirect(is_skip_check, result.status_code, options.url)
     if check_result.has_redirect then
         if check_result.real_url then
-            options.getRedirectedUrl = nil
             options.url = options.getRedirectedUrl()
+            options.getRedirectedUrl = nil
             return Api.makeHttpRequest(options)
         elseif check_result.error then
             result = check_result

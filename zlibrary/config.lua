@@ -191,20 +191,6 @@ function Config.setAndValidateBaseUrl(url_string)
         url_string = "https://" .. url_string
     end
 
-    local _, _, protocol, domain = string.find(url_string, "^(https?://)(.+)")
-    if domain then
-        if not string.match(domain, "^%d+%.%d+%.%d+%.%d+$") then
-            local domain_parts = {}
-            for part in string.gmatch(domain, "[^%.]+") do
-                table.insert(domain_parts, part)
-            end
-            if #domain_parts > 2 then
-                local base_domain = table.concat({domain_parts[#domain_parts-1], domain_parts[#domain_parts]}, ".")
-                url_string = protocol .. base_domain
-            end
-        end
-    end
-
     if not string.find(url_string, "%.") then
         return false, "Error: URL must include a valid domain name (e.g., example.com)."
     end

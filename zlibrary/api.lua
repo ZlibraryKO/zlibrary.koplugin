@@ -70,7 +70,7 @@ local function _checkAndHandleRedirect(skip_check, status_code, current_url)
         headers = { ["User-Agent"] = Config.USER_AGENT },
         timeout = {5, 10},
         redirect = true,
-    }, true)
+    })
     
     result.has_redirect = true
     result.status_code = http_result.status_code

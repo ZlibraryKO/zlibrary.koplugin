@@ -95,7 +95,7 @@ jobs:
             --output="$POT_FILE"
           echo "POT file successfully updated at $POT_FILE"
       
-      - name: Update existing PO files
+      - name: Update and compile existing PO files
         run: |
           POT_FILE="./l10n/koreader.pot"
           if [ -f "$POT_FILE" ]; then
@@ -105,8 +105,11 @@ jobs:
                 if [ $? -ne 0 ]; then
                     echo "Failed to update $po_file!"
                 fi
-                echo "Checking $po_file"
-                msgfmt --check-format --verbose "$po_file" || echo "Errors in $po_file"
+                echo "Checking and compiling $po_file ..."
+                msgfmt --check-format --verbose "$po_file" \
+                  && msgfmt "$po_file" -o "${po_file%.po}.mo" \
+                  && echo "Compiled successfully: ${po_file%.po}.mo" \
+                  || echo "Errors in $po_file"
             done
             echo "All .po files updated."
           else
@@ -140,11 +143,11 @@ jobs:
             echo "Info: 'zlibrary' directory not found. Skipping files from 'zlibrary'."
           fi
           
-          # Add .po files
+          # Add .po .mo files
           if [ -d "l10n" ]; then
-             TEMP_ZLIB_PO_FILES=$(find ./l10n -maxdepth 2 -type f \( -name '*.po' -o -name '*.pot' \))
-             if [ -n "$TEMP_ZLIB_PO_FILES" ]; then
-               FILE_LINES="${FILE_LINES}${TEMP_ZLIB_PO_FILES}"$'\n'
+             TEMP_ZLIB_L10N_FILES=$(find ./l10n -maxdepth 2 -type f \( -name '*.po' -o -name '*.pot' -o -name '*.mo' \))
+             if [ -n "$TEMP_ZLIB_L10N_FILES" ]; then
+               FILE_LINES="${FILE_LINES}${TEMP_ZLIB_L10N_FILES}"$'\n'
              fi
           else
             echo "Info: 'l10n' directory not found. Skipping files from 'l10n'."

@@ -641,7 +641,11 @@ function Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, ok
     showDialog()
 end
 
-function Ui.showRecommendedBooksMenu(ui_self, books, plugin_self)
+local function _showBooksMenu(ui_self, plugin_self, options)
+    local log_context = options.log_context or ""
+    local books = options.books or {}
+    local title = options.title or ""
+
     local menu_items = {}
     for _, book in ipairs(books) do
         local title = book.title or T("Untitled")
@@ -656,11 +660,11 @@ function Ui.showRecommendedBooksMenu(ui_self, books, plugin_self)
     end
 
     if #menu_items == 0 then
-        Ui.showInfoMessage(T("No recommended books found, please try again. Sometimes this requires a couple of retries."))
+        Ui.showInfoMessage(T(string.format("No %s found, please try again. Sometimes this requires a couple of retries.", log_context)))
         return
     end
     local menu = Menu:new({
-        title = T("Z-library Recommended Books"),
+        title = title,
         item_table = menu_items,
         items_per_page = 10,
         show_captions = true,
@@ -673,70 +677,28 @@ function Ui.showRecommendedBooksMenu(ui_self, books, plugin_self)
     _showAndTrackDialog(menu)
 end
 
-function Ui.showMostPopularBooksMenu(ui_self, books, plugin_self)
-    local menu_items = {}
-    for _, book in ipairs(books) do
-        local title = book.title or T("Untitled")
-        local author = book.author or T("Unknown Author")
-        local menu_text = string.format("%s - %s", title, author)
-        table.insert(menu_items, {
-            text = menu_text,
-            callback = function()
-                plugin_self:onSelectRecommendedBook(book)
-            end,
-        })
-    end
-
-    if #menu_items == 0 then
-        Ui.showInfoMessage(T("No most popular books found. The list was empty, please try again."))
-        return
-    end
-
-    local menu = Menu:new({
-        title = T("Z-library Most Popular Books"),
-        item_table = menu_items,
-        items_per_page = 10,
-        show_captions = true,
-        parent = ui_self.document_menu_parent_holder,
-        is_popout = false,
-        is_borderless = true,
-        title_bar_fm_style = true,
-        multilines_show_more_text = true
+function Ui.showRecommendedBooksMenu(ui_self, books, plugin_self)
+    _showBooksMenu(ui_self, plugin_self, {
+        title = T("Z-library Recommended Books"),
+        books = books,
+        log_context = "recommended books",
     })
-    _showAndTrackDialog(menu)
+end
+
+function Ui.showMostPopularBooksMenu(ui_self, books, plugin_self)
+    _showBooksMenu(ui_self, plugin_self, {
+        title = T("Z-library Most Popular Books"),
+        books = books,
+        log_context = "most popular books",
+    })
 end
 
 function Ui.showSimilarBooksMenu(ui_self, books, plugin_self)
-    local menu_items = {}
-    for _, book in ipairs(books) do
-        local title = book.title or T("Untitled")
-        local author = book.author or T("Unknown Author")
-        local menu_text = string.format("%s - %s", title, author)
-        table.insert(menu_items, {
-            text = menu_text,
-            callback = function()
-                plugin_self:onSelectRecommendedBook(book)
-            end,
-        })
-    end
-
-    if #menu_items == 0 then
-        Ui.showInfoMessage(T("No similar books found. The list was empty, please try again."))
-        return
-    end
-
-    local menu = Menu:new({
+    _showBooksMenu(ui_self, plugin_self, {
         title = T("Z-library Similar Books"),
-        item_table = menu_items,
-        items_per_page = 10,
-        show_captions = true,
-        parent = ui_self.document_menu_parent_holder,
-        is_popout = false,
-        is_borderless = true,
-        title_bar_fm_style = true,
-        multilines_show_more_text = true
+        books = books,
+        log_context = "similar books",
     })
-    _showAndTrackDialog(menu)
 end
 
 function Ui.confirmShowRecommendedBooks(ok_callback)

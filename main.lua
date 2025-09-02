@@ -80,7 +80,7 @@ function Zlibrary:addToMainMenu(menu_items)
                                 Ui.showGenericInputDialog(
                                     T("Set base URL"),
                                     Config.SETTINGS_BASE_URL_KEY,
-                                    Config.getBaseUrl(),
+                                    Config.getBaseUrl(true),
                                     false,
                                     function(input_value)
                                         local success, err_msg = Config.setAndValidateBaseUrl(input_value)

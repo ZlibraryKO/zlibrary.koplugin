@@ -71,8 +71,9 @@ function Cache:get(key, cache_expiry)
     if expiry <= 0 then
         return nil
     end
+    uptime = tonumber(uptime)
     if not uptime or (os.time() - uptime > expiry) then
-        self._cache:delSetting(key)
+        self:remove(key)
         return nil
     end
 
@@ -105,7 +106,9 @@ function Cache:remove(key)
     if not self._cache.delSetting then
         return nil
     end
+    local uptime_key = key .. "_ut"
     self._cache:delSetting(key)
+    self._cache:delSetting(uptime_key):flush()
     return true
 end
 

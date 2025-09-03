@@ -34,6 +34,15 @@ local function _transformApiBookData(api_book)
     if not api_book or type(api_book) ~= "table" then
         return nil
     end
+
+    -- Handle case where dl field contains 'exactEnd' - mark for detail fetch
+    local download_url = api_book.dl
+    local needs_detail_fetch = false
+    if download_url and type(download_url) == "string" and download_url == "exactEnd" then
+        needs_detail_fetch = true
+        download_url = nil  -- Clear the invalid URL
+    end
+
     return {
         id = api_book.id,
         hash = api_book.hash,
@@ -46,7 +55,8 @@ local function _transformApiBookData(api_book)
         lang = api_book.language or "N/A",
         rating = api_book.interestScore or "N/A",
         href = api_book.href,
-        download = api_book.dl,
+        download = download_url,
+        needs_detail_fetch = needs_detail_fetch,
         cover = api_book.cover,
         description = api_book.description,
         publisher = api_book.publisher,

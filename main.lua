@@ -479,13 +479,6 @@ function Zlibrary:onSelectSearchBook(book_data)
         return
     end
 
-    -- Need to fetch detailed information
-    if not (book_data.id and book_data.hash) then
-        logger.warn("Zlibrary:onSelectSearchBook - parameter error: missing book ID or hash")
-        Ui.showErrorMessage(T("Cannot fetch book details: missing book ID or hash."))
-        return
-    end
-
     local function attemptBookDetails()
         local user_session = Config.getUserSession()
         local loading_msg = Ui.showLoadingMessage(T("Fetching book details..."))

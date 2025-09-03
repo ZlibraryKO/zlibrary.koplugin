@@ -105,6 +105,9 @@ function Ui.closeMessage(message_widget)
     if message_widget then
         if type(message_widget.close) == "function" then
             message_widget:close()
+            -- Ensure complete screen refresh after closing the progress dialog
+            -- Use setDirty with "full" to completely redraw the screen area
+            UIManager:setDirty("all", "full")
         else
             UIManager:close(message_widget)
         end

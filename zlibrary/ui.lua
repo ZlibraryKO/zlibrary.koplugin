@@ -428,7 +428,11 @@ function Ui.createBookMenuItem(book_data, parent_zlibrary_instance)
     return {
         text = combined_text,
         callback = function()
-            Ui.showBookDetails(parent_zlibrary_instance, book_data)
+            if book_data.needs_detail_fetch then
+                parent_zlibrary_instance:onSelectSearchBook(book_data)
+            else
+                Ui.showBookDetails(parent_zlibrary_instance, book_data)
+            end
         end,
         keep_menu_open = true,
         original_book_data_ref = book_data,

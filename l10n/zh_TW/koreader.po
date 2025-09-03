@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-14 18:09+0000\n"
+"POT-Creation-Date: 2025-09-03 08:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese <zh@li.org>\n"
@@ -163,9 +163,6 @@ msgstr "此書籍無下載鏈接。"
 #, lua-format
 msgid "Cannot create downloads directory: %s"
 msgstr "無法創建下載目錄: %s"
-
-msgid "Downloading…"
-msgstr "正在下載…"
 
 msgid "Could not open reader UI."
 msgstr "無法打開閱讀器界面。"
@@ -372,6 +369,9 @@ msgstr "正在下載更新..."
 
 msgid "Download failed. Please try again later."
 msgstr "下載失敗。請稍後重試。"
+
+msgid "Downloading…"
+msgstr "正在下載…"
 
 msgid "Close"
 msgstr "關閉"

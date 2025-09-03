@@ -467,6 +467,68 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
     attemptBookDetails()
 end
 
+function Zlibrary:onSelectSearchBook(book_data)
+    if not NetworkMgr:isOnline() then
+        Ui.showErrorMessage(T("No internet connection detected."))
+        return
+    end
+
+    -- If the book doesn't need detail fetching, show details directly
+    if not book_data.needs_detail_fetch then
+        Ui.showBookDetails(self, book_data)
+        return
+    end
+
+    -- Need to fetch detailed information
+    if not (book_data.id and book_data.hash) then
+        logger.warn("Zlibrary:onSelectSearchBook - parameter error: missing book ID or hash")
+        Ui.showErrorMessage(T("Cannot fetch book details: missing book ID or hash."))
+        return
+    end
+
+    local function attemptBookDetails()
+        local user_session = Config.getUserSession()
+        local loading_msg = Ui.showLoadingMessage(T("Fetching book details..."))
+
+        local task = function()
+            return Api.getBookDetails(user_session and user_session.user_id, user_session and user_session.user_key, book_data.id, book_data.hash)
+        end
+
+        local on_success = function(api_result)
+            if api_result.error then
+                Ui.closeMessage(loading_msg)
+                Ui.showErrorMessage(Ui.colonConcat(T("Failed to fetch book details"), tostring(api_result.error)))
+                return
+            end
+
+            if not api_result.book then
+                Ui.closeMessage(loading_msg)
+                Ui.showErrorMessage(T("Could not retrieve book details."))
+                return
+            end
+
+            Ui.closeMessage(loading_msg)
+            logger.info(string.format("Zlibrary:onSelectSearchBook - Fetch successful for book ID: %s", api_result.book.id))
+
+            Ui.showBookDetails(self, api_result.book)
+        end
+
+        local function on_error_handler(err_msg)
+            -- Use retry dialog for timeout and network errors
+            Ui.showRetryErrorDialog(err_msg, T("Book details"), function()
+                -- Retry callback
+                attemptBookDetails()
+            end, function(final_err_msg)
+                -- Cancel callback - user already knows about the error
+            end, loading_msg)
+        end
+
+        AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
+    end
+
+    attemptBookDetails()
+end
+
 function Zlibrary:login(callback)
     if not NetworkMgr:isOnline() then
         Ui.showErrorMessage(T("No internet connection detected."))
@@ -710,6 +772,10 @@ function Zlibrary:downloadBook(book)
         return
     end
 
+    self:_proceedWithDownload(book)
+end
+
+function Zlibrary:_proceedWithDownload(book)
     local download_url = Config.getDownloadUrl(book.download)
     logger.info(string.format("Zlibrary:downloadBook - Download URL: %s", download_url))
 

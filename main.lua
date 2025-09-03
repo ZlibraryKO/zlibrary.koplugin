@@ -765,10 +765,6 @@ function Zlibrary:downloadBook(book)
         return
     end
 
-    self:_proceedWithDownload(book)
-end
-
-function Zlibrary:_proceedWithDownload(book)
     local download_url = Config.getDownloadUrl(book.download)
     logger.info(string.format("Zlibrary:downloadBook - Download URL: %s", download_url))
 

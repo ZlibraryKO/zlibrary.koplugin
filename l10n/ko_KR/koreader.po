@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-06 09:25+0000\n"
+"POT-Creation-Date: 2025-09-03 08:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -163,9 +163,6 @@ msgstr "이 도서에 대한 다운로드 링크가 없습니다."
 #, lua-format
 msgid "Cannot create downloads directory: %s"
 msgstr "다운로드 디렉토리를 생성할 수 없습니다: %s"
-
-msgid "Downloading…"
-msgstr "다운로드 중…"
 
 msgid "Could not open reader UI."
 msgstr "리더 UI를 열 수 없습니다."
@@ -372,6 +369,9 @@ msgstr "업데이트 다운로드 중..."
 
 msgid "Download failed. Please try again later."
 msgstr "다운로드에 실패했습니다. 나중에 다시 시도해 주세요."
+
+msgid "Downloading…"
+msgstr "다운로드 중…"
 
 msgid "Close"
 msgstr "닫기"

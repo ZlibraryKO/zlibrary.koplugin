@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-06 09:25+0000\n"
+"POT-Creation-Date: 2025-09-03 08:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -163,9 +163,6 @@ msgstr "Geen downloadlink beschikbaar voor dit boek."
 #, lua-format
 msgid "Cannot create downloads directory: %s"
 msgstr "Kan downloadmap niet aanmaken: %s"
-
-msgid "Downloading…"
-msgstr "Bezig met downloaden…"
 
 msgid "Could not open reader UI."
 msgstr "Kan de reader-interface niet openen."
@@ -372,6 +369,9 @@ msgstr "Update wordt gedownload..."
 
 msgid "Download failed. Please try again later."
 msgstr "Download mislukt. Probeer het later opnieuw."
+
+msgid "Downloading…"
+msgstr "Bezig met downloaden…"
 
 msgid "Close"
 msgstr "Sluiten"

@@ -105,6 +105,9 @@ function Ui.closeMessage(message_widget)
     if message_widget then
         if type(message_widget.close) == "function" then
             message_widget:close()
+            -- Ensure complete screen refresh after closing the progress dialog
+            -- Use setDirty with "full" to completely redraw the screen area
+            UIManager:setDirty("all", "full")
         else
             UIManager:close(message_widget)
         end
@@ -428,7 +431,11 @@ function Ui.createBookMenuItem(book_data, parent_zlibrary_instance)
     return {
         text = combined_text,
         callback = function()
-            Ui.showBookDetails(parent_zlibrary_instance, book_data)
+            if book_data.needs_detail_fetch then
+                parent_zlibrary_instance:onSelectSearchBook(book_data)
+            else
+                Ui.showBookDetails(parent_zlibrary_instance, book_data)
+            end
         end,
         keep_menu_open = true,
         original_book_data_ref = book_data,
@@ -546,12 +553,24 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
     table.insert(details_menu_items, { text = "---" })
 
     table.insert(details_menu_items, {
+        text = book.isFavorite and T("Remove From Favorites") or T("Add To Favorites"),
+        mandatory = "\u{F004}",
+        callback = function()
+            if book.isFavorite then
+                return parent_zlibrary:unfavoriteBook(book)
+            end
+            parent_zlibrary:favoriteBook(book)
+        end,
+    })
+
+    table.insert(details_menu_items, {
         text = T("More Similar Books"),
         mandatory = "\u{F002}",
         callback = function()
             parent_zlibrary:searchSimilarBooks(book)
         end,
     })
+
     table.insert(details_menu_items, {
         text = T("Back"),
         mandatory = "\u{21A9}",
@@ -641,7 +660,7 @@ function Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, ok
     showDialog()
 end
 
-local function _showBooksMenu(ui_self, plugin_self, options)
+local function _showBooksMenu(ui_self, options, plugin_self)
     local log_context = options.log_context or ""
     local books = options.books or {}
     local title = options.title or ""
@@ -678,27 +697,27 @@ local function _showBooksMenu(ui_self, plugin_self, options)
 end
 
 function Ui.showRecommendedBooksMenu(ui_self, books, plugin_self)
-    _showBooksMenu(ui_self, plugin_self, {
+    _showBooksMenu(ui_self, {
         title = T("Z-library Recommended Books"),
         books = books,
         log_context = "recommended books",
-    })
+    }, plugin_self)
 end
 
 function Ui.showMostPopularBooksMenu(ui_self, books, plugin_self)
-    _showBooksMenu(ui_self, plugin_self, {
+    _showBooksMenu(ui_self, {
         title = T("Z-library Most Popular Books"),
         books = books,
         log_context = "most popular books",
-    })
+    }, plugin_self)
 end
 
 function Ui.showSimilarBooksMenu(ui_self, books, plugin_self)
-    _showBooksMenu(ui_self, plugin_self, {
+    _showBooksMenu(ui_self, {
         title = T("Z-library Similar Books"),
         books = books,
         log_context = "similar books",
-    })
+    }, plugin_self)
 end
 
 function Ui.confirmShowRecommendedBooks(ok_callback)

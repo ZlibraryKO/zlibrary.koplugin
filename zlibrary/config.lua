@@ -2,6 +2,7 @@ local util = require("util")
 local logger = require("logger")
 local lfs = require("libs/libkoreader-lfs")
 local T = require("zlibrary.gettext")
+local Cache = require("zlibrary.cache")
 
 local Config = {}
 
@@ -26,6 +27,7 @@ Config.CREDENTIALS_FILENAME = "zlibrary_credentials.lua"
 
 Config.DEFAULT_DOWNLOAD_DIR_FALLBACK = G_reader_settings:readSetting("home_dir")
              or require("apps/filemanager/filemanagerutil").getDefaultDir()
+Config.USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
 Config.SEARCH_RESULTS_LIMIT = 30
 
 -- Timeout configuration for different operations (block_timeout, total_timeout)
@@ -135,8 +137,43 @@ Config.SUPPORTED_ORDERS = {
     { name = string.format("%s %s", T("File size"), "↑"), value = "filesizeA" }
 }
 
-function Config.getBaseUrl()
-    local configured_url = Config.getSetting(Config.SETTINGS_BASE_URL_KEY)
+function Config.getCacheRealUrl()
+    local runtime_cache = Cache:new{
+        name = "_runtime_cache"
+    }
+    local api_real_url = runtime_cache:get("api_real_url", 600)
+    return api_real_url and api_real_url[1]
+end
+
+function Config.clearCacheRealUrl()
+    local runtime_cache = Cache:new{
+        name = "_runtime_cache"
+    }
+    return runtime_cache:remove("api_real_url")
+end
+
+function Config.setCacheRealUrl(original_url, real_url)
+    if not (original_url and real_url) then
+        return
+    end
+    
+    local base_url = Config.getBaseUrl(true)
+    if not (base_url and string.find(original_url, base_url, 1, true)) then
+        return
+    end
+
+    if string.sub(real_url, -1) == "/" then
+        real_url = string.sub(real_url, 1, -2)
+    end
+    
+    local runtime_cache = Cache:new{
+        name = "_runtime_cache"
+    }
+    return runtime_cache:insert("api_real_url", {real_url})
+end
+
+function Config.getBaseUrl(is_original)
+    local configured_url = (not is_original and Config.getCacheRealUrl()) or Config.getSetting(Config.SETTINGS_BASE_URL_KEY)
     if configured_url == nil or configured_url == "" then
         return nil
     end
@@ -177,6 +214,7 @@ function Config.setAndValidateBaseUrl(url_string)
     end
 
     Config.saveSetting(Config.SETTINGS_BASE_URL_KEY, url_string)
+    Config.clearCacheRealUrl()
     return true, nil
 end
 
@@ -218,6 +256,30 @@ function Config.getSimilarBooksUrl(book_id, book_hash)
     local base = Config.getBaseUrl()
     if not base or not book_id or not book_hash then return nil end
     return base .. string.format("/eapi/book/%s/%s/similar", book_id, book_hash)
+end
+
+function Config.getDownloadedBooksUrl(order, page, limit)
+    local base = Config.getBaseUrl()
+    if not base then return nil end
+    return base .. string.format("/eapi/user/book/downloaded?", "page=1&limit=999")
+end
+
+function Config.getFavoriteBooksUrl(order, page, limit)
+    local base = Config.getBaseUrl()
+    if not base then return nil end
+    return base .. string.format("/eapi/user/book/saved?", "page=1&limit=999")
+end
+
+function Config.getUnFavoriteUrl(book_id)
+    local base = Config.getBaseUrl()
+    if not base or not book_id then return nil end
+    return base .. string.format("/eapi/user/book/%s/unsave", book_id)
+end
+
+function Config.getFavoriteUrl(book_id)
+    local base = Config.getBaseUrl()
+    if not base or not book_id then return nil end
+    return base .. string.format("/eapi/user/book/%s/save", book_id)
 end
 
 function Config.getRecommendedBooksUrl()

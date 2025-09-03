@@ -80,7 +80,7 @@ function Zlibrary:addToMainMenu(menu_items)
                                 Ui.showGenericInputDialog(
                                     T("Set base URL"),
                                     Config.SETTINGS_BASE_URL_KEY,
-                                    Config.getBaseUrl(),
+                                    Config.getBaseUrl(true),
                                     false,
                                     function(input_value)
                                         local success, err_msg = Config.setAndValidateBaseUrl(input_value)
@@ -237,13 +237,19 @@ function Zlibrary:addToMainMenu(menu_items)
                         local search_tab_most_popular = 2
                         self:showMultiSearchDialog(search_tab_most_popular)
                     end,
+                },{
+                    text = T("My books"),
+                    callback = function()
+                        local mybooks_tab_downloaded = 1
+                        self:showMyBooksDialog(mybooks_tab_downloaded)
+                    end,
                 },
             }
         }
     end
 end
 
-function Zlibrary:_fetchBookList(options, ...)
+function Zlibrary:_requestDispatcher(options, ...)
     if not NetworkMgr:isOnline() then
         Ui.showErrorMessage(T("No internet connection detected."))
         return
@@ -278,23 +284,22 @@ function Zlibrary:_fetchBookList(options, ...)
                 return
             end
 
-            if not api_result.books or #api_result.books == 0 then
-                Ui.closeMessage(loading_msg)
-                if options.no_items_text_key then
-                    Ui.showInfoMessage(options.no_items_text_key)
-                else
-                    Ui.showInfoMessage(T("No books found, please try again"))
+            if type(options.hasValidApiResult) == "function" then
+                local ok, error_msg = options.hasValidApiResult(api_result)
+                if not ok then
+                    Ui.closeMessage(loading_msg)
+                    Ui.showInfoMessage(error_msg)
+                    return
                 end
-                return
             end
 
             Ui.closeMessage(loading_msg)
-            logger.info(string.format("Zlibrary:%s - Fetch successful. Results: %d", options.log_context, #api_result.books))
-            self[options.results_member_name] = api_result.books
-
-            UIManager:nextTick(function()
-                options.display_menu_func(self.ui, self[options.results_member_name], self)
-            end)
+            logger.info(string.format("Zlibrary:%s - Fetch successful.", options.log_context))
+            if type(options.resolve_result) == "function" then
+                options.resolve_result(self.ui, api_result, self)
+            else
+                logger.warn("Zlibrary:%s - Fetch resolve_result undefined", options.log_context)
+            end
         end
 
         local on_error_handler = function(err_msg)
@@ -322,6 +327,23 @@ function Zlibrary:_fetchBookList(options, ...)
 
     attemptFetch()
 end
+
+function Zlibrary:_fetchBookList(options, ...)
+    options.hasValidApiResult = function(api_result)
+        if not (type(api_result) == "table" and api_result.books and #api_result.books > 0) then
+            return false, options.no_items_text_key or T("No books found, please try again")
+        end
+        return true
+    end
+    options.resolve_result = function(ui_self, api_result, plugin_self)
+        -- 这句什么作用？
+        self[options.results_member_name] = api_result.books
+        UIManager:nextTick(function()
+            options.display_menu_func(ui_self, self[options.results_member_name], plugin_self)
+        end)
+    end
+    self:_requestDispatcher(options, ...)
+end  
 
 function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
     local search_dialog
@@ -377,6 +399,59 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
     search_dialog:fetchAndShow()
 end
 
+function Zlibrary:showMyBooksDialog(def_position, def_search_input)
+    local my_books_dialog
+    local showMyBooks = function(ui_self, books, plugin_self)
+        my_books_dialog:refreshMenuItems(books)
+    end
+    my_books_dialog = MultiSearchDialog:new{
+        title = T("Z-library Mybooks"),
+        def_position = def_position,
+        def_search_input = def_search_input,
+        on_select_book_callback = function(book)
+            self:onSelectRecommendedBook(book)
+        end,
+        on_search_callback = function(def_input)
+            Ui.showSearchDialog(self, def_input)
+        end,
+        on_similar_books_callback = function(book)
+            self:searchSimilarBooks(book)
+        end,
+        toggle_items = {{
+            text = T("Downloaded"),
+            cache_key = "downloaded",
+            callback = function(widget)
+                self:_fetchBookList({
+                    api_method = Api.getDownloadedBooks,
+                    loading_text_key = T("Fetching downloaded books..."),
+                    error_prefix_key = T("Failed to fetch downloaded books"),
+                    operation_name = T("Downloaded books"),
+                    log_context = "onShowDownloadedBooks",
+                    results_member_name = "current_downloaded_books",
+                    display_menu_func = showMyBooks,
+                    requires_auth = true
+                })
+            end}, {
+            text = T("Favorites"),
+            cache_key = "favorites",
+            callback = function(widget)
+                self:_fetchBookList({
+                    api_method = Api.getFavoriteBooks,
+                    loading_text_key = T("Getting your favorite books..."),
+                    error_prefix_key = T("Failed to fetch favorite books"),
+                    operation_name = T("Favorite books"),
+                    log_context = "onShowFavoriteBooks",
+                    results_member_name = "current_favorite_books",
+                    display_menu_func = showMyBooks,
+                    requires_auth = true
+                })
+            end},
+        }}
+
+    self.dialog_manager:trackDialog(my_books_dialog)
+    my_books_dialog:fetchAndShow()
+end
+
 function Zlibrary:onShowRecommendedBooks()
     self:_fetchBookList({
         api_method = Api.getRecommendedBooks,
@@ -418,6 +493,38 @@ function Zlibrary:searchSimilarBooks(book_stub)
         display_menu_func = Ui.showSimilarBooksMenu,
         requires_auth = true
     }, book_stub.id, book_stub.hash)
+end
+
+function Zlibrary:unfavoriteBook(book_stub)
+     self:_requestDispatcher({
+        api_method = Api.unfavoriteBook,
+        loading_text_key = T("Removing book from favorites…"),
+        error_prefix_key = T("Failed to remove book from favorites"),
+        operation_name = T("unfavoriteBook"),
+        log_context = "unfavoriteBook",
+        resolve_result = function(ui_self, api_result, plugin_self)
+            if api_result and api_result.success == true then
+                Ui.showInfoMessage(T("Book removed from favorites"))
+            end
+        end,
+        requires_auth = true
+    }, book_stub)
+end
+
+function Zlibrary:favoriteBook(book_stub)
+     self:_requestDispatcher({
+        api_method = Api.favoriteBook,
+        loading_text_key = T("Adding book to favorites…"),
+        error_prefix_key = T("Failed to add book to favorites"),
+        operation_name = T("favoriteBook"),
+        log_context = "favoriteBook",
+        resolve_result = function(ui_self, api_result, plugin_self)
+            if api_result and api_result.success == true then
+                Ui.showInfoMessage(T("Book added to favorites."))
+            end
+        end,
+        requires_auth = true
+    }, book_stub)
 end
 
 function Zlibrary:onSelectRecommendedBook(book_stub)
@@ -471,6 +578,61 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
             Ui.showBookDetails(self, api_result.book)
 
             book_cache:insert("details", api_result.book)
+        end
+
+        local function on_error_handler(err_msg)
+            -- Use retry dialog for timeout and network errors
+            Ui.showRetryErrorDialog(err_msg, T("Book details"), function()
+                -- Retry callback
+                attemptBookDetails()
+            end, function(final_err_msg)
+                -- Cancel callback - user already knows about the error
+            end, loading_msg)
+        end
+
+        AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
+    end
+
+    attemptBookDetails()
+end
+
+function Zlibrary:onSelectSearchBook(book_data)
+    if not NetworkMgr:isOnline() then
+        Ui.showErrorMessage(T("No internet connection detected."))
+        return
+    end
+
+    -- If the book doesn't need detail fetching, show details directly
+    if not book_data.needs_detail_fetch then
+        Ui.showBookDetails(self, book_data)
+        return
+    end
+
+    local function attemptBookDetails()
+        local user_session = Config.getUserSession()
+        local loading_msg = Ui.showLoadingMessage(T("Fetching book details..."))
+
+        local task = function()
+            return Api.getBookDetails(user_session and user_session.user_id, user_session and user_session.user_key, book_data.id, book_data.hash)
+        end
+
+        local on_success = function(api_result)
+            if api_result.error then
+                Ui.closeMessage(loading_msg)
+                Ui.showErrorMessage(Ui.colonConcat(T("Failed to fetch book details"), tostring(api_result.error)))
+                return
+            end
+
+            if not api_result.book then
+                Ui.closeMessage(loading_msg)
+                Ui.showErrorMessage(T("Could not retrieve book details."))
+                return
+            end
+
+            Ui.closeMessage(loading_msg)
+            logger.info(string.format("Zlibrary:onSelectSearchBook - Fetch successful for book ID: %s", api_result.book.id))
+
+            Ui.showBookDetails(self, api_result.book)
         end
 
         local function on_error_handler(err_msg)

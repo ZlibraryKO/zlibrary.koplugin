@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-06 09:25+0000\n"
+"POT-Creation-Date: 2025-09-03 08:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -163,9 +163,6 @@ msgstr "Aucun lien de téléchargement disponible pour ce livre."
 #, lua-format
 msgid "Cannot create downloads directory: %s"
 msgstr "Impossible de créer le répertoire de téléchargements : %s"
-
-msgid "Downloading…"
-msgstr "Téléchargement en cours…"
 
 msgid "Could not open reader UI."
 msgstr "Impossible d'ouvrir l'interface utilisateur du lecteur."
@@ -372,6 +369,9 @@ msgstr "Téléchargement de la mise à jour..."
 
 msgid "Download failed. Please try again later."
 msgstr "Échec du téléchargement. Veuillez réessayer plus tard."
+
+msgid "Downloading…"
+msgstr "Téléchargement en cours…"
 
 msgid "Close"
 msgstr "Fermer"

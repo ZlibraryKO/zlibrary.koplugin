@@ -160,7 +160,7 @@ function SearchDialog:init()
     }
 end
 
-function SearchDialog:ToggleSwitchCallBack(_position)
+function SearchDialog:ToggleSwitchCallBack(_position, is_refresh)
     if not (type(_position) == 'number' and _position > 0) then
         logger.warn("MultiSearchDialog.ToggleSwitchCallBack invalid parameter")
         return
@@ -187,7 +187,7 @@ function SearchDialog:ToggleSwitchCallBack(_position)
     local toggle_item_callback = toggle_item["callback"]
     if type(toggle_item_callback) == "function" then
         UIManager:nextTick(function()
-            local ok, err = pcall(toggle_item_callback, self)
+            local ok, err = pcall(toggle_item_callback, self, is_refresh)
             if not ok then
                 logger.warn("SearchDialog.ToggleSwitchCallBack callback err: ", err)
             end
@@ -268,7 +268,7 @@ function SearchDialog:forceRefreshMenuItems()
         local cache_key = toggle_item["cache_key"]
         self._cache:remove(cache_key)
     end
-    self:ToggleSwitchCallBack(self._position)
+    self:ToggleSwitchCallBack(self._position, true)
 end
 
 function SearchDialog:onMenuChoice(item)

@@ -290,8 +290,7 @@ end
 
 function Config.getFavoriteBookIdsUrl()
     local base = Config.getBaseUrl()
-    if not base then return nil end
-    return string.format("%s/papi/my-library/saved-book-ids", base)
+    return base and (base .. "/papi/my-library/saved-book-ids")
 end
 
 function Config.getUnFavoriteUrl(book_id)
@@ -304,6 +303,11 @@ function Config.getFavoriteUrl(book_id)
     local base = Config.getBaseUrl()
     if not base or not book_id then return nil end
     return base .. string.format("/eapi/user/book/%s/save", book_id)
+end
+
+function Config.getDownloadQuotaUrl()
+    local base = Config.getBaseUrl()
+    return base and (base .. "/eapi/user/profile")
 end
 
 function Config.getRecommendedBooksUrl()

@@ -64,13 +64,15 @@ local function _transformApiBookData(api_books)
                 rating = book.interestScore or "N/A",
                 href = book.href,
                 download = download_url,
+                date_download = book.date_download,
+                date_saved = book.date_saved,
                 needs_detail_fetch = needs_detail_fetch,
                 cover = book.cover,
                 description = book.description,
                 publisher = book.publisher,
                 series = book.series,
                 pages = book.pages,
-                identifier = tostring(book.identifier),
+                identifier = book.identifier,
             })
         else
             logger.warn("transformApiBookData - Failed to transform an API book item, skipping.", book)
@@ -572,7 +574,7 @@ function Api.getRecommendedBooks(user_id, user_key)
         logger.warn("Api.getRecommendedBooks - API error: ", http_result.body)
         return { error = data.message or T("API returned an error for recommended books.") }
     end
-
+    
     local transformed_books = _transformApiBookData(data.books)
     return { books = transformed_books }
 end
@@ -848,7 +850,7 @@ function Api.getFavoriteBooks(user_id, user_key, page, accumulator, is_all)
         logger.warn("Api.getFavoriteBooks - API error: ", http_result.body)
         return { error = data.message or T("API returned an error for favorite books.") }
     end
-
+    
     local transformed_books = _transformApiBookData(data.books)
     for _, book in ipairs(transformed_books) do
         table.insert(accumulator, book)
@@ -1010,7 +1012,7 @@ function Api.getFavoriteBookIds(user_id, user_key)
         return { error = T("Failed to parse favorite book ids.") }
     end
     
-    if data.success ~= 1 and not data.list then
+    if not (data.success == 1 and data.list) then
         logger.warn("Api.getFavoriteBookIds - API error: ", http_result.body)
         return { error = data.message or T("API returned an error for favorite book ids.") }
     end

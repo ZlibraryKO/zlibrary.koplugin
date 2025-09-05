@@ -197,8 +197,14 @@ function Zlibrary:addToMainMenu(menu_items)
                                             Config.clearUserSession()
                                             Ui.showInfoMessage(T("Session cleared. You will need to login again."))
                                         end,
-                                    },
-                                    {
+                                    }, {
+                                        text = T("Clear runtime cache"),
+                                        keep_menu_open = true,
+                                        callback = function()
+                                            self._runtime_cache:clear()
+                                            Ui.showInfoMessage(T("Runtime cache cleared."))
+                                        end,
+                                    }, {
                                         text = T("Test mode"),
                                         keep_menu_open = true,
                                         checked_func = function()
@@ -519,6 +525,7 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                         log_context = "onShowDownloadedBooks",
                         results_member_name = "current_downloaded_books",
                         display_menu_func = function(ui_self, books, plugin_self)
+                            widget:apply_mandatory_from(books, "date_download")
                             widget:refreshMenuItems(books)
                             if is_refresh then
                                 plugin_self:resetDownloadQuotaCache()
@@ -538,6 +545,7 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                         log_context = "onShowFavoriteBooks",
                         results_member_name = "current_favorite_books",
                         display_menu_func = function(ui_self, books, plugin_self)
+                            widget:apply_mandatory_from(books, "date_saved")
                             widget:refreshMenuItems(books)
                         end,
                         requires_auth = true

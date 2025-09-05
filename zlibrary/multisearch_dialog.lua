@@ -202,13 +202,15 @@ function SearchDialog:_getMenuItems(books)
         local author = book.author or T("Unknown Author")
         local menu_text = string.format("%s - %s", title, author)
         table.insert(menu_items, {
+            book_index = i,
             text = menu_text,
-            book_index = i
+            mandatory = book._mandatory,
         })
     end
     return menu_items
 end
 
+-- support setting book._mandatory with multi-line text
 function SearchDialog:refreshMenuItems(books, is_cache)
     local old_height = self.menu_container.height
     self.menu_container = self:createMenuContainer(books, old_height)
@@ -310,6 +312,17 @@ function SearchDialog:onMenuHold(item)
         title_align = "center"
     }
     UIManager:show(dialog)
+end
+
+function SearchDialog:apply_mandatory_from(books, field)
+    if type(books) ~= "table" or not field then return end
+    for _, book in ipairs(books) do
+        if type(book) == "table" and book[field] then
+            book._mandatory = book[field]
+            book[field] = nil
+        end
+    end
+    return books
 end
 
 return SearchDialog

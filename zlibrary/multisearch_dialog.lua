@@ -350,6 +350,11 @@ function SearchDialog:extendBatchData(books)
     return self.books
 end
 
+function SearchDialog:appendBatchDataAndReload(books)
+    self:extendBatchData(books)
+    self:reloadFromBookData(nil, nil, 1)
+end
+
 function SearchDialog:setPaginationState(has_more_results, current_page)
     self.has_more_api_results = has_more_results
     self.current_page_loaded = current_page

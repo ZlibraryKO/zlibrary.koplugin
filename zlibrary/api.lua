@@ -790,7 +790,7 @@ function Api.getDownloadedBooks(user_id, user_key, page, accumulator, fetch_all)
 
     local transformed_books = _transformApiBookData(data.books)
     if not fetch_all then
-        return { has_more_results = has_more_results, books = transformed_books}
+        return { has_more_results = has_more_results, books = transformed_books }
     end
 
     for _, book in ipairs(transformed_books) do
@@ -798,7 +798,7 @@ function Api.getDownloadedBooks(user_id, user_key, page, accumulator, fetch_all)
     end
 
     if not has_more_results then
-        return {books = accumulator}
+        return { books = accumulator }
     end
 
     return Api.getDownloadedBooks(user_id, user_key, page + 1 , accumulator, fetch_all)
@@ -862,7 +862,7 @@ function Api.getFavoriteBooks(user_id, user_key, page, accumulator, fetch_all)
     local transformed_books = _transformApiBookData(data.books)
 
     if not fetch_all then
-        return { has_more_results = has_more_results, books = transformed_books}
+        return { has_more_results = has_more_results, books = transformed_books }
     end
 
     for _, book in ipairs(transformed_books) do
@@ -870,7 +870,7 @@ function Api.getFavoriteBooks(user_id, user_key, page, accumulator, fetch_all)
     end
     
     if not has_more_results then
-        return {books = accumulator}
+        return { books = accumulator }
     end
 
     return Api.getFavoriteBooks(user_id, user_key, page + 1 , accumulator, fetch_all)
@@ -977,7 +977,7 @@ function Api.getDownloadQuotaStatus(user_id, user_key)
         return { error = data.message or T("API returned an error for download quota status.") }
     end
 
-    return { success = true,  quota_status = {today = data.user.downloads_today, limit = data.user.downloads_limit}}
+    return { quota_status = {today = data.user.downloads_today, limit = data.user.downloads_limit}}
 end
 
 function Api.getFavoriteBookIds(user_id, user_key)
@@ -1024,7 +1024,7 @@ function Api.getFavoriteBookIds(user_id, user_key)
         return { error = data.message or T("API returned an error for favorite book ids.") }
     end
     
-    return {success = true, list = data.list}
+    return { list = data.list }
 end
 
 function Api.favoriteBook(user_id, user_key, book_stub)

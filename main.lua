@@ -420,7 +420,7 @@ function Zlibrary:validateDownloadQuota(on_success)
 
     -- use cache when offline
     if not NetworkMgr:isOnline() or (type(quota_status) == "table" and next(quota_status)) then
-        if type(on_success) then on_success() end
+        if type(on_success) == "function" then on_success() end
         return
     end
 
@@ -433,7 +433,7 @@ function Zlibrary:validateDownloadQuota(on_success)
         requires_auth = true,
         resolve_result = function(ui_self, api_result, plugin_self)
             self._runtime_cache:insert("download_quota_status", api_result.quota_status)
-            if type(on_success) then on_success() end
+            if type(on_success) == "function" then on_success() end
         end,
         hasValidApiResult = function(api_result)
             local ok = type(api_result) == "table" and type(api_result.quota_status) == "table"
@@ -457,7 +457,7 @@ end
 function Zlibrary:validateFavoriteBookIds(on_success)
     local cached_ids = self._runtime_cache:get("favorite_book_ids")
     if type(cached_ids) == "table" and next(cached_ids) then
-        if type(on_success) then on_success() end
+        if type(on_success) == "function" then on_success() end
         return
     end
 
@@ -473,7 +473,7 @@ function Zlibrary:validateFavoriteBookIds(on_success)
         if next(book_ids) then
             self._runtime_cache:insert("favorite_book_ids", book_ids)
         end
-        if type(on_success) then on_success() end
+        if type(on_success) == "function" then on_success() end
     end
 
     self:_requestDispatcher({
@@ -544,8 +544,7 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                                 widget:reloadFromBookData(books)
                             else
                                 -- Merge paginated results
-                                widget:extendBatchData(books)
-                                widget:reloadFromBookData(nil, nil, 1)
+                                widget:appendBatchDataAndReload(books)
                             end
                             return is_refresh and plugin_self:resetDownloadQuotaCache()
                         end,

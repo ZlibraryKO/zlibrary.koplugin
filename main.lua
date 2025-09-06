@@ -369,7 +369,7 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
         toggle_items = {{
             text = T("Recommended"),
             cache_key = "recommended",
-            callback = function(widget, is_refresh)
+            callback = function(widget, page, is_refresh)
                 self:_fetchBookList({
                     api_method = Api.getRecommendedBooks,
                     loading_text_key = T("Fetching recommended books..."),
@@ -378,14 +378,14 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
                     log_context = "onShowRecommendedBooks",
                     results_member_name = "current_recommended_books",
                     display_menu_func = function(ui_self, books, plugin_self)
-                        widget:refreshMenuItems(books)
+                        widget:reloadFromBookData(books)
                     end,
                     requires_auth = true,
                 })
             end},{
             text = T("Most popular"),
             cache_key = "popular",
-            callback = function(widget, is_refresh)
+            callback = function(widget, page, is_refresh)
                 self:_fetchBookList({
                     api_method = Api.getMostPopularBooks,
                     loading_text_key = T("Fetching most popular books..."),
@@ -394,7 +394,7 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
                     log_context = "onShowMostPopularBooks",
                     results_member_name = "current_most_popular_books",
                     display_menu_func = function(ui_self, books, plugin_self)
-                        widget:refreshMenuItems(books)
+                        widget:reloadFromBookData(books)
                     end,
                     requires_auth = false,
                 })
@@ -406,6 +406,7 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
     search_dialog:fetchAndShow()
 end
 
+-- Reset when a book is successfully downloaded or when refreshing the menu
 function Zlibrary:resetDownloadQuotaCache()
     self._runtime_cache:remove("download_quota_status")
 end
@@ -427,7 +428,7 @@ function Zlibrary:validateDownloadQuota(on_success)
         api_method = Api.getDownloadQuotaStatus,
         loading_text_key = T("fetching download quota status..."),
         error_prefix_key = T("failed to load download quota status"),
-        operation_name = T("validateDownloadQuota"),
+        operation_name = T("Validate download quota"),
         log_context = "validateDownloadQuota",
         requires_auth = true,
         resolve_result = function(ui_self, api_result, plugin_self)
@@ -447,6 +448,7 @@ function Zlibrary:isBookInFavorites(book_stub)
     return type(cached_ids) == "table" and cached_ids[tostring(book_stub.id)] == true
 end
 
+-- Reset when a book is favorited/unfavorited or when refreshing the menu
 function Zlibrary:resetFavoritesCache(is_all)
     self._runtime_cache:remove("favorite_book_ids")
     if is_all then Cache:new({ name = "multi_search" }):remove("favorites") end
@@ -478,7 +480,7 @@ function Zlibrary:validateFavoriteBookIds(on_success)
         api_method = Api.getFavoriteBookIds,
         loading_text_key = T("fetching favorite book id list…"),
         error_prefix_key = T("failed to load favorite book id list"),
-        operation_name = T("validateFavoriteBookIds"),
+        operation_name = T("Validate favorite book ids"),
         log_context = "validateFavoriteBookIdsk",
         resolve_result = refresh_favorited_book_ids,
         requires_auth = true,
@@ -516,27 +518,43 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
             toggle_items = {{
                 text = T("Downloaded") .. download_quota_status_string,
                 cache_key = "downloaded",
-                callback = function(widget, is_refresh)
-                    self:_fetchBookList({
-                        api_method = Api.getDownloadedBooksAll,
+                enablePagination = true,
+                callback = function(widget, page, is_refresh)
+                    self:_requestDispatcher({
+                        api_method = Api.getDownloadedBooks,
                         loading_text_key = T("Fetching downloaded books..."),
                         error_prefix_key = T("Failed to fetch downloaded books"),
                         operation_name = T("Downloaded books"),
                         log_context = "onShowDownloadedBooks",
                         results_member_name = "current_downloaded_books",
-                        display_menu_func = function(ui_self, books, plugin_self)
-                            widget:apply_mandatory_from(books, "date_download")
-                            widget:refreshMenuItems(books)
-                            if is_refresh then
-                                plugin_self:resetDownloadQuotaCache()
+                        hasValidApiResult = function(api_result)
+                            local ok = type(api_result) == "table" and api_result.has_more_results ~= nil
+                            return ok, ok and nil or T("API returned an error, please try again")
+                        end,
+                        resolve_result = function(ui_self, api_result, plugin_self)
+                            local books = api_result.books
+                            
+                            widget:setPaginationState(api_result.has_more_results, page)
+                       
+                            widget:applyMandatoryFrom(books, function(book)
+                                return book and book["date_download"]
+                            end)
+
+                            if not page or page == 1 then
+                                widget:reloadFromBookData(books)
+                            else
+                                -- Merge paginated results
+                                widget:extendBatchData(books)
+                                widget:reloadFromBookData(nil, nil, 1)
                             end
+                            return is_refresh and plugin_self:resetDownloadQuotaCache()
                         end,
                         requires_auth = true
-                    })
+                    }, page)
                 end}, {
                 text = T("Favorites"),
                 cache_key = "favorites",
-                callback = function(widget, is_refresh)
+                callback = function(widget, page, is_refresh)
                     self:_fetchBookList({
                         api_method = Api.getFavoriteBooksAll,
                         loading_text_key = T("Getting your favorite books..."),
@@ -545,8 +563,11 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                         log_context = "onShowFavoriteBooks",
                         results_member_name = "current_favorite_books",
                         display_menu_func = function(ui_self, books, plugin_self)
-                            widget:apply_mandatory_from(books, "date_saved")
-                            widget:refreshMenuItems(books)
+                            widget:applyMandatoryFrom(books, function(book)
+                                return book and book["date_saved"]
+                            end)
+                            widget:reloadFromBookData(books)
+                            return is_refresh and plugin_self:resetFavoritesCache()
                         end,
                         requires_auth = true
                     })
@@ -593,7 +614,7 @@ function Zlibrary:searchSimilarBooks(book_stub)
         api_method = Api.getSimilarBooks,
         loading_text_key = T("Finding similar books..."),
         error_prefix_key = T("No similar books found"),
-        operation_name = T("Similar Books"),
+        operation_name = T("Similar books"),
         log_context = "searchSimilarBooks",
         results_member_name = "current_similar_books",
         display_menu_func = Ui.showSimilarBooksMenu,
@@ -610,7 +631,7 @@ function Zlibrary:unfavoriteBook(book_stub, on_success)
         api_method = Api.unfavoriteBook,
         loading_text_key = T("Removing book from favorites…"),
         error_prefix_key = T("Failed to remove book from favorites"),
-        operation_name = T("unfavoriteBook"),
+        operation_name = T("unfavorite book"),
         log_context = "unfavoriteBook",
         resolve_result = function(ui_self, api_result, plugin_self)
             if api_result and api_result.success == true then
@@ -642,7 +663,7 @@ function Zlibrary:favoriteBook(book_stub, on_success)
         api_method = Api.favoriteBook,
         loading_text_key = T("Adding book to favorites…"),
         error_prefix_key = T("Failed to add book to favorites"),
-        operation_name = T("favoriteBook"),
+        operation_name = T("Favorite book"),
         log_context = "favoriteBook",
         resolve_result = function(ui_self, api_result, plugin_self)
             if api_result and api_result.success == true then

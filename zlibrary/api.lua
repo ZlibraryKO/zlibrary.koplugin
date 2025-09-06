@@ -281,7 +281,7 @@ function Api.login(email, password, is_retry)
         return result
     end
 
-    local data, _, err_msg = json.decode(http_result.body, json.decode.simple)
+    local data, _, err_msg = json.decode(http_result.body)
 
     if not data or type(data) ~= "table" then
         result.error = T("Login failed: Invalid response format") .. (err_msg and (". " .. err_msg) or "")
@@ -382,7 +382,7 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
         return result
     end
 
-    local data, _, err_msg = json.decode(http_result.body, json.decode.simple)
+    local data, _, err_msg = json.decode(http_result.body)
 
     if not data or type(data) ~= "table" then
         result.error = T("Invalid response format from server") .. (err_msg and (": " .. err_msg) or "")
@@ -732,7 +732,7 @@ function Api.getSimilarBooks(user_id, user_key, book_id, book_hash)
     return { books = transformed_books }
 end
 
-function Api.getDownloadedBooks(user_id, user_key, page, accumulator, is_all)
+function Api.getDownloadedBooks(user_id, user_key, page, accumulator, fetch_all)
 
     accumulator = accumulator or {}
     page = page or 1
@@ -778,33 +778,36 @@ function Api.getDownloadedBooks(user_id, user_key, page, accumulator, is_all)
         return { error = T("Failed to parse downloaded books response.") }
     end
      
-    if not (data.success == 1 and data.books and data.pagination) then
+    if not (data.success == 1 and data.books and type(data.pagination) == "table") then
         logger.warn("Api.getDownloadedBooks - API error: ", http_result.body)
         return { error = data.message or T("API returned an error for downloaded books.") }
     end
 
+    local pagination = data.pagination
+    local has_more_results = type(data.books) == "table" and #data.books > 0 
+    and pagination.total_pages and pagination.current 
+    and  page == pagination.current and pagination.current < pagination.total_pages
+
     local transformed_books = _transformApiBookData(data.books)
+    if not fetch_all then
+        return { has_more_results = has_more_results, books = transformed_books}
+    end
+
     for _, book in ipairs(transformed_books) do
         table.insert(accumulator, book)
     end
 
-    local pagination = data.pagination
-    local has_more_results = pagination
-    and pagination.total_pages and pagination.current
-    and pagination.next and page == pagination.current
-    and pagination.current < pagination.total_pages
-
-    if not (is_all and has_api_results) then
-        return { books = accumulator }
+    if not has_more_results then
+        return {books = accumulator}
     end
 
-    return Api.getDownloadedBooks(user_id, user_key, page + 1 , accumulator, is_all)
+    return Api.getDownloadedBooks(user_id, user_key, page + 1 , accumulator, fetch_all)
 end
 
-function Api.getFavoriteBooks(user_id, user_key, page, accumulator, is_all)
+function Api.getFavoriteBooks(user_id, user_key, page, accumulator, fetch_all)
 
-    accumulator = accumulator or {}
     page = page or 1
+    accumulator = accumulator or {}
     
     local url = Config.getFavoriteBooksUrl(page)
     if not url then
@@ -851,30 +854,34 @@ function Api.getFavoriteBooks(user_id, user_key, page, accumulator, is_all)
         return { error = data.message or T("API returned an error for favorite books.") }
     end
     
+    local pagination = data.pagination
+    local has_more_results = type(data.books) == "table" and #data.books > 0 
+    and pagination.total_pages and pagination.current 
+    and  page == pagination.current and pagination.current < pagination.total_pages
+
     local transformed_books = _transformApiBookData(data.books)
+
+    if not fetch_all then
+        return { has_more_results = has_more_results, books = transformed_books}
+    end
+
     for _, book in ipairs(transformed_books) do
         table.insert(accumulator, book)
     end
     
-    local pagination = data.pagination
-    local has_more_results = pagination
-    and pagination.total_pages and pagination.current
-    and pagination.next and page == pagination.current
-    and pagination.current < pagination.total_pages
-  
-    if not (is_all and has_more_results) then
-        return { books = accumulator }
+    if not has_more_results then
+        return {books = accumulator}
     end
 
-    return Api.getFavoriteBooks(user_id, user_key, page + 1 , accumulator)
+    return Api.getFavoriteBooks(user_id, user_key, page + 1 , accumulator, fetch_all)
 end
 
 function Api.getDownloadedBooksAll(user_id, user_key)
-    return Api.getDownloadedBooks(user_id, user_key, nil, nil, true)
+    return Api.getDownloadedBooks(user_id, user_key, 1, nil, true)
 end
 
 function Api.getFavoriteBooksAll(user_id, user_key)
-    return Api.getFavoriteBooks(user_id, user_key, nil, nil, true)
+    return Api.getFavoriteBooks(user_id, user_key, 1, nil, true)
 end
 
 function Api.unfavoriteBook(user_id, user_key, book_stub)
@@ -965,7 +972,7 @@ function Api.getDownloadQuotaStatus(user_id, user_key)
         return { error = T("Failed to parse download quota status response.") }
     end
 
-    if not (data.success == 1 and data.user and data.user.downloads_today ~= nil )then
+    if not (data.success == 1 and type(data.user) == "table" and data.user.downloads_today ~= nil )then
         logger.warn("Api.getDownloadQuotaStatus - API error: ", http_result.body)
         return { error = data.message or T("API returned an error for download quota status.") }
     end

@@ -1010,18 +1010,18 @@ function Api.getFavoriteBookIds(user_id, user_key)
 
     if not http_result.body then
         logger.warn("Api.getFavoriteBookIds - No response body")
-        return { error = T("Failed to fetch favorite book ids (no response body).") }
+        return { error = T("Failed to fetch favorite-book IDs (no response body).") }
     end
 
     local success, data = pcall(json.decode, http_result.body, json.decode.simple)
     if not success or not data then
         logger.warn("Api.getFavoriteBookIds - Failed to decode JSON: ", http_result.body)
-        return { error = T("Failed to parse favorite book ids.") }
+        return { error = T("Failed to parse favorite-book IDs.") }
     end
     
     if not (data.success == 1 and data.list) then
         logger.warn("Api.getFavoriteBookIds - API error: ", http_result.body)
-        return { error = data.message or T("API returned an error for favorite book ids.") }
+        return { error = data.message or T("API returned an error for favorite-book IDs.") }
     end
     
     return { list = data.list }

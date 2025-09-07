@@ -276,7 +276,17 @@ function Zlibrary:_requestDispatcher(options, ...)
         end
 
         local on_success = function(api_result)
-            if api_result.error then
+
+            if type(options.hasValidApiResult) == "function" then
+                local ok, error_msg = options.hasValidApiResult(api_result)
+                if not ok then
+                    Ui.closeMessage(loading_msg)
+                    Ui.showInfoMessage(error_msg)
+                    return
+                end
+            end
+            
+            if api_result and api_result.error then
                 if retry_on_auth_error and Api.isAuthenticationError(api_result.error) and options.requires_auth then
                     Ui.closeMessage(loading_msg)
                     self:login(function(login_ok)
@@ -290,15 +300,6 @@ function Zlibrary:_requestDispatcher(options, ...)
                 Ui.closeMessage(loading_msg)
                 Ui.showErrorMessage(Ui.colonConcat(options.error_prefix_key, tostring(api_result.error)))
                 return
-            end
-
-            if type(options.hasValidApiResult) == "function" then
-                local ok, error_msg = options.hasValidApiResult(api_result)
-                if not ok then
-                    Ui.closeMessage(loading_msg)
-                    Ui.showInfoMessage(error_msg)
-                    return
-                end
             end
 
             Ui.closeMessage(loading_msg)
@@ -426,7 +427,7 @@ function Zlibrary:validateDownloadQuota(on_success)
 
     self:_requestDispatcher({
         api_method = Api.getDownloadQuotaStatus,
-        loading_text_key = T("fetching download quota status..."),
+        loading_text_key = T("Getting your download limit..."),
         error_prefix_key = T("failed to load download quota status"),
         operation_name = T("Validate download quota"),
         log_context = "validateDownloadQuota",
@@ -478,9 +479,9 @@ function Zlibrary:validateFavoriteBookIds(on_success)
 
     self:_requestDispatcher({
         api_method = Api.getFavoriteBookIds,
-        loading_text_key = T("fetching favorite book id list…"),
+        loading_text_key = T("Checking your favorites..."),
         error_prefix_key = T("failed to load favorite book id list"),
-        operation_name = T("Validate favorite book ids"),
+        operation_name = T("Checking favorites"),
         log_context = "validateFavoriteBookIdsk",
         resolve_result = refresh_favorited_book_ids,
         requires_auth = true,
@@ -522,7 +523,7 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                 callback = function(widget, page, is_refresh)
                     self:_requestDispatcher({
                         api_method = Api.getDownloadedBooks,
-                        loading_text_key = T("Fetching downloaded books..."),
+                        loading_text_key = T("Getting your downloaded..."),
                         error_prefix_key = T("Failed to fetch downloaded books"),
                         operation_name = T("Downloaded books"),
                         log_context = "onShowDownloadedBooks",
@@ -533,22 +534,24 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                         end,
                         resolve_result = function(ui_self, api_result, plugin_self)
                             local books = api_result.books
-                            
+                            local current_page = page or 1
+                            local is_refresh_call = is_refresh
+
                             widget:setPaginationState(api_result.has_more_results, page)
                        
                             widget:applyMandatoryFrom(books, function(book)
                                 return book and book["date_download"]
                             end)
 
-                            if not page or page == 1 then
+                            if current_page == 1 then
                                 widget:reloadFromBookData(books)
                             else
                                 -- Merge paginated results
                                 widget:appendBatchDataAndReload(books)
                             end
-                            return is_refresh and plugin_self:resetDownloadQuotaCache()
+                            return is_refresh_call and plugin_self:resetDownloadQuotaCache()
                         end,
-                        requires_auth = true
+                        requires_auth = true,
                     }, page)
                 end}, {
                 text = T("Favorites"),
@@ -556,7 +559,7 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                 callback = function(widget, page, is_refresh)
                     self:_fetchBookList({
                         api_method = Api.getFavoriteBooksAll,
-                        loading_text_key = T("Getting your favorite books..."),
+                        loading_text_key = T("Getting your favorites..."),
                         error_prefix_key = T("Failed to fetch favorite books"),
                         operation_name = T("Favorite books"),
                         log_context = "onShowFavoriteBooks",
@@ -568,7 +571,7 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                             widget:reloadFromBookData(books)
                             return is_refresh and plugin_self:resetFavoritesCache()
                         end,
-                        requires_auth = true
+                        requires_auth = true,
                     })
                 end},
             }}
@@ -616,8 +619,11 @@ function Zlibrary:searchSimilarBooks(book_stub)
         operation_name = T("Similar books"),
         log_context = "searchSimilarBooks",
         results_member_name = "current_similar_books",
-        display_menu_func = Ui.showSimilarBooksMenu,
-        requires_auth = true
+        display_menu_func = function(ui_self, books, plugin_self)
+            local source_title = book_stub.title
+            Ui.showSimilarBooksMenu(ui_self, books, plugin_self, source_title)
+        end,
+        requires_auth = true,
     }, book_stub.id, book_stub.hash)
 end
 

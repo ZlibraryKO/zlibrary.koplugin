@@ -59,12 +59,17 @@ function Ui.showErrorMessage(text)
     if _plugin_instance and _plugin_instance.dialog_manager then
         _plugin_instance.dialog_manager:showErrorMessage(text)
     else
-        UIManager:show(InfoMessage:new{ text = text, timeout = 5 })
+        UIManager:show(InfoMessage:new{ text = text, icon = "notice-warning", timeout = 5 })
     end
 end
 
 function Ui.showLoadingMessage(text)
-    local message = InfoMessage:new{ text = text, timeout = 0 }
+    local message = InfoMessage:new{ 
+        text = string.format("\u{23f3}  %s", text),
+        dismissable = false,
+        show_icon = false,
+        force_one_line = true,
+    }
     UIManager:show(message)
     return message
 end
@@ -677,14 +682,13 @@ local function _showBooksMenu(ui_self, options, plugin_self)
     local log_context = options.log_context or ""
     local books = options.books or {}
     local title = options.title or ""
+    local subtitle = options.subtitle
 
     local menu_items = {}
     for _, book in ipairs(books) do
-        local title = book.title or T("Untitled")
-        local author = book.author or T("Unknown Author")
-        local menu_text = string.format("%s - %s", title, author)
+        local menu_item = Ui.createBookMenuItem(book, plugin_self)
         table.insert(menu_items, {
-            text = menu_text,
+            text = menu_item.text,
             callback = function()
                 plugin_self:onSelectRecommendedBook(book)
             end,
@@ -697,6 +701,7 @@ local function _showBooksMenu(ui_self, options, plugin_self)
     end
     local menu = Menu:new({
         title = title,
+        subtitle = subtitle,
         item_table = menu_items,
         items_per_page = 10,
         show_captions = true,
@@ -725,9 +730,10 @@ function Ui.showMostPopularBooksMenu(ui_self, books, plugin_self)
     }, plugin_self)
 end
 
-function Ui.showSimilarBooksMenu(ui_self, books, plugin_self)
+function Ui.showSimilarBooksMenu(ui_self, books, plugin_self, source_title)
     _showBooksMenu(ui_self, {
         title = T("Z-library Similar Books"),
+        subtitle = source_title,
         books = books,
         log_context = "similar books",
     }, plugin_self)

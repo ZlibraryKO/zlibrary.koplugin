@@ -210,7 +210,11 @@ end
 function SearchDialog:_fetchAndProcessData(page, is_refresh)
     local current_toggle = self:getActiveItem()
     local item_callback = current_toggle and current_toggle.callback
-    if type(item_callback) == "function" then item_callback(self, page, is_refresh) end
+    if type(item_callback) == "function" then
+        UIManager:nextTick(function()
+            item_callback(self, page, is_refresh)
+        end)
+    end
 end
 
 function SearchDialog:reloadFromBookData(books, skip_cache, select_number, no_recalculate_dimen)

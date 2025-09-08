@@ -191,20 +191,6 @@ function Config.setAndValidateBaseUrl(url_string)
         url_string = "https://" .. url_string
     end
 
-    local _, _, protocol, domain = string.find(url_string, "^(https?://)(.+)")
-    if domain then
-        if not string.match(domain, "^%d+%.%d+%.%d+%.%d+$") then
-            local domain_parts = {}
-            for part in string.gmatch(domain, "[^%.]+") do
-                table.insert(domain_parts, part)
-            end
-            if #domain_parts > 2 then
-                local base_domain = table.concat({domain_parts[#domain_parts-1], domain_parts[#domain_parts]}, ".")
-                url_string = protocol .. base_domain
-            end
-        end
-    end
-
     if not string.find(url_string, "%.") then
         return false, "Error: URL must include a valid domain name (e.g., example.com)."
     end
@@ -258,13 +244,14 @@ function Config.getSimilarBooksUrl(book_id, book_hash)
     return base .. string.format("/eapi/book/%s/%s/similar", book_id, book_hash)
 end
 
-function Config.getDownloadedBooksUrl(page, limit, order)
+function Config.getDownloadedBooksUrl(page, order)
     local base = Config.getBaseUrl()
     if not base then return nil end
     
     order = order or {"date"}
     page = page or 1
-    limit = limit or Config.SEARCH_RESULTS_LIMIT
+
+    local limit = Config.SEARCH_RESULTS_LIMIT
     local order_str = ""
     if order and #order > 0 then
         order_str = "&order=" .. util.urlEncode(order[1])
@@ -273,13 +260,14 @@ function Config.getDownloadedBooksUrl(page, limit, order)
     return string.format("%s/eapi/user/book/downloaded?page=%d&limit=%d%s",base, page, limit, order_str)
 end
 
-function Config.getFavoriteBooksUrl(page, limit, order)
+function Config.getFavoriteBooksUrl(page, order)
     local base = Config.getBaseUrl()
     if not base then return nil end
 
     order = order or {"date"}
     page = page or 1
-    limit = limit or Config.SEARCH_RESULTS_LIMIT
+    
+    local limit = Config.SEARCH_RESULTS_LIMIT
     local order_str = ""
     if order and #order > 0 then
         order_str = "&order=" .. util.urlEncode(order[1])

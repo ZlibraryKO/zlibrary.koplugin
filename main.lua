@@ -305,7 +305,9 @@ function Zlibrary:_requestDispatcher(options, ...)
             Ui.closeMessage(loading_msg)
             logger.info(string.format("Zlibrary:%s - Fetch successful.", options.log_context))
             if type(options.resolve_result) == "function" then
-                options.resolve_result(self.ui, api_result, self)
+                UIManager:nextTick(function()
+                    options.resolve_result(self.ui, api_result, self)
+                end)
             else
                 logger.warn("Zlibrary:%s - Fetch resolve_result undefined", options.log_context)
             end
@@ -340,14 +342,12 @@ end
 function Zlibrary:_fetchBookList(options, ...)
     options.hasValidApiResult = function(api_result)
         local ok = type(api_result) == "table" and type(api_result.books) == "table" and #api_result.books > 0
-        return ok, ok and nil or T("No books found, please try again")
+        return ok, not ok and T("No books found, please try again")
     end
     options.resolve_result = function(ui_self, api_result, plugin_self)
         
         self[options.results_member_name] = api_result.books
-        UIManager:nextTick(function()
-            options.display_menu_func(ui_self, self[options.results_member_name], plugin_self)
-        end)
+        options.display_menu_func(ui_self, self[options.results_member_name], plugin_self)
     end
     self:_requestDispatcher(options, ...)
 end  
@@ -370,6 +370,7 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
         toggle_items = {{
             text = T("Recommended"),
             cache_key = "recommended",
+            cache_expiry = 180000,
             callback = function(widget, page, is_refresh)
                 self:_fetchBookList({
                     api_method = Api.getRecommendedBooks,
@@ -386,6 +387,7 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
             end},{
             text = T("Most popular"),
             cache_key = "popular",
+            cache_expiry = 180000,
             callback = function(widget, page, is_refresh)
                 self:_fetchBookList({
                     api_method = Api.getMostPopularBooks,
@@ -413,7 +415,7 @@ function Zlibrary:resetDownloadQuotaCache()
 end
 
 function Zlibrary:getDownloadQuotaCache()
-    return self._runtime_cache:get("download_quota_status", 1800)
+    return self._runtime_cache:get("download_quota_status", 10800)
 end
 
 function Zlibrary:validateDownloadQuota(on_success)
@@ -438,14 +440,14 @@ function Zlibrary:validateDownloadQuota(on_success)
         end,
         hasValidApiResult = function(api_result)
             local ok = type(api_result) == "table" and type(api_result.quota_status) == "table"
-            return ok, ok and nil or T("API returned an error, please try again")
+            return ok, not ok and T("API returned an error, please try again")
         end,
     })
 end
 
 function Zlibrary:isBookInFavorites(book_stub)
     if not book_stub.id then return false end
-    local cached_ids = self._runtime_cache:get("favorite_book_ids")
+    local cached_ids = self._runtime_cache:get("favorite_book_ids", 1800)
     return type(cached_ids) == "table" and cached_ids[tostring(book_stub.id)] == true
 end
 
@@ -487,7 +489,7 @@ function Zlibrary:validateFavoriteBookIds(on_success)
         requires_auth = true,
         hasValidApiResult = function(api_result)
             local ok = type(api_result) == "table" and type(api_result.list) == "table"
-            return ok, ok and nil or T("API returned an error, please try again")
+            return ok, not ok and T("API returned an error, please try again")
         end,
     })
 end
@@ -501,6 +503,11 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
         if type(quota_status) == "table" and quota_status.today ~= nil then
             quota_status.limit = quota_status.limit or 10
             download_quota_status_string = string.format(" [%d/%d]", quota_status.today, quota_status.limit)
+        end
+
+        local valid_api_result = function(api_result)
+            local ok = type(api_result) == "table" and api_result.has_more_results ~= nil
+            return ok, not ok and T("API returned an error, please try again")
         end
 
         my_books_dialog = MultiSearchDialog:new{
@@ -519,6 +526,7 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
             toggle_items = {{
                 text = T("Downloaded") .. download_quota_status_string,
                 cache_key = "downloaded",
+                cache_expiry = 86400,
                 enablePagination = true,
                 callback = function(widget, page, is_refresh)
                     self:_requestDispatcher({
@@ -527,17 +535,13 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                         error_prefix_key = T("Failed to fetch downloaded books"),
                         operation_name = T("Downloaded books"),
                         log_context = "onShowDownloadedBooks",
-                        results_member_name = "current_downloaded_books",
-                        hasValidApiResult = function(api_result)
-                            local ok = type(api_result) == "table" and api_result.has_more_results ~= nil
-                            return ok, ok and nil or T("API returned an error, please try again")
-                        end,
+                        hasValidApiResult = valid_api_result,
                         resolve_result = function(ui_self, api_result, plugin_self)
                             local books = api_result.books
                             local current_page = page or 1
                             local is_refresh_call = is_refresh
 
-                            widget:setPaginationState(api_result.has_more_results, page)
+                            widget:setPaginationState(api_result.has_more_results, current_page)
                        
                             widget:applyMandatoryFrom(books, function(book)
                                 return book and book["date_download"]
@@ -556,23 +560,36 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                 end}, {
                 text = T("Favorites"),
                 cache_key = "favorites",
+                cache_expiry = 86400,
+                enablePagination = true,
                 callback = function(widget, page, is_refresh)
-                    self:_fetchBookList({
-                        api_method = Api.getFavoriteBooksAll,
+                    self:_requestDispatcher({
+                        api_method = Api.getFavoriteBooks,
                         loading_text_key = T("Getting your favorites..."),
                         error_prefix_key = T("Failed to fetch favorite books"),
                         operation_name = T("Favorite books"),
                         log_context = "onShowFavoriteBooks",
-                        results_member_name = "current_favorite_books",
-                        display_menu_func = function(ui_self, books, plugin_self)
+                        hasValidApiResult = valid_api_result,
+                        resolve_result = function(ui_self, api_result, plugin_self)
+                            local books = api_result.books
+                            local current_page = page or 1
+                            local is_refresh_call = is_refresh
+
+                            widget:setPaginationState(api_result.has_more_results, current_page)
+                       
                             widget:applyMandatoryFrom(books, function(book)
                                 return book and book["date_saved"]
                             end)
-                            widget:reloadFromBookData(books)
-                            return is_refresh and plugin_self:resetFavoritesCache()
+
+                            if current_page == 1 then
+                                widget:reloadFromBookData(books)
+                            else
+                                widget:appendBatchDataAndReload(books)
+                            end
+                            return is_refresh_call and plugin_self:resetFavoritesCache()
                         end,
                         requires_auth = true,
-                    })
+                    }, page)
                 end},
             }}
 
@@ -652,7 +669,7 @@ function Zlibrary:unfavoriteBook(book_stub, on_success)
         end,
         hasValidApiResult = function(api_result)
             local ok = type(api_result) == "table"
-            return ok, ok and nil or T("API returned an error, please try again")
+            return ok, not ok and T("API returned an error, please try again")
         end,
         requires_auth = true,
     }, book_stub)
@@ -682,7 +699,7 @@ function Zlibrary:favoriteBook(book_stub, on_success)
         end,
         hasValidApiResult = function(api_result)
             local ok = type(api_result) == "table"
-            return ok, ok and nil or T("API returned an error, please try again")
+            return ok, not ok and T("API returned an error, please try again")
         end,
         requires_auth = true,
     }, book_stub)
@@ -723,7 +740,7 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
         requires_auth = true,
         hasValidApiResult = function(api_result)
             local ok = type(api_result) == "table" and type(api_result.book) == "table"
-            return ok, ok and nil or T("Could not retrieve book details.")
+            return ok, not ok and T("Could not retrieve book details.")
         end,
     }, book_stub.id, book_stub.hash)
 end

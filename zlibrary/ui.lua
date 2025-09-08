@@ -685,8 +685,9 @@ local function _showBooksMenu(ui_self, options, plugin_self)
     local subtitle = options.subtitle
 
     local menu_items = {}
+    local menu_item
     for _, book in ipairs(books) do
-        local menu_item = Ui.createBookMenuItem(book, plugin_self)
+        menu_item = Ui.createBookMenuItem(book, plugin_self)
         table.insert(menu_items, {
             text = menu_item.text,
             callback = function()

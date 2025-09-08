@@ -732,12 +732,11 @@ function Api.getSimilarBooks(user_id, user_key, book_id, book_hash)
     return { books = transformed_books }
 end
 
-function Api.getDownloadedBooks(user_id, user_key, page, accumulator, fetch_all)
+function Api.getDownloadedBooks(user_id, user_key, page, order)
 
-    accumulator = accumulator or {}
     page = page or 1
 
-    local url = Config.getDownloadedBooksUrl(page)
+    local url = Config.getDownloadedBooksUrl(page, order)
     if not url then
         logger.warn("Api.getDownloadedBooks - Base URL not configured")
         return { error = T("Z-library server URL not configured.") }
@@ -757,7 +756,7 @@ function Api.getDownloadedBooks(user_id, user_key, page, accumulator, fetch_all)
         headers = headers,
         timeout = Config.getPopularTimeout(),
         getRedirectedUrl = function()
-            return Config.getDownloadedBooksUrl(page)
+            return Config.getDownloadedBooksUrl(page, order)
         end,
     }
 
@@ -786,30 +785,17 @@ function Api.getDownloadedBooks(user_id, user_key, page, accumulator, fetch_all)
     local pagination = data.pagination
     local has_more_results = type(data.books) == "table" and #data.books > 0 
     and pagination.total_pages and pagination.current 
-    and  page == pagination.current and pagination.current < pagination.total_pages
+    and page == pagination.current and pagination.current < pagination.total_pages
 
     local transformed_books = _transformApiBookData(data.books)
-    if not fetch_all then
-        return { has_more_results = has_more_results, books = transformed_books }
-    end
-
-    for _, book in ipairs(transformed_books) do
-        table.insert(accumulator, book)
-    end
-
-    if not has_more_results then
-        return { books = accumulator }
-    end
-
-    return Api.getDownloadedBooks(user_id, user_key, page + 1 , accumulator, fetch_all)
+    return { has_more_results = has_more_results, books = transformed_books }
 end
 
-function Api.getFavoriteBooks(user_id, user_key, page, accumulator, fetch_all)
+function Api.getFavoriteBooks(user_id, user_key, page, order)
 
     page = page or 1
-    accumulator = accumulator or {}
     
-    local url = Config.getFavoriteBooksUrl(page)
+    local url = Config.getFavoriteBooksUrl(page, order)
     if not url then
         logger.warn("Api.getFavoriteBooks - Base URL not configured")
         return { error = T("Z-library server URL not configured.") }
@@ -829,7 +815,7 @@ function Api.getFavoriteBooks(user_id, user_key, page, accumulator, fetch_all)
         headers = headers,
         timeout = Config.getPopularTimeout(),
         getRedirectedUrl = function()
-            return Config.getFavoriteBooksUrl(page)
+            return Config.getFavoriteBooksUrl(page, order)
         end,
     }
     
@@ -857,31 +843,10 @@ function Api.getFavoriteBooks(user_id, user_key, page, accumulator, fetch_all)
     local pagination = data.pagination
     local has_more_results = type(data.books) == "table" and #data.books > 0 
     and pagination.total_pages and pagination.current 
-    and  page == pagination.current and pagination.current < pagination.total_pages
+    and page == pagination.current and pagination.current < pagination.total_pages
 
     local transformed_books = _transformApiBookData(data.books)
-
-    if not fetch_all then
-        return { has_more_results = has_more_results, books = transformed_books }
-    end
-
-    for _, book in ipairs(transformed_books) do
-        table.insert(accumulator, book)
-    end
-    
-    if not has_more_results then
-        return { books = accumulator }
-    end
-
-    return Api.getFavoriteBooks(user_id, user_key, page + 1 , accumulator, fetch_all)
-end
-
-function Api.getDownloadedBooksAll(user_id, user_key)
-    return Api.getDownloadedBooks(user_id, user_key, 1, nil, true)
-end
-
-function Api.getFavoriteBooksAll(user_id, user_key)
-    return Api.getFavoriteBooks(user_id, user_key, 1, nil, true)
+    return { has_more_results = has_more_results, books = transformed_books }
 end
 
 function Api.unfavoriteBook(user_id, user_key, book_stub)

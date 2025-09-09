@@ -475,17 +475,17 @@ function Ui.appendSearchResultsToMenu(menu_instance, new_menu_items)
 end
 
 function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
-    parent_zlibrary:validateFavoriteBookIds(function()
-        Ui.createshowBookDetailsMenu(parent_zlibrary, book, clear_cache_callback)
+    parent_zlibrary:validateFavoriteBookIds(function(precheck_ok)
+        Ui.createshowBookDetailsMenu(parent_zlibrary, book, clear_cache_callback, precheck_ok)
     end)
 end
 
-function Ui.createshowBookDetailsMenu(parent_zlibrary, book, clear_cache_callback)
+function Ui.createshowBookDetailsMenu(parent_zlibrary, book, clear_cache_callback, precheck_ok)
     local details_menu_items = {}
     local details_menu
 
     local is_cache = (type(clear_cache_callback) == "function")
-    local in_favorites =  parent_zlibrary:isBookInFavorites(book) == true
+    local in_favorites = parent_zlibrary:isBookInFavorites(book) == true
     local title_text_for_html = (type(book.title) == "string" and book.title) or ""
     local full_title = util.htmlEntitiesToUtf8(title_text_for_html)
     table.insert(details_menu_items, {
@@ -564,21 +564,24 @@ function Ui.createshowBookDetailsMenu(parent_zlibrary, book, clear_cache_callbac
 
     table.insert(details_menu_items, { text = "---" })
 
-    table.insert(details_menu_items, {
-        text = in_favorites and T("Remove From Favorites") or T("Add To Favorites"),
-        mandatory = "\u{F004}",
-        callback = function()
-            local reload = function()
-                UIManager:close(details_menu)
-                Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
-            end
-            if in_favorites then
-                parent_zlibrary:unfavoriteBook(book, reload)
-                return
-            end
-            parent_zlibrary:favoriteBook(book, reload)
-        end,
-    })
+    -- Could not fetch favorite IDs, so hiding favorite feature
+    if precheck_ok then
+        table.insert(details_menu_items, {
+            text = in_favorites and T("Remove From Favorites") or T("Add To Favorites"),
+            mandatory = "\u{F004}",
+            callback = function()
+                local reload = function()
+                    UIManager:close(details_menu)
+                    Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
+                end
+                if in_favorites then
+                    parent_zlibrary:unfavoriteBook(book, reload)
+                    return
+                end
+                parent_zlibrary:favoriteBook(book, reload)
+            end,
+        })
+    end
 
     table.insert(details_menu_items, {
         text = T("More Similar Books"),

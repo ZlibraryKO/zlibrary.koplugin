@@ -87,7 +87,7 @@ function Cache:get(key, cache_expiry)
 end
 
 function Cache:insert(key, object)
-    if not (type(key) == "string" and type(object) == "table" and next(object)) then
+    if not (type(key) == "string" and type(object) == "table") then
         return
     end
     self:_ensureInit()

@@ -193,14 +193,21 @@ end
 function SearchDialog:_getMenuItems(books)
     local menu_items = {}
     if type(books) ~= "table" then return menu_items end
+
+    local current_toggle = self:getActiveItem()
+    local mandatory_func = current_toggle and current_toggle.mandatory_func
+    
+    local title, author, menu_text, mandatory_text
     for i, book in ipairs(books) do
-        local title = book.title or T("Untitled")
-        local author = book.author or T("Unknown Author")
-        local menu_text = string.format("%s - %s", title, author)
+        title = book.title or T("Untitled")
+        author = book.author or T("Unknown Author")
+        menu_text = string.format("%s - %s", title, author)
+        mandatory_text = mandatory_func and mandatory_func(book)
+
         table.insert(menu_items, {
             book_index = i,
             text = menu_text,
-            mandatory = book._mandatory,
+            mandatory = mandatory_text,
         })
     end
     return menu_items
@@ -332,16 +339,6 @@ function SearchDialog:onMenuHold(item)
     UIManager:show(dialog)
 end
 
-function SearchDialog:applyMandatoryFrom(books, on_mandatory)
-    if not (type(books) == "table" and type(on_mandatory) == "function")then return end
-    for _, book in ipairs(books) do
-        if type(book) == "table" then
-            book._mandatory = on_mandatory(book)
-        end
-    end
-    return books  
-end
-
 -- Can be appended multiple times, then call reloadFromBookData(nil, nil, 1)
 function SearchDialog:extendBatchData(books)
     if not self.current_page_loaded or self.current_page_loaded == 1 then
@@ -384,7 +381,7 @@ end
 function SearchDialog:_isEnablePagination()
     local current_toggle = self:getActiveItem()
     if current_toggle then
-        return current_toggle["enablePagination"] == true
+        return current_toggle["enable_pagination"] == true
     end
 end
 

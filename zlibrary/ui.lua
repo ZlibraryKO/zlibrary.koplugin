@@ -475,20 +475,32 @@ function Ui.appendSearchResultsToMenu(menu_instance, new_menu_items)
 end
 
 function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
-    parent_zlibrary:validateFavoriteBookIds(function(precheck_ok)
-        Ui.createshowBookDetailsMenu(parent_zlibrary, book, clear_cache_callback, precheck_ok)
-    end)
-end
-
-function Ui.createshowBookDetailsMenu(parent_zlibrary, book, clear_cache_callback, precheck_ok)
-    local details_menu_items = {}
-    local details_menu
-
+    
     local is_cache = (type(clear_cache_callback) == "function")
-    local in_favorites = parent_zlibrary:isBookInFavorites(book) == true
+    -- Could not cache favorite IDs, hide favorite feature on init
+    local has_favorite_ids_cache = parent_zlibrary:isBookInFavorites()
+    
     local title_text_for_html = (type(book.title) == "string" and book.title) or ""
     local full_title = util.htmlEntitiesToUtf8(title_text_for_html)
-    table.insert(details_menu_items, {
+
+    local details_menu = Menu:new{
+        title = T("Book Details"),
+        subtitle = is_cache and "\u{F1C0}",
+        title_bar_left_icon = is_cache and "cre.render.reload",
+        item_table = {},
+        parent = parent_zlibrary.ui,
+        show_captions = true,
+        multilines_show_more_text = true
+    }
+
+    function details_menu:onLeftButtonTap()
+        if is_cache then
+            UIManager:close(self)
+            return clear_cache_callback and clear_cache_callback()
+        end
+    end
+
+    table.insert(details_menu.item_table, {
         text = _colon_concat(T("Title"), full_title),
         mandatory = "\u{25B7}",
         callback = function()
@@ -508,7 +520,7 @@ function Ui.createshowBookDetailsMenu(parent_zlibrary, book, clear_cache_callbac
 
     local author_text_for_html = (type(book.author) == "string" and book.author) or ""
     local full_author = util.htmlEntitiesToUtf8(author_text_for_html)
-    table.insert(details_menu_items, {
+    table.insert(details_menu.item_table, {
         text = string.format("%s: %s", T("Author"), full_author),
         mandatory = "\u{25B7}",
         callback = function()
@@ -517,7 +529,7 @@ function Ui.createshowBookDetailsMenu(parent_zlibrary, book, clear_cache_callbac
     })
 
     if book.cover and book.cover ~= "" and book.hash then
-        table.insert(details_menu_items, {
+        table.insert(details_menu.item_table, {
             text = string.format("%s %s", T("Cover"), T("(tap to view)")),
             mandatory = "\u{25B7}",
             callback = function()
@@ -525,12 +537,12 @@ function Ui.createshowBookDetailsMenu(parent_zlibrary, book, clear_cache_callbac
             end})
     end
 
-    if book.year and book.year ~= "N/A" and tostring(book.year) ~= "0" then table.insert(details_menu_items, { text = _colon_concat(T("Year"), book.year), enabled = false }) end
-    if book.lang and book.lang ~= "N/A" then table.insert(details_menu_items, { text = _colon_concat(T("Language"), book.lang), enabled = false }) end
+    if book.year and book.year ~= "N/A" and tostring(book.year) ~= "0" then table.insert(details_menu.item_table, { text = _colon_concat(T("Year"), book.year), enabled = false }) end
+    if book.lang and book.lang ~= "N/A" then table.insert(details_menu.item_table, { text = _colon_concat(T("Language"), book.lang), enabled = false }) end
 
     if book.format and book.format ~= "N/A" then
         if book.download then
-            table.insert(details_menu_items, {
+            table.insert(details_menu.item_table, {
                 text = string.format(T("Format: %s (tap to download)"), book.format),
                 mandatory = "\u{25B7}",
                 callback = function()
@@ -538,10 +550,10 @@ function Ui.createshowBookDetailsMenu(parent_zlibrary, book, clear_cache_callbac
                 end,
             })
         else
-            table.insert(details_menu_items, { text = string.format(T("Format: %s (Download not available)"), book.format), enabled = false })
+            table.insert(details_menu.item_table, { text = string.format(T("Format: %s (Download not available)"), book.format), enabled = false })
         end
     elseif book.download then
-        table.insert(details_menu_items, {
+        table.insert(details_menu.item_table, {
             text = T("Download Book (Unknown Format)"),
             mandatory = "\u{25B7}",
             callback = function()
@@ -550,40 +562,21 @@ function Ui.createshowBookDetailsMenu(parent_zlibrary, book, clear_cache_callbac
         })
     end
 
-    if book.size and book.size ~= "N/A" then table.insert(details_menu_items, { text = _colon_concat(T("Size"), book.size), enabled = false }) end
-    if book.rating and book.rating ~= "N/A" then table.insert(details_menu_items, { text = _colon_concat(T("Rating"), book.rating), enabled = false }) end
+    if book.size and book.size ~= "N/A" then table.insert(details_menu.item_table, { text = _colon_concat(T("Size"), book.size), enabled = false }) end
+    if book.rating and book.rating ~= "N/A" then table.insert(details_menu.item_table, { text = _colon_concat(T("Rating"), book.rating), enabled = false }) end
     if book.publisher and book.publisher ~= "" then
         local publisher_for_html = (type(book.publisher) == "string" and book.publisher) or ""
-        table.insert(details_menu_items, { text = _colon_concat(T("Publisher"), util.htmlEntitiesToUtf8(publisher_for_html)), enabled = false })
+        table.insert(details_menu.item_table, { text = _colon_concat(T("Publisher"), util.htmlEntitiesToUtf8(publisher_for_html)), enabled = false })
     end
     if book.series and book.series ~= "" then
         local series_for_html = (type(book.series) == "string" and book.series) or ""
-        table.insert(details_menu_items, { text = _colon_concat(T("Series"), util.htmlEntitiesToUtf8(series_for_html)), enabled = false })
+        table.insert(details_menu.item_table, { text = _colon_concat(T("Series"), util.htmlEntitiesToUtf8(series_for_html)), enabled = false })
     end
-    if book.pages and book.pages ~= 0 then table.insert(details_menu_items, { text = _colon_concat(T("Pages"), book.pages), enabled = false }) end
+    if book.pages and book.pages ~= 0 then table.insert(details_menu.item_table, { text = _colon_concat(T("Pages"), book.pages), enabled = false }) end
 
-    table.insert(details_menu_items, { text = "---" })
+    table.insert(details_menu.item_table, { text = "---" })
 
-    -- Could not fetch favorite IDs, so hiding favorite feature
-    if precheck_ok then
-        table.insert(details_menu_items, {
-            text = in_favorites and T("Remove From Favorites") or T("Add To Favorites"),
-            mandatory = "\u{F004}",
-            callback = function()
-                local reload = function()
-                    UIManager:close(details_menu)
-                    Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
-                end
-                if in_favorites then
-                    parent_zlibrary:unfavoriteBook(book, reload)
-                    return
-                end
-                parent_zlibrary:favoriteBook(book, reload)
-            end,
-        })
-    end
-
-    table.insert(details_menu_items, {
+    table.insert(details_menu.item_table, {
         text = T("More Similar Books"),
         mandatory = "\u{F002}",
         callback = function()
@@ -591,7 +584,7 @@ function Ui.createshowBookDetailsMenu(parent_zlibrary, book, clear_cache_callbac
         end,
     })
 
-    table.insert(details_menu_items, {
+    table.insert(details_menu.item_table, {
         text = T("Back"),
         mandatory = "\u{21A9}",
         callback = function()
@@ -599,23 +592,43 @@ function Ui.createshowBookDetailsMenu(parent_zlibrary, book, clear_cache_callbac
         end,
     })
 
-    details_menu = Menu:new{
-        title = T("Book Details"),
-        subtitle = is_cache and "\u{F1C0}",
-        title_bar_left_icon = is_cache and "cre.render.reload",
-        item_table = details_menu_items,
-        parent = parent_zlibrary.ui,
-        show_captions = true,
-        multilines_show_more_text = true
-    }
-    function details_menu:onLeftButtonTap()
-        if is_cache then
-            UIManager:close(self)
-            clear_cache_callback()
+    local function show_favorite_item(is_visible)
+        if is_visible then
+            local in_favorites = parent_zlibrary:isBookInFavorites(book) == true
+            -- Insert at the third-to-last position
+            table.insert(details_menu.item_table, #details_menu.item_table - 1, {
+                text = in_favorites and T("Remove From Favorites") or T("Add To Favorites"),
+                mandatory = "\u{F004}",
+                callback = function()
+                    local reload = function()
+                         UIManager:close(details_menu)
+                         Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
+                    end
+                    if in_favorites then
+                        parent_zlibrary:unfavoriteBook(book, reload)
+                        return
+                    end
+                    parent_zlibrary:favoriteBook(book, reload)
+                end,
+             })
         end
     end
 
+    -- Use cache if available
+    show_favorite_item(has_favorite_ids_cache)
+
     _showAndTrackDialog(details_menu)
+    details_menu:updateItems()
+
+    if not has_favorite_ids_cache then
+        parent_zlibrary:validateFavoriteBookIds(function(precheck_ok)
+            if precheck_ok then
+                show_favorite_item(true)
+                details_menu:updateItems()
+            end
+        end)
+    end
+
     return details_menu
 end
 

@@ -507,17 +507,18 @@ end
 
 function Zlibrary:showMyBooksDialog(def_position, def_search_input)
 
-    self:validateDownloadQuota(function(precheck_ok)
-
         local datetime = require("datetime")
         local my_books_dialog
-        local download_quota_status_string = ""
-
-        local quota_status = self:getDownloadQuotaCache()
-        if type(quota_status) == "table" and quota_status.today ~= nil then
-            quota_status.limit = quota_status.limit or 10
-            download_quota_status_string = string.format(" [%d/%d]", quota_status.today, quota_status.limit)
+        
+        local get_quota_status = function()
+            local quota_status = self:getDownloadQuotaCache()
+            if type(quota_status) == "table" and quota_status.today ~= nil then
+                quota_status.limit = quota_status.limit or 10
+                 return string.format(" [%d/%d]", quota_status.today, quota_status.limit)
+            end
         end
+        
+        local download_quota_status_string = get_quota_status() or ""
 
         local valid_api_result = function(api_result)
             local ok = type(api_result) == "table" and api_result.has_more_results ~= nil
@@ -542,6 +543,20 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
             end,
             on_similar_books_callback = function(book)
                 self:searchSimilarBooks(book)
+            end,
+            -- Invoked in fetchAndShow to dynamically update the widget
+            on_fetch_and_show = function(widget)
+                -- refresh download quota cache
+                if download_quota_status_string == "" then
+                    self:validateDownloadQuota(function(precheck_ok)
+                        if precheck_ok then
+                            download_quota_status_string = get_quota_status() or ""
+                            widget.toggle_items[1].text = T("Downloaded") .. download_quota_status_string
+                            widget:init()
+                            UIManager:setDirty("all", "ui")
+                        end
+                    end)
+                end
             end,
             toggle_items = {{
                 text = T("Downloaded") .. download_quota_status_string,
@@ -613,7 +628,6 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
 
         self.dialog_manager:trackDialog(my_books_dialog)
         my_books_dialog:fetchAndShow()
-    end)
 end
 
 function Zlibrary:onShowRecommendedBooks()

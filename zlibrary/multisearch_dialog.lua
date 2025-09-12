@@ -245,6 +245,11 @@ function SearchDialog:fetchAndShow()
     else
         self:reloadFromBookData(self.books)
     end
+
+    if type(self.on_fetch_and_show) == "function" then 
+        self.on_fetch_and_show(self)
+    end
+
     -- automatically enter search
     if not self.def_position and self._cache:hasValidCache() then
         self.on_search_callback(self.def_search_input)

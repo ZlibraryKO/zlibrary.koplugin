@@ -598,7 +598,7 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
             -- Insert at the third-to-last position
             table.insert(details_menu.item_table, #details_menu.item_table - 1, {
                 text = in_favorites and T("Remove From Favorites") or T("Add To Favorites"),
-                mandatory = "\u{F004}",
+                mandatory = in_favorites and "\u{2665}" or "\u{2661}",
                 callback = function()
                     local reload = function()
                          UIManager:close(details_menu)

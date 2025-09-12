@@ -260,7 +260,8 @@ end
 function Zlibrary:_requestDispatcher(options, ...)
     
     if type(options.resolve_result) ~= "function" then
-        logger.warn("Zlibrary:%s - Fetch resolve_result undefined", options.log_context)
+        logger.err("Zlibrary:%s - Fetch resolve_result undefined", options.log_context)
+        return
     end
 
     -- If hasValidApiResult is undefined, resolve_result will be called globally
@@ -443,7 +444,7 @@ function Zlibrary:validateDownloadQuota(callback)
         requires_auth = true,
         resolve_result = function(ui_self, api_result, plugin_self)
             if type(api_result) == "table" and type(api_result.quota_status) == "table" then
-                self._runtime_cache:insert("download_quota_status", api_result.quota_status)
+                plugin_self._runtime_cache:insert("download_quota_status", api_result.quota_status)
                 return has_callback and callback(true)                
             else
                 logger.warn("failed to load download quota status")
@@ -484,7 +485,7 @@ function Zlibrary:validateFavoriteBookIds(callback)
             end
 
             -- Allow favorites to be empty in cache
-            self._runtime_cache:insert("favorite_book_ids", book_ids)
+            plugin_self._runtime_cache:insert("favorite_book_ids", book_ids)
 
             return has_callback and callback(true)
         else
@@ -523,6 +524,12 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
             return ok, not ok and T("API returned an error, please try again")
         end
 
+        local mandatory_format = function(mandatory_text)
+            if not mandatory_text then return nil end
+            local secondsToDate, stringToSeconds = datetime.secondsToDate, datetime.stringToSeconds
+            return stringToSeconds and secondsToDate(stringToSeconds(mandatory_text), true)
+        end
+
         my_books_dialog = MultiSearchDialog:new{
             title = T("Z-library My Books"),
             def_position = def_position,
@@ -542,9 +549,7 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                 cache_expiry = 86400,
                 enable_pagination = true,
                 mandatory_func = function(book)
-                    if not (book and book.date_download) then return nil end
-                    local secondsToDate, stringToSeconds = datetime.secondsToDate, datetime.stringToSeconds
-                    return secondsToDate(stringToSeconds(book.date_download), true)
+                    return mandatory_format(book and book.date_download)
                 end,
                 callback = function(widget, page, is_refresh)
                     self:_requestDispatcher({
@@ -577,9 +582,7 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                 cache_expiry = 86400,
                 enable_pagination = true,
                 mandatory_func = function(book)
-                    if not (book and book.date_saved) then return nil end
-                    local secondsToDate, stringToSeconds = datetime.secondsToDate, datetime.stringToSeconds
-                    return secondsToDate(stringToSeconds(book.date_saved), true)
+                    return mandatory_format(book and book.date_saved)
                 end,
                 callback = function(widget, page, is_refresh)
                     self:_requestDispatcher({

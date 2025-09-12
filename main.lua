@@ -551,9 +551,7 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                     self:validateDownloadQuota(function(precheck_ok)
                         if precheck_ok then
                             download_quota_status_string = get_quota_status() or ""
-                            widget.toggle_items[1].text = T("Downloaded") .. download_quota_status_string
-                            widget:init()
-                            UIManager:setDirty("all", "ui")
+                            widget:setToggleTitle(1, T("Downloaded") .. download_quota_status_string)  
                         end
                     end)
                 end

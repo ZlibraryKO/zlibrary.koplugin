@@ -397,4 +397,14 @@ function SearchDialog:getActiveItemCacheKey()
     end
 end
 
+function SearchDialog:setToggleTitle(position, title)
+    local toggle_items_count = #self.toggle_items
+    if position > toggle_items_count or position < 1 then
+        return
+    end
+    self.toggle_items[1].text = title or ""
+    self:init()
+    UIManager:setDirty("all", "ui")
+end
+
 return SearchDialog

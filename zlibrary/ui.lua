@@ -59,12 +59,17 @@ function Ui.showErrorMessage(text)
     if _plugin_instance and _plugin_instance.dialog_manager then
         _plugin_instance.dialog_manager:showErrorMessage(text)
     else
-        UIManager:show(InfoMessage:new{ text = text, timeout = 5 })
+        UIManager:show(InfoMessage:new{ text = text, icon = "notice-warning", timeout = 5 })
     end
 end
 
 function Ui.showLoadingMessage(text)
-    local message = InfoMessage:new{ text = text, timeout = 0 }
+    local message = InfoMessage:new{ 
+        text = string.format("\u{23f3}  %s", text),
+        dismissable = false,
+        show_icon = false,
+        force_one_line = true,
+    }
     UIManager:show(message)
     return message
 end
@@ -470,13 +475,32 @@ function Ui.appendSearchResultsToMenu(menu_instance, new_menu_items)
 end
 
 function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
-    local details_menu_items = {}
-    local details_menu
-
+    
     local is_cache = (type(clear_cache_callback) == "function")
+    -- Could not cache favorite IDs, hide favorite feature on init
+    local has_favorite_ids_cache = parent_zlibrary:isBookInFavorites()
+    
     local title_text_for_html = (type(book.title) == "string" and book.title) or ""
     local full_title = util.htmlEntitiesToUtf8(title_text_for_html)
-    table.insert(details_menu_items, {
+
+    local details_menu = Menu:new{
+        title = T("Book Details"),
+        subtitle = is_cache and "\u{F1C0}",
+        title_bar_left_icon = is_cache and "cre.render.reload",
+        item_table = {},
+        parent = parent_zlibrary.ui,
+        show_captions = true,
+        multilines_show_more_text = true
+    }
+
+    function details_menu:onLeftButtonTap()
+        if is_cache then
+            UIManager:close(self)
+            return clear_cache_callback and clear_cache_callback()
+        end
+    end
+
+    table.insert(details_menu.item_table, {
         text = _colon_concat(T("Title"), full_title),
         mandatory = "\u{25B7}",
         callback = function()
@@ -496,7 +520,7 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
 
     local author_text_for_html = (type(book.author) == "string" and book.author) or ""
     local full_author = util.htmlEntitiesToUtf8(author_text_for_html)
-    table.insert(details_menu_items, {
+    table.insert(details_menu.item_table, {
         text = string.format("%s: %s", T("Author"), full_author),
         mandatory = "\u{25B7}",
         callback = function()
@@ -505,7 +529,7 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
     })
 
     if book.cover and book.cover ~= "" and book.hash then
-        table.insert(details_menu_items, {
+        table.insert(details_menu.item_table, {
             text = string.format("%s %s", T("Cover"), T("(tap to view)")),
             mandatory = "\u{25B7}",
             callback = function()
@@ -513,12 +537,12 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
             end})
     end
 
-    if book.year and book.year ~= "N/A" and tostring(book.year) ~= "0" then table.insert(details_menu_items, { text = _colon_concat(T("Year"), book.year), enabled = false }) end
-    if book.lang and book.lang ~= "N/A" then table.insert(details_menu_items, { text = _colon_concat(T("Language"), book.lang), enabled = false }) end
+    if book.year and book.year ~= "N/A" and tostring(book.year) ~= "0" then table.insert(details_menu.item_table, { text = _colon_concat(T("Year"), book.year), enabled = false }) end
+    if book.lang and book.lang ~= "N/A" then table.insert(details_menu.item_table, { text = _colon_concat(T("Language"), book.lang), enabled = false }) end
 
     if book.format and book.format ~= "N/A" then
         if book.download then
-            table.insert(details_menu_items, {
+            table.insert(details_menu.item_table, {
                 text = string.format(T("Format: %s (tap to download)"), book.format),
                 mandatory = "\u{25B7}",
                 callback = function()
@@ -526,10 +550,10 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
                 end,
             })
         else
-            table.insert(details_menu_items, { text = string.format(T("Format: %s (Download not available)"), book.format), enabled = false })
+            table.insert(details_menu.item_table, { text = string.format(T("Format: %s (Download not available)"), book.format), enabled = false })
         end
     elseif book.download then
-        table.insert(details_menu_items, {
+        table.insert(details_menu.item_table, {
             text = T("Download Book (Unknown Format)"),
             mandatory = "\u{25B7}",
             callback = function()
@@ -538,21 +562,29 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
         })
     end
 
-    if book.size and book.size ~= "N/A" then table.insert(details_menu_items, { text = _colon_concat(T("Size"), book.size), enabled = false }) end
-    if book.rating and book.rating ~= "N/A" then table.insert(details_menu_items, { text = _colon_concat(T("Rating"), book.rating), enabled = false }) end
+    if book.size and book.size ~= "N/A" then table.insert(details_menu.item_table, { text = _colon_concat(T("Size"), book.size), enabled = false }) end
+    if book.rating and book.rating ~= "N/A" then table.insert(details_menu.item_table, { text = _colon_concat(T("Rating"), book.rating), enabled = false }) end
     if book.publisher and book.publisher ~= "" then
         local publisher_for_html = (type(book.publisher) == "string" and book.publisher) or ""
-        table.insert(details_menu_items, { text = _colon_concat(T("Publisher"), util.htmlEntitiesToUtf8(publisher_for_html)), enabled = false })
+        table.insert(details_menu.item_table, { text = _colon_concat(T("Publisher"), util.htmlEntitiesToUtf8(publisher_for_html)), enabled = false })
     end
     if book.series and book.series ~= "" then
         local series_for_html = (type(book.series) == "string" and book.series) or ""
-        table.insert(details_menu_items, { text = _colon_concat(T("Series"), util.htmlEntitiesToUtf8(series_for_html)), enabled = false })
+        table.insert(details_menu.item_table, { text = _colon_concat(T("Series"), util.htmlEntitiesToUtf8(series_for_html)), enabled = false })
     end
-    if book.pages and book.pages ~= 0 then table.insert(details_menu_items, { text = _colon_concat(T("Pages"), book.pages), enabled = false }) end
+    if book.pages and book.pages ~= 0 then table.insert(details_menu.item_table, { text = _colon_concat(T("Pages"), book.pages), enabled = false }) end
 
-    table.insert(details_menu_items, { text = "---" })
+    table.insert(details_menu.item_table, { text = "---" })
 
-    table.insert(details_menu_items, {
+    table.insert(details_menu.item_table, {
+        text = T("More Similar Books"),
+        mandatory = "\u{F002}",
+        callback = function()
+            parent_zlibrary:searchSimilarBooks(book)
+        end,
+    })
+
+    table.insert(details_menu.item_table, {
         text = T("Back"),
         mandatory = "\u{21A9}",
         callback = function()
@@ -560,23 +592,44 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
         end,
     })
 
-    details_menu = Menu:new{
-        title = T("Book Details"),
-        subtitle = is_cache and "\u{F1C0}",
-        title_bar_left_icon = is_cache and "cre.render.reload",
-        item_table = details_menu_items,
-        parent = parent_zlibrary.ui,
-        show_captions = true,
-        multilines_show_more_text = true
-    }
-    function details_menu:onLeftButtonTap()
-        if is_cache then
-            UIManager:close(self)
-            clear_cache_callback()
+    local function show_favorite_item(is_visible)
+        if is_visible then
+            local in_favorites = parent_zlibrary:isBookInFavorites(book) == true
+            -- Insert at the third-to-last position
+            table.insert(details_menu.item_table, #details_menu.item_table - 1, {
+                text = in_favorites and T("Remove From Favorites") or T("Add To Favorites"),
+                mandatory = in_favorites and "\u{2665}" or "\u{2661}",
+                callback = function()
+                    local reload = function()
+                         UIManager:close(details_menu)
+                         Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
+                    end
+                    if in_favorites then
+                        parent_zlibrary:unfavoriteBook(book, reload)
+                        return
+                    end
+                    parent_zlibrary:favoriteBook(book, reload)
+                end,
+             })
         end
     end
 
+    -- Use cache if available
+    show_favorite_item(has_favorite_ids_cache)
+
     _showAndTrackDialog(details_menu)
+    details_menu:updateItems()
+
+    if not has_favorite_ids_cache then
+        parent_zlibrary:validateFavoriteBookIds(function(precheck_ok)
+            if precheck_ok then
+                show_favorite_item(true)
+                details_menu:updateItems()
+            end
+        end)
+    end
+
+    return details_menu
 end
 
 function Ui.confirmDownload(filename, ok_callback)
@@ -641,14 +694,18 @@ function Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, ok
     showDialog()
 end
 
-function Ui.showRecommendedBooksMenu(ui_self, books, plugin_self)
+local function _showBooksMenu(ui_self, options, plugin_self)
+    local log_context = options.log_context or ""
+    local books = options.books or {}
+    local title = options.title or ""
+    local subtitle = options.subtitle
+
     local menu_items = {}
+    local menu_item
     for _, book in ipairs(books) do
-        local title = book.title or T("Untitled")
-        local author = book.author or T("Unknown Author")
-        local menu_text = string.format("%s - %s", title, author)
+        menu_item = Ui.createBookMenuItem(book, plugin_self)
         table.insert(menu_items, {
-            text = menu_text,
+            text = menu_item.text,
             callback = function()
                 plugin_self:onSelectRecommendedBook(book)
             end,
@@ -656,11 +713,12 @@ function Ui.showRecommendedBooksMenu(ui_self, books, plugin_self)
     end
 
     if #menu_items == 0 then
-        Ui.showInfoMessage(T("No recommended books found, please try again. Sometimes this requires a couple of retries."))
+        Ui.showInfoMessage(T(string.format("No %s found, please try again. Sometimes this requires a couple of retries.", log_context)))
         return
     end
     local menu = Menu:new({
-        title = T("Z-library Recommended Books"),
+        title = title,
+        subtitle = subtitle,
         item_table = menu_items,
         items_per_page = 10,
         show_captions = true,
@@ -673,37 +731,29 @@ function Ui.showRecommendedBooksMenu(ui_self, books, plugin_self)
     _showAndTrackDialog(menu)
 end
 
+function Ui.showRecommendedBooksMenu(ui_self, books, plugin_self)
+    _showBooksMenu(ui_self, {
+        title = T("Z-library Recommended Books"),
+        books = books,
+        log_context = "recommended books",
+    }, plugin_self)
+end
+
 function Ui.showMostPopularBooksMenu(ui_self, books, plugin_self)
-    local menu_items = {}
-    for _, book in ipairs(books) do
-        local title = book.title or T("Untitled")
-        local author = book.author or T("Unknown Author")
-        local menu_text = string.format("%s - %s", title, author)
-        table.insert(menu_items, {
-            text = menu_text,
-            callback = function()
-                plugin_self:onSelectRecommendedBook(book)
-            end,
-        })
-    end
-
-    if #menu_items == 0 then
-        Ui.showInfoMessage(T("No most popular books found. The list was empty, please try again."))
-        return
-    end
-
-    local menu = Menu:new({
+    _showBooksMenu(ui_self, {
         title = T("Z-library Most Popular Books"),
-        item_table = menu_items,
-        items_per_page = 10,
-        show_captions = true,
-        parent = ui_self.document_menu_parent_holder,
-        is_popout = false,
-        is_borderless = true,
-        title_bar_fm_style = true,
-        multilines_show_more_text = true
-    })
-    _showAndTrackDialog(menu)
+        books = books,
+        log_context = "most popular books",
+    }, plugin_self)
+end
+
+function Ui.showSimilarBooksMenu(ui_self, books, plugin_self, source_title)
+    _showBooksMenu(ui_self, {
+        title = T("Z-library Similar Books"),
+        subtitle = source_title,
+        books = books,
+        log_context = "similar books",
+    }, plugin_self)
 end
 
 function Ui.confirmShowRecommendedBooks(ok_callback)

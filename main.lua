@@ -50,6 +50,8 @@ function Zlibrary:init()
     else
         logger.warn("self.ui or self.ui.menu not initialized in Zlibrary:init")
     end
+
+    self._runtime_cache = Cache:new({name = "_runtime_cache"})
 end
 
 function Zlibrary:onZlibrarySearch()
@@ -195,8 +197,14 @@ function Zlibrary:addToMainMenu(menu_items)
                                             Config.clearUserSession()
                                             Ui.showInfoMessage(T("Session cleared. You will need to login again."))
                                         end,
-                                    },
-                                    {
+                                    }, {
+                                        text = T("Clear runtime cache"),
+                                        keep_menu_open = true,
+                                        callback = function()
+                                            self._runtime_cache:clear()
+                                            Ui.showInfoMessage(T("Runtime cache cleared."))
+                                        end,
+                                    }, {
                                         text = T("Test mode"),
                                         keep_menu_open = true,
                                         checked_func = function()
@@ -237,17 +245,39 @@ function Zlibrary:addToMainMenu(menu_items)
                         local search_tab_most_popular = 2
                         self:showMultiSearchDialog(search_tab_most_popular)
                     end,
+                },{
+                    text = T("My books"),
+                    callback = function()
+                        local mybooks_tab_downloaded = 1
+                        self:showMyBooksDialog(mybooks_tab_downloaded)
+                    end,
                 },
             }
         }
     end
 end
 
-function Zlibrary:_fetchBookList(options)
-    if not NetworkMgr:isOnline() then
-        Ui.showErrorMessage(T("No internet connection detected."))
+function Zlibrary:_requestDispatcher(options, ...)
+    
+    if type(options.resolve_result) ~= "function" then
+        logger.err("Zlibrary:%s - Fetch resolve_result undefined", options.log_context)
         return
     end
+
+    -- If hasValidApiResult is undefined, resolve_result will be called globally
+    local has_valid_api_result = type(options.hasValidApiResult) == "function"
+    local on_finally = not has_valid_api_result and function(error_false)
+        UIManager:nextTick(function()
+            options.resolve_result(self.ui, error_false, self)
+        end)
+    end
+
+    if not NetworkMgr:isOnline() then
+        Ui.showErrorMessage(T("No internet connection detected."))
+        return on_finally and on_finally(false)
+    end
+
+    local api_extra_params = {...}
 
     local function attemptFetch(retry_on_auth_error)
         retry_on_auth_error = retry_on_auth_error == nil and true or retry_on_auth_error
@@ -255,43 +285,40 @@ function Zlibrary:_fetchBookList(options)
         local user_session = Config.getUserSession()
         local loading_msg = Ui.showLoadingMessage(options.loading_text_key)
 
+
         local task = function()
-            return options.api_method(user_session and user_session.user_id, user_session and user_session.user_key)
+            return options.api_method(user_session and user_session.user_id, user_session and user_session.user_key, table.unpack(api_extra_params))
         end
 
         local on_success = function(api_result)
-            if api_result.error then
+
+            if has_valid_api_result then
+                local ok, error_msg = options.hasValidApiResult(api_result)
+                if not ok then
+                    Ui.closeMessage(loading_msg)
+                    Ui.showInfoMessage(error_msg)
+                    return
+                end
+            end
+            
+            if api_result and api_result.error then
                 if retry_on_auth_error and Api.isAuthenticationError(api_result.error) and options.requires_auth then
                     Ui.closeMessage(loading_msg)
                     self:login(function(login_ok)
-                        if login_ok then
-                            attemptFetch(false)
-                        end
+                        return login_ok and attemptFetch(false)
                     end)
                     return
                 end
                 
                 Ui.closeMessage(loading_msg)
                 Ui.showErrorMessage(Ui.colonConcat(options.error_prefix_key, tostring(api_result.error)))
-                return
-            end
-
-            if not api_result.books or #api_result.books == 0 then
-                Ui.closeMessage(loading_msg)
-                if options.no_items_text_key then
-                    Ui.showInfoMessage(options.no_items_text_key)
-                else
-                    Ui.showInfoMessage(T("No books found, please try again"))
-                end
-                return
+                return on_finally and on_finally(false)
             end
 
             Ui.closeMessage(loading_msg)
-            logger.info(string.format("Zlibrary:%s - Fetch successful. Results: %d", options.log_context, #api_result.books))
-            self[options.results_member_name] = api_result.books
-
+            logger.info(string.format("Zlibrary:%s - Fetch successful.", options.log_context))
             UIManager:nextTick(function()
-                options.display_menu_func(self.ui, self[options.results_member_name], self)
+                options.resolve_result(self.ui, api_result, self)
             end)
         end
 
@@ -299,9 +326,7 @@ function Zlibrary:_fetchBookList(options)
             if retry_on_auth_error and Api.isAuthenticationError(err_msg) and options.requires_auth then
                 Ui.closeMessage(loading_msg)
                 self:login(function(login_ok)
-                    if login_ok then
-                        attemptFetch(false)
-                    end
+                    return login_ok and attemptFetch(false)
                 end)
                 return
             end
@@ -312,6 +337,7 @@ function Zlibrary:_fetchBookList(options)
                 attemptFetch(false)
             end, function(final_err_msg)
                 -- Cancel callback - user already knows about the error
+                return on_finally and on_finally(false)
             end, loading_msg)
         end
 
@@ -321,11 +347,21 @@ function Zlibrary:_fetchBookList(options)
     attemptFetch()
 end
 
+function Zlibrary:_fetchBookList(options, ...)
+    options.hasValidApiResult = function(api_result)
+        local ok = type(api_result) == "table" and type(api_result.books) == "table" and #api_result.books > 0
+        return ok, not ok and T("No books found, please try again")
+    end
+    options.resolve_result = function(ui_self, api_result, plugin_self)
+        
+        self[options.results_member_name] = api_result.books
+        options.display_menu_func(ui_self, self[options.results_member_name], plugin_self)
+    end
+    self:_requestDispatcher(options, ...)
+end  
+
 function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
     local search_dialog
-    local ShowBooksMultiSearch = function(ui_self, books, plugin_self)
-        search_dialog:refreshMenuItems(books)
-    end
     search_dialog = MultiSearchDialog:new{
         title = T("Z-library search"),
         def_position = def_position,
@@ -336,10 +372,14 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
         on_search_callback = function(def_input)
             Ui.showSearchDialog(self, def_input)
         end,
+        on_similar_books_callback = function(book)
+            self:searchSimilarBooks(book)
+        end,
         toggle_items = {{
             text = T("Recommended"),
             cache_key = "recommended",
-            callback = function(widget)
+            cache_expiry = 180000,
+            callback = function(widget, page, is_refresh)
                 self:_fetchBookList({
                     api_method = Api.getRecommendedBooks,
                     loading_text_key = T("Fetching recommended books..."),
@@ -347,13 +387,16 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
                     operation_name = T("Recommended books"),
                     log_context = "onShowRecommendedBooks",
                     results_member_name = "current_recommended_books",
-                    display_menu_func = ShowBooksMultiSearch,
-                    requires_auth = true
+                    display_menu_func = function(ui_self, books, plugin_self)
+                        widget:reloadFromBookData(books)
+                    end,
+                    requires_auth = true,
                 })
             end},{
             text = T("Most popular"),
             cache_key = "popular",
-            callback = function(widget)
+            cache_expiry = 180000,
+            callback = function(widget, page, is_refresh)
                 self:_fetchBookList({
                     api_method = Api.getMostPopularBooks,
                     loading_text_key = T("Fetching most popular books..."),
@@ -361,8 +404,10 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
                     operation_name = T("Most popular books"),
                     log_context = "onShowMostPopularBooks",
                     results_member_name = "current_most_popular_books",
-                    display_menu_func = ShowBooksMultiSearch,
-                    requires_auth = false
+                    display_menu_func = function(ui_self, books, plugin_self)
+                        widget:reloadFromBookData(books)
+                    end,
+                    requires_auth = false,
                 })
             end}
         }
@@ -370,6 +415,217 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
 
     self.dialog_manager:trackDialog(search_dialog)
     search_dialog:fetchAndShow()
+end
+
+-- Reset when a book is successfully downloaded or when refreshing the menu
+function Zlibrary:resetDownloadQuotaCache()
+    self._runtime_cache:remove("download_quota_status")
+end
+
+function Zlibrary:getDownloadQuotaCache()
+    return self._runtime_cache:get("download_quota_status", 10800)
+end
+
+-- Run completion callback (precheck_ok)
+function Zlibrary:validateDownloadQuota(callback)
+    local has_callback = type(callback) == "function"
+
+    local quota_status = self._runtime_cache:get("download_quota_status")
+    if type(quota_status) == "table" and next(quota_status) then
+        return has_callback and callback(true)
+    end
+
+    self:_requestDispatcher({
+        api_method = Api.getDownloadQuotaStatus,
+        loading_text_key = T("Syncing your download limit..."),
+        error_prefix_key = T("failed to load download quota status"),
+        operation_name = T("Sync download quota"),
+        log_context = "validateDownloadQuota",
+        requires_auth = true,
+        resolve_result = function(ui_self, api_result, plugin_self)
+            if type(api_result) == "table" and type(api_result.quota_status) == "table" then
+                plugin_self._runtime_cache:insert("download_quota_status", api_result.quota_status)
+                return has_callback and callback(true)                
+            else
+                logger.warn("failed to load download quota status")
+                return has_callback and callback(false)
+            end
+        end,
+    })
+end
+
+function Zlibrary:isBookInFavorites(book_stub)
+    local cached_ids = self._runtime_cache:get("favorite_book_ids", 1800)
+    if not (book_stub and book_stub.id) then return type(cached_ids) == "table" end
+    return type(cached_ids) == "table" and cached_ids[tostring(book_stub.id)] == true
+end
+
+-- Reset when a book is favorited/unfavorited or when refreshing the menu
+function Zlibrary:resetFavoritesCache(is_all)
+    self._runtime_cache:remove("favorite_book_ids")
+    if is_all then Cache:new({ name = "multi_search" }):remove("favorites") end
+end
+
+function Zlibrary:validateFavoriteBookIds(callback)
+    local has_callback = type(callback) == "function"
+    
+    -- The cache list exists，includes empty array
+    if self:isBookInFavorites() then
+        return has_callback and callback(true)
+    end
+
+    local refresh_favorited_book_ids = function(ui_self, api_result, plugin_self)
+
+        -- Favorites list empty (#list == 0) is still success
+        if type(api_result) == "table" and type(api_result.list) == "table" then
+
+            local book_ids = {}
+            for _, book_id in ipairs(api_result.list) do
+                book_ids[tostring(book_id)] = true
+            end
+
+            -- Allow favorites to be empty in cache
+            plugin_self._runtime_cache:insert("favorite_book_ids", book_ids)
+
+            return has_callback and callback(true)
+        else
+            logger.warn("failed to load favorite book id list")
+            return has_callback and callback(false)
+        end
+    end
+
+    self:_requestDispatcher({
+        api_method = Api.getFavoriteBookIds,
+        loading_text_key = T("Syncing favorites summary…"),
+        error_prefix_key = T("failed to load favorite book id list"),
+        operation_name = T("Sync favorites summary"),
+        log_context = "validateFavoriteBookIds",
+        resolve_result = refresh_favorited_book_ids,
+        requires_auth = true,
+    })
+end
+
+function Zlibrary:showMyBooksDialog(def_position, def_search_input)
+
+        local datetime = require("datetime")
+        local my_books_dialog
+        
+        local get_quota_status = function()
+            local quota_status = self:getDownloadQuotaCache()
+            if type(quota_status) == "table" and quota_status.today ~= nil then
+                quota_status.limit = quota_status.limit or 10
+                 return string.format(" [%d/%d]", quota_status.today, quota_status.limit)
+            end
+        end
+        
+        local download_quota_status_string = get_quota_status() or ""
+
+        local valid_api_result = function(api_result)
+            local ok = type(api_result) == "table" and api_result.has_more_results ~= nil
+            return ok, not ok and T("API returned an error, please try again")
+        end
+
+        local mandatory_format = function(mandatory_text)
+            if not mandatory_text then return nil end
+            local secondsToDate, stringToSeconds = datetime.secondsToDate, datetime.stringToSeconds
+            return stringToSeconds and secondsToDate(stringToSeconds(mandatory_text), true)
+        end
+
+        my_books_dialog = MultiSearchDialog:new{
+            title = T("Z-library My Books"),
+            def_position = def_position,
+            def_search_input = def_search_input,
+            on_select_book_callback = function(book)
+                self:onSelectRecommendedBook(book)
+            end,
+            on_search_callback = function(def_input)
+                Ui.showSearchDialog(self, def_input)
+            end,
+            on_similar_books_callback = function(book)
+                self:searchSimilarBooks(book)
+            end,
+            -- Invoked in fetchAndShow to dynamically update the widget
+            on_fetch_and_show = function(widget)
+                -- refresh download quota cache
+                if download_quota_status_string == "" then
+                    self:validateDownloadQuota(function(precheck_ok)
+                        if precheck_ok then
+                            download_quota_status_string = get_quota_status() or ""
+                            widget:setToggleTitle(1, T("Downloaded") .. download_quota_status_string)  
+                        end
+                    end)
+                end
+            end,
+            toggle_items = {{
+                text = T("Downloaded") .. download_quota_status_string,
+                cache_key = "downloaded",
+                cache_expiry = 86400,
+                enable_pagination = true,
+                mandatory_func = function(book)
+                    return mandatory_format(book and book.date_download)
+                end,
+                callback = function(widget, page, is_refresh)
+                    self:_requestDispatcher({
+                        api_method = Api.getDownloadedBooks,
+                        loading_text_key = T("Getting your downloaded..."),
+                        error_prefix_key = T("Failed to fetch downloaded books"),
+                        operation_name = T("Downloaded books"),
+                        log_context = "onShowDownloadedBooks",
+                        hasValidApiResult = valid_api_result,
+                        resolve_result = function(ui_self, api_result, plugin_self)
+                            local books = api_result.books
+                            local current_page = page or 1
+                            local is_refresh_call = is_refresh
+
+                            widget:setPaginationState(api_result.has_more_results, current_page)
+                       
+                            if current_page == 1 then
+                                widget:reloadFromBookData(books)
+                            else
+                                -- Merge paginated results
+                                widget:appendBatchDataAndReload(books)
+                            end
+                            return is_refresh_call and plugin_self:resetDownloadQuotaCache()
+                        end,
+                        requires_auth = true,
+                    }, page)
+                end}, {
+                text = T("Favorites"),
+                cache_key = "favorites",
+                cache_expiry = 86400,
+                enable_pagination = true,
+                mandatory_func = function(book)
+                    return mandatory_format(book and book.date_saved)
+                end,
+                callback = function(widget, page, is_refresh)
+                    self:_requestDispatcher({
+                        api_method = Api.getFavoriteBooks,
+                        loading_text_key = T("Getting your favorites..."),
+                        error_prefix_key = T("Failed to fetch favorite books"),
+                        operation_name = T("Favorite books"),
+                        log_context = "onShowFavoriteBooks",
+                        hasValidApiResult = valid_api_result,
+                        resolve_result = function(ui_self, api_result, plugin_self)
+                            local books = api_result.books
+                            local current_page = page or 1
+                            local is_refresh_call = is_refresh
+
+                            widget:setPaginationState(api_result.has_more_results, current_page)
+
+                            if current_page == 1 then
+                                widget:reloadFromBookData(books)
+                            else
+                                widget:appendBatchDataAndReload(books)
+                            end
+                            return is_refresh_call and plugin_self:resetFavoritesCache()
+                        end,
+                        requires_auth = true,
+                    }, page)
+                end},
+            }}
+
+        self.dialog_manager:trackDialog(my_books_dialog)
+        my_books_dialog:fetchAndShow()
 end
 
 function Zlibrary:onShowRecommendedBooks()
@@ -398,12 +654,88 @@ function Zlibrary:onShowMostPopularBooks()
     })
 end
 
-function Zlibrary:onSelectRecommendedBook(book_stub)
-    if not NetworkMgr:isOnline() then
-        Ui.showErrorMessage(T("No internet connection detected."))
+function Zlibrary:searchSimilarBooks(book_stub)
+    if not (book_stub.id and book_stub.hash) then
+        logger.warn("Zlibrary.searchSimilarBooks - parameter error")
         return
     end
+    self:_fetchBookList({
+        api_method = Api.getSimilarBooks,
+        loading_text_key = T("Finding similar books..."),
+        error_prefix_key = T("No similar books found"),
+        operation_name = T("Similar books"),
+        log_context = "searchSimilarBooks",
+        results_member_name = "current_similar_books",
+        display_menu_func = function(ui_self, books, plugin_self)
+            local source_title = book_stub.title
+            Ui.showSimilarBooksMenu(ui_self, books, plugin_self, source_title)
+        end,
+        requires_auth = true,
+    }, book_stub.id, book_stub.hash)
+end
 
+function Zlibrary:unfavoriteBook(book_stub, on_success)
+     if not (book_stub.id and book_stub.hash) then
+        logger.warn("Zlibrary.unfavoriteBook - parameter error")
+        return
+     end
+     self:_requestDispatcher({
+        api_method = Api.unfavoriteBook,
+        loading_text_key = T("Removing book from favorites…"),
+        error_prefix_key = T("Failed to remove book from favorites"),
+        operation_name = T("unfavorite book"),
+        log_context = "unfavoriteBook",
+        resolve_result = function(ui_self, api_result, plugin_self)
+            if api_result and api_result.success == true then
+                
+                -- clear the book cache and favorite books after success
+                plugin_self:resetFavoritesCache(true)
+                if type(on_success) == "function" then 
+                    on_success() 
+                else
+                    Ui.showInfoMessage(T("Book removed from favorites, please refresh"))
+                end
+            end
+        end,
+        hasValidApiResult = function(api_result)
+            local ok = type(api_result) == "table"
+            return ok, not ok and T("API returned an error, please try again")
+        end,
+        requires_auth = true,
+    }, book_stub)
+end
+
+function Zlibrary:favoriteBook(book_stub, on_success)
+     if not (book_stub.id and book_stub.hash) then
+        logger.warn("Zlibrary.favoriteBook - parameter error")
+        return
+     end
+     
+     self:_requestDispatcher({
+        api_method = Api.favoriteBook,
+        loading_text_key = T("Adding book to favorites…"),
+        error_prefix_key = T("Failed to add book to favorites"),
+        operation_name = T("Favorite book"),
+        log_context = "favoriteBook",
+        resolve_result = function(ui_self, api_result, plugin_self)
+            if api_result and api_result.success == true then
+                plugin_self:resetFavoritesCache(true)
+                if type(on_success) == "function" then 
+                    on_success() 
+                else
+                    Ui.showInfoMessage(T("Book added to favorites, please refresh"))
+                end
+            end
+        end,
+        hasValidApiResult = function(api_result)
+            local ok = type(api_result) == "table"
+            return ok, not ok and T("API returned an error, please try again")
+        end,
+        requires_auth = true,
+    }, book_stub)
+end
+
+function Zlibrary:onSelectRecommendedBook(book_stub)
     if not (book_stub.id and book_stub.hash) then
         logger.warn("Zlibrary.onSelectRecommendedBook - parameter error")
         return
@@ -422,49 +754,25 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
         return
     end
 
-    local function attemptBookDetails()
-        local user_session = Config.getUserSession()
-        local loading_msg = Ui.showLoadingMessage(T("Fetching book details..."))
-
-        local task = function()
-            return Api.getBookDetails(user_session and user_session.user_id, user_session and user_session.user_key, book_stub.id, book_stub.hash)
-        end
-
-        local on_success = function(api_result)
-            if api_result.error then
-                Ui.closeMessage(loading_msg)
-                Ui.showErrorMessage(Ui.colonConcat(T("Failed to fetch book details"), tostring(api_result.error)))
-                return
-            end
-
-            if not api_result.book then
-                Ui.closeMessage(loading_msg)
-                Ui.showErrorMessage(T("Could not retrieve book details."))
-                return
-            end
-
-            Ui.closeMessage(loading_msg)
-            logger.info(string.format("Zlibrary:onSelectRecommendedBook - Fetch successful for book ID: %s", api_result.book.id))
-
-            Ui.showBookDetails(self, api_result.book)
-
-            book_cache:insert("details", api_result.book)
-        end
-
-        local function on_error_handler(err_msg)
-            -- Use retry dialog for timeout and network errors
-            Ui.showRetryErrorDialog(err_msg, T("Book details"), function()
-                -- Retry callback
-                attemptBookDetails()
-            end, function(final_err_msg)
-                -- Cancel callback - user already knows about the error
-            end, loading_msg)
-        end
-
-        AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
+    local on_success = function(ui_self, api_result, plugin_self)
+        logger.info(string.format("Zlibrary:onSelectRecommendedBook - Fetch successful for book ID: %s", api_result.book.id))
+        Ui.showBookDetails(self, api_result.book)
+        book_cache:insert("details", api_result.book)
     end
-
-    attemptBookDetails()
+    
+    self:_requestDispatcher({
+        api_method = Api.getBookDetails,
+        loading_text_key = T("Fetching book details..."),
+        error_prefix_key = T("Failed to fetch book details"),
+        operation_name = T("Book details"),
+        log_context = "onSelectRecommendedBook",
+        resolve_result = on_success,
+        requires_auth = true,
+        hasValidApiResult = function(api_result)
+            local ok = type(api_result) == "table" and type(api_result.book) == "table"
+            return ok, not ok and T("Could not retrieve book details.")
+        end,
+    }, book_stub.id, book_stub.hash)
 end
 
 function Zlibrary:onSelectSearchBook(book_data)
@@ -821,6 +1129,10 @@ function Zlibrary:downloadBook(book)
 
             Ui.closeMessage(loading_msg)
             if api_result and api_result.success then
+
+                -- reset download quota cache
+                self:resetDownloadQuotaCache()
+
                 local has_wifi_toggle = Device:hasWifiToggle()
                 local default_turn_off_wifi = Config.getTurnOffWifiAfterDownload()
 

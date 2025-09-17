@@ -154,8 +154,8 @@ function SearchDialog:init()
         }
     }
     self[1] = frame
-    self.menu_container.onMenuChoice = function(_, item)
-        self:onMenuChoice(item)
+    self.menu_container.onMenuSelect = function(_, item)
+        self:onMenuSelect(item)
     end
     self.menu_container.onMenuHold= function(_, item)
         self:onMenuHold(item)
@@ -294,9 +294,13 @@ function SearchDialog:forceFetchAndReloadMenu()
    self:_fetchAndProcessData(nil, true)
 end
 
-function SearchDialog:onMenuChoice(item)
+function SearchDialog:onMenuSelect(item)
+    if not (item and item.book_index) then
+        return true
+    end
     local book = self.books[item.book_index]
     self.on_select_book_callback(book)
+    return true
 end
 
 function SearchDialog:onMenuHold(item)

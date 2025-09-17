@@ -25,6 +25,9 @@ local SearchDialog = WidgetContainer:extend{
     def_search_input = nil,
     on_search_callback = nil,
     on_select_book_callback = nil,
+    on_similar_books_callback = nil,
+    current_page_loaded = nil,
+    has_more_api_results = nil,
     books = nil,
     _position = nil,
     _cache = nil,
@@ -90,7 +93,7 @@ function SearchDialog:init()
         width = icon_size,
         padding_right = Size.padding.button,
         callback = function()
-            self:forceRefreshMenuItems()
+            self:forceFetchAndReloadMenu()
         end
     }
 
@@ -107,7 +110,9 @@ function SearchDialog:init()
             onConfigChoose = function(_, _values, name, event, args, _position)
                 -- compatible with older versions
                 local position = type(_position) == "number" and _position or tonumber(name)
-                self:ToggleSwitchCallBack(position)
+                UIManager:nextTick(function()
+                    self:ToggleSwitchCallBack(position)
+                end)
             end
         }
     }
@@ -149,11 +154,14 @@ function SearchDialog:init()
         }
     }
     self[1] = frame
-    self.menu_container.onMenuChoice = function(_, item)
-        self:onMenuChoice(item)
+    self.menu_container.onMenuSelect = function(_, item)
+        self:onMenuSelect(item)
     end
     self.menu_container.onMenuHold= function(_, item)
         self:onMenuHold(item)
+    end
+    self.menu_container.onGotoPage = function(menu_instance, page)
+        self:onMenuGotoPage(menu_instance, page)
     end
     self._cache = Cache:new{
         name = "multi_search"
@@ -167,57 +175,66 @@ function SearchDialog:ToggleSwitchCallBack(_position)
     end
 
     self._position = _position
-    self:resetMenuItems()
-    local toggle_item = self.toggle_items[_position]
-    if type(toggle_item) ~= "table" then
-        return
-    end
-
-    local cache_key = toggle_item["cache_key"]
+    self:clearMenuItems()
+  
+    local cache_key, cache_expiry = self:getActiveItemCacheKey()
     if cache_key then
-        local cache_expiry = toggle_item["cache_expiry"]
         local cache_books = self._cache:get(cache_key, cache_expiry)
         if cache_books then
             -- use cached data
-            self:refreshMenuItems(cache_books, true)
+            self:reloadFromBookData(cache_books, true)
             return true
         end
     end
 
-    local toggle_item_callback = toggle_item["callback"]
-    if type(toggle_item_callback) == "function" then
-        UIManager:nextTick(function()
-            local ok, err = pcall(toggle_item_callback, self)
-            if not ok then
-                logger.warn("SearchDialog.ToggleSwitchCallBack callback err: ", err)
-            end
-        end)
-    end
+    self:_fetchAndProcessData()
 end
 
 function SearchDialog:_getMenuItems(books)
     local menu_items = {}
+    if type(books) ~= "table" then return menu_items end
+
+    local current_toggle = self:getActiveItem()
+    local mandatory_func = current_toggle and current_toggle.mandatory_func
+    
+    local title, author, menu_text, mandatory_text
     for i, book in ipairs(books) do
-        local title = book.title or T("Untitled")
-        local author = book.author or T("Unknown Author")
-        local menu_text = string.format("%s - %s", title, author)
+        title = book.title or T("Untitled")
+        author = book.author or T("Unknown Author")
+        menu_text = string.format("%s - %s", title, author)
+        mandatory_text = mandatory_func and mandatory_func(book)
+
         table.insert(menu_items, {
+            book_index = i,
             text = menu_text,
-            book_index = i
+            mandatory = mandatory_text,
         })
     end
     return menu_items
 end
 
-function SearchDialog:refreshMenuItems(books, is_cache)
+-- call function to fetch and process data
+function SearchDialog:_fetchAndProcessData(page, is_refresh)
+    local current_toggle = self:getActiveItem()
+    local item_callback = current_toggle and current_toggle.callback
+    if type(item_callback) == "function" then
+        UIManager:nextTick(function()
+            item_callback(self, page, is_refresh)
+        end)
+    end
+end
+
+function SearchDialog:reloadFromBookData(books, skip_cache, select_number, no_recalculate_dimen)
     local old_height = self.menu_container.height
     self.menu_container = self:createMenuContainer(books, old_height)
-    Menu.updateItems(self.menu_container)
 
-    local toggle_item = self.toggle_items[self._position]
-    if not is_cache and toggle_item and toggle_item["cache_key"] then
-        local cache_key = toggle_item["cache_key"]
-        self._cache:insert(cache_key, self.books)
+    Menu.updateItems(self.menu_container, select_number, no_recalculate_dimen)
+
+    if not skip_cache then
+        local cache_key = self:getActiveItemCacheKey()
+        if cache_key and type(self.books) == "table" then
+            self._cache:insert(cache_key, self.books)
+        end
     end
 end
 
@@ -226,8 +243,13 @@ function SearchDialog:fetchAndShow()
     if not (self.books and #self.books > 0) then
         self:ToggleSwitchCallBack(self._position)
     else
-        self:refreshMenuItems(self.books)
+        self:reloadFromBookData(self.books)
     end
+
+    if type(self.on_fetch_and_show) == "function" then 
+        self.on_fetch_and_show(self)
+    end
+
     -- automatically enter search
     if not self.def_position and self._cache:hasValidCache() then
         self.on_search_callback(self.def_search_input)
@@ -255,25 +277,30 @@ function SearchDialog:createMenuContainer(books, height)
     return self.menu_container
 end
 
-function SearchDialog:resetMenuItems()
+function SearchDialog:clearMenuItems()
+    self.books = {}
     if self.menu_container then
         self.menu_container.item_table = {}
         Menu.updateItems(self.menu_container)
     end
 end
 
-function SearchDialog:forceRefreshMenuItems()
-   local toggle_item = self.toggle_items[self._position]
-    if toggle_item and toggle_item["cache_key"] then
-        local cache_key = toggle_item["cache_key"]
+function SearchDialog:forceFetchAndReloadMenu()
+   local cache_key = self:getActiveItemCacheKey()
+   if cache_key then
         self._cache:remove(cache_key)
-    end
-    self:ToggleSwitchCallBack(self._position)
+   end
+   self:clearMenuItems()
+   self:_fetchAndProcessData(nil, true)
 end
 
-function SearchDialog:onMenuChoice(item)
+function SearchDialog:onMenuSelect(item)
+    if not (item and item.book_index) then
+        return true
+    end
     local book = self.books[item.book_index]
     self.on_select_book_callback(book)
+    return true
 end
 
 function SearchDialog:onMenuHold(item)
@@ -304,12 +331,84 @@ function SearchDialog:onMenuHold(item)
             end
         }})
     end
+    if book.id and book.hash and type(self.on_similar_books_callback) == 'function' then
+        table.insert(buttons, {{
+            text = T("More Similar Books"),
+            callback = function()
+                UIManager:close(dialog)
+                self.on_similar_books_callback(book)
+            end
+        }})
+    end
     dialog = ButtonDialog:new{
         buttons = buttons,
         title = string.format("\u{f002} %s", T("Search")),
         title_align = "center"
     }
     UIManager:show(dialog)
+end
+
+-- Can be appended multiple times, then call reloadFromBookData(nil, nil, 1)
+function SearchDialog:extendBatchData(books)
+    if not self.current_page_loaded or self.current_page_loaded == 1 then
+        self.books = {}
+    end
+    if type(books) ~= "table" then return self.books end
+    for _, book in ipairs(books) do
+        table.insert(self.books, book)
+    end
+    return self.books
+end
+
+function SearchDialog:appendBatchDataAndReload(books)
+    self:extendBatchData(books)
+    self:reloadFromBookData(nil, nil, 1)
+end
+
+function SearchDialog:setPaginationState(has_more_results, current_page)
+    self.has_more_api_results = has_more_results
+    self.current_page_loaded = current_page
+end
+
+function SearchDialog:onMenuGotoPage(menu_instance, new_page)
+    Menu.onGotoPage(menu_instance, new_page)
+
+    local is_last_page = new_page == menu_instance.page_num
+    if not (is_last_page and self.has_more_api_results and self:_isEnablePagination()) then
+        return true
+    end
+
+    logger.dbg(string.format("MultiSearchDialo.GotoPage gexecuting paginated fetch, current page %s", new_page))
+    self:_fetchAndProcessData((self.current_page_loaded or 1) + 1)
+    return true
+end
+
+function SearchDialog:getActiveItem()
+    return self.toggle_items[self._position]
+end
+
+function SearchDialog:_isEnablePagination()
+    local current_toggle = self:getActiveItem()
+    if current_toggle then
+        return current_toggle["enable_pagination"] == true
+    end
+end
+
+function SearchDialog:getActiveItemCacheKey()
+    local current_toggle = self:getActiveItem()
+    if current_toggle then
+        return current_toggle["cache_key"], current_toggle["cache_expiry"]
+    end
+end
+
+function SearchDialog:setToggleTitle(position, title)
+    local toggle_items_count = #self.toggle_items
+    if position > toggle_items_count or position < 1 then
+        return
+    end
+    self.toggle_items[1].text = title or ""
+    self:init()
+    UIManager:setDirty("all", "ui")
 end
 
 return SearchDialog

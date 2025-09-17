@@ -30,40 +30,56 @@ function Api.isAuthenticationError(error_message)
     return false
 end
 
-local function _transformApiBookData(api_book)
-    if not api_book or type(api_book) ~= "table" then
-        return nil
+local function _transformApiBookData(api_books)
+    if not api_books or type(api_books) ~= "table" then
+        return {}
     end
 
-    -- Handle case where dl field contains 'exactEnd' - mark for detail fetch
-    local download_url = api_book.dl
-    local needs_detail_fetch = false
-    if download_url and type(download_url) == "string" and download_url == "exactEnd" then
-        needs_detail_fetch = true
-        download_url = nil  -- Clear the invalid URL
+    local is_single = api_books.id ~= nil
+    local books = is_single and { api_books } or api_books
+
+    local transformed_books = {}
+
+    for _, book in ipairs(books) do
+        if book.id then
+
+            -- Handle case where dl field contains 'exactEnd' - mark for detail fetch
+            local download_url = book.dl
+            local needs_detail_fetch = false
+            if download_url and type(download_url) == "string" and download_url == "exactEnd" then
+                needs_detail_fetch = true
+                download_url = nil  -- Clear the invalid URL
+            end
+
+            table.insert(transformed_books, {
+                id =book.id,
+                hash =book.hash,
+                title = util.trim(book.title) or "Unknown Title",
+                author = util.trim(book.author) or "Unknown Author",
+                year = book.year or "N/A",
+                format = book.extension or "N/A",
+                size = book.filesizeString or book.filesize or "N/A",
+                filesize = book.filesize,
+                lang = book.language or "N/A",
+                rating = book.interestScore or "N/A",
+                href = book.href,
+                download = download_url,
+                date_download = book.date_download,
+                date_saved = book.date_saved,
+                needs_detail_fetch = needs_detail_fetch,
+                cover = book.cover,
+                description = book.description,
+                publisher = book.publisher,
+                series = book.series,
+                pages = book.pages,
+                identifier = book.identifier,
+            })
+        else
+            logger.warn("transformApiBookData - Failed to transform an API book item, skipping.", book)
+        end
     end
 
-    return {
-        id = api_book.id,
-        hash = api_book.hash,
-        title = util.trim(api_book.title or "Unknown Title"),
-        author = util.trim(api_book.author or "Unknown Author"),
-        year = api_book.year or "N/A",
-        format = api_book.extension or "N/A",
-        size = api_book.filesizeString or api_book.filesize or "N/A",
-        filesize = api_book.filesize,
-        lang = api_book.language or "N/A",
-        rating = api_book.interestScore or "N/A",
-        href = api_book.href,
-        download = download_url,
-        needs_detail_fetch = needs_detail_fetch,
-        cover = api_book.cover,
-        description = api_book.description,
-        publisher = api_book.publisher,
-        series = api_book.series,
-        pages = api_book.pages,
-        identifier = api_book.identifier,
-    }
+    return is_single and transformed_books[1] or transformed_books
 end
 
 local function _checkAndHandleRedirect(skip_check, status_code, current_url)
@@ -387,17 +403,7 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
         books_from_api = data.exactMatch.books
     end
 
-    local transformed_books = {}
-    if #books_from_api > 0 then
-        for _, api_book_item in ipairs(books_from_api) do
-            local transformed_book = _transformApiBookData(api_book_item)
-            if transformed_book then
-                table.insert(transformed_books, transformed_book)
-            else
-                logger.warn("Zlibrary:Api.search - Failed to transform an API book item, skipping.")
-            end
-        end
-    end
+    local transformed_books = _transformApiBookData(books_from_api)
     result.results = transformed_books
 
     if data.pagination and data.pagination.total_items then
@@ -558,7 +564,7 @@ function Api.getRecommendedBooks(user_id, user_key)
         return { error = T("Failed to fetch recommended books (no response body).") }
     end
 
-    local success, data = pcall(json.decode, http_result.body)
+    local success, data = pcall(json.decode, http_result.body, json.decode.simple)
     if not success or not data then
         logger.warn("Api.getRecommendedBooks - Failed to decode JSON: ", http_result.body)
         return { error = T("Failed to parse recommended books response.") }
@@ -568,17 +574,8 @@ function Api.getRecommendedBooks(user_id, user_key)
         logger.warn("Api.getRecommendedBooks - API error: ", http_result.body)
         return { error = data.message or T("API returned an error for recommended books.") }
     end
-
-    local transformed_books = {}
-    for _, book_data in ipairs(data.books) do
-        local transformed_book = _transformApiBookData(book_data)
-        if transformed_book then
-            table.insert(transformed_books, transformed_book)
-        else
-            logger.warn("Api.getRecommendedBooks - Failed to transform book data: ", book_data.id)
-        end
-    end
-
+    
+    local transformed_books = _transformApiBookData(data.books)
     return { books = transformed_books }
 end
 
@@ -615,7 +612,7 @@ function Api.getMostPopularBooks(user_id, user_key)
         return { error = T("Failed to fetch most popular books (no response body).") }
     end
 
-    local success, data = pcall(json.decode, http_result.body)
+    local success, data = pcall(json.decode, http_result.body, json.decode.simple)
     if not success or not data then
         logger.warn("Api.getMostPopularBooks - Failed to decode JSON: ", http_result.body)
         return { error = T("Failed to parse most popular books response.") }
@@ -626,16 +623,7 @@ function Api.getMostPopularBooks(user_id, user_key)
         return { error = data.message or T("API returned an error for most popular books.") }
     end
 
-    local transformed_books = {}
-    for _, book_data in ipairs(data.books) do
-        local transformed_book = _transformApiBookData(book_data)
-        if transformed_book then
-            table.insert(transformed_books, transformed_book)
-        else
-            logger.warn("Api.getMostPopularBooks - Failed to transform book data: ", book_data.id)
-        end
-    end
-
+    local transformed_books = _transformApiBookData(data.books)
     return { books = transformed_books }
 end
 
@@ -674,7 +662,7 @@ function Api.getBookDetails(user_id, user_key, book_id, book_hash)
         return { error = T("Failed to fetch book details (no response body).") }
     end
 
-    local success, data = pcall(json.decode, http_result.body)
+    local success, data = pcall(json.decode, http_result.body, json.decode.simple)
     if not success or not data then
         logger.warn("Api.getBookDetails - Failed to decode JSON: ", http_result.body)
         return { error = T("Failed to parse book details response.") }
@@ -692,6 +680,365 @@ function Api.getBookDetails(user_id, user_key, book_id, book_hash)
     end
 
     return { book = transformed_book }
+end
+
+function Api.getSimilarBooks(user_id, user_key, book_id, book_hash)
+    local url = Config.getSimilarBooksUrl(book_id, book_hash)
+    if not url then
+        logger.warn("Api.getSimilarBooks - Base URL not configured")
+        return { error = T("Z-library server URL not configured.") }
+    end
+
+    local headers = {
+        ['Content-Type'] = 'application/x-www-form-urlencoded',
+        ["User-Agent"] = Config.USER_AGENT,
+    }
+    if user_id and user_key then
+        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
+    end
+
+    local http_result = Api.makeHttpRequest{
+        url = url,
+        method = "GET",
+        headers = headers,
+        timeout = Config.getPopularTimeout(),
+        getRedirectedUrl = function()
+            return Config.getSimilarBooksUrl(book_id, book_hash)
+        end,
+    }
+
+    if http_result.error then
+        logger.warn("Api.getSimilarBooks - HTTP request error: ", http_result.error)
+        return { error = http_result.error }
+    end
+
+    if not http_result.body then
+        logger.warn("Api.getSimilarBooks - No response body")
+        return { error = T("Failed to fetch similar books (no response body).") }
+    end
+
+    local success, data = pcall(json.decode, http_result.body, json.decode.simple)
+    if not success or not data then
+        logger.warn("Api.getSimilarBooks - Failed to decode JSON: ", http_result.body)
+        return { error = T("Failed to parse similar books response.") }
+    end
+
+    if data.success ~= 1 or not data.books then
+        logger.warn("Api.getSimilarBooks - API error: ", http_result.body)
+        return { error = data.message or T("API returned an error for similar books.") }
+    end
+
+    local transformed_books = _transformApiBookData(data.books)
+    return { books = transformed_books }
+end
+
+function Api.getDownloadedBooks(user_id, user_key, page, order)
+
+    page = page or 1
+
+    local url = Config.getDownloadedBooksUrl(page, order)
+    if not url then
+        logger.warn("Api.getDownloadedBooks - Base URL not configured")
+        return { error = T("Z-library server URL not configured.") }
+    end
+
+    local headers = {
+        ['Content-Type'] = 'application/x-www-form-urlencoded',
+        ["User-Agent"] = Config.USER_AGENT,
+    }
+    if user_id and user_key then
+        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
+    end
+
+    local http_result = Api.makeHttpRequest{
+        url = url,
+        method = "GET",
+        headers = headers,
+        timeout = Config.getPopularTimeout(),
+        getRedirectedUrl = function()
+            return Config.getDownloadedBooksUrl(page, order)
+        end,
+    }
+
+    if http_result.error then
+        logger.warn("Api.getDownloadedBooks - HTTP request error: ", http_result.error)
+        return { error = http_result.error }
+    end
+
+    if not http_result.body then
+        logger.warn("Api.getDownloadedBooks - No response body")
+        return { error = T("Failed to fetch downloaded books (no response body).") }
+    end
+
+    -- Get nil instead of functions for 'null' by using JSON.decode.simple
+    local success, data = pcall(json.decode, http_result.body, json.decode.simple)
+    if not success or not data then
+        logger.warn("Api.getDownloadedBooks - Failed to decode JSON: ", http_result.body)
+        return { error = T("Failed to parse downloaded books response.") }
+    end
+     
+    if not (data.success == 1 and data.books and type(data.pagination) == "table") then
+        logger.warn("Api.getDownloadedBooks - API error: ", http_result.body)
+        return { error = data.message or T("API returned an error for downloaded books.") }
+    end
+
+    local pagination = data.pagination
+    local has_more_results = type(data.books) == "table" and #data.books > 0 
+    and pagination.total_pages and pagination.current 
+    and page == pagination.current and pagination.current < pagination.total_pages
+
+    local transformed_books = _transformApiBookData(data.books)
+    return { has_more_results = has_more_results, books = transformed_books }
+end
+
+function Api.getFavoriteBooks(user_id, user_key, page, order)
+
+    page = page or 1
+    
+    local url = Config.getFavoriteBooksUrl(page, order)
+    if not url then
+        logger.warn("Api.getFavoriteBooks - Base URL not configured")
+        return { error = T("Z-library server URL not configured.") }
+    end
+
+    local headers = {
+        ['Content-Type'] = 'application/x-www-form-urlencoded',
+        ["User-Agent"] = Config.USER_AGENT,
+    }
+    if user_id and user_key then
+        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
+    end
+
+    local http_result = Api.makeHttpRequest{
+        url = url,
+        method = "GET",
+        headers = headers,
+        timeout = Config.getPopularTimeout(),
+        getRedirectedUrl = function()
+            return Config.getFavoriteBooksUrl(page, order)
+        end,
+    }
+    
+    if http_result.error then
+        logger.warn("Api.getFavoriteBooks - HTTP request error: ", http_result.error)
+        return { error = http_result.error }
+    end
+
+    if not http_result.body then
+        logger.warn("Api.getFavoriteBooks - No response body")
+        return { error = T("Failed to fetch favorite books (no response body).") }
+    end
+
+    local success, data = pcall(json.decode, http_result.body, json.decode.simple)
+    if not success or not data then
+        logger.warn("Api.getFavoriteBooks - Failed to decode JSON: ", http_result.body)
+        return { error = T("Failed to parse favorite books response.") }
+    end
+
+    if not (data.success == 1 and data.books and data.pagination) then
+        logger.warn("Api.getFavoriteBooks - API error: ", http_result.body)
+        return { error = data.message or T("API returned an error for favorite books.") }
+    end
+    
+    local pagination = data.pagination
+    local has_more_results = type(data.books) == "table" and #data.books > 0 
+    and pagination.total_pages and pagination.current 
+    and page == pagination.current and pagination.current < pagination.total_pages
+
+    local transformed_books = _transformApiBookData(data.books)
+    return { has_more_results = has_more_results, books = transformed_books }
+end
+
+function Api.unfavoriteBook(user_id, user_key, book_stub)
+    local url = Config.getUnFavoriteUrl(book_stub.id)
+    if not url then
+        logger.warn("Api.unfavoriteBook - Base URL not configured")
+        return { error = T("Z-library server URL not configured.") }
+    end
+
+    local headers = {
+        ['Content-Type'] = 'application/x-www-form-urlencoded',
+        ["User-Agent"] = Config.USER_AGENT,
+    }
+    if user_id and user_key then
+        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
+    end
+
+    local http_result = Api.makeHttpRequest{
+        url = url,
+        method = "GET",
+        headers = headers,
+        timeout = Config.getPopularTimeout(),
+        getRedirectedUrl = function()
+            return Config.getUnFavoriteUrl(book_stub.id)
+        end,
+    }
+
+    if http_result.error then
+        logger.warn("Api.unfavoriteBook - HTTP request error: ", http_result.error)
+        return { error = http_result.error }
+    end
+
+    if not http_result.body then
+        logger.warn("Api.unfavoriteBook - No response body")
+        return { error = T("Failed to fetch unfavorite book (no response body).") }
+    end
+
+    local success, data = pcall(json.decode, http_result.body, json.decode.simple)
+    if not success or not data then
+        logger.warn("Api.unfavoriteBook - Failed to decode JSON: ", http_result.body)
+        return { error = T("Failed to parse unfavorite book response.") }
+    end
+
+    if data.success ~= 1 then
+        logger.warn("Api.unfavoriteBook - API error: ", http_result.body)
+        return { error = data.message or T("API returned an error for unfavorite book.") }
+    end
+
+    return { success = true }
+end
+
+function Api.getDownloadQuotaStatus(user_id, user_key)
+    local url = Config.getDownloadQuotaUrl()
+    if not url then
+        logger.warn("Api.getDownloadQuotaStatus - Base URL not configured")
+        return { error = T("Z-library server URL not configured.") }
+    end
+
+    local headers = {
+        ['Content-Type'] = 'application/x-www-form-urlencoded',
+        ["User-Agent"] = Config.USER_AGENT,
+    }
+    if user_id and user_key then
+        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
+    end
+
+    local http_result = Api.makeHttpRequest{
+        url = url,
+        method = "GET",
+        headers = headers,
+        timeout = Config.getPopularTimeout(),
+        getRedirectedUrl = Config.getDownloadQuotaUrl,
+    }
+
+    if http_result.error then
+        logger.warn("Api.getDownloadQuotaStatus - HTTP request error: ", http_result.error)
+        return { error = http_result.error }
+    end
+
+    if not http_result.body then
+        logger.warn("Api.getDownloadQuotaStatus - No response body")
+        return { error = T("Failed to fetch download quota status (no response body).") }
+    end
+
+    local success, data = pcall(json.decode, http_result.body, json.decode.simple)
+    if not success or not data then
+        logger.warn("Api.getDownloadQuotaStatus - Failed to decode JSON: ", http_result.body)
+        return { error = T("Failed to parse download quota status response.") }
+    end
+
+    if not (data.success == 1 and type(data.user) == "table" and data.user.downloads_today ~= nil )then
+        logger.warn("Api.getDownloadQuotaStatus - API error: ", http_result.body)
+        return { error = data.message or T("API returned an error for download quota status.") }
+    end
+
+    return { quota_status = {today = data.user.downloads_today, limit = data.user.downloads_limit}}
+end
+
+function Api.getFavoriteBookIds(user_id, user_key)
+    local url = Config.getFavoriteBookIdsUrl()
+    if not url then
+        logger.warn("Api.getFavoriteBookIds - Base URL not configured")
+        return { error = T("Z-library server URL not configured.") }
+    end
+
+    local headers = {
+        ['Content-Type'] = 'application/x-www-form-urlencoded',
+        ["User-Agent"] = Config.USER_AGENT,
+    }
+    if user_id and user_key then
+        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
+    end
+
+    local http_result = Api.makeHttpRequest{
+        url = url,
+        method = "GET",
+        headers = headers,
+        timeout = Config.getPopularTimeout(),
+        getRedirectedUrl = Config.getFavoriteBookIdsUrl,
+    }
+
+    if http_result.error then
+        logger.warn("Api.getFavoriteBookIds - HTTP request error: ", http_result.error)
+        return { error = http_result.error }
+    end
+
+    if not http_result.body then
+        logger.warn("Api.getFavoriteBookIds - No response body")
+        return { error = T("Failed to fetch favorite-book IDs (no response body).") }
+    end
+
+    local success, data = pcall(json.decode, http_result.body, json.decode.simple)
+    if not success or not data then
+        logger.warn("Api.getFavoriteBookIds - Failed to decode JSON: ", http_result.body)
+        return { error = T("Failed to parse favorite-book IDs.") }
+    end
+    
+    if not (data.success == 1 and data.list) then
+        logger.warn("Api.getFavoriteBookIds - API error: ", http_result.body)
+        return { error = data.message or T("API returned an error for favorite-book IDs.") }
+    end
+    
+    return { list = data.list }
+end
+
+function Api.favoriteBook(user_id, user_key, book_stub)
+    local url = Config.getFavoriteUrl(book_stub.id)
+    if not url then
+        logger.warn("Api.favoriteBook - Base URL not configured")
+        return { error = T("Z-library server URL not configured.") }
+    end
+
+    local headers = {
+        ['Content-Type'] = 'application/x-www-form-urlencoded',
+        ["User-Agent"] = Config.USER_AGENT,
+    }
+    if user_id and user_key then
+        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
+    end
+
+    local http_result = Api.makeHttpRequest{
+        url = url,
+        method = "GET",
+        headers = headers,
+        timeout = Config.getPopularTimeout(),
+        getRedirectedUrl = function()
+            return Config.getFavoriteUrl(book_stub.id)
+        end,
+    }
+
+    if http_result.error then
+        logger.warn("Api.favoriteBook - HTTP request error: ", http_result.error)
+        return { error = http_result.error }
+    end
+
+    if not http_result.body then
+        logger.warn("Api.favoriteBook - No response body")
+        return { error = T("Failed to fetch favorite book (no response body).") }
+    end
+
+    local success, data = pcall(json.decode, http_result.body, json.decode.simple)
+    if not success or not data then
+        logger.warn("Api.favoriteBook - Failed to decode JSON: ", http_result.body)
+        return { error = T("Failed to parse favorite book response.") }
+    end
+
+    if data.success ~= 1 then
+        logger.warn("Api.favoriteBook - API error: ", http_result.body)
+        return { error = data.message or T("API returned an error for favorite book.") }
+    end
+
+    return { success = true }
 end
 
 return Api

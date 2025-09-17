@@ -238,6 +238,66 @@ function Config.getBookDetailsUrl(book_id, book_hash)
     return base .. string.format("/eapi/book/%s/%s", book_id, book_hash)
 end
 
+function Config.getSimilarBooksUrl(book_id, book_hash)
+    local base = Config.getBaseUrl()
+    if not base or not book_id or not book_hash then return nil end
+    return base .. string.format("/eapi/book/%s/%s/similar", book_id, book_hash)
+end
+
+function Config.getDownloadedBooksUrl(page, order)
+    local base = Config.getBaseUrl()
+    if not base then return nil end
+    
+    order = order or {"date"}
+    page = page or 1
+
+    local limit = Config.SEARCH_RESULTS_LIMIT
+    local order_str = ""
+    if order and #order > 0 then
+        order_str = "&order=" .. util.urlEncode(order[1])
+    end
+
+    return string.format("%s/eapi/user/book/downloaded?page=%d&limit=%d%s",base, page, limit, order_str)
+end
+
+function Config.getFavoriteBooksUrl(page, order)
+    local base = Config.getBaseUrl()
+    if not base then return nil end
+
+    order = order or {"date"}
+    page = page or 1
+    
+    local limit = Config.SEARCH_RESULTS_LIMIT
+    local order_str = ""
+    if order and #order > 0 then
+        order_str = "&order=" .. util.urlEncode(order[1])
+    end
+
+    return string.format("%s/eapi/user/book/saved?page=%d&limit=%d%s",base, page, limit, order_str)
+end
+
+function Config.getFavoriteBookIdsUrl()
+    local base = Config.getBaseUrl()
+    return base and (base .. "/papi/my-library/saved-book-ids")
+end
+
+function Config.getUnFavoriteUrl(book_id)
+    local base = Config.getBaseUrl()
+    if not base or not book_id then return nil end
+    return base .. string.format("/eapi/user/book/%s/unsave", book_id)
+end
+
+function Config.getFavoriteUrl(book_id)
+    local base = Config.getBaseUrl()
+    if not base or not book_id then return nil end
+    return base .. string.format("/eapi/user/book/%s/save", book_id)
+end
+
+function Config.getDownloadQuotaUrl()
+    local base = Config.getBaseUrl()
+    return base and (base .. "/eapi/user/profile")
+end
+
 function Config.getRecommendedBooksUrl()
     local base = Config.getBaseUrl()
     if not base then return nil end

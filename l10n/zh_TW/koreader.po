@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-03 08:56+0000\n"
+"POT-Creation-Date: 2025-09-24 17:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese <zh@li.org>\n"
@@ -75,6 +75,12 @@ msgstr ""
 msgid "Session cleared. You will need to login again."
 msgstr ""
 
+msgid "Clear runtime cache"
+msgstr ""
+
+msgid "Runtime cache cleared."
+msgstr ""
+
 msgid "Test mode"
 msgstr ""
 
@@ -93,14 +99,17 @@ msgstr "推薦"
 msgid "Most popular"
 msgstr "最熱門"
 
+msgid "My books"
+msgstr ""
+
 msgid "No internet connection detected."
 msgstr "未檢測到網絡連接。"
 
-msgid "No books found, please try again"
-msgstr "未找到書籍，請重試"
-
 msgid "Operation"
 msgstr ""
+
+msgid "No books found, please try again"
+msgstr "未找到書籍，請重試"
 
 msgid "Fetching recommended books..."
 msgstr "正在獲取推薦書籍..."
@@ -120,17 +129,98 @@ msgstr "獲取熱門書籍失敗"
 msgid "Most popular books"
 msgstr ""
 
+msgid "Syncing your download limit..."
+msgstr ""
+
+msgid "failed to load download quota status"
+msgstr ""
+
+msgid "Sync download quota"
+msgstr ""
+
+msgid "Syncing favorites summary…"
+msgstr ""
+
+msgid "failed to load favorite book id list"
+msgstr ""
+
+msgid "Sync favorites summary"
+msgstr ""
+
+msgid "API returned an error, please try again"
+msgstr ""
+
+msgid "Z-library My Books"
+msgstr ""
+
+msgid "Downloaded"
+msgstr ""
+
+msgid "Getting your downloaded..."
+msgstr ""
+
+msgid "Failed to fetch downloaded books"
+msgstr ""
+
+msgid "Downloaded books"
+msgstr ""
+
+msgid "Favorites"
+msgstr ""
+
+msgid "Getting your favorites..."
+msgstr ""
+
+msgid "Failed to fetch favorite books"
+msgstr ""
+
+msgid "Favorite books"
+msgstr ""
+
+msgid "Finding similar books..."
+msgstr ""
+
+msgid "No similar books found"
+msgstr ""
+
+msgid "Similar books"
+msgstr ""
+
+msgid "Removing book from favorites…"
+msgstr ""
+
+msgid "Failed to remove book from favorites"
+msgstr ""
+
+msgid "unfavorite book"
+msgstr ""
+
+msgid "Book removed from favorites, please refresh"
+msgstr ""
+
+msgid "Adding book to favorites…"
+msgstr ""
+
+msgid "Failed to add book to favorites"
+msgstr ""
+
+msgid "Favorite book"
+msgstr ""
+
+msgid "Book added to favorites, please refresh"
+msgstr ""
+
 msgid "Fetching book details..."
 msgstr "正在獲取書籍詳情..."
 
 msgid "Failed to fetch book details"
 msgstr "獲取書籍詳情失敗"
 
-msgid "Could not retrieve book details."
-msgstr "無法獲取書籍詳情。"
-
 msgid "Book details"
 msgstr ""
+
+msgid "Could not retrieve book details."
+msgstr "無法獲取書籍詳情。"
 
 msgid "Please set both username and password first."
 msgstr "請先設置用戶名和密碼。"
@@ -263,6 +353,69 @@ msgstr "API返回書籍詳情錯誤。"
 msgid "Failed to process book details."
 msgstr "處理書籍詳情失敗。"
 
+msgid "Failed to fetch similar books (no response body)."
+msgstr ""
+
+msgid "Failed to parse similar books response."
+msgstr ""
+
+msgid "API returned an error for similar books."
+msgstr ""
+
+msgid "Failed to fetch downloaded books (no response body)."
+msgstr ""
+
+msgid "Failed to parse downloaded books response."
+msgstr ""
+
+msgid "API returned an error for downloaded books."
+msgstr ""
+
+msgid "Failed to fetch favorite books (no response body)."
+msgstr ""
+
+msgid "Failed to parse favorite books response."
+msgstr ""
+
+msgid "API returned an error for favorite books."
+msgstr ""
+
+msgid "Failed to fetch unfavorite book (no response body)."
+msgstr ""
+
+msgid "Failed to parse unfavorite book response."
+msgstr ""
+
+msgid "API returned an error for unfavorite book."
+msgstr ""
+
+msgid "Failed to fetch download quota status (no response body)."
+msgstr ""
+
+msgid "Failed to parse download quota status response."
+msgstr ""
+
+msgid "API returned an error for download quota status."
+msgstr ""
+
+msgid "Failed to fetch favorite-book IDs (no response body)."
+msgstr ""
+
+msgid "Failed to parse favorite-book IDs."
+msgstr ""
+
+msgid "API returned an error for favorite-book IDs."
+msgstr ""
+
+msgid "Failed to fetch favorite book (no response body)."
+msgstr ""
+
+msgid "Failed to parse favorite book response."
+msgstr ""
+
+msgid "API returned an error for favorite book."
+msgstr ""
+
 msgid "Best match"
 msgstr ""
 
@@ -296,6 +449,9 @@ msgstr "未知作者"
 
 msgid "Author"
 msgstr "作者"
+
+msgid "More Similar Books"
+msgstr ""
 
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "更新失敗：無法確定插件安裝位置。"
@@ -443,6 +599,9 @@ msgstr "評分"
 msgid "Search Results"
 msgstr "搜索結果"
 
+msgid "Book Details"
+msgstr "書籍詳情"
+
 msgid "Description"
 msgstr "描述"
 
@@ -484,8 +643,11 @@ msgstr "頁數"
 msgid "Back"
 msgstr "返回"
 
-msgid "Book Details"
-msgstr "書籍詳情"
+msgid "Remove From Favorites"
+msgstr ""
+
+msgid "Add To Favorites"
+msgstr ""
 
 #, lua-format
 msgid "Download \"%s\"?"
@@ -501,17 +663,14 @@ msgstr "關閉此對話框後關閉 Wi-Fi"
 msgid "Open book"
 msgstr "打開書籍"
 
-msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
-msgstr "未找到推薦書籍，請重試。有時需要多次嘗試。"
-
 msgid "Z-library Recommended Books"
 msgstr "Z-圖書館推薦書籍"
 
-msgid "No most popular books found. The list was empty, please try again."
-msgstr "未找到熱門書籍。列表為空，請重試。"
-
 msgid "Z-library Most Popular Books"
 msgstr "Z-圖書館熱門書籍"
+
+msgid "Z-library Similar Books"
+msgstr ""
 
 msgid "Fetch most recommended book from Z-library?"
 msgstr "從Z-圖書館獲取最推薦書籍？"
@@ -629,6 +788,12 @@ msgstr "所有逾時設定已重設為預設值"
 
 msgid "Timeout Settings"
 msgstr "逾時設定"
+
+#~ msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
+#~ msgstr "未找到推薦書籍，請重試。有時需要多次嘗試。"
+
+#~ msgid "No most popular books found. The list was empty, please try again."
+#~ msgstr "未找到熱門書籍。列表為空，請重試。"
 
 #~ msgid "Search failed"
 #~ msgstr "搜索失敗"

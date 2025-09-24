@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-03 08:56+0000\n"
+"POT-Creation-Date: 2025-09-24 17:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,6 +75,12 @@ msgstr ""
 msgid "Session cleared. You will need to login again."
 msgstr ""
 
+msgid "Clear runtime cache"
+msgstr ""
+
+msgid "Runtime cache cleared."
+msgstr ""
+
 msgid "Test mode"
 msgstr ""
 
@@ -93,14 +99,17 @@ msgstr "Aanbevolen"
 msgid "Most popular"
 msgstr "Meest populair"
 
+msgid "My books"
+msgstr ""
+
 msgid "No internet connection detected."
 msgstr "Geen internetverbinding gedetecteerd."
 
-msgid "No books found, please try again"
-msgstr "Geen boeken gevonden, probeer het opnieuw"
-
 msgid "Operation"
 msgstr ""
+
+msgid "No books found, please try again"
+msgstr "Geen boeken gevonden, probeer het opnieuw"
 
 msgid "Fetching recommended books..."
 msgstr "Aanbevolen boeken ophalen..."
@@ -120,17 +129,98 @@ msgstr "Kan meest populaire boeken niet ophalen"
 msgid "Most popular books"
 msgstr ""
 
+msgid "Syncing your download limit..."
+msgstr ""
+
+msgid "failed to load download quota status"
+msgstr ""
+
+msgid "Sync download quota"
+msgstr ""
+
+msgid "Syncing favorites summary…"
+msgstr ""
+
+msgid "failed to load favorite book id list"
+msgstr ""
+
+msgid "Sync favorites summary"
+msgstr ""
+
+msgid "API returned an error, please try again"
+msgstr ""
+
+msgid "Z-library My Books"
+msgstr ""
+
+msgid "Downloaded"
+msgstr ""
+
+msgid "Getting your downloaded..."
+msgstr ""
+
+msgid "Failed to fetch downloaded books"
+msgstr ""
+
+msgid "Downloaded books"
+msgstr ""
+
+msgid "Favorites"
+msgstr ""
+
+msgid "Getting your favorites..."
+msgstr ""
+
+msgid "Failed to fetch favorite books"
+msgstr ""
+
+msgid "Favorite books"
+msgstr ""
+
+msgid "Finding similar books..."
+msgstr ""
+
+msgid "No similar books found"
+msgstr ""
+
+msgid "Similar books"
+msgstr ""
+
+msgid "Removing book from favorites…"
+msgstr ""
+
+msgid "Failed to remove book from favorites"
+msgstr ""
+
+msgid "unfavorite book"
+msgstr ""
+
+msgid "Book removed from favorites, please refresh"
+msgstr ""
+
+msgid "Adding book to favorites…"
+msgstr ""
+
+msgid "Failed to add book to favorites"
+msgstr ""
+
+msgid "Favorite book"
+msgstr ""
+
+msgid "Book added to favorites, please refresh"
+msgstr ""
+
 msgid "Fetching book details..."
 msgstr "Boekdetails ophalen..."
 
 msgid "Failed to fetch book details"
 msgstr "Kan boekdetails niet ophalen"
 
-msgid "Could not retrieve book details."
-msgstr "Kan boekdetails niet ophalen."
-
 msgid "Book details"
 msgstr ""
+
+msgid "Could not retrieve book details."
+msgstr "Kan boekdetails niet ophalen."
 
 msgid "Please set both username and password first."
 msgstr "Stel eerst zowel gebruikersnaam als wachtwoord in."
@@ -263,6 +353,69 @@ msgstr "API retourneerde een fout voor boekdetails."
 msgid "Failed to process book details."
 msgstr "Kan boekdetails niet verwerken."
 
+msgid "Failed to fetch similar books (no response body)."
+msgstr ""
+
+msgid "Failed to parse similar books response."
+msgstr ""
+
+msgid "API returned an error for similar books."
+msgstr ""
+
+msgid "Failed to fetch downloaded books (no response body)."
+msgstr ""
+
+msgid "Failed to parse downloaded books response."
+msgstr ""
+
+msgid "API returned an error for downloaded books."
+msgstr ""
+
+msgid "Failed to fetch favorite books (no response body)."
+msgstr ""
+
+msgid "Failed to parse favorite books response."
+msgstr ""
+
+msgid "API returned an error for favorite books."
+msgstr ""
+
+msgid "Failed to fetch unfavorite book (no response body)."
+msgstr ""
+
+msgid "Failed to parse unfavorite book response."
+msgstr ""
+
+msgid "API returned an error for unfavorite book."
+msgstr ""
+
+msgid "Failed to fetch download quota status (no response body)."
+msgstr ""
+
+msgid "Failed to parse download quota status response."
+msgstr ""
+
+msgid "API returned an error for download quota status."
+msgstr ""
+
+msgid "Failed to fetch favorite-book IDs (no response body)."
+msgstr ""
+
+msgid "Failed to parse favorite-book IDs."
+msgstr ""
+
+msgid "API returned an error for favorite-book IDs."
+msgstr ""
+
+msgid "Failed to fetch favorite book (no response body)."
+msgstr ""
+
+msgid "Failed to parse favorite book response."
+msgstr ""
+
+msgid "API returned an error for favorite book."
+msgstr ""
+
 msgid "Best match"
 msgstr ""
 
@@ -296,6 +449,9 @@ msgstr "Onbekende auteur"
 
 msgid "Author"
 msgstr "Auteur"
+
+msgid "More Similar Books"
+msgstr ""
 
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "Update mislukt: Kan de installatieplek van de plugin niet bepalen."
@@ -443,6 +599,9 @@ msgstr "Beoordeling"
 msgid "Search Results"
 msgstr "Zoekresultaten"
 
+msgid "Book Details"
+msgstr "Boekdetails"
+
 msgid "Description"
 msgstr "Beschrijving"
 
@@ -484,8 +643,11 @@ msgstr "Pagina's"
 msgid "Back"
 msgstr "Terug"
 
-msgid "Book Details"
-msgstr "Boekdetails"
+msgid "Remove From Favorites"
+msgstr ""
+
+msgid "Add To Favorites"
+msgstr ""
 
 #, lua-format
 msgid "Download \"%s\"?"
@@ -501,17 +663,14 @@ msgstr "Wi-Fi uitschakelen na sluiten van dit dialoog"
 msgid "Open book"
 msgstr "Boek openen"
 
-msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
-msgstr "Geen aanbevolen boeken gevonden, probeer het opnieuw. Soms zijn meerdere pogingen nodig."
-
 msgid "Z-library Recommended Books"
 msgstr "Aanbevolen boeken van Z-library"
 
-msgid "No most popular books found. The list was empty, please try again."
-msgstr "Geen meest populaire boeken gevonden. De lijst was leeg, probeer het opnieuw."
-
 msgid "Z-library Most Popular Books"
 msgstr "Meest populaire boeken van Z-library"
+
+msgid "Z-library Similar Books"
+msgstr ""
 
 msgid "Fetch most recommended book from Z-library?"
 msgstr "Meest aanbevolen boek ophalen van Z-library?"
@@ -629,6 +788,12 @@ msgstr "Alle timeout-instellingen naar standaardwaarden hersteld"
 
 msgid "Timeout Settings"
 msgstr "Timeout-instellingen"
+
+#~ msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
+#~ msgstr "Geen aanbevolen boeken gevonden, probeer het opnieuw. Soms zijn meerdere pogingen nodig."
+
+#~ msgid "No most popular books found. The list was empty, please try again."
+#~ msgstr "Geen meest populaire boeken gevonden. De lijst was leeg, probeer het opnieuw."
 
 #~ msgid "Search failed"
 #~ msgstr "Zoekopdracht mislukt"

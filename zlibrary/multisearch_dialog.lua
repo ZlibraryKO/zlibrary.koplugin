@@ -168,6 +168,44 @@ function SearchDialog:init()
     }
 end
 
+function SearchDialog:onKeyPress(key)
+    if key == "Left" then
+        if self._position > 1 then
+            self:ToggleSwitchCallBack(self._position - 1)
+        end
+        return true
+    elseif key == "Right" then
+        if self._position < #self.toggle_items then
+            self:ToggleSwitchCallBack(self._position + 1)
+        end
+        return true
+    elseif key == "Up" or key == "Down" then
+        if self.menu_container then
+            return self.menu_container:onKeyPress(key)
+        end
+    elseif key == "Select" then
+        local selected_item = self.menu_container:getCurrentItem()
+        if selected_item then
+            self:onMenuSelect(selected_item)
+        end
+        return true
+    elseif key == "Search" then
+        self.on_search_callback(self.def_search_input)
+        return true
+    elseif key == "Back" then
+        -- Handle exit
+        UIManager:close(self)
+        return true
+    end
+    return false
+end
+
+-- Add method to handle clean exit
+function SearchDialog:onClose()
+    UIManager:close(self)
+    return true
+end
+
 function SearchDialog:ToggleSwitchCallBack(_position)
     if not (type(_position) == 'number' and _position > 0) then
         logger.warn("MultiSearchDialog.ToggleSwitchCallBack invalid parameter")

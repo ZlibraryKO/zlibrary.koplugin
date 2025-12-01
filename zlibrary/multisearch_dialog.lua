@@ -1,4 +1,4 @@
-local Screen = require("device").screen
+local Device = require("device")
 local Blitbuffer = require("ffi/blitbuffer")
 local Size = require("ui/size")
 local Geom = require("ui/geometry")
@@ -12,6 +12,7 @@ local HorizontalGroup = require("ui/widget/horizontalgroup")
 local VerticalGroup = require("ui/widget/verticalgroup")
 local FrameContainer = require("ui/widget/container/framecontainer")
 local InputContainer = require("ui/widget/container/inputcontainer")
+local Screen = Device.screen
 local T = require("zlibrary.gettext")
 local Cache = require("zlibrary.cache")
 local logger = require("logger")
@@ -154,8 +155,7 @@ function SearchDialog:init()
         }
     }
     self[1] = frame
-    self.toggle_switch:disableFocusManagement(self[1])
-    
+
     self.menu_container.onMenuSelect = function(_, item)
         self:onMenuSelect(item)
     end
@@ -165,9 +165,12 @@ function SearchDialog:init()
     self.menu_container.onGotoPage = function(menu_instance, page)
         self:onMenuGotoPage(menu_instance, page)
     end
-    self.menu_container.key_events.Close = nil
-    self.menu_container.key_events.FocusRight = nil
-    self.menu_container.key_events.Right = nil
+    if Device:hasKeys() then
+        self.menu_container.key_events.Close = nil
+        self.menu_container.key_events.FocusRight = nil
+        self.menu_container.key_events.Right = nil
+        self.toggle_switch:disableFocusManagement(self[1])
+    end
 
     self._cache = Cache:new{
         name = "multi_search"

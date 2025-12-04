@@ -1,4 +1,4 @@
-local Screen = require("device").screen
+local Device = require("device")
 local Blitbuffer = require("ffi/blitbuffer")
 local Size = require("ui/size")
 local Geom = require("ui/geometry")
@@ -11,12 +11,13 @@ local ToggleSwitch = require("ui/widget/toggleswitch")
 local HorizontalGroup = require("ui/widget/horizontalgroup")
 local VerticalGroup = require("ui/widget/verticalgroup")
 local FrameContainer = require("ui/widget/container/framecontainer")
-local WidgetContainer = require("ui/widget/container/widgetcontainer")
+local InputContainer = require("ui/widget/container/inputcontainer")
+local Screen = Device.screen
 local T = require("zlibrary.gettext")
 local Cache = require("zlibrary.cache")
 local logger = require("logger")
 
-local SearchDialog = WidgetContainer:extend{
+local SearchDialog = InputContainer:extend{
     title = T("Z-library search"),
     width = nil,
     height = nil,
@@ -99,7 +100,7 @@ function SearchDialog:init()
 
     local has_multiple_items = toggle_items_count ~= 1
     local filter_width = frame_inner_width - force_refresh_button.width - force_refresh_button.padding_right
-    local filter = ToggleSwitch:new{
+    self.toggle_switch = ToggleSwitch:new{
         width = filter_width,
         font_size = 20,
         alternate = false,
@@ -122,13 +123,13 @@ function SearchDialog:init()
             w = frame_inner_width
         },
         align = "center",
-        filter,
+        self.toggle_switch ,
         force_refresh_button
     }
-    filter:setPosition(self._position)
+    self.toggle_switch:setPosition(self._position)
 
     local titlebar_size = titlebar:getSize()
-    local filter_size = filter:getSize()
+    local filter_size = self.toggle_switch:getSize()
     local menu_container_height = frame_inner_hight - titlebar_size.h - filter_size.h
     self.menu_container = self:createMenuContainer(self.books, menu_container_height)
     self.container_parent = VerticalGroup:new{
@@ -154,6 +155,7 @@ function SearchDialog:init()
         }
     }
     self[1] = frame
+
     self.menu_container.onMenuSelect = function(_, item)
         self:onMenuSelect(item)
     end
@@ -163,41 +165,40 @@ function SearchDialog:init()
     self.menu_container.onGotoPage = function(menu_instance, page)
         self:onMenuGotoPage(menu_instance, page)
     end
+    if Device:hasKeys() then
+        self.menu_container.key_events.Close = nil
+        self.menu_container.key_events.FocusRight = nil
+        self.menu_container.key_events.Right = nil
+        self.toggle_switch:disableFocusManagement(self[1])
+    end
+
     self._cache = Cache:new{
         name = "multi_search"
     }
 end
 
 function SearchDialog:onKeyPress(key)
-    if key == "Left" then
-        if self._position > 1 then
-            self:ToggleSwitchCallBack(self._position - 1)
-        end
+    if type(key) ~= "table" then return false end
+    if key["Right"] or key["Tab"] then
+        local position = self._position + 1
+        if position > #self.toggle_items then position = 1 end
+        self.toggle_switch:togglePosition(position, true)
+        UIManager:nextTick(function()
+            self:ToggleSwitchCallBack(position)
+        end)
         return true
-    elseif key == "Right" then
-        if self._position < #self.toggle_items then
-            self:ToggleSwitchCallBack(self._position + 1)
-        end
-        return true
-    elseif key == "Up" or key == "Down" then
-        if self.menu_container then
-            return self.menu_container:onKeyPress(key)
-        end
-    elseif key == "Select" then
-        local selected_item = self.menu_container:getCurrentItem()
-        if selected_item then
-            self:onMenuSelect(selected_item)
-        end
-        return true
-    elseif key == "Search" then
+    elseif key["Menu"] then
         self.on_search_callback(self.def_search_input)
         return true
-    elseif key == "Back" then
+    elseif key["Home"] then
+        self:forceFetchAndReloadMenu()
+        return true
+    elseif key["Back"] then
         -- Handle exit
         UIManager:close(self)
         return true
     end
-    return false
+    return InputContainer.onKeyPress(self, key)
 end
 
 -- Add method to handle clean exit

@@ -81,6 +81,12 @@ To easily access this plugin, you can set up a gesture to open the search menu:
 3.  Select your desired gesture in two steps.
 4.  Under **General**, find **Z-library search** on the last page and check the box.
 
+## Keyboard Controls
+
+**Right / Tab**: Cycle through category tabs  
+**Menu**: Open search options  
+**Home**: Refresh category book list  
+**Back**: Close widget
 
 ## Localization Support
 

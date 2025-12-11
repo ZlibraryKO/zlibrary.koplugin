@@ -1068,13 +1068,10 @@ function Zlibrary:downloadBook(book)
         return
     end
 
-    if not book.download then
-        Ui.showErrorMessage(T("No download link available for this book."))
+    if not book.id or not book.hash then
+        Ui.showErrorMessage(T("Book identifiers missing. Cannot download."))
         return
     end
-
-    local download_url = Config.getDownloadUrl(book.download)
-    logger.info(string.format("Zlibrary:downloadBook - Download URL: %s", download_url))
 
     local safe_title = util.trim(book.title or "Unknown Title"):gsub("[/\\?%*:|\"<>%c]", "_")
     local safe_author = util.trim(book.author or "Unknown Author"):gsub("[/\\?%*:|\"<>%c]", "_")
@@ -1111,8 +1108,19 @@ function Zlibrary:downloadBook(book)
         local loading_msg, progress_callback = Ui.showBookDownloadProgress(book)
 
         local function task_download()
+            -- Always fetch the download link from the new endpoint
+            logger.info(string.format("Zlibrary:downloadBook - Fetching download link from endpoint for book ID: %s", book.id))
+            local link_result = Api.getDownloadLink(user_session and user_session.user_id,
+                user_session and user_session.user_key, book.id, book.hash)
             
-            return Api.downloadBook(download_url, target_filepath, user_session and user_session.user_id,
+            if link_result.error then
+                return { success = false, error = link_result.error }
+            end
+            
+            local final_download_url = link_result.download_link
+            logger.info(string.format("Zlibrary:downloadBook - Got download link from endpoint: %s", final_download_url))
+            
+            return Api.downloadBook(final_download_url, target_filepath, user_session and user_session.user_id,
                 user_session and user_session.user_key, referer_url, progress_callback)
         end
 

@@ -229,20 +229,16 @@ function Api.login(email, password, is_retry)
     logger.info(string.format("Zlibrary:Api.login - START"))
     local result = { user_id = nil, user_key = nil, error = nil }
 
-    local rpc_url = Config.getRpcUrl()
-    if not rpc_url then
+    local login_url = Config.getLoginUrl()
+    if not login_url then
         result.error = T("The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings.")
         logger.err(string.format("Zlibrary:Api.login - END (Configuration error) - Error: %s", result.error))
         return result
     end
 
     local body_data = {
-        isModal = "true",
-        email = email,
-        password = password,
-        site_mode = "books",
-        action = "login",
-        gg_json_mode = "1"
+        email = email or "",
+        password = password or "",
     }
     local body_parts = {}
     for k, v in pairs(body_data) do
@@ -251,7 +247,7 @@ function Api.login(email, password, is_retry)
     local body = table.concat(body_parts, "&")
 
     local http_result = Api.makeHttpRequest{
-        url = rpc_url,
+        url = login_url,
         method = "POST",
         headers = {
             ["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8",
@@ -266,7 +262,7 @@ function Api.login(email, password, is_retry)
         redirect = false,
     }
 
-    local check_result = _checkAndHandleRedirect(is_retry, http_result.status_code, rpc_url)
+    local check_result = _checkAndHandleRedirect(is_retry, http_result.status_code, login_url)
     if check_result.has_redirect then
         if check_result.real_url then
             return Api.login(email, password, true)
@@ -289,12 +285,21 @@ function Api.login(email, password, is_retry)
         return result
     end
 
-    local session = data.response or {}
-    local user_id = tostring(session.user_id or "")
-    local user_key = session.user_key or ""
+    local success_flag = tonumber(data.success) or 0
+    local session = data.user or data.response or {}
+
+    if success_flag ~= 1 or type(session) ~= "table" then
+        local api_message = (session and session.message) or data.message or (data.error and (data.error.message or data.error))
+        result.error = T("Login failed") .. (api_message and (": " .. api_message) or "")
+        logger.warn(string.format("Zlibrary:Api.login - END (API error) - Error: %s", result.error))
+        return result
+    end
+
+    local user_id = tostring(session.id or session.user_id or "")
+    local user_key = session.remix_userkey or session.user_key or ""
 
     if user_id == "" or user_key == "" then
-        result.error = T("Login failed") .. ": " .. (session.message or T("Credentials rejected or invalid response"))
+        result.error = T("Login failed") .. ": " .. (session.message or data.message or T("Credentials rejected or invalid response"))
         logger.warn(string.format("Zlibrary:Api.login - END (Credentials error) - Error: %s", result.error))
         return result
     end
@@ -680,6 +685,69 @@ function Api.getBookDetails(user_id, user_key, book_id, book_hash)
     end
 
     return { book = transformed_book }
+end
+
+function Api.getDownloadLink(user_id, user_key, book_id, book_hash)
+    local url = Config.getDownloadLinkUrl(book_id, book_hash)
+    if not url then
+        logger.warn("Api.getDownloadLink - URL could not be constructed. Base URL configured? Book ID/Hash provided?")
+        return { error = T("Z-library server URL not configured or book identifiers missing.") }
+    end
+
+    local headers = {
+        ["User-Agent"] = Config.USER_AGENT,
+        ['Content-Type'] = 'application/x-www-form-urlencoded',
+    }
+    if user_id and user_key then
+        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
+    end
+
+    local http_result = Api.makeHttpRequest{
+        url = url,
+        method = "GET",
+        headers = headers,
+        timeout = Config.getBookDetailsTimeout(),
+        getRedirectedUrl = function()
+            return Config.getDownloadLinkUrl(book_id, book_hash)
+        end,
+    }
+
+    if http_result.error then
+        logger.warn("Api.getDownloadLink - HTTP request error: ", http_result.error)
+        return { error = http_result.error }
+    end
+
+    if not http_result.body then
+        logger.warn("Api.getDownloadLink - No response body")
+        return { error = T("Failed to fetch download link (no response body).") }
+    end
+
+    local success, data = pcall(json.decode, http_result.body, json.decode.simple)
+    if not success or not data then
+        logger.warn("Api.getDownloadLink - Failed to decode JSON: ", http_result.body)
+        return { error = T("Failed to parse download link response.") }
+    end
+
+    if data.success ~= 1 or not data.file then
+        logger.warn("Api.getDownloadLink - API error: ", http_result.body)
+        return { error = data.message or T("API returned an error for download link.") }
+    end
+
+    local file_data = data.file
+    local download_link = file_data.downloadLink
+    
+    if not download_link then
+        logger.warn("Api.getDownloadLink - No download link in response: ", http_result.body)
+        return { error = T("No download link provided in API response.") }
+    end
+
+    return {
+        download_link = download_link,
+        description = file_data.description,
+        author = file_data.author,
+        extension = file_data.extension,
+        allow_download = file_data.allowDownload,
+    }
 end
 
 function Api.getSimilarBooks(user_id, user_key, book_id, book_hash)

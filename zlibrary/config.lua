@@ -204,10 +204,10 @@ function Config.setAndValidateBaseUrl(url_string)
     return true, nil
 end
 
-function Config.getRpcUrl()
+function Config.getLoginUrl()
     local base = Config.getBaseUrl()
     if not base then return nil end
-    return base .. "/rpc.php"
+    return base .. "/eapi/user/login"
 end
 
 function Config.getSearchUrl(query)
@@ -236,6 +236,12 @@ function Config.getBookDetailsUrl(book_id, book_hash)
     local base = Config.getBaseUrl()
     if not base or not book_id or not book_hash then return nil end
     return base .. string.format("/eapi/book/%s/%s", book_id, book_hash)
+end
+
+function Config.getDownloadLinkUrl(book_id, book_hash)
+    local base = Config.getBaseUrl()
+    if not base or not book_id or not book_hash then return nil end
+    return base .. string.format("/eapi/book/%s/%s/file", book_id, book_hash)
 end
 
 function Config.getSimilarBooksUrl(book_id, book_hash)

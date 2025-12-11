@@ -1052,12 +1052,12 @@ function Api.getFavoriteBookIds(user_id, user_key)
         return { error = T("Failed to parse favorite-book IDs.") }
     end
     
-    if not (data.success == 1 and data.list) then
+    if not (data.success == 1 and data.books) then
         logger.warn("Api.getFavoriteBookIds - API error: ", http_result.body)
         return { error = data.message or T("API returned an error for favorite-book IDs.") }
     end
     
-    return { list = data.list }
+    return { books = data.books }
 end
 
 function Api.favoriteBook(user_id, user_key, book_stub)

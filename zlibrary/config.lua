@@ -284,7 +284,8 @@ end
 
 function Config.getFavoriteBookIdsUrl()
     local base = Config.getBaseUrl()
-    return base and (base .. "/papi/my-library/saved-book-ids")
+    local limit = Config.SEARCH_RESULTS_LIMIT
+    return base and (base .. "/eapi/user/book/saved?order=saved_date&page=1&limit=" .. limit)
 end
 
 function Config.getUnFavoriteUrl(book_id)

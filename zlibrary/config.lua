@@ -238,6 +238,12 @@ function Config.getBookDetailsUrl(book_id, book_hash)
     return base .. string.format("/eapi/book/%s/%s", book_id, book_hash)
 end
 
+function Config.getDownloadLinkUrl(book_id, book_hash)
+    local base = Config.getBaseUrl()
+    if not base or not book_id or not book_hash then return nil end
+    return base .. string.format("/eapi/book/%s/%s/file", book_id, book_hash)
+end
+
 function Config.getSimilarBooksUrl(book_id, book_hash)
     local base = Config.getBaseUrl()
     if not base or not book_id or not book_hash then return nil end

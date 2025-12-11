@@ -687,6 +687,69 @@ function Api.getBookDetails(user_id, user_key, book_id, book_hash)
     return { book = transformed_book }
 end
 
+function Api.getDownloadLink(user_id, user_key, book_id, book_hash)
+    local url = Config.getDownloadLinkUrl(book_id, book_hash)
+    if not url then
+        logger.warn("Api.getDownloadLink - URL could not be constructed. Base URL configured? Book ID/Hash provided?")
+        return { error = T("Z-library server URL not configured or book identifiers missing.") }
+    end
+
+    local headers = {
+        ["User-Agent"] = Config.USER_AGENT,
+        ['Content-Type'] = 'application/x-www-form-urlencoded',
+    }
+    if user_id and user_key then
+        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
+    end
+
+    local http_result = Api.makeHttpRequest{
+        url = url,
+        method = "GET",
+        headers = headers,
+        timeout = Config.getBookDetailsTimeout(),
+        getRedirectedUrl = function()
+            return Config.getDownloadLinkUrl(book_id, book_hash)
+        end,
+    }
+
+    if http_result.error then
+        logger.warn("Api.getDownloadLink - HTTP request error: ", http_result.error)
+        return { error = http_result.error }
+    end
+
+    if not http_result.body then
+        logger.warn("Api.getDownloadLink - No response body")
+        return { error = T("Failed to fetch download link (no response body).") }
+    end
+
+    local success, data = pcall(json.decode, http_result.body, json.decode.simple)
+    if not success or not data then
+        logger.warn("Api.getDownloadLink - Failed to decode JSON: ", http_result.body)
+        return { error = T("Failed to parse download link response.") }
+    end
+
+    if data.success ~= 1 or not data.file then
+        logger.warn("Api.getDownloadLink - API error: ", http_result.body)
+        return { error = data.message or T("API returned an error for download link.") }
+    end
+
+    local file_data = data.file
+    local download_link = file_data.downloadLink
+    
+    if not download_link then
+        logger.warn("Api.getDownloadLink - No download link in response: ", http_result.body)
+        return { error = T("No download link provided in API response.") }
+    end
+
+    return {
+        download_link = download_link,
+        description = file_data.description,
+        author = file_data.author,
+        extension = file_data.extension,
+        allow_download = file_data.allowDownload,
+    }
+end
+
 function Api.getSimilarBooks(user_id, user_key, book_id, book_hash)
     local url = Config.getSimilarBooksUrl(book_id, book_hash)
     if not url then

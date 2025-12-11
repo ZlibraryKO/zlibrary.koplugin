@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-24 17:53+0000\n"
+"POT-Creation-Date: 2025-12-11 09:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese <zh@li.org>\n"
@@ -247,8 +247,8 @@ msgstr "加載更多結果失敗"
 msgid "No more results found."
 msgstr "沒有更多結果。"
 
-msgid "No download link available for this book."
-msgstr "此書籍無下載鏈接。"
+msgid "Book identifiers missing. Cannot download."
+msgstr ""
 
 #, lua-format
 msgid "Cannot create downloads directory: %s"
@@ -352,6 +352,18 @@ msgstr "API返回書籍詳情錯誤。"
 
 msgid "Failed to process book details."
 msgstr "處理書籍詳情失敗。"
+
+msgid "Failed to fetch download link (no response body)."
+msgstr ""
+
+msgid "Failed to parse download link response."
+msgstr ""
+
+msgid "API returned an error for download link."
+msgstr ""
+
+msgid "No download link provided in API response."
+msgstr ""
 
 msgid "Failed to fetch similar books (no response body)."
 msgstr ""
@@ -788,6 +800,9 @@ msgstr "所有逾時設定已重設為預設值"
 
 msgid "Timeout Settings"
 msgstr "逾時設定"
+
+#~ msgid "No download link available for this book."
+#~ msgstr "此書籍無下載鏈接。"
 
 #~ msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
 #~ msgstr "未找到推薦書籍，請重試。有時需要多次嘗試。"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-24 17:53+0000\n"
+"POT-Creation-Date: 2025-12-11 09:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -247,8 +247,8 @@ msgstr "No se pudieron cargar más resultados"
 msgid "No more results found."
 msgstr "No se encontraron más resultados."
 
-msgid "No download link available for this book."
-msgstr "No hay enlace de descarga disponible para este libro."
+msgid "Book identifiers missing. Cannot download."
+msgstr ""
 
 #, lua-format
 msgid "Cannot create downloads directory: %s"
@@ -352,6 +352,18 @@ msgstr "La API devolvió un error para los detalles del libro."
 
 msgid "Failed to process book details."
 msgstr "Error al procesar los detalles del libro."
+
+msgid "Failed to fetch download link (no response body)."
+msgstr ""
+
+msgid "Failed to parse download link response."
+msgstr ""
+
+msgid "API returned an error for download link."
+msgstr ""
+
+msgid "No download link provided in API response."
+msgstr ""
 
 msgid "Failed to fetch similar books (no response body)."
 msgstr ""
@@ -788,6 +800,9 @@ msgstr "Todas las configuraciones de tiempo límite restablecidas a valores pred
 
 msgid "Timeout Settings"
 msgstr "Configuración de tiempos límite"
+
+#~ msgid "No download link available for this book."
+#~ msgstr "No hay enlace de descarga disponible para este libro."
 
 #~ msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
 #~ msgstr "No se encontraron libros recomendados, por favor, intente de nuevo. A veces esto requiere un par de reintentos."

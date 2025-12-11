@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-24 17:53+0000\n"
+"POT-Creation-Date: 2025-12-11 09:56+0000\n"
 "PO-Revision-Date: 2025-05-28 15:14-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -248,8 +248,8 @@ msgstr "Falha ao carregar mais resultados"
 msgid "No more results found."
 msgstr "Nenhum outro resultado encontrado."
 
-msgid "No download link available for this book."
-msgstr "Nenhum link de download disponível para este livro."
+msgid "Book identifiers missing. Cannot download."
+msgstr ""
 
 #, lua-format
 msgid "Cannot create downloads directory: %s"
@@ -353,6 +353,18 @@ msgstr "A API retornou um erro para os detalhes do livro."
 
 msgid "Failed to process book details."
 msgstr "Falha ao processar os detalhes do livro."
+
+msgid "Failed to fetch download link (no response body)."
+msgstr ""
+
+msgid "Failed to parse download link response."
+msgstr ""
+
+msgid "API returned an error for download link."
+msgstr ""
+
+msgid "No download link provided in API response."
+msgstr ""
 
 msgid "Failed to fetch similar books (no response body)."
 msgstr ""
@@ -789,6 +801,9 @@ msgstr "Todas as configurações de timeout restauradas para padrão"
 
 msgid "Timeout Settings"
 msgstr "Configurações de timeout"
+
+#~ msgid "No download link available for this book."
+#~ msgstr "Nenhum link de download disponível para este livro."
 
 #~ msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
 #~ msgstr "Nenhum livro recomendado encontrado, por favor tente novamente. Às vezes é necessário tentar mais de uma vez."

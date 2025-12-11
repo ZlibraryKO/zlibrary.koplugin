@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-24 17:53+0000\n"
+"POT-Creation-Date: 2025-12-11 09:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -247,8 +247,8 @@ msgstr "Не удалось загрузить дополнительные ре
 msgid "No more results found."
 msgstr "Больше результатов не найдено."
 
-msgid "No download link available for this book."
-msgstr "Для этой книги нет доступной ссылки для скачивания."
+msgid "Book identifiers missing. Cannot download."
+msgstr ""
 
 #, lua-format
 msgid "Cannot create downloads directory: %s"
@@ -352,6 +352,18 @@ msgstr "API вернул ошибку для деталей книги."
 
 msgid "Failed to process book details."
 msgstr "Не удалось обработать детали книги."
+
+msgid "Failed to fetch download link (no response body)."
+msgstr ""
+
+msgid "Failed to parse download link response."
+msgstr ""
+
+msgid "API returned an error for download link."
+msgstr ""
+
+msgid "No download link provided in API response."
+msgstr ""
 
 msgid "Failed to fetch similar books (no response body)."
 msgstr ""
@@ -788,6 +800,9 @@ msgstr "Все настройки таймаута сброшены к знач�
 
 msgid "Timeout Settings"
 msgstr "Настройки таймаута"
+
+#~ msgid "No download link available for this book."
+#~ msgstr "Для этой книги нет доступной ссылки для скачивания."
 
 #~ msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
 #~ msgstr "Рекомендуемые книги не найдены, попробуйте еще раз. Иногда требуется несколько попыток."

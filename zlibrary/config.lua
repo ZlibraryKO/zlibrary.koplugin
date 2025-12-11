@@ -204,10 +204,10 @@ function Config.setAndValidateBaseUrl(url_string)
     return true, nil
 end
 
-function Config.getRpcUrl()
+function Config.getLoginUrl()
     local base = Config.getBaseUrl()
     if not base then return nil end
-    return base .. "/rpc.php"
+    return base .. "/eapi/user/login"
 end
 
 function Config.getSearchUrl(query)

@@ -229,20 +229,16 @@ function Api.login(email, password, is_retry)
     logger.info(string.format("Zlibrary:Api.login - START"))
     local result = { user_id = nil, user_key = nil, error = nil }
 
-    local rpc_url = Config.getRpcUrl()
-    if not rpc_url then
+    local login_url = Config.getLoginUrl()
+    if not login_url then
         result.error = T("The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings.")
         logger.err(string.format("Zlibrary:Api.login - END (Configuration error) - Error: %s", result.error))
         return result
     end
 
     local body_data = {
-        isModal = "true",
-        email = email,
-        password = password,
-        site_mode = "books",
-        action = "login",
-        gg_json_mode = "1"
+        email = email or "",
+        password = password or "",
     }
     local body_parts = {}
     for k, v in pairs(body_data) do
@@ -251,7 +247,7 @@ function Api.login(email, password, is_retry)
     local body = table.concat(body_parts, "&")
 
     local http_result = Api.makeHttpRequest{
-        url = rpc_url,
+        url = login_url,
         method = "POST",
         headers = {
             ["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8",
@@ -266,7 +262,7 @@ function Api.login(email, password, is_retry)
         redirect = false,
     }
 
-    local check_result = _checkAndHandleRedirect(is_retry, http_result.status_code, rpc_url)
+    local check_result = _checkAndHandleRedirect(is_retry, http_result.status_code, login_url)
     if check_result.has_redirect then
         if check_result.real_url then
             return Api.login(email, password, true)
@@ -289,12 +285,21 @@ function Api.login(email, password, is_retry)
         return result
     end
 
-    local session = data.response or {}
-    local user_id = tostring(session.user_id or "")
-    local user_key = session.user_key or ""
+    local success_flag = tonumber(data.success) or 0
+    local session = data.user or data.response or {}
+
+    if success_flag ~= 1 or type(session) ~= "table" then
+        local api_message = (session and session.message) or data.message or (data.error and (data.error.message or data.error))
+        result.error = T("Login failed") .. (api_message and (": " .. api_message) or "")
+        logger.warn(string.format("Zlibrary:Api.login - END (API error) - Error: %s", result.error))
+        return result
+    end
+
+    local user_id = tostring(session.id or session.user_id or "")
+    local user_key = session.remix_userkey or session.user_key or ""
 
     if user_id == "" or user_key == "" then
-        result.error = T("Login failed") .. ": " .. (session.message or T("Credentials rejected or invalid response"))
+        result.error = T("Login failed") .. ": " .. (session.message or data.message or T("Credentials rejected or invalid response"))
         logger.warn(string.format("Zlibrary:Api.login - END (Credentials error) - Error: %s", result.error))
         return result
     end

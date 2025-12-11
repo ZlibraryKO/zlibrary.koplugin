@@ -476,12 +476,11 @@ function Zlibrary:validateFavoriteBookIds(callback)
 
     local refresh_favorited_book_ids = function(ui_self, api_result, plugin_self)
 
-        -- Favorites list empty (#list == 0) is still success
-        if type(api_result) == "table" and type(api_result.list) == "table" then
-
+        -- Favorites list empty is still success
+        if type(api_result) == "table" and type(api_result.books) == "table" then
             local book_ids = {}
-            for _, book_id in ipairs(api_result.list) do
-                book_ids[tostring(book_id)] = true
+            for _, book in ipairs(api_result.books) do
+                book_ids[tostring(book.id)] = true
             end
 
             -- Allow favorites to be empty in cache

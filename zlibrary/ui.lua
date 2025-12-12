@@ -276,11 +276,12 @@ function Ui.showOrdersSelectionDialog(parent_ui, ok_callback)
     _showRadioSelectionDialog(parent_ui, T("Select search order"), Config.SETTINGS_SEARCH_ORDERS_KEY, Config.SUPPORTED_ORDERS, ok_callback)
 end
 
-function Ui.showGenericInputDialog(title, setting_key, current_value_or_default, is_password, validate_and_save_callback)
+function Ui.showGenericInputDialog(title, setting_key, current_value_or_default, is_password, validate_and_save_callback, description)
     local dialog
 
     dialog = InputDialog:new{
         title = title,
+        description = description,
         input = current_value_or_default or "",
         text_type = is_password and "password" or nil,
         buttons = {{

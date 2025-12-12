@@ -79,6 +79,7 @@ function Zlibrary:addToMainMenu(menu_items)
                             text = T("Set base URL"),
                             keep_menu_open = true,
                             callback = function()
+                                local real_url = Config.getCacheRealUrl()
                                 Ui.showGenericInputDialog(
                                     T("Set base URL"),
                                     Config.SETTINGS_BASE_URL_KEY,
@@ -91,7 +92,8 @@ function Zlibrary:addToMainMenu(menu_items)
                                             return false
                                         end
                                         return true
-                                    end
+                                    end,
+                                    real_url and string.format(T("*Current base URL redirected to %s. Click Set to update the target."), real_url)
                                 )
                             end,
                             separator = true,
@@ -743,7 +745,7 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
     local book_cache = Cache:new{
             name = string.format("%s_%s", book_stub.id, book_stub.hash)
     }
-    local book_details_cache = book_cache:get("details")
+    local book_details_cache = book_cache:get("details", 1800)
 
     if type(book_details_cache) == "table" and book_details_cache.title then
         Ui.showBookDetails(self, book_details_cache, function()

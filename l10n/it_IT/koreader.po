@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-11 14:22+0000\n"
+"POT-Creation-Date: 2026-01-03 09:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -101,9 +101,6 @@ msgstr "Più popolari"
 
 msgid "My books"
 msgstr ""
-
-msgid "No internet connection detected."
-msgstr "Nessuna connessione internet rilevata."
 
 msgid "Operation"
 msgstr ""
@@ -287,10 +284,16 @@ msgstr ""
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr ""
 
+msgid "Login failed: Empty response from server"
+msgstr ""
+
 msgid "Login failed: Invalid response format"
 msgstr ""
 
 msgid "Login failed"
+msgstr ""
+
+msgid "Login failed: Invalid session data"
 msgstr ""
 
 msgid "Credentials rejected or invalid response"
@@ -476,9 +479,6 @@ msgstr "Installazione aggiornamento fallita."
 
 msgid "Update installed successfully. Please restart KOReader for changes to take effect."
 msgstr "Aggiornamento installato con successo. Riavvia KOReader affinché le modifiche abbiano effetto."
-
-msgid "No internet connection detected. Please connect to the internet and try again."
-msgstr "Nessuna connessione internet rilevata. Connettiti a internet e riprova."
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "Verifica aggiornamenti fallita: Impossibile determinare la posizione del plugin."
@@ -800,6 +800,12 @@ msgstr "Tutte le impostazioni timeout ripristinate ai valori predefiniti"
 
 msgid "Timeout Settings"
 msgstr "Impostazioni timeout"
+
+#~ msgid "No internet connection detected."
+#~ msgstr "Nessuna connessione internet rilevata."
+
+#~ msgid "No internet connection detected. Please connect to the internet and try again."
+#~ msgstr "Nessuna connessione internet rilevata. Connettiti a internet e riprova."
 
 #~ msgid "No download link available for this book."
 #~ msgstr "Nessun link di download disponibile per questo libro."

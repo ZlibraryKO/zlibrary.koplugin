@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-11 14:22+0000\n"
+"POT-Creation-Date: 2026-01-03 09:28+0000\n"
 "PO-Revision-Date: 2025-05-28 15:14-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -102,9 +102,6 @@ msgstr "Mais populares"
 
 msgid "My books"
 msgstr ""
-
-msgid "No internet connection detected."
-msgstr "Nenhuma conexão com a internet detectada."
 
 msgid "Operation"
 msgstr ""
@@ -288,10 +285,16 @@ msgstr ""
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr ""
 
+msgid "Login failed: Empty response from server"
+msgstr ""
+
 msgid "Login failed: Invalid response format"
 msgstr ""
 
 msgid "Login failed"
+msgstr ""
+
+msgid "Login failed: Invalid session data"
 msgstr ""
 
 msgid "Credentials rejected or invalid response"
@@ -477,9 +480,6 @@ msgstr "A instalação da atualização falhou."
 
 msgid "Update installed successfully. Please restart KOReader for changes to take effect."
 msgstr "Atualização instalada com sucesso. Por favor, reinicie o KOReader para que as alterações tenham efeito."
-
-msgid "No internet connection detected. Please connect to the internet and try again."
-msgstr "Nenhuma conexão com a internet detectada. Por favor, conecte-se à internet e tente novamente."
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "Falha na verificação de atualização: Não foi possível determinar a localização do plugin."
@@ -801,6 +801,12 @@ msgstr "Todas as configurações de timeout restauradas para padrão"
 
 msgid "Timeout Settings"
 msgstr "Configurações de timeout"
+
+#~ msgid "No internet connection detected."
+#~ msgstr "Nenhuma conexão com a internet detectada."
+
+#~ msgid "No internet connection detected. Please connect to the internet and try again."
+#~ msgstr "Nenhuma conexão com a internet detectada. Por favor, conecte-se à internet e tente novamente."
 
 #~ msgid "No download link available for this book."
 #~ msgstr "Nenhum link de download disponível para este livro."

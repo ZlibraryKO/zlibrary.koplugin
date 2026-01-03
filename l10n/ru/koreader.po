@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-11 14:22+0000\n"
+"POT-Creation-Date: 2026-01-03 09:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -101,9 +101,6 @@ msgstr "Популярные"
 
 msgid "My books"
 msgstr ""
-
-msgid "No internet connection detected."
-msgstr "Интернет-соединение не обнаружено."
 
 msgid "Operation"
 msgstr ""
@@ -287,10 +284,16 @@ msgstr ""
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr ""
 
+msgid "Login failed: Empty response from server"
+msgstr ""
+
 msgid "Login failed: Invalid response format"
 msgstr ""
 
 msgid "Login failed"
+msgstr ""
+
+msgid "Login failed: Invalid session data"
 msgstr ""
 
 msgid "Credentials rejected or invalid response"
@@ -476,9 +479,6 @@ msgstr "Ошибка установки обновления."
 
 msgid "Update installed successfully. Please restart KOReader for changes to take effect."
 msgstr "Обновление успешно установлено. Перезапустите KOReader для применения изменений."
-
-msgid "No internet connection detected. Please connect to the internet and try again."
-msgstr "Интернет-соединение не обнаружено. Пожалуйста, подключитесь к интернету и попробуйте снова."
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "Ошибка проверки обновлений: Не удалось определить расположение плагина."
@@ -800,6 +800,12 @@ msgstr "Все настройки таймаута сброшены к знач�
 
 msgid "Timeout Settings"
 msgstr "Настройки таймаута"
+
+#~ msgid "No internet connection detected."
+#~ msgstr "Интернет-соединение не обнаружено."
+
+#~ msgid "No internet connection detected. Please connect to the internet and try again."
+#~ msgstr "Интернет-соединение не обнаружено. Пожалуйста, подключитесь к интернету и попробуйте снова."
 
 #~ msgid "No download link available for this book."
 #~ msgstr "Для этой книги нет доступной ссылки для скачивания."

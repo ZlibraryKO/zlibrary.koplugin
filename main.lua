@@ -258,7 +258,6 @@ function Zlibrary:addToMainMenu(menu_items)
 end
 
 function Zlibrary:_requestDispatcher(options, ...)
-    
     if type(options.resolve_result) ~= "function" then
         logger.err("Zlibrary:%s - Fetch resolve_result undefined", options.log_context)
         return
@@ -272,12 +271,13 @@ function Zlibrary:_requestDispatcher(options, ...)
         end)
     end
 
-    if not NetworkMgr:isOnline() then
-        Ui.showErrorMessage(T("No internet connection detected."))
+    local api_extra_params = {...}
+
+    if NetworkMgr:willRerunWhenOnline(function()
+        self:_requestDispatcher(options, table.unpack(api_extra_params))
+    end) then
         return on_finally and on_finally(false)
     end
-
-    local api_extra_params = {...}
 
     local function attemptFetch(retry_on_auth_error)
         retry_on_auth_error = retry_on_auth_error == nil and true or retry_on_auth_error
@@ -505,7 +505,6 @@ function Zlibrary:validateFavoriteBookIds(callback)
 end
 
 function Zlibrary:showMyBooksDialog(def_position, def_search_input)
-
         local datetime = require("datetime")
         local my_books_dialog
         
@@ -775,8 +774,9 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
 end
 
 function Zlibrary:onSelectSearchBook(book_data)
-    if not NetworkMgr:isOnline() then
-        Ui.showErrorMessage(T("No internet connection detected."))
+    if NetworkMgr:willRerunWhenOnline(function()
+        self:onSelectSearchBook(book_data)
+    end) then
         return
     end
 
@@ -830,9 +830,9 @@ function Zlibrary:onSelectSearchBook(book_data)
 end
 
 function Zlibrary:login(callback)
-    if not NetworkMgr:isOnline() then
-        Ui.showErrorMessage(T("No internet connection detected."))
-        if callback then callback(false) end
+    if NetworkMgr:willRerunWhenOnline(function()
+        self:login(callback)
+    end) then
         return
     end
 
@@ -876,8 +876,9 @@ function Zlibrary:login(callback)
 end
 
 function Zlibrary:performSearch(query)
-    if not NetworkMgr:isOnline() then
-        Ui.showErrorMessage(T("No internet connection detected."))
+    if NetworkMgr:willRerunWhenOnline(function()
+        self:performSearch(query)
+    end) then
         return
     end
 
@@ -1062,8 +1063,9 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
 end
 
 function Zlibrary:downloadBook(book)
-    if not NetworkMgr:isOnline() then
-        Ui.showErrorMessage(T("No internet connection detected."))
+    if NetworkMgr:willRerunWhenOnline(function()
+        self:downloadBook(book)
+    end) then
         return
     end
 

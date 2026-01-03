@@ -18,7 +18,7 @@ function Api.isAuthenticationError(error_message)
     local error_str = tostring(error_message)
 
     if string.find(error_str, "Please login", 1, true) ~= nil or 
-       string.find(error_str, "Invalid credentials", 1, true) ~= nil then
+       string.find(error_str, "Incorrect email or password", 1, true) ~= nil then
         return true
     end
     
@@ -271,16 +271,16 @@ function Api.login(email, password, is_retry)
         end
     end
 
-    if http_result.error then
-        result.error = http_result.error
-        logger.err(string.format("Zlibrary:Api.login - END (HTTP error) - Error: %s", result.error))
+    if not http_result.body or http_result.body == "" then
+        result.error = http_result.error or T("Login failed: Empty response from server")
+        logger.err(string.format("Zlibrary:Api.login - END (Empty body) - Error: %s", result.error))
         return result
     end
 
     local data, _, err_msg = json.decode(http_result.body)
 
     if not data or type(data) ~= "table" then
-        result.error = T("Login failed: Invalid response format") .. (err_msg and (". " .. err_msg) or "")
+        result.error = http_result.error or (T("Login failed: Invalid response format") .. (err_msg and (". " .. err_msg) or ""))
         logger.err(string.format("Zlibrary:Api.login - END (JSON error) - Error: %s", result.error))
         return result
     end
@@ -288,10 +288,18 @@ function Api.login(email, password, is_retry)
     local success_flag = tonumber(data.success) or 0
     local session = data.user or data.response or {}
 
-    if success_flag ~= 1 or type(session) ~= "table" then
-        local api_message = (session and session.message) or data.message or (data.error and (data.error.message or data.error))
-        result.error = T("Login failed") .. (api_message and (": " .. api_message) or "")
+    if success_flag ~= 1 then
+        local api_message = data.error or
+                           (type(session) == "table" and session.message) or
+                           data.message
+        result.error = api_message and tostring(api_message) or (http_result.error or T("Login failed"))
         logger.warn(string.format("Zlibrary:Api.login - END (API error) - Error: %s", result.error))
+        return result
+    end
+
+    if type(session) ~= "table" then
+        result.error = T("Login failed: Invalid session data")
+        logger.warn(string.format("Zlibrary:Api.login - END (Session error) - Error: %s", result.error))
         return result
     end
 

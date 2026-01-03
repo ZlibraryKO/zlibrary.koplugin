@@ -31,7 +31,7 @@ function AsyncHelper.run(task_func, on_success, on_error, loading_msg_widget_to_
         local co_resume_success, returned_value = coroutine.resume(co)
 
         if not co_resume_success then
-            logger.err("AsyncHelper.run - Coroutine resumption failed: %s", tostring(returned_value))
+            logger.err(string.format("AsyncHelper.run - Coroutine resumption failed: %s", tostring(returned_value)))
             close_loading_message()
             if on_error then on_error("AsyncHelper: Coroutine resumption failed: " .. tostring(returned_value)) end
             return
@@ -43,14 +43,14 @@ function AsyncHelper.run(task_func, on_success, on_error, loading_msg_widget_to_
             if returned_value.ok then
                 logger.dbg("AsyncHelper.run - Task successful.")
                 if returned_value.data and returned_value.data.error then
-                    logger.err("AsyncHelper.run - Task error: %s", tostring(returned_value.data.error))
+                    logger.err(string.format("AsyncHelper.run - Task error: %s", tostring(returned_value.data.error)))
                     if on_error then on_error(tostring(returned_value.data.error)) end
                 else
                     logger.dbg("AsyncHelper.run - Calling on_success callback.")
                     if on_success then on_success(returned_value.data) end
                 end
             else
-                logger.err("AsyncHelper.run - Task failed: %s", tostring(returned_value.error))
+                logger.err(string.format("AsyncHelper.run - Task failed: %s", tostring(returned_value.error)))
                 if on_error then on_error(tostring(returned_value.error)) end
             end
         else

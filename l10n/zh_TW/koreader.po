@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-11 14:22+0000\n"
+"POT-Creation-Date: 2026-01-03 09:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese <zh@li.org>\n"
@@ -101,9 +101,6 @@ msgstr "最熱門"
 
 msgid "My books"
 msgstr ""
-
-msgid "No internet connection detected."
-msgstr "未檢測到網絡連接。"
 
 msgid "Operation"
 msgstr ""
@@ -287,10 +284,16 @@ msgstr ""
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr ""
 
+msgid "Login failed: Empty response from server"
+msgstr ""
+
 msgid "Login failed: Invalid response format"
 msgstr ""
 
 msgid "Login failed"
+msgstr ""
+
+msgid "Login failed: Invalid session data"
 msgstr ""
 
 msgid "Credentials rejected or invalid response"
@@ -476,9 +479,6 @@ msgstr "更新安裝失敗。"
 
 msgid "Update installed successfully. Please restart KOReader for changes to take effect."
 msgstr "更新安裝成功。請重啟KOReader使更改生效。"
-
-msgid "No internet connection detected. Please connect to the internet and try again."
-msgstr "未檢測到網絡連接。請連接網絡後重試。"
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "更新檢查失敗：無法確定插件位置。"
@@ -800,6 +800,12 @@ msgstr "所有逾時設定已重設為預設值"
 
 msgid "Timeout Settings"
 msgstr "逾時設定"
+
+#~ msgid "No internet connection detected."
+#~ msgstr "未檢測到網絡連接。"
+
+#~ msgid "No internet connection detected. Please connect to the internet and try again."
+#~ msgstr "未檢測到網絡連接。請連接網絡後重試。"
 
 #~ msgid "No download link available for this book."
 #~ msgstr "此書籍無下載鏈接。"

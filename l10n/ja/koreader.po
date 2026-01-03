@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-11 14:22+0000\n"
+"POT-Creation-Date: 2026-01-03 09:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -101,9 +101,6 @@ msgstr "人気順"
 
 msgid "My books"
 msgstr ""
-
-msgid "No internet connection detected."
-msgstr "インターネット接続が検出されません。"
 
 msgid "Operation"
 msgstr ""
@@ -287,10 +284,16 @@ msgstr ""
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr ""
 
+msgid "Login failed: Empty response from server"
+msgstr ""
+
 msgid "Login failed: Invalid response format"
 msgstr ""
 
 msgid "Login failed"
+msgstr ""
+
+msgid "Login failed: Invalid session data"
 msgstr ""
 
 msgid "Credentials rejected or invalid response"
@@ -476,9 +479,6 @@ msgstr "アップデートのインストールに失敗しました。"
 
 msgid "Update installed successfully. Please restart KOReader for changes to take effect."
 msgstr "アップデートが正常にインストールされました。変更を有効にするにはKOReaderを再起動してください。"
-
-msgid "No internet connection detected. Please connect to the internet and try again."
-msgstr "インターネット接続が検出されません。接続して再試行してください。"
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "アップデートの確認に失敗しました：プラグインの場所が不明です。"
@@ -800,6 +800,12 @@ msgstr "すべてのタイムアウト設定をデフォルトにリセットし
 
 msgid "Timeout Settings"
 msgstr "タイムアウト設定"
+
+#~ msgid "No internet connection detected."
+#~ msgstr "インターネット接続が検出されません。"
+
+#~ msgid "No internet connection detected. Please connect to the internet and try again."
+#~ msgstr "インターネット接続が検出されません。接続して再試行してください。"
 
 #~ msgid "No download link available for this book."
 #~ msgstr "この書籍にはダウンロードリンクがありません。"

@@ -122,6 +122,27 @@ local function _checkAndHandleRedirect(skip_check, status_code, current_url)
     return result
 end
 
+local function _extractErrorFromJsonBody(body)
+    if not body or body == "" then
+        return nil
+    end
+    
+    local success, data = pcall(json.decode, body, json.decode.simple)
+    if success and type(data) == "table" then
+        if data.error then
+            if type(data.error) == "table" and data.error.message then
+                return tostring(data.error.message)
+            else
+                return tostring(data.error)
+            end
+        elseif data.message then
+            return tostring(data.message)
+        end
+    end
+    
+    return nil
+end
+
 function Api.makeHttpRequest(options)
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - START - URL: %s, Method: %s", options.url, options.method or "GET"))
     
@@ -216,7 +237,12 @@ function Api.makeHttpRequest(options)
 
     if result.status_code ~= 200 and result.status_code ~= 206 then
         if not result.error then
-            result.error = string.format("%s: %s (%s)", T("HTTP Error"), result.status_code, r_status_str or T("Unknown Status"))
+            local json_error = _extractErrorFromJsonBody(result.body)
+            if json_error then
+                result.error = json_error
+            else
+                result.error = string.format("%s: %s (%s)", T("HTTP Error"), result.status_code, r_status_str or T("Unknown Status"))
+            end
         end
     end
 

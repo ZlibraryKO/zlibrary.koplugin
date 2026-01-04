@@ -305,7 +305,9 @@ function Zlibrary:_requestDispatcher(options, ...)
                 if retry_on_auth_error and Api.isAuthenticationError(api_result.error) and options.requires_auth then
                     Ui.closeMessage(loading_msg)
                     self:login(function(login_ok)
-                        return login_ok and attemptFetch(false)
+                        if login_ok then
+                            attemptFetch(false)
+                        end
                     end)
                     return
                 end
@@ -326,7 +328,9 @@ function Zlibrary:_requestDispatcher(options, ...)
             if retry_on_auth_error and Api.isAuthenticationError(err_msg) and options.requires_auth then
                 Ui.closeMessage(loading_msg)
                 self:login(function(login_ok)
-                    return login_ok and attemptFetch(false)
+                    if login_ok then
+                        attemptFetch(false)
+                    end
                 end)
                 return
             end

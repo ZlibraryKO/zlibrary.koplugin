@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 09:47+0000\n"
+"POT-Creation-Date: 2026-01-17 10:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese <zh@li.org>\n"
@@ -21,11 +21,20 @@ msgstr "[[一個用於從Z-圖書館搜索和下載書籍的插件。]]"
 msgid "Z-library search"
 msgstr "Z-圖書館搜索"
 
+msgid "Network not available. Please connect and try again."
+msgstr "網路無法使用。請連線後再試一次。"
+
+msgid "Failed to discover a working base URL"
+msgstr ""
+
 msgid "Settings"
 msgstr "設置"
 
 msgid "Set base URL"
 msgstr "設置基礎網址"
+
+msgid "Invalid Base URL."
+msgstr "無效的基礎網址。"
 
 msgid "Auto-discover base URL"
 msgstr "自動發現基礎 URL"
@@ -41,15 +50,6 @@ msgstr "無法找到可用的基礎 URL。"
 
 msgid "Error during auto-discovery: "
 msgstr "自動發現時發生錯誤："
-
-msgid "Network not available. Please connect and try again."
-msgstr "網路無法使用。請連線後再試一次。"
-
-msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
-msgstr "無法找到可用的 Z-library 伺服器。請檢查您的網際網路連線或手動設定基礎 URL。"
-
-msgid "Invalid Base URL."
-msgstr "無效的基礎網址。"
 
 msgid "Set email"
 msgstr "設置電子郵件"
@@ -451,6 +451,9 @@ msgstr ""
 
 msgid "API returned an error for favorite book."
 msgstr ""
+
+msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
+msgstr "無法找到可用的 Z-library 伺服器。請檢查您的網際網路連線或手動設定基礎 URL。"
 
 msgid "Best match"
 msgstr ""

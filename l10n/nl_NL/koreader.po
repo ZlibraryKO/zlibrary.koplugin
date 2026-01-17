@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 09:47+0000\n"
+"POT-Creation-Date: 2026-01-17 10:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,11 +21,20 @@ msgstr "[[Een plugin om boeken te zoeken en te downloaden van Z-library.]]"
 msgid "Z-library search"
 msgstr "Z-library zoeken"
 
+msgid "Network not available. Please connect and try again."
+msgstr "Netwerk niet beschikbaar. Verbind en probeer opnieuw."
+
+msgid "Failed to discover a working base URL"
+msgstr ""
+
 msgid "Settings"
 msgstr "Instellingen"
 
 msgid "Set base URL"
 msgstr "Stel basis-URL in"
+
+msgid "Invalid Base URL."
+msgstr "Ongeldige basis-URL."
 
 msgid "Auto-discover base URL"
 msgstr "Basis-URL automatisch ontdekken"
@@ -41,15 +50,6 @@ msgstr "Kan geen werkende basis-URL vinden."
 
 msgid "Error during auto-discovery: "
 msgstr "Fout tijdens automatische ontdekking: "
-
-msgid "Network not available. Please connect and try again."
-msgstr "Netwerk niet beschikbaar. Verbind en probeer opnieuw."
-
-msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
-msgstr "Kan geen werkende Z-library server vinden. Controleer uw internetverbinding of stel de basis-URL handmatig in."
-
-msgid "Invalid Base URL."
-msgstr "Ongeldige basis-URL."
 
 msgid "Set email"
 msgstr "E-mailadres instellen"
@@ -451,6 +451,9 @@ msgstr ""
 
 msgid "API returned an error for favorite book."
 msgstr ""
+
+msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
+msgstr "Kan geen werkende Z-library server vinden. Controleer uw internetverbinding of stel de basis-URL handmatig in."
 
 msgid "Best match"
 msgstr ""

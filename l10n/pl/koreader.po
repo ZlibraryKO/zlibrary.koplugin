@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 09:47+0000\n"
+"POT-Creation-Date: 2026-01-17 10:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,11 +21,21 @@ msgstr "[[Wtyczka do wyszukiwania i pobierania książek z Z-library.]]"
 msgid "Z-library search"
 msgstr "Wyszukiwanie w Z-library"
 
+msgid "Network not available. Please connect and try again."
+msgstr "Sieć niedostępna. Połącz się i spróbuj ponownie."
+
+msgid "Failed to discover a working base URL"
+msgstr ""
+
 msgid "Settings"
 msgstr "Ustawienia"
 
 msgid "Set base URL"
 msgstr "Ustaw podstawowy adres URL"
+
+msgid "Invalid Base URL."
+msgstr "Nieprawidłowy podstawowy adres URL."
+
 msgid "Auto-discover base URL"
 msgstr "Automatyczne wykrywanie podstawowego URL"
 
@@ -40,14 +50,6 @@ msgstr "Nie udało się znaleźć działającego podstawowego URL."
 
 msgid "Error during auto-discovery: "
 msgstr "Błąd podczas automatycznego wykrywania: "
-
-msgid "Network not available. Please connect and try again."
-msgstr "Sieć niedostępna. Połącz się i spróbuj ponownie."
-
-msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
-msgstr "Nie można znaleźć działającego serwera Z-library. Sprawdź połączenie internetowe lub ustaw podstawowy URL ręcznie."
-msgid "Invalid Base URL."
-msgstr "Nieprawidłowy podstawowy adres URL."
 
 msgid "Set email"
 msgstr "Ustaw adres e-mail"
@@ -449,6 +451,9 @@ msgstr ""
 
 msgid "API returned an error for favorite book."
 msgstr ""
+
+msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
+msgstr "Nie można znaleźć działającego serwera Z-library. Sprawdź połączenie internetowe lub ustaw podstawowy URL ręcznie."
 
 msgid "Best match"
 msgstr ""

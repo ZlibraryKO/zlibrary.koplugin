@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 09:47+0000\n"
+"POT-Creation-Date: 2026-01-17 10:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -21,11 +21,20 @@ msgstr "[[Плагин для поиска и скачивания книг из
 msgid "Z-library search"
 msgstr "Поиск в Z-библиотеке"
 
+msgid "Network not available. Please connect and try again."
+msgstr "Сеть недоступна. Подключитесь и попробуйте снова."
+
+msgid "Failed to discover a working base URL"
+msgstr ""
+
 msgid "Settings"
 msgstr "Настройки"
 
 msgid "Set base URL"
 msgstr "Установить базовый URL"
+
+msgid "Invalid Base URL."
+msgstr "Некорректный базовый URL."
 
 msgid "Auto-discover base URL"
 msgstr "Автоматическое обнаружение базового URL"
@@ -41,15 +50,6 @@ msgstr "Не удалось найти рабочий базовый URL."
 
 msgid "Error during auto-discovery: "
 msgstr "Ошибка при автоматическом обнаружении: "
-
-msgid "Network not available. Please connect and try again."
-msgstr "Сеть недоступна. Подключитесь и попробуйте снова."
-
-msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
-msgstr "Не удалось найти работающий сервер Z-library. Проверьте подключение к интернету или установите базовый URL вручную."
-
-msgid "Invalid Base URL."
-msgstr "Некорректный базовый URL."
 
 msgid "Set email"
 msgstr "Установить email"
@@ -451,6 +451,9 @@ msgstr ""
 
 msgid "API returned an error for favorite book."
 msgstr ""
+
+msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
+msgstr "Не удалось найти работающий сервер Z-library. Проверьте подключение к интернету или установите базовый URL вручную."
 
 msgid "Best match"
 msgstr ""

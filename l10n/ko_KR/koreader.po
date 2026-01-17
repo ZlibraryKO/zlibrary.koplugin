@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 09:47+0000\n"
+"POT-Creation-Date: 2026-01-17 10:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,11 +21,20 @@ msgstr "[[Z-라이브러리에서 책을 검색하고 다운로드할 수 있는
 msgid "Z-library search"
 msgstr "Z-라이브러리 검색"
 
+msgid "Network not available. Please connect and try again."
+msgstr "네트워크를 사용할 수 없습니다. 연결 후 다시 시도하세요."
+
+msgid "Failed to discover a working base URL"
+msgstr ""
+
 msgid "Settings"
 msgstr "설정"
 
 msgid "Set base URL"
 msgstr "기본 URL 설정"
+
+msgid "Invalid Base URL."
+msgstr "잘못된 기본 URL입니다."
 
 msgid "Auto-discover base URL"
 msgstr "기본 URL 자동 검색"
@@ -41,15 +50,6 @@ msgstr "작동하는 기본 URL을 찾지 못했습니다."
 
 msgid "Error during auto-discovery: "
 msgstr "자동 검색 중 오류 발생: "
-
-msgid "Network not available. Please connect and try again."
-msgstr "네트워크를 사용할 수 없습니다. 연결 후 다시 시도하세요."
-
-msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
-msgstr "작동 중인 Z-library 서버를 찾을 수 없습니다. 인터넷 연결을 확인하거나 기본 URL을 수동으로 설정하세요."
-
-msgid "Invalid Base URL."
-msgstr "잘못된 기본 URL입니다."
 
 msgid "Set email"
 msgstr "이메일 설정"
@@ -451,6 +451,9 @@ msgstr ""
 
 msgid "API returned an error for favorite book."
 msgstr ""
+
+msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
+msgstr "작동 중인 Z-library 서버를 찾을 수 없습니다. 인터넷 연결을 확인하거나 기본 URL을 수동으로 설정하세요."
 
 msgid "Best match"
 msgstr ""

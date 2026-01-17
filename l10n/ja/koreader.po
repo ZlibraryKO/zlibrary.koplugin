@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 09:47+0000\n"
+"POT-Creation-Date: 2026-01-17 10:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,11 +21,20 @@ msgstr "[[Z-libraryから本を検索・ダウンロードするためのプラ�
 msgid "Z-library search"
 msgstr "Z-library検索"
 
+msgid "Network not available. Please connect and try again."
+msgstr "ネットワークが利用できません。接続して再試行してください。"
+
+msgid "Failed to discover a working base URL"
+msgstr ""
+
 msgid "Settings"
 msgstr "設定"
 
 msgid "Set base URL"
 msgstr "ベースURLを設定"
+
+msgid "Invalid Base URL."
+msgstr "無効なベースURLです。"
 
 msgid "Auto-discover base URL"
 msgstr "ベースURLを自動検出"
@@ -41,15 +50,6 @@ msgstr "動作するベースURLが見つかりませんでした。"
 
 msgid "Error during auto-discovery: "
 msgstr "自動検出中にエラーが発生しました: "
-
-msgid "Network not available. Please connect and try again."
-msgstr "ネットワークが利用できません。接続して再試行してください。"
-
-msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
-msgstr "動作するZ-libraryサーバーが見つかりませんでした。インターネット接続を確認するか、ベースURLを手動で設定してください。"
-
-msgid "Invalid Base URL."
-msgstr "無効なベースURLです。"
 
 msgid "Set email"
 msgstr "メールアドレスを設定"
@@ -451,6 +451,9 @@ msgstr ""
 
 msgid "API returned an error for favorite book."
 msgstr ""
+
+msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
+msgstr "動作するZ-libraryサーバーが見つかりませんでした。インターネット接続を確認するか、ベースURLを手動で設定してください。"
 
 msgid "Best match"
 msgstr ""

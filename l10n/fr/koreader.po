@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 09:47+0000\n"
+"POT-Creation-Date: 2026-01-17 10:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,11 +21,20 @@ msgstr "[[Un plugin pour rechercher et télécharger des livres depuis Z-library
 msgid "Z-library search"
 msgstr "Recherche Z-library"
 
+msgid "Network not available. Please connect and try again."
+msgstr "Réseau non disponible. Veuillez vous connecter et réessayer."
+
+msgid "Failed to discover a working base URL"
+msgstr ""
+
 msgid "Settings"
 msgstr "Paramètres"
 
 msgid "Set base URL"
 msgstr "Définir l'URL de base"
+
+msgid "Invalid Base URL."
+msgstr "URL de base invalide."
 
 msgid "Auto-discover base URL"
 msgstr "Découvrir l'URL de base automatiquement"
@@ -41,15 +50,6 @@ msgstr "Impossible de trouver une URL de base fonctionnelle."
 
 msgid "Error during auto-discovery: "
 msgstr "Erreur lors de la découverte automatique : "
-
-msgid "Network not available. Please connect and try again."
-msgstr "Réseau non disponible. Veuillez vous connecter et réessayer."
-
-msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
-msgstr "Impossible de trouver un serveur Z-library fonctionnel. Veuillez vérifier votre connexion Internet ou définir l'URL de base manuellement."
-
-msgid "Invalid Base URL."
-msgstr "URL de base invalide."
 
 msgid "Set email"
 msgstr "Définir l'e-mail"
@@ -451,6 +451,9 @@ msgstr ""
 
 msgid "API returned an error for favorite book."
 msgstr ""
+
+msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
+msgstr "Impossible de trouver un serveur Z-library fonctionnel. Veuillez vérifier votre connexion Internet ou définir l'URL de base manuellement."
 
 msgid "Best match"
 msgstr ""

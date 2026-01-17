@@ -28,6 +28,27 @@ msgstr "Configurações"
 msgid "Set base URL"
 msgstr "Definir URL base"
 
+msgid "Auto-discover base URL"
+msgstr "Descobrir URL base automaticamente"
+
+msgid "Searching for working Z-library server..."
+msgstr "Procurando servidor Z-library funcionando..."
+
+msgid "Successfully found and set base URL to: "
+msgstr "URL base encontrada e definida com sucesso para: "
+
+msgid "Failed to find a working base URL."
+msgstr "Falha ao encontrar uma URL base funcionando."
+
+msgid "Error during auto-discovery: "
+msgstr "Erro durante a descoberta automática: "
+
+msgid "Network not available. Please connect and try again."
+msgstr "Rede não disponível. Por favor, conecte-se e tente novamente."
+
+msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
+msgstr "Não foi possível encontrar um servidor Z-library funcionando. Verifique sua conexão com a internet ou defina a URL base manualmente."
+
 msgid "Invalid Base URL."
 msgstr "URL base inválida."
 

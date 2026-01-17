@@ -27,6 +27,27 @@ msgstr "Instellingen"
 msgid "Set base URL"
 msgstr "Stel basis-URL in"
 
+msgid "Auto-discover base URL"
+msgstr "Basis-URL automatisch ontdekken"
+
+msgid "Searching for working Z-library server..."
+msgstr "Zoeken naar werkende Z-library server..."
+
+msgid "Successfully found and set base URL to: "
+msgstr "Basis-URL succesvol gevonden en ingesteld op: "
+
+msgid "Failed to find a working base URL."
+msgstr "Kan geen werkende basis-URL vinden."
+
+msgid "Error during auto-discovery: "
+msgstr "Fout tijdens automatische ontdekking: "
+
+msgid "Network not available. Please connect and try again."
+msgstr "Netwerk niet beschikbaar. Verbind en probeer opnieuw."
+
+msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
+msgstr "Kan geen werkende Z-library server vinden. Controleer uw internetverbinding of stel de basis-URL handmatig in."
+
 msgid "Invalid Base URL."
 msgstr "Ongeldige basis-URL."
 

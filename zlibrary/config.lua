@@ -137,6 +137,20 @@ Config.SUPPORTED_ORDERS = {
     { name = string.format("%s %s", T("File size"), "↑"), value = "filesizeA" }
 }
 
+Config.SEED_URLS = { -- List of known Z-library base URLs extracted from the Android app
+    "https://z-lib.fo/",
+    -- "https://singlelogin.re/", -- Currently some kind of porn site
+    "https://library-oceania.sk/",
+    "https://library-latin.sk/",
+    "https://z-lib.fm/",
+    "https://library-asia.sk/",
+    "https://lib-africa.sk/",
+    "https://z-library.do/",
+    "https://z-lib.gd/",
+    "https://1lib.sk/",
+    "https://z-lib.gl/"
+}
+
 function Config.getCacheRealUrl()
     local runtime_cache = Cache:new{
         name = "_runtime_cache"

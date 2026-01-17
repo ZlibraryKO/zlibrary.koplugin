@@ -27,6 +27,27 @@ msgstr "設置"
 msgid "Set base URL"
 msgstr "設置基礎網址"
 
+msgid "Auto-discover base URL"
+msgstr "自動發現基礎 URL"
+
+msgid "Searching for working Z-library server..."
+msgstr "正在尋找可用的 Z-library 伺服器..."
+
+msgid "Successfully found and set base URL to: "
+msgstr "成功找到並設定基礎 URL 為："
+
+msgid "Failed to find a working base URL."
+msgstr "無法找到可用的基礎 URL。"
+
+msgid "Error during auto-discovery: "
+msgstr "自動發現時發生錯誤："
+
+msgid "Network not available. Please connect and try again."
+msgstr "網路無法使用。請連線後再試一次。"
+
+msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
+msgstr "無法找到可用的 Z-library 伺服器。請檢查您的網際網路連線或手動設定基礎 URL。"
+
 msgid "Invalid Base URL."
 msgstr "無效的基礎網址。"
 

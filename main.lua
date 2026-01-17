@@ -64,6 +64,31 @@ function Zlibrary:onZlibrarySearch()
     return true
 end
 
+function Zlibrary:autoDiscoverAndSetBaseUrl()
+    if NetworkMgr:willRerunWhenOnline(function()
+        self:autoDiscoverAndSetBaseUrl()
+    end) then
+        return { success = false, error = T("Network not available. Please connect and try again.") }
+    end
+
+    logger.info("Zlibrary:autoDiscoverAndSetBaseUrl - START")
+    local result = Api.findWorkingBaseUrl()
+    
+    if result.success and result.url then
+        local success, err_msg = Config.setAndValidateBaseUrl(result.url)
+        if success then
+            logger.info("Zlibrary:autoDiscoverAndSetBaseUrl - Successfully set base URL to: " .. result.url)
+            return { success = true, url = result.url }
+        else
+            logger.warn("Zlibrary:autoDiscoverAndSetBaseUrl - Failed to validate discovered URL: " .. (err_msg or "Unknown error"))
+            return { success = false, error = err_msg }
+        end
+    end
+    
+    logger.warn("Zlibrary:autoDiscoverAndSetBaseUrl - Failed to discover working base URL")
+    return { success = false, error = T("Failed to discover a working base URL") }
+end
+
 function Zlibrary:addToMainMenu(menu_items)
     if not self.ui.view then
         menu_items.zlibrary_main = {
@@ -93,6 +118,33 @@ function Zlibrary:addToMainMenu(menu_items)
                                         return true
                                     end
                                 )
+                            end,
+                        },
+                        {
+                            text = T("Auto-discover base URL"),
+                            keep_menu_open = true,
+                            callback = function()
+                                local loading_msg = Ui.showLoadingMessage(T("Searching for working Z-library server..."))
+                                
+                                local task = function()
+                                    return self:autoDiscoverAndSetBaseUrl()
+                                end
+                                
+                                local on_success = function(result)
+                                    Ui.closeMessage(loading_msg)
+                                    if result.success then
+                                        Ui.showInfoMessage(T("Successfully found and set base URL to: ") .. result.url)
+                                    else
+                                        Ui.showErrorMessage(result.error or T("Failed to find a working base URL."))
+                                    end
+                                end
+                                
+                                local on_error = function(err_msg)
+                                    Ui.closeMessage(loading_msg)
+                                    Ui.showErrorMessage(T("Error during auto-discovery: ") .. tostring(err_msg))
+                                end
+                                
+                                AsyncHelper.run(task, on_success, on_error)
                             end,
                             separator = true,
                         },

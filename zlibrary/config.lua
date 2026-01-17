@@ -138,19 +138,17 @@ Config.SUPPORTED_ORDERS = {
 }
 
 Config.SEED_URLS = { -- List of known Z-library base URLs extracted from the Android app
-    "https://example.com/",
-    -- "https://z-library.do/",
-    -- "https://z-lib.fo/",
-    -- -- "https://singlelogin.re/", -- Currently some kind of porn site
-    -- "https://library-oceania.sk/",
-    -- "https://library-latin.sk/",
-    -- "https://z-lib.fm/",
-    -- "https://library-asia.sk/",
-    -- "https://lib-africa.sk/",
-    -- "https://z-library.do/",
-    -- "https://z-lib.gd/",
-    -- "https://1lib.sk/",
-    -- "https://z-lib.gl/"
+    "https://z-lib.fo/",
+    -- "https://singlelogin.re/", -- Currently some kind of porn site
+    "https://library-oceania.sk/",
+    "https://library-latin.sk/",
+    "https://z-lib.fm/",
+    "https://library-asia.sk/",
+    "https://lib-africa.sk/",
+    "https://z-library.do/",
+    "https://z-lib.gd/",
+    "https://1lib.sk/",
+    "https://z-lib.gl/"
 }
 
 function Config.getCacheRealUrl()

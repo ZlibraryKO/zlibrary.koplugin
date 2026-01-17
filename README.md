@@ -48,6 +48,7 @@ There are two ways to configure your Z-library credentials:
 3.  Select "Z-library" (it's probably on the second page of this menu).
 4.  Select "Settings".
 5.  Enter your Z-library email, password, and the base URL for your Z-library instance.
+    *   **Tip:** If you don't know which base URL to use, select "Auto-discover base URL" and the plugin will automatically try a list of known Z-library servers to find a working one.
 6.  Adjust other settings if needed.
 
 **2. Via a Credentials File (Advanced):**

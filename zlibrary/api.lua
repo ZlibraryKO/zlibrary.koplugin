@@ -1143,4 +1143,70 @@ function Api.favoriteBook(user_id, user_key, book_stub)
     return { success = true }
 end
 
+function Api.healthCheck(baseUrl)
+    local url = baseUrl .. "/eapi/info/ok"
+
+    local http_result = Api.makeHttpRequest{
+        url = url,
+        method = "GET",
+        headers = {
+            ["User-Agent"] = Config.USER_AGENT,
+        },
+        timeout = {5, 10},
+        redirect = true,
+    }
+
+    if http_result.error then
+        logger.dbg("Api.healthCheck - Failed for " .. baseUrl .. ": " .. tostring(http_result.error))
+        return { success = false, error = http_result.error }
+    end
+
+    if not http_result.status_code or http_result.status_code < 200 or http_result.status_code >= 300 then
+        logger.dbg("Api.healthCheck - Invalid status code " .. tostring(http_result.status_code) .. " for " .. baseUrl)
+        return { success = false, error = "Invalid status code: " .. tostring(http_result.status_code) }
+    end
+
+    if not http_result.body or http_result.body == "" then
+        logger.dbg("Api.healthCheck - No response body from " .. baseUrl)
+        return { success = false, error = "No response body" }
+    end
+
+    local success_parse, data = pcall(json.decode, http_result.body, json.decode.simple)
+    if not success_parse or not data then
+        logger.dbg("Api.healthCheck - Failed to parse JSON from " .. baseUrl)
+        return { success = false, error = "Invalid JSON response" }
+    end
+
+    if data.success == 1 then
+        logger.info("Api.healthCheck - Success for " .. baseUrl .. " (status: " .. tostring(http_result.status_code) .. ")")
+        return { success = true, url = baseUrl }
+    end
+
+    logger.dbg("Api.healthCheck - Invalid response data from " .. baseUrl .. ", success=" .. tostring(data.success))
+    return { success = false, error = "Invalid API response" }
+end
+
+function Api.findWorkingBaseUrl()
+    logger.info("Api.findWorkingBaseUrl - START - Checking SEED_URLS")
+    
+    for i, seed_url in ipairs(Config.SEED_URLS) do
+        local clean_url = seed_url
+        if string.sub(clean_url, -1) == "/" then
+            clean_url = string.sub(clean_url, 1, -2)
+        end
+        
+        logger.info(string.format("Api.findWorkingBaseUrl - Trying [%d/%d]: %s", i, #Config.SEED_URLS, clean_url))
+        
+        local result = Api.healthCheck(clean_url)
+        if result.success then
+            logger.info(string.format("Api.findWorkingBaseUrl - Found working URL: %s", clean_url))
+            return { success = true, url = clean_url }
+        end
+    end
+    
+    logger.warn("Api.findWorkingBaseUrl - END - No working URL found")
+    return { success = false, error = T("Could not find a working Z-library server. Please check your internet connection or set the base URL manually.") }
+end
+
+
 return Api

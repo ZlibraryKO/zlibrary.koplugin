@@ -27,6 +27,27 @@ msgstr "الإعدادات"
 msgid "Set base URL"
 msgstr "تعيين عنوان URL الأساسي"
 
+msgid "Auto-discover base URL"
+msgstr "الاكتشاف التلقائي لعنوان URL الأساسي"
+
+msgid "Searching for working Z-library server..."
+msgstr "جارٍ البحث عن خادم Z-library متاح..."
+
+msgid "Successfully found and set base URL to: "
+msgstr "تم العثور على عنوان URL الأساسي وتعيينه بنجاح إلى: "
+
+msgid "Failed to find a working base URL."
+msgstr "فشل العثور على عنوان URL أساسي متاح."
+
+msgid "Error during auto-discovery: "
+msgstr "خطأ أثناء الاكتشاف التلقائي: "
+
+msgid "Network not available. Please connect and try again."
+msgstr "الشبكة غير متاحة. يرجى الاتصال والمحاولة مرة أخرى."
+
+msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
+msgstr "تعذر العثور على خادم Z-library متاح. يرجى التحقق من اتصال الإنترنت أو تعيين عنوان URL الأساسي يدويًا."
+
 msgid "Invalid Base URL."
 msgstr "عنوان URL الأساسي غير صالح."
 

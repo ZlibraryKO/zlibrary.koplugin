@@ -27,6 +27,27 @@ msgstr "Настройки"
 msgid "Set base URL"
 msgstr "Установить базовый URL"
 
+msgid "Auto-discover base URL"
+msgstr "Автоматическое обнаружение базового URL"
+
+msgid "Searching for working Z-library server..."
+msgstr "Поиск работающего сервера Z-library..."
+
+msgid "Successfully found and set base URL to: "
+msgstr "Базовый URL успешно найден и установлен: "
+
+msgid "Failed to find a working base URL."
+msgstr "Не удалось найти рабочий базовый URL."
+
+msgid "Error during auto-discovery: "
+msgstr "Ошибка при автоматическом обнаружении: "
+
+msgid "Network not available. Please connect and try again."
+msgstr "Сеть недоступна. Подключитесь и попробуйте снова."
+
+msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
+msgstr "Не удалось найти работающий сервер Z-library. Проверьте подключение к интернету или установите базовый URL вручную."
+
 msgid "Invalid Base URL."
 msgstr "Некорректный базовый URL."
 

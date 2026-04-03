@@ -3,50 +3,50 @@ msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-17 10:36+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: zh <zh@li.org>\n"
-"Language: Chinese\n"
+"PO-Revision-Date: 2026-04-03 00:00+0800\n"
+"Last-Translator: ifeelok <1046924339@qq.com>\n"
+"Language-Team: zh_CN <zh_CN@li.org>\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "Z-library"
-msgstr "Z-图书馆"
+msgstr "Z-library"
 
 msgid "[[A plugin to search and download books from Z-library.]]"
-msgstr "[[用于从Z-图书馆搜索和下载书籍的插件。]]"
+msgstr "[[用于从 Z-library 搜索和下载书籍的插件。]]"
 
 msgid "Z-library search"
-msgstr "Z-图书馆搜索"
+msgstr "Z-library 搜索"
 
 msgid "Network not available. Please connect and try again."
 msgstr "网络不可用。请连接后重试。"
 
 msgid "Failed to discover a working base URL"
-msgstr ""
+msgstr "未能自动发现可用的入口网址"
 
 msgid "Settings"
 msgstr "设置"
 
 msgid "Set base URL"
-msgstr "设置基础网址"
+msgstr "设置入口网址"
 
 msgid "Invalid Base URL."
-msgstr "基础网址无效。"
+msgstr "入口网址无效。"
 
 msgid "Auto-discover base URL"
-msgstr "自动发现基础网址"
+msgstr "自动发现入口网址"
 
 msgid "Searching for working Z-library server..."
-msgstr "正在搜索可用的Z-library服务器..."
+msgstr "正在搜索可用的 Z-library 服务器..."
 
 msgid "Successfully found and set base URL to: "
-msgstr "成功找到并设置基础网址为："
+msgstr "成功找到并设置入口网址为："
 
 msgid "Failed to find a working base URL."
-msgstr "未能找到可用的基础网址。"
+msgstr "未能找到可用的入口网址。"
 
 msgid "Error during auto-discovery: "
 msgstr "自动发现过程中出错："
@@ -67,7 +67,7 @@ msgid "Set download directory"
 msgstr "设置下载目录"
 
 msgid "Search options"
-msgstr ""
+msgstr "搜索选项"
 
 msgid "Select search languages"
 msgstr "选择搜索语言"
@@ -76,7 +76,7 @@ msgid "Select search formats"
 msgstr "选择搜索格式"
 
 msgid "Select search order"
-msgstr ""
+msgstr "选择搜索排序"
 
 msgid "Timeout settings"
 msgstr "超时设置"
@@ -88,28 +88,28 @@ msgid "Error: Plugin path not found. Cannot check for updates."
 msgstr "错误：未找到插件路径。无法检查更新。"
 
 msgid "Developer options"
-msgstr ""
+msgstr "开发者选项"
 
 msgid "Clear user session"
-msgstr ""
+msgstr "清除用户会话"
 
 msgid "Session cleared. You will need to login again."
-msgstr ""
+msgstr "会话已清除。您需要重新登录。"
 
 msgid "Clear runtime cache"
-msgstr ""
+msgstr "清除运行时缓存"
 
 msgid "Runtime cache cleared."
-msgstr ""
+msgstr "运行时缓存已清除。"
 
 msgid "Test mode"
-msgstr ""
+msgstr "测试模式"
 
 msgid "Test mode disabled. Normal download behavior restored."
-msgstr ""
+msgstr "测试模式已关闭。已恢复正常下载行为。"
 
 msgid "Test mode enabled. Downloads will always succeed."
-msgstr ""
+msgstr "测试模式已开启。下载将始终成功。"
 
 msgid "Search"
 msgstr "搜索"
@@ -121,10 +121,10 @@ msgid "Most popular"
 msgstr "最受欢迎"
 
 msgid "My books"
-msgstr ""
+msgstr "我的书籍"
 
 msgid "Operation"
-msgstr ""
+msgstr "操作"
 
 msgid "No books found, please try again"
 msgstr "未找到书籍，请重试"
@@ -136,7 +136,7 @@ msgid "Failed to fetch recommended books"
 msgstr "获取推荐书籍失败"
 
 msgid "Recommended books"
-msgstr ""
+msgstr "推荐书籍"
 
 msgid "Fetching most popular books..."
 msgstr "正在获取热门书籍..."
@@ -145,88 +145,88 @@ msgid "Failed to fetch most popular books"
 msgstr "获取热门书籍失败"
 
 msgid "Most popular books"
-msgstr ""
+msgstr "热门书籍"
 
 msgid "Syncing your download limit..."
-msgstr ""
+msgstr "正在同步下载配额..."
 
 msgid "failed to load download quota status"
-msgstr ""
+msgstr "加载下载配额状态失败"
 
 msgid "Sync download quota"
-msgstr ""
+msgstr "同步下载配额"
 
 msgid "Syncing favorites summary…"
-msgstr ""
+msgstr "正在同步收藏摘要..."
 
 msgid "failed to load favorite book id list"
-msgstr ""
+msgstr "加载收藏书籍ID列表失败"
 
 msgid "Sync favorites summary"
-msgstr ""
+msgstr "同步收藏摘要"
 
 msgid "API returned an error, please try again"
-msgstr ""
+msgstr "API 返回错误，请重试"
 
 msgid "Z-library My Books"
-msgstr ""
+msgstr "Z-library 我的书籍"
 
 msgid "Downloaded"
-msgstr ""
+msgstr "已下载"
 
 msgid "Getting your downloaded..."
-msgstr ""
+msgstr "正在获取已下载书籍..."
 
 msgid "Failed to fetch downloaded books"
-msgstr ""
+msgstr "获取已下载书籍失败"
 
 msgid "Downloaded books"
-msgstr ""
+msgstr "已下载书籍"
 
 msgid "Favorites"
-msgstr ""
+msgstr "收藏夹"
 
 msgid "Getting your favorites..."
-msgstr ""
+msgstr "正在获取收藏书籍..."
 
 msgid "Failed to fetch favorite books"
-msgstr ""
+msgstr "获取收藏书籍失败"
 
 msgid "Favorite books"
-msgstr ""
+msgstr "收藏的书籍"
 
 msgid "Finding similar books..."
-msgstr ""
+msgstr "正在查找相似书籍..."
 
 msgid "No similar books found"
-msgstr ""
+msgstr "未找到相似书籍"
 
 msgid "Similar books"
-msgstr ""
+msgstr "相似书籍"
 
 msgid "Removing book from favorites…"
-msgstr ""
+msgstr "正在从收藏夹移除书籍..."
 
 msgid "Failed to remove book from favorites"
-msgstr ""
+msgstr "从收藏夹移除书籍失败"
 
 msgid "unfavorite book"
-msgstr ""
+msgstr "取消收藏"
 
 msgid "Book removed from favorites, please refresh"
-msgstr ""
+msgstr "书籍已从收藏夹移除，请刷新"
 
 msgid "Adding book to favorites…"
-msgstr ""
+msgstr "正在添加书籍到收藏夹..."
 
 msgid "Failed to add book to favorites"
-msgstr ""
+msgstr "添加书籍到收藏夹失败"
 
 msgid "Favorite book"
-msgstr ""
+msgstr "收藏书籍"
 
 msgid "Book added to favorites, please refresh"
-msgstr ""
+msgstr "书籍已添加到收藏夹，请刷新"
 
 msgid "Fetching book details..."
 msgstr "正在获取书籍详情..."
@@ -235,7 +235,7 @@ msgid "Failed to fetch book details"
 msgstr "获取书籍详情失败"
 
 msgid "Book details"
-msgstr ""
+msgstr "书籍详情"
 
 msgid "Could not retrieve book details."
 msgstr "无法获取书籍详情。"
@@ -266,7 +266,7 @@ msgid "No more results found."
 msgstr "没有更多结果。"
 
 msgid "Book identifiers missing. Cannot download."
-msgstr ""
+msgstr "缺少书籍标识符，无法下载。"
 
 #, lua-format
 msgid "Cannot create downloads directory: %s"
@@ -285,64 +285,64 @@ msgid "Download"
 msgstr "下载"
 
 msgid "Retrying download..."
-msgstr ""
+msgstr "正在重试下载..."
 
 msgid "Request timed out - please check your connection and try again"
-msgstr ""
+msgstr "请求超时 - 请检查您的连接后重试"
 
 msgid "Network request failed"
-msgstr ""
+msgstr "网络请求失败"
 
 msgid "Network connection error - please check your internet connection and try again"
-msgstr ""
+msgstr "网络连接错误 - 请检查您的网络连接后重试"
 
 msgid "HTTP Error"
-msgstr ""
+msgstr "HTTP 错误"
 
 msgid "Unknown Status"
-msgstr ""
+msgstr "未知状态"
 
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
-msgstr ""
+msgstr "未设置 Z-library 服务器地址(URL)。请在 Z-library 插件设置中进行配置。"
 
 msgid "Login failed: Empty response from server"
-msgstr ""
+msgstr "登录失败：服务器返回空响应"
 
 msgid "Login failed: Invalid response format"
-msgstr ""
+msgstr "登录失败：响应格式无效"
 
 msgid "Login failed"
-msgstr ""
+msgstr "登录失败"
 
 msgid "Login failed: Invalid session data"
-msgstr ""
+msgstr "登录失败：会话数据无效"
 
 msgid "Credentials rejected or invalid response"
-msgstr ""
+msgstr "凭证被拒绝或响应无效"
 
 msgid "No response received from server - please try again"
-msgstr ""
+msgstr "未收到服务器响应 - 请重试"
 
 msgid "Invalid response format from server"
-msgstr ""
+msgstr "服务器响应格式无效"
 
 msgid "Search API error"
-msgstr ""
+msgstr "搜索 API 错误"
 
 msgid "Failed to open target file"
-msgstr ""
+msgstr "无法打开目标文件"
 
 msgid "Unknown error"
-msgstr ""
+msgstr "未知错误"
 
 msgid "Download limit reached or file is an HTML page"
-msgstr ""
+msgstr "已达下载限制或文件为HTML页面"
 
 msgid "Download HTTP Error"
-msgstr ""
+msgstr "下载 HTTP 错误"
 
 msgid "Z-library server URL not configured."
-msgstr "未配置Z-图书馆服务器网址。"
+msgstr "未配置 Z-library 服务器网址。"
 
 msgid "Failed to fetch recommended books (no response body)."
 msgstr "获取推荐书籍失败(无响应体)。"
@@ -363,7 +363,7 @@ msgid "API returned an error for most popular books."
 msgstr "API返回了热门书籍的错误。"
 
 msgid "Z-library server URL not configured or book identifiers missing."
-msgstr "未配置Z-图书馆服务器网址或缺少书籍标识符。"
+msgstr "未配置 Z-library 服务器网址或缺少书籍标识符。"
 
 msgid "Failed to fetch book details (no response body)."
 msgstr "获取书籍详情失败(无响应体)。"
@@ -378,88 +378,88 @@ msgid "Failed to process book details."
 msgstr "处理书籍详情失败。"
 
 msgid "Failed to fetch download link (no response body)."
-msgstr ""
+msgstr "获取下载链接失败(无响应体)。"
 
 msgid "Failed to parse download link response."
-msgstr ""
+msgstr "解析下载链接响应失败。"
 
 msgid "API returned an error for download link."
-msgstr ""
+msgstr "API返回了下载链接的错误。"
 
 msgid "No download link provided in API response."
-msgstr ""
+msgstr "API响应中未提供下载链接。"
 
 msgid "Failed to fetch similar books (no response body)."
-msgstr ""
+msgstr "获取相似书籍失败(无响应体)。"
 
 msgid "Failed to parse similar books response."
-msgstr ""
+msgstr "解析相似书籍响应失败。"
 
 msgid "API returned an error for similar books."
-msgstr ""
+msgstr "API返回了相似书籍的错误。"
 
 msgid "Failed to fetch downloaded books (no response body)."
-msgstr ""
+msgstr "获取已下载书籍失败(无响应体)。"
 
 msgid "Failed to parse downloaded books response."
-msgstr ""
+msgstr "解析已下载书籍响应失败。"
 
 msgid "API returned an error for downloaded books."
-msgstr ""
+msgstr "API返回了已下载书籍的错误。"
 
 msgid "Failed to fetch favorite books (no response body)."
-msgstr ""
+msgstr "获取收藏书籍失败(无响应体)。"
 
 msgid "Failed to parse favorite books response."
-msgstr ""
+msgstr "解析收藏书籍响应失败。"
 
 msgid "API returned an error for favorite books."
-msgstr ""
+msgstr "API返回了收藏书籍的错误。"
 
 msgid "Failed to fetch unfavorite book (no response body)."
-msgstr ""
+msgstr "取消收藏书籍失败(无响应体)。"
 
 msgid "Failed to parse unfavorite book response."
-msgstr ""
+msgstr "解析取消收藏响应失败。"
 
 msgid "API returned an error for unfavorite book."
-msgstr ""
+msgstr "API返回了取消收藏的错误。"
 
 msgid "Failed to fetch download quota status (no response body)."
-msgstr ""
+msgstr "获取下载配额状态失败(无响应体)。"
 
 msgid "Failed to parse download quota status response."
-msgstr ""
+msgstr "解析下载配额状态响应失败。"
 
 msgid "API returned an error for download quota status."
-msgstr ""
+msgstr "API返回了下载配额状态的错误。"
 
 msgid "Failed to fetch favorite-book IDs (no response body)."
-msgstr ""
+msgstr "获取收藏书籍ID失败(无响应体)。"
 
 msgid "Failed to parse favorite-book IDs."
-msgstr ""
+msgstr "解析收藏书籍ID失败。"
 
 msgid "API returned an error for favorite-book IDs."
-msgstr ""
+msgstr "API返回了收藏书籍ID的错误。"
 
 msgid "Failed to fetch favorite book (no response body)."
-msgstr ""
+msgstr "获取收藏书籍失败(无响应体)。"
 
 msgid "Failed to parse favorite book response."
-msgstr ""
+msgstr "解析收藏书籍响应失败。"
 
 msgid "API returned an error for favorite book."
-msgstr ""
+msgstr "API返回了收藏书籍的错误。"
 
 msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
-msgstr "未能找到可用的Z-library服务器。请检查您的网络连接或手动设置基础网址。"
+msgstr "未能找到可用的 Z-library 服务器。请检查您的网络连接或手动设置入口网址。"
 
 msgid "Best match"
-msgstr ""
+msgstr "最佳匹配"
 
 msgid "Recently added"
-msgstr ""
+msgstr "最近添加"
 
 msgid "Title"
 msgstr "标题"
@@ -468,10 +468,10 @@ msgid "Year"
 msgstr "年份"
 
 msgid "File size"
-msgstr ""
+msgstr "文件大小"
 
 msgid "Default"
-msgstr ""
+msgstr "默认"
 
 msgid "infinite"
 msgstr "无限"
@@ -490,7 +490,7 @@ msgid "Author"
 msgstr "作者"
 
 msgid "More Similar Books"
-msgstr ""
+msgstr "更多相似书籍"
 
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "更新失败：无法确定插件安装位置。"
@@ -569,7 +569,7 @@ msgid "Close"
 msgstr "关闭"
 
 msgid "Select Z-library Download Directory"
-msgstr "选择Z-图书馆下载目录"
+msgstr "选择 Z-library 下载目录"
 
 #, lua-format
 msgid "Download directory set to: %s"
@@ -618,13 +618,13 @@ msgid "Formats (%d)"
 msgstr "格式 (%d)"
 
 msgid "Search Z-library"
-msgstr "搜索Z-图书馆"
+msgstr "搜索 Z-library"
 
 msgid "Please enter a search term."
 msgstr "请输入搜索词。"
 
 msgid "Sort by"
-msgstr ""
+msgstr "排序方式"
 
 msgid "Unknown Title"
 msgstr "未知标题"
@@ -645,10 +645,10 @@ msgid "Full Title"
 msgstr "完整标题"
 
 msgid "Cover"
-msgstr ""
+msgstr "封面"
 
 msgid "(tap to view)"
-msgstr ""
+msgstr "（点击查看）"
 
 msgid "Language"
 msgstr "语言"
@@ -680,10 +680,10 @@ msgid "Back"
 msgstr "返回"
 
 msgid "Remove From Favorites"
-msgstr ""
+msgstr "从收藏夹移除"
 
 msgid "Add To Favorites"
-msgstr ""
+msgstr "添加到收藏夹"
 
 #, lua-format
 msgid "Download \"%s\"?"
@@ -700,31 +700,31 @@ msgid "Open book"
 msgstr "打开书籍"
 
 msgid "Z-library Recommended Books"
-msgstr "Z-图书馆推荐书籍"
+msgstr "Z-library 推荐书籍"
 
 msgid "Z-library Most Popular Books"
-msgstr "Z-图书馆热门书籍"
+msgstr "Z-library 热门书籍"
 
 msgid "Z-library Similar Books"
-msgstr ""
+msgstr "Z-library 相似书籍"
 
 msgid "Fetch most recommended book from Z-library?"
-msgstr "从Z-图书馆获取最推荐书籍？"
+msgstr "从 Z-library 获取最推荐书籍？"
 
 msgid "OK"
 msgstr "确定"
 
 msgid "Fetch most popular books from Z-library?"
-msgstr "从Z-图书馆获取热门书籍？"
+msgstr "从 Z-library 获取热门书籍？"
 
 msgid "Retrying search for \""
 msgstr "正在重试搜索\""
 
 msgid "Request timed out"
-msgstr ""
+msgstr "请求超时"
 
 msgid "Network connection error"
-msgstr ""
+msgstr "网络连接错误"
 
 #, lua-format
 msgid "%s failed due to a timeout%s. Would you like to retry?"

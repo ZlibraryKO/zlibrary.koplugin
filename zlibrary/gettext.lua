@@ -20,40 +20,55 @@ local changeLang = function(new_lang)
     local original_wrapUntranslated_func = GetText.wrapUntranslated
     local original_current_lang = GetText.current_lang
 
-    GetText.dirname = NewGetText.dirname
+    -- Save current KOReader translations, then clear for plugin loading
+    local saved_translation = util.tableDeepCopy(GetText.translation) or {}
+    GetText.translation = {}
+    GetText.context = {}
 
-    local ok, err = pcall(GetText.changeLang, new_lang)
-    if ok then
-        if (GetText.translation and next(GetText.translation) ~= nil) or (GetText.context and next(GetText.context) ~= nil) then
-            local copied_gettext = util.tableDeepCopy(GetText)
-            if copied_gettext then
-                NewGetText = copied_gettext
-                --  reduce memory usage and prioritize using KOReader-translation
-                if NewGetText.translation and original_translation then
-                    for k, v in pairs(NewGetText.translation) do
-                        if original_translation[k] then
-                            NewGetText.translation[k] = nil
-                        end
+    -- Directly load plugin .mo file instead of using changeLang
+    -- (changeLang ignores dirname changes in newer KOReader versions)
+    local mo_path = string.format("%s/%s/%s.mo", NewGetText.dirname, new_lang, GetText.textdomain or "koreader")
+    local load_ok = false
+    if GetText.loadMO then
+        load_ok = GetText.loadMO(mo_path)
+    end
+
+    if load_ok and GetText.translation and next(GetText.translation) ~= nil then
+        local copied_gettext = util.tableDeepCopy(GetText)
+        if copied_gettext then
+            NewGetText = copied_gettext
+            NewGetText.current_lang = new_lang
+            NewGetText.dirname = NewGetText.dirname or string.format("%s/l10n", plugin_path)
+            -- Copy over functions we need from original GetText
+            if not NewGetText.wrapUntranslated then
+                NewGetText.wrapUntranslated = original_wrapUntranslated_func
+            end
+            if not NewGetText.getPlural then
+                NewGetText.getPlural = GetText.getPlural
+            end
+            --  reduce memory usage: remove entries identical to KOReader's
+            if NewGetText.translation and saved_translation then
+                for k, v in pairs(NewGetText.translation) do
+                    if type(v) == "string" and saved_translation[k] == v then
+                        NewGetText.translation[k] = nil
                     end
                 end
             end
         end
     else
-        logger.warn(string.format("Failed to parse the PO file for lang %s: %s", tostring(new_lang), tostring(err)))
+        logger.warn(string.format("[zlibrary] Failed to load MO file: %s", mo_path))
     end
 
+    -- Restore original KOReader state
     GetText.context = original_context
     GetText.translation = original_translation
     GetText.dirname = original_l10n_dirname
     GetText.wrapUntranslated = original_wrapUntranslated_func
     GetText.current_lang = original_current_lang
-
-    original_translation = nil
-    original_context = nil
 end
 
 local function createGetTextProxy(new_gettext, gettext)
-    if not new_gettext.current_lang or new_gettext.current_lang == "C" or 
+    if not new_gettext.current_lang or new_gettext.current_lang == "C" or
        not (new_gettext.wrapUntranslated and new_gettext.translation) then
         return gettext
     end
@@ -103,16 +118,7 @@ local function createGetTextProxy(new_gettext, gettext)
         end
     }
 
-    return setmetatable({
-        -- dump the parsed data of the po file. For debugging only.
-        -- If NewGetText is not loaded, this will be nil value when called
-        debug_dump = function()
-            local new_lang = new_gettext.current_lang
-            local dump_path = string.format("%s/%s/%s", new_gettext.dirname, new_lang, "debug_logs.lua")
-            require("luasettings"):open(dump_path):saveSetting("po", new_gettext):flush()
-            logger.info(string.format("debug_dump: %s.po to %s", new_lang, dump_path))
-      end
-    }, mt)
+    return setmetatable({}, mt)
 end
 
 local current_lang = GetText.current_lang or G_reader_settings:readSetting("language")

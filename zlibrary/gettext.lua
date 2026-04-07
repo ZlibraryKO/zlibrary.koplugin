@@ -25,12 +25,15 @@ local changeLang = function(new_lang)
     GetText.translation = {}
     GetText.context = {}
 
-    -- Directly load plugin .mo file instead of using changeLang
-    -- (changeLang ignores dirname changes in newer KOReader versions)
-    local mo_path = string.format("%s/%s/%s.mo", NewGetText.dirname, new_lang, GetText.textdomain or "koreader")
     local load_ok = false
     if GetText.loadMO then
+        -- Directly load plugin .mo file (works with newer KOReader versions)
+        local mo_path = string.format("%s/%s/%s.mo", NewGetText.dirname, new_lang, GetText.textdomain or "koreader")
         load_ok = GetText.loadMO(mo_path)
+    else
+        -- Fallback for older KOReader versions that support .po files
+        GetText.dirname = NewGetText.dirname
+        load_ok = pcall(GetText.changeLang, new_lang)
     end
 
     if load_ok and GetText.translation and next(GetText.translation) ~= nil then
@@ -56,7 +59,7 @@ local changeLang = function(new_lang)
             end
         end
     else
-        logger.warn(string.format("[zlibrary] Failed to load MO file: %s", mo_path))
+        logger.warn(string.format("[zlibrary] Failed to load translations for lang: %s", new_lang))
     end
 
     -- Restore original KOReader state

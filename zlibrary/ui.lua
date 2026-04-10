@@ -574,6 +574,14 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
     end
     if book.pages and book.pages ~= 0 then table.insert(details_menu.item_table, { text = _colon_concat(T("Pages"), book.pages), enabled = false }) end
 
+    table.insert(details_menu.item_table, {
+        text = T("Comments"),
+        mandatory = "\u{25B7}",
+        callback = function()
+            Ui.showCommentsDialog(parent_zlibrary, book.id)
+        end
+    })
+
     table.insert(details_menu.item_table, { text = "---" })
 
     table.insert(details_menu.item_table, {
@@ -1140,6 +1148,83 @@ function Ui.showAllTimeoutConfigDialog(parent_ui)
         show_captions = true,
     }
     _showAndTrackDialog(main_menu)
+end
+
+function Ui.showCommentsDialog(parent_zlibrary, book_id)
+    if not book_id then
+        Ui.showErrorMessage(T("Book ID is required"))
+        return
+    end
+
+    local loading_msg = Ui.showLoadingMessage(T("Loading comments..."))
+
+    local task = function()
+        return Api.getBookComments(book_id)
+    end
+
+    local on_success = function(api_result)
+        Ui.closeMessage(loading_msg)
+
+        if api_result.error then
+            Ui.showErrorMessage(Ui.colonConcat(T("Failed to load comments"), tostring(api_result.error)))
+            return
+        end
+
+        local comments = api_result.comments
+        if not comments or #comments == 0 then
+            Ui.showInfoMessage(T("No comments to display"))
+            return
+        end
+
+        -- Create a map of comment IDs to comment objects for quick lookup
+        local comment_map = {}
+        for _, comment in ipairs(comments) do
+            comment_map[comment.id] = comment
+        end
+
+        local comment_items = {}
+        for _, comment in ipairs(comments) do
+            local user_name = comment.user and comment.user.name or "Anonymous"
+            local date_str = comment.dateRelative or comment.date or ""
+            -- 用户名
+            local comment_text = string.format("%s: %s", user_name, comment.text)
+            
+            -- Add parent comment reference if it exists
+            if comment.parent_id and comment_map[comment.parent_id] then
+                local parent_comment = comment_map[comment.parent_id]
+                local parent_user_name = parent_comment.user and parent_comment.user.name or "Anonymous"
+                local parent_text = string.sub(parent_comment.text, 1, 50) -- Truncate long parent comments
+                if string.len(parent_comment.text) > 50 then
+                    parent_text = parent_text .. "..."
+                end
+                -- 引用内容换行并使用符号标注
+                comment_text = string.format("%s  ↪ %s: %s", comment_text, parent_user_name, parent_text)
+            end
+            
+            if date_str ~= "" then
+                comment_text = string.format("%s (%s)", comment_text, date_str)
+            end
+            
+            table.insert(comment_items, {
+                text = comment_text
+            })
+        end
+
+        local comments_menu = Menu:new{
+            title = T("Comments"),
+            item_table = comment_items,
+            show_captions = true,
+            multilines_show_more_text = true
+        }
+        _showAndTrackDialog(comments_menu)
+    end
+
+    local on_error = function(err_msg)
+        Ui.closeMessage(loading_msg)
+        Ui.showErrorMessage(Ui.colonConcat(T("Failed to load comments"), tostring(err_msg)))
+    end
+
+    AsyncHelper.run(task, on_success, on_error, loading_msg)
 end
 
 return Ui

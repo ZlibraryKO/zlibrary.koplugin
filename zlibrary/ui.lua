@@ -435,6 +435,7 @@ function Ui.createBookMenuItem(book_data, parent_zlibrary_instance)
 
     return {
         text = combined_text,
+        shortcut = book_data.hash and ("cover:" .. book_data.hash) or nil,
         callback = function()
             if book_data.needs_detail_fetch then
                 parent_zlibrary_instance:onSelectSearchBook(book_data)
@@ -454,7 +455,7 @@ function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_it
         subtitle = string.format("%s: %s", T("Sort by"), search_order_name),
         item_table = initial_menu_items,
         parent = parent_ui_ref,
-        items_per_page = 10,
+        items_per_page = 5, -- Reducido de 10 a 5 para forzar mayor altura (ver bien las portadas)
         show_captions = true,
         onGotoPage = on_goto_page_handler,
         is_popout = false,
@@ -701,11 +702,11 @@ local function _showBooksMenu(ui_self, options, plugin_self)
     local subtitle = options.subtitle
 
     local menu_items = {}
-    local menu_item
     for _, book in ipairs(books) do
-        menu_item = Ui.createBookMenuItem(book, plugin_self)
+        local menu_item = Ui.createBookMenuItem(book, plugin_self)
         table.insert(menu_items, {
             text = menu_item.text,
+            shortcut = menu_item.shortcut,
             callback = function()
                 plugin_self:onSelectRecommendedBook(book)
             end,
@@ -720,7 +721,7 @@ local function _showBooksMenu(ui_self, options, plugin_self)
         title = title,
         subtitle = subtitle,
         item_table = menu_items,
-        items_per_page = 10,
+        items_per_page = 5,
         show_captions = true,
         parent = ui_self.document_menu_parent_holder,
         is_popout = false,
@@ -1140,6 +1141,56 @@ function Ui.showAllTimeoutConfigDialog(parent_ui)
         show_captions = true,
     }
     _showAndTrackDialog(main_menu)
+end
+
+--- Descarga portadas de forma síncrona (bloqueante).
+--- Diseñada para ejecutarse DENTRO de un task de AsyncHelper,
+--- de modo que el mensaje de "cargando" se muestre mientras ocurre.
+--- IMPORTANTE: Solo descarga las primeras MAX_COVERS portadas para evitar
+--- bloquear el dispositivo durante demasiado tiempo.
+--- @param books table Lista de book_data con campos .cover y .hash
+--- @param max_covers number Máximo de portadas a descargar (default: 50)
+function Ui.prefetchCoversSync(books, max_covers)
+    if type(books) ~= "table" then return end
+
+    local Cache = require("zlibrary.cache")
+    local util_mod = require("util")
+    local Api = require("zlibrary.api")
+    local logger = require("logger")
+
+    max_covers = max_covers or 50
+    local downloaded = 0
+
+    local ok_dir, _ = pcall(Cache.ensureCoversDir)
+    if not ok_dir then
+        logger.err("prefetchCoversSync: failed to create covers directory")
+        return
+    end
+
+    for _, book in ipairs(books) do
+        if downloaded >= max_covers then break end
+
+        if book.cover and book.cover ~= "" and book.hash then
+            local target_path = Cache.getCoverPath(book.hash)
+
+            -- Si ya existe en caché, no cuenta como descarga nueva
+            if util_mod.fileExists(target_path) then
+                -- ya está, no hacer nada
+            else
+                local ok, result = pcall(Api.downloadBookCover, book.cover, target_path)
+                if ok and result and result.success then
+                    logger.dbg("prefetchCoversSync: OK", book.hash)
+                    downloaded = downloaded + 1
+                else
+                    logger.warn("prefetchCoversSync: FAIL", book.hash, ok and (result and result.error or "unknown") or tostring(result))
+                    -- Limpiar archivo parcial si existe
+                    pcall(os.remove, target_path)
+                    downloaded = downloaded + 1 -- contar como intento para no quedarse atrapado
+                end
+            end
+        end
+    end
+    logger.info(string.format("prefetchCoversSync: completed (%d downloads)", downloaded))
 end
 
 return Ui

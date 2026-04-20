@@ -303,6 +303,7 @@ function SearchDialog:createMenuContainer(books, height)
             width = self.width - Screen:scaleBySize(6),
             height = height,
             item_table = menu_items,
+            items_per_page = 5, -- Altura más amplia para permitir renderizar portadas
             is_popout = false,
             no_title = true,
             show_captions = true,

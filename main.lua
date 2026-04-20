@@ -52,6 +52,9 @@ function Zlibrary:init()
     end
 
     self._runtime_cache = Cache:new({name = "_runtime_cache"})
+
+    -- Limpieza silenciosa de covers antiguos (>7 días)
+    pcall(Cache.cleanOldCovers, 7)
 end
 
 function Zlibrary:onZlibrarySearch()
@@ -339,7 +342,12 @@ function Zlibrary:_requestDispatcher(options, ...)
 
 
         local task = function()
-            return options.api_method(user_session and user_session.user_id, user_session and user_session.user_key, table.unpack(api_extra_params))
+            local api_result = options.api_method(user_session and user_session.user_id, user_session and user_session.user_key, table.unpack(api_extra_params))
+            -- Hook opcional: pre-procesar resultado (ej. pre-descargar portadas)
+            if type(options.prefetch_task) == "function" then
+                pcall(options.prefetch_task, api_result)
+            end
+            return api_result
         end
 
         local on_success = function(api_result)
@@ -407,6 +415,14 @@ function Zlibrary:_fetchBookList(options, ...)
     options.hasValidApiResult = function(api_result)
         local ok = type(api_result) == "table" and type(api_result.books) == "table" and #api_result.books > 0
         return ok, not ok and T("No books found, please try again")
+    end
+    -- Pre-descargar portadas antes de mostrar el menú
+    if not options.prefetch_task then
+        options.prefetch_task = function(api_result)
+            if api_result and api_result.books then
+                Ui.prefetchCoversSync(api_result.books, 50)
+            end
+        end
     end
     options.resolve_result = function(ui_self, api_result, plugin_self)
         
@@ -626,6 +642,11 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                         operation_name = T("Downloaded books"),
                         log_context = "onShowDownloadedBooks",
                         hasValidApiResult = valid_api_result,
+                        prefetch_task = function(api_result)
+                            if api_result and api_result.books then
+                                Ui.prefetchCoversSync(api_result.books, 50)
+                            end
+                        end,
                         resolve_result = function(ui_self, api_result, plugin_self)
                             local books = api_result.books
                             local current_page = page or 1
@@ -659,6 +680,11 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                         operation_name = T("Favorite books"),
                         log_context = "onShowFavoriteBooks",
                         hasValidApiResult = valid_api_result,
+                        prefetch_task = function(api_result)
+                            if api_result and api_result.books then
+                                Ui.prefetchCoversSync(api_result.books, 50)
+                            end
+                        end,
                         resolve_result = function(ui_self, api_result, plugin_self)
                             local books = api_result.books
                             local current_page = page or 1
@@ -950,7 +976,12 @@ function Zlibrary:performSearch(query)
         local current_page_to_search = 1
 
         local task = function()
-            return Api.search(query, user_session and user_session.user_id, user_session and user_session.user_key, selected_languages, selected_extensions, selected_order, current_page_to_search)
+            local api_result = Api.search(query, user_session and user_session.user_id, user_session and user_session.user_key, selected_languages, selected_extensions, selected_order, current_page_to_search)
+            -- Pre-descargar portadas antes de devolver los resultados
+            if api_result and api_result.results and #api_result.results > 0 then
+                Ui.prefetchCoversSync(api_result.results, 50)
+            end
+            return api_result
         end
 
         local on_success
@@ -1051,7 +1082,12 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
             local selected_order_more = Config.getSearchOrder()
 
             local task_load_more = function()
-                return Api.search(self.current_search_query, user_session_more.user_id, user_session_more.user_key, selected_languages_more, selected_extensions_more, selected_order_more, next_api_page_to_fetch)
+                local api_result_more = Api.search(self.current_search_query, user_session_more.user_id, user_session_more.user_key, selected_languages_more, selected_extensions_more, selected_order_more, next_api_page_to_fetch)
+                -- Pre-descargar portadas de la nueva página
+                if api_result_more and api_result_more.results and #api_result_more.results > 0 then
+                    Ui.prefetchCoversSync(api_result_more.results, 50)
+                end
+                return api_result_more
             end
 
             local on_success_load_more

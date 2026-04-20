@@ -435,6 +435,7 @@ function Ui.createBookMenuItem(book_data, parent_zlibrary_instance)
 
     return {
         text = combined_text,
+        shortcut = book_data.hash and ("cover:" .. book_data.hash) or nil,
         callback = function()
             if book_data.needs_detail_fetch then
                 parent_zlibrary_instance:onSelectSearchBook(book_data)
@@ -454,7 +455,7 @@ function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_it
         subtitle = string.format("%s: %s", T("Sort by"), search_order_name),
         item_table = initial_menu_items,
         parent = parent_ui_ref,
-        items_per_page = 10,
+        items_per_page = 5, -- Reducido de 10 a 5 para forzar mayor altura (ver bien las portadas)
         show_captions = true,
         onGotoPage = on_goto_page_handler,
         is_popout = false,
@@ -708,11 +709,11 @@ local function _showBooksMenu(ui_self, options, plugin_self)
     local subtitle = options.subtitle
 
     local menu_items = {}
-    local menu_item
     for _, book in ipairs(books) do
-        menu_item = Ui.createBookMenuItem(book, plugin_self)
+        local menu_item = Ui.createBookMenuItem(book, plugin_self)
         table.insert(menu_items, {
             text = menu_item.text,
+            shortcut = menu_item.shortcut,
             callback = function()
                 plugin_self:onSelectRecommendedBook(book)
             end,
@@ -727,7 +728,7 @@ local function _showBooksMenu(ui_self, options, plugin_self)
         title = title,
         subtitle = subtitle,
         item_table = menu_items,
-        items_per_page = 10,
+        items_per_page = 5,
         show_captions = true,
         parent = ui_self.document_menu_parent_holder,
         is_popout = false,
@@ -1224,7 +1225,7 @@ function Ui.showCommentsDialog(parent_zlibrary, book_comments)
 
         return table.concat(html_parts, "\n")
     end
-    
+
     local Device = require("device")
     local Screen = Device.screen
     local FootnoteWidget = require("ui/widget/footnotewidget")
@@ -1240,8 +1241,8 @@ function Ui.showCommentsDialog(parent_zlibrary, book_comments)
     comments_popup = FootnoteWidget:new{
         html = generateCommentsHTML(book_comments),
         css = COMMENTS_CSS,
-        close_callback = function() 
-            UIManager:close(comments_popup) 
+        close_callback = function()
+            UIManager:close(comments_popup)
         end,
         dialog = UIManager:getTopmostVisibleWidget(),
         doc_margins = {
@@ -1253,9 +1254,50 @@ function Ui.showCommentsDialog(parent_zlibrary, book_comments)
         doc_font_size = Screen:scaleBySize(23),
         covers_footer = false,
     }
-    
-    Device.screen.getHeight = original_getHeight 
+
+    Device.screen.getHeight = original_getHeight
     _showAndTrackDialog(comments_popup)
+end
+
+function Ui.prefetchCoversSync(books, max_covers)
+    if type(books) ~= "table" then return end
+
+    local Cache = require("zlibrary.cache")
+    local util_mod = require("util")
+    local Api = require("zlibrary.api")
+    local logger = require("logger")
+
+    max_covers = max_covers or 50
+    local downloaded = 0
+
+    local ok_dir, _ = pcall(Cache.ensureCoversDir)
+    if not ok_dir then
+        logger.err("prefetchCoversSync: failed to create covers directory")
+        return
+    end
+
+    for _, book in ipairs(books) do
+        if downloaded >= max_covers then break end
+
+        if book.cover and book.cover ~= "" and book.hash then
+            local target_path = Cache.getCoverPath(book.hash)
+
+            if util_mod.fileExists(target_path) then
+                -- already cached, skip
+            else
+                local ok, result = pcall(Api.downloadBookCover, book.cover, target_path)
+                if ok and result and result.success then
+                    logger.dbg("prefetchCoversSync: OK", book.hash)
+                    downloaded = downloaded + 1
+                else
+                    logger.warn("prefetchCoversSync: FAIL", book.hash, ok and (result and result.error or "unknown") or tostring(result))
+                    pcall(os.remove, target_path)
+                    downloaded = downloaded + 1
+                end
+            end
+        end
+    end
+    logger.info(string.format("prefetchCoversSync: completed (%d downloads)", downloaded))
 end
 
 return Ui

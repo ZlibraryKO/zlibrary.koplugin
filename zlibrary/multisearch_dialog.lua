@@ -247,6 +247,7 @@ function SearchDialog:_getMenuItems(books)
             book_index = i,
             text = menu_text,
             mandatory = mandatory_text,
+            shortcut = book.hash and ("cover:" .. book.hash) or nil,
         })
     end
     return menu_items
@@ -267,7 +268,7 @@ function SearchDialog:reloadFromBookData(books, skip_cache, select_number, no_re
     local old_height = self.menu_container.height
     self.menu_container = self:createMenuContainer(books, old_height)
 
-    Menu.updateItems(self.menu_container, select_number, no_recalculate_dimen)
+    self.menu_container:updateItems(select_number, no_recalculate_dimen)
 
     if not skip_cache then
         local cache_key = self:getActiveItemCacheKey()
@@ -446,8 +447,13 @@ function SearchDialog:setToggleTitle(position, title)
     if position > toggle_items_count or position < 1 then
         return
     end
-    self.toggle_items[1].text = title or ""
-    self:init()
+    self.toggle_items[position].text = title or ""
+
+    -- Update the toggle switch text directly instead of rebuilding the entire widget
+    if self.toggle_switch and self.toggle_switch.toggle then
+        self.toggle_switch.toggle[position] = title or ""
+        self.toggle_switch:update()
+    end
     UIManager:setDirty("all", "ui")
 end
 

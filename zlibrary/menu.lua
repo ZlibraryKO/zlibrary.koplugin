@@ -6,6 +6,9 @@ local Geom = require("ui/geometry")
 local logger = require("logger")
 local Cache = require("zlibrary.cache")
 local util = require("util")
+local ImageWidget = require("ui/widget/imagewidget")
+local CenterContainer = require("ui/widget/container/centercontainer")
+local WidgetContainer = require("ui/widget/container/widgetcontainer")
 
 local M = Menu:extend{}
 
@@ -97,7 +100,6 @@ function M:getItemShortCutIcon(dimen, key, style)
 
     if not cover_path then
         -- No debería llegar aquí, pero por seguridad
-        local WidgetContainer = require("ui/widget/container/widgetcontainer")
         return WidgetContainer:new{
             dimen = Geom:new{ w = dimen.w, h = dimen.h },
         }
@@ -112,9 +114,6 @@ function M:getItemShortCutIcon(dimen, key, style)
 
     -- Cargar imagen con pcall para evitar crashes
     local load_ok, widget = pcall(function()
-        local ImageWidget = require("ui/widget/imagewidget")
-        local CenterContainer = require("ui/widget/container/centercontainer")
-
         local img = ImageWidget:new{
             file = cover_path,
             width = cover_w,
@@ -137,7 +136,6 @@ function M:getItemShortCutIcon(dimen, key, style)
     pcall(os.remove, cover_path)
 
     -- Retornar widget vacío seguro (con dimensiones correctas)
-    local WidgetContainer = require("ui/widget/container/widgetcontainer")
     return WidgetContainer:new{
         dimen = Geom:new{ w = dimen.w, h = dimen.h },
     }

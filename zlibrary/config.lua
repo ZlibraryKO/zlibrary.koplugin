@@ -137,19 +137,37 @@ Config.SUPPORTED_ORDERS = {
     { name = string.format("%s %s", T("File size"), "↑"), value = "filesizeA" }
 }
 
+Config.SEED_URLS = { -- List of known Z-library base URLs extracted from the Android app
+    "https://z-lib.fo/",
+    -- "https://singlelogin.re/", -- Currently some kind of porn site
+    "https://library-oceania.sk/",
+    "https://library-latin.sk/",
+    "https://z-lib.fm/",
+    "https://library-asia.sk/",
+    "https://lib-africa.sk/",
+    "https://z-library.do/",
+    "https://z-lib.gd/",
+    "https://1lib.sk/",
+    "https://z-lib.gl/"
+}
+
+-- Singleton lazy instance to avoid recreating Cache (MD5 + LuaSettings open) on every call
+local _config_runtime_cache
+local function _getConfigRuntimeCache()
+    if not _config_runtime_cache then
+        _config_runtime_cache = Cache:new{ name = "_runtime_cache" }
+    end
+    return _config_runtime_cache
+end
+
+
 function Config.getCacheRealUrl()
-    local runtime_cache = Cache:new{
-        name = "_runtime_cache"
-    }
-    local api_real_url = runtime_cache:get("api_real_url", 600)
+    local api_real_url = _getConfigRuntimeCache():get("api_real_url", 600)
     return api_real_url and api_real_url[1]
 end
 
 function Config.clearCacheRealUrl()
-    local runtime_cache = Cache:new{
-        name = "_runtime_cache"
-    }
-    return runtime_cache:remove("api_real_url")
+    return _getConfigRuntimeCache():remove("api_real_url")
 end
 
 function Config.setCacheRealUrl(original_url, real_url)
@@ -166,10 +184,7 @@ function Config.setCacheRealUrl(original_url, real_url)
         real_url = string.sub(real_url, 1, -2)
     end
     
-    local runtime_cache = Cache:new{
-        name = "_runtime_cache"
-    }
-    return runtime_cache:insert("api_real_url", {real_url})
+    return _getConfigRuntimeCache():insert("api_real_url", {real_url})
 end
 
 function Config.getBaseUrl(is_original)
@@ -210,7 +225,7 @@ function Config.getLoginUrl()
     return base .. "/eapi/user/login"
 end
 
-function Config.getSearchUrl(query)
+function Config.getSearchUrl()
     local base = Config.getBaseUrl()
     if not base then return nil end
     return base .. "/eapi/book/search"

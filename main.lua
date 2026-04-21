@@ -653,31 +653,6 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
         my_books_dialog:fetchAndShow()
 end
 
-function Zlibrary:onShowRecommendedBooks()
-    self:_fetchBookList({
-        api_method = Api.getRecommendedBooks,
-        loading_text_key = T("Fetching recommended books..."),
-        error_prefix_key = T("Failed to fetch recommended books"),
-        operation_name = T("Recommended books"),
-        log_context = "onShowRecommendedBooks",
-        results_member_name = "current_recommended_books",
-        display_menu_func = Ui.showRecommendedBooksMenu,
-        requires_auth = true
-    })
-end
-
-function Zlibrary:onShowMostPopularBooks()
-    self:_fetchBookList({
-        api_method = Api.getMostPopularBooks,
-        loading_text_key = T("Fetching most popular books..."),
-        error_prefix_key = T("Failed to fetch most popular books"),
-        operation_name = T("Most popular books"),
-        log_context = "onShowMostPopularBooks",
-        results_member_name = "current_most_popular_books",
-        display_menu_func = Ui.showMostPopularBooksMenu,
-        requires_auth = false
-    })
-end
 
 function Zlibrary:searchSimilarBooks(book_stub)
     if not (book_stub.id and book_stub.hash) then
@@ -1257,30 +1232,23 @@ end
 
 function Zlibrary:downloadAndShowCover(book)
     local cover_url = book.cover
-    local book_id = book.id
     local book_hash = book.hash
     local book_title = book.title
 
-    if not (cover_url and book_id and book_hash) then
+    if not (cover_url and book_hash) then
         logger.warn("Zlibrary:downloadAndShowCover - parameter error")
         return
     end
 
-    local function getImgExtension(url)
-       local clean_url = url:match("^([^%?]+)") or url
-       return clean_url:match("[%.]([^%.]+)$") or "jpg"
-    end
-
-    local cover_ext = getImgExtension(cover_url)
-    local cache_path = Cache:makePath(book_id, book_hash)
-    local cover_cache_path = string.format("%s.%s", cache_path, cover_ext)
+    -- Use the unified cover cache path (same as prefetchCoversSync and menu.lua)
+    local cover_cache_path = Cache.getCoverPath(book_hash)
+    if not cover_cache_path then return end
 
     if not util.fileExists(cover_cache_path) then
+        pcall(Cache.ensureCoversDir)
         local download_result = Api.downloadBookCover(cover_url, cover_cache_path)
         if download_result.error or not download_result.success then
-            if util.fileExists(cover_cache_path) then
-                    pcall(os.remove, cover_cache_path)
-            end
+            pcall(os.remove, cover_cache_path)
             Ui.showErrorMessage(tostring(download_result.error))
             return
         end

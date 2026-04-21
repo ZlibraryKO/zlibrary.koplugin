@@ -1,3 +1,17 @@
+--[[--
+Deferred-synchronous task executor for the Z-library plugin.
+
+IMPORTANT: This is NOT truly asynchronous. The task function runs to completion
+in a single coroutine.resume() call, blocking the UI thread during execution.
+The only "async" aspect is that UIManager:nextTick defers the START of execution,
+allowing the loading message to render before the blocking task begins.
+
+Flow: show loading → nextTick → resume coroutine (BLOCKS) → close loading → callback
+
+If a task needs to yield control (e.g. prefetchCoversSync), it must explicitly
+call coroutine.yield() and the resume_handler will re-schedule via nextTick.
+--]]--
+
 local UIManager = require("ui/uimanager")
 local coroutine = require("coroutine")
 local logger = require("logger")

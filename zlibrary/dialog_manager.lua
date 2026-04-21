@@ -152,6 +152,10 @@ end
 
 
 function DialogManager:trackDialog(dialog)
+    -- Avoid tracking the same dialog instance twice
+    for _, d in ipairs(self._open_dialogs) do
+        if d == dialog then return dialog end
+    end
     table.insert(self._open_dialogs, dialog)
     return dialog
 end

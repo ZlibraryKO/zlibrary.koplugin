@@ -11,6 +11,7 @@ local logger = require("logger")
 local Config = require("zlibrary.config")
 local Api = require("zlibrary.api")
 local AsyncHelper = require("zlibrary.async_helper")
+local coroutine = require("coroutine")
 
 local Ui = {}
 
@@ -732,22 +733,6 @@ local function _showBooksMenu(ui_self, options, plugin_self)
     _showAndTrackDialog(menu)
 end
 
-function Ui.showRecommendedBooksMenu(ui_self, books, plugin_self)
-    _showBooksMenu(ui_self, {
-        title = T("Z-library Recommended Books"),
-        books = books,
-        log_context = "recommended books",
-    }, plugin_self)
-end
-
-function Ui.showMostPopularBooksMenu(ui_self, books, plugin_self)
-    _showBooksMenu(ui_self, {
-        title = T("Z-library Most Popular Books"),
-        books = books,
-        log_context = "most popular books",
-    }, plugin_self)
-end
-
 function Ui.showSimilarBooksMenu(ui_self, books, plugin_self, source_title)
     _showBooksMenu(ui_self, {
         title = T("Z-library Similar Books"),
@@ -757,43 +742,7 @@ function Ui.showSimilarBooksMenu(ui_self, books, plugin_self, source_title)
     }, plugin_self)
 end
 
-function Ui.confirmShowRecommendedBooks(ok_callback)
-    if _plugin_instance and _plugin_instance.dialog_manager then
-        _plugin_instance.dialog_manager:showConfirmDialog({
-            text = T("Fetch most recommended book from Z-library?"),
-            ok_text = T("OK"),
-            cancel_text = T("Cancel"),
-            ok_callback = ok_callback,
-        })
-    else
-        local dialog = ConfirmBox:new{
-            text = T("Fetch most recommended book from Z-library?"),
-            ok_text = T("OK"),
-            cancel_text = T("Cancel"),
-            ok_callback = ok_callback,
-        }
-        UIManager:show(dialog)
-    end
-end
 
-function Ui.confirmShowMostPopularBooks(ok_callback)
-    if _plugin_instance and _plugin_instance.dialog_manager then
-        _plugin_instance.dialog_manager:showConfirmDialog({
-            text = T("Fetch most popular books from Z-library?"),
-            ok_text = T("OK"),
-            cancel_text = T("Cancel"),
-            ok_callback = ok_callback,
-        })
-    else
-        local dialog = ConfirmBox:new{
-            text = T("Fetch most popular books from Z-library?"),
-            ok_text = T("OK"),
-            cancel_text = T("Cancel"),
-            ok_callback = ok_callback,
-        }
-        UIManager:show(dialog)
-    end
-end
 
 function Ui.createSingleBookMenu(ui_self, title, menu_items)
     local menu = Menu:new{
@@ -1186,6 +1135,11 @@ function Ui.prefetchCoversSync(books, max_covers)
                     -- Limpiar archivo parcial si existe
                     pcall(os.remove, target_path)
                     downloaded = downloaded + 1 -- contar como intento para no quedarse atrapado
+                end
+                -- Yield control to UIManager between downloads to prevent
+                -- long UI freezes on e-ink devices (works with AsyncHelper coroutines)
+                if coroutine.running() then
+                    coroutine.yield()
                 end
             end
         end

@@ -18,7 +18,7 @@ function Api.isAuthenticationError(error_message)
     local error_str = tostring(error_message)
 
     if string.find(error_str, "Please login", 1, true) ~= nil or 
-       string.find(error_str, "Invalid credentials", 1, true) ~= nil then
+       string.find(error_str, "Incorrect email or password", 1, true) ~= nil then
         return true
     end
     
@@ -288,7 +288,12 @@ function Api.makeHttpRequest(options)
 
     if result.status_code ~= 200 and result.status_code ~= 206 then
         if not result.error then
-            result.error = string.format("%s: %s (%s)", T("HTTP Error"), result.status_code, r_status_str or T("Unknown Status"))
+            local json_error = _extractErrorFromJsonBody(result.body)
+            if json_error then
+                result.error = json_error
+            else
+                result.error = string.format("%s: %s (%s)", T("HTTP Error"), result.status_code, r_status_str or T("Unknown Status"))
+            end
         end
     end
 
@@ -342,16 +347,16 @@ function Api.login(email, password, is_retry)
         end
     end
 
-    if http_result.error then
-        result.error = http_result.error
-        logger.err(string.format("Zlibrary:Api.login - END (HTTP error) - Error: %s", result.error))
+    if not http_result.body or http_result.body == "" then
+        result.error = http_result.error or T("Login failed: Empty response from server")
+        logger.err(string.format("Zlibrary:Api.login - END (Empty body) - Error: %s", result.error))
         return result
     end
 
     local data, _, err_msg = json.decode(http_result.body)
 
     if not data or type(data) ~= "table" then
-        result.error = T("Login failed: Invalid response format") .. (err_msg and (". " .. err_msg) or "")
+        result.error = http_result.error or (T("Login failed: Invalid response format") .. (err_msg and (". " .. err_msg) or ""))
         logger.err(string.format("Zlibrary:Api.login - END (JSON error) - Error: %s", result.error))
         return result
     end
@@ -359,10 +364,18 @@ function Api.login(email, password, is_retry)
     local success_flag = tonumber(data.success) or 0
     local session = data.user or data.response or {}
 
-    if success_flag ~= 1 or type(session) ~= "table" then
-        local api_message = (session and session.message) or data.message or (data.error and (data.error.message or data.error))
-        result.error = T("Login failed") .. (api_message and (": " .. api_message) or "")
+    if success_flag ~= 1 then
+        local api_message = data.error or
+                           (type(session) == "table" and session.message) or
+                           data.message
+        result.error = api_message and tostring(api_message) or (http_result.error or T("Login failed"))
         logger.warn(string.format("Zlibrary:Api.login - END (API error) - Error: %s", result.error))
+        return result
+    end
+
+    if type(session) ~= "table" then
+        result.error = T("Login failed: Invalid session data")
+        logger.warn(string.format("Zlibrary:Api.login - END (Session error) - Error: %s", result.error))
         return result
     end
 
@@ -790,5 +803,71 @@ function Api.favoriteBook(user_id, user_key, book_stub)
     end
     return { success = true }
 end
+
+function Api.healthCheck(baseUrl)
+    local url = baseUrl .. "/eapi/info/ok"
+
+    local http_result = Api.makeHttpRequest{
+        url = url,
+        method = "GET",
+        headers = {
+            ["User-Agent"] = Config.USER_AGENT,
+        },
+        timeout = {5, 10},
+        redirect = true,
+    }
+
+    if http_result.error then
+        logger.dbg("Api.healthCheck - Failed for " .. baseUrl .. ": " .. tostring(http_result.error))
+        return { success = false, error = http_result.error }
+    end
+
+    if not http_result.status_code or http_result.status_code < 200 or http_result.status_code >= 300 then
+        logger.dbg("Api.healthCheck - Invalid status code " .. tostring(http_result.status_code) .. " for " .. baseUrl)
+        return { success = false, error = "Invalid status code: " .. tostring(http_result.status_code) }
+    end
+
+    if not http_result.body or http_result.body == "" then
+        logger.dbg("Api.healthCheck - No response body from " .. baseUrl)
+        return { success = false, error = "No response body" }
+    end
+
+    local success_parse, data = pcall(json.decode, http_result.body, json.decode.simple)
+    if not success_parse or not data then
+        logger.dbg("Api.healthCheck - Failed to parse JSON from " .. baseUrl)
+        return { success = false, error = "Invalid JSON response" }
+    end
+
+    if data.success == 1 then
+        logger.info("Api.healthCheck - Success for " .. baseUrl .. " (status: " .. tostring(http_result.status_code) .. ")")
+        return { success = true, url = baseUrl }
+    end
+
+    logger.dbg("Api.healthCheck - Invalid response data from " .. baseUrl .. ", success=" .. tostring(data.success))
+    return { success = false, error = "Invalid API response" }
+end
+
+function Api.findWorkingBaseUrl()
+    logger.info("Api.findWorkingBaseUrl - START - Checking SEED_URLS")
+    
+    for i, seed_url in ipairs(Config.SEED_URLS) do
+        local clean_url = seed_url
+        if string.sub(clean_url, -1) == "/" then
+            clean_url = string.sub(clean_url, 1, -2)
+        end
+        
+        logger.info(string.format("Api.findWorkingBaseUrl - Trying [%d/%d]: %s", i, #Config.SEED_URLS, clean_url))
+        
+        local result = Api.healthCheck(clean_url)
+        if result.success then
+            logger.info(string.format("Api.findWorkingBaseUrl - Found working URL: %s", clean_url))
+            return { success = true, url = clean_url }
+        end
+    end
+    
+    logger.warn("Api.findWorkingBaseUrl - END - No working URL found")
+    return { success = false, error = T("Could not find a working Z-library server. Please check your internet connection or set the base URL manually.") }
+end
+
 
 return Api

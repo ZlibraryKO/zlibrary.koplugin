@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-11 14:22+0000\n"
+"POT-Creation-Date: 2026-01-17 10:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
@@ -21,6 +21,12 @@ msgstr "[[用于从Z-图书馆搜索和下载书籍的插件。]]"
 msgid "Z-library search"
 msgstr "Z-图书馆搜索"
 
+msgid "Network not available. Please connect and try again."
+msgstr "网络不可用。请连接后重试。"
+
+msgid "Failed to discover a working base URL"
+msgstr ""
+
 msgid "Settings"
 msgstr "设置"
 
@@ -29,6 +35,21 @@ msgstr "设置基础网址"
 
 msgid "Invalid Base URL."
 msgstr "基础网址无效。"
+
+msgid "Auto-discover base URL"
+msgstr "自动发现基础网址"
+
+msgid "Searching for working Z-library server..."
+msgstr "正在搜索可用的Z-library服务器..."
+
+msgid "Successfully found and set base URL to: "
+msgstr "成功找到并设置基础网址为："
+
+msgid "Failed to find a working base URL."
+msgstr "未能找到可用的基础网址。"
+
+msgid "Error during auto-discovery: "
+msgstr "自动发现过程中出错："
 
 msgid "Set email"
 msgstr "设置邮箱"
@@ -101,9 +122,6 @@ msgstr "最受欢迎"
 
 msgid "My books"
 msgstr ""
-
-msgid "No internet connection detected."
-msgstr "未检测到网络连接。"
 
 msgid "Operation"
 msgstr ""
@@ -287,10 +305,16 @@ msgstr ""
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr ""
 
+msgid "Login failed: Empty response from server"
+msgstr ""
+
 msgid "Login failed: Invalid response format"
 msgstr ""
 
 msgid "Login failed"
+msgstr ""
+
+msgid "Login failed: Invalid session data"
 msgstr ""
 
 msgid "Credentials rejected or invalid response"
@@ -428,6 +452,9 @@ msgstr ""
 msgid "API returned an error for favorite book."
 msgstr ""
 
+msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
+msgstr "未能找到可用的Z-library服务器。请检查您的网络连接或手动设置基础网址。"
+
 msgid "Best match"
 msgstr ""
 
@@ -476,9 +503,6 @@ msgstr "更新安装失败。"
 
 msgid "Update installed successfully. Please restart KOReader for changes to take effect."
 msgstr "更新安装成功。请重启KOReader使更改生效。"
-
-msgid "No internet connection detected. Please connect to the internet and try again."
-msgstr "未检测到网络连接。请连接网络后重试。"
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "更新检查失败：无法确定插件位置。"
@@ -800,6 +824,12 @@ msgstr "所有超时设置已重置为默认值"
 
 msgid "Timeout Settings"
 msgstr "超时设置"
+
+#~ msgid "No internet connection detected."
+#~ msgstr "未检测到网络连接。"
+
+#~ msgid "No internet connection detected. Please connect to the internet and try again."
+#~ msgstr "未检测到网络连接。请连接网络后重试。"
 
 #~ msgid "No download link available for this book."
 #~ msgstr "本书无可用下载链接。"

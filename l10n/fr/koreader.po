@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-11 14:22+0000\n"
+"POT-Creation-Date: 2026-01-17 10:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,6 +21,12 @@ msgstr "[[Un plugin pour rechercher et télécharger des livres depuis Z-library
 msgid "Z-library search"
 msgstr "Recherche Z-library"
 
+msgid "Network not available. Please connect and try again."
+msgstr "Réseau non disponible. Veuillez vous connecter et réessayer."
+
+msgid "Failed to discover a working base URL"
+msgstr ""
+
 msgid "Settings"
 msgstr "Paramètres"
 
@@ -29,6 +35,21 @@ msgstr "Définir l'URL de base"
 
 msgid "Invalid Base URL."
 msgstr "URL de base invalide."
+
+msgid "Auto-discover base URL"
+msgstr "Découvrir l'URL de base automatiquement"
+
+msgid "Searching for working Z-library server..."
+msgstr "Recherche d'un serveur Z-library fonctionnel..."
+
+msgid "Successfully found and set base URL to: "
+msgstr "URL de base trouvée et configurée avec succès : "
+
+msgid "Failed to find a working base URL."
+msgstr "Impossible de trouver une URL de base fonctionnelle."
+
+msgid "Error during auto-discovery: "
+msgstr "Erreur lors de la découverte automatique : "
 
 msgid "Set email"
 msgstr "Définir l'e-mail"
@@ -101,9 +122,6 @@ msgstr "Les plus populaires"
 
 msgid "My books"
 msgstr ""
-
-msgid "No internet connection detected."
-msgstr "Aucune connexion internet détectée."
 
 msgid "Operation"
 msgstr ""
@@ -287,10 +305,16 @@ msgstr ""
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr ""
 
+msgid "Login failed: Empty response from server"
+msgstr ""
+
 msgid "Login failed: Invalid response format"
 msgstr ""
 
 msgid "Login failed"
+msgstr ""
+
+msgid "Login failed: Invalid session data"
 msgstr ""
 
 msgid "Credentials rejected or invalid response"
@@ -428,6 +452,9 @@ msgstr ""
 msgid "API returned an error for favorite book."
 msgstr ""
 
+msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
+msgstr "Impossible de trouver un serveur Z-library fonctionnel. Veuillez vérifier votre connexion Internet ou définir l'URL de base manuellement."
+
 msgid "Best match"
 msgstr ""
 
@@ -476,9 +503,6 @@ msgstr "L'installation de la mise à jour a échoué."
 
 msgid "Update installed successfully. Please restart KOReader for changes to take effect."
 msgstr "Mise à jour installée avec succès. Veuillez redémarrer KOReader pour que les modifications prennent effet."
-
-msgid "No internet connection detected. Please connect to the internet and try again."
-msgstr "Aucune connexion internet détectée. Veuillez vous connecter à internet et réessayer."
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "Échec de la vérification de la mise à jour : Impossible de déterminer l'emplacement du plugin."
@@ -800,6 +824,12 @@ msgstr "Tous les paramètres de délai d'expiration rétablis aux valeurs par d�
 
 msgid "Timeout Settings"
 msgstr "Paramètres de délai d'expiration"
+
+#~ msgid "No internet connection detected."
+#~ msgstr "Aucune connexion internet détectée."
+
+#~ msgid "No internet connection detected. Please connect to the internet and try again."
+#~ msgstr "Aucune connexion internet détectée. Veuillez vous connecter à internet et réessayer."
 
 #~ msgid "No download link available for this book."
 #~ msgstr "Aucun lien de téléchargement disponible pour ce livre."

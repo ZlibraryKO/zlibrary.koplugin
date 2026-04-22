@@ -220,9 +220,9 @@ end
 function Ota.startUpdateProcess(plugin_path_from_main)
     logger.info("Zlibrary:Ota.startUpdateProcess - Initiated by user. Plugin path: " .. tostring(plugin_path_from_main))
 
-    if not NetworkMgr:isOnline() then
-        logger.warn("Zlibrary:Ota.startUpdateProcess - No internet connection.")
-        _show_ota_final_message(T("No internet connection detected. Please connect to the internet and try again."), true)
+    if NetworkMgr:willRerunWhenOnline(function()
+        Ota.startUpdateProcess(plugin_path_from_main)
+    end) then
         return
     end
 

@@ -1150,6 +1150,38 @@ function Ui.showAllTimeoutConfigDialog(parent_ui)
     _showAndTrackDialog(main_menu)
 end
 
+-- Helper function to safely truncate UTF-8 strings
+local function truncateUtf8(str, max_len)
+    if #str <= max_len then
+        return str
+    end
+    
+    local result = ""
+    local len = 0
+    local i = 1
+    while i <= #str do
+        local char = string.byte(str, i)
+        local char_len = 1
+        if char >= 0xF0 then
+            char_len = 4
+        elseif char >= 0xE0 then
+            char_len = 3
+        elseif char >= 0xC0 then
+            char_len = 2
+        end
+        
+        if len + char_len > max_len - 3 then -- leave room for "..."
+            break
+        end
+        
+        result = result .. string.sub(str, i, i + char_len - 1)
+        len = len + char_len
+        i = i + char_len
+    end
+    
+    return result .. "..."
+end
+
 function Ui.showCommentsDialog(parent_zlibrary, book_id)
     if not book_id then
         Ui.showErrorMessage(T("Book ID is required"))
@@ -1186,33 +1218,36 @@ function Ui.showCommentsDialog(parent_zlibrary, book_id)
         for _, comment in ipairs(comments) do
             local user_name = comment.user and comment.user.name or "Anonymous"
             local date_str = comment.dateRelative or comment.date or ""
-            -- 用户名
-            local comment_text = string.format("%s: %s", user_name, comment.text)
             
-            -- Add parent comment reference if it exists
+            -- Build full comment text for dialog
+            local full_comment = comment.text
             if comment.parent_id and comment_map[comment.parent_id] then
                 local parent_comment = comment_map[comment.parent_id]
                 local parent_user_name = parent_comment.user and parent_comment.user.name or "Anonymous"
-                local parent_text = string.sub(parent_comment.text, 1, 50) -- Truncate long parent comments
-                if string.len(parent_comment.text) > 50 then
-                    parent_text = parent_text .. "..."
-                end
-                -- 引用内容换行并使用符号标注
-                comment_text = string.format("%s  ↪ %s: %s", comment_text, parent_user_name, parent_text)
+                full_comment = string.format("↪ %s: %s\n\n%s", parent_user_name, parent_comment.text, full_comment)
             end
             
+            -- Build truncated text for menu
+            local display_text = string.format("%s: %s", user_name, truncateUtf8(comment.text, 80))
+            
             if date_str ~= "" then
-                comment_text = string.format("%s (%s)", comment_text, date_str)
+                display_text = string.format("%s (%s)", display_text, date_str)
             end
             
             table.insert(comment_items, {
-                text = comment_text
+                text = display_text,
+                mandatory = "\u{25B7}",
+                callback = function()
+                    -- Show full comment in TextViewer
+                    Ui.showFullTextDialog(string.format("%s - %s", user_name, date_str), full_comment)
+                end
             })
         end
 
         local comments_menu = Menu:new{
             title = T("Comments"),
             item_table = comment_items,
+            items_per_page = 8, -- Reduce items per page to prevent font scaling issues
             show_captions = true,
             multilines_show_more_text = true
         }

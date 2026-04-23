@@ -1208,5 +1208,103 @@ function Api.findWorkingBaseUrl()
     return { success = false, error = T("Could not find a working Z-library server. Please check your internet connection or set the base URL manually.") }
 end
 
+local function _transformApiCommentsData(comments)
+    local transformed_comments = {}
+    for _, comment in ipairs(comments) do
+        -- Clean up comment text: remove blank lines and extra line breaks
+        local cleaned_text = comment.text or ""
+        -- Replace <br> tags with newlines
+        cleaned_text = string.gsub(cleaned_text, "<[Bb][Rr]%s*/?>", "\n")
+        -- Remove HTML tags
+        cleaned_text = string.gsub(cleaned_text, "<[^>]+>", "")
+        -- Convert HTML entities to UTF-8
+        cleaned_text = require("util").htmlEntitiesToUtf8(cleaned_text)
+        -- Replace multiple newlines with single
+        cleaned_text = string.gsub(cleaned_text, "(\n\r?%s*){2,}", "\n")
+        -- Trim leading/trailing whitespace
+        cleaned_text = require("util").trim(cleaned_text)
+        
+        table.insert(transformed_comments, {
+            id = comment.id,
+            text = cleaned_text,
+            date = comment.date,
+            dateRelative = comment.dateRelative,
+            user = {
+                name = comment.user and comment.user.name or "Anonymous",
+                avatar = comment.user and comment.user.avatar or nil,
+                isPremium = comment.user and comment.user.isPremium or false
+            },
+            parent_id = comment.parent_id
+        })
+    end
+
+    return transformed_comments
+end
+
+function Api.getBookComments(book_id)
+    if not book_id then
+        logger.warn("Api.getBookComments - Missing book_id parameter")
+        return {
+            error = T("Book ID is required.")
+        }
+    end
+
+    local url = Config.getBookCommentsUrl(book_id)
+    if not url then
+        logger.warn("Api.getBookComments - URL could not be constructed. Base URL configured? Book ID provided?")
+        return {
+            error = T("Z-library server URL not configured or book identifiers missing.")
+        }
+    end
+
+    local headers = {
+        ["User-Agent"] = Config.USER_AGENT
+    }
+
+    local http_result = Api.makeHttpRequest {
+        url = url,
+        method = "GET",
+        headers = headers,
+        timeout = Config.getBookCommentsTimeout(),
+        getRedirectedUrl = function()
+            return Config.getBookCommentsUrl(book_id)
+        end
+    }
+
+    if http_result.error then
+        logger.warn("Api.getBookComments - HTTP request error: ", http_result.error)
+        return {
+            error = http_result.error
+        }
+    end
+
+    if not http_result.body then
+        logger.warn("Api.getBookComments - No response body")
+        return {
+            error = T("Failed to fetch book comments (no response body).")
+        }
+    end
+
+    local success, data = pcall(json.decode, http_result.body, json.decode.simple)
+    if not success or not data then
+        logger.warn("Api.getBookComments - Failed to decode JSON: ", http_result.body)
+        return {
+            error = T("Failed to parse book comments response.")
+        }
+    end
+
+    if data.success ~= 1 then
+        logger.warn("Api.getBookComments - API error: ", http_result.body)
+        return {
+            error = data.message or T("API returned an error for book comments.")
+        }
+    end
+
+    local transformed_comments = _transformApiCommentsData(data.comments or {})
+
+    return {
+        comments = transformed_comments
+    }
+end
 
 return Api

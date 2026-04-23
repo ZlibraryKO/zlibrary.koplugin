@@ -67,6 +67,14 @@ function Zlibrary:onZlibrarySearch()
     return true
 end
 
+function Zlibrary:_silentAutoDiscover()
+    local ok, result = pcall(Api.findWorkingBaseUrl)
+    if ok and result and result.success and result.url then
+        pcall(Config.setAndValidateBaseUrl, result.url)
+        logger.info("Zlibrary:_silentAutoDiscover - base URL updated to: " .. result.url)
+    end
+end
+
 function Zlibrary:autoDiscoverAndSetBaseUrl()
     if NetworkMgr:willRerunWhenOnline(function()
         self:autoDiscoverAndSetBaseUrl()
@@ -342,6 +350,9 @@ function Zlibrary:_requestDispatcher(options, ...)
 
 
         local task = function()
+            if options.auto_discover then
+                self:_silentAutoDiscover()
+            end
             local api_result = options.api_method(user_session and user_session.user_id, user_session and user_session.user_key, table.unpack(api_extra_params))
             -- Hook opcional: pre-procesar resultado (ej. pre-descargar portadas)
             if type(options.prefetch_task) == "function" then
@@ -462,6 +473,7 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
             callback = function(widget, page, is_refresh)
                 self:_fetchBookList({
                     api_method = Api.getRecommendedBooks,
+                    auto_discover = true,
                     loading_text_key = T("Fetching recommended books..."),
                     error_prefix_key = T("Failed to fetch recommended books"),
                     operation_name = T("Recommended books"),
@@ -479,6 +491,7 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
             callback = function(widget, page, is_refresh)
                 self:_fetchBookList({
                     api_method = Api.getMostPopularBooks,
+                    auto_discover = true,
                     loading_text_key = T("Fetching most popular books..."),
                     error_prefix_key = T("Failed to fetch most popular books"),
                     operation_name = T("Most popular books"),
@@ -959,6 +972,7 @@ function Zlibrary:performSearch(query)
         local current_page_to_search = 1
 
         local task = function()
+            self:_silentAutoDiscover()
             local api_result = Api.search(query, user_session and user_session.user_id, user_session and user_session.user_key, selected_languages, selected_extensions, selected_order, current_page_to_search)
             -- Pre-descargar portadas antes de devolver los resultados
             if api_result and api_result.results and #api_result.results > 0 then

@@ -578,7 +578,7 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
         text = T("Comments"),
         mandatory = "\u{25B7}",
         callback = function()
-            Ui.showCommentsDialog(parent_zlibrary, book.id)
+            parent_zlibrary:fetchAndDisplayComments(book)
         end
     })
 
@@ -1113,6 +1113,16 @@ function Ui.showAllTimeoutConfigDialog(parent_ui)
                     Config.getCoverTimeout, Config.setCoverTimeout, refreshMainDialog)
             end
         },
+         {
+            text = T("Comments"),
+            mandatory_func = function()
+                return Config.formatTimeoutForDisplay(Config.getBookCommentsTimeout())
+            end,
+            callback = function()
+                Ui.showTimeoutConfigDialog(parent_ui, T("Comments"), Config.SETTINGS_TIMEOUT_BOOK_COMMENTS_KEY,
+                    Config.getBookCommentsTimeout, Config.setBookCommentsTimeout, refreshMainDialog)
+            end
+        },
         {
             text = "---"
         },
@@ -1132,6 +1142,7 @@ function Ui.showAllTimeoutConfigDialog(parent_ui)
                             Config.deleteSetting(Config.SETTINGS_TIMEOUT_POPULAR_KEY)
                             Config.deleteSetting(Config.SETTINGS_TIMEOUT_DOWNLOAD_KEY)
                             Config.deleteSetting(Config.SETTINGS_TIMEOUT_COVER_KEY)
+                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_BOOK_COMMENTS_KEY)
                             Ui.showInfoMessage(T("All timeout settings reset to defaults"))
                             refreshMainDialog()
                         end
@@ -1150,116 +1161,99 @@ function Ui.showAllTimeoutConfigDialog(parent_ui)
     _showAndTrackDialog(main_menu)
 end
 
--- Helper function to safely truncate UTF-8 strings
-local function truncateUtf8(str, max_len)
-    if #str <= max_len then
-        return str
-    end
-    
-    local result = ""
-    local len = 0
-    local i = 1
-    while i <= #str do
-        local char = string.byte(str, i)
-        local char_len = 1
-        if char >= 0xF0 then
-            char_len = 4
-        elseif char >= 0xE0 then
-            char_len = 3
-        elseif char >= 0xC0 then
-            char_len = 2
-        end
-        
-        if len + char_len > max_len - 3 then -- leave room for "..."
-            break
-        end
-        
-        result = result .. string.sub(str, i, i + char_len - 1)
-        len = len + char_len
-        i = i + char_len
-    end
-    
-    return result .. "..."
-end
-
-function Ui.showCommentsDialog(parent_zlibrary, book_id)
-    if not book_id then
-        Ui.showErrorMessage(T("Book ID is required"))
+function Ui.showCommentsDialog(parent_zlibrary, book_comments)
+    if not (type(book_comments) == "table" and book_comments[1]) then
+        Ui.showErrorMessage(T("No comments to display"))
         return
     end
 
-    local loading_msg = Ui.showLoadingMessage(T("Loading comments..."))
+    local function generateCommentsHTML(comments)
+        local html_parts = {}
+        local roots = {}
+        local children = {}
 
-    local task = function()
-        return Api.getBookComments(book_id)
-    end
-
-    local on_success = function(api_result)
-        Ui.closeMessage(loading_msg)
-
-        if api_result.error then
-            Ui.showErrorMessage(Ui.colonConcat(T("Failed to load comments"), tostring(api_result.error)))
-            return
-        end
-
-        local comments = api_result.comments
-        if not comments or #comments == 0 then
-            Ui.showInfoMessage(T("No comments to display"))
-            return
-        end
-
-        -- Create a map of comment IDs to comment objects for quick lookup
-        local comment_map = {}
         for _, comment in ipairs(comments) do
-            comment_map[comment.id] = comment
+            local pid = comment.parent_id
+            if pid and pid ~= "" and pid ~= 0 then
+                if not children[pid] then children[pid] = {} end
+                table.insert(children[pid], comment)
+            else
+                table.insert(roots, comment)
+            end
         end
 
-        local comment_items = {}
-        for _, comment in ipairs(comments) do
-            local user_name = comment.user and comment.user.name or "Anonymous"
+        -- Flatten if parent_id exists but root node not found
+        if #roots == 0 and #comments > 0 then
+            roots = comments
+        end
+
+        local function renderComment(comment, depth)
+            local user = comment.user or {}
+            local user_name = user.name or "Anonymous"
+            local is_premium = user.isPremium and "⭐" or ""
             local date_str = comment.dateRelative or comment.date or ""
-            
-            -- Build full comment text for dialog
-            local full_comment = comment.text
-            if comment.parent_id and comment_map[comment.parent_id] then
-                local parent_comment = comment_map[comment.parent_id]
-                local parent_user_name = parent_comment.user and parent_comment.user.name or "Anonymous"
-                full_comment = string.format("↪ %s: %s\n\n%s", parent_user_name, parent_comment.text, full_comment)
-            end
-            
-            -- Build truncated text for menu
-            local display_text = string.format("%s: %s", user_name, truncateUtf8(comment.text, 80))
-            
-            if date_str ~= "" then
-                display_text = string.format("%s (%s)", display_text, date_str)
-            end
-            
-            table.insert(comment_items, {
-                text = display_text,
-                mandatory = "\u{25B7}",
-                callback = function()
-                    -- Show full comment in TextViewer
-                    Ui.showFullTextDialog(string.format("%s - %s", user_name, date_str), full_comment)
+            local text = comment.text or ""
+
+            local inline_style = depth > 0 and string.format(' style="margin-left: %sem;"', depth * 1.5) or ""
+            local reply_class = depth > 0 and " comment-reply" or ""
+
+            local comment_html = string.format([[
+            <div class="comment-node%s"%s>
+                <div class="comment-inner">
+                    <div class="comment-header">%s <span>%s</span></div>
+                    <div class="comment-body">%s</div>
+                    <div class="comment-meta">%s</div>
+                </div>
+            </div>
+            ]], reply_class, inline_style, user_name, is_premium, text, date_str)
+
+            table.insert(html_parts, comment_html)
+
+            local child_comments = children[comment.id]
+            if child_comments then
+                for _, child in ipairs(child_comments) do
+                    renderComment(child, depth + 1)
                 end
-            })
+            end
         end
 
-        local comments_menu = Menu:new{
-            title = T("Comments"),
-            item_table = comment_items,
-            items_per_page = 8, -- Reduce items per page to prevent font scaling issues
-            show_captions = true,
-            multilines_show_more_text = true
-        }
-        _showAndTrackDialog(comments_menu)
+        for _, root_comment in ipairs(roots) do
+            renderComment(root_comment, 0)
+        end
+
+        return table.concat(html_parts, "\n")
+    end
+    
+    local Screen = require("device").screen
+    local FootnoteWidget = require("ui/widget/footnotewidget")
+
+    local COMMENTS_CSS = "body{padding-top:20px;}.comment-node{margin-top:1.2em;margin-bottom:1.2em;}.comment-reply{border-left:2px solid #ccc;padding-left:1em;}.comment-inner{padding-bottom:1em;border-bottom:1px solid #e0e0e0;}.comment-header{font-weight:bold;margin-bottom:0.5em;color:#333;}.comment-body{margin-bottom:0.5em;line-height:1.4;word-break:break-word;}.comment-meta{font-size:0.85em;color:#666;font-style:italic;}"
+
+    local original_getHeight = Screen.getHeight
+    Screen.getHeight = function(self)
+        return original_getHeight(self) * 2
     end
 
-    local on_error = function(err_msg)
-        Ui.closeMessage(loading_msg)
-        Ui.showErrorMessage(Ui.colonConcat(T("Failed to load comments"), tostring(err_msg)))
-    end
-
-    AsyncHelper.run(task, on_success, on_error, loading_msg)
+    local comments_popup
+    comments_popup = FootnoteWidget:new{
+        html = generateCommentsHTML(book_comments),
+        css = COMMENTS_CSS,
+        close_callback = function() 
+            UIManager:close(comments_popup) 
+        end,
+        dialog = UIManager:getTopmostVisibleWidget(),
+        doc_margins = {
+            left = Screen:scaleBySize(20),
+            right = Screen:scaleBySize(20),
+            top = Screen:scaleBySize(20),
+            bottom = Screen:scaleBySize(20),
+        },
+        doc_font_size = Screen:scaleBySize(23),
+        covers_footer = false,
+    }
+    
+    Screen.getHeight = original_getHeight 
+    _showAndTrackDialog(comments_popup)
 end
 
 return Ui

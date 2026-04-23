@@ -807,6 +807,10 @@ msgstr "다운로드 타임아웃"
 msgid "Cover download timeouts"
 msgstr "표지 다운로드 타임아웃"
 
+#: zlibrary/ui.lua:1102
+msgid "Covers not available"
+msgstr "표지를 사용할 수 없습니다"
+
 msgid "Cover download"
 msgstr "표지 다운로드"
 

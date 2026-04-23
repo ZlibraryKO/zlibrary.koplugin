@@ -1073,6 +1073,10 @@ msgstr "Таймаути при изтегляне"
 msgid "Cover download timeouts"
 msgstr "Таймаути при изтегляне на корици"
 
+#: zlibrary/ui.lua:1102
+msgid "Covers not available"
+msgstr "Кориците не са налични"
+
 #: zlibrary/ui.lua:1104
 msgid "Cover download"
 msgstr "Изтегляне на корица"

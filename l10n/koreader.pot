@@ -1088,6 +1088,10 @@ msgstr ""
 msgid "Cover download timeouts"
 msgstr ""
 
+#: zlibrary/ui.lua:1102
+msgid "Covers not available"
+msgstr ""
+
 #: zlibrary/ui.lua:1104
 msgid "Cover download"
 msgstr ""

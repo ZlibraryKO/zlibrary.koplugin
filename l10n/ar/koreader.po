@@ -807,6 +807,10 @@ msgstr "مهل التنزيل"
 msgid "Cover download timeouts"
 msgstr "مهل تنزيل الغلاف"
 
+#: zlibrary/ui.lua:1102
+msgid "Covers not available"
+msgstr "الأغلفة غير متاحة"
+
 msgid "Cover download"
 msgstr "تنزيل الغلاف"
 

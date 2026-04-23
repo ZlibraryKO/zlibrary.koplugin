@@ -807,6 +807,10 @@ msgstr "下载超时"
 msgid "Cover download timeouts"
 msgstr "封面下载超时"
 
+#: zlibrary/ui.lua:1102
+msgid "Covers not available"
+msgstr "封面不可用"
+
 msgid "Cover download"
 msgstr "封面下载"
 

@@ -1100,7 +1100,7 @@ end
 --- @param books table Lista de book_data con campos .cover y .hash
 --- @param max_covers number Máximo de portadas a descargar (default: 50)
 function Ui.prefetchCoversSync(books, max_covers)
-    if type(books) ~= "table" then return end
+    if type(books) ~= "table" then return false end
 
     local Cache = require("zlibrary.cache")
     local util_mod = require("util")
@@ -1109,11 +1109,12 @@ function Ui.prefetchCoversSync(books, max_covers)
 
     max_covers = max_covers or 50
     local downloaded = 0
+    local timed_out = false
 
     local ok_dir, _ = pcall(Cache.ensureCoversDir)
     if not ok_dir then
         logger.err("prefetchCoversSync: failed to create covers directory")
-        return
+        return false
     end
 
     for _, book in ipairs(books) do
@@ -1131,10 +1132,14 @@ function Ui.prefetchCoversSync(books, max_covers)
                     logger.dbg("prefetchCoversSync: OK", book.hash)
                     downloaded = downloaded + 1
                 else
-                    logger.warn("prefetchCoversSync: FAIL", book.hash, ok and (result and result.error or "unknown") or tostring(result))
-                    -- Limpiar archivo parcial si existe
+                    local err_msg = ok and (result and result.error or "unknown") or tostring(result)
+                    logger.warn("prefetchCoversSync: FAIL", book.hash, err_msg)
                     pcall(os.remove, target_path)
-                    downloaded = downloaded + 1 -- contar como intento para no quedarse atrapado
+                    if string.find(err_msg, "timed out") then
+                        timed_out = true
+                        break
+                    end
+                    downloaded = downloaded + 1
                 end
                 -- Yield control to UIManager between downloads to prevent
                 -- long UI freezes on e-ink devices (works with AsyncHelper coroutines)
@@ -1144,7 +1149,8 @@ function Ui.prefetchCoversSync(books, max_covers)
             end
         end
     end
-    logger.info(string.format("prefetchCoversSync: completed (%d downloads)", downloaded))
+    logger.info(string.format("prefetchCoversSync: completed (%d downloads, timed_out=%s)", downloaded, tostring(timed_out)))
+    return timed_out
 end
 
 return Ui

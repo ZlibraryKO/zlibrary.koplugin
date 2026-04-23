@@ -807,6 +807,10 @@ msgstr "Limity czasu pobierania"
 msgid "Cover download timeouts"
 msgstr "Limity czasu pobierania okładki"
 
+#: zlibrary/ui.lua:1102
+msgid "Covers not available"
+msgstr "Okładki niedostępne"
+
 msgid "Cover download"
 msgstr "Pobieranie okładki"
 

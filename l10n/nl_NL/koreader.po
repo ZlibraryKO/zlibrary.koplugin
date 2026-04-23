@@ -807,6 +807,10 @@ msgstr "Download timeouts"
 msgid "Cover download timeouts"
 msgstr "Omslag download timeouts"
 
+#: zlibrary/ui.lua:1102
+msgid "Covers not available"
+msgstr "Omslagen niet beschikbaar"
+
 msgid "Cover download"
 msgstr "Omslag download"
 

@@ -868,5 +868,68 @@ function Api.findWorkingBaseUrl()
     return { success = false, error = T("Could not find a working Z-library server. Please check your internet connection or set the base URL manually.") }
 end
 
+function Api.getBookComments(user_id, user_key, book_id)
+    if not book_id then
+        logger.warn("Api.getBookComments - Missing book_id parameter")
+        return {
+            error = T("Book ID is required.")
+        }
+    end
+
+    local url = Config.getBookCommentsUrl(book_id)
+    if not url then
+        logger.warn("Api.getBookComments - URL could not be constructed. Base URL configured? Book ID provided?")
+        return {
+            error = T("Z-library server URL not configured or book identifiers missing.")
+        }
+    end
+
+    local headers = {
+        ["User-Agent"] = Config.USER_AGENT
+    }
+
+    local http_result = Api.makeHttpRequest {
+        url = url,
+        method = "GET",
+        headers = headers,
+        timeout = Config.getBookCommentsTimeout(),
+        getRedirectedUrl = function()
+            return Config.getBookCommentsUrl(book_id)
+        end
+    }
+
+    if http_result.error then
+        logger.warn("Api.getBookComments - HTTP request error: ", http_result.error)
+        return {
+            error = http_result.error
+        }
+    end
+
+    if not http_result.body then
+        logger.warn("Api.getBookComments - No response body")
+        return {
+            error = T("Failed to fetch book comments (no response body).")
+        }
+    end
+
+    local success, data = pcall(json.decode, http_result.body, json.decode.simple)
+    if not success or not data then
+        logger.warn("Api.getBookComments - Failed to decode JSON: ", http_result.body)
+        return {
+            error = T("Failed to parse book comments response.")
+        }
+    end
+
+    if data.success ~= 1 then
+        logger.warn("Api.getBookComments - API error: ", http_result.body)
+        return {
+            error = data.message or T("API returned an error for book comments.")
+        }
+    end
+    
+    return {
+        comments = data.comments
+    }
+end
 
 return Api

@@ -1347,6 +1347,47 @@ function Zlibrary:downloadAndShowCover(book)
     Ui.showCoverDialog(book_title, cover_cache_path)
 end
 
+function Zlibrary:fetchAndDisplayComments(book, skip_cache)
+    if not (book and book.id and book.hash) then
+        Ui.showErrorMessage(T("Book ID is required"))
+        return
+    end
+    
+    local book_cache = Cache:new{
+            name = string.format("comments_%s_%s", book.id, book.hash)
+    }
+    if not skip_cache then
+        local book_comments_cache = book_cache:get("comments", 432000)
+        if type(book_comments_cache) == "table" and book_comments_cache[1] then
+            Ui.showCommentsDialog(self, book_comments_cache)
+            return
+        end
+    end
+    
+    local task = function()
+        return Api.getBookComments(book.id)
+    end
+
+    local on_success = function(ui_self, api_result, plugin_self)
+        Ui.showCommentsDialog(self, api_result.comments)
+        book_cache:insert("comments", api_result.comments)
+    end
+
+    self:_requestDispatcher({
+        api_method = Api.getBookComments,
+        loading_text_key = T("Loading comments..."),
+        error_prefix_key = T("Failed to load comments"),
+        operation_name = T("Comments"),
+        log_context = "fetchAndDisplayComments",
+        resolve_result = on_success,
+        requires_auth = false,
+        hasValidApiResult = function(api_result)
+            local ok = type(api_result) == "table" and type(api_result.comments) == "table" and type(api_result.comments[1]) == "table"
+            return ok, not ok and T("No comments to display")
+        end,
+    }, book.id)
+end
+
 function Zlibrary:onExit()
     if self.dialog_manager and self.dialog_manager:getDialogCount() > 0 then
         logger.info("Zlibrary:onExit - Cleaning up " .. self.dialog_manager:getDialogCount() .. " remaining dialogs")

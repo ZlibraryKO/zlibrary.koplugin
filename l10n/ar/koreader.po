@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-17 10:36+0000\n"
+"POT-Creation-Date: 2026-04-23 09:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -287,6 +287,21 @@ msgstr "تنزيل"
 msgid "Retrying download..."
 msgstr ""
 
+msgid "Book ID is required"
+msgstr ""
+
+msgid "Loading comments..."
+msgstr ""
+
+msgid "Failed to load comments"
+msgstr ""
+
+msgid "Comments"
+msgstr ""
+
+msgid "No comments to display"
+msgstr ""
+
 msgid "Request timed out - please check your connection and try again"
 msgstr ""
 
@@ -454,6 +469,18 @@ msgstr ""
 
 msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
 msgstr "تعذر العثور على خادم Z-library متاح. يرجى التحقق من اتصال الإنترنت أو تعيين عنوان URL الأساسي يدويًا."
+
+msgid "Book ID is required."
+msgstr ""
+
+msgid "Failed to fetch book comments (no response body)."
+msgstr ""
+
+msgid "Failed to parse book comments response."
+msgstr ""
+
+msgid "API returned an error for book comments."
+msgstr ""
 
 msgid "Best match"
 msgstr ""
@@ -667,14 +694,14 @@ msgstr "تنزيل كتاب (تنسيق غير معروف)"
 msgid "Size"
 msgstr "الحجم"
 
+msgid "Pages"
+msgstr "الصفحات"
+
 msgid "Publisher"
 msgstr "الناشر"
 
 msgid "Series"
 msgstr "السلسلة"
-
-msgid "Pages"
-msgstr "الصفحات"
 
 msgid "Back"
 msgstr "رجوع"

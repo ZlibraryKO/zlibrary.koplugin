@@ -23,6 +23,7 @@ Config.SETTINGS_TIMEOUT_RECOMMENDED_KEY = "zlibrary_timeout_recommended"
 Config.SETTINGS_TIMEOUT_POPULAR_KEY = "zlibrary_timeout_popular"
 Config.SETTINGS_TIMEOUT_DOWNLOAD_KEY = "zlibrary_timeout_download"
 Config.SETTINGS_TIMEOUT_COVER_KEY = "zlibrary_timeout_cover"
+Config.SETTINGS_TIMEOUT_BOOK_COMMENTS_KEY = "zlibrary_timeout_book_comments"
 Config.CREDENTIALS_FILENAME = "zlibrary_credentials.lua"
 
 Config.DEFAULT_DOWNLOAD_DIR_FALLBACK = G_reader_settings:readSetting("home_dir")
@@ -38,6 +39,7 @@ Config.TIMEOUT_RECOMMENDED = { 30, 15 }  -- Recommended books operations
 Config.TIMEOUT_POPULAR = { 30, 15 }      -- Popular books operations
 Config.TIMEOUT_DOWNLOAD = { 15, -1 }    -- Book download operations (infinite total timeout if data flows)
 Config.TIMEOUT_COVER = { 5, 15 }        -- Cover image operations
+Config.TIMEOUT_BOOK_COMMENTS = { 10, 15 } -- Comments operations
 
 function Config.loadCredentialsFromFile(plugin_path)
     local cred_file_path = plugin_path .. Config.CREDENTIALS_FILENAME
@@ -252,6 +254,12 @@ function Config.getBookDetailsUrl(book_id, book_hash)
     return base .. string.format("/eapi/book/%s/%s", book_id, book_hash)
 end
 
+function Config.getBookCommentsUrl(book_id)
+    local base = Config.getBaseUrl()
+    if not base or not book_id then return nil end
+    return base .. string.format("/papi/comments/book/%s/0", book_id)
+end
+
 function Config.getDownloadLinkUrl(book_id, book_hash)
     local base = Config.getBaseUrl()
     if not base or not book_id or not book_hash then return nil end
@@ -460,6 +468,10 @@ function Config.getCoverTimeout()
     return Config.getTimeoutConfig(Config.SETTINGS_TIMEOUT_COVER_KEY, Config.TIMEOUT_COVER)
 end
 
+function Config.getBookCommentsTimeout()
+    return Config.getTimeoutConfig(Config.SETTINGS_TIMEOUT_BOOK_COMMENTS_KEY, Config.TIMEOUT_BOOK_COMMENTS)
+end
+
 function Config.formatTimeoutForDisplay(timeout_pair)
     local block_timeout = timeout_pair[1]
     local total_timeout = timeout_pair[2]
@@ -494,6 +506,10 @@ end
 
 function Config.setCoverTimeout(block_timeout, total_timeout)
     Config.setTimeoutConfig(Config.SETTINGS_TIMEOUT_COVER_KEY, block_timeout, total_timeout)
+end
+
+function Config.setBookCommentsTimeout(block_timeout, total_timeout)
+    Config.setTimeoutConfig(Config.SETTINGS_TIMEOUT_BOOK_COMMENTS_KEY, block_timeout, total_timeout)
 end
 
 return Config

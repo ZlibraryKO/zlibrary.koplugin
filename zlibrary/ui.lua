@@ -570,7 +570,7 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
         mandatory = "\u{25B7}",
         callback = function()
             parent_zlibrary:fetchAndDisplayComments(book)
-        end
+        end,
     })
     if book.publisher and book.publisher ~= "" then
         local publisher_for_html = (type(book.publisher) == "string" and book.publisher) or ""
@@ -1225,13 +1225,14 @@ function Ui.showCommentsDialog(parent_zlibrary, book_comments)
         return table.concat(html_parts, "\n")
     end
     
-    local Screen = require("device").screen
+    local Device = require("device")
+    local Screen = Device.screen
     local FootnoteWidget = require("ui/widget/footnotewidget")
 
     local COMMENTS_CSS = "body{padding-top:20px;}.comment-node{margin-top:1.2em;margin-bottom:1.2em;}.comment-reply{border-left:2px solid #ccc;padding-left:1em;}.comment-inner{padding-bottom:1em;border-bottom:1px solid #e0e0e0;}.comment-header{font-weight:bold;margin-bottom:0.5em;color:#333;}.comment-body{margin-bottom:0.5em;line-height:1.4;word-break:break-word;}.comment-meta{font-size:0.85em;color:#666;font-style:italic;}"
 
     local original_getHeight = Screen.getHeight
-    Screen.getHeight = function(self)
+    Device.screen.getHeight = function(self)
         return original_getHeight(self) * 2
     end
 
@@ -1253,7 +1254,7 @@ function Ui.showCommentsDialog(parent_zlibrary, book_comments)
         covers_footer = false,
     }
     
-    Screen.getHeight = original_getHeight 
+    Device.screen.getHeight = original_getHeight 
     _showAndTrackDialog(comments_popup)
 end
 

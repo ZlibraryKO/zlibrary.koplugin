@@ -563,7 +563,15 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
     end
 
     if book.size and book.size ~= "N/A" then table.insert(details_menu.item_table, { text = _colon_concat(T("Size"), book.size), enabled = false }) end
+    if book.pages and book.pages ~= 0 then table.insert(details_menu.item_table, { text = _colon_concat(T("Pages"), book.pages), enabled = false }) end
     if book.rating and book.rating ~= "N/A" then table.insert(details_menu.item_table, { text = _colon_concat(T("Rating"), book.rating), enabled = false }) end
+    table.insert(details_menu.item_table, {
+        text = T("Comments"),
+        mandatory = "\u{25B7}",
+        callback = function()
+            parent_zlibrary:fetchAndDisplayComments(book)
+        end
+    })
     if book.publisher and book.publisher ~= "" then
         local publisher_for_html = (type(book.publisher) == "string" and book.publisher) or ""
         table.insert(details_menu.item_table, { text = _colon_concat(T("Publisher"), util.htmlEntitiesToUtf8(publisher_for_html)), enabled = false })
@@ -572,15 +580,6 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
         local series_for_html = (type(book.series) == "string" and book.series) or ""
         table.insert(details_menu.item_table, { text = _colon_concat(T("Series"), util.htmlEntitiesToUtf8(series_for_html)), enabled = false })
     end
-    if book.pages and book.pages ~= 0 then table.insert(details_menu.item_table, { text = _colon_concat(T("Pages"), book.pages), enabled = false }) end
-
-    table.insert(details_menu.item_table, {
-        text = T("Comments"),
-        mandatory = "\u{25B7}",
-        callback = function()
-            parent_zlibrary:fetchAndDisplayComments(book)
-        end
-    })
 
     table.insert(details_menu.item_table, { text = "---" })
 
@@ -1172,7 +1171,9 @@ function Ui.showCommentsDialog(parent_zlibrary, book_comments)
         local roots = {}
         local children = {}
 
-        for _, comment in ipairs(comments) do
+        -- comments are in reverse order
+        for i = #comments, 1, -1 do
+            local comment = comments[i]
             local pid = comment.parent_id
             if pid and pid ~= "" and pid ~= 0 then
                 if not children[pid] then children[pid] = {} end

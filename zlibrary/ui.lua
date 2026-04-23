@@ -1209,7 +1209,7 @@ function Ui.showCommentsDialog(parent_zlibrary, book_comments)
 end
 
 function Ui.prefetchCoversSync(books, max_covers)
-    if type(books) ~= "table" then return end
+    if type(books) ~= "table" then return false end
 
     local Cache = require("zlibrary.cache")
     local util_mod = require("util")
@@ -1218,11 +1218,12 @@ function Ui.prefetchCoversSync(books, max_covers)
 
     max_covers = max_covers or 50
     local downloaded = 0
+    local timed_out = false
 
     local ok_dir, _ = pcall(Cache.ensureCoversDir)
     if not ok_dir then
         logger.err("prefetchCoversSync: failed to create covers directory")
-        return
+        return false
     end
 
     for _, book in ipairs(books) do
@@ -1239,8 +1240,13 @@ function Ui.prefetchCoversSync(books, max_covers)
                     logger.dbg("prefetchCoversSync: OK", book.hash)
                     downloaded = downloaded + 1
                 else
-                    logger.warn("prefetchCoversSync: FAIL", book.hash, ok and (result and result.error or "unknown") or tostring(result))
+                    local err_msg = ok and (result and result.error or "unknown") or tostring(result)
+                    logger.warn("prefetchCoversSync: FAIL", book.hash, err_msg)
                     pcall(os.remove, target_path)
+                    if string.find(err_msg, "timed out") then
+                        timed_out = true
+                        break
+                    end
                     downloaded = downloaded + 1
                 end
                 -- Yield control to UIManager between downloads to prevent
@@ -1251,7 +1257,8 @@ function Ui.prefetchCoversSync(books, max_covers)
             end
         end
     end
-    logger.info(string.format("prefetchCoversSync: completed (%d downloads)", downloaded))
+    logger.info(string.format("prefetchCoversSync: completed (%d downloads, timed_out=%s)", downloaded, tostring(timed_out)))
+    return timed_out
 end
 
 return Ui

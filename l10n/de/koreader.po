@@ -834,6 +834,10 @@ msgstr "Download-Timeouts"
 msgid "Cover download timeouts"
 msgstr "Cover-Download-Timeouts"
 
+#: zlibrary/ui.lua:1102
+msgid "Covers not available"
+msgstr "Cover nicht verfügbar"
+
 msgid "Cover download"
 msgstr "Cover-Download"
 

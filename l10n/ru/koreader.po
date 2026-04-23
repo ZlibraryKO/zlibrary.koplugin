@@ -834,6 +834,10 @@ msgstr "Таймауты загрузки"
 msgid "Cover download timeouts"
 msgstr "Таймауты загрузки обложки"
 
+#: zlibrary/ui.lua:1102
+msgid "Covers not available"
+msgstr "Обложки недоступны"
+
 msgid "Cover download"
 msgstr "Загрузка обложки"
 

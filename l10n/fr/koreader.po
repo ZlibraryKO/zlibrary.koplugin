@@ -834,6 +834,10 @@ msgstr "Délais d'expiration de téléchargement"
 msgid "Cover download timeouts"
 msgstr "Délais d'expiration de téléchargement de couverture"
 
+#: zlibrary/ui.lua:1102
+msgid "Covers not available"
+msgstr "Couvertures non disponibles"
+
 msgid "Cover download"
 msgstr "Téléchargement de couverture"
 

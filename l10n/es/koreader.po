@@ -834,6 +834,10 @@ msgstr "Tiempos límite de descarga"
 msgid "Cover download timeouts"
 msgstr "Tiempos límite de descarga de portada"
 
+#: zlibrary/ui.lua:1102
+msgid "Covers not available"
+msgstr "Portadas no disponibles"
+
 msgid "Cover download"
 msgstr "Descarga de portada"
 

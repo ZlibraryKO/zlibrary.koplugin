@@ -345,7 +345,10 @@ function Zlibrary:_requestDispatcher(options, ...)
             local api_result = options.api_method(user_session and user_session.user_id, user_session and user_session.user_key, table.unpack(api_extra_params))
             -- Hook opcional: pre-procesar resultado (ej. pre-descargar portadas)
             if type(options.prefetch_task) == "function" then
-                pcall(options.prefetch_task, api_result)
+                local ok, timed_out = pcall(options.prefetch_task, api_result)
+                if ok and timed_out then
+                    api_result._covers_timed_out = true
+                end
             end
             return api_result
         end
@@ -381,6 +384,11 @@ function Zlibrary:_requestDispatcher(options, ...)
             logger.info(string.format("Zlibrary:%s - Fetch successful.", options.log_context))
             UIManager:nextTick(function()
                 options.resolve_result(self.ui, api_result, self)
+                if api_result._covers_timed_out then
+                    UIManager:nextTick(function()
+                        Ui.showInfoMessage(T("Covers not available"))
+                    end)
+                end
             end)
         end
 
@@ -420,7 +428,7 @@ function Zlibrary:_fetchBookList(options, ...)
     if not options.prefetch_task then
         options.prefetch_task = function(api_result)
             if api_result and api_result.books then
-                Ui.prefetchCoversSync(api_result.books, 50)
+                return Ui.prefetchCoversSync(api_result.books, 50)
             end
         end
     end
@@ -644,7 +652,7 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                         hasValidApiResult = valid_api_result,
                         prefetch_task = function(api_result)
                             if api_result and api_result.books then
-                                Ui.prefetchCoversSync(api_result.books, 50)
+                                return Ui.prefetchCoversSync(api_result.books, 50)
                             end
                         end,
                         resolve_result = function(ui_self, api_result, plugin_self)
@@ -682,7 +690,7 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                         hasValidApiResult = valid_api_result,
                         prefetch_task = function(api_result)
                             if api_result and api_result.books then
-                                Ui.prefetchCoversSync(api_result.books, 50)
+                                return Ui.prefetchCoversSync(api_result.books, 50)
                             end
                         end,
                         resolve_result = function(ui_self, api_result, plugin_self)
@@ -954,7 +962,8 @@ function Zlibrary:performSearch(query)
             local api_result = Api.search(query, user_session and user_session.user_id, user_session and user_session.user_key, selected_languages, selected_extensions, selected_order, current_page_to_search)
             -- Pre-descargar portadas antes de devolver los resultados
             if api_result and api_result.results and #api_result.results > 0 then
-                Ui.prefetchCoversSync(api_result.results, 50)
+                local timed_out = Ui.prefetchCoversSync(api_result.results, 50)
+                if timed_out then api_result._covers_timed_out = true end
             end
             return api_result
         end
@@ -994,6 +1003,11 @@ function Zlibrary:performSearch(query)
 
             UIManager:nextTick(function()
                 self:displaySearchResults(self.all_search_results_data, self.current_search_query)
+                if api_result._covers_timed_out then
+                    UIManager:nextTick(function()
+                        Ui.showInfoMessage(T("Covers not available"))
+                    end)
+                end
             end)
         end
 
@@ -1060,7 +1074,8 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
                 local api_result_more = Api.search(self.current_search_query, user_session_more.user_id, user_session_more.user_key, selected_languages_more, selected_extensions_more, selected_order_more, next_api_page_to_fetch)
                 -- Pre-descargar portadas de la nueva página
                 if api_result_more and api_result_more.results and #api_result_more.results > 0 then
-                    Ui.prefetchCoversSync(api_result_more.results, 50)
+                    local timed_out = Ui.prefetchCoversSync(api_result_more.results, 50)
+                    if timed_out then api_result_more._covers_timed_out = true end
                 end
                 return api_result_more
             end
@@ -1094,6 +1109,9 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
                         table.insert(new_menu_items_to_add, Ui.createBookMenuItem(book_api_data_transformed, self))
                     end
                     Ui.appendSearchResultsToMenu(menu_instance, new_menu_items_to_add)
+                    if api_result_more._covers_timed_out then
+                        Ui.showInfoMessage(T("Covers not available"))
+                    end
                 else
                     logger.info("Zlibrary: No more results from API or API returned empty.")
                     self.has_more_api_results = false

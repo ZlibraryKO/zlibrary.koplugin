@@ -13,6 +13,35 @@ local NewGetText = {
     dirname = string.format("%s/l10n", plugin_path)
 }
 
+local function _tryLoadLang(lang, original_translation)
+    local ok, err = pcall(GetText.changeLang, lang)
+    local loaded = ok and (
+        (GetText.translation and next(GetText.translation) ~= nil) or
+        (GetText.context and next(GetText.context) ~= nil)
+    )
+    if loaded then
+        logger.info(string.format("zlibrary.gettext: loaded translations for '%s'", lang))
+        local copied_gettext = util.tableDeepCopy(GetText)
+        if copied_gettext then
+            NewGetText = copied_gettext
+            if NewGetText.translation and original_translation then
+                for k, _ in pairs(NewGetText.translation) do
+                    if original_translation[k] then
+                        NewGetText.translation[k] = nil
+                    end
+                end
+            end
+        end
+        return true
+    end
+    if not ok then
+        logger.warn(string.format("zlibrary.gettext: error loading '%s': %s", lang, tostring(err)))
+    else
+        logger.warn(string.format("zlibrary.gettext: no translations found for '%s'", lang))
+    end
+    return false
+end
+
 local changeLang = function(new_lang)
     local original_l10n_dirname = GetText.dirname
     local original_context = GetText.context
@@ -22,24 +51,21 @@ local changeLang = function(new_lang)
 
     GetText.dirname = NewGetText.dirname
 
-    local ok, err = pcall(GetText.changeLang, new_lang)
-    if ok then
-        if (GetText.translation and next(GetText.translation) ~= nil) or (GetText.context and next(GetText.context) ~= nil) then
-            local copied_gettext = util.tableDeepCopy(GetText)
-            if copied_gettext then
-                NewGetText = copied_gettext
-                --  reduce memory usage and prioritize using KOReader-translation
-                if NewGetText.translation and original_translation then
-                    for k, v in pairs(NewGetText.translation) do
-                        if original_translation[k] then
-                            NewGetText.translation[k] = nil
-                        end
-                    end
-                end
-            end
+    -- Try full language code, then base language (e.g. "es_ES" -> "es", "zh-CN" -> "zh_CN" -> "zh")
+    local loaded = _tryLoadLang(new_lang, original_translation)
+    if not loaded then
+        -- Normalize hyphens to underscores and try again
+        local normalized = new_lang:gsub("%-", "_")
+        if normalized ~= new_lang then
+            loaded = _tryLoadLang(normalized, original_translation)
         end
-    else
-        logger.warn(string.format("Failed to parse the PO file for lang %s: %s", tostring(new_lang), tostring(err)))
+    end
+    if not loaded then
+        -- Try base language (strip region suffix)
+        local base_lang = new_lang:match("^([^%-%_]+)")
+        if base_lang and base_lang ~= new_lang then
+            _tryLoadLang(base_lang, original_translation)
+        end
     end
 
     GetText.context = original_context

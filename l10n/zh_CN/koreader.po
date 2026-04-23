@@ -866,3 +866,27 @@ msgstr "超时设置"
 
 #~ msgid "Downloading..."
 #~ msgstr "正在下载..."
+
+msgid "Book ID is required."
+msgstr "未指定书籍id"
+
+msgid "Failed to fetch book comments (no response body)."
+msgstr "获取书籍评论失败。"
+
+msgid "Failed to parse book comments response."
+msgstr "获取书籍评论失败。"
+
+msgid "API returned an error for book comments."
+msgstr "获取书籍评论出错。"
+
+msgid "Loading comments..."
+msgstr "加载评论中。。。"
+
+msgid "Failed to load comments"
+msgstr "加载评论失败"
+
+msgid "No comments to display"
+msgstr "没有评论展示"
+
+msgid "Comments"
+msgstr "评论"

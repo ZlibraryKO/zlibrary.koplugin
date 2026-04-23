@@ -574,6 +574,14 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
     end
     if book.pages and book.pages ~= 0 then table.insert(details_menu.item_table, { text = _colon_concat(T("Pages"), book.pages), enabled = false }) end
 
+    table.insert(details_menu.item_table, {
+        text = T("Comments"),
+        mandatory = "\u{25B7}",
+        callback = function()
+            Ui.showCommentsDialog(parent_zlibrary, book.id)
+        end
+    })
+
     table.insert(details_menu.item_table, { text = "---" })
 
     table.insert(details_menu.item_table, {
@@ -1140,6 +1148,118 @@ function Ui.showAllTimeoutConfigDialog(parent_ui)
         show_captions = true,
     }
     _showAndTrackDialog(main_menu)
+end
+
+-- Helper function to safely truncate UTF-8 strings
+local function truncateUtf8(str, max_len)
+    if #str <= max_len then
+        return str
+    end
+    
+    local result = ""
+    local len = 0
+    local i = 1
+    while i <= #str do
+        local char = string.byte(str, i)
+        local char_len = 1
+        if char >= 0xF0 then
+            char_len = 4
+        elseif char >= 0xE0 then
+            char_len = 3
+        elseif char >= 0xC0 then
+            char_len = 2
+        end
+        
+        if len + char_len > max_len - 3 then -- leave room for "..."
+            break
+        end
+        
+        result = result .. string.sub(str, i, i + char_len - 1)
+        len = len + char_len
+        i = i + char_len
+    end
+    
+    return result .. "..."
+end
+
+function Ui.showCommentsDialog(parent_zlibrary, book_id)
+    if not book_id then
+        Ui.showErrorMessage(T("Book ID is required"))
+        return
+    end
+
+    local loading_msg = Ui.showLoadingMessage(T("Loading comments..."))
+
+    local task = function()
+        return Api.getBookComments(book_id)
+    end
+
+    local on_success = function(api_result)
+        Ui.closeMessage(loading_msg)
+
+        if api_result.error then
+            Ui.showErrorMessage(Ui.colonConcat(T("Failed to load comments"), tostring(api_result.error)))
+            return
+        end
+
+        local comments = api_result.comments
+        if not comments or #comments == 0 then
+            Ui.showInfoMessage(T("No comments to display"))
+            return
+        end
+
+        -- Create a map of comment IDs to comment objects for quick lookup
+        local comment_map = {}
+        for _, comment in ipairs(comments) do
+            comment_map[comment.id] = comment
+        end
+
+        local comment_items = {}
+        for _, comment in ipairs(comments) do
+            local user_name = comment.user and comment.user.name or "Anonymous"
+            local date_str = comment.dateRelative or comment.date or ""
+            
+            -- Build full comment text for dialog
+            local full_comment = comment.text
+            if comment.parent_id and comment_map[comment.parent_id] then
+                local parent_comment = comment_map[comment.parent_id]
+                local parent_user_name = parent_comment.user and parent_comment.user.name or "Anonymous"
+                full_comment = string.format("↪ %s: %s\n\n%s", parent_user_name, parent_comment.text, full_comment)
+            end
+            
+            -- Build truncated text for menu
+            local display_text = string.format("%s: %s", user_name, truncateUtf8(comment.text, 80))
+            
+            if date_str ~= "" then
+                display_text = string.format("%s (%s)", display_text, date_str)
+            end
+            
+            table.insert(comment_items, {
+                text = display_text,
+                mandatory = "\u{25B7}",
+                callback = function()
+                    -- Show full comment in TextViewer
+                    Ui.showFullTextDialog(string.format("%s - %s", user_name, date_str), full_comment)
+                end
+            })
+        end
+
+        local comments_menu = Menu:new{
+            title = T("Comments"),
+            item_table = comment_items,
+            items_per_page = 8, -- Reduce items per page to prevent font scaling issues
+            show_captions = true,
+            multilines_show_more_text = true
+        }
+        _showAndTrackDialog(comments_menu)
+    end
+
+    local on_error = function(err_msg)
+        Ui.closeMessage(loading_msg)
+        Ui.showErrorMessage(Ui.colonConcat(T("Failed to load comments"), tostring(err_msg)))
+    end
+
+    AsyncHelper.run(task, on_success, on_error, loading_msg)
 end
 
 return Ui

@@ -1311,19 +1311,21 @@ function Zlibrary:downloadAndShowCover(book)
     Ui.showCoverDialog(book_title, cover_cache_path)
 end
 
-function Zlibrary:fetchAndDisplayComments(book)
+function Zlibrary:fetchAndDisplayComments(book, skip_cache)
     if not (book and book.id and book.hash) then
         Ui.showErrorMessage(T("Book ID is required"))
         return
     end
     
     local book_cache = Cache:new{
-        name = string.format("comments_%s_%s", book.id, book.hash)
+            name = string.format("comments_%s_%s", book.id, book.hash)
     }
-    local book_comments_cache = book_cache:get("comments", 432000)
-    if type(book_comments_cache) == "table" then
-        Ui.showCommentsDialog(self, book_comments_cache)
-        return
+    if not skip_cache then
+        local book_comments_cache = book_cache:get("comments", 432000)
+        if type(book_comments_cache) == "table" and book_comments_cache[1] then
+            Ui.showCommentsDialog(self, book_comments_cache)
+            return
+        end
     end
     
     local task = function()

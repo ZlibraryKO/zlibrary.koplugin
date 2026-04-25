@@ -1,20 +1,22 @@
 # Bulgarian translation for zlibrary.koplugin
 # Copyright (C) 2026
 # This file is distributed under the same license as the zlibrary.koplugin package.
-#
+# Translators:
+# d0nizam 2026
 msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-23 09:37+0000\n"
-"PO-Revision-Date: 2026-04-13 00:00+0000\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2026-04-25 21:51+0300\n"
+"Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
 "Language: bg_BG\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.9\n"
 
 msgid "Z-library"
 msgstr "Z-library"
@@ -155,16 +157,16 @@ msgid "Syncing your download limit..."
 msgstr "Синхронизиране на лимита за изтегляне..."
 
 msgid "failed to load download quota status"
-msgstr "Неуспешно зареждане на статуса на лимита за изтегляне"
+msgstr "неуспешно зареждане на статуса на квотата за изтегляне"
 
 msgid "Sync download quota"
 msgstr "Синхронизиране на лимита за изтегляне"
 
 msgid "Syncing favorites summary…"
-msgstr "Синхронизиране на резюме на любими..."
+msgstr "Синхронизиране на резюме на любими…"
 
 msgid "failed to load favorite book id list"
-msgstr "Неуспешно зареждане на списъка с любими книги"
+msgstr "неуспешно зареждане на списъка с любими книги"
 
 msgid "Sync favorites summary"
 msgstr "Синхронизиране на резюме на любими"
@@ -209,19 +211,19 @@ msgid "Similar books"
 msgstr "Подобни книги"
 
 msgid "Removing book from favorites…"
-msgstr "Премахване на книгата от любими..."
+msgstr "Премахване на книгата от любими…"
 
 msgid "Failed to remove book from favorites"
 msgstr "Неуспешно премахване на книгата от любими"
 
 msgid "unfavorite book"
-msgstr "Премахване от любими"
+msgstr "премахване от любими"
 
 msgid "Book removed from favorites, please refresh"
 msgstr "Книгата е премахната от любими, моля опреснете"
 
 msgid "Adding book to favorites…"
-msgstr "Добавяне на книгата към любими..."
+msgstr "Добавяне на книгата към любими…"
 
 msgid "Failed to add book to favorites"
 msgstr "Неуспешно добавяне на книгата към любими"
@@ -254,10 +256,10 @@ msgid "Login"
 msgstr "Влизане"
 
 msgid "Searching for \""
-msgstr ""
+msgstr "Търсене на \""
 
 msgid "No results found for \""
-msgstr ""
+msgstr "Няма намерени резултати за \""
 
 #, lua-format
 msgid "Loading more results (Page %s)..."
@@ -292,19 +294,19 @@ msgid "Retrying download..."
 msgstr "Повторен опит за изтегляне..."
 
 msgid "Book ID is required"
-msgstr ""
+msgstr "Изисква се ID на книгата"
 
 msgid "Loading comments..."
-msgstr ""
+msgstr "Коментарите се зареждат..."
 
 msgid "Failed to load comments"
-msgstr ""
+msgstr "Неуспешно зареждане на коментарите"
 
 msgid "Comments"
-msgstr ""
+msgstr "Коментари"
 
 msgid "No comments to display"
-msgstr ""
+msgstr "Няма коментари за показване"
 
 msgid "Request timed out - please check your connection and try again"
 msgstr "Заявката изтече — проверете връзката си и опитайте отново"
@@ -475,16 +477,16 @@ msgid "Could not find a working Z-library server. Please check your internet con
 msgstr "Не може да се намери работещ сървър на Z-library. Проверете интернет връзката си или задайте URL ръчно."
 
 msgid "Book ID is required."
-msgstr ""
+msgstr "Изисква се ID на книгата."
 
 msgid "Failed to fetch book comments (no response body)."
-msgstr ""
+msgstr "Неуспешно извличане на коментари за книгата (няма отговор)."
 
 msgid "Failed to parse book comments response."
-msgstr ""
+msgstr "Не успя да се анализира отговорът с коментари за книгата."
 
 msgid "API returned an error for book comments."
-msgstr ""
+msgstr "API върна грешка за коментарите на книгата."
 
 msgid "Best match"
 msgstr "Най-добро съвпадение"
@@ -718,11 +720,11 @@ msgstr "Добавяне към любими"
 
 #, lua-format
 msgid "Download \"%s\"?"
-msgstr ""
+msgstr "Изтегляне на „%s“?"
 
 #, lua-format
 msgid "\"%s\" downloaded successfully. Open it now?"
-msgstr ""
+msgstr "„%s“ беше изтеглен успешно. Искате ли да го отворите сега?"
 
 msgid "Turn off Wi-Fi after closing this dialog"
 msgstr "Изключване на Wi-Fi след затваряне на диалога"
@@ -749,7 +751,7 @@ msgid "Fetch most popular books from Z-library?"
 msgstr "Зареждане на най-популярни книги от Z-library?"
 
 msgid "Retrying search for \""
-msgstr ""
+msgstr "Повторен опит за търсене на \""
 
 msgid "Request timed out"
 msgstr "Заявката изтече"

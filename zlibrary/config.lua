@@ -131,7 +131,7 @@ Config.SUPPORTED_ORDERS = {
     { name = string.format("%s %s", T("File size"), "↑"), value = "filesizeA" }
 }
 
-Config.SEED_URLS = { -- List of known Z-library base URLs extracted from the Android app
+Config.SEED_URLS = { -- List of known Z-library base URLs extracted from the Android app (v1.11.4)
     "https://z-lib.fo/",
     -- "https://singlelogin.re/", -- Currently some kind of porn site
     "https://library-oceania.sk/",
@@ -142,7 +142,10 @@ Config.SEED_URLS = { -- List of known Z-library base URLs extracted from the And
     "https://z-library.do/",
     "https://z-lib.gd/",
     "https://1lib.sk/",
-    "https://z-lib.gl/"
+    "https://z-lib.gl/",
+    "https://z-library.rs/", -- these last 3 don't seem to work currently (May 2026), but may be worth trying in the future
+    "https://z-lib.do/",
+    "https://z-lib.gs/",
 }
 
 local _lua_settings

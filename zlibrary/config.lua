@@ -1,6 +1,7 @@
 local util = require("util")
 local logger = require("logger")
-local lfs = require("libs/libkoreader-lfs")
+local DataStorage = require("datastorage")
+local LuaSettings = require("luasettings")
 local T = require("zlibrary.gettext")
 local Cache = require("zlibrary.cache")
 
@@ -43,40 +44,31 @@ Config.TIMEOUT_BOOK_COMMENTS = { 10, 15 } -- Comments operations
 
 function Config.loadCredentialsFromFile(plugin_path)
     local cred_file_path = plugin_path .. Config.CREDENTIALS_FILENAME
-    if lfs.attributes(cred_file_path, "mode") == "file" then
-        local func, err = loadfile(cred_file_path)
-        if func then
-            local success, result = pcall(func)
-            if success and type(result) == "table" then
-                logger.info("Successfully loaded credentials from " .. Config.CREDENTIALS_FILENAME)
-                if result.baseUrl then
-                    local success, err_msg = Config.setAndValidateBaseUrl(result.baseUrl)
-                    if success then
-                        logger.info("Overriding Base URL from " .. Config.CREDENTIALS_FILENAME)
-                    else
-                        logger.warn("Invalid Base URL from " .. Config.CREDENTIALS_FILENAME .. ": " .. (err_msg or "Unknown error"))
-                    end
-                end
-                if result.username then
-                    Config.saveSetting(Config.SETTINGS_USERNAME_KEY, result.username)
-                    logger.info("Overriding Username from " .. Config.CREDENTIALS_FILENAME)
-                end
-                if result.email then
-                    Config.saveSetting(Config.SETTINGS_USERNAME_KEY, result.email)
-                    logger.info("Overriding Username from " .. Config.CREDENTIALS_FILENAME)
-                end
-                if result.password then
-                    Config.saveSetting(Config.SETTINGS_PASSWORD_KEY, result.password)
-                    logger.info("Overriding Password from " .. Config.CREDENTIALS_FILENAME)
-                end
-            else
-                logger.warn("Failed to execute or get table from " .. Config.CREDENTIALS_FILENAME .. ": " .. tostring(result))
-            end
+    local creds = LuaSettings:open(cred_file_path)
+    if not creds.data or not next(creds.data) then
+        logger.info(Config.CREDENTIALS_FILENAME .. " is undefined. Using UI settings if available.")
+        return
+    end
+    logger.info("Successfully loaded credentials from " .. Config.CREDENTIALS_FILENAME)
+
+    local base_url = creds:readSetting("baseUrl")
+    if base_url then
+        local success, err_msg = Config.setAndValidateBaseUrl(base_url)
+        if success then
+            logger.info("Overriding Base URL from " .. Config.CREDENTIALS_FILENAME)
         else
-            logger.warn("Failed to load " .. Config.CREDENTIALS_FILENAME .. ": " .. tostring(err))
+            logger.warn("Invalid Base URL from " .. Config.CREDENTIALS_FILENAME .. ": " .. (err_msg or "Unknown error"))
         end
-    else
-        logger.info(Config.CREDENTIALS_FILENAME .. " not found. Using UI settings if available.")
+    end
+    local identity = creds:readSetting("username") or creds:readSetting("email")
+    if identity then
+        Config.saveSetting(Config.SETTINGS_USERNAME_KEY, identity)
+        logger.info("Overriding Identity (Username/Email) from " .. Config.CREDENTIALS_FILENAME)
+    end
+    local password = creds:readSetting("password")
+    if password then
+        Config.saveSetting(Config.SETTINGS_PASSWORD_KEY, password)
+        logger.info("Overriding Password from " .. Config.CREDENTIALS_FILENAME)
     end
 end
 
@@ -153,19 +145,42 @@ Config.SEED_URLS = { -- List of known Z-library base URLs extracted from the And
     "https://z-lib.gl/"
 }
 
+local _lua_settings
+local function _getLuaSettings()
+    if not _lua_settings then
+        local settings_file = DataStorage:getSettingsDir() .. "/zlibrary.lua"
+        _lua_settings = LuaSettings:open(settings_file)
+
+        -- Check if data migration from old settings is needed
+        if not _lua_settings:readSetting(Config.SETTINGS_BASE_URL_KEY) and (G_reader_settings and G_reader_settings:readSetting(Config.SETTINGS_BASE_URL_KEY)) then
+             for key, value in pairs(G_reader_settings.data) do
+                if type(key) == "string" and (key:match("^zlib_") or key:match("^zlibrary_")) then
+                    _lua_settings:saveSetting(key, value)
+                    G_reader_settings:delSetting(key)
+                end
+            end
+            _lua_settings:flush()
+        end
+    end
+    return _lua_settings
+end
+
+-- Singleton lazy instance to avoid recreating Cache on every call
+local _config_runtime_cache
+local function _getConfigRuntimeCache()
+    if not _config_runtime_cache then
+        _config_runtime_cache = Cache:new{ name = "_runtime_cache" }
+    end
+    return _config_runtime_cache
+end
+
 function Config.getCacheRealUrl()
-    local runtime_cache = Cache:new{
-        name = "_runtime_cache"
-    }
-    local api_real_url = runtime_cache:get("api_real_url", 600)
+    local api_real_url = _getConfigRuntimeCache():get("api_real_url", 600)
     return api_real_url and api_real_url[1]
 end
 
 function Config.clearCacheRealUrl()
-    local runtime_cache = Cache:new{
-        name = "_runtime_cache"
-    }
-    return runtime_cache:remove("api_real_url")
+    return _getConfigRuntimeCache():remove("api_real_url")
 end
 
 function Config.setCacheRealUrl(original_url, real_url)
@@ -182,10 +197,7 @@ function Config.setCacheRealUrl(original_url, real_url)
         real_url = string.sub(real_url, 1, -2)
     end
     
-    local runtime_cache = Cache:new{
-        name = "_runtime_cache"
-    }
-    return runtime_cache:insert("api_real_url", {real_url})
+    return _getConfigRuntimeCache():insert("api_real_url", {real_url})
 end
 
 function Config.getBaseUrl(is_original)
@@ -340,19 +352,19 @@ function Config.getMostPopularBooksUrl()
 end
 
 function Config.getSetting(key, default)
-    return G_reader_settings:readSetting(key) or default
+    return _getLuaSettings():readSetting(key) or default
 end
 
 function Config.saveSetting(key, value)
     if type(value) == "string" then
-        G_reader_settings:saveSetting(key, util.trim(value))
+        _getLuaSettings():saveSetting(key, util.trim(value)):flush()
     else
-        G_reader_settings:saveSetting(key, value)
+        _getLuaSettings():saveSetting(key, value):flush()
     end
 end
 
 function Config.deleteSetting(key)
-    G_reader_settings:delSetting(key)
+    _getLuaSettings():delSetting(key):flush()
 end
 
 function Config.getCredentials()

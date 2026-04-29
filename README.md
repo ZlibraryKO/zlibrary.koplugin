@@ -29,7 +29,6 @@ If you find this plugin helpful, please consider supporting its development. You
 
 *   KOReader installed on your device.
 *   A Z-library account.
-*   A Z-library url.
 
 ## Installation
 

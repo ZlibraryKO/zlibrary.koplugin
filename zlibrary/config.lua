@@ -43,6 +43,7 @@ Config.TIMEOUT_COVER = { 5, 15 }        -- Cover image operations
 Config.TIMEOUT_BOOK_COMMENTS = { 10, 15 } -- Comments operations
 
 function Config.loadCredentialsFromFile(plugin_path)
+    Config._plugin_path = plugin_path
     local cred_file_path = plugin_path .. Config.CREDENTIALS_FILENAME
     local creds = LuaSettings:open(cred_file_path)
     if not creds.data or not next(creds.data) then
@@ -209,22 +210,45 @@ function Config.getBaseUrl(is_original)
 end
 
 function Config.getSeedUrls()
+    local new_seed_urls, seen = {}, {}
+
     local base = Config.getBaseUrl()
     local clean_base = (type(base) == "string" and base ~= "") and base:gsub("/$", "") or nil
+    if clean_base then seen[clean_base] = true end
 
-    local urls = {}
-    for _, url in ipairs(Config.SEED_URLS) do
-        if type(url) == "string" and url ~= "" then
-            local clean_url = url:gsub("/$", "")
-            if clean_url ~= clean_base then table.insert(urls, clean_url) end
+    local function processAndMerge(source_urls)
+        if type(source_urls) ~= "table" or #source_urls == 0 then return end
+        local temp_urls = {}
+        
+        -- clean & deduplicate
+        for _, url in ipairs(source_urls) do
+            if type(url) == "string" and url ~= "" then
+                local clean_url = url:gsub("/$", "")
+                if not seen[clean_url] then
+                    seen[clean_url] = true
+                    table.insert(temp_urls, clean_url)
+                end
+            end
+        end
+        -- Shuffle
+        for i = #temp_urls, 2, -1 do
+            local j = math.random(i)
+            temp_urls[i], temp_urls[j] = temp_urls[j], temp_urls[i]
+        end
+        for _, url in ipairs(temp_urls) do
+            table.insert(new_seed_urls, url)
         end
     end
-    -- Shuffle
-    for i = #urls, 2, -1 do
-        local j = math.random(i)
-        urls[i], urls[j] = urls[j], urls[i]
-    end
-    return urls
+
+    -- User-defined > Dynamic > Hardcoded
+    local cred_file_path = Config._plugin_path .. Config.CREDENTIALS_FILENAME
+    local creds = LuaSettings:open(cred_file_path)
+    processAndMerge(creds and creds:readSetting("seedUrls"))
+    local domains_cache = Cache:new{ name = "_domains_cache" }
+    processAndMerge(domains_cache:get("domains", 86400))
+    processAndMerge(Config.SEED_URLS)
+
+    return new_seed_urls
 end
 
 function Config.setAndValidateBaseUrl(url_string)

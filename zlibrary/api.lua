@@ -1271,4 +1271,43 @@ function Api.getBookComments(user_id, user_key, book_id)
     }
 end
 
+function Api.fetchDynamicDomains(repo_path)
+    -- local repo = repo_path or "ZlibraryKO/zlibrary.koplugin"
+    -- local url = string.format("https://raw.githubusercontent.com/%s/main/domains.json", repo)
+
+    -- test
+    local url = "https://z-lib.gd/eapi/info/domains"
+    logger.info(string.format("Api.fetchDynamicDomains - START - URL: %s", url))
+
+    local http_result = Api.makeHttpRequest{
+        url = url,
+        method = "GET",
+        headers = {
+            ["User-Agent"] = Config.USER_AGENT,
+            ["Accept"] = "application/json"
+        },
+        timeout = {5, 10},
+        redirect = true,
+    }
+
+    if http_result.error then
+        logger.warn("Api.fetchDynamicDomains - HTTP request error: ", http_result.error)
+        return { success = false, error = http_result.error }
+    end
+
+    if not http_result.body or http_result.body == "" then
+        logger.warn("Api.fetchDynamicDomains - No response body")
+        return { success = false }
+    end
+
+    local success, data = pcall(json.decode, http_result.body, json.decode.simple)
+    if not success or type(data) ~= "table" then
+        logger.warn("Api.fetchDynamicDomains - Failed to decode JSON: ", http_result.body)
+        return { success = false }
+    end
+
+    logger.info("Api.fetchDynamicDomains - END (Success)")
+    return { success = true, domains = data }
+end
+
 return Api

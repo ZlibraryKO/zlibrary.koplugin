@@ -72,6 +72,28 @@ function Zlibrary:autoDiscoverAndSetBaseUrl()
     end
 
     logger.info("Zlibrary:autoDiscoverAndSetBaseUrl - START")
+
+    local domains_cache = Cache:new{ name = "_domains_cache" }
+    local domains = domains_cache:get("domains", 86400)
+    if not domains then
+        logger.info("Zlibrary:autoDiscoverAndSetBaseUrl - Domains not in cache, fetching from remote...")
+        local response = Api.fetchDynamicDomains()
+        if response.success and response.domains and type(response.domains.domains) == "table" then
+            local flat_domains = {}
+            for _, item in ipairs(response.domains.domains) do
+                if type(item.domain) == "string" then
+                    table.insert(flat_domains, item.domain)
+                end
+            end
+            if #flat_domains > 0 then
+                logger.info(string.format("Zlibrary:autoDiscoverAndSetBaseUrl - Successfully extracted %d domains, updating cache", #flat_domains))
+                domains_cache:insert("domains", flat_domains) 
+            else
+                logger.warn("Zlibrary:autoDiscoverAndSetBaseUrl - Remote fetch succeeded, but no valid domains were extracted")
+            end
+        end
+    end
+
     local result = Api.findWorkingBaseUrl()
     
     if result.success and result.url then

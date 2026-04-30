@@ -208,6 +208,25 @@ function Config.getBaseUrl(is_original)
     return configured_url
 end
 
+function Config.getSeedUrls()
+    local base = Config.getBaseUrl()
+    local clean_base = (type(base) == "string" and base ~= "") and base:gsub("/$", "") or nil
+
+    local urls = {}
+    for _, url in ipairs(Config.SEED_URLS) do
+        if type(url) == "string" and url ~= "" then
+            local clean_url = url:gsub("/$", "")
+            if clean_url ~= clean_base then table.insert(urls, clean_url) end
+        end
+    end
+    -- Shuffle
+    for i = #urls, 2, -1 do
+        local j = math.random(i)
+        urls[i], urls[j] = urls[j], urls[i]
+    end
+    return urls
+end
+
 function Config.setAndValidateBaseUrl(url_string)
     if not url_string or url_string == "" then
         return false, "Error: URL cannot be empty."

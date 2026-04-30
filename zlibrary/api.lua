@@ -1190,10 +1190,11 @@ function Api.findWorkingBaseUrl()
     logger.info("Api.findWorkingBaseUrl - START - Checking SEED_URLS")
     
     local seed_urls = Config.getSeedUrls() or {}
+    local total_urls = #seed_urls
     for i, seed_url in ipairs(seed_urls) do
         local clean_url = seed_url:gsub("/$", "")
         
-        logger.info(string.format("Api.findWorkingBaseUrl - Trying [%d/%d]: %s", i, #Config.SEED_URLS, clean_url))
+        logger.info(string.format("Api.findWorkingBaseUrl - Trying [%d/%d]: %s", i, total_urls, clean_url))
         
         local result = Api.healthCheck(clean_url)
         if result.success then

@@ -896,7 +896,18 @@ function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel
                         Ui.closeMessage(loading_msg_to_close)
                     end
                     cancel_callback(err_msg)
-                end
+                end,
+                other_buttons_first = is_timeout and true or nil,
+                other_buttons = is_timeout and {{{ 
+                    text = string.format("%s&%s",T("Auto-discover base URL"), T("Retry")), 
+                    callback = function()  
+                        if loading_msg_to_close then  
+                            Ui.closeMessage(loading_msg_to_close)  
+                        end  
+                        local result = _plugin_instance:autoDiscoverAndSetBaseUrl()
+                        if result and result.success then retry_callback() end
+                    end  
+                }}} or nil,  
             })
         else
             if loading_msg_to_close then

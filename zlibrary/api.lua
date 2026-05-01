@@ -1143,9 +1143,13 @@ function Api.favoriteBook(user_id, user_key, book_stub)
     return { success = true }
 end
 
-function Api.healthCheck(baseUrl)
-    local url = baseUrl .. "/eapi/info/ok"
-
+function Api.healthCheck()
+    local url = Config.getHealthCheckUrl()
+    if not url then
+        logger.warn("Api.healthCheck - Base URL not configured")
+        return { error = T("Z-library server URL not configured.") }
+    end
+    local baseUrl = Config.getBaseUrl(true)
     local http_result = Api.makeHttpRequest{
         url = url,
         method = "GET",
@@ -1153,7 +1157,9 @@ function Api.healthCheck(baseUrl)
             ["User-Agent"] = Config.USER_AGENT,
         },
         timeout = {5, 10},
-        redirect = true,
+        getRedirectedUrl = function()
+            return Config.getHealthCheckUrl()
+        end,
     }
 
     if http_result.error then
@@ -1188,6 +1194,7 @@ end
 
 function Api.findWorkingBaseUrl()
     logger.info("Api.findWorkingBaseUrl - START - Checking SEED_URLS")
+    local original_base_url = Config.getBaseUrl(true)
     
     local seed_urls = Config.getSeedUrls() or {}
     local total_urls = #seed_urls
@@ -1195,15 +1202,17 @@ function Api.findWorkingBaseUrl()
         local clean_url = seed_url:gsub("/$", "")
         
         logger.info(string.format("Api.findWorkingBaseUrl - Trying [%d/%d]: %s", i, total_urls, clean_url))
-        
-        local result = Api.healthCheck(clean_url)
+        Config.setAndValidateBaseUrl(clean_url)
+        local result = Api.healthCheck()
         if result.success then
             logger.info(string.format("Api.findWorkingBaseUrl - Found working URL: %s", clean_url))
+            Config.setAndValidateBaseUrl(original_base_url)
             return { success = true, url = clean_url }
         end
     end
     
     logger.warn("Api.findWorkingBaseUrl - END - No working URL found")
+    Config.setAndValidateBaseUrl(original_base_url)
     return { success = false, error = T("Could not find a working Z-library server. Please check your internet connection or set the base URL manually.") }
 end
 

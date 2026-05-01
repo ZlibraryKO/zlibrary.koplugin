@@ -197,7 +197,7 @@ function Config.setCacheRealUrl(original_url, real_url)
     if string.sub(real_url, -1) == "/" then
         real_url = string.sub(real_url, 1, -2)
     end
-    
+
     return Config.getConfigRuntimeCache():insert("api_real_url", {real_url})
 end
 
@@ -288,6 +288,12 @@ function Config.getSearchUrl(query)
     local base = Config.getBaseUrl()
     if not base then return nil end
     return base .. "/eapi/book/search"
+end
+
+function Config.getHealthCheckUrl()
+    local base = Config.getBaseUrl()
+    if not base then return nil end
+    return base .. "/eapi/info/ok"
 end
 
 function Config.getBookUrl(href)

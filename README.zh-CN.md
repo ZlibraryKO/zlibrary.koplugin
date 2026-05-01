@@ -27,7 +27,6 @@
 
 *   你的设备上已安装 KOReader。
 *   拥有一个 Z-library 账户。
-*   一个 Z-library 的访问链接（URL）。
 
 ## 安装方法
 

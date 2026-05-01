@@ -51,7 +51,7 @@ function Zlibrary:init()
         logger.warn("self.ui or self.ui.menu not initialized in Zlibrary:init")
     end
 
-    self._runtime_cache = Cache:new({name = "_runtime_cache"})
+    self._runtime_cache = Config.getConfigRuntimeCache()
 end
 
 function Zlibrary:onZlibrarySearch()
@@ -276,6 +276,7 @@ function Zlibrary:addToMainMenu(menu_items)
                                         keep_menu_open = true,
                                         callback = function()
                                             self._runtime_cache:clear()
+                                            Cache:new{ name = "_domains_cache" }:clear()
                                             Ui.showInfoMessage(T("Runtime cache cleared."))
                                         end,
                                     }, {

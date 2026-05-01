@@ -168,7 +168,7 @@ end
 
 -- Singleton lazy instance to avoid recreating Cache on every call
 local _config_runtime_cache
-local function _getConfigRuntimeCache()
+function Config.getConfigRuntimeCache()
     if not _config_runtime_cache then
         _config_runtime_cache = Cache:new{ name = "_runtime_cache" }
     end
@@ -176,12 +176,12 @@ local function _getConfigRuntimeCache()
 end
 
 function Config.getCacheRealUrl()
-    local api_real_url = _getConfigRuntimeCache():get("api_real_url", 600)
+    local api_real_url = Config.getConfigRuntimeCache():get("api_real_url", 600)
     return api_real_url and api_real_url[1]
 end
 
 function Config.clearCacheRealUrl()
-    return _getConfigRuntimeCache():remove("api_real_url")
+    return Config.getConfigRuntimeCache():remove("api_real_url")
 end
 
 function Config.setCacheRealUrl(original_url, real_url)
@@ -198,7 +198,7 @@ function Config.setCacheRealUrl(original_url, real_url)
         real_url = string.sub(real_url, 1, -2)
     end
     
-    return _getConfigRuntimeCache():insert("api_real_url", {real_url})
+    return Config.getConfigRuntimeCache():insert("api_real_url", {real_url})
 end
 
 function Config.getBaseUrl(is_original)
@@ -224,6 +224,9 @@ function Config.getSeedUrls()
         for _, url in ipairs(source_urls) do
             if type(url) == "string" and url ~= "" then
                 local clean_url = url:gsub("/$", "")
+                if not clean_url :match("^https?://") then
+                        clean_url  = "https://" .. clean_url 
+                end
                 if not seen[clean_url] then
                     seen[clean_url] = true
                     table.insert(temp_urls, clean_url)
@@ -240,14 +243,14 @@ function Config.getSeedUrls()
         end
     end
 
-    -- User-defined > Dynamic > Hardcoded
+    -- User-defined  > Hardcoded > Dynamic
     local cred_file_path = Config._plugin_path .. Config.CREDENTIALS_FILENAME
     local creds = LuaSettings:open(cred_file_path)
     processAndMerge(creds and creds:readSetting("seedUrls"))
+    processAndMerge(Config.SEED_URLS)
     local domains_cache = Cache:new{ name = "_domains_cache" }
     processAndMerge(domains_cache:get("domains", 86400))
-    processAndMerge(Config.SEED_URLS)
-
+    
     return new_seed_urls
 end
 

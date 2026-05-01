@@ -1271,12 +1271,16 @@ function Api.getBookComments(user_id, user_key, book_id)
     }
 end
 
-function Api.fetchDynamicDomains(repo_path)
-    -- local repo = repo_path or "ZlibraryKO/zlibrary.koplugin"
-    -- local url = string.format("https://raw.githubusercontent.com/%s/main/domains.json", repo)
+function Api.fetchDynamicDomains(is_retry)
+     -- Data reference: https://z-lib.gd/eapi/info/domains
+    local cdn_urls = {
+        "https://fastly.jsdelivr.net/gh/ZlibraryKO/zlibrary.koplugin@main/assets/domains.json",
+        "https://cdn.jsdelivr.net/gh/ZlibraryKO/zlibrary.koplugin@main/assets/domains.json",
+        "https://raw.githubusercontent.com/ZlibraryKO/zlibrary.koplugin/main/assets/domains.json"
+    }
 
-    -- test
-    local url = "https://z-lib.gd/eapi/info/domains"
+    local url = cdn_urls[math.random(#cdn_urls)]
+
     logger.info(string.format("Api.fetchDynamicDomains - START - URL: %s", url))
 
     local http_result = Api.makeHttpRequest{
@@ -1291,8 +1295,12 @@ function Api.fetchDynamicDomains(repo_path)
     }
 
     if http_result.error then
-        logger.warn("Api.fetchDynamicDomains - HTTP request error: ", http_result.error)
-        return { success = false, error = http_result.error }
+        logger.warn("Api.fetchDynamicDomains - HTTP request error: ",  tostring(http_result.error))
+        if not is_retry then
+            return Api.fetchDynamicDomains(true)
+        else
+            return { success = false, error = http_result.error }
+        end
     end
 
     if not http_result.body or http_result.body == "" then

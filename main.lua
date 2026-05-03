@@ -62,7 +62,7 @@ function Zlibrary:onZlibrarySearch()
     return true
 end
 
-function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive)
+function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
     if NetworkMgr:willRerunWhenOnline(function()
         self:autoDiscoverAndSetBaseUrl(is_interactive)
     end) then
@@ -70,7 +70,9 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive)
     end
 
     logger.info("Zlibrary:autoDiscoverAndSetBaseUrl - START")
-    
+
+    local domains_cache = Cache:new{ name = "_domains_cache" }
+
     local updateDomainsCache = function()
         logger.info("Zlibrary:autoDiscoverAndSetBaseUrl - Domains not in cache, fetching from remote...")
         local response = Api.fetchDynamicDomains()
@@ -82,8 +84,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive)
                 end
             end
             if #flat_domains > 0 then
-                logger.info(string.format("Zlibrary:autoDiscoverAndSetBaseUrl - Successfully extracted %d domains, updating cache", #flat_domains))
-                local domains_cache = Cache:new{ name = "_domains_cache" }
+                logger.info(string.format("Zlibrary:autoDiscoverAndSetBaseUrl - Successfully extracted %d domains", #flat_domains))
                 domains_cache:insert("domains", flat_domains) 
             else
                 logger.warn("Zlibrary:autoDiscoverAndSetBaseUrl - Remote fetch succeeded, but no valid domains were extracted")
@@ -91,128 +92,149 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive)
         end
     end
 
-    if not Cache:new{ name = "_domains_cache" }:get("domains", 172800) then
-        local loading_msg = Ui.showLoadingMessage(T("Searching for working Z-library server..."))
-        AsyncHelper.run(updateDomainsCache, nil, nil, loading_msg)
-    end
+    local executeDiscovery = function()
+        local seed_urls = Config.getSeedUrls()
+        local progress_callback
 
-    local seed_urls = Config.getSeedUrls()
-    local progress_callback
-
-    local task = function()
-        return Api.findWorkingBaseUrl(seed_urls, progress_callback)
-    end                    
-    local on_success = function(result)
-        if result.success and result.url then
-            local success, err_msg = Config.setAndValidateBaseUrl(result.url)
-            if success then
-                logger.info("Zlibrary:autoDiscoverAndSetBaseUrl - Successfully set base URL to: " .. result.url)
-                Ui.showInfoMessage(T("Successfully found and set base URL to: ") .. result.url)
-            else
-                logger.warn("Zlibrary:autoDiscoverAndSetBaseUrl - Failed to validate discovered URL: " .. (err_msg or "Unknown error"))
-            end    
-        else
-            logger.warn("Zlibrary:autoDiscoverAndSetBaseUrl - Failed to discover working base URL")            Ui.showErrorMessage(result.error or T("Failed to find a working base URL."))
-        end
-    end                  
-    local on_error = function(err_msg)
-        Ui.showErrorMessage(T("Error during auto-discovery: ") .. tostring(err_msg))
-    end
-
-    if is_interactive ~= true then
-        local loading_msg = Ui.showLoadingMessage(T("Searching for working Z-library server..."))
-        AsyncHelper.run(task, on_success, on_error, loading_msg)
-    else
-        local connection_menu
-        local menu_items = {{
-            text = T("Start"),
-            mandatory = "\u{25B7}",
-            callback = function()
-                local loading_msg = Ui.showLoadingMessage(T("Searching for working Z-library server..."))
-                AsyncHelper.run(task, on_success, on_error, loading_msg)
-            end,
-        }, { text = "---" }}
-        local has_clipboard = Device:hasClipboard()
-
-        for i, seed_item in ipairs(seed_urls) do
-            local raw_url = type(seed_item) == "table" and seed_item.url or tostring(seed_item)
-            local src_str = type(seed_item) == "table" and seed_item.src or "X"
-            local display_url = raw_url:gsub("^https?://", ""):gsub("/$", "")
-            table.insert(menu_items, {
-                text = string.format("[%s] %s", src_str, display_url),
-                mandatory = "\u{23F3} " .. T("Queued"),
-                show_indicator = false,
-                callback = has_clipboard and function()
-                    local c_text = display_url
-                     Device.input.setClipboardText(string.format("https://%s", c_text))
-                     Ui.showInfoMessage(T("Selection copied to clipboard."))
-                end,
-            })
-        end
-        table.insert(menu_items, { text = "---" })
-        table.insert(menu_items, {
-            text = T("Refresh Dynamic Domains"),
-            mandatory = "\u{25B7}",
-            callback = function()
-                updateDomainsCache()
-                if connection_menu then UIManager:close(connection_menu) end
-            end,
-        })
-        table.insert(menu_items, {
-            text = T("Prioritize Custom BaseUrls"),
-            mandatory = "\u{25B7}",
-            callback = function()
-                local cred_file_path = self.plugin_path .. Config.CREDENTIALS_FILENAME
-                Ui.showSimpleMessageDialog("", (string.format(T("Please edit the `seedUrls` list in file `%s` or submit an issue on GitHub."), cred_file_path)))
-            end,
-        })
-        table.insert(menu_items, {
-            text = T("Back"),
-            mandatory = "\u{21A9}",
-            callback = function()
-                if connection_menu then UIManager:close(connection_menu) end
-            end,
-        })
-
-        connection_menu = Ui.showUrlCheckProgress(self, menu_items)
-
-        progress_callback = function(status, check_result)
-            if not (connection_menu and connection_menu.item_table) then return end
-            if type(check_result) ~= "table" then return end
-            local update_item_index = check_result.index + 2
-            local item = connection_menu.item_table[update_item_index]
-            if not item then return end
-
-            if status == "START" then
-                item.mandatory = "\u{27F3} " .. T("Checking")
-                item.bold = true
-            elseif status == "END" then
-                item.bold = false
-                if check_result.success then
-                    item.mandatory = string.format("\u{2714} %dms", check_result.duration or 0)
-                    item.callback = function()
-                        local ok, err_msg = Config.setAndValidateBaseUrl(check_result.url)
-                        if ok then
-                            Ui.showInfoMessage(string.format("%s : %s", T("Set base URL"), tostring(check_result.url)))
-                        else
-                            Ui.showInfoMessage( T("Invalid Base URL.") .. tostring(err_msg))
-                        end
+        local task = function()
+            return Api.findWorkingBaseUrl(seed_urls, progress_callback)
+        end                    
+        
+        local on_success = function(result)
+            if result.success and result.url then
+                local success, err_msg = Config.setAndValidateBaseUrl(result.url)
+                if success then
+                    logger.info("Zlibrary:autoDiscoverAndSetBaseUrl - Successfully set base URL to: " .. result.url)
+                    if is_interactive ~= true and type(retry_callback) == "function" then 
+                        retry_callback() 
+                    else
+                        Ui.showInfoMessage(T("Successfully found and set base URL to: ") .. result.url)
                     end
                 else
-                    item.mandatory = "\u{2718} " .. T("Failed")
-                    item.callback = function()
-                        Ui.showInfoMessage(check_result.error or T("Unknown error"))
+                    logger.warn("Zlibrary:autoDiscoverAndSetBaseUrl - Failed to validate discovered URL: " .. (err_msg or "Unknown error"))
+                end    
+            else
+                logger.warn("Zlibrary:autoDiscoverAndSetBaseUrl - Failed to discover working base URL")
+                Ui.showErrorMessage(result.error or T("Failed to find a working base URL."))
+            end
+        end                  
+        
+        local on_error = function(err_msg)
+            Ui.showErrorMessage(T("Error during auto-discovery: ") .. tostring(err_msg))
+        end
+
+        if is_interactive ~= true then
+            local loading_msg = Ui.showLoadingMessage(T("Searching for working Z-library server..."))
+            AsyncHelper.run(task, on_success, on_error, loading_msg)
+        else
+            local connection_menu
+            local menu_items = {{
+                text = T("Start"),
+                mandatory = "\u{25B7}",
+                callback = function()
+                    local loading_msg = Ui.showLoadingMessage(T("Searching for working Z-library server..."))
+                    AsyncHelper.run(task, on_success, on_error, loading_msg)
+                end,
+            }, { text = "---" }}
+            
+            local item_index_offset = #menu_items
+            local has_clipboard = Device:hasClipboard()
+
+            for i, seed_item in ipairs(seed_urls) do
+                local raw_url = type(seed_item) == "table" and seed_item.url or tostring(seed_item)
+                local src_str = type(seed_item) == "table" and seed_item.src or "X"
+                local display_url = raw_url:gsub("^https?://", ""):gsub("/$", "")
+                table.insert(menu_items, {
+                    text = string.format("[%s] %s", src_str, display_url),
+                    mandatory = "\u{23F3} " .. T("Queued"),
+                    show_indicator = false,
+                    callback = has_clipboard and function()
+                        local c_text = display_url
+                        Device.input.setClipboardText(string.format("https://%s", c_text))
+                        Ui.showInfoMessage(T("Selection copied to clipboard."))
+                    end or nil,
+                })
+            end
+            
+            table.insert(menu_items, { text = "---" })
+            table.insert(menu_items, {
+                text = T("Refresh Dynamic Domains"),
+                mandatory = "\u{25B7}",
+                callback = function()
+                    if connection_menu then UIManager:close(connection_menu) end
+                    local loading_msg = Ui.showLoadingMessage(T("Fetching dynamic domains..."))
+                    AsyncHelper.run(updateDomainsCache, function()
+                        self:autoDiscoverAndSetBaseUrl(true) 
+                    end, on_error, loading_msg)
+                end,
+            })
+            table.insert(menu_items, {
+                text = T("Prioritize Custom BaseUrls"),
+                mandatory = "\u{25B7}",
+                callback = function()
+                    local cred_file_path = self.plugin_path .. Config.CREDENTIALS_FILENAME
+                    Ui.showSimpleMessageDialog("", (string.format(T("Please edit the `seedUrls` list in file `%s` or submit an issue on GitHub."), cred_file_path)))
+                end,
+            })
+            table.insert(menu_items, {
+                text = T("Back"),
+                mandatory = "\u{21A9}",
+                callback = function()
+                    if connection_menu then UIManager:close(connection_menu) end
+                end,
+            })
+
+            connection_menu = Ui.showUrlCheckProgress(self, menu_items)
+
+            progress_callback = function(status, check_result)
+                if not (connection_menu and connection_menu.item_table) then return end
+                if type(check_result) ~= "table" then return end
+                
+                local update_item_index = check_result.index + item_index_offset
+                local item = connection_menu.item_table[update_item_index]
+                if not item then return end
+
+                if status == "START" then
+                    item.mandatory = "\u{27F3} " .. T("Checking")
+                    item.bold = true
+                elseif status == "END" then
+                    item.bold = false
+                    if check_result.success then
+                        item.mandatory = string.format("\u{2714} %dms", check_result.duration or 0)
+                        item.callback = function()
+                            local ok, err_msg = Config.setAndValidateBaseUrl(check_result.url)
+                            if ok then
+                                Ui.showInfoMessage(string.format("%s : %s", T("Set base URL"), tostring(check_result.url)))
+                            else
+                                Ui.showInfoMessage( T("Invalid Base URL.") .. " " .. tostring(err_msg))
+                            end
+                        end
+                    else
+                        item.mandatory = "\u{2718} " .. T("Failed")
+                        item.callback = function()
+                            Ui.showInfoMessage(check_result.error or T("Unknown error"))
+                        end
                     end
                 end
-            end
 
-            UIManager:nextTick(function()
-                connection_menu:switchItemTable(nil, nil, update_item_index)
-                connection_menu:updateItems(nil, true)
-                UIManager:setDirty(connection_menu, "ui")
-                UIManager:forceRePaint()
-            end)
+                UIManager:nextTick(function()
+                    connection_menu:switchItemTable(nil, nil, update_item_index)
+                    connection_menu:updateItems(nil, true)
+                    UIManager:setDirty(connection_menu, "ui")
+                    UIManager:forceRePaint()
+                end)
+            end
         end
+    end
+
+    if domains_cache:get("domains", 172800) then
+        executeDiscovery()
+    else
+        local loading_msg = Ui.showLoadingMessage(T("Fetching dynamic domains..."))
+        AsyncHelper.run(updateDomainsCache, executeDiscovery, function(err)
+            Ui.showErrorMessage(T("Failed to fetch domains: ") .. tostring(err))
+            executeDiscovery()
+        end, loading_msg)
     end
 end
 

@@ -904,8 +904,7 @@ function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel
                         if loading_msg_to_close then  
                             Ui.closeMessage(loading_msg_to_close)  
                         end  
-                        local result = _plugin_instance:autoDiscoverAndSetBaseUrl()
-                        if result and result.success then retry_callback() end
+                        _plugin_instance:autoDiscoverAndSetBaseUrl(nil, retry_callback)
                     end  
                 }}} or nil,  
             })

@@ -64,7 +64,7 @@ end
 
 function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
     if NetworkMgr:willRerunWhenOnline(function()
-        self:autoDiscoverAndSetBaseUrl(is_interactive)
+        self:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
     end) then
         return { success = false, error = T("Network not available. Please connect and try again.") }
     end
@@ -76,7 +76,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
     local updateDomainsCache = function()
         logger.info("Zlibrary:autoDiscoverAndSetBaseUrl - Domains not in cache, fetching from remote...")
         local response = Api.fetchDynamicDomains()
-        if response.success and response.domains and type(response.domains.domains) == "table" then
+        if response.success and type(response.domains) == "table" and type(response.domains.domains) == "table" then
             local flat_domains = {}
             for _, item in ipairs(response.domains.domains) do
                 if type(item.domain) == "string" then
@@ -84,8 +84,8 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                 end
             end
             if #flat_domains > 0 then
-                logger.info(string.format("Zlibrary:autoDiscoverAndSetBaseUrl - Successfully extracted %d domains", #flat_domains))
                 domains_cache:insert("domains", flat_domains) 
+                logger.info(string.format("Zlibrary:autoDiscoverAndSetBaseUrl - Successfully extracted %d domains", #flat_domains))
             else
                 logger.warn("Zlibrary:autoDiscoverAndSetBaseUrl - Remote fetch succeeded, but no valid domains were extracted")
             end

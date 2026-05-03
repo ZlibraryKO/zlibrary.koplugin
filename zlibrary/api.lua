@@ -1155,14 +1155,8 @@ function Api.favoriteBook(user_id, user_key, book_stub)
 end
 
 function Api.healthCheck(baseUrl, skip_redir_cache, redir_url)
-    local url
     local is_redir_callback = (type(redir_url) == "string")
-
-    if not is_redir_callback then
-        url = baseUrl .. "/eapi/info/ok"
-    else
-        url = redir_url .. "/eapi/info/ok"
-    end
+    local url = (is_redir_callback and redir_url or baseUrl) .. "/eapi/info/ok"
 
     local start_time = time.now()
     local http_result = Api.makeHttpRequest{
@@ -1175,15 +1169,15 @@ function Api.healthCheck(baseUrl, skip_redir_cache, redir_url)
         skipRedirectCache = skip_redir_cache or false,
         onRedirect = (not is_redir_callback) and function()
             return function(redir_res)
-                local next_base_url = redir_res and redir_res.real_url_base
+                local next_base_url = redir_res and redir_res.real_url_base or nil
                 return Api.healthCheck(baseUrl, skip_redir_cache, next_base_url)
             end
         end,
     }
 
+    if is_redir_callback then return http_result end
     local elapsed = time.to_ms(time.since(start_time)) 
 
-    if is_redir_callback then return http_result end
     if http_result.error then
         logger.dbg("Api.healthCheck - Failed for " .. baseUrl .. ": " .. tostring(http_result.error))
         return { success = false, error = http_result.error }
@@ -1221,8 +1215,8 @@ function Api.findWorkingBaseUrl(seed_urls, progress_callback)
     if type(seed_urls) ~= "table" then
         seed_urls = Config.getSeedUrls() or {}
     end
-    local is_fast = type(progress_callback) ~= "function" 
-    if is_fast then progress_callback=function(a, b) end end
+    local find_first_match = type(progress_callback) ~= "function" 
+    if find_first_match then progress_callback=function(a, b) end end
     local first_working_url
 
     local total_urls = #seed_urls
@@ -1251,7 +1245,7 @@ function Api.findWorkingBaseUrl(seed_urls, progress_callback)
         if result.success then
             if not first_working_url then first_working_url = clean_url end
             logger.info(string.format("Api.findWorkingBaseUrl - Found working URL: %s", clean_url))
-            if is_fast then return { success = true, url = clean_url } end
+            if find_first_match then return { success = true, url = clean_url } end
         end
         ::continue::
     end

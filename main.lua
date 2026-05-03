@@ -50,8 +50,6 @@ function Zlibrary:init()
     else
         logger.warn("self.ui or self.ui.menu not initialized in Zlibrary:init")
     end
-
-    self._runtime_cache = Config.getConfigRuntimeCache()
 end
 
 function Zlibrary:onZlibrarySearch()
@@ -64,18 +62,16 @@ function Zlibrary:onZlibrarySearch()
     return true
 end
 
-function Zlibrary:autoDiscoverAndSetBaseUrl()
+function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive)
     if NetworkMgr:willRerunWhenOnline(function()
-        self:autoDiscoverAndSetBaseUrl()
+        self:autoDiscoverAndSetBaseUrl(is_interactive)
     end) then
         return { success = false, error = T("Network not available. Please connect and try again.") }
     end
 
     logger.info("Zlibrary:autoDiscoverAndSetBaseUrl - START")
-
-    local domains_cache = Cache:new{ name = "_domains_cache" }
-    local domains = domains_cache:get("domains", 86400)
-    if not domains then
+    
+    local updateDomainsCache = function()
         logger.info("Zlibrary:autoDiscoverAndSetBaseUrl - Domains not in cache, fetching from remote...")
         local response = Api.fetchDynamicDomains()
         if response.success and response.domains and type(response.domains.domains) == "table" then
@@ -87,6 +83,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl()
             end
             if #flat_domains > 0 then
                 logger.info(string.format("Zlibrary:autoDiscoverAndSetBaseUrl - Successfully extracted %d domains, updating cache", #flat_domains))
+                local domains_cache = Cache:new{ name = "_domains_cache" }
                 domains_cache:insert("domains", flat_domains) 
             else
                 logger.warn("Zlibrary:autoDiscoverAndSetBaseUrl - Remote fetch succeeded, but no valid domains were extracted")
@@ -94,21 +91,129 @@ function Zlibrary:autoDiscoverAndSetBaseUrl()
         end
     end
 
-    local result = Api.findWorkingBaseUrl()
-    
-    if result.success and result.url then
-        local success, err_msg = Config.setAndValidateBaseUrl(result.url)
-        if success then
-            logger.info("Zlibrary:autoDiscoverAndSetBaseUrl - Successfully set base URL to: " .. result.url)
-            return { success = true, url = result.url }
+    if not Cache:new{ name = "_domains_cache" }:get("domains", 172800) then
+        local loading_msg = Ui.showLoadingMessage(T("Searching for working Z-library server..."))
+        AsyncHelper.run(updateDomainsCache, nil, nil, loading_msg)
+    end
+
+    local seed_urls = Config.getSeedUrls()
+    local progress_callback
+
+    local task = function()
+        return Api.findWorkingBaseUrl(seed_urls, progress_callback)
+    end                    
+    local on_success = function(result)
+        if result.success and result.url then
+            local success, err_msg = Config.setAndValidateBaseUrl(result.url)
+            if success then
+                logger.info("Zlibrary:autoDiscoverAndSetBaseUrl - Successfully set base URL to: " .. result.url)
+                Ui.showInfoMessage(T("Successfully found and set base URL to: ") .. result.url)
+            else
+                logger.warn("Zlibrary:autoDiscoverAndSetBaseUrl - Failed to validate discovered URL: " .. (err_msg or "Unknown error"))
+            end    
         else
-            logger.warn("Zlibrary:autoDiscoverAndSetBaseUrl - Failed to validate discovered URL: " .. (err_msg or "Unknown error"))
-            return { success = false, error = err_msg }
+            logger.warn("Zlibrary:autoDiscoverAndSetBaseUrl - Failed to discover working base URL")            Ui.showErrorMessage(result.error or T("Failed to find a working base URL."))
+        end
+    end                  
+    local on_error = function(err_msg)
+        Ui.showErrorMessage(T("Error during auto-discovery: ") .. tostring(err_msg))
+    end
+
+    if is_interactive ~= true then
+        local loading_msg = Ui.showLoadingMessage(T("Searching for working Z-library server..."))
+        AsyncHelper.run(task, on_success, on_error, loading_msg)
+    else
+        local connection_menu
+        local menu_items = {{
+            text = T("Start"),
+            mandatory = "\u{25B7}",
+            callback = function()
+                local loading_msg = Ui.showLoadingMessage(T("Searching for working Z-library server..."))
+                AsyncHelper.run(task, on_success, on_error, loading_msg)
+            end,
+        }, { text = "---" }}
+        local has_clipboard = Device:hasClipboard()
+
+        for i, seed_item in ipairs(seed_urls) do
+            local raw_url = type(seed_item) == "table" and seed_item.url or tostring(seed_item)
+            local src_str = type(seed_item) == "table" and seed_item.src or "X"
+            local display_url = raw_url:gsub("^https?://", ""):gsub("/$", "")
+            table.insert(menu_items, {
+                text = string.format("[%s] %s", src_str, display_url),
+                mandatory = "\u{23F3} " .. T("Queued"),
+                show_indicator = false,
+                callback = has_clipboard and function()
+                    local c_text = display_url
+                     Device.input.setClipboardText(string.format("https://%s", c_text))
+                     Ui.showInfoMessage(T("Selection copied to clipboard."))
+                end,
+            })
+        end
+        table.insert(menu_items, { text = "---" })
+        table.insert(menu_items, {
+            text = T("Refresh Dynamic Domains"),
+            mandatory = "\u{25B7}",
+            callback = function()
+                updateDomainsCache()
+                if connection_menu then UIManager:close(connection_menu) end
+            end,
+        })
+        table.insert(menu_items, {
+            text = T("Prioritize Custom BaseUrls"),
+            mandatory = "\u{25B7}",
+            callback = function()
+                local cred_file_path = self.plugin_path .. Config.CREDENTIALS_FILENAME
+                Ui.showSimpleMessageDialog("", (string.format(T("Please edit the `seedUrls` list in file `%s` or submit an issue on GitHub."), cred_file_path)))
+            end,
+        })
+        table.insert(menu_items, {
+            text = T("Back"),
+            mandatory = "\u{21A9}",
+            callback = function()
+                if connection_menu then UIManager:close(connection_menu) end
+            end,
+        })
+
+        connection_menu = Ui.showUrlCheckProgress(self, menu_items)
+
+        progress_callback = function(status, check_result)
+            if not (connection_menu and connection_menu.item_table) then return end
+            if type(check_result) ~= "table" then return end
+            local update_item_index = check_result.index + 2
+            local item = connection_menu.item_table[update_item_index]
+            if not item then return end
+
+            if status == "START" then
+                item.mandatory = "\u{27F3} " .. T("Checking")
+                item.bold = true
+            elseif status == "END" then
+                item.bold = false
+                if check_result.success then
+                    item.mandatory = string.format("\u{2714} %dms", check_result.duration or 0)
+                    item.callback = function()
+                        local ok, err_msg = Config.setAndValidateBaseUrl(check_result.url)
+                        if ok then
+                            Ui.showInfoMessage(string.format("%s : %s", T("Set base URL"), tostring(check_result.url)))
+                        else
+                            Ui.showInfoMessage( T("Invalid Base URL.") .. tostring(err_msg))
+                        end
+                    end
+                else
+                    item.mandatory = "\u{2718} " .. T("Failed")
+                    item.callback = function()
+                        Ui.showInfoMessage(check_result.error or T("Unknown error"))
+                    end
+                end
+            end
+
+            UIManager:nextTick(function()
+                connection_menu:switchItemTable(nil, nil, update_item_index)
+                connection_menu:updateItems(nil, true)
+                UIManager:setDirty(connection_menu, "ui")
+                UIManager:forceRePaint()
+            end)
         end
     end
-    
-    logger.warn("Zlibrary:autoDiscoverAndSetBaseUrl - Failed to discover working base URL")
-    return { success = false, error = T("Failed to discover a working base URL") }
 end
 
 function Zlibrary:addToMainMenu(menu_items)
@@ -146,27 +251,7 @@ function Zlibrary:addToMainMenu(menu_items)
                             text = T("Auto-discover base URL"),
                             keep_menu_open = true,
                             callback = function()
-                                local loading_msg = Ui.showLoadingMessage(T("Searching for working Z-library server..."))
-                                
-                                local task = function()
-                                    return self:autoDiscoverAndSetBaseUrl()
-                                end
-                                
-                                local on_success = function(result)
-                                    Ui.closeMessage(loading_msg)
-                                    if result.success then
-                                        Ui.showInfoMessage(T("Successfully found and set base URL to: ") .. result.url)
-                                    else
-                                        Ui.showErrorMessage(result.error or T("Failed to find a working base URL."))
-                                    end
-                                end
-                                
-                                local on_error = function(err_msg)
-                                    Ui.closeMessage(loading_msg)
-                                    Ui.showErrorMessage(T("Error during auto-discovery: ") .. tostring(err_msg))
-                                end
-                                
-                                AsyncHelper.run(task, on_success, on_error)
+                                UIManager:nextTick(function() self:autoDiscoverAndSetBaseUrl(true) end)
                             end,
                             separator = true,
                         },
@@ -275,7 +360,7 @@ function Zlibrary:addToMainMenu(menu_items)
                                         text = T("Clear runtime cache"),
                                         keep_menu_open = true,
                                         callback = function()
-                                            self._runtime_cache:clear()
+                                            Config.getConfigRuntimeCache():clear()
                                             Cache:new{ name = "_domains_cache" }:clear()
                                             Ui.showInfoMessage(T("Runtime cache cleared."))
                                         end,
@@ -498,18 +583,18 @@ end
 
 -- Reset when a book is successfully downloaded or when refreshing the menu
 function Zlibrary:resetDownloadQuotaCache()
-    self._runtime_cache:remove("download_quota_status")
+    Config.getConfigRuntimeCache():remove("download_quota_status")
 end
 
 function Zlibrary:getDownloadQuotaCache()
-    return self._runtime_cache:get("download_quota_status", 10800)
+    return Config.getConfigRuntimeCache():get("download_quota_status", 10800)
 end
 
 -- Run completion callback (precheck_ok)
 function Zlibrary:validateDownloadQuota(callback)
     local has_callback = type(callback) == "function"
 
-    local quota_status = self._runtime_cache:get("download_quota_status")
+    local quota_status = Config.getConfigRuntimeCache():get("download_quota_status")
     if type(quota_status) == "table" and next(quota_status) then
         return has_callback and callback(true)
     end
@@ -523,7 +608,7 @@ function Zlibrary:validateDownloadQuota(callback)
         requires_auth = true,
         resolve_result = function(ui_self, api_result, plugin_self)
             if type(api_result) == "table" and type(api_result.quota_status) == "table" then
-                plugin_self._runtime_cache:insert("download_quota_status", api_result.quota_status)
+                Config.getConfigRuntimeCache():insert("download_quota_status", api_result.quota_status)
                 return has_callback and callback(true)                
             else
                 logger.warn("failed to load download quota status")
@@ -534,14 +619,14 @@ function Zlibrary:validateDownloadQuota(callback)
 end
 
 function Zlibrary:isBookInFavorites(book_stub)
-    local cached_ids = self._runtime_cache:get("favorite_book_ids", 1800)
+    local cached_ids = Config.getConfigRuntimeCache():get("favorite_book_ids", 1800)
     if not (book_stub and book_stub.id) then return type(cached_ids) == "table" end
     return type(cached_ids) == "table" and cached_ids[tostring(book_stub.id)] == true
 end
 
 -- Reset when a book is favorited/unfavorited or when refreshing the menu
 function Zlibrary:resetFavoritesCache(is_all)
-    self._runtime_cache:remove("favorite_book_ids")
+    Config.getConfigRuntimeCache():remove("favorite_book_ids")
     if is_all then Cache:new({ name = "multi_search" }):remove("favorites") end
 end
 
@@ -563,7 +648,7 @@ function Zlibrary:validateFavoriteBookIds(callback)
             end
 
             -- Allow favorites to be empty in cache
-            plugin_self._runtime_cache:insert("favorite_book_ids", book_ids)
+            Config.getConfigRuntimeCache():insert("favorite_book_ids", book_ids)
 
             return has_callback and callback(true)
         else

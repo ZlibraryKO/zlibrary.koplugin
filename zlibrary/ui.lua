@@ -1269,4 +1269,20 @@ function Ui.showCommentsDialog(parent_zlibrary, book_comments)
     _showAndTrackDialog(comments_popup)
 end
 
+function Ui.showUrlCheckProgress(parent_zlibrary, menu_items)
+    if type(menu_items) ~= "table" then menu_items = {} end
+    local menu = Menu:new{
+        title = T("Auto-discover base URL"),
+        item_table = menu_items,
+        show_parent = parent_zlibrary.ui,
+        is_popout = false,
+        is_borderless = true,
+        show_captions = true,
+        title_bar_fm_style = true,
+        multilines_show_more_text = true,
+    }
+    _showAndTrackDialog(menu)
+    return menu
+end
+
 return Ui

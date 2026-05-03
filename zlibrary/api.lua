@@ -1,4 +1,5 @@
 local Config = require("zlibrary.config")
+local time = require("ui/time") 
 local util = require("util")
 local logger = require("logger")
 local json = require("json")
@@ -85,11 +86,21 @@ end
 local function _checkAndHandleRedirect(skip_check, status_code, current_url)
 
     local result = { has_redirect = nil, real_url = nil, status_code = nil, error = nil }
-    if skip_check or type(current_url) ~= "string" or current_url == "" or (status_code ~= 301 and 
-                    status_code ~= 302 and status_code ~= 303 and status_code ~= 307) then
+    local redirect_codes = { [301] = true, [302] = true, [303] = true, [307] = true }
+    if skip_check or type(current_url) ~= "string" or current_url == "" or 
+        type(status_code) ~= "number" or not redirect_codes[status_code]  then
             return result
     end
     
+    local current_url_parse = socket_url.parse(current_url)
+    local current_url_base = socket_url.build({
+                scheme = current_url_parse.scheme,
+                host = current_url_parse.host
+        })
+
+    logger.dbg("Request URL: " .. current_url .. ", Redirect Target: " .. current_url_base ..
+           ", Status Code: " .. tostring(status_code) .. ", Is Redirect: " .. tostring(redirect_codes[status_code]))
+
     local http_result = Api.makeHttpRequest({
         url = current_url,
         method = "HEAD",
@@ -103,19 +114,20 @@ local function _checkAndHandleRedirect(skip_check, status_code, current_url)
 
     local real_url = http_result.headers and (http_result.headers.location or http_result.headers.Location)
     if type(real_url) ~= "string" or real_url == "" then
+        logger.err("Redirect failed: empty Location header.", http_result.headers)
         result.error = string.format("Redirect failed: empty Location header. %s", tostring(http_result.error))
         return result
     end
 
     local real_url_parse = socket_url.parse(real_url)
     local real_url_host = real_url_parse.host
-    if real_url_host and real_url_parse.scheme and real_url_host ~= socket_url.parse(current_url).host then
-
-        Config.setCacheRealUrl(current_url, socket_url.build({
+    if real_url_host and real_url_parse.scheme and real_url_host ~= current_url_parse.host then
+        
+        result.real_url = real_url
+        result.real_url_base = socket_url.build({
                 scheme = real_url_parse.scheme,
                 host = real_url_host
-        }))
-        result.real_url = real_url
+        })
     else
         result.error = string.format("Invalid or unchanged Location header. %s", tostring(http_result.error))
     end
@@ -223,15 +235,23 @@ function Api.makeHttpRequest(options)
         return result
     end
 
-    local is_skip_check = not (request_params.method == "GET" and type(options.getRedirectedUrl) == "function")
-    local check_result = _checkAndHandleRedirect(is_skip_check, result.status_code, options.url)
-    if check_result.has_redirect then
-        if check_result.real_url then
-            options.url = options.getRedirectedUrl()
-            options.getRedirectedUrl = nil
-            return Api.makeHttpRequest(options)
-        elseif check_result.error then
-            result = check_result
+    local skip_redirect_check = options.redirect or type(options.onRedirect) ~= "function"
+    local redir_res = _checkAndHandleRedirect(skip_redirect_check, result.status_code, options.url)
+    if redir_res.has_redirect then
+        if redir_res.real_url and redir_res.real_url_base then
+            if not options.skipRedirectCache then
+                Config.setCacheRealUrl(options.url, redir_res.real_url_base)
+            end
+            local redirect_next_step = options.onRedirect()
+            if type(redirect_next_step) == "string" then
+                options.url = redirect_next_step
+                options.onRedirect = nil
+                return Api.makeHttpRequest(options)
+            elseif type(redirect_next_step) == "function" then
+                 return redirect_next_step(redir_res)
+            end
+        elseif redir_res.error then
+            result = redir_res
         end
     end
 
@@ -251,7 +271,7 @@ function Api.makeHttpRequest(options)
     return result
 end
 
-function Api.login(email, password, is_retry)
+function Api.login(email, password, is_redir_callback)
     logger.info(string.format("Zlibrary:Api.login - START"))
     local result = { user_id = nil, user_key = nil, error = nil }
 
@@ -286,17 +306,13 @@ function Api.login(email, password, is_retry)
         timeout = Config.getLoginTimeout(),
         -- Avoid redirects - 301/302 convert POST to GET per RFC.
         redirect = false,
+        -- retry after URL redirection
+        onRedirect = (not is_redir_callback) and function()
+            return function(redir_res) return Api.login(email, password, true) end
+        end,
     }
 
-    local check_result = _checkAndHandleRedirect(is_retry, http_result.status_code, login_url)
-    if check_result.has_redirect then
-        if check_result.real_url then
-            return Api.login(email, password, true)
-        elseif check_result.error then
-            http_result = check_result
-        end
-    end
-
+    if is_redir_callback then return http_result end
     if not http_result.body or http_result.body == "" then
         result.error = http_result.error or T("Login failed: Empty response from server")
         logger.err(string.format("Zlibrary:Api.login - END (Empty body) - Error: %s", result.error))
@@ -344,7 +360,7 @@ function Api.login(email, password, is_retry)
     return result
 end
 
-function Api.search(query, user_id, user_key, languages, extensions, order, page, is_retry)
+function Api.search(query, user_id, user_key, languages, extensions, order, page, is_redir_callback)
     logger.info(string.format("Zlibrary:Api.search - START - Query: %s, Page: %s", query, tostring(page)))
     local result = { results = nil, total_count = nil, error = nil }
 
@@ -397,17 +413,12 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
         headers = headers,
         source = ltn12.source.string(body),
         timeout = Config.getSearchTimeout(),
+        onRedirect = (not is_redir_callback) and function()
+            return function(redir_res) return Api.search(query, user_id, user_key, languages, extensions, order, page, true) end
+        end,
     }
 
-    local check_result = _checkAndHandleRedirect(is_retry, http_result.status_code, search_url)
-    if check_result.has_redirect then
-        if check_result.real_url then
-            return Api.search(query, user_id, user_key, languages, extensions, order, page, true)
-        elseif check_result.error then
-            http_result = check_result
-        end
-    end  
-
+    if is_redir_callback then return http_result end
     if http_result.error then
         result.error = http_result.error
         result.status_code = http_result.status_code
@@ -590,7 +601,7 @@ function Api.getRecommendedBooks(user_id, user_key)
         method = "GET",
         headers = headers,
         timeout = Config.getRecommendedTimeout(),
-        getRedirectedUrl = Config.getRecommendedBooksUrl,
+        onRedirect = Config.getRecommendedBooksUrl,
     }
     
     if http_result.error then
@@ -638,7 +649,7 @@ function Api.getMostPopularBooks(user_id, user_key)
         method = "GET",
         headers = headers,
         timeout = Config.getPopularTimeout(),
-        getRedirectedUrl = Config.getMostPopularBooksUrl,
+        onRedirect = Config.getMostPopularBooksUrl,
     }
 
     if http_result.error then
@@ -686,7 +697,7 @@ function Api.getBookDetails(user_id, user_key, book_id, book_hash)
         method = "GET",
         headers = headers,
         timeout = Config.getBookDetailsTimeout(),
-        getRedirectedUrl = function()
+        onRedirect = function()
             return Config.getBookDetailsUrl(book_id, book_hash)
         end,
     }
@@ -741,7 +752,7 @@ function Api.getDownloadLink(user_id, user_key, book_id, book_hash)
         method = "GET",
         headers = headers,
         timeout = Config.getBookDetailsTimeout(),
-        getRedirectedUrl = function()
+        onRedirect = function()
             return Config.getDownloadLinkUrl(book_id, book_hash)
         end,
     }
@@ -804,7 +815,7 @@ function Api.getSimilarBooks(user_id, user_key, book_id, book_hash)
         method = "GET",
         headers = headers,
         timeout = Config.getPopularTimeout(),
-        getRedirectedUrl = function()
+        onRedirect = function()
             return Config.getSimilarBooksUrl(book_id, book_hash)
         end,
     }
@@ -857,7 +868,7 @@ function Api.getDownloadedBooks(user_id, user_key, page, order)
         method = "GET",
         headers = headers,
         timeout = Config.getPopularTimeout(),
-        getRedirectedUrl = function()
+        onRedirect = function()
             return Config.getDownloadedBooksUrl(page, order)
         end,
     }
@@ -916,7 +927,7 @@ function Api.getFavoriteBooks(user_id, user_key, page, order)
         method = "GET",
         headers = headers,
         timeout = Config.getPopularTimeout(),
-        getRedirectedUrl = function()
+        onRedirect = function()
             return Config.getFavoriteBooksUrl(page, order)
         end,
     }
@@ -971,7 +982,7 @@ function Api.unfavoriteBook(user_id, user_key, book_stub)
         method = "GET",
         headers = headers,
         timeout = Config.getPopularTimeout(),
-        getRedirectedUrl = function()
+        onRedirect = function()
             return Config.getUnFavoriteUrl(book_stub.id)
         end,
     }
@@ -1020,7 +1031,7 @@ function Api.getDownloadQuotaStatus(user_id, user_key)
         method = "GET",
         headers = headers,
         timeout = Config.getPopularTimeout(),
-        getRedirectedUrl = Config.getDownloadQuotaUrl,
+        onRedirect = Config.getDownloadQuotaUrl,
     }
 
     if http_result.error then
@@ -1067,7 +1078,7 @@ function Api.getFavoriteBookIds(user_id, user_key)
         method = "GET",
         headers = headers,
         timeout = Config.getPopularTimeout(),
-        getRedirectedUrl = Config.getFavoriteBookIdsUrl,
+        onRedirect = Config.getFavoriteBookIdsUrl,
     }
 
     if http_result.error then
@@ -1114,7 +1125,7 @@ function Api.favoriteBook(user_id, user_key, book_stub)
         method = "GET",
         headers = headers,
         timeout = Config.getPopularTimeout(),
-        getRedirectedUrl = function()
+        onRedirect = function()
             return Config.getFavoriteUrl(book_stub.id)
         end,
     }
@@ -1143,13 +1154,17 @@ function Api.favoriteBook(user_id, user_key, book_stub)
     return { success = true }
 end
 
-function Api.healthCheck()
-    local url = Config.getHealthCheckUrl()
-    if not url then
-        logger.warn("Api.healthCheck - Base URL not configured")
-        return { error = T("Z-library server URL not configured.") }
+function Api.healthCheck(baseUrl, skip_redir_cache, redir_url)
+    local url
+    local is_redir_callback = (type(redir_url) == "string")
+
+    if not is_redir_callback then
+        url = baseUrl .. "/eapi/info/ok"
+    else
+        url = redir_url .. "/eapi/info/ok"
     end
-    local baseUrl = Config.getBaseUrl(true)
+
+    local start_time = time.now()
     local http_result = Api.makeHttpRequest{
         url = url,
         method = "GET",
@@ -1157,11 +1172,18 @@ function Api.healthCheck()
             ["User-Agent"] = Config.USER_AGENT,
         },
         timeout = {5, 10},
-        getRedirectedUrl = function()
-            return Config.getHealthCheckUrl()
+        skipRedirectCache = skip_redir_cache or false,
+        onRedirect = (not is_redir_callback) and function()
+            return function(redir_res)
+                local next_base_url = redir_res and redir_res.real_url_base
+                return Api.healthCheck(baseUrl, skip_redir_cache, next_base_url)
+            end
         end,
     }
 
+    local elapsed = time.to_ms(time.since(start_time)) 
+
+    if is_redir_callback then return http_result end
     if http_result.error then
         logger.dbg("Api.healthCheck - Failed for " .. baseUrl .. ": " .. tostring(http_result.error))
         return { success = false, error = http_result.error }
@@ -1185,35 +1207,60 @@ function Api.healthCheck()
 
     if data.success == 1 then
         logger.info("Api.healthCheck - Success for " .. baseUrl .. " (status: " .. tostring(http_result.status_code) .. ")")
-        return { success = true, url = baseUrl }
+        return { success = true, url = baseUrl, duration = elapsed}
     end
 
     logger.dbg("Api.healthCheck - Invalid response data from " .. baseUrl .. ", success=" .. tostring(data.success))
     return { success = false, error = "Invalid API response" }
 end
 
-function Api.findWorkingBaseUrl()
+
+function Api.findWorkingBaseUrl(seed_urls, progress_callback)
     logger.info("Api.findWorkingBaseUrl - START - Checking SEED_URLS")
-    local original_base_url = Config.getBaseUrl(true)
     
-    local seed_urls = Config.getSeedUrls() or {}
-    local total_urls = #seed_urls
-    for i, seed_url in ipairs(seed_urls) do
-        local clean_url = seed_url:gsub("/$", "")
-        
-        logger.info(string.format("Api.findWorkingBaseUrl - Trying [%d/%d]: %s", i, total_urls, clean_url))
-        Config.setAndValidateBaseUrl(clean_url)
-        local result = Api.healthCheck()
-        if result.success then
-            logger.info(string.format("Api.findWorkingBaseUrl - Found working URL: %s", clean_url))
-            Config.setAndValidateBaseUrl(original_base_url)
-            return { success = true, url = clean_url }
-        end
+    if type(seed_urls) ~= "table" then
+        seed_urls = Config.getSeedUrls() or {}
     end
-    
-    logger.warn("Api.findWorkingBaseUrl - END - No working URL found")
-    Config.setAndValidateBaseUrl(original_base_url)
-    return { success = false, error = T("Could not find a working Z-library server. Please check your internet connection or set the base URL manually.") }
+    local is_fast = type(progress_callback) ~= "function" 
+    if is_fast then progress_callback=function(a, b) end end
+    local first_working_url
+
+    local total_urls = #seed_urls
+    for i, seed_item in ipairs(seed_urls) do
+        local raw_url = type(seed_item) == "table" and seed_item.url or seed_item
+        if type(raw_url) ~= "string" or raw_url == "" then goto continue end
+        
+        local clean_url = raw_url:gsub("/$", "")
+        local source = type(seed_item) == "table" and seed_item.src or "Unknown"
+
+        logger.info(string.format("Api.findWorkingBaseUrl - Trying [%d/%d]: %s", i, total_urls, clean_url))
+        progress_callback("START", {index = i, url = clean_url , src = source})
+        if coroutine.running() then coroutine.yield() end
+
+        local result = Api.healthCheck(clean_url, true)
+
+        progress_callback("END", {
+            index = i,
+            url = clean_url,
+            src = source,
+            success = result.success,
+            duration = result.duration,
+            timestamp = os.time(),
+            error = result.success and nil or (result.error or "Unknown")
+        })
+        if result.success then
+            if not first_working_url then first_working_url = clean_url end
+            logger.info(string.format("Api.findWorkingBaseUrl - Found working URL: %s", clean_url))
+            if is_fast then return { success = true, url = clean_url } end
+        end
+        ::continue::
+    end
+    if first_working_url then
+        return { success = true, url = first_working_url }
+    else
+        logger.warn("Api.findWorkingBaseUrl - END - No working URL found")
+        return { success = false, error = T("Could not find a working Z-library server. Please check your internet connection or set the base URL manually.") }
+    end
 end
 
 function Api.getBookComments(user_id, user_key, book_id)
@@ -1241,7 +1288,7 @@ function Api.getBookComments(user_id, user_key, book_id)
         method = "GET",
         headers = headers,
         timeout = Config.getBookCommentsTimeout(),
-        getRedirectedUrl = function()
+        onRedirect = function()
             return Config.getBookCommentsUrl(book_id)
         end
     }

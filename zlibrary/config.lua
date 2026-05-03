@@ -216,7 +216,7 @@ function Config.getSeedUrls()
     local clean_base = (type(base) == "string" and base ~= "") and base:gsub("/$", "") or nil
     if clean_base then seen[clean_base] = true end
 
-    local function processAndMerge(source_urls)
+    local function processAndMerge(source_urls , src_name)
         if type(source_urls) ~= "table" or #source_urls == 0 then return end
         local temp_urls = {}
         
@@ -224,12 +224,12 @@ function Config.getSeedUrls()
         for _, url in ipairs(source_urls) do
             if type(url) == "string" and url ~= "" then
                 local clean_url = url:gsub("/$", "")
-                if not clean_url :match("^https?://") then
-                        clean_url  = "https://" .. clean_url 
+                if not clean_url:match("^https?://") then
+                    clean_url  = "https://" .. clean_url 
                 end
                 if not seen[clean_url] then
                     seen[clean_url] = true
-                    table.insert(temp_urls, clean_url)
+                    table.insert(temp_urls, {url = clean_url, src = src_name})
                 end
             end
         end
@@ -238,18 +238,18 @@ function Config.getSeedUrls()
             local j = math.random(i)
             temp_urls[i], temp_urls[j] = temp_urls[j], temp_urls[i]
         end
-        for _, url in ipairs(temp_urls) do
-            table.insert(new_seed_urls, url)
+        for _, item in ipairs(temp_urls) do
+            table.insert(new_seed_urls, item)
         end
     end
 
     -- User-defined  > Hardcoded > Dynamic
     local cred_file_path = Config._plugin_path .. Config.CREDENTIALS_FILENAME
     local creds = LuaSettings:open(cred_file_path)
-    processAndMerge(creds and creds:readSetting("seedUrls"))
-    processAndMerge(Config.SEED_URLS)
+    processAndMerge(creds and creds:readSetting("seedUrls"), "U")
+    processAndMerge(Config.SEED_URLS, "C")
     local domains_cache = Cache:new{ name = "_domains_cache" }
-    processAndMerge(domains_cache:get("domains", 86400))
+    processAndMerge(domains_cache:get("domains", 86400), "D")
     
     return new_seed_urls
 end
@@ -288,12 +288,6 @@ function Config.getSearchUrl(query)
     local base = Config.getBaseUrl()
     if not base then return nil end
     return base .. "/eapi/book/search"
-end
-
-function Config.getHealthCheckUrl()
-    local base = Config.getBaseUrl()
-    if not base then return nil end
-    return base .. "/eapi/info/ok"
 end
 
 function Config.getBookUrl(href)

@@ -6,4 +6,5 @@ return {
     -- baseUrl = "https://your.zlibrary.domain.com",
     -- email = "your_email",
     -- password = "your_password",
+    -- seedUrls = {},
 }

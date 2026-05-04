@@ -63,11 +63,10 @@ function Zlibrary:onZlibrarySearch()
 end
 
 function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
-    if NetworkMgr:willRerunWhenOnline(function()
+    -- only automatically enable the network when in non-interactive mode
+    if not is_interactive and NetworkMgr:willRerunWhenOnline(function()
         self:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
-    end) then
-        return { success = false, error = T("Network not available. Please connect and try again.") }
-    end
+    end) then return end
 
     logger.info("Zlibrary:autoDiscoverAndSetBaseUrl - START")
 
@@ -151,7 +150,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                         local base_status
                         if type(result) == "table" then
                             if result.success then
-                                base_status = string.format("\u{2714} %dms", result.duration or 0)
+                                base_status = string.format("\u{2714} %dms", result.elapsed or 0)
                             elseif result.error then
                                 base_status = "\u{2718} " .. tostring(result.error)
                             end
@@ -175,9 +174,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                                 end
                                 updateBaseUrlItem(input_value)
                                 return true
-                            end,
-                            base_status
-                        )
+                            end, base_status)
                     end
                     if base_url and base_url ~= "" and NetworkMgr:isConnected() then
                         local loading_msg = Ui.showLoadingMessage(T("Checking") .. "...")
@@ -194,8 +191,13 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                 text = T("Auto-discover base URL"),
                 mandatory = "\u{25B7}",
                 callback = function()
-                    local loading_msg = Ui.showLoadingMessage(T("Searching for working Z-library server..."))
-                    AsyncHelper.run(task, on_success, on_error, loading_msg)
+                    if not NetworkMgr:isConnected() then
+                        return Ui.showErrorMessage(T("Network not available. Please connect and try again."))
+                    end
+                    UIManager:nextTick(function()
+                        local loading_msg = Ui.showLoadingMessage(T("Searching for working Z-library server..."))
+                        AsyncHelper.run(task, on_success, on_error, loading_msg)
+                    end)
                 end,
             }, { text = "---" }}
             
@@ -223,6 +225,9 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                 text = T("Refresh Dynamic Domains"),
                 mandatory = "\u{25B7}",
                 callback = function()
+                    if not NetworkMgr:isConnected() then
+                        return Ui.showErrorMessage(T("Network not available. Please connect and try again."))
+                    end
                     if connection_menu then UIManager:close(connection_menu) end
                     local loading_msg = Ui.showLoadingMessage(T("Fetching dynamic domains..."))
                     AsyncHelper.run(updateDomainsCache, function()
@@ -262,7 +267,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                 elseif event == "END" then
                     item.bold = false
                     if check_result.success then
-                        item.mandatory = string.format("\u{2714} %dms", check_result.duration or 0)
+                        item.mandatory = string.format("\u{2714} %dms", check_result.elapsed or 0)
                         item.callback = function()
                             local ok, err_msg = Config.setAndValidateBaseUrl(check_result.url)
                             if ok then
@@ -280,13 +285,11 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                         end
                     end
                 end
-
-                UIManager:nextTick(function()
-                    connection_menu:switchItemTable(nil, nil, update_item_index)
-                    connection_menu:updateItems(nil, true)
-                    UIManager:setDirty(connection_menu, "ui")
-                    UIManager:forceRePaint()
-                end)
+                
+                connection_menu:switchItemTable(nil, nil, update_item_index)
+                connection_menu:updateItems(nil, true)
+                -- only one frame, need immediate refresh.
+                UIManager:forceRePaint()
             end
         end
     end
@@ -971,11 +974,15 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
     local book_cache = Cache:new{
             name = string.format("%s_%s", book_stub.id, book_stub.hash)
     }
-    local book_details_cache = book_cache:get("details", 432000)
+    local book_details_cache = book_cache:get("details", 604800)
 
     if type(book_details_cache) == "table" and book_details_cache.title then
         Ui.showBookDetails(self, book_details_cache, function()
                 book_cache:clear()
+                -- also clear comments
+                Cache:new{ 
+                    name = string.format("comments_%s_%s", book_stub.id, book_stub.hash)
+                }:clear()
                 self:onSelectRecommendedBook(book_stub)
         end)
         return
@@ -1494,7 +1501,7 @@ function Zlibrary:fetchAndDisplayComments(book, skip_cache)
             name = string.format("comments_%s_%s", book.id, book.hash)
     }
     if not skip_cache then
-        local book_comments_cache = book_cache:get("comments", 432000)
+        local book_comments_cache = book_cache:get("comments", 604800)
         if type(book_comments_cache) == "table" and book_comments_cache[1] then
             Ui.showCommentsDialog(self, book_comments_cache)
             return

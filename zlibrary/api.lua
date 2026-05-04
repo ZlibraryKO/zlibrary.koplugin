@@ -188,9 +188,11 @@ function Api.makeHttpRequest(options)
     }
 
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Timeout: %s", request_params.url, request_params.method, tostring(options.timeout)))
-
-    local req_ok, r_val, r_code, r_headers_tbl, r_status_str = pcall(http.request, request_params)
     
+    local start_time = time.now()
+    local req_ok, r_val, r_code, r_headers_tbl, r_status_str = pcall(http.request, request_params)
+    result.elapsed = time.to_ms(time.since(start_time))
+
     if options.timeout then
         socketutil:reset_timeout()
         logger.dbg("Zlibrary:Api.makeHttpRequest - Reset timeout to default")
@@ -1158,7 +1160,6 @@ function Api.healthCheck(baseUrl, skip_redir_cache, redir_url)
     local is_redir_callback = (type(redir_url) == "string")
     local url = (is_redir_callback and redir_url or baseUrl) .. "/eapi/info/ok"
 
-    local start_time = time.now()
     local http_result = Api.makeHttpRequest{
         url = url,
         method = "GET",
@@ -1176,8 +1177,6 @@ function Api.healthCheck(baseUrl, skip_redir_cache, redir_url)
     }
 
     if is_redir_callback then return http_result end
-    local elapsed = time.to_ms(time.since(start_time)) 
-
     if http_result.error then
         logger.dbg("Api.healthCheck - Failed for " .. baseUrl .. ": " .. tostring(http_result.error))
         return { success = false, error = http_result.error }
@@ -1201,7 +1200,7 @@ function Api.healthCheck(baseUrl, skip_redir_cache, redir_url)
 
     if data.success == 1 then
         logger.info("Api.healthCheck - Success for " .. baseUrl .. " (status: " .. tostring(http_result.status_code) .. ")")
-        return { success = true, url = baseUrl, duration = elapsed}
+        return { success = true, url = baseUrl, elapsed = http_result.elapsed}
     end
 
     logger.dbg("Api.healthCheck - Invalid response data from " .. baseUrl .. ", success=" .. tostring(data.success))
@@ -1238,7 +1237,7 @@ function Api.findWorkingBaseUrl(seed_urls, progress_callback)
             url = clean_url,
             src = source,
             success = result.success,
-            duration = result.duration,
+            elapsed = result.elapsed,
             timestamp = os.time(),
             error = result.success and nil or (result.error or "Unknown")
         })

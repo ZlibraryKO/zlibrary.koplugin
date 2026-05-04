@@ -94,7 +94,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
 
     local executeDiscovery = function()
         local seed_urls = Config.getSeedUrls()
-        local progress_callback
+        local connection_menu, progress_callback, updateBaseUrlItem
 
         local task = function()
             return Api.findWorkingBaseUrl(seed_urls, progress_callback)
@@ -109,6 +109,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                         retry_callback() 
                     else
                         Ui.showInfoMessage(T("Successfully found and set base URL to: ") .. result.url)
+                        if type(updateBaseUrlItem) == "function" then updateBaseUrlItem(result.url) end
                     end
                 else
                     logger.warn("Zlibrary:autoDiscoverAndSetBaseUrl - Failed to validate discovered URL: " .. (err_msg or "Unknown error"))
@@ -127,9 +128,70 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
             local loading_msg = Ui.showLoadingMessage(T("Searching for working Z-library server..."))
             AsyncHelper.run(task, on_success, on_error, loading_msg)
         else
-            local connection_menu
+            local cleanBaseUrl = function(base)
+                return (base and (tostring(base):gsub("^https?://", ""):gsub("/+$", ""))) or ""
+            end
+            updateBaseUrlItem = function(base)
+                if connection_menu and connection_menu.item_table and connection_menu.item_table[1] then
+                    connection_menu.item_table[1].text = string.format("%s [ %s ]", T("Current Base URL:"), cleanBaseUrl(base))
+                    connection_menu:updateItems(nil, true)
+                end
+            end
+
+            local base_url = Config.getBaseUrl(true)
+            local clean_base_url = cleanBaseUrl(base_url)
             local menu_items = {{
-                text = T("Start"),
+                text = string.format("%s  [ %s ]", T("Current Base URL:"), clean_base_url),
+                mandatory = "\u{2699}",
+                callback = function()
+                    -- Could have changed
+                    base_url = Config.getBaseUrl(true)
+                    local showConfigDialog = function(result)
+                        local real_url = Config.getCacheRealUrl()
+                        local base_status
+                        if type(result) == "table" then
+                            if result.success then
+                                base_status = string.format("\u{2714} %dms", result.duration or 0)
+                            elseif result.error then
+                                base_status = "\u{2718} " .. tostring(result.error)
+                            end
+                        elseif type(result) == "string" then 
+                            base_status = result
+                        end
+
+                        if real_url or base_status then
+                            base_status = string.format(" %s \n %s", base_status, (real_url and T("Mirror site redirected to: ") .. tostring(real_url)) or "")
+                        end
+                        Ui.showGenericInputDialog(
+                            T("Set base URL"),
+                            Config.SETTINGS_BASE_URL_KEY,
+                            base_url,
+                            false,
+                            function(input_value)
+                                local success, err_msg = Config.setAndValidateBaseUrl(input_value)
+                                if not success then
+                                    Ui.showErrorMessage(err_msg or T("Invalid Base URL."))
+                                    return false
+                                end
+                                updateBaseUrlItem(input_value)
+                                return true
+                            end,
+                            base_status
+                        )
+                    end
+                    if base_url and base_url ~= "" and NetworkMgr:isConnected() then
+                        local loading_msg = Ui.showLoadingMessage(T("Checking") .. "...")
+                        AsyncHelper.run(function()
+                            return Api.healthCheck(base_url)
+                        end, function(result)
+                            showConfigDialog(result)
+                        end, function(err_msg) showConfigDialog(err_msg) end, loading_msg)
+                    else
+                        showConfigDialog()
+                    end
+                end,
+            }, {
+                text = T("Auto-discover base URL"),
                 mandatory = "\u{25B7}",
                 callback = function()
                     local loading_msg = Ui.showLoadingMessage(T("Searching for working Z-library server..."))
@@ -143,7 +205,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
             for i, seed_item in ipairs(seed_urls) do
                 local raw_url = type(seed_item) == "table" and seed_item.url or tostring(seed_item)
                 local src_str = type(seed_item) == "table" and seed_item.src or "X"
-                local display_url = raw_url:gsub("^https?://", ""):gsub("/$", "")
+                local display_url = cleanBaseUrl(raw_url)
                 table.insert(menu_items, {
                     text = string.format("[%s] %s", src_str, display_url),
                     mandatory = "\u{23F3} " .. T("Queued"),
@@ -164,7 +226,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                     if connection_menu then UIManager:close(connection_menu) end
                     local loading_msg = Ui.showLoadingMessage(T("Fetching dynamic domains..."))
                     AsyncHelper.run(updateDomainsCache, function()
-                        self:autoDiscoverAndSetBaseUrl(true) 
+                        self:autoDiscoverAndSetBaseUrl(true)
                     end, on_error, loading_msg)
                 end,
             })
@@ -186,18 +248,18 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
 
             connection_menu = Ui.showUrlCheckProgress(self, menu_items)
 
-            progress_callback = function(status, check_result)
+            progress_callback = function(event, check_result)
                 if not (connection_menu and connection_menu.item_table) then return end
-                if type(check_result) ~= "table" then return end
+                if not (type(check_result) == "table" and type(check_result.index) == "number") then return end
                 
                 local update_item_index = check_result.index + item_index_offset
                 local item = connection_menu.item_table[update_item_index]
                 if not item then return end
 
-                if status == "START" then
+                if event == "START" then
                     item.mandatory = "\u{27F3} " .. T("Checking")
                     item.bold = true
-                elseif status == "END" then
+                elseif event == "END" then
                     item.bold = false
                     if check_result.success then
                         item.mandatory = string.format("\u{2714} %dms", check_result.duration or 0)
@@ -205,12 +267,14 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                             local ok, err_msg = Config.setAndValidateBaseUrl(check_result.url)
                             if ok then
                                 Ui.showInfoMessage(string.format("%s : %s", T("Set base URL"), tostring(check_result.url)))
+                                updateBaseUrlItem(check_result.url)
                             else
                                 Ui.showInfoMessage( T("Invalid Base URL.") .. " " .. tostring(err_msg))
                             end
                         end
                     else
                         item.mandatory = "\u{2718} " .. T("Failed")
+                        item.mandatory_dim = true
                         item.callback = function()
                             Ui.showInfoMessage(check_result.error or T("Unknown error"))
                         end
@@ -253,29 +317,8 @@ function Zlibrary:addToMainMenu(menu_items)
                             text = T("Set base URL"),
                             keep_menu_open = true,
                             callback = function()
-                                Ui.showGenericInputDialog(
-                                    T("Set base URL"),
-                                    Config.SETTINGS_BASE_URL_KEY,
-                                    Config.getBaseUrl(true),
-                                    false,
-                                    function(input_value)
-                                        local success, err_msg = Config.setAndValidateBaseUrl(input_value)
-                                        if not success then
-                                            Ui.showErrorMessage(err_msg or T("Invalid Base URL."))
-                                            return false
-                                        end
-                                        return true
-                                    end
-                                )
-                            end,
-                        },
-                        {
-                            text = T("Auto-discover base URL"),
-                            keep_menu_open = true,
-                            callback = function()
                                 UIManager:nextTick(function() self:autoDiscoverAndSetBaseUrl(true) end)
                             end,
-                            separator = true,
                         },
                         {
                             text = T("Set email"),
@@ -928,7 +971,7 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
     local book_cache = Cache:new{
             name = string.format("%s_%s", book_stub.id, book_stub.hash)
     }
-    local book_details_cache = book_cache:get("details")
+    local book_details_cache = book_cache:get("details", 432000)
 
     if type(book_details_cache) == "table" and book_details_cache.title then
         Ui.showBookDetails(self, book_details_cache, function()

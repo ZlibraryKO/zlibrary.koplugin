@@ -263,11 +263,13 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
 
                 if event == "START" then
                     item.mandatory = "\u{27F3} " .. T("Checking")
+                    item.mandatory_dim = false
                     item.bold = true
                 elseif event == "END" then
                     item.bold = false
                     if check_result.success then
                         item.mandatory = string.format("\u{2714} %dms", check_result.elapsed or 0)
+                        item.mandatory_dim = false
                         item.callback = function()
                             local ok, err_msg = Config.setAndValidateBaseUrl(check_result.url)
                             if ok then
@@ -286,10 +288,10 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                     end
                 end
                 
-                connection_menu:switchItemTable(nil, nil, update_item_index)
                 connection_menu:updateItems(nil, true)
                 -- only one frame, need immediate refresh.
                 UIManager:forceRePaint()
+                connection_menu:switchItemTable(nil, nil, update_item_index)
             end
         end
     end

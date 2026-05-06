@@ -244,9 +244,8 @@ function Config.getSeedUrls()
     end
 
     -- User-defined  > Hardcoded > Dynamic
-    local cred_file_path = Config._plugin_path .. Config.CREDENTIALS_FILENAME
-    local creds = LuaSettings:open(cred_file_path)
-    processAndMerge(creds and creds:readSetting("seedUrls"), "U")
+    local settings =  _getLuaSettings()
+    processAndMerge(settings and settings:readSetting("seedUrls"), "U")
     processAndMerge(Config.SEED_URLS, "C")
     local domains_cache = Cache:new{ name = "_domains_cache" }
     processAndMerge(domains_cache:get("domains", 86400), "D")

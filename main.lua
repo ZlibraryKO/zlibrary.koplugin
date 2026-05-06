@@ -236,14 +236,6 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                 end,
             })
             table.insert(menu_items, {
-                text = T("Prioritize Custom BaseUrls"),
-                mandatory = "\u{25B7}",
-                callback = function()
-                    local cred_file_path = self.plugin_path .. Config.CREDENTIALS_FILENAME
-                    Ui.showSimpleMessageDialog("", (string.format(T("Please edit the `seedUrls` list in file `%s` or submit an issue on GitHub."), cred_file_path)))
-                end,
-            })
-            table.insert(menu_items, {
                 text = T("Back"),
                 mandatory = "\u{21A9}",
                 callback = function()
@@ -252,7 +244,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
             })
 
             connection_menu = Ui.showUrlCheckProgress(self, menu_items)
-
+            
             progress_callback = function(event, check_result)
                 if not (connection_menu and connection_menu.item_table) then return end
                 if not (type(check_result) == "table" and type(check_result.index) == "number") then return end
@@ -287,11 +279,15 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                         end
                     end
                 end
-                
-                connection_menu:updateItems(nil, true)
+
+                local target_page = connection_menu:getPageNumber(update_item_index)  
+                if connection_menu.page ~= target_page then  
+                    connection_menu:switchItemTable(nil, nil, update_item_index)  
+                else  
+                    connection_menu:updateItems(update_item_index, true)  
+                end 
                 -- only one frame, need immediate refresh.
                 UIManager:forceRePaint()
-                connection_menu:switchItemTable(nil, nil, update_item_index)
             end
         end
     end

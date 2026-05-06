@@ -6,6 +6,7 @@ local T = require("zlibrary.gettext")
 local DownloadMgr = require("ui/downloadmgr")
 local InputDialog = require("ui/widget/inputdialog")
 local Menu = require("zlibrary.menu")
+local Device = require("device")
 local util = require("util")
 local logger = require("logger")
 local Config = require("zlibrary.config")
@@ -212,6 +213,8 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
         item_table = menu_items,
         parent = parent_ui,
         show_captions = true,
+        is_popout = false,
+        title_bar_fm_style = true,
         onClose = function()
             local ok, err = pcall(function()
                 local new_selected_values = {}
@@ -276,11 +279,12 @@ function Ui.showOrdersSelectionDialog(parent_ui, ok_callback)
     _showRadioSelectionDialog(parent_ui, T("Select search order"), Config.SETTINGS_SEARCH_ORDERS_KEY, Config.SUPPORTED_ORDERS, ok_callback)
 end
 
-function Ui.showGenericInputDialog(title, setting_key, current_value_or_default, is_password, validate_and_save_callback)
+function Ui.showGenericInputDialog(title, setting_key, current_value_or_default, is_password, validate_and_save_callback, description)
     local dialog
 
     dialog = InputDialog:new{
         title = title,
+        description = description,
         input = current_value_or_default or "",
         text_type = is_password and "password" or nil,
         buttons = {{
@@ -325,10 +329,16 @@ end
 
 function Ui.showSearchDialog(parent_zlibrary, def_input)
     -- save last search input
-    if Ui._last_search_input and not def_input then
+    if not def_input then
         def_input = Ui._last_search_input
+        if not def_input and Device:hasClipboard() then
+            local clip_text = Device.input.getClipboardText()
+            if type(clip_text) == "string" and #clip_text < 80 then
+                def_input = clip_text
+            end
+        end
     end
-
+  
     local dialog
     local search_order_name = Config.getSearchOrderName()
     
@@ -368,6 +378,7 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
             _closeAndUntrackDialog(dialog)
 
             if not query or not query:match("%S") then
+                Ui._last_search_input = nil
                 Ui.showErrorMessage(T("Please enter a search term."))
                 return
             end
@@ -490,6 +501,8 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
         item_table = {},
         parent = parent_zlibrary.ui,
         show_captions = true,
+        is_popout = false,
+        title_bar_fm_style = true,
         multilines_show_more_text = true
     }
 
@@ -896,7 +909,17 @@ function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel
                         Ui.closeMessage(loading_msg_to_close)
                     end
                     cancel_callback(err_msg)
-                end
+                end,
+                other_buttons_first = is_timeout and true or nil,
+                other_buttons = is_timeout and {{{ 
+                    text = string.format("%s&%s",T("Auto-discover base URL"), T("Retry")), 
+                    callback = function()  
+                        if loading_msg_to_close then  
+                            Ui.closeMessage(loading_msg_to_close)  
+                        end  
+                        _plugin_instance:autoDiscoverAndSetBaseUrl(nil, retry_callback)
+                    end  
+                }}} or nil,  
             })
         else
             if loading_msg_to_close then
@@ -1015,6 +1038,7 @@ function Ui.showTimeoutConfigDialog(parent_ui, timeout_name, timeout_key, getter
         item_table = dialog_items,
         parent = parent_ui,
         show_captions = true,
+        is_popout = false,
     }
     
     local original_onClose = dialog_menu.onClose
@@ -1127,6 +1151,7 @@ function Ui.showAllTimeoutConfigDialog(parent_ui)
         },
         {
             text = T("Reset all timeouts to defaults"),
+            mandatory = "\u{25B7}",
             callback = function()
                 if _plugin_instance and _plugin_instance.dialog_manager then
                     _plugin_instance.dialog_manager:showConfirmDialog({
@@ -1156,6 +1181,8 @@ function Ui.showAllTimeoutConfigDialog(parent_ui)
         item_table = timeout_items,
         parent = parent_ui,
         show_captions = true,
+        is_popout = false,
+        title_bar_fm_style = true,
     }
     _showAndTrackDialog(main_menu)
 end
@@ -1256,6 +1283,22 @@ function Ui.showCommentsDialog(parent_zlibrary, book_comments)
     
     Device.screen.getHeight = original_getHeight 
     _showAndTrackDialog(comments_popup)
+end
+
+function Ui.showUrlCheckProgress(parent_zlibrary, menu_items)
+    if type(menu_items) ~= "table" then menu_items = {} end
+    local menu = Menu:new{
+        title = T("Set base URL"),
+        item_table = menu_items,
+        show_parent = parent_zlibrary.ui,
+        is_popout = false,
+        is_borderless = true,
+        show_captions = true,
+        title_bar_fm_style = true,
+        single_line = true,
+    }
+    _showAndTrackDialog(menu)
+    return menu
 end
 
 return Ui

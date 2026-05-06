@@ -43,6 +43,7 @@ Config.TIMEOUT_COVER = { 5, 15 }        -- Cover image operations
 Config.TIMEOUT_BOOK_COMMENTS = { 10, 15 } -- Comments operations
 
 function Config.loadCredentialsFromFile(plugin_path)
+    Config._plugin_path = plugin_path
     local cred_file_path = plugin_path .. Config.CREDENTIALS_FILENAME
     local creds = LuaSettings:open(cred_file_path)
     if not creds.data or not next(creds.data) then
@@ -170,7 +171,7 @@ end
 
 -- Singleton lazy instance to avoid recreating Cache on every call
 local _config_runtime_cache
-local function _getConfigRuntimeCache()
+function Config.getConfigRuntimeCache()
     if not _config_runtime_cache then
         _config_runtime_cache = Cache:new{ name = "_runtime_cache" }
     end
@@ -178,12 +179,12 @@ local function _getConfigRuntimeCache()
 end
 
 function Config.getCacheRealUrl()
-    local api_real_url = _getConfigRuntimeCache():get("api_real_url", 600)
+    local api_real_url = Config.getConfigRuntimeCache():get("api_real_url", 600)
     return api_real_url and api_real_url[1]
 end
 
 function Config.clearCacheRealUrl()
-    return _getConfigRuntimeCache():remove("api_real_url")
+    return Config.getConfigRuntimeCache():remove("api_real_url")
 end
 
 function Config.setCacheRealUrl(original_url, real_url)
@@ -199,8 +200,8 @@ function Config.setCacheRealUrl(original_url, real_url)
     if string.sub(real_url, -1) == "/" then
         real_url = string.sub(real_url, 1, -2)
     end
-    
-    return _getConfigRuntimeCache():insert("api_real_url", {real_url})
+
+    return Config.getConfigRuntimeCache():insert("api_real_url", {real_url})
 end
 
 function Config.getBaseUrl(is_original)
@@ -209,6 +210,50 @@ function Config.getBaseUrl(is_original)
         return nil
     end
     return configured_url
+end
+
+function Config.getSeedUrls()
+    local new_seed_urls, seen = {}, {}
+
+    local base = Config.getBaseUrl()
+    local clean_base = (type(base) == "string" and base ~= "") and base:gsub("/$", "") or nil
+    if clean_base then seen[clean_base] = true end
+
+    local function processAndMerge(source_urls , src_name)
+        if type(source_urls) ~= "table" or #source_urls == 0 then return end
+        local temp_urls = {}
+        
+        -- clean & deduplicate
+        for _, url in ipairs(source_urls) do
+            if type(url) == "string" and url ~= "" then
+                local clean_url = url:gsub("/$", "")
+                if not clean_url:match("^https?://") then
+                    clean_url  = "https://" .. clean_url 
+                end
+                if not seen[clean_url] then
+                    seen[clean_url] = true
+                    table.insert(temp_urls, {url = clean_url, src = src_name})
+                end
+            end
+        end
+        -- Shuffle
+        for i = #temp_urls, 2, -1 do
+            local j = math.random(i)
+            temp_urls[i], temp_urls[j] = temp_urls[j], temp_urls[i]
+        end
+        for _, item in ipairs(temp_urls) do
+            table.insert(new_seed_urls, item)
+        end
+    end
+
+    -- User-defined  > Hardcoded > Dynamic
+    local settings =  _getLuaSettings()
+    processAndMerge(settings and settings:readSetting("seedUrls"), "U")
+    processAndMerge(Config.SEED_URLS, "C")
+    local domains_cache = Cache:new{ name = "_domains_cache" }
+    processAndMerge(domains_cache:get("domains", 86400), "D")
+    
+    return new_seed_urls
 end
 
 function Config.setAndValidateBaseUrl(url_string)

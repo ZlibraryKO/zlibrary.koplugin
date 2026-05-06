@@ -78,7 +78,7 @@ function SearchDialog:init()
         with_bottom_line = true,
         left_icon = "appbar.search",
         left_icon_size_ratio = 0.9,
-        left_icon_allow_flash = true,
+        right_icon_size_ratio = 0.9,
         left_icon_tap_callback = function()
             self.on_search_callback(self.def_search_input)
         end,

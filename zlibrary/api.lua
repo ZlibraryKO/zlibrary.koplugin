@@ -1179,81 +1179,32 @@ function Api.healthCheck(baseUrl, skip_redir_cache, redir_url)
     if is_redir_callback then return http_result end
     if http_result.error then
         logger.dbg("Api.healthCheck - Failed for " .. baseUrl .. ": " .. tostring(http_result.error))
-        return { success = false, error = http_result.error }
+        return { success = false, error = http_result.error, elapsed = http_result.elapsed}
     end
 
     if not http_result.status_code or http_result.status_code < 200 or http_result.status_code >= 300 then
         logger.dbg("Api.healthCheck - Invalid status code " .. tostring(http_result.status_code) .. " for " .. baseUrl)
-        return { success = false, error = "Invalid status code: " .. tostring(http_result.status_code) }
+        return { success = false, elapsed = http_result.elapsed, error = "Invalid status code: " .. tostring(http_result.status_code) }
     end
 
     if not http_result.body or http_result.body == "" then
         logger.dbg("Api.healthCheck - No response body from " .. baseUrl)
-        return { success = false, error = "No response body" }
+        return { success = false, error = "No response body", elapsed = http_result.elapsed}
     end
 
     local success_parse, data = pcall(json.decode, http_result.body, json.decode.simple)
     if not success_parse or not data then
         logger.dbg("Api.healthCheck - Failed to parse JSON from " .. baseUrl)
-        return { success = false, error = "Invalid JSON response" }
+        return { success = false, error = "Invalid JSON response", elapsed = http_result.elapsed}
     end
 
     if data.success == 1 then
         logger.info("Api.healthCheck - Success for " .. baseUrl .. " (status: " .. tostring(http_result.status_code) .. ")")
-        return { success = true, url = baseUrl, elapsed = http_result.elapsed}
+        return { success = true, url = baseUrl, elapsed = http_result.elapsed, real_url= redir_url}
     end
 
     logger.dbg("Api.healthCheck - Invalid response data from " .. baseUrl .. ", success=" .. tostring(data.success))
-    return { success = false, error = "Invalid API response" }
-end
-
-
-function Api.findWorkingBaseUrl(seed_urls, progress_callback)
-    logger.info("Api.findWorkingBaseUrl - START - Checking SEED_URLS")
-    
-    if type(seed_urls) ~= "table" then
-        seed_urls = Config.getSeedUrls() or {}
-    end
-    local find_first_match = type(progress_callback) ~= "function" 
-    if find_first_match then progress_callback=function(a, b) end end
-    local first_working_url
-
-    local total_urls = #seed_urls
-    for i, seed_item in ipairs(seed_urls) do
-        local raw_url = type(seed_item) == "table" and seed_item.url or seed_item
-        if type(raw_url) ~= "string" or raw_url == "" then goto continue end
-        
-        local clean_url = raw_url:gsub("/$", "")
-        local source = type(seed_item) == "table" and seed_item.src or "Unknown"
-
-        logger.info(string.format("Api.findWorkingBaseUrl - Trying [%d/%d]: %s", i, total_urls, clean_url))
-        progress_callback("START", {index = i, url = clean_url , src = source})
-        if coroutine.running() then coroutine.yield() end
-
-        local result = Api.healthCheck(clean_url, true)
-
-        progress_callback("END", {
-            index = i,
-            url = clean_url,
-            src = source,
-            success = result.success,
-            elapsed = result.elapsed,
-            timestamp = os.time(),
-            error = result.success and nil or (result.error or "Unknown")
-        })
-        if result.success then
-            if not first_working_url then first_working_url = clean_url end
-            logger.info(string.format("Api.findWorkingBaseUrl - Found working URL: %s", clean_url))
-            if find_first_match then return { success = true, url = clean_url } end
-        end
-        ::continue::
-    end
-    if first_working_url then
-        return { success = true, url = first_working_url }
-    else
-        logger.warn("Api.findWorkingBaseUrl - END - No working URL found")
-        return { success = false, error = T("Could not find a working Z-library server. Please check your internet connection or set the base URL manually.") }
-    end
+    return { success = false, error = "Invalid API response", elapsed = http_result.elapsed}
 end
 
 function Api.getBookComments(user_id, user_key, book_id)

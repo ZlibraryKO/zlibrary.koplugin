@@ -325,6 +325,7 @@ function Ui.showGenericInputDialog(title, setting_key, current_value_or_default,
     }
     _showAndTrackDialog(dialog)
     dialog:onShowKeyboard()
+    return dialog
 end
 
 function Ui.showSearchDialog(parent_zlibrary, def_input)
@@ -1285,7 +1286,7 @@ function Ui.showCommentsDialog(parent_zlibrary, book_comments)
     _showAndTrackDialog(comments_popup)
 end
 
-function Ui.showUrlCheckProgress(parent_zlibrary, menu_items)
+function Ui.showUrlCheckProgress(parent_zlibrary, menu_items, close_callback)
     if type(menu_items) ~= "table" then menu_items = {} end
     local menu = Menu:new{
         title = T("Set base URL"),
@@ -1297,6 +1298,10 @@ function Ui.showUrlCheckProgress(parent_zlibrary, menu_items)
         title_bar_fm_style = true,
         single_line = true,
     }
+    function menu:onCloseWidget() 
+        if type(close_callback) == "" then close_callback() end
+        Menu.onCloseWidget(self)
+    end
     _showAndTrackDialog(menu)
     return menu
 end

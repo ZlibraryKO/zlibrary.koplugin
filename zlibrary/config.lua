@@ -5,7 +5,10 @@ local LuaSettings = require("luasettings")
 local T = require("zlibrary.gettext")
 local Cache = require("zlibrary.cache")
 
-local Config = {}
+local Config = {
+    _lua_settings = nil,
+    _runtime_cache = nil,
+}
 
 Config.SETTINGS_BASE_URL_KEY = "zlibrary_base_url"
 Config.SETTINGS_USERNAME_KEY = "zlibrary_username"
@@ -146,33 +149,31 @@ Config.SEED_URLS = { -- List of known Z-library base URLs extracted from the And
     "https://z-lib.gl/"
 }
 
-local _lua_settings
 local function _getLuaSettings()
-    if not _lua_settings then
+    if not Config._lua_settings then
         local settings_file = DataStorage:getSettingsDir() .. "/zlibrary.lua"
-        _lua_settings = LuaSettings:open(settings_file)
+        Config._lua_settings = LuaSettings:open(settings_file)
 
         -- Check if data migration from old settings is needed
-        if not _lua_settings:readSetting(Config.SETTINGS_BASE_URL_KEY) and (G_reader_settings and G_reader_settings:readSetting(Config.SETTINGS_BASE_URL_KEY)) then
+        if not Config._lua_settings:readSetting(Config.SETTINGS_BASE_URL_KEY) and (G_reader_settings and G_reader_settings:readSetting(Config.SETTINGS_BASE_URL_KEY)) then
              for key, value in pairs(G_reader_settings.data) do
                 if type(key) == "string" and (key:match("^zlib_") or key:match("^zlibrary_")) then
-                    _lua_settings:saveSetting(key, value)
+                    Config._lua_settings:saveSetting(key, value)
                     G_reader_settings:delSetting(key)
                 end
             end
-            _lua_settings:flush()
+            Config._lua_settings:flush()
         end
     end
-    return _lua_settings
+    return Config._lua_settings
 end
 
 -- Singleton lazy instance to avoid recreating Cache on every call
-local _config_runtime_cache
 function Config.getConfigRuntimeCache()
-    if not _config_runtime_cache then
-        _config_runtime_cache = Cache:new{ name = "_runtime_cache" }
+    if not Config._runtime_cache then
+        Config._runtime_cache = Cache:new{ name = "_runtime_cache" }
     end
-    return _config_runtime_cache
+    return Config._runtime_cache
 end
 
 function Config.getCacheRealUrl()
@@ -204,7 +205,8 @@ end
 function Config.getBaseUrl(is_original)
     local configured_url = (not is_original and Config.getCacheRealUrl()) or Config.getSetting(Config.SETTINGS_BASE_URL_KEY)
     if configured_url == nil or configured_url == "" then
-        return nil
+        -- default
+        configured_url = (Config.SEED_URLS and #Config.SEED_URLS > 0) and Config.SEED_URLS[1] or nil
     end
     return configured_url
 end

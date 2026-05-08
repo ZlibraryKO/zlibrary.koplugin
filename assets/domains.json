@@ -1,0 +1,28 @@
+{
+	"success": 1,
+	"domains": [{
+		"domain": "z-library.sk",
+		"contentAvailable": true,
+		"isRedirector": false
+	}, {
+		"domain": "article.sk",
+		"contentAvailable": true,
+		"isRedirector": false
+	}, {
+		"domain": "articles.sk",
+		"contentAvailable": true,
+		"isRedirector": false
+	}, {
+		"domain": "proxy.zlibraryproxies.workers.dev",
+		"contentAvailable": true,
+		"isRedirector": false
+	},{
+        "domain":"1lib.su"
+    },{
+        "domain":"zlib.by"
+    },{
+        "domain":"101ml.su"
+    },{
+        "domain":"zlib.re"
+    }]
+}

@@ -50,7 +50,7 @@ function Cache:_ensureInit()
         if not util.directoryExists(dir) then
             util.makePath(dir)
             if not util.directoryExists(dir) then
-                os.execute(string.format('"mkdir -p "%s"', dir))
+                os.execute(string.format('mkdir -p "%s"', dir))
             end
         end
     end
@@ -129,6 +129,69 @@ function Cache:clear()
         pcall(os.remove, self.path)
         self._cache = nil
     end
+end
+
+function Cache:getCoversDir()
+    local dir = DataStorage:getDataDir() .. "/cache/zlibrary/covers"
+    self:ensureDir(dir)
+    return dir
+end
+
+function Cache:getCoverPath(book_hash)
+    if not book_hash or book_hash == "" then return nil end
+    return self:getCoversDir() .. "/" .. book_hash .. ".jpg"
+end
+
+function Cache:ensureDir(dir)
+    if dir and not util.directoryExists(dir) then
+        util.makePath(dir)
+        --[[
+        local Device = require("device")
+        if not util.directoryExists(dir) then
+            -- mkdir -p fallback for Windows and Unix, though mostly Unix in KOReader
+            if Device and Device:isDesktop() and package.config:sub(1,1) == '\\' then
+                os.execute(string.format('mkdir "%s"', dir:gsub("/", "\\")))
+            else
+                os.execute(string.format('mkdir -p "%s"', dir))
+            end
+        end
+        ]]
+    end
+end
+
+function Cache:cleanOldCovers(max_age_days)
+    local lfs = require("libs/libkoreader-lfs")
+    local dir = Cache:getCoversDir()
+
+    max_age_days = max_age_days or 7
+    local max_age_seconds = max_age_days * 86400
+    local now = os.time()
+    local removed = 0
+
+    local ok, err = pcall(function()
+        if not util.directoryExists(dir) then return end
+
+        for filename in lfs.dir(dir) do
+            if filename ~= "." and filename ~= ".." then
+                local filepath = dir .. "/" .. filename
+                local attr = lfs.attributes(filepath)
+                if attr and attr.mode == "file" and attr.modification then
+                    local age = now - attr.modification
+                    if age > max_age_seconds then
+                        os.remove(filepath)
+                        removed = removed + 1
+                    end
+                end
+            end
+        end
+    end)
+
+    if not ok then
+        local logger = require("logger")
+        logger.warn("Cache.cleanOldCovers error:", tostring(err))
+    end
+
+    return removed
 end
 
 return Cache

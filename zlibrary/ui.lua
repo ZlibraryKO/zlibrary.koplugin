@@ -455,7 +455,10 @@ function Ui.createBookMenuItem(book_data, parent_zlibrary_instance)
             end
         end,
         keep_menu_open = true,
-        original_book_data_ref = book_data,
+       -- original_book_data_ref = book_data,
+        book_id = book_data.id,
+        hash = book_data.hash,
+        cover = book_data.cover,
     }
 end
 

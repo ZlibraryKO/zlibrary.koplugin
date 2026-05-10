@@ -983,18 +983,15 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
         return
     end
 
-    local book_cache = Cache:new{
-            name = string.format("%s_%s", book_stub.id, book_stub.hash)
-    }
-    local book_details_cache = book_cache:get("details", 604800)
+    local book_cache = Cache:new{ type="bookinfo" }
+    local book_details_cache = book_cache:get(book_stub.hash, 604800)
 
     if type(book_details_cache) == "table" and book_details_cache.title then
         Ui.showBookDetails(self, book_details_cache, function()
-                book_cache:clear()
+                book_cache:clear(book_stub.hash)
                 -- also clear comments
-                Cache:new{ 
-                    name = string.format("comments_%s_%s", book_stub.id, book_stub.hash)
-                }:clear()
+                local comments_key = string.format("%s_comments", book_stub.hash)
+                book_cache:clear(comments_key)
                 self:onSelectRecommendedBook(book_stub)
         end)
         return
@@ -1003,7 +1000,7 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
     local on_success = function(ui_self, api_result, plugin_self)
         logger.info(string.format("Zlibrary:onSelectRecommendedBook - Fetch successful for book ID: %s", api_result.book.id))
         Ui.showBookDetails(self, api_result.book)
-        book_cache:insert("details", api_result.book)
+        book_cache:insert(book_stub.hash, api_result.book)
     end
     
     self:_requestDispatcher({
@@ -1479,20 +1476,20 @@ function Zlibrary:downloadAndShowCover(book)
         return
     end
 
-    local cover_cache_path = Cache:getCoverPath(book_hash)
-    if not cover_cache_path then return end
-    local temp_path = cover_cache_path .. ".downloading"
-
-    if not util.fileExists(cover_cache_path) then
+    local cover_cache = Cache:new{ type="cover" }
+    local cover_cache_path = cover_cache:get(book_hash)
+    if not cover_cache_path then
+        local temp_path = cover_cache:getTempPath(book_hash)
         if util.fileExists(temp_path) then pcall(util.removeFile, temp_path) end
         local download_result = Api.downloadBookCover(cover_url, temp_path)
         if download_result.error or not download_result.success then
             pcall(util.removeFile, temp_path)
             Ui.showErrorMessage(tostring(download_result.error))
             return
+        else
+            cover_cache:insert(book_hash,temp_path)
         end
     end
-    local rename_success, err = os.rename(temp_path, cover_cache_path)
     Ui.showCoverDialog(book_title, cover_cache_path)
 end
 
@@ -1502,11 +1499,10 @@ function Zlibrary:fetchAndDisplayComments(book, skip_cache)
         return
     end
     
-    local book_cache = Cache:new{
-            name = string.format("comments_%s_%s", book.id, book.hash)
-    }
+    local book_cache = Cache:new{ type="bookinfo" }
+    local comments_key = string.format("%s_comments", book.hash)
     if not skip_cache then
-        local book_comments_cache = book_cache:get("comments", 604800)
+        local book_comments_cache = book_cache:get(comments_key, 604800)
         if type(book_comments_cache) == "table" and book_comments_cache[1] then
             Ui.showCommentsDialog(self, book_comments_cache)
             return
@@ -1519,7 +1515,7 @@ function Zlibrary:fetchAndDisplayComments(book, skip_cache)
 
     local on_success = function(ui_self, api_result, plugin_self)
         Ui.showCommentsDialog(self, api_result.comments)
-        book_cache:insert("comments", api_result.comments)
+        book_cache:insert(comments_key, api_result.comments)
     end
 
     self:_requestDispatcher({
@@ -1542,6 +1538,7 @@ function Zlibrary:onExit()
         logger.info("Zlibrary:onExit - Cleaning up " .. self.dialog_manager:getDialogCount() .. " remaining dialogs")
         self.dialog_manager:closeAllDialogs()
     end
+    Cache.cleanAllFiles()
 end
 
 function Zlibrary:onCloseWidget()

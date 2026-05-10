@@ -28,11 +28,14 @@ function M:mergeTitleBarIntoLayout()
    Menu.mergeTitleBarIntoLayout(self)
 end
 
-local function downloadCover(url, cache_path)
-    if type(url) ~= "string" or type(cache_path) ~= "string" then return false end
-    if util.fileExists(cache_path) then return true end
+local function downloadCover(url, book_hash)
+    if type(url) ~= "string" or type(book_hash) ~= "string" then return false end
+    local cover_cache = Cache:new{ type="cover" }
+    
+    local cache_path = cover_cache:get(book_hash)
+    if cache_path then return true end
 
-    local temp_path = cache_path .. ".downloading"
+    local temp_path = cover_cache:getTempPath(book_hash)
     if util.fileExists(temp_path) then util.removeFile(temp_path) end
 
     local download_result = Api.downloadBookCover(url, temp_path)
@@ -48,30 +51,31 @@ local function downloadCover(url, cache_path)
         return nil
     end
     cover_bb = nil
-    local rename_success, err = os.rename(temp_path, cache_path)
-    return rename_success ~= nil
+    cover_cache:insert(book_hash, temp_path)
+    return true
 end
 
 
 local function attachCover(item, cover_w, cover_h)
     if not (item and item.hash) then return nil end
-    local cover_cache_path = Cache:getCoverPath(item.hash)
+    local cover_cache = Cache:new{ type="cover" }
+    local cover_cache_path = cover_cache:get(item.hash)
 
-    if util.fileExists(cover_cache_path) then
+    if cover_cache_path then
         item._is_cover_cached = true
         item.state = CenterContainer:new{
             dimen = Geom:new{ w = cover_w, h = cover_h },
             ImageWidget:new{ 
-                -- image = cover_bb, 
                 file = cover_cache_path,
                 width = cover_w, 
                 height = cover_h, 
                 scale_factor = 0, 
-                file_do_cache = true, 
-                image_disposable = true,
+                file_do_cache = true,
+                alpha = false,
+                use_legacy_image_scaling = true,
             }
         }
-        return cover_cache_path
+        return true
     end
 
     local bordersize = Size.border.thin
@@ -99,7 +103,7 @@ local function attachCover(item, cover_w, cover_h)
         }
     }
 
-    return cover_cache_path
+    return true
 end
 
 function M:updateItems(select_number, no_recalculate_dimen)
@@ -159,9 +163,8 @@ function M:updateItems(select_number, no_recalculate_dimen)
                 for idx = 1, perpage do
                     local item = self.item_table[idx_offset + idx]
                     if item and item.cover and item.hash then
-                        local cache_path = Cache:getCoverPath(item.hash)
                         if not item._is_cover_cached then
-                            table.insert(missing_covers, { item = item, path = cache_path })
+                            table.insert(missing_covers, { item = item })
                         end
                     end
                 end
@@ -176,19 +179,23 @@ function M:updateItems(select_number, no_recalculate_dimen)
                     task_func = downloadCover,
                     max_retries = 2,
                     get_task_args = function(req)
-                        return { req.item.cover, req.path } 
+                        return { req.item.cover, req.item.hash }
                     end,
                     on_item_end = function(idx, req, success)
                         req = req or {}
-                        if success and req.item and util.fileExists(req.path) then
-                            UIManager:nextTick(function()
-                                if not (type(self) == "table" and self.page) then return end
-                                -- callback, page unchanged
-                                if self.page == current_page then
-                                    self:updateItems(nil, true)
-                                    UIManager:setDirty(self, "ui")
-                                end
-                            end)
+                        if success and req.item then
+                            local cover_cache = Cache:new{ type="cover" }
+                            local cover_cache_path = cover_cache:get(req.item.hash)
+                            if cover_cache_path then
+                                UIManager:nextTick(function()
+                                    if not (type(self) == "table" and self.page) then return end
+                                    -- callback, page unchanged
+                                    if self.page == current_page then
+                                        self:updateItems(nil, true)
+                                        UIManager:setDirty(self, "ui")
+                                    end
+                                end)
+                            end
                         end
                         return false 
                     end

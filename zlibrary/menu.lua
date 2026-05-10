@@ -1,5 +1,6 @@
 local NetworkMgr = require("ui/network/manager")
 local Font = require("ui/font")
+local Screen = require("device").screen
 local CenterContainer = require("ui/widget/container/centercontainer")
 local FrameContainer = require("ui/widget/container/framecontainer")
 local TextBoxWidget = require("ui/widget/textboxwidget")
@@ -19,6 +20,7 @@ local M = Menu:extend{
     _cover_channel = nil,
     _debounce_timer_cancel = nil,
     _last_page_summary = nil,
+    list_cover_per_page = nil,
 }
 -- fix no_title = true koreader crash
 function M:mergeTitleBarIntoLayout()
@@ -106,6 +108,23 @@ local function attachCover(item, cover_w, cover_h)
     return true
 end
 
+function M:getCoverItemsPerPage()
+    local scale_by_size = Screen:scaleBySize(1000000) * (1/1000000)  
+    
+    local top_height = 0  
+    if self.title_bar and not self.no_title then  
+        top_height = self.title_bar:getHeight()  
+    end  
+    local bottom_height = 0  
+    if self.page_return_arrow and self.page_info_text then  
+        bottom_height = math.max(self.page_return_arrow:getSize().h, self.page_info_text:getSize().h)  
+                    + Size.padding.button
+    end  
+    local available_height = self.inner_dimen.h - top_height - bottom_height
+    local items_per_page = math.floor(available_height / scale_by_size / 120)
+    return math.max(3, math.min(14, items_per_page))
+end
+
 function M:updateItems(select_number, no_recalculate_dimen)
     local old_perpage = self.perpage or 14
     local ok, err = pcall(function()
@@ -120,8 +139,9 @@ function M:updateItems(select_number, no_recalculate_dimen)
 
         self._cover_channel = self._cover_channel or AsyncHelper:createChannel("Menu_Covers", 4)
 
-        if tonumber(self.perpage) ~= 8 then
-            self.items_per_page = 8
+        if not self.list_cover_per_page then self.list_cover_per_page = self:getCoverItemsPerPage() end
+        if tonumber(self.perpage) ~= self.list_cover_per_page then
+            self.items_per_page = self.list_cover_per_page
             self:_recalculateDimen()
             perpage = self.perpage
             current_page = self.page
@@ -170,7 +190,7 @@ function M:updateItems(select_number, no_recalculate_dimen)
                 end
 
                 if #missing_covers == 0 then 
-                    logger.info("[menucovers] all covers ready")
+                    logger.dbg("[menucovers] all covers ready")
                     return 
                 end
 

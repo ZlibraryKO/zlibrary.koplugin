@@ -400,6 +400,16 @@ function Zlibrary:addToMainMenu(menu_items)
                                 callback = function()
                                     Ui.showOrdersSelectionDialog(self.ui)
                                 end
+                            }, {
+                                text = T("Show covers"),
+                                keep_menu_open = true,
+                                checked_func = function()
+                                    return Config.getSearchCoverMode() == true
+                                end,
+                                callback = function()  
+                                    local is_show_cover = Config.getSearchCoverMode()
+                                    Config.setSearchCoverMode(not is_show_cover)
+                                end, 
                             }}
                         },
                         {
@@ -768,9 +778,14 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
         end
 
         local mandatory_format = function(mandatory_text)
-            if not mandatory_text then return nil end
-            local secondsToDate, stringToSeconds = datetime.secondsToDate, datetime.stringToSeconds
-            return stringToSeconds and secondsToDate(stringToSeconds(mandatory_text), true)
+             local secondsToDate, stringToSeconds = datetime.secondsToDate, datetime.stringToSeconds
+             if not (mandatory_text and stringToSeconds) then return nil end
+             local timestamp = stringToSeconds(mandatory_text)
+             if not timestamp then return nil end
+             local short_date = secondsToDate(timestamp, false)
+             if type(short_date) == "string" then
+                return (short_date:gsub("^%d%d(%d%d)%-0?(%d+)%-0?(%d+).*", "%1.%2.%3"))
+             end
         end
 
         my_books_dialog = MultiSearchDialog:new{
@@ -1544,7 +1559,7 @@ function Zlibrary:onExit()
     local runtime_cache = Config.getConfigRuntimeCache()
     local last_cleaned_at = tonumber(runtime_cache:get("last_cleaned_at"))
     if not last_cleaned_at or (current_time - last_cleaned_at) > CACHE_CLEAN_INTERVAL then
-        runtime_cache:set("last_cleaned_at", os.time())
+        runtime_cache:insert("last_cleaned_at", os.time())
         Cache.cleanAllFiles()
     end
 end

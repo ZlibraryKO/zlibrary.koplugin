@@ -445,6 +445,7 @@ function Ui.createBookMenuItem(book_data, parent_zlibrary_instance)
         combined_text = combined_text .. " | " .. table.concat(additional_info_parts, " | ")
     end
 
+    local is_show_cover = Config.getSearchCoverMode()
     return {
         text = combined_text,
         callback = function()
@@ -458,7 +459,7 @@ function Ui.createBookMenuItem(book_data, parent_zlibrary_instance)
        -- original_book_data_ref = book_data,
         book_id = book_data.id,
         hash = book_data.hash,
-        cover = book_data.cover,
+        cover = is_show_cover and book_data.cover or nil,
     }
 end
 

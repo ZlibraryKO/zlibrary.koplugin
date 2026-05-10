@@ -1538,7 +1538,15 @@ function Zlibrary:onExit()
         logger.info("Zlibrary:onExit - Cleaning up " .. self.dialog_manager:getDialogCount() .. " remaining dialogs")
         self.dialog_manager:closeAllDialogs()
     end
-    Cache.cleanAllFiles()
+
+    local CACHE_CLEAN_INTERVAL = 86400
+    local current_time = os.time()
+    local runtime_cache = Config.getConfigRuntimeCache()
+    local last_cleaned_at = tonumber(runtime_cache:get("last_cleaned_at"))
+    if not last_cleaned_at or (current_time - last_cleaned_at) > CACHE_CLEAN_INTERVAL then
+        runtime_cache:set("last_cleaned_at", os.time())
+        Cache.cleanAllFiles()
+    end
 end
 
 function Zlibrary:onCloseWidget()

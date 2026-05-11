@@ -58,7 +58,7 @@ local function downloadCover(url, book_hash)
 end
 
 
-local function attachCover(item, cover_w, cover_h)
+local function _updateItemsBuildUI(item, cover_w, cover_h)
     if not (item and item.hash) then return nil end
     local cover_cache = Cache:new{ type="cover" }
     local cover_cache_path = cover_cache:get(item.hash)
@@ -157,7 +157,7 @@ function M:updateItems(select_number, no_recalculate_dimen)
 
         for idx = 1, perpage do
             local item = self.item_table[idx_offset + idx]
-            if item then attachCover(item, cover_w, cover_h) end
+            if item then _updateItemsBuildUI(item, cover_w, cover_h) end
         end
 
         if new_last_page_summary ~= self._last_page_summary then

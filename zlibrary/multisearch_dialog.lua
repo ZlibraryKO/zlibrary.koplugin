@@ -240,7 +240,7 @@ function SearchDialog:_getMenuItems(books)
     for i, book in ipairs(books) do
         title = book.title or T("Untitled")
         author = book.author or T("Unknown Author")
-        menu_text = string.format("%s - %s", title, author)
+        menu_text = string.format("\u{FFF1}\u{FFF2}%s\u{FFF3} - %s", title, author)
         mandatory_text = mandatory_func and mandatory_func(book)
 
         table.insert(menu_items, {

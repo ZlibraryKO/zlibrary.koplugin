@@ -428,7 +428,7 @@ function Ui.createBookMenuItem(book_data, parent_zlibrary_instance)
     local title = util.htmlEntitiesToUtf8(title_for_html)
     local author_for_html = (type(book_data.author) == "string" and book_data.author) or T("Unknown Author")
     local author = util.htmlEntitiesToUtf8(author_for_html)
-    local combined_text = string.format("%s by %s%s", title, author, year_str)
+    local combined_text = string.format("\u{FFF1}\u{FFF2}%s\u{FFF3} by %s%s", title, author, year_str)
 
     local additional_info_parts = {}
     local selected_extensions = Config.getSearchExtensions()

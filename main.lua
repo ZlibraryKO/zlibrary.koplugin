@@ -187,7 +187,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                             if connection_menu.page < connection_menu:getPageNumber(max_idx) then
                                 connection_menu:switchItemTable(nil, nil, max_idx)
                             else
-                                connection_menu:updateItems(pos, true)
+                                connection_menu:updateItems(nil, true)
                             end
                         end
                     end
@@ -1007,6 +1007,7 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
                 -- also clear comments
                 local comments_key = string.format("%s_comments", book_stub.hash)
                 book_cache:clear(comments_key)
+                Cache:new{ type="cover" }:clear(book_stub.hash)
                 self:onSelectRecommendedBook(book_stub)
         end)
         return

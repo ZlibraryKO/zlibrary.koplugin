@@ -129,6 +129,7 @@ function Ui.showFullTextDialog(title, full_text)
 end
 
 function Ui.showCoverDialog(title, img_path)
+    if not util.fileExists(img_path) then return end
     local ImageViewer = require("ui/widget/imageviewer")
     local dialog = ImageViewer:new{
         file = img_path,

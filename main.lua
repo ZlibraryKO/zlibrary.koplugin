@@ -1496,16 +1496,18 @@ function Zlibrary:downloadAndShowCover(book)
     local cover_cache_path = cover_cache:get(book_hash)
     if not cover_cache_path then
         local temp_path = cover_cache:getTempPath(book_hash)
-        if util.fileExists(temp_path) then pcall(util.removeFile, temp_path) end
+        -- avoid conflicts (extremely low probability)
+        if util.fileExists(temp_path) then return end
         local download_result = Api.downloadBookCover(cover_url, temp_path)
         if download_result.error or not download_result.success then
-            pcall(util.removeFile, temp_path)
+            util.removeFile(temp_path)
             Ui.showErrorMessage(tostring(download_result.error))
             return
         else
             cover_cache:insert(book_hash,temp_path)
         end
     end
+    cover_cache_path = cover_cache:get(book_hash)
     Ui.showCoverDialog(book_title, cover_cache_path)
 end
 
@@ -1554,15 +1556,7 @@ function Zlibrary:onExit()
         logger.info("Zlibrary:onExit - Cleaning up " .. self.dialog_manager:getDialogCount() .. " remaining dialogs")
         self.dialog_manager:closeAllDialogs()
     end
-
-    local CACHE_CLEAN_INTERVAL = 86400
-    local current_time = os.time()
-    local runtime_cache = Config.getConfigRuntimeCache()
-    local last_cleaned_at = tonumber(runtime_cache:get("last_cleaned_at"))
-    if not last_cleaned_at or (current_time - last_cleaned_at) > CACHE_CLEAN_INTERVAL then
-        runtime_cache:insert("last_cleaned_at", os.time())
-        Cache.cleanAllFiles()
-    end
+    Cache.autoCacheCleanup()
 end
 
 function Zlibrary:onCloseWidget()
@@ -1570,6 +1564,7 @@ function Zlibrary:onCloseWidget()
         logger.info("Zlibrary:onCloseWidget - Cleaning up " .. self.dialog_manager:getDialogCount() .. " remaining dialogs")
         self.dialog_manager:closeAllDialogs()
     end
+    Cache.autoCacheCleanup()
 end
 
 return Zlibrary

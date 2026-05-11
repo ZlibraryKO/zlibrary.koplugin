@@ -27,7 +27,7 @@ function BaseCache:_safeCopy(from, to)
     if not ok then
         local copy_ok = pcall(ffiUtil.copyFile, from, to)
         if copy_ok then
-            pcall(os.remove, from)
+            util.removeFile(from)
         else
             logger.warn("Cache:_safeCopy failed to copy file: " .. tostring(from))
             return false
@@ -183,7 +183,7 @@ function BookInfoCache:remove(book_hash)
     if type(book_hash) ~= "string" then return false end
     local path = self:getPath(book_hash)
     if util.fileExists(path) then
-        return pcall(os.remove, path)
+        return os.remove(path)
     end
     return false
 end
@@ -191,7 +191,6 @@ end
 function BookInfoCache:clear(book_hash) 
     return self:remove(book_hash)
 end
-
 
 local CoverCache = setmetatable({}, {__index = BaseCache})
 CoverCache.__index = CoverCache
@@ -203,11 +202,13 @@ function CoverCache:init()
 end
 
 function CoverCache:getPath(book_hash)
+    self:_ensurePath(self._target_dir)
     return ("%s/%s.jpg"):format(self._target_dir, book_hash or "")
 end
 
 function CoverCache:getTempPath(book_hash)
     if type(book_hash) ~= "string" or book_hash == "" then return nil end
+    self:_ensurePath(self._target_dir)
     return ("%s/%s.jpg.downloading"):format(self._target_dir, book_hash)
 end
 
@@ -235,8 +236,8 @@ function CoverCache:remove(book_hash)
     local temp_path = self:getTempPath(book_hash)
     
     local deleted = false
-    if util.fileExists(path) and pcall(os.remove, path) then deleted = true end
-    if util.fileExists(temp_path) then pcall(os.remove, temp_path) end
+    if util.fileExists(path) and util.removeFile(path) then deleted = true end
+    if util.fileExists(temp_path) then util.removeFile(temp_path) end
     
     return deleted
 end
@@ -277,14 +278,22 @@ function M:new(o)
     return obj
 end
 
-function M.cleanAllFiles()
-    local logger = require("logger")
-    logger.info("Cache: Starting global GC clean...")
-    local cover_cache = M:new({type="cover"})
-    cover_cache:gc_clean()
-    local info_cache = M:new({type="bookinfo"})
-    info_cache:gc_clean()
-    logger.info("Cache: Global GC clean finished.")
+function M.autoCacheCleanup()
+    local CACHE_CLEAN_INTERVAL = 86400
+    local current_time = os.time()
+    local Config = require("zlibrary.config")
+    local runtime_cache = Config.getConfigRuntimeCache()
+    local last_cleaned_at = tonumber(runtime_cache:get("last_cleaned_at"))
+    if not last_cleaned_at or (current_time - last_cleaned_at) > CACHE_CLEAN_INTERVAL then
+        runtime_cache:insert("last_cleaned_at", os.time())
+        local logger = require("logger")
+        logger.info("Cache: Starting global GC clean...")
+        local cover_cache = M:new({type="cover"})
+        cover_cache:gc_clean()
+        local info_cache = M:new({type="bookinfo"})
+        info_cache:gc_clean()
+        logger.info("Cache: Global GC clean finished.")
+    end
 end
 
 return M

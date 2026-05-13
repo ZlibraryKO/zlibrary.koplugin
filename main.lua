@@ -77,6 +77,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
     end
 
     local domains_cache = Cache:new{ name = "_domains_cache" }
+    local check_cache = Cache:new{ name = "_domains_check_cache" }
 
     local function updateDomainsCache()
         logger.info("Zlibrary - Fetching dynamic domains...")
@@ -138,6 +139,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
             
             self.discover_channel:executeBatch({
                 items = valid_seeds,
+                aggregate = true,
                 task_func = health_check_task,
                 get_task_args = function(seed) return { seed.url } end,
                 
@@ -163,7 +165,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                         local item = connection_menu.item_table[pos]
                         if item then
                             item.bold = false
-                            if success then
+                            if success and result.success then
                                 item.mandatory = string.format("\u{2714} %dms", result.elapsed or 0)
                                 item.mandatory_dim = false
                                 item.callback = function()
@@ -200,7 +202,18 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                     end
                     return false
                 end,
-                on_batch_end = function(is_aborted) finishDiscovery() end
+                on_batch_end = function(is_aborted, results_map)
+                    if type(results_map) == "table" and next(results_map) then
+                        local filtered_results = {}
+                        for i, seed in ipairs(valid_seeds) do
+                            if type(seed) == "table" and seed.url and type(results_map[i]) == "table"  then
+                                filtered_results[seed.url] = results_map[i].result
+                            end
+                        end
+                        if next(filtered_results) then check_cache:insert("result", filtered_results) end
+                    end
+                    finishDiscovery()
+                end,
             })
         end
 
@@ -275,16 +288,42 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
         }
 
         offset = #menu_items
+        local last_check = check_cache:get("result", 600)
+        local has_last_check = (type(last_check) == "table")
         for _, seed in ipairs(valid_seeds) do
             local d_url = getCleanUrl(seed.url)
+            local item_mandatory = "\u{23F3} " .. T("Queued")
+            local item_mandatory_dim = false
+            local item_callback = Device:hasClipboard() and function()
+                Device.input.setClipboardText("https://" .. d_url)
+                Ui.showInfoMessage(T("Selection copied to clipboard."))
+            end or nil
+            -- has cache
+            if has_last_check and type(last_check[seed.url]) == "table" then
+                local url_last_check = last_check[seed.url]
+                if url_last_check.success then
+                    item_mandatory = string.format("\u{2714} %dms", url_last_check.elapsed or 0)
+                    item_callback = function()
+                        local ok, err = Config.setAndValidateBaseUrl(seed.url)
+                        if ok then
+                            Ui.showInfoMessage(string.format("%s : %s", T("Set base URL"), seed.url))
+                            if updateBaseUrlItem then updateBaseUrlItem(seed.url) end
+                        else
+                            Ui.showErrorMessage(T("Invalid Base URL.") .. " " .. tostring(err))
+                        end
+                    end
+                else
+                    item_mandatory = "\u{2718} " .. T("Failed")
+                    item_mandatory_dim = true
+                    item_callback = function() Ui.showInfoMessage(url_last_check.error or T("Unknown error")) end
+                end
+            end
             table.insert(menu_items, {
                 text = string.format("[%s] %s", seed.src, d_url),
-                mandatory = "\u{23F3} " .. T("Queued"),
+                mandatory = item_mandatory,
+                mandatory_dim = item_mandatory_dim,
                 show_indicator = false,
-                callback = Device:hasClipboard() and function()
-                    Device.input.setClipboardText("https://" .. d_url)
-                    Ui.showInfoMessage(T("Selection copied to clipboard."))
-                end or nil
+                callback = item_callback
             })
         end
         

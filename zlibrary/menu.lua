@@ -20,6 +20,7 @@ local M = Menu:extend{
     _cover_channel = nil,
     _debounce_timer_cancel = nil,
     _last_page_summary = nil,
+    _last_page = nil,
     list_cover_per_page = nil,
 }
 -- fix no_title = true koreader crash
@@ -52,7 +53,7 @@ local function downloadCover(url, book_hash)
         util.removeFile(temp_path)
         return nil
     end
-    cover_bb = nil
+    if cover_bb.free then cover_bb:free() end
     cover_cache:insert(book_hash, temp_path)
     return true
 end
@@ -137,19 +138,20 @@ function M:updateItems(select_number, no_recalculate_dimen)
         local first_item = self.item_table[idx_offset + 1]
         if not (first_item and first_item.cover and first_item.hash) then return end
 
-        self._cover_channel = self._cover_channel or AsyncHelper:createChannel("Menu_Covers", 4)
-
+        -- data digest, used to detect page changes
+        local new_last_page_summary = tostring(first_item.hash) .. "_" .. tostring(perpage)
         if not self.list_cover_per_page then self.list_cover_per_page = self:getCoverItemsPerPage() end
-        if tonumber(self.perpage) ~= self.list_cover_per_page then
+        local is_perpage_changed = (tonumber(perpage) ~= self.list_cover_per_page)
+        local is_page_unchanged = (current_page == self._last_page) 
+        local is_summary_changed = (new_last_page_summary ~= self._last_page_summary)
+
+        if is_perpage_changed or (is_page_unchanged and is_summary_changed) then
             self.items_per_page = self.list_cover_per_page
             self:_recalculateDimen()
             perpage = self.perpage
             current_page = self.page
             idx_offset = (current_page - 1) * perpage
         end
-
-        -- data digest, used to detect page changes
-        local new_last_page_summary = tostring(first_item.hash) .. "_" .. tostring(perpage)
 
         local cover_h = self.item_dimen.h - 2 * Size.line.medium 
         local cover_w = math.floor(cover_h * 2 / 3)
@@ -160,9 +162,11 @@ function M:updateItems(select_number, no_recalculate_dimen)
             if item then _updateItemsBuildUI(item, cover_w, cover_h) end
         end
 
+        self._last_page = current_page
         if new_last_page_summary ~= self._last_page_summary then
             logger.info("[menucovers] Page change detected, restarting task...")
             self._last_page_summary = new_last_page_summary
+            self._cover_channel = self._cover_channel or AsyncHelper:createChannel("Menu_Covers", 4)
             self._cover_channel:clearTasks()
 
             -- debounce
@@ -236,6 +240,9 @@ end
 
 function M:onCloseWidget()
     if self._cover_channel then self._cover_channel:clearTasks() end
+    self._last_page_summary = nil
+    self._last_page = nil
+    self.list_cover_per_page = nil
     Menu.onCloseWidget(self)
 end
 

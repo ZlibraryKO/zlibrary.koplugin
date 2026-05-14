@@ -107,7 +107,8 @@ function KVCache:get(key, cache_expiry)
     end
 
     local expiry = tonumber(cache_expiry) or DEF_TTL_CACHE_EXPIRY
-    if expiry > 0 and (os.time() - entry._at > expiry) then
+    local diff = os.time() - entry._at
+    if diff < 0 or (expiry > 0 and diff > expiry) then
         self:remove(key)
         return nil
     end
@@ -168,10 +169,10 @@ function BookInfoCache:get(book_hash, cache_expiry)
         return nil 
     end
 
-    if cache_expiry then
-        local _at = book_cache:readSetting("_at")
-        local expiry = tonumber(cache_expiry)
-        if _at and expiry and expiry > 0 and (os.time() - _at > expiry) then
+    local _at = book_cache:readSetting("_at")
+    if type(cache_expiry) == "number" and _at then
+        local diff = os.time() - _at
+        if diff < 0 or (cache_expiry > 0 and diff > cache_expiry) then
             book_cache:purge()
             return nil
         end
@@ -223,10 +224,22 @@ function CoverCache:insert(book_hash, source_file_path)
     return false
 end
 
-function CoverCache:get(book_hash)
+function CoverCache:get(book_hash, cache_expiry)
     if type(book_hash) ~= "string" or book_hash == "" then return nil end
     local path = self:getPath(book_hash)
-    if util.fileExists(path) then return path end
+    if util.fileExists(path) then 
+        if type(cache_expiry) == "number" then
+            local attr = lfs.attributes(path)
+            local file_time = attr and (attr.modification or attr.access)
+            if type(file_time) ~= "number" then return path end
+            local diff = os.time() - file_time
+             if diff < 0 or (cache_expiry > 0 and diff > cache_expiry) then
+                self:remove(book_hash)
+                return nil
+            end
+        end
+        return path 
+    end
     return nil
 end
 

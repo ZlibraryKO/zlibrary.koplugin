@@ -203,7 +203,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                     return false
                 end,
                 on_batch_end = function(is_aborted, results_map)
-                    if type(results_map) == "table" and next(results_map) then
+                    if not is_aborted and type(results_map) == "table" and next(results_map) then
                         local filtered_results = {}
                         for i, seed in ipairs(valid_seeds) do
                             if type(seed) == "table" and seed.url and type(results_map[i]) == "table"  then
@@ -346,7 +346,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
         end)
     end
 
-    if domains_cache:get("domains", 172800) then
+    if domains_cache:get("domains", 172800) or not NetworkMgr:isConnected() then
         executeDiscovery()
     else
         AsyncHelper.run(updateDomainsCache, executeDiscovery, function(err)

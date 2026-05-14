@@ -172,7 +172,7 @@ function M:updateItems(select_number, no_recalculate_dimen)
             -- debounce
             if self._debounce_timer_cancel then 
                 self._debounce_timer_cancel() 
-                logger.info("[menucovers] Previous publish schedule cancelled")
+                logger.dbg("[menucovers] Previous publish schedule cancelled")
             end
 
             if not NetworkMgr:isConnected() then return false end
@@ -181,7 +181,7 @@ function M:updateItems(select_number, no_recalculate_dimen)
                 self._debounce_timer_cancel = nil
                 if self.page ~= current_page then return end
 
-                logger.info("[menucovers] Stopped, collecting covers...")
+                logger.dbg("[menucovers] Stopped, collecting covers...")
                 
                 local missing_covers = {}
                 for idx = 1, perpage do
@@ -198,31 +198,28 @@ function M:updateItems(select_number, no_recalculate_dimen)
                     return 
                 end
 
+                local cover_cache = Cache:new{ type="cover" }
                 self._cover_channel:executeBatch({
                     items = missing_covers,
                     task_func = downloadCover,
                     max_retries = 2,
-                    get_task_args = function(req)
+                   get_task_args = function(req)
                         return { req.item.cover, req.item.hash }
                     end,
                     on_item_end = function(idx, req, success)
                         req = req or {}
-                        if success and req.item then
-                            local cover_cache = Cache:new{ type="cover" }
+                        if success and req.item and req.item.hash then
                             local cover_cache_path = cover_cache:get(req.item.hash)
-                            if cover_cache_path then
-                                UIManager:nextTick(function()
-                                    if not (type(self) == "table" and self.page) then return end
-                                    -- callback, page unchanged
-                                    if self.page == current_page then
+                            if cover_cache_path and type(self) == "table" and self.page == current_page then
+                                  logger.dbg(" [covermenu]page unchanged, callback refresh menu item:", req.item.hash)
+                                  UIManager:nextTick(function()
                                         self:updateItems(nil, true)
                                         UIManager:setDirty(self, "ui")
-                                    end
-                                end)
+                                   end)
                             end
                         end
                         return false 
-                    end
+                    end,
                 })
             end)
         end

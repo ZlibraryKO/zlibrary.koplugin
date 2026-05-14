@@ -1,4 +1,6 @@
+local time = require("ui/time")
 local UIManager = require("ui/uimanager")
+local buffer = require("string.buffer")
 local ffiUtil = require("ffi/util")
 local Device = require("device")
 local Trapper = require("ui/trapper")
@@ -84,23 +86,18 @@ function Channel:_processNext()
     end
 
     safe_call("on_start", task.on_start, task.current_retry)
-    
-    local buffer = require("string.buffer")
     local timeout = task.timeout or 180
+    local task_returns_simple_string =  task.returns_string
 
     -- first worker wakes CPU
     if self.active_workers == 1 then pcall(function() Device:enableCPUCores(2) end) end
 
     logger.dbg("Channel:_processNext - START", self.name)    
-    local start_time = os.time()
+    local start_time = time.now()
     local pid, parent_read_fd = nil, nil
     local poll_count = 0
 
     local function deliver_result(ok, r1, r2)
-        if parent_read_fd then
-            pcall(ffiUtil.readAllFromFD, parent_read_fd)
-            parent_read_fd = nil
-        end
         logger.dbg("Channel:_processNext - END", self.name)
         local completed, result = ok, r1
 
@@ -134,60 +131,124 @@ function Channel:_processNext()
             UIManager:nextTick(function() self:_processNext() end)
         end
     end
-
     pid, parent_read_fd = ffiUtil.runInSubProcess(function(_pid, child_write_fd)
-        local job_ok, r1, r2 = pcall(execute_func)
-        local ret_tbl = { ok = job_ok, r1 = r1, r2 = r2 }
-        
         local output_str = ""
-        local enc_ok, str = pcall(buffer.encode, ret_tbl)
-        if enc_ok and str then
-            output_str = str
+        if task_returns_simple_string then
+            local job_ok, result = pcall(execute_func)
+            if job_ok then
+                if type(result) == "string" then
+                    output_str = result
+                elseif result ~= nil then
+                    logger.warn("Channel:_processNext - returned value from execute_func is not a string:", result)
+                end
+            else
+                -- return empty string if function crashes
+                logger.warn("Channel:_processNext - execute_func crashed:", result)
+            end
         else
-            logger.warn("Channel:_processNext - serialization failed:", str or "unknown error")
-            ret_tbl = { ok = false, r1 = "serialization_error", r2 = tostring(str)}
-            output_str = buffer.encode(ret_tbl) or ""
-        end 
+            local job_ok, r1, r2 = pcall(execute_func)
+            local ret_tbl = { ok = job_ok, r1 = r1, r2 = r2 }
+            local enc_ok, str = pcall(buffer.encode, ret_tbl)
+            if enc_ok and str then
+                output_str = str
+            else
+                logger.warn("Channel:_processNext - serialization failed:", str or "unknown error")
+                -- fallback when serialization fails
+                ret_tbl = { ok = false, r1 = "serialization_error", r2 = tostring(str) }
+                output_str = buffer.encode(ret_tbl) or ""
+            end 
+        end
         ffiUtil.writeToFD(child_write_fd, output_str, true)
+        return true
     end, true)
     if not pid then
         logger.warn("Channel:_processNext - background task failed to start")
         deliver_result(false, "start_failed")
         return
     end
+    local check_interval_sec = 0.125 
     local function poll()
-        poll_count = poll_count + 1  
-        if timeout and os.difftime(os.time(), start_time) >= timeout then
-            logger.warn("Channel:_processNext - timeout reached, killing subprocess")
+        poll_count = poll_count + 1
+        local function safe_collect_and_clean(target_pid, fd_to_close, max_retries, retry_interval, debug_tag)
+            local retry_count = 0
+            local function cleaner_step()
+                retry_count = retry_count + 1
+                if ffiUtil.isSubProcessDone(target_pid) then
+                   if fd_to_close then ffiUtil.readAllFromFD(fd_to_close) end -- close fd
+                    logger.dbg(string.format("Channel:_processNext - %s collected successfully.", debug_tag))
+                elseif retry_count >= max_retries then
+                    -- max retries reached, abort to avoid infinite recursion
+                    logger.warn(string.format("Channel:_processNext - %s failed to collect PID %d after %d retries. Forcibly terminating!", debug_tag, target_pid, max_retries))
+                    ffiUtil.terminateSubProcess(target_pid)
+                    UIManager:scheduleIn(1, function()
+                        if ffiUtil.isSubProcessDone(target_pid) then
+                            logger.warn("Channel:_processNext - cleaner_step max_retries, force killed and exited", target_pid)
+                            if fd_to_close then ffiUtil.readAllFromFD(fd_to_close) end
+                        end
+                    end)
+                else
+                    if fd_to_close and ffiUtil.getNonBlockingReadSize(fd_to_close) ~= 0 then
+                        ffiUtil.readAllFromFD(fd_to_close)
+                        fd_to_close = nil 
+                    end
+                    UIManager:scheduleIn(retry_interval, cleaner_step)
+                end
+            end
+            cleaner_step()
+        end
+
+        local duration_seconds = time.to_s(time.since(start_time))
+        if timeout and duration_seconds >= timeout then
+            logger.warn("Channel:_processNext - timeout reached, killing subprocess", pid, duration_seconds)
             ffiUtil.terminateSubProcess(pid)
-            UIManager:scheduleIn(0.5, function()
-                deliver_result(false, "timeout")
-            end)
+            safe_collect_and_clean(pid, parent_read_fd, 5, 3, "timed-out subprocess")
+            parent_read_fd = nil
+            deliver_result(false, "timeout")
             return
         end
+
         local subprocess_done = ffiUtil.isSubProcessDone(pid)
-        if subprocess_done then
+        local stuff_to_read = parent_read_fd and ffiUtil.getNonBlockingReadSize(parent_read_fd) ~= 0
+
+        if subprocess_done or stuff_to_read then
+            -- Subprocess is gone or nearly gone
             local ok, r1, r2 = false, nil, nil
-            if parent_read_fd then
+            
+            if stuff_to_read then
                 local ret_str = ffiUtil.readAllFromFD(parent_read_fd) or ""
+                parent_read_fd = nil
+                
                 if ret_str ~= "" then
-                    local dec_ok, ret_tbl = pcall(buffer.decode, ret_str)
-                    if dec_ok and type(ret_tbl) == "table" then
-                        ok, r1, r2 = ret_tbl.ok, ret_tbl.r1, ret_tbl.r2
+                    if task_returns_simple_string then
+                        ok, r1, r2= true, ret_str, nil 
                     else
-                        logger.warn(string.format("Channel:_processNext - malformed data (len: %d)", #ret_str))
-                        ok, r1, r2 = false, "decode_error", nil
+                        local dec_ok, ret_tbl = pcall(buffer.decode, ret_str)
+                        if dec_ok and type(ret_tbl) == "table" then
+                            ok, r1, r2 = ret_tbl.ok, ret_tbl.r1, ret_tbl.r2
+                        else
+                            logger.warn("Channel:_processNext - malformed serialized data")
+                            ok, r1, r2 = false, "decode_error", nil
+                        end
                     end
                 else
                     ok, r1, r2 = false, "empty_pipe_error", nil
                 end
-                parent_read_fd = nil
+                -- data fully read, but process hasn't exited yet
+                if not subprocess_done then
+                    safe_collect_and_clean(pid, parent_read_fd, 3, 1, "pre-read subprocess")
+                end
+            else -- subprocess_done: process exited with no output
+                    ffiUtil.readAllFromFD(parent_read_fd) -- close our fd
+                    -- no ret_values
             end
             logger.dbg("Channel:_processNext - background task completed")
             deliver_result(ok, r1, r2)
         else
-            local next_delay = (poll_count <= 5) and 0.02 or 0.2
-            UIManager:scheduleIn(next_delay, poll)
+            -- backoff polling
+            if check_interval_sec < 1 and poll_count % 10 == 0 then
+                check_interval_sec = math.min(check_interval_sec * 2, 1)
+            end
+            UIManager:scheduleIn(check_interval_sec, poll)
         end
     end
     poll()
@@ -275,7 +336,8 @@ function Channel:executeBatch(params)
             args = static_args, 
             args_generator = args_gen,
             on_start = wrap_start,
-            max_retries = params.max_retries
+            max_retries = params.max_retries,
+            returns_string = params.returns_string,
         })
     end
 end

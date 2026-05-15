@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-29 15:49+0000\n"
+"POT-Creation-Date: 2026-05-15 09:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,14 +21,20 @@ msgstr "[[Een plugin om boeken te zoeken en te downloaden van Z-library.]]"
 msgid "Z-library search"
 msgstr "Z-library zoeken"
 
-msgid "Network not available. Please connect and try again."
-msgstr "Netwerk niet beschikbaar. Verbind en probeer opnieuw."
-
-msgid "Failed to discover a working base URL"
+msgid "Operation failed, please retry."
 msgstr ""
 
-msgid "Settings"
-msgstr "Instellingen"
+msgid "Fetching domains..."
+msgstr ""
+
+msgid "Successfully set base URL to: "
+msgstr ""
+
+msgid "Failed to find a working base URL."
+msgstr "Kan geen werkende basis-URL vinden."
+
+msgid "Checking"
+msgstr ""
 
 msgid "Set base URL"
 msgstr "Stel basis-URL in"
@@ -36,20 +42,44 @@ msgstr "Stel basis-URL in"
 msgid "Invalid Base URL."
 msgstr "Ongeldige basis-URL."
 
-msgid "Auto-discover base URL"
-msgstr "Basis-URL automatisch ontdekken"
+msgid "Failed"
+msgstr ""
+
+msgid "Unknown error"
+msgstr ""
 
 msgid "Searching for working Z-library server..."
 msgstr "Zoeken naar werkende Z-library server..."
 
-msgid "Successfully found and set base URL to: "
-msgstr "Basis-URL succesvol gevonden en ingesteld op: "
+msgid "Current Base URL:"
+msgstr ""
 
-msgid "Failed to find a working base URL."
-msgstr "Kan geen werkende basis-URL vinden."
+msgid "Mirror site redirected to: "
+msgstr ""
 
-msgid "Error during auto-discovery: "
-msgstr "Fout tijdens automatische ontdekking: "
+msgid "Auto-discover base URL"
+msgstr "Basis-URL automatisch ontdekken"
+
+msgid "Network unavailable."
+msgstr ""
+
+msgid "Discovery is already running..."
+msgstr ""
+
+msgid "Queued"
+msgstr ""
+
+msgid "Selection copied to clipboard."
+msgstr ""
+
+msgid "Refresh Dynamic Domains"
+msgstr ""
+
+msgid "Back"
+msgstr "Terug"
+
+msgid "Settings"
+msgstr "Instellingen"
 
 msgid "Set email"
 msgstr "E-mailadres instellen"
@@ -76,6 +106,9 @@ msgid "Select search formats"
 msgstr "Selecteer zoekformaten"
 
 msgid "Select search order"
+msgstr ""
+
+msgid "Show covers"
 msgstr ""
 
 msgid "Timeout settings"
@@ -347,9 +380,6 @@ msgstr ""
 msgid "Failed to open target file"
 msgstr ""
 
-msgid "Unknown error"
-msgstr ""
-
 msgid "Download limit reached or file is an HTML page"
 msgstr ""
 
@@ -466,9 +496,6 @@ msgstr ""
 
 msgid "API returned an error for favorite book."
 msgstr ""
-
-msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
-msgstr "Kan geen werkende Z-library server vinden. Controleer uw internetverbinding of stel de basis-URL handmatig in."
 
 msgid "Book ID is required."
 msgstr ""
@@ -703,9 +730,6 @@ msgstr "Uitgever"
 msgid "Series"
 msgstr "Serie"
 
-msgid "Back"
-msgstr "Terug"
-
 msgid "Remove From Favorites"
 msgstr ""
 
@@ -851,6 +875,18 @@ msgstr "Alle timeout-instellingen naar standaardwaarden hersteld"
 
 msgid "Timeout Settings"
 msgstr "Timeout-instellingen"
+
+#~ msgid "Network not available. Please connect and try again."
+#~ msgstr "Netwerk niet beschikbaar. Verbind en probeer opnieuw."
+
+#~ msgid "Successfully found and set base URL to: "
+#~ msgstr "Basis-URL succesvol gevonden en ingesteld op: "
+
+#~ msgid "Error during auto-discovery: "
+#~ msgstr "Fout tijdens automatische ontdekking: "
+
+#~ msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
+#~ msgstr "Kan geen werkende Z-library server vinden. Controleer uw internetverbinding of stel de basis-URL handmatig in."
 
 #~ msgid "No internet connection detected."
 #~ msgstr "Geen internetverbinding gedetecteerd."

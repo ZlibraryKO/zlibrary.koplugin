@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-29 15:49+0000\n"
+"POT-Creation-Date: 2026-05-15 09:25+0000\n"
 "PO-Revision-Date: 2025-05-28 15:14-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -22,14 +22,20 @@ msgstr "[[Um plugin para buscar e baixar livros da Z-library.]]"
 msgid "Z-library search"
 msgstr "Busca na Z-library"
 
-msgid "Network not available. Please connect and try again."
-msgstr "Rede não disponível. Por favor, conecte-se e tente novamente."
-
-msgid "Failed to discover a working base URL"
+msgid "Operation failed, please retry."
 msgstr ""
 
-msgid "Settings"
-msgstr "Configurações"
+msgid "Fetching domains..."
+msgstr ""
+
+msgid "Successfully set base URL to: "
+msgstr ""
+
+msgid "Failed to find a working base URL."
+msgstr "Falha ao encontrar uma URL base funcionando."
+
+msgid "Checking"
+msgstr ""
 
 msgid "Set base URL"
 msgstr "Definir URL base"
@@ -37,20 +43,44 @@ msgstr "Definir URL base"
 msgid "Invalid Base URL."
 msgstr "URL base inválida."
 
-msgid "Auto-discover base URL"
-msgstr "Descobrir URL base automaticamente"
+msgid "Failed"
+msgstr ""
+
+msgid "Unknown error"
+msgstr ""
 
 msgid "Searching for working Z-library server..."
 msgstr "Procurando servidor Z-library funcionando..."
 
-msgid "Successfully found and set base URL to: "
-msgstr "URL base encontrada e definida com sucesso para: "
+msgid "Current Base URL:"
+msgstr ""
 
-msgid "Failed to find a working base URL."
-msgstr "Falha ao encontrar uma URL base funcionando."
+msgid "Mirror site redirected to: "
+msgstr ""
 
-msgid "Error during auto-discovery: "
-msgstr "Erro durante a descoberta automática: "
+msgid "Auto-discover base URL"
+msgstr "Descobrir URL base automaticamente"
+
+msgid "Network unavailable."
+msgstr ""
+
+msgid "Discovery is already running..."
+msgstr ""
+
+msgid "Queued"
+msgstr ""
+
+msgid "Selection copied to clipboard."
+msgstr ""
+
+msgid "Refresh Dynamic Domains"
+msgstr ""
+
+msgid "Back"
+msgstr "Voltar"
+
+msgid "Settings"
+msgstr "Configurações"
 
 msgid "Set email"
 msgstr "Definir e-mail"
@@ -77,6 +107,9 @@ msgid "Select search formats"
 msgstr "Selecionar formatos de busca"
 
 msgid "Select search order"
+msgstr ""
+
+msgid "Show covers"
 msgstr ""
 
 msgid "Timeout settings"
@@ -348,9 +381,6 @@ msgstr ""
 msgid "Failed to open target file"
 msgstr ""
 
-msgid "Unknown error"
-msgstr ""
-
 msgid "Download limit reached or file is an HTML page"
 msgstr ""
 
@@ -467,9 +497,6 @@ msgstr ""
 
 msgid "API returned an error for favorite book."
 msgstr ""
-
-msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
-msgstr "Não foi possível encontrar um servidor Z-library funcionando. Verifique sua conexão com a internet ou defina a URL base manualmente."
 
 msgid "Book ID is required."
 msgstr ""
@@ -704,9 +731,6 @@ msgstr "Editora"
 msgid "Series"
 msgstr "Série"
 
-msgid "Back"
-msgstr "Voltar"
-
 msgid "Remove From Favorites"
 msgstr ""
 
@@ -852,6 +876,18 @@ msgstr "Todas as configurações de timeout restauradas para padrão"
 
 msgid "Timeout Settings"
 msgstr "Configurações de timeout"
+
+#~ msgid "Network not available. Please connect and try again."
+#~ msgstr "Rede não disponível. Por favor, conecte-se e tente novamente."
+
+#~ msgid "Successfully found and set base URL to: "
+#~ msgstr "URL base encontrada e definida com sucesso para: "
+
+#~ msgid "Error during auto-discovery: "
+#~ msgstr "Erro durante a descoberta automática: "
+
+#~ msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
+#~ msgstr "Não foi possível encontrar um servidor Z-library funcionando. Verifique sua conexão com a internet ou defina a URL base manualmente."
 
 #~ msgid "No internet connection detected."
 #~ msgstr "Nenhuma conexão com a internet detectada."

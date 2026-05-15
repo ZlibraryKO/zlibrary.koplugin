@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-29 15:49+0000\n"
+"POT-Creation-Date: 2026-05-15 09:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,14 +21,20 @@ msgstr "[[مكون إضافي للبحث عن الكتب وتنزيلها من Z
 msgid "Z-library search"
 msgstr "البحث في Z-library"
 
-msgid "Network not available. Please connect and try again."
-msgstr "الشبكة غير متاحة. يرجى الاتصال والمحاولة مرة أخرى."
-
-msgid "Failed to discover a working base URL"
+msgid "Operation failed, please retry."
 msgstr ""
 
-msgid "Settings"
-msgstr "الإعدادات"
+msgid "Fetching domains..."
+msgstr ""
+
+msgid "Successfully set base URL to: "
+msgstr ""
+
+msgid "Failed to find a working base URL."
+msgstr "فشل العثور على عنوان URL أساسي متاح."
+
+msgid "Checking"
+msgstr ""
 
 msgid "Set base URL"
 msgstr "تعيين عنوان URL الأساسي"
@@ -36,20 +42,44 @@ msgstr "تعيين عنوان URL الأساسي"
 msgid "Invalid Base URL."
 msgstr "عنوان URL الأساسي غير صالح."
 
-msgid "Auto-discover base URL"
-msgstr "الاكتشاف التلقائي لعنوان URL الأساسي"
+msgid "Failed"
+msgstr ""
+
+msgid "Unknown error"
+msgstr ""
 
 msgid "Searching for working Z-library server..."
 msgstr "جارٍ البحث عن خادم Z-library متاح..."
 
-msgid "Successfully found and set base URL to: "
-msgstr "تم العثور على عنوان URL الأساسي وتعيينه بنجاح إلى: "
+msgid "Current Base URL:"
+msgstr ""
 
-msgid "Failed to find a working base URL."
-msgstr "فشل العثور على عنوان URL أساسي متاح."
+msgid "Mirror site redirected to: "
+msgstr ""
 
-msgid "Error during auto-discovery: "
-msgstr "خطأ أثناء الاكتشاف التلقائي: "
+msgid "Auto-discover base URL"
+msgstr "الاكتشاف التلقائي لعنوان URL الأساسي"
+
+msgid "Network unavailable."
+msgstr ""
+
+msgid "Discovery is already running..."
+msgstr ""
+
+msgid "Queued"
+msgstr ""
+
+msgid "Selection copied to clipboard."
+msgstr ""
+
+msgid "Refresh Dynamic Domains"
+msgstr ""
+
+msgid "Back"
+msgstr "رجوع"
+
+msgid "Settings"
+msgstr "الإعدادات"
 
 msgid "Set email"
 msgstr "تعيين البريد الإلكتروني"
@@ -76,6 +106,9 @@ msgid "Select search formats"
 msgstr "تحديد تنسيقات البحث"
 
 msgid "Select search order"
+msgstr ""
+
+msgid "Show covers"
 msgstr ""
 
 msgid "Timeout settings"
@@ -347,9 +380,6 @@ msgstr ""
 msgid "Failed to open target file"
 msgstr ""
 
-msgid "Unknown error"
-msgstr ""
-
 msgid "Download limit reached or file is an HTML page"
 msgstr ""
 
@@ -466,9 +496,6 @@ msgstr ""
 
 msgid "API returned an error for favorite book."
 msgstr ""
-
-msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
-msgstr "تعذر العثور على خادم Z-library متاح. يرجى التحقق من اتصال الإنترنت أو تعيين عنوان URL الأساسي يدويًا."
 
 msgid "Book ID is required."
 msgstr ""
@@ -703,9 +730,6 @@ msgstr "الناشر"
 msgid "Series"
 msgstr "السلسلة"
 
-msgid "Back"
-msgstr "رجوع"
-
 msgid "Remove From Favorites"
 msgstr ""
 
@@ -851,6 +875,18 @@ msgstr "تم إعادة تعيين جميع إعدادات المهلة الزم
 
 msgid "Timeout Settings"
 msgstr "إعدادات المهلة الزمنية"
+
+#~ msgid "Network not available. Please connect and try again."
+#~ msgstr "الشبكة غير متاحة. يرجى الاتصال والمحاولة مرة أخرى."
+
+#~ msgid "Successfully found and set base URL to: "
+#~ msgstr "تم العثور على عنوان URL الأساسي وتعيينه بنجاح إلى: "
+
+#~ msgid "Error during auto-discovery: "
+#~ msgstr "خطأ أثناء الاكتشاف التلقائي: "
+
+#~ msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
+#~ msgstr "تعذر العثور على خادم Z-library متاح. يرجى التحقق من اتصال الإنترنت أو تعيين عنوان URL الأساسي يدويًا."
 
 #~ msgid "No internet connection detected."
 #~ msgstr "لم يتم الكشف عن اتصال بالإنترنت."

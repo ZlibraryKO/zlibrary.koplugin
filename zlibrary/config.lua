@@ -180,8 +180,7 @@ function Config.getConfigRuntimeCache()
 end
 
 function Config.getCacheRealUrl()
-    local api_real_url = Config.getConfigRuntimeCache():get("api_real_url", 600)
-    return api_real_url and api_real_url[1]
+    return Config.getConfigRuntimeCache():get("api_real_url", 600)
 end
 
 function Config.clearCacheRealUrl()
@@ -202,7 +201,7 @@ function Config.setCacheRealUrl(original_url, real_url)
         real_url = string.sub(real_url, 1, -2)
     end
 
-    return Config.getConfigRuntimeCache():insert("api_real_url", {real_url})
+    return Config.getConfigRuntimeCache():insert("api_real_url", real_url)
 end
 
 function Config.getBaseUrl(is_original)
@@ -253,7 +252,8 @@ function Config.getSeedUrls()
     processAndMerge(settings and settings:readSetting("seedUrls"), "U")
     processAndMerge(Config.SEED_URLS, "C")
     local domains_cache = Cache:new{ name = "_domains_cache" }
-    processAndMerge(domains_cache:get("domains", 86400), "D")
+    -- domains are updated passively, no expiration set here
+    processAndMerge(domains_cache:get("domains"), "D")
     
     return new_seed_urls
 end
@@ -402,7 +402,8 @@ function Config.getMostPopularBooksUrl()
 end
 
 function Config.getSetting(key, default)
-    return _getLuaSettings():readSetting(key) or default
+    -- fix default = true and value = false
+    return _getLuaSettings():readSetting(key, default)
 end
 
 function Config.saveSetting(key, value)
@@ -572,6 +573,14 @@ end
 
 function Config.setBookCommentsTimeout(block_timeout, total_timeout)
     Config.setTimeoutConfig(Config.SETTINGS_TIMEOUT_BOOK_COMMENTS_KEY, block_timeout, total_timeout)
+end
+
+function Config.setSearchCoverMode(enabled)
+    Config.saveSetting("search_cover_mode", enabled)
+end
+
+function Config.getSearchCoverMode()
+    return Config.getSetting("search_cover_mode", true)
 end
 
 return Config

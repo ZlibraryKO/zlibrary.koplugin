@@ -129,6 +129,7 @@ function Ui.showFullTextDialog(title, full_text)
 end
 
 function Ui.showCoverDialog(title, img_path)
+    if not util.fileExists(img_path) then return end
     local ImageViewer = require("ui/widget/imageviewer")
     local dialog = ImageViewer:new{
         file = img_path,
@@ -428,7 +429,7 @@ function Ui.createBookMenuItem(book_data, parent_zlibrary_instance)
     local title = util.htmlEntitiesToUtf8(title_for_html)
     local author_for_html = (type(book_data.author) == "string" and book_data.author) or T("Unknown Author")
     local author = util.htmlEntitiesToUtf8(author_for_html)
-    local combined_text = string.format("%s by %s%s", title, author, year_str)
+    local combined_text = string.format("\u{FFF1}\u{FFF2}%s\u{FFF3} by %s%s", title, author, year_str)
 
     local additional_info_parts = {}
     local selected_extensions = Config.getSearchExtensions()
@@ -445,6 +446,7 @@ function Ui.createBookMenuItem(book_data, parent_zlibrary_instance)
         combined_text = combined_text .. " | " .. table.concat(additional_info_parts, " | ")
     end
 
+    local is_show_cover = Config.getSearchCoverMode()
     return {
         text = combined_text,
         callback = function()
@@ -455,7 +457,10 @@ function Ui.createBookMenuItem(book_data, parent_zlibrary_instance)
             end
         end,
         keep_menu_open = true,
-        original_book_data_ref = book_data,
+       -- original_book_data_ref = book_data,
+        book_id = book_data.id,
+        hash = book_data.hash,
+        cover = is_show_cover and book_data.cover or nil,
     }
 end
 

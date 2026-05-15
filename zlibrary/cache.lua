@@ -13,12 +13,10 @@ local BaseCache = {}
 BaseCache.__index = BaseCache
 
 function BaseCache:_ensurePath(dir)
-    if not util.directoryExists(dir) then
-        util.makePath(dir)
-        if not util.directoryExists(dir) then
-            ffiUtil.execute(string.format('mkdir -p "%s"', dir))
-        end
-    end
+    if util.directoryExists(dir) then return dir end
+    util.makePath(dir)
+    if util.directoryExists(dir) then return dir end
+    ffiUtil.execute(string.format('mkdir -p "%s"', dir))
     return dir
 end
 
@@ -119,7 +117,7 @@ function KVCache:remove(key)
     if not self._cache or type(key) ~= "string" or not self._cache.delSetting then return false end
     self._cache:delSetting(key)
     if self._cache.data and not next(self._cache.data) then
-        self._cache:purge()
+        self:clear()
     else
         self._cache:flush()
     end
@@ -140,7 +138,6 @@ BookInfoCache.__index = BookInfoCache
 function BookInfoCache:init()
     self._target_dir = BASE_CACHE_DIR .. "/bookinfos"
     self.file_cache_size = 5 * 1024 * 1024 -- 5M
-    self:_ensurePath(self._target_dir)
 end
 
 function BookInfoCache:getPath(book_hash)
@@ -149,6 +146,7 @@ end
 
 function BookInfoCache:insert(book_hash, info_table)
     if type(book_hash) ~= "string" or type(info_table) ~= "table" then return false end
+    self:_ensurePath(self._target_dir)
     local path = self:getPath(book_hash)
     local book_cache = LuaSettings:open(path)
     book_cache:saveSetting("info", info_table)
@@ -199,11 +197,9 @@ CoverCache.__index = CoverCache
 function CoverCache:init()
     self._target_dir = BASE_CACHE_DIR .. "/covers"
     self.file_cache_size = 20 * 1024 * 1024 -- test 0.01* 1024 * 1024
-    self:_ensurePath(self._target_dir)
 end
 
 function CoverCache:getPath(book_hash)
-    self:_ensurePath(self._target_dir)
     return ("%s/%s.jpg"):format(self._target_dir, book_hash or "")
 end
 
@@ -216,7 +212,7 @@ end
 function CoverCache:insert(book_hash, source_file_path)
     if type(book_hash) ~= "string" or type(source_file_path) ~= "string" then return false end
     if not util.fileExists(source_file_path) then return false end
-    
+    self:_ensurePath(self._target_dir)
     local target_path = self:getPath(book_hash)
     if self:_safeCopy(source_file_path, target_path) then
         return target_path

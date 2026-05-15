@@ -44,14 +44,14 @@ local function downloadCover(url, book_hash)
     local download_result = Api.downloadBookCover(url, temp_path)
     if not download_result or download_result.error or not download_result.success then
         if util.fileExists(temp_path) then util.removeFile(temp_path) end
-        -- if return is empty, retry
-        return nil
+        -- if return false, retry
+        return false
     end
     local cover_bb = RenderImage:renderImageFile(temp_path, false, nil, nil)  
     if not cover_bb then
         logger.err("[downloadCover] Image corrupted, deleted:", url)
         util.removeFile(temp_path)
-        return nil
+        return false
     end
     if cover_bb.free then cover_bb:free() end
     cover_cache:insert(book_hash, temp_path)

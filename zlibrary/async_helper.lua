@@ -33,13 +33,12 @@ function Channel:new(name, max_workers, shared_cache, on_finish)
 end
 
 -- NetworkMgr:isConnected() not Work in task
--- task_func must have a return value
 function Channel:pushTask(task_func, callback, opts)
     opts = opts or {}
     local cache_key = opts.cache_key
     if cache_key and self.cache[cache_key] then
         UIManager:nextTick(function()
-            safe_call("on_start (cache)", opts.on_start, 0)
+            safe_call("on_start (cache)", opts.on_start)
             safe_call("callback (cache)", callback, true, self.cache[cache_key], 0)
         end)
         return
@@ -69,50 +68,75 @@ end
 
 function Channel:_processNext()
     if #self.queue == 0 then return end
-    self.active_workers = self.active_workers + 1
     local task = table.remove(self.queue, 1)
 
     local actual_args = task.args
     if type(task.args_generator) == "function" then
-        local gen_ok, gen_args = safe_call("args_generator", task.args_generator, task.current_retry)
-        if gen_ok then actual_args = gen_args else actual_args = nil end
+        local ok, gen_args = safe_call("args_generator", task.args_generator, task.current_retry)
+        actual_args = ok and gen_args or nil 
+        if not actual_args then
+            logger.err("Channel: Args generation failed, aborting task", self.name)
+            safe_call("callback", task.callback, false, "Arguments generation failed", task.current_retry)
+            UIManager:nextTick(function() self:_processNext() end)
+            return
+        end
     end
 
+    actual_args = actual_args or {} 
     local execute_func
     if actual_args and type(actual_args) == "table" then
-        execute_func = function() return task.func(unpack(actual_args)) end
+        local unpack_func = table.unpack or unpack
+        execute_func = function() return task.func(unpack_func(actual_args)) end
     else
         execute_func = task.func
     end
 
-    safe_call("on_start", task.on_start, task.current_retry)
-    local timeout = task.timeout or 180
-    local task_returns_simple_string =  task.returns_string
+     logger.dbg("Channel:_processNext - START", self.name)    
+    self.active_workers = self.active_workers + 1
 
     -- first worker wakes CPU
     if self.active_workers == 1 then pcall(function() Device:enableCPUCores(2) end) end
+    if task.on_start then
+        safe_call("on_start", task.on_start)
+        task.on_start = nil
+    end
 
-    logger.dbg("Channel:_processNext - START", self.name)    
+    local timeout = task.timeout or 180
+    local task_returns_simple_string =  task.returns_string
     local start_time = time.now()
     local pid, parent_read_fd = nil, nil
     local poll_count = 0
 
     local function deliver_result(ok, r1, r2)
         logger.dbg("Channel:_processNext - END", self.name)
-        local completed, result = ok, r1
-
+        local completed, ret1, ret2 = ok, r1, r2
         -- lifecycle hook
         if task.session == self.session then
-            local success = (completed and result ~= nil and actual_args ~= nil)
-
-            if not success and task.current_retry < task.max_retries then
-                task.current_retry = task.current_retry + 1
-                logger.warn(string.format("Channel '%s': Task failed, retrying... (%d/%d)", self.name, task.current_retry, task.max_retries))
-                table.insert(self.queue, 1, task) -- failed task retry with priority
+            local success = false
+            local final_result = nil
+            local final_error = nil
+            if not completed then
+                success = false
+                final_error = tostring(ret1)
+            elseif ret1 == false then
+                success = false
+                final_error = ret2 or "Task soft-failed without error message"
             else
-                if success and task.cache_key then self.cache[task.cache_key] = result end
-                
-                safe_call("callback", task.callback, success, result, task.current_retry)
+                success = true
+                final_result = ret1
+            end
+            if success then
+                safe_call("callback", task.callback, true, final_result, task.current_retry)
+            else
+                if task.current_retry < task.max_retries then
+                    task.current_retry = task.current_retry + 1
+                    table.insert(self.queue, 1, task)
+                    logger.warn(string.format("Channel '%s': Task failed, retrying... (%d/%d)", self.name, task.current_retry, task.max_retries))
+                else
+                    logger.err("Channel: Task failure or returned nil:", self.name)
+                    final_error = final_error or "task failure or returned nil"
+                    safe_call("callback", task.callback, false, final_error, task.current_retry)
+                end
             end
         else
             logger.dbg("Channel: Dropped stale task for:", self.name)
@@ -121,51 +145,57 @@ function Channel:_processNext()
         if #self.queue == 0 and self.active_workers == 0 then
             -- no tasks, restore CPU core
             pcall(function() Device:enableCPUCores(1) end)
-            UIManager:nextTick(function()
-                if #self.queue == 0 and self.active_workers == 0 then
-                    logger.dbg("Channel: Naturally drained:", self.name)
-                    safe_call("on_finish (drain)", self.on_finish, false)
-                end
-            end)
+            if self.on_finish then
+                UIManager:nextTick(function()
+                    if #self.queue == 0 and self.active_workers == 0 then
+                        logger.dbg("Channel: Naturally drained:", self.name)
+                        safe_call("on_finish (drain)", self.on_finish, false)
+                    end
+                end)
+            end
         else
             UIManager:nextTick(function() self:_processNext() end)
         end
     end
     pid, parent_read_fd = ffiUtil.runInSubProcess(function(_pid, child_write_fd)
-        local output_str = ""
+        local job_ok, r1, r2 = pcall(execute_func)
+        local output_str = nil
+        
+        local need_pack = not task_returns_simple_string
         if task_returns_simple_string then
-            local job_ok, result = pcall(execute_func)
-            if job_ok then
-                if type(result) == "string" then
-                    output_str = result
-                elseif result ~= nil then
-                    logger.warn("Channel:_processNext - returned value from execute_func is not a string:", result)
-                end
+            if job_ok and type(r1) == "string" then
+                output_str = r1
+                need_pack = false
             else
-                -- return empty string if function crashes
-                logger.warn("Channel:_processNext - execute_func crashed:", result)
+                -- error occurred, revert to batch mode
+                need_pack = true 
+                if not job_ok then
+                    logger.warn("Channel:_processNext - execute_func crashed:", r1)
+                else
+                    logger.warn("Channel:_processNext - returned value from task_func is not a string")
+                    r1 = "returned value from task_func is not a string"
+                    job_ok = false
+                end
             end
-        else
-            local job_ok, r1, r2 = pcall(execute_func)
+        end
+        if need_pack then
             local ret_tbl = { ok = job_ok, r1 = r1, r2 = r2 }
             local enc_ok, str = pcall(buffer.encode, ret_tbl)
             if enc_ok and str then
                 output_str = str
             else
                 logger.warn("Channel:_processNext - serialization failed:", str or "unknown error")
-                -- fallback when serialization fails
                 ret_tbl = { ok = false, r1 = "serialization_error", r2 = tostring(str) }
                 output_str = buffer.encode(ret_tbl) or ""
             end 
         end
-        ffiUtil.writeToFD(child_write_fd, output_str, true)
-        return true
-    end, true)
-    if not pid then
-        logger.warn("Channel:_processNext - background task failed to start")
-        deliver_result(false, "start_failed")
-        return
-    end
+        ffiUtil.writeToFD(child_write_fd, output_str or "", true)
+        end, true)
+        if not pid then
+            logger.warn("Channel:_processNext - background task failed to start")
+            deliver_result(false, "start_failed")
+            return
+        end
     local check_interval_sec = 0.125 
     local function poll()
         poll_count = poll_count + 1
@@ -174,7 +204,7 @@ function Channel:_processNext()
             local function cleaner_step()
                 retry_count = retry_count + 1
                 if ffiUtil.isSubProcessDone(target_pid) then
-                   if fd_to_close then ffiUtil.readAllFromFD(fd_to_close) end -- close fd
+                   if fd_to_close then ffiUtil.readAllFromFD(fd_to_close) end
                     logger.dbg(string.format("Channel:_processNext - %s collected successfully.", debug_tag))
                 elseif retry_count >= max_retries then
                     -- max retries reached, abort to avoid infinite recursion
@@ -197,7 +227,7 @@ function Channel:_processNext()
             cleaner_step()
         end
 
-        local duration_seconds = time.to_s(time.since(start_time))
+        local duration_seconds = tonumber(time.to_s(time.since(start_time))) or 0
         if timeout and duration_seconds >= timeout then
             logger.warn("Channel:_processNext - timeout reached, killing subprocess", pid, duration_seconds)
             ffiUtil.terminateSubProcess(pid)
@@ -218,7 +248,7 @@ function Channel:_processNext()
                 local ret_str = ffiUtil.readAllFromFD(parent_read_fd) or ""
                 parent_read_fd = nil
                 
-                if ret_str ~= "" then
+                if ret_str ~= "" or (ret_str == "" and task_returns_simple_string and subprocess_done) then
                     if task_returns_simple_string then
                         ok, r1, r2= true, ret_str, nil 
                     else
@@ -238,7 +268,7 @@ function Channel:_processNext()
                     safe_collect_and_clean(pid, parent_read_fd, 3, 1, "pre-read subprocess")
                 end
             else -- subprocess_done: process exited with no output
-                    ffiUtil.readAllFromFD(parent_read_fd) -- close our fd
+                   if parent_read_fd then ffiUtil.readAllFromFD(parent_read_fd) end
                     -- no ret_values
             end
             logger.dbg("Channel:_processNext - background task completed")
@@ -301,7 +331,7 @@ function Channel:executeBatch(params)
     end
 
     for i, item in ipairs(items) do
-        local wrap_start = on_start and function(retry) on_start(i, item, retry) end or nil
+        local wrap_start = on_start and function() on_start(i, item) end or nil
         local args_gen = get_task_args and function(retry) return get_task_args(item, retry) end or nil
         local static_args = (not args_gen) and {item} or nil
         
@@ -349,7 +379,7 @@ local AsyncHelper = {
 
 function AsyncHelper:createChannel(name, max_workers, on_finish)
     if not self.channels[name] then
-        self.channels[name] = Channel:new(name, max_workers, self.cache)
+        self.channels[name] = Channel:new(name, max_workers, self.cache, on_finish)
         logger.dbg(string.format("AsyncHelper: Created channel '%s' (max_workers=%d)", name, max_workers or 1))
     end
     return self.channels[name]
@@ -374,16 +404,17 @@ function AsyncHelper:clearCache()
 end
 
 function AsyncHelper.delay(seconds, func)
-    local pending = true
-    UIManager:scheduleIn(seconds, function()
-        pending = false
-        func()
-    end)
-    return function()
-        if pending then
-            pending = false
-            UIManager:unschedule(func)
+    local is_cancelled = false
+    local wrapper
+    wrapper = function()
+        if not is_cancelled then
+            func()
         end
+    end
+    UIManager:scheduleIn(seconds, wrapper)
+    return function()
+        is_cancelled = true
+        UIManager:unschedule(wrapper)
     end
 end
 

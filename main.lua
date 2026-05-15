@@ -68,8 +68,14 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
     end) then return end
 
     logger.info("Zlibrary:autoDiscoverAndSetBaseUrl - START")
-
-    self.discover_channel = self.discover_channel or AsyncHelper:createChannel("findWorkingBaseUrl", 3)
+    local loading_msg = false
+    local safe_close_loading_msg = function()
+        if type(loading_msg) == "table" then 
+            UIManager:close(loading_msg)
+            loading_msg = false
+        end
+    end
+    self.discover_channel = self.discover_channel or AsyncHelper:createChannel("findWorkingBaseUrl", 3, safe_close_loading_msg)
 
     local function getCleanUrl(url)
         if type(url) ~= "string" then return "" end
@@ -79,16 +85,40 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
     local domains_cache = Cache:new{ name = "_domains_cache" }
     local check_cache = Cache:new{ name = "_domains_check_cache" }
 
-    local function updateDomainsCache()
-        logger.info("Zlibrary - Fetching dynamic domains...")
-        local response = Api.fetchDynamicDomains()
-        if response.success and type(response.domains) == "table" and type(response.domains.domains) == "table" then
-            local flat = {}
-            for _, item in ipairs(response.domains.domains) do
-                if type(item.domain) == "string" then table.insert(flat, item.domain) end
+    local function refreshDomainsCache(callback)
+        local task_channel = self.discover_channel
+        local fetch_task = function()
+            logger.dbg("Zlibrary - Fetching dynamic domains...")
+            local response = Api.fetchDynamicDomains()
+            if response and response.success then
+                local domains_data = response.domains and response.domains.domains
+                if type(domains_data) == "table" then
+                    local flat = {}
+                    for _, item in ipairs(domains_data) do
+                        if type(item.domain) == "string" then table.insert(flat, item.domain) end
+                    end
+                    if #flat > 0 then 
+                        domains_cache:insert("domains", flat)
+                        return true 
+                    end
+                end
             end
-            if #flat > 0 then domains_cache:insert("domains", flat) end
+            return false -- return false to allow retry
         end
+        local on_callback = function(success, res)
+            safe_close_loading_msg()
+            if is_interactive and not (success and res) then
+                Ui.showErrorMessage(T("Operation failed, please retry."))
+            end
+            if callback then callback(success and res == true) end
+        end
+        task_channel:pushTask(fetch_task, on_callback, {
+            max_retries = 3,
+            insert_at_head = true,
+            on_start = function()
+                loading_msg = Ui.showLoadingMessage(T("Fetching domains..."))
+            end
+        })
     end
 
     local health_check_task = function(url) return Api.healthCheck(url, true) end
@@ -103,7 +133,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
         end
 
         local connection_menu, updateBaseUrlItem
-        local first_working_url, loading_msg = nil, nil
+        local first_working_url = nil
         -- task status lock
         local is_discovering = false
         local max_idx = 1
@@ -111,11 +141,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
 
         local function finishDiscovery()
             is_discovering = false
-            if loading_msg then 
-                UIManager:close(loading_msg)
-                loading_msg = nil 
-            end
-            
+            safe_close_loading_msg()
             if first_working_url then
                 local ok, err = Config.setAndValidateBaseUrl(first_working_url)
                 if ok then
@@ -330,10 +356,10 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
         table.insert(menu_items, { text = "---" })
         table.insert(menu_items, {
             text = T("Refresh Dynamic Domains"), mandatory = "\u{25B7}", callback = function()
+                if is_discovering then return Ui.showInfoMessage(T("Discovery is already running...")) end
                 if not NetworkMgr:isConnected() then return Ui.showErrorMessage(T("Network unavailable.")) end
                 if connection_menu then UIManager:close(connection_menu) end
-                AsyncHelper.run(updateDomainsCache, function() self:autoDiscoverAndSetBaseUrl(true) end, 
-                    function(err) Ui.showErrorMessage(tostring(err)) end, Ui.showLoadingMessage(T("Fetching dynamic domains...")))
+                refreshDomainsCache(function() self:autoDiscoverAndSetBaseUrl(true) end)
         end})
         table.insert(menu_items, { text = T("Back"), mandatory = "\u{21A9}", callback = function()
             if connection_menu and connection_menu.onFirstPage then connection_menu:onFirstPage() end
@@ -349,10 +375,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
     if domains_cache:get("domains", 172800) or not NetworkMgr:isConnected() then
         executeDiscovery()
     else
-        AsyncHelper.run(updateDomainsCache, executeDiscovery, function(err)
-            Ui.showErrorMessage(T("Failed to fetch domains: ") .. tostring(err))
-            executeDiscovery()
-        end, Ui.showLoadingMessage(T("Fetching dynamic domains...")))
+        refreshDomainsCache(executeDiscovery)
     end
 end
 

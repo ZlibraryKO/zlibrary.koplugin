@@ -1276,7 +1276,8 @@ function Api.fetchDynamicDomains()
     local cdn_urls = {
         "https://fastly.jsdelivr.net/gh/ZlibraryKO/zlibrary.koplugin@main/assets/domains.json",
         "https://cdn.jsdelivr.net/gh/ZlibraryKO/zlibrary.koplugin@main/assets/domains.json",
-        "https://raw.githubusercontent.com/ZlibraryKO/zlibrary.koplugin/main/assets/domains.json"
+        "https://raw.githubusercontent.com/ZlibraryKO/zlibrary.koplugin/main/assets/domains.json",
+        "https://gh.xxooo.cf/https://raw.githubusercontent.com/ZlibraryKO/zlibrary.koplugin/main/assets/domains.json"
     }
 
     math.randomseed(os.time())

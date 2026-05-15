@@ -252,7 +252,8 @@ function Config.getSeedUrls()
     processAndMerge(settings and settings:readSetting("seedUrls"), "U")
     processAndMerge(Config.SEED_URLS, "C")
     local domains_cache = Cache:new{ name = "_domains_cache" }
-    processAndMerge(domains_cache:get("domains", 86400), "D")
+    -- domains are updated passively, no expiration set here
+    processAndMerge(domains_cache:get("domains"), "D")
     
     return new_seed_urls
 end

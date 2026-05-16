@@ -22,6 +22,7 @@ local M = Menu:extend{
     _last_page_summary = nil,
     _last_page = nil,
     list_cover_per_page = nil,
+    is_enable_shortcut = false,
 }
 -- fix no_title = true koreader crash
 function M:mergeTitleBarIntoLayout()

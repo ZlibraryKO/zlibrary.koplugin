@@ -29,7 +29,8 @@ local Zlibrary = WidgetContainer:extend{
 }
 
 function Zlibrary:onDispatcherRegisterActions()
-    Dispatcher:registerAction("zlibrary_search", { category="none", event="ZlibrarySearch", title=T("Z-library search"), general=true,})
+    Dispatcher:registerAction("zlibrary_search", { category="none", event="ZlibraryAction", title=T("Z-library search"), arg="search",general=true,})
+    Dispatcher:registerAction("zlibrary_mybook", { category="none", event="ZlibraryAction", title=string.format("%s %s", T("Z-library"), T("My books")), arg="mybooks",general=true,})
 end
 
 function Zlibrary:init()
@@ -52,13 +53,18 @@ function Zlibrary:init()
     end
 end
 
-function Zlibrary:onZlibrarySearch()
-    local def_search_input
-    if self.ui and self.ui.doc_settings and self.ui.doc_settings.data.doc_props then
-      local doc_props = self.ui.doc_settings.data.doc_props
-      def_search_input = doc_props.authors or doc_props.title
+function Zlibrary:onZlibraryAction(act_page)
+    if act_page == "mybooks" then
+        local mybooks_tab_downloaded = 1
+        self:showMyBooksDialog(mybooks_tab_downloaded)
+    else
+        local def_search_input
+        if self.ui and self.ui.doc_settings and self.ui.doc_settings.data.doc_props then
+            local doc_props = self.ui.doc_settings.data.doc_props
+            def_search_input = doc_props.authors or doc_props.title
+        end
+        self:showMultiSearchDialog(nil, def_search_input)
     end
-    self:showMultiSearchDialog(nil, def_search_input)
     return true
 end
 
@@ -186,7 +192,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                     if type(result) ~= "table" then result = {} end
 
                     -- UI update logic
-                    if is_interactive and connection_menu then
+                    if is_interactive and connection_menu and UIManager:isWidgetShown(connection_menu) then
                         local pos = idx + offset
                         local item = connection_menu.item_table[pos]
                         if item then
@@ -547,21 +553,20 @@ function Zlibrary:addToMainMenu(menu_items)
                 {
                     text = T("Recommended"),
                     callback = function()
-                        local search_tab_recommended = 1
+                        local search_tab_recommended = 2
                         self:showMultiSearchDialog(search_tab_recommended)
                     end,
                 },
                 {
                     text = T("Most popular"),
                     callback = function()
-                        local search_tab_most_popular = 2
+                        local search_tab_most_popular = 1
                         self:showMultiSearchDialog(search_tab_most_popular)
                     end,
                 },{
                     text = T("My books"),
                     callback = function()
-                        local mybooks_tab_downloaded = 1
-                        self:showMyBooksDialog(mybooks_tab_downloaded)
+                        self:onZlibraryAction("mybooks")
                     end,
                 },
             }
@@ -692,23 +697,6 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
             self:searchSimilarBooks(book)
         end,
         toggle_items = {{
-            text = T("Recommended"),
-            cache_key = "recommended",
-            cache_expiry = 180000,
-            callback = function(widget, page, is_refresh)
-                self:_fetchBookList({
-                    api_method = Api.getRecommendedBooks,
-                    loading_text_key = T("Fetching recommended books..."),
-                    error_prefix_key = T("Failed to fetch recommended books"),
-                    operation_name = T("Recommended books"),
-                    log_context = "onShowRecommendedBooks",
-                    results_member_name = "current_recommended_books",
-                    display_menu_func = function(ui_self, books, plugin_self)
-                        widget:reloadFromBookData(books)
-                    end,
-                    requires_auth = true,
-                })
-            end},{
             text = T("Most popular"),
             cache_key = "popular",
             cache_expiry = 180000,
@@ -725,7 +713,24 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
                     end,
                     requires_auth = false,
                 })
-            end}
+            end}, {
+                text = T("Recommended"),
+                cache_key = "recommended",
+                cache_expiry = 180000,
+                callback = function(widget, page, is_refresh)
+                    self:_fetchBookList({
+                        api_method = Api.getRecommendedBooks,
+                        loading_text_key = T("Fetching recommended books..."),
+                        error_prefix_key = T("Failed to fetch recommended books"),
+                        operation_name = T("Recommended books"),
+                        log_context = "onShowRecommendedBooks",
+                        results_member_name = "current_recommended_books",
+                        display_menu_func = function(ui_self, books, plugin_self)
+                            widget:reloadFromBookData(books)
+                        end,
+                        requires_auth = true,
+                    })
+            end},
         }
     }
 
@@ -870,45 +875,12 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                     self:validateDownloadQuota(function(precheck_ok)
                         if precheck_ok then
                             download_quota_status_string = get_quota_status() or ""
-                            widget:setToggleTitle(1, T("Downloaded") .. download_quota_status_string)  
+                            widget:setToggleTitle(2, T("Downloaded") .. download_quota_status_string)  
                         end
                     end)
                 end
             end,
-            toggle_items = {{
-                text = T("Downloaded") .. download_quota_status_string,
-                cache_key = "downloaded",
-                cache_expiry = 86400,
-                enable_pagination = true,
-                mandatory_func = function(book)
-                    return mandatory_format(book and book.date_download)
-                end,
-                callback = function(widget, page, is_refresh)
-                    self:_requestDispatcher({
-                        api_method = Api.getDownloadedBooks,
-                        loading_text_key = T("Getting your downloaded..."),
-                        error_prefix_key = T("Failed to fetch downloaded books"),
-                        operation_name = T("Downloaded books"),
-                        log_context = "onShowDownloadedBooks",
-                        hasValidApiResult = valid_api_result,
-                        resolve_result = function(ui_self, api_result, plugin_self)
-                            local books = api_result.books
-                            local current_page = page or 1
-                            local is_refresh_call = is_refresh
-
-                            widget:setPaginationState(api_result.has_more_results, current_page)
-                       
-                            if current_page == 1 then
-                                widget:reloadFromBookData(books)
-                            else
-                                -- Merge paginated results
-                                widget:appendBatchDataAndReload(books)
-                            end
-                            return is_refresh_call and plugin_self:resetDownloadQuotaCache()
-                        end,
-                        requires_auth = true,
-                    }, page)
-                end}, {
+            toggle_items = { {
                 text = T("Favorites"),
                 cache_key = "favorites",
                 cache_expiry = 86400,
@@ -940,7 +912,40 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                         end,
                         requires_auth = true,
                     }, page)
-                end},
+                end}, {
+                    text = T("Downloaded") .. download_quota_status_string,
+                    cache_key = "downloaded",
+                    cache_expiry = 86400,
+                    enable_pagination = true,
+                    mandatory_func = function(book)
+                        return mandatory_format(book and book.date_download)
+                    end,
+                    callback = function(widget, page, is_refresh)
+                        self:_requestDispatcher({
+                            api_method = Api.getDownloadedBooks,
+                            loading_text_key = T("Getting your downloaded..."),
+                            error_prefix_key = T("Failed to fetch downloaded books"),
+                            operation_name = T("Downloaded books"),
+                            log_context = "onShowDownloadedBooks",
+                            hasValidApiResult = valid_api_result,
+                            resolve_result = function(ui_self, api_result, plugin_self)
+                                local books = api_result.books
+                                local current_page = page or 1
+                                local is_refresh_call = is_refresh
+
+                                widget:setPaginationState(api_result.has_more_results, current_page)
+                        
+                                if current_page == 1 then
+                                    widget:reloadFromBookData(books)
+                                else
+                                    -- Merge paginated results
+                                    widget:appendBatchDataAndReload(books)
+                                end
+                                return is_refresh_call and plugin_self:resetDownloadQuotaCache()
+                            end,
+                            requires_auth = true,
+                     }, page)
+                 end},
             }}
 
         self.dialog_manager:trackDialog(my_books_dialog)

@@ -293,7 +293,7 @@ function SearchDialog:fetchAndShow()
     end
 
     -- automatically enter search
-    if not self.def_position and self._cache:hasValidCache() then
+    if not self.def_position then
         self.on_search_callback(self.def_search_input)
     end
 end
@@ -449,12 +449,8 @@ function SearchDialog:setToggleTitle(position, title)
         return
     end
     self.toggle_items[position].text = title or ""
-
-    -- Update the toggle switch text directly instead of rebuilding the entire widget
-    if self.toggle_switch and self.toggle_switch.toggle then
-        self.toggle_switch.toggle[position] = title or ""
-        self.toggle_switch:update()
-    end
+    -- -- static widget modification requires init
+    self:init()
     UIManager:setDirty("all", "ui")
 end
 

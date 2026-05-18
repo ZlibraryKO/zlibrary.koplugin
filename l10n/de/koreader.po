@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 09:25+0000\n"
+"POT-Creation-Date: 2026-05-18 09:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,6 +21,9 @@ msgstr "[[Ein Plugin zum Suchen und Herunterladen von Büchern aus der Z-library
 msgid "Z-library search"
 msgstr "Z-library-Suche"
 
+msgid "My books"
+msgstr ""
+
 msgid "Operation failed, please retry."
 msgstr ""
 
@@ -32,6 +35,12 @@ msgstr ""
 
 msgid "Failed to find a working base URL."
 msgstr "Keine funktionierende Basis-URL gefunden."
+
+msgid "Queued"
+msgstr ""
+
+msgid "Selection copied to clipboard."
+msgstr ""
 
 msgid "Checking"
 msgstr ""
@@ -66,12 +75,6 @@ msgstr ""
 msgid "Discovery is already running..."
 msgstr ""
 
-msgid "Queued"
-msgstr ""
-
-msgid "Selection copied to clipboard."
-msgstr ""
-
 msgid "Refresh Dynamic Domains"
 msgstr ""
 
@@ -81,20 +84,32 @@ msgstr "Zurück"
 msgid "Settings"
 msgstr "Einstellungen"
 
-msgid "Set email"
-msgstr "E-Mail festlegen"
-
-msgid "Set password"
-msgstr "Passwort festlegen"
-
-msgid "Verify credentials"
-msgstr "Anmeldedaten überprüfen"
+msgid "Set credentials"
+msgstr ""
 
 msgid "Login successful!"
 msgstr "Anmeldung erfolgreich!"
 
+msgid "Verify credentials"
+msgstr "Anmeldedaten überprüfen"
+
 msgid "Set download directory"
 msgstr "Download-Verzeichnis festlegen"
+
+msgid "View Settings"
+msgstr ""
+
+msgid "Search Covers"
+msgstr ""
+
+msgid "Search Items/Page"
+msgstr ""
+
+msgid "Browse Covers"
+msgstr ""
+
+msgid "Browse Items/Page"
+msgstr ""
 
 msgid "Search options"
 msgstr ""
@@ -106,9 +121,6 @@ msgid "Select search formats"
 msgstr "Suchformate auswählen"
 
 msgid "Select search order"
-msgstr ""
-
-msgid "Show covers"
 msgstr ""
 
 msgid "Timeout settings"
@@ -153,23 +165,11 @@ msgstr "Empfohlen"
 msgid "Most popular"
 msgstr "Am beliebtesten"
 
-msgid "My books"
-msgstr ""
-
 msgid "Operation"
 msgstr ""
 
 msgid "No books found, please try again"
 msgstr "Keine Bücher gefunden, bitte versuchen Sie es erneut"
-
-msgid "Fetching recommended books..."
-msgstr "Empfohlene Bücher werden abgerufen..."
-
-msgid "Failed to fetch recommended books"
-msgstr "Empfohlene Bücher konnten nicht abgerufen werden"
-
-msgid "Recommended books"
-msgstr ""
 
 msgid "Fetching most popular books..."
 msgstr "Beliebteste Bücher werden abgerufen..."
@@ -178,6 +178,15 @@ msgid "Failed to fetch most popular books"
 msgstr "Beliebteste Bücher konnten nicht abgerufen werden"
 
 msgid "Most popular books"
+msgstr ""
+
+msgid "Fetching recommended books..."
+msgstr "Empfohlene Bücher werden abgerufen..."
+
+msgid "Failed to fetch recommended books"
+msgstr "Empfohlene Bücher konnten nicht abgerufen werden"
+
+msgid "Recommended books"
 msgstr ""
 
 msgid "Syncing your download limit..."
@@ -207,15 +216,6 @@ msgstr ""
 msgid "Downloaded"
 msgstr ""
 
-msgid "Getting your downloaded..."
-msgstr ""
-
-msgid "Failed to fetch downloaded books"
-msgstr ""
-
-msgid "Downloaded books"
-msgstr ""
-
 msgid "Favorites"
 msgstr ""
 
@@ -226,6 +226,15 @@ msgid "Failed to fetch favorite books"
 msgstr ""
 
 msgid "Favorite books"
+msgstr ""
+
+msgid "Getting your downloaded..."
+msgstr ""
+
+msgid "Failed to fetch downloaded books"
+msgstr ""
+
+msgid "Downloaded books"
 msgstr ""
 
 msgid "Finding similar books..."
@@ -750,23 +759,12 @@ msgstr "WLAN nach Schließen dieses Dialogs ausschalten"
 msgid "Open book"
 msgstr "Buch öffnen"
 
-msgid "Z-library Recommended Books"
-msgstr "Z-library Empfohlene Bücher"
-
-msgid "Z-library Most Popular Books"
-msgstr "Z-library Meistgelesene Bücher"
+#, lua-format
+msgid "No %s found, please try again. Sometimes this requires a couple of retries."
+msgstr ""
 
 msgid "Z-library Similar Books"
 msgstr ""
-
-msgid "Fetch most recommended book from Z-library?"
-msgstr "Meistempfohlenes Buch von Z-library abrufen?"
-
-msgid "OK"
-msgstr "OK"
-
-msgid "Fetch most popular books from Z-library?"
-msgstr "Meistgelesene Bücher von Z-library abrufen?"
 
 msgid "Retrying search for \""
 msgstr "Suche wird erneut versucht für \""
@@ -875,6 +873,42 @@ msgstr "Alle Timeout-Einstellungen auf Standardwerte zurückgesetzt"
 
 msgid "Timeout Settings"
 msgstr "Timeout-Einstellungen"
+
+msgid "Email Address"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "Enter password"
+msgstr ""
+
+msgid "Please fill in all fields"
+msgstr ""
+
+msgid "Feature not implemented"
+msgstr ""
+
+#~ msgid "Set email"
+#~ msgstr "E-Mail festlegen"
+
+#~ msgid "Set password"
+#~ msgstr "Passwort festlegen"
+
+#~ msgid "Z-library Recommended Books"
+#~ msgstr "Z-library Empfohlene Bücher"
+
+#~ msgid "Z-library Most Popular Books"
+#~ msgstr "Z-library Meistgelesene Bücher"
+
+#~ msgid "Fetch most recommended book from Z-library?"
+#~ msgstr "Meistempfohlenes Buch von Z-library abrufen?"
+
+#~ msgid "OK"
+#~ msgstr "OK"
+
+#~ msgid "Fetch most popular books from Z-library?"
+#~ msgstr "Meistgelesene Bücher von Z-library abrufen?"
 
 #~ msgid "Network not available. Please connect and try again."
 #~ msgstr "Netzwerk nicht verfügbar. Bitte verbinden und erneut versuchen."

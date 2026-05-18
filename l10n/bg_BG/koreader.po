@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 09:25+0000\n"
+"POT-Creation-Date: 2026-05-18 09:29+0000\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -18,1145 +18,903 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.9\n"
 
-#: _meta.lua:4 main.lua:25 main.lua:386
 msgid "Z-library"
 msgstr "Z-library"
 
-#: _meta.lua:5
 msgid "[[A plugin to search and download books from Z-library.]]"
 msgstr "[[Приставка за търсене и изтегляне на книги от Z-library.]]"
 
-#: main.lua:32 main.lua:682 zlibrary/multisearch_dialog.lua:21
 msgid "Z-library search"
 msgstr "Търсене в Z-library"
 
-#: main.lua:111
-msgid "Operation failed, please retry."
-msgstr "Операцията е неуспешна, моля опитайте отново."
-
-#: main.lua:119
-msgid "Fetching domains..."
-msgstr "Извличане на домейни…"
-
-#: main.lua:151
-msgid "Successfully set base URL to: "
-msgstr "Основният URL е зададен успешно: "
-
-#: main.lua:158
-msgid "Failed to find a working base URL."
-msgstr "Неуспешно намиране на работещ основен URL."
-
-#: main.lua:177
-msgid "Checking"
-msgstr "Проверка"
-
-#: main.lua:200 main.lua:271 main.lua:335 main.lua:394 zlibrary/ui.lua:1297
-msgid "Set base URL"
-msgstr "Задаване на основен URL"
-
-#: main.lua:203 main.lua:274 main.lua:338
-msgid "Invalid Base URL."
-msgstr "Невалиден основен URL."
-
-#: main.lua:207 main.lua:342
-msgid "Failed"
-msgstr "Неуспешно"
-
-#: main.lua:209 main.lua:344 zlibrary/api.lua:485 zlibrary/api.lua:544
-msgid "Unknown error"
-msgstr "Непозната грешка"
-
-#: main.lua:248
-msgid "Searching for working Z-library server..."
-msgstr "Търсене на работещ сървър на Z-library..."
-
-#: main.lua:255 main.lua:263
-msgid "Current Base URL:"
-msgstr "Текущ основен URL:"
-
-#: main.lua:278 main.lua:289
-msgid "Mirror site redirected to: "
-msgstr "Огледалният сайт пренасочи към: "
-
-#: main.lua:304 zlibrary/ui.lua:921
-msgid "Auto-discover base URL"
-msgstr "Автоматично намиране на основен URL"
-
-#: main.lua:307 main.lua:360
-msgid "Network unavailable."
-msgstr "Мрежата не е налична."
-
-#: main.lua:308 main.lua:359
-msgid "Discovery is already running..."
-msgstr "Търсенето вече е в ход…"
-
-#: main.lua:321
-msgid "Queued"
-msgstr "В опашката"
-
-#: main.lua:325
-msgid "Selection copied to clipboard."
-msgstr "Селекцията е копирана в клипборда."
-
-#: main.lua:358
-msgid "Refresh Dynamic Domains"
-msgstr "Обновяване на динамичните домейни"
-
-#: main.lua:364 zlibrary/ui.lua:614 zlibrary/ui.lua:827
-msgid "Back"
-msgstr "Назад"
-
-#: main.lua:389
-msgid "Settings"
-msgstr "Настройки"
-
-#: main.lua:401 main.lua:405
-msgid "Set email"
-msgstr "Задаване на имейл"
-
-#: main.lua:413 main.lua:417
-msgid "Set password"
-msgstr "Задаване на парола"
-
-#: main.lua:425
-msgid "Verify credentials"
-msgstr "Проверка на данните"
-
-#: main.lua:430
-msgid "Login successful!"
-msgstr "Успешно влизане!"
-
-#: main.lua:437
-msgid "Set download directory"
-msgstr "Задаване на папка за изтегляне"
-
-#: main.lua:444
-msgid "Search options"
-msgstr "Настройки за търсене"
-
-#: main.lua:448 zlibrary/ui.lua:272 zlibrary/ui.lua:404
-msgid "Select search languages"
-msgstr "Избор на езици за търсене"
-
-#: main.lua:454 zlibrary/ui.lua:276 zlibrary/ui.lua:412
-msgid "Select search formats"
-msgstr "Избор на формати за търсене"
-
-#: main.lua:460 zlibrary/ui.lua:280
-msgid "Select search order"
-msgstr "Избор на ред на търсене"
-
-#: main.lua:466
-msgid "Show covers"
-msgstr "Показване на корици"
-
-#: main.lua:478
-msgid "Timeout settings"
-msgstr "Настройки за изчакване"
-
-#: main.lua:486
-msgid "Check for updates"
-msgstr "Проверка за актуализации"
-
-#: main.lua:494
-msgid "Error: Plugin path not found. Cannot check for updates."
-msgstr "Грешка: Пътят до приставката не е намерен. Не може да се провери за актуализации."
-
-#: main.lua:499
-msgid "Developer options"
-msgstr "Опции за разработчици"
-
-#: main.lua:505
-msgid "Clear user session"
-msgstr "Изчистване на потребителската сесия"
-
-#: main.lua:509
-msgid "Session cleared. You will need to login again."
-msgstr "Сесията е изчистена. Ще трябва да влезете отново."
-
-#: main.lua:512
-msgid "Clear runtime cache"
-msgstr "Изчистване на кеша"
-
-#: main.lua:517
-msgid "Runtime cache cleared."
-msgstr "Кешът е изчистен."
-
-#: main.lua:520
-msgid "Test mode"
-msgstr "Тестов режим"
-
-#: main.lua:529
-msgid "Test mode disabled. Normal download behavior restored."
-msgstr "Тестовият режим е изключен. Нормалното изтегляне е възстановено."
-
-#: main.lua:532
-msgid "Test mode enabled. Downloads will always succeed."
-msgstr "Тестовият режим е включен. Изтеглянията винаги ще успяват."
-
-#: main.lua:542 zlibrary/multisearch_dialog.lua:387 zlibrary/ui.lua:377 zlibrary/ui.lua:852 zlibrary/ui.lua:1091
-msgid "Search"
-msgstr "Търсене"
-
-#: main.lua:548 main.lua:695
-msgid "Recommended"
-msgstr "Препоръчани"
-
-#: main.lua:555 main.lua:712 zlibrary/config.lua:128
-msgid "Most popular"
-msgstr "Най-популярни"
-
-#: main.lua:561
 msgid "My books"
 msgstr "Моите книги"
 
-#: main.lua:651
+msgid "Operation failed, please retry."
+msgstr "Операцията е неуспешна, моля опитайте отново."
+
+msgid "Fetching domains..."
+msgstr "Извличане на домейни…"
+
+msgid "Successfully set base URL to: "
+msgstr "Основният URL е зададен успешно: "
+
+msgid "Failed to find a working base URL."
+msgstr "Неуспешно намиране на работещ основен URL."
+
+msgid "Queued"
+msgstr "В опашката"
+
+msgid "Selection copied to clipboard."
+msgstr "Селекцията е копирана в клипборда."
+
+msgid "Checking"
+msgstr "Проверка"
+
+msgid "Set base URL"
+msgstr "Задаване на основен URL"
+
+msgid "Invalid Base URL."
+msgstr "Невалиден основен URL."
+
+msgid "Failed"
+msgstr "Неуспешно"
+
+msgid "Unknown error"
+msgstr "Непозната грешка"
+
+msgid "Searching for working Z-library server..."
+msgstr "Търсене на работещ сървър на Z-library..."
+
+msgid "Current Base URL:"
+msgstr "Текущ основен URL:"
+
+msgid "Mirror site redirected to: "
+msgstr "Огледалният сайт пренасочи към: "
+
+msgid "Auto-discover base URL"
+msgstr "Автоматично намиране на основен URL"
+
+msgid "Network unavailable."
+msgstr "Мрежата не е налична."
+
+msgid "Discovery is already running..."
+msgstr "Търсенето вече е в ход…"
+
+msgid "Refresh Dynamic Domains"
+msgstr "Обновяване на динамичните домейни"
+
+msgid "Back"
+msgstr "Назад"
+
+msgid "Settings"
+msgstr "Настройки"
+
+msgid "Set credentials"
+msgstr ""
+
+msgid "Login successful!"
+msgstr "Успешно влизане!"
+
+msgid "Verify credentials"
+msgstr "Проверка на данните"
+
+msgid "Set download directory"
+msgstr "Задаване на папка за изтегляне"
+
+msgid "View Settings"
+msgstr ""
+
+msgid "Search Covers"
+msgstr ""
+
+msgid "Search Items/Page"
+msgstr ""
+
+msgid "Browse Covers"
+msgstr ""
+
+msgid "Browse Items/Page"
+msgstr ""
+
+msgid "Search options"
+msgstr "Настройки за търсене"
+
+msgid "Select search languages"
+msgstr "Избор на езици за търсене"
+
+msgid "Select search formats"
+msgstr "Избор на формати за търсене"
+
+msgid "Select search order"
+msgstr "Избор на ред на търсене"
+
+msgid "Timeout settings"
+msgstr "Настройки за изчакване"
+
+msgid "Check for updates"
+msgstr "Проверка за актуализации"
+
+msgid "Error: Plugin path not found. Cannot check for updates."
+msgstr "Грешка: Пътят до приставката не е намерен. Не може да се провери за актуализации."
+
+msgid "Developer options"
+msgstr "Опции за разработчици"
+
+msgid "Clear user session"
+msgstr "Изчистване на потребителската сесия"
+
+msgid "Session cleared. You will need to login again."
+msgstr "Сесията е изчистена. Ще трябва да влезете отново."
+
+msgid "Clear runtime cache"
+msgstr "Изчистване на кеша"
+
+msgid "Runtime cache cleared."
+msgstr "Кешът е изчистен."
+
+msgid "Test mode"
+msgstr "Тестов режим"
+
+msgid "Test mode disabled. Normal download behavior restored."
+msgstr "Тестовият режим е изключен. Нормалното изтегляне е възстановено."
+
+msgid "Test mode enabled. Downloads will always succeed."
+msgstr "Тестовият режим е включен. Изтеглянията винаги ще успяват."
+
+msgid "Search"
+msgstr "Търсене"
+
+msgid "Recommended"
+msgstr "Препоръчани"
+
+msgid "Most popular"
+msgstr "Най-популярни"
+
 msgid "Operation"
 msgstr "Операция"
 
-#: main.lua:669
 msgid "No books found, please try again"
 msgstr "Не са намерени книги, моля опитайте отново"
 
-#: main.lua:701 main.lua:953
-msgid "Fetching recommended books..."
-msgstr "Зареждане на препоръчани книги..."
-
-#: main.lua:702 main.lua:954
-msgid "Failed to fetch recommended books"
-msgstr "Неуспешно зареждане на препоръчани книги"
-
-#: main.lua:703 main.lua:955 zlibrary/ui.lua:1111
-msgid "Recommended books"
-msgstr "Препоръчани книги"
-
-#: main.lua:718 main.lua:966
 msgid "Fetching most popular books..."
 msgstr "Зареждане на най-популярни книги..."
 
-#: main.lua:719 main.lua:967
 msgid "Failed to fetch most popular books"
 msgstr "Неуспешно зареждане на най-популярни книги"
 
-#: main.lua:720 main.lua:968
 msgid "Most popular books"
 msgstr "Най-популярни книги"
 
-#: main.lua:756
+msgid "Fetching recommended books..."
+msgstr "Зареждане на препоръчани книги..."
+
+msgid "Failed to fetch recommended books"
+msgstr "Неуспешно зареждане на препоръчани книги"
+
+msgid "Recommended books"
+msgstr "Препоръчани книги"
+
 msgid "Syncing your download limit..."
 msgstr "Синхронизиране на лимита за изтегляне..."
 
-#: main.lua:757
 msgid "failed to load download quota status"
 msgstr "неуспешно зареждане на статуса на квотата за изтегляне"
 
-#: main.lua:758
 msgid "Sync download quota"
 msgstr "Синхронизиране на лимита за изтегляне"
 
-#: main.lua:814
 msgid "Syncing favorites summary…"
 msgstr "Синхронизиране на резюме на любими…"
 
-#: main.lua:815
 msgid "failed to load favorite book id list"
 msgstr "неуспешно зареждане на списъка с любими книги"
 
-#: main.lua:816
 msgid "Sync favorites summary"
 msgstr "Синхронизиране на резюме на любими"
 
-#: main.lua:839 main.lua:1021 main.lua:1051
 msgid "API returned an error, please try again"
 msgstr "API върна грешка, моля опитайте отново"
 
-#: main.lua:854
 msgid "Z-library My Books"
 msgstr "Моите книги в Z-library"
 
-#: main.lua:873 main.lua:879
 msgid "Downloaded"
 msgstr "Изтеглени"
 
-#: main.lua:889
-msgid "Getting your downloaded..."
-msgstr "Зареждане на изтеглените книги..."
-
-#: main.lua:890
-msgid "Failed to fetch downloaded books"
-msgstr "Неуспешно зареждане на изтеглените книги"
-
-#: main.lua:891
-msgid "Downloaded books"
-msgstr "Изтеглени книги"
-
-#: main.lua:912
 msgid "Favorites"
 msgstr "Любими"
 
-#: main.lua:922
 msgid "Getting your favorites..."
 msgstr "Зареждане на любимите книги..."
 
-#: main.lua:923
 msgid "Failed to fetch favorite books"
 msgstr "Неуспешно зареждане на любимите книги"
 
-#: main.lua:924
 msgid "Favorite books"
 msgstr "Любими книги"
 
-#: main.lua:983
+msgid "Getting your downloaded..."
+msgstr "Зареждане на изтеглените книги..."
+
+msgid "Failed to fetch downloaded books"
+msgstr "Неуспешно зареждане на изтеглените книги"
+
+msgid "Downloaded books"
+msgstr "Изтеглени книги"
+
 msgid "Finding similar books..."
 msgstr "Търсене на подобни книги..."
 
-#: main.lua:984
 msgid "No similar books found"
 msgstr "Не са намерени подобни книги"
 
-#: main.lua:985
 msgid "Similar books"
 msgstr "Подобни книги"
 
-#: main.lua:1003
 msgid "Removing book from favorites…"
 msgstr "Премахване на книгата от любими…"
 
-#: main.lua:1004
 msgid "Failed to remove book from favorites"
 msgstr "Неуспешно премахване на книгата от любими"
 
-#: main.lua:1005
 msgid "unfavorite book"
 msgstr "премахване от любими"
 
-#: main.lua:1015
 msgid "Book removed from favorites, please refresh"
 msgstr "Книгата е премахната от любими, моля опреснете"
 
-#: main.lua:1035
 msgid "Adding book to favorites…"
 msgstr "Добавяне на книгата към любими…"
 
-#: main.lua:1036
 msgid "Failed to add book to favorites"
 msgstr "Неуспешно добавяне на книгата към любими"
 
-#: main.lua:1037
 msgid "Favorite book"
 msgstr "Любима книга"
 
-#: main.lua:1045
 msgid "Book added to favorites, please refresh"
 msgstr "Книгата е добавена към любими, моля опреснете"
 
-#: main.lua:1086 main.lua:1114
 msgid "Fetching book details..."
 msgstr "Зареждане на детайли за книгата..."
 
-#: main.lua:1087 main.lua:1123
 msgid "Failed to fetch book details"
 msgstr "Неуспешно зареждане на детайли за книгата"
 
-#: main.lua:1088 main.lua:1141 zlibrary/ui.lua:1101
 msgid "Book details"
 msgstr "Детайли за книгата"
 
-#: main.lua:1094 main.lua:1129
 msgid "Could not retrieve book details."
 msgstr "Не може да се получат детайли за книгата."
 
-#: main.lua:1166
 msgid "Please set both username and password first."
 msgstr "Моля, задайте първо потребителско име и парола."
 
-#: main.lua:1171
 msgid "Logging in..."
 msgstr "Влизане..."
 
-#: main.lua:1191 zlibrary/ui.lua:1081
 msgid "Login"
 msgstr "Влизане"
 
-#: main.lua:1212
 msgid "Searching for \""
 msgstr "Търсене на \""
 
-#: main.lua:1245
 msgid "No results found for \""
 msgstr "Няма намерени резултати за \""
 
-#: main.lua:1313
 #, lua-format
 msgid "Loading more results (Page %s)..."
 msgstr "Зареждане на още резултати (Страница %s)..."
 
-#: main.lua:1338 main.lua:1372
 msgid "Failed to load more results"
 msgstr "Неуспешно зареждане на още резултати"
 
-#: main.lua:1356
 msgid "No more results found."
 msgstr "Няма повече резултати."
 
-#: main.lua:1396
 msgid "Book identifiers missing. Cannot download."
 msgstr "Липсват идентификатори на книгата. Изтеглянето е невъзможно."
 
-#: main.lua:1417
 #, lua-format
 msgid "Cannot create downloads directory: %s"
 msgstr "Не може да се създаде папка за изтегляне: %s"
 
-#: main.lua:1483
 msgid "Could not open reader UI."
 msgstr "Не може да се отвори интерфейсът на четеца."
 
-#: main.lua:1498
 msgid "Download failed: Unknown error"
 msgstr "Изтеглянето неуспешно: Непозната грешка"
 
-#: main.lua:1500 main.lua:1523
 msgid "Download limit reached. Please try again later or check your account."
 msgstr "Достигнат лимит за изтегляне. Опитайте по-късно или проверете акаунта си."
 
-#: main.lua:1529 zlibrary/ui.lua:665 zlibrary/ui.lua:672 zlibrary/ui.lua:1131
 msgid "Download"
 msgstr "Изтегляне"
 
-#: main.lua:1531
 msgid "Retrying download..."
 msgstr "Повторен опит за изтегляне..."
 
-#: main.lua:1578
 msgid "Book ID is required"
 msgstr "Изисква се ID на книгата"
 
-#: main.lua:1603
 msgid "Loading comments..."
 msgstr "Коментарите се зареждат..."
 
-#: main.lua:1604
 msgid "Failed to load comments"
 msgstr "Неуспешно зареждане на коментарите"
 
-#: main.lua:1605 zlibrary/ui.lua:588 zlibrary/ui.lua:1146 zlibrary/ui.lua:1151
 msgid "Comments"
 msgstr "Коментари"
 
-#: main.lua:1611 zlibrary/ui.lua:1198
 msgid "No comments to display"
 msgstr "Няма коментари за показване"
 
-#: zlibrary/api.lua:211 zlibrary/api.lua:232
 msgid "Request timed out - please check your connection and try again"
 msgstr "Заявката изтече — проверете връзката си и опитайте отново"
 
-#: zlibrary/api.lua:213 zlibrary/ui.lua:865
 msgid "Network request failed"
 msgstr "Мрежовата заявка неуспешна"
 
-#: zlibrary/api.lua:234
 msgid "Network connection error - please check your internet connection and try again"
 msgstr "Грешка в мрежовата връзка — проверете интернет връзката си и опитайте отново"
 
-#: zlibrary/api.lua:266 zlibrary/api.lua:528
 msgid "HTTP Error"
 msgstr "HTTP грешка"
 
-#: zlibrary/api.lua:266
 msgid "Unknown Status"
 msgstr "Непознат статус"
 
-#: zlibrary/api.lua:282 zlibrary/api.lua:371
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "Адресът (URL) на сървъра на Z-library не е зададен. Конфигурирайте го в настройките на приставката."
 
-#: zlibrary/api.lua:319
 msgid "Login failed: Empty response from server"
 msgstr "Неуспешно влизане: Празен отговор от сървъра"
 
-#: zlibrary/api.lua:327
 msgid "Login failed: Invalid response format"
 msgstr "Неуспешно влизане: Невалиден формат на отговора"
 
-#: zlibrary/api.lua:339 zlibrary/api.lua:354
 msgid "Login failed"
 msgstr "Неуспешно влизане"
 
-#: zlibrary/api.lua:345
 msgid "Login failed: Invalid session data"
 msgstr "Неуспешно влизане: Невалидни данни за сесията"
 
-#: zlibrary/api.lua:354
 msgid "Credentials rejected or invalid response"
 msgstr "Отхвърлени идентификационни данни или невалиден отговор"
 
-#: zlibrary/api.lua:432
 msgid "No response received from server - please try again"
 msgstr "Не е получен отговор от сървъра — опитайте отново"
 
-#: zlibrary/api.lua:440
 msgid "Invalid response format from server"
 msgstr "Невалиден формат на отговора от сървъра"
 
-#: zlibrary/api.lua:446
 msgid "Search API error"
 msgstr "Грешка в API за търсене"
 
-#: zlibrary/api.lua:485 zlibrary/api.lua:544
 msgid "Failed to open target file"
 msgstr "Неуспешно отваряне на целевия файл"
 
-#: zlibrary/api.lua:521
 msgid "Download limit reached or file is an HTML page"
 msgstr "Достигнат лимит за изтегляне или файлът е HTML страница"
 
-#: zlibrary/api.lua:575
 msgid "Download HTTP Error"
 msgstr "HTTP грешка при изтегляне"
 
-#: zlibrary/api.lua:590 zlibrary/api.lua:638 zlibrary/api.lua:804 zlibrary/api.lua:857 zlibrary/api.lua:916 zlibrary/api.lua:971 zlibrary/api.lua:1020 zlibrary/api.lua:1067 zlibrary/api.lua:1114
 msgid "Z-library server URL not configured."
 msgstr "URL адресът на сървъра на Z-library не е конфигуриран."
 
-#: zlibrary/api.lua:616
 msgid "Failed to fetch recommended books (no response body)."
 msgstr "Неуспешно зареждане на препоръчани книги (няма тяло на отговора)."
 
-#: zlibrary/api.lua:622
 msgid "Failed to parse recommended books response."
 msgstr "Неуспешен разбор на отговора за препоръчани книги."
 
-#: zlibrary/api.lua:627
 msgid "API returned an error for recommended books."
 msgstr "API върна грешка за препоръчани книги."
 
-#: zlibrary/api.lua:664
 msgid "Failed to fetch most popular books (no response body)."
 msgstr "Неуспешно зареждане на най-популярни книги (няма тяло на отговора)."
 
-#: zlibrary/api.lua:670
 msgid "Failed to parse most popular books response."
 msgstr "Неуспешен разбор на отговора за най-популярни книги."
 
-#: zlibrary/api.lua:675
 msgid "API returned an error for most popular books."
 msgstr "API върна грешка за най-популярни книги."
 
-#: zlibrary/api.lua:686 zlibrary/api.lua:741 zlibrary/api.lua:1222
 msgid "Z-library server URL not configured or book identifiers missing."
 msgstr "URL адресът на сървъра не е конфигуриран или липсват идентификатори на книгата."
 
-#: zlibrary/api.lua:714
 msgid "Failed to fetch book details (no response body)."
 msgstr "Неуспешно зареждане на детайли за книгата (няма тяло на отговора)."
 
-#: zlibrary/api.lua:720
 msgid "Failed to parse book details response."
 msgstr "Неуспешен разбор на отговора за детайли на книгата."
 
-#: zlibrary/api.lua:725
 msgid "API returned an error for book details."
 msgstr "API върна грешка за детайли на книгата."
 
-#: zlibrary/api.lua:731
 msgid "Failed to process book details."
 msgstr "Неуспешна обработка на детайли за книгата."
 
-#: zlibrary/api.lua:769
 msgid "Failed to fetch download link (no response body)."
 msgstr "Неуспешно зареждане на линк за изтегляне (няма тяло на отговора)."
 
-#: zlibrary/api.lua:775
 msgid "Failed to parse download link response."
 msgstr "Неуспешен разбор на отговора за линк за изтегляне."
 
-#: zlibrary/api.lua:780
 msgid "API returned an error for download link."
 msgstr "API върна грешка за линк за изтегляне."
 
-#: zlibrary/api.lua:788
 msgid "No download link provided in API response."
 msgstr "В отговора на API не е предоставен линк за изтегляне."
 
-#: zlibrary/api.lua:832
 msgid "Failed to fetch similar books (no response body)."
 msgstr "Неуспешно зареждане на подобни книги (няма тяло на отговора)."
 
-#: zlibrary/api.lua:838
 msgid "Failed to parse similar books response."
 msgstr "Неуспешен разбор на отговора за подобни книги."
 
-#: zlibrary/api.lua:843
 msgid "API returned an error for similar books."
 msgstr "API върна грешка за подобни книги."
 
-#: zlibrary/api.lua:885
 msgid "Failed to fetch downloaded books (no response body)."
 msgstr "Неуспешно зареждане на изтеглени книги (няма тяло на отговора)."
 
-#: zlibrary/api.lua:892
 msgid "Failed to parse downloaded books response."
 msgstr "Неуспешен разбор на отговора за изтеглени книги."
 
-#: zlibrary/api.lua:897
 msgid "API returned an error for downloaded books."
 msgstr "API върна грешка за изтеглени книги."
 
-#: zlibrary/api.lua:944
 msgid "Failed to fetch favorite books (no response body)."
 msgstr "Неуспешно зареждане на любими книги (няма тяло на отговора)."
 
-#: zlibrary/api.lua:950
 msgid "Failed to parse favorite books response."
 msgstr "Неуспешен разбор на отговора за любими книги."
 
-#: zlibrary/api.lua:955
 msgid "API returned an error for favorite books."
 msgstr "API върна грешка за любими книги."
 
-#: zlibrary/api.lua:999
 msgid "Failed to fetch unfavorite book (no response body)."
 msgstr "Неуспешно зареждане при премахване от любими (няма тяло на отговора)."
 
-#: zlibrary/api.lua:1005
 msgid "Failed to parse unfavorite book response."
 msgstr "Неуспешен разбор на отговора при премахване от любими."
 
-#: zlibrary/api.lua:1010
 msgid "API returned an error for unfavorite book."
 msgstr "API върна грешка при премахване от любими."
 
-#: zlibrary/api.lua:1046
 msgid "Failed to fetch download quota status (no response body)."
 msgstr "Неуспешно зареждане на статус на лимита за изтегляне (няма тяло на отговора)."
 
-#: zlibrary/api.lua:1052
 msgid "Failed to parse download quota status response."
 msgstr "Неуспешен разбор на отговора за статус на лимита за изтегляне."
 
-#: zlibrary/api.lua:1057
 msgid "API returned an error for download quota status."
 msgstr "API върна грешка за статус на лимита за изтегляне."
 
-#: zlibrary/api.lua:1093
 msgid "Failed to fetch favorite-book IDs (no response body)."
 msgstr "Неуспешно зареждане на идентификатори на любими книги (няма тяло на отговора)."
 
-#: zlibrary/api.lua:1099
 msgid "Failed to parse favorite-book IDs."
 msgstr "Неуспешен разбор на идентификатори на любими книги."
 
-#: zlibrary/api.lua:1104
 msgid "API returned an error for favorite-book IDs."
 msgstr "API върна грешка за идентификатори на любими книги."
 
-#: zlibrary/api.lua:1142
 msgid "Failed to fetch favorite book (no response body)."
 msgstr "Неуспешно зареждане на любима книга (няма тяло на отговора)."
 
-#: zlibrary/api.lua:1148
 msgid "Failed to parse favorite book response."
 msgstr "Неуспешен разбор на отговора за любима книга."
 
-#: zlibrary/api.lua:1153
 msgid "API returned an error for favorite book."
 msgstr "API върна грешка за любима книга."
 
-#: zlibrary/api.lua:1214
 msgid "Book ID is required."
 msgstr "Изисква се ID на книгата."
 
-#: zlibrary/api.lua:1250
 msgid "Failed to fetch book comments (no response body)."
 msgstr "Неуспешно извличане на коментари за книгата (няма отговор)."
 
-#: zlibrary/api.lua:1258
 msgid "Failed to parse book comments response."
 msgstr "Не успя да се анализира отговорът с коментари за книгата."
 
-#: zlibrary/api.lua:1265
 msgid "API returned an error for book comments."
 msgstr "API върна грешка за коментарите на книгата."
 
-#: zlibrary/config.lua:129
 msgid "Best match"
 msgstr "Най-добро съвпадение"
 
-#: zlibrary/config.lua:130
 msgid "Recently added"
 msgstr "Наскоро добавени"
 
-#: zlibrary/config.lua:131 zlibrary/config.lua:132 zlibrary/multisearch_dialog.lua:357 zlibrary/ui.lua:523
 msgid "Title"
 msgstr "Заглавие"
 
-#: zlibrary/config.lua:133 zlibrary/ui.lua:559
 msgid "Year"
 msgstr "Година"
 
-#: zlibrary/config.lua:134 zlibrary/config.lua:135
 msgid "File size"
 msgstr "Размер на файла"
 
-#: zlibrary/config.lua:462
 msgid "Default"
 msgstr "По подразбиране"
 
-#: zlibrary/config.lua:542 zlibrary/ui.lua:960 zlibrary/ui.lua:993
 msgid "infinite"
 msgstr "безкрайно"
 
-#: zlibrary/config.lua:543
 #, lua-format
 msgid "Block: %ds, Total: %s"
 msgstr "Блок: %d сек, Общо: %s"
 
-#: zlibrary/multisearch_dialog.lua:241
 msgid "Untitled"
 msgstr "Без заглавие"
 
-#: zlibrary/multisearch_dialog.lua:242 zlibrary/ui.lua:430
 msgid "Unknown Author"
 msgstr "Непознат автор"
 
-#: zlibrary/multisearch_dialog.lua:367 zlibrary/ui.lua:543
 msgid "Author"
 msgstr "Автор"
 
-#: zlibrary/multisearch_dialog.lua:378 zlibrary/ui.lua:606
 msgid "More Similar Books"
 msgstr "Още подобни книги"
 
-#: zlibrary/ota.lua:181
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "Актуализацията неуспешна: Не може да се определи къде да се инсталира приставката."
 
-#: zlibrary/ota.lua:185
 msgid "Installing update..."
 msgstr "Инсталиране на актуализацията..."
 
-#: zlibrary/ota.lua:203
 msgid "Update installation failed."
 msgstr "Инсталирането на актуализацията неуспешно."
 
-#: zlibrary/ota.lua:216
 msgid "Update installed successfully. Please restart KOReader for changes to take effect."
 msgstr "Актуализацията е инсталирана успешно. Рестартирайте KOReader за да влязат в сила промените."
 
-#: zlibrary/ota.lua:231
 msgid "Update check failed: Could not determine plugin location."
 msgstr "Проверката за актуализации неуспешна: Не може да се определи местоположението на приставката."
 
-#: zlibrary/ota.lua:236
 #, lua-format
 msgid "Unsupported plugin path for OTA update: %s. Only 'plugins/zlibrary.koplugin' is supported."
 msgstr "Неподдържан път на приставката за OTA актуализация: %s. Поддържа се само 'plugins/zlibrary.koplugin'."
 
-#: zlibrary/ota.lua:242
 msgid "Checking for updates..."
 msgstr "Проверка за актуализации..."
 
-#: zlibrary/ota.lua:248
 msgid "Failed to check for updates. Please check your internet connection."
 msgstr "Неуспешна проверка за актуализации. Проверете интернет връзката си."
 
-#: zlibrary/ota.lua:255
 msgid "Could not find update information (invalid data format)."
 msgstr "Не може да се намери информация за актуализацията (невалиден формат на данните)."
 
-#: zlibrary/ota.lua:264
 msgid "Could not find update version information."
 msgstr "Не може да се намери информация за версията на актуализацията."
 
-#: zlibrary/ota.lua:271
 msgid "Could not understand the update version format."
 msgstr "Не може да се разпознае форматът на версията на актуализацията."
 
-#: zlibrary/ota.lua:278
 msgid "Could not find update files."
 msgstr "Не може да се намерят файловете за актуализация."
 
-#: zlibrary/ota.lua:284
 msgid "Could not find a download link for the update."
 msgstr "Не може да се намери линк за изтегляне на актуализацията."
 
-#: zlibrary/ota.lua:301
 #, lua-format
 msgid "You are already on the latest version (%s) or newer."
 msgstr "Вече имате най-новата версия (%s) или по-нова."
 
-#: zlibrary/ota.lua:303
 #, lua-format
 msgid "Could not determine your current version, but the latest is %s. If you recently updated, you might be up-to-date."
 msgstr "Не може да се определи текущата ви версия, но най-новата е %s. Ако наскоро сте актуализирали, може би сте актуални."
 
-#: zlibrary/ota.lua:310
 #, lua-format
 msgid "New version available: %s (you have %s). Download and install?"
 msgstr "Налична е нова версия: %s (вие имате %s). Изтегляне и инсталиране?"
 
-#: zlibrary/ota.lua:312
 msgid "an older version"
 msgstr "по-стара версия"
 
-#: zlibrary/ota.lua:316
 msgid "Update available"
 msgstr "Налична актуализация"
 
-#: zlibrary/ota.lua:318
 msgid "Update"
 msgstr "Актуализация"
 
-#: zlibrary/ota.lua:319 zlibrary/ui.lua:293 zlibrary/ui.lua:417 zlibrary/ui.lua:667 zlibrary/ui.lua:674 zlibrary/ui.lua:790 zlibrary/ui.lua:797 zlibrary/ui.lua:809 zlibrary/ui.lua:816 zlibrary/ui.lua:906 zlibrary/ui.lua:1028 zlibrary/ui.lua:1166
 msgid "Cancel"
 msgstr "Отказ"
 
-#: zlibrary/ota.lua:321
 msgid "Downloading update..."
 msgstr "Изтегляне на актуализацията..."
 
-#: zlibrary/ota.lua:331
 msgid "Download failed. Please try again later."
 msgstr "Изтеглянето неуспешно. Опитайте отново по-късно."
 
-#: zlibrary/ui.lua:79
 msgid "Downloading…"
 msgstr "Изтегляне…"
 
-#: zlibrary/ui.lua:149 zlibrary/ui.lua:156 zlibrary/ui.lua:709
 msgid "Close"
 msgstr "Затваряне"
 
-#: zlibrary/ui.lua:166
 msgid "Select Z-library Download Directory"
 msgstr "Изберете папка за изтегляне от Z-library"
 
-#: zlibrary/ui.lua:170
 #, lua-format
 msgid "Download directory set to: %s"
 msgstr "Папката за изтегляне е зададена на: %s"
 
-#: zlibrary/ui.lua:172
 msgid "No directory selected."
 msgstr "Не е избрана папка."
 
-#: zlibrary/ui.lua:256
 #, lua-format
 msgid "%d items selected for %s."
 msgstr "Избрани са %d елемента за %s."
 
-#: zlibrary/ui.lua:260
 #, lua-format
 msgid "Filter cleared for %s."
 msgstr "Филтърът за %s е изчистен."
 
-#: zlibrary/ui.lua:298
 msgid "Set"
 msgstr "Задаване"
 
-#: zlibrary/ui.lua:305 zlibrary/ui.lua:312
 msgid "Setting saved successfully!"
 msgstr "Настройката е запазена успешно!"
 
-#: zlibrary/ui.lua:315
 msgid "Setting cleared."
 msgstr "Настройката е изчистена."
 
-#: zlibrary/ui.lua:350
 msgid "Set languages"
 msgstr "Задаване на езици"
 
-#: zlibrary/ui.lua:353
 #, lua-format
 msgid "Language: %s"
 msgstr "Език: %s"
 
-#: zlibrary/ui.lua:355
 #, lua-format
 msgid "Languages (%d)"
 msgstr "Езици (%d)"
 
-#: zlibrary/ui.lua:359
 msgid "Set formats"
 msgstr "Задаване на формати"
 
-#: zlibrary/ui.lua:364
 #, lua-format
 msgid "Format: %s"
 msgstr "Формат: %s"
 
-#: zlibrary/ui.lua:369
 #, lua-format
 msgid "Formats (%d)"
 msgstr "Формати (%d)"
 
-#: zlibrary/ui.lua:374
 msgid "Search Z-library"
 msgstr "Търсене в Z-library"
 
-#: zlibrary/ui.lua:384
 msgid "Please enter a search term."
 msgstr "Моля, въведете дума за търсене."
 
-#: zlibrary/ui.lua:393 zlibrary/ui.lua:471
 msgid "Sort by"
 msgstr "Сортиране по"
 
-#: zlibrary/ui.lua:428
 msgid "Unknown Title"
 msgstr "Непознато заглавие"
 
-#: zlibrary/ui.lua:443 zlibrary/ui.lua:586
 msgid "Rating"
 msgstr "Оценка"
 
-#: zlibrary/ui.lua:470
 msgid "Search Results"
 msgstr "Резултати от търсенето"
 
-#: zlibrary/ui.lua:504 zlibrary/ui.lua:825
 msgid "Book Details"
 msgstr "Детайли за книгата"
 
-#: zlibrary/ui.lua:533
 msgid "Description"
 msgstr "Описание"
 
-#: zlibrary/ui.lua:535
 msgid "Full Title"
 msgstr "Пълно заглавие"
 
-#: zlibrary/ui.lua:552
 msgid "Cover"
 msgstr "Корица"
 
-#: zlibrary/ui.lua:552
 msgid "(tap to view)"
 msgstr "(докоснете за преглед)"
 
-#: zlibrary/ui.lua:560
 msgid "Language"
 msgstr "Език"
 
-#: zlibrary/ui.lua:565
 #, lua-format
 msgid "Format: %s (tap to download)"
 msgstr "Формат: %s (докоснете за изтегляне)"
 
-#: zlibrary/ui.lua:572
 #, lua-format
 msgid "Format: %s (Download not available)"
 msgstr "Формат: %s (изтеглянето не е налично)"
 
-#: zlibrary/ui.lua:576
 msgid "Download Book (Unknown Format)"
 msgstr "Изтегляне на книгата (непознат формат)"
 
-#: zlibrary/ui.lua:584
 msgid "Size"
 msgstr "Размер"
 
-#: zlibrary/ui.lua:585
 msgid "Pages"
 msgstr "Страници"
 
-#: zlibrary/ui.lua:596
 msgid "Publisher"
 msgstr "Издателство"
 
-#: zlibrary/ui.lua:600
 msgid "Series"
 msgstr "Поредица"
 
-#: zlibrary/ui.lua:626
 msgid "Remove From Favorites"
 msgstr "Премахване от любими"
 
-#: zlibrary/ui.lua:626
 msgid "Add To Favorites"
 msgstr "Добавяне към любими"
 
-#: zlibrary/ui.lua:664 zlibrary/ui.lua:671
 #, lua-format
 msgid "Download \"%s\"?"
 msgstr "Изтегляне на „%s“?"
 
-#: zlibrary/ui.lua:684
 #, lua-format
 msgid "\"%s\" downloaded successfully. Open it now?"
 msgstr "„%s“ беше изтеглен успешно. Искате ли да го отворите сега?"
 
-#: zlibrary/ui.lua:692
 msgid "Turn off Wi-Fi after closing this dialog"
 msgstr "Изключване на Wi-Fi след затваряне на диалога"
 
-#: zlibrary/ui.lua:705
 msgid "Open book"
 msgstr "Отваряне на книга"
 
-#: zlibrary/ui.lua:762
-msgid "Z-library Recommended Books"
-msgstr "Препоръчани книги от Z-library"
+#, lua-format
+msgid "No %s found, please try again. Sometimes this requires a couple of retries."
+msgstr ""
 
-#: zlibrary/ui.lua:770
-msgid "Z-library Most Popular Books"
-msgstr "Най-популярни книги от Z-library"
-
-#: zlibrary/ui.lua:778
 msgid "Z-library Similar Books"
 msgstr "Подобни книги от Z-library"
 
-#: zlibrary/ui.lua:788 zlibrary/ui.lua:795
-msgid "Fetch most recommended book from Z-library?"
-msgstr "Зареждане на препоръчани книги от Z-library?"
-
-#: zlibrary/ui.lua:789 zlibrary/ui.lua:796 zlibrary/ui.lua:808 zlibrary/ui.lua:815
-msgid "OK"
-msgstr "ОК"
-
-#: zlibrary/ui.lua:807 zlibrary/ui.lua:814
-msgid "Fetch most popular books from Z-library?"
-msgstr "Зареждане на най-популярни книги от Z-library?"
-
-#: zlibrary/ui.lua:839
 msgid "Retrying search for \""
 msgstr "Повторен опит за търсене на \""
 
-#: zlibrary/ui.lua:860
 msgid "Request timed out"
 msgstr "Заявката изтече"
 
-#: zlibrary/ui.lua:864
 msgid "Network connection error"
 msgstr "Грешка в мрежовата връзка"
 
-#: zlibrary/ui.lua:895
 #, lua-format
 msgid "%s failed due to a timeout%s. Would you like to retry?"
 msgstr "%s неуспешно поради изтекло време%s. Желаете ли да опитате отново?"
 
-#: zlibrary/ui.lua:897
 #, lua-format
 msgid "%s failed due to a network error. Would you like to retry?"
 msgstr "%s неуспешно поради мрежова грешка. Желаете ли да опитате отново?"
 
-#: zlibrary/ui.lua:899
 #, lua-format
 msgid "%s failed due to a temporary issue. Would you like to retry?"
 msgstr "%s неуспешно поради временен проблем. Желаете ли да опитате отново?"
 
-#: zlibrary/ui.lua:905 zlibrary/ui.lua:921
 msgid "Retry"
 msgstr "Повторен опит"
 
-#: zlibrary/ui.lua:959 zlibrary/ui.lua:969
 #, lua-format
 msgid "Block timeout: %s seconds"
 msgstr "Таймаут на блок: %s секунди"
 
-#: zlibrary/ui.lua:960 zlibrary/ui.lua:993
 #, lua-format
 msgid "Total timeout: %s"
 msgstr "Общ таймаут: %s"
 
-#: zlibrary/ui.lua:960 zlibrary/ui.lua:993
 msgid "seconds"
 msgstr "секунди"
 
-#: zlibrary/ui.lua:973
 #, lua-format
 msgid "Set %s block timeout (seconds)"
 msgstr "Задаване на таймаут на блок за %s (секунди)"
 
-#: zlibrary/ui.lua:984
 msgid "Please enter a valid number (minimum 1 second)"
 msgstr "Моля, въведете валидно число (минимум 1 секунда)"
 
-#: zlibrary/ui.lua:997
 #, lua-format
 msgid "Set %s total timeout (seconds, -1 for infinite)"
 msgstr "Задаване на общ таймаут за %s (секунди, -1 за безкраен)"
 
-#: zlibrary/ui.lua:1008
 msgid "Please enter a valid number (minimum 1 second or -1 for infinite)"
 msgstr "Моля, въведете валидно число (минимум 1 секунда или -1 за безкраен)"
 
-#: zlibrary/ui.lua:1021
 msgid "Reset to defaults"
 msgstr "Възстановяване на стойностите по подразбиране"
 
-#: zlibrary/ui.lua:1026
 #, lua-format
 msgid "Reset %s timeouts to default values?"
 msgstr "Възстановяване на таймаутите за %s до стойностите по подразбиране?"
 
-#: zlibrary/ui.lua:1027
 msgid "Reset"
 msgstr "Възстановяване"
 
-#: zlibrary/ui.lua:1032
 msgid "Timeout settings reset to defaults"
 msgstr "Настройките за таймаут са възстановени до стойностите по подразбиране"
 
-#: zlibrary/ui.lua:1042
 #, lua-format
 msgid "%s Timeout Settings"
 msgstr "Настройки за таймаут на %s"
 
-#: zlibrary/ui.lua:1076
 msgid "Login timeouts"
 msgstr "Таймаути при влизане"
 
-#: zlibrary/ui.lua:1086
 msgid "Search timeouts"
 msgstr "Таймаути при търсене"
 
-#: zlibrary/ui.lua:1096
 msgid "Book details timeouts"
 msgstr "Таймаути за детайли на книгата"
 
-#: zlibrary/ui.lua:1106
 msgid "Recommended books timeouts"
 msgstr "Таймаути за препоръчани книги"
 
-#: zlibrary/ui.lua:1116
 msgid "Popular books timeouts"
 msgstr "Таймаути за популярни книги"
 
-#: zlibrary/ui.lua:1121
 msgid "Popular books"
 msgstr "Популярни книги"
 
-#: zlibrary/ui.lua:1126
 msgid "Download timeouts"
 msgstr "Таймаути при изтегляне"
 
-#: zlibrary/ui.lua:1136
 msgid "Cover download timeouts"
 msgstr "Таймаути при изтегляне на корици"
 
-#: zlibrary/ui.lua:1141
 msgid "Cover download"
 msgstr "Изтегляне на корица"
 
-#: zlibrary/ui.lua:1159
 msgid "Reset all timeouts to defaults"
 msgstr "Възстановяване на всички таймаути до стойностите по подразбиране"
 
-#: zlibrary/ui.lua:1164
 msgid "Reset all timeout settings to default values?"
 msgstr "Възстановяване на всички настройки за таймаут до стойностите по подразбиране?"
 
-#: zlibrary/ui.lua:1165
 msgid "Reset All"
 msgstr "Възстановяване на всички"
 
-#: zlibrary/ui.lua:1176
 msgid "All timeout settings reset to defaults"
 msgstr "Всички настройки за таймаут са възстановени до стойностите по подразбиране"
 
-#: zlibrary/ui.lua:1186
 msgid "Timeout Settings"
 msgstr "Настройки за таймаут"
+
+msgid "Email Address"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "Enter password"
+msgstr ""
+
+msgid "Please fill in all fields"
+msgstr ""
+
+msgid "Feature not implemented"
+msgstr ""
+
+#~ msgid "Set email"
+#~ msgstr "Задаване на имейл"
+
+#~ msgid "Set password"
+#~ msgstr "Задаване на парола"
+
+#~ msgid "Show covers"
+#~ msgstr "Показване на корици"
+
+#~ msgid "Z-library Recommended Books"
+#~ msgstr "Препоръчани книги от Z-library"
+
+#~ msgid "Z-library Most Popular Books"
+#~ msgstr "Най-популярни книги от Z-library"
+
+#~ msgid "Fetch most recommended book from Z-library?"
+#~ msgstr "Зареждане на препоръчани книги от Z-library?"
+
+#~ msgid "OK"
+#~ msgstr "ОК"
+
+#~ msgid "Fetch most popular books from Z-library?"
+#~ msgstr "Зареждане на най-популярни книги от Z-library?"

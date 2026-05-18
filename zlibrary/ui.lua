@@ -423,7 +423,7 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
     dialog:onShowKeyboard()
 end
 
-function Ui.createBookMenuItem(book_data, parent_zlibrary_instance)
+function Ui.createBookMenuItem(book_data, parent_zlibrary_instance, is_show_cover)
     local year_str = (book_data.year and book_data.year ~= "N/A" and tostring(book_data.year) ~= "0") and (" (" .. book_data.year .. ")") or ""
     local title_for_html = (type(book_data.title) == "string" and book_data.title) or T("Unknown Title")
     local title = util.htmlEntitiesToUtf8(title_for_html)
@@ -446,7 +446,6 @@ function Ui.createBookMenuItem(book_data, parent_zlibrary_instance)
         combined_text = combined_text .. " | " .. table.concat(additional_info_parts, " | ")
     end
 
-    local is_show_cover = Config.getSearchCoverMode()
     return {
         text = combined_text,
         callback = function()
@@ -464,7 +463,7 @@ function Ui.createBookMenuItem(book_data, parent_zlibrary_instance)
     }
 end
 
-function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_items, on_goto_page_handler)
+function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_items, on_goto_page_handler, opts)
     local search_order_name = Config.getSearchOrderName()
     local menu = Menu:new{
         title = _colon_concat(T("Search Results"), query_string),
@@ -477,7 +476,9 @@ function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_it
         is_popout = false,
         is_borderless = true,
         title_bar_fm_style = true,
-        multilines_show_more_text = true
+        multilines_show_more_text = true,
+        list_per_page =opts and opts.search_per_page,
+        show_cover = opts and opts.show_cover_search ~= false,
     }
     _showAndTrackDialog(menu)
     return menu
@@ -720,104 +721,40 @@ function Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, ok
     showDialog()
 end
 
-local function _showBooksMenu(ui_self, options, plugin_self)
-    local log_context = options.log_context or ""
-    local books = options.books or {}
-    local title = options.title or ""
-    local subtitle = options.subtitle
+function Ui.showSimilarBooksMenu(ui_self, books, plugin_self, source_title)
+    local opts = Config.getViewSettings()
+    local show_cover = opts.show_cover_search ~= false
+    books = books or {}
 
     local menu_items = {}
     local menu_item
     for _, book in ipairs(books) do
-        menu_item = Ui.createBookMenuItem(book, plugin_self)
-        table.insert(menu_items, {
-            text = menu_item.text,
-            callback = function()
+        menu_item = Ui.createBookMenuItem(book, plugin_self, show_cover)
+        menu_item.callback = function()
                 plugin_self:onSelectRecommendedBook(book)
-            end,
-        })
+        end
+        table.insert(menu_items, menu_item)
     end
 
     if #menu_items == 0 then
-        Ui.showInfoMessage(T(string.format("No %s found, please try again. Sometimes this requires a couple of retries.", log_context)))
+       Ui.showInfoMessage(string.format(T("No %s found, please try again. Sometimes this requires a couple of retries."), "similar books"))
         return
     end
+    
     local menu = Menu:new({
-        title = title,
-        subtitle = subtitle,
+        title = T("Z-library Similar Books"),
+        subtitle = source_title,
         item_table = menu_items,
-        items_per_page = 10,
         show_captions = true,
         parent = ui_self.document_menu_parent_holder,
         is_popout = false,
         is_borderless = true,
         title_bar_fm_style = true,
         multilines_show_more_text = true,
+        list_per_page =opts and opts.search_per_page,
+        show_cover = show_cover,
     })
     _showAndTrackDialog(menu)
-end
-
-function Ui.showRecommendedBooksMenu(ui_self, books, plugin_self)
-    _showBooksMenu(ui_self, {
-        title = T("Z-library Recommended Books"),
-        books = books,
-        log_context = "recommended books",
-    }, plugin_self)
-end
-
-function Ui.showMostPopularBooksMenu(ui_self, books, plugin_self)
-    _showBooksMenu(ui_self, {
-        title = T("Z-library Most Popular Books"),
-        books = books,
-        log_context = "most popular books",
-    }, plugin_self)
-end
-
-function Ui.showSimilarBooksMenu(ui_self, books, plugin_self, source_title)
-    _showBooksMenu(ui_self, {
-        title = T("Z-library Similar Books"),
-        subtitle = source_title,
-        books = books,
-        log_context = "similar books",
-    }, plugin_self)
-end
-
-function Ui.confirmShowRecommendedBooks(ok_callback)
-    if _plugin_instance and _plugin_instance.dialog_manager then
-        _plugin_instance.dialog_manager:showConfirmDialog({
-            text = T("Fetch most recommended book from Z-library?"),
-            ok_text = T("OK"),
-            cancel_text = T("Cancel"),
-            ok_callback = ok_callback,
-        })
-    else
-        local dialog = ConfirmBox:new{
-            text = T("Fetch most recommended book from Z-library?"),
-            ok_text = T("OK"),
-            cancel_text = T("Cancel"),
-            ok_callback = ok_callback,
-        }
-        UIManager:show(dialog)
-    end
-end
-
-function Ui.confirmShowMostPopularBooks(ok_callback)
-    if _plugin_instance and _plugin_instance.dialog_manager then
-        _plugin_instance.dialog_manager:showConfirmDialog({
-            text = T("Fetch most popular books from Z-library?"),
-            ok_text = T("OK"),
-            cancel_text = T("Cancel"),
-            ok_callback = ok_callback,
-        })
-    else
-        local dialog = ConfirmBox:new{
-            text = T("Fetch most popular books from Z-library?"),
-            ok_text = T("OK"),
-            cancel_text = T("Cancel"),
-            ok_callback = ok_callback,
-        }
-        UIManager:show(dialog)
-    end
 end
 
 function Ui.createSingleBookMenu(ui_self, title, menu_items)
@@ -1309,6 +1246,100 @@ function Ui.showUrlCheckProgress(parent_zlibrary, menu_items, close_callback)
     end
     _showAndTrackDialog(menu)
     return menu
+end
+
+function Ui.createPerPageSettingCallback(title_text, setting_key)
+    return function()
+        local opts = Config.getViewSettings()
+        local SpinWidget = require("ui/widget/spinwidget")
+        local widget = SpinWidget:new{
+            title_text = title_text or "",
+            value = opts[setting_key] or 6,
+            value_min = 4,
+            value_max = 16,
+            default_value = 6,
+            keep_shown_on_apply = true,
+            callback = function(spin)
+                opts[setting_key] = tonumber(spin.value)
+                Config.setViewSettings(opts)
+                Ui.showInfoMessage(T("Setting saved successfully!"))
+            end,
+        }
+        UIManager:show(widget)
+    end
+end
+
+function Ui.showCredentialsDialog(validate_and_save_callback, test_callback)
+    local current_email = Config.getSetting(Config.SETTINGS_USERNAME_KEY) or ""
+    local current_password = Config.getSetting(Config.SETTINGS_PASSWORD_KEY) or ""
+    local dialog
+    dialog = require("ui/widget/multiinputdialog"):new{
+        title = T("Set credentials"),
+        fields = {{
+                description = T("Email Address"), 
+                text = current_email,
+                hint = "example@email.com", 
+            }, {
+                description = T("Password"), 
+                text = current_password,
+                hint = T("Enter password"), 
+                text_type = "password",
+            },},
+        buttons = { {{
+                    text = T("Cancel"),
+                    id = "close",
+                    callback = function() 
+                        _closeAndUntrackDialog(dialog) 
+                    end,
+                }, {
+                    text = T("Verify credentials"),
+                    callback = function()
+                        local fields = dialog:getFields()
+                        local trimmed_email = util.trim(fields[1] or "")
+                        local trimmed_password = util.trim(fields[2] or "")
+                        if trimmed_email == "" or trimmed_password == "" then
+                            Ui.showInfoMessage(T("Please fill in all fields"))
+                            return
+                        end
+                        if test_callback then
+                            test_callback(trimmed_email, trimmed_password)
+                        else
+                            Ui.showInfoMessage(T("Feature not implemented"))
+                        end
+                    end,
+                }, {
+                    text =  T("Set"),
+                    callback = function()
+                        local fields = dialog:getFields()
+                        local trimmed_email = util.trim(fields[1] or "")
+                        local trimmed_password = util.trim(fields[2] or "")
+                        if trimmed_email == "" or trimmed_password == "" then
+                            Ui.showInfoMessage(T("Please fill in all fields"))
+                            return 
+                        end
+                        local close_dialog_after_action = false
+                        if validate_and_save_callback then
+                            if validate_and_save_callback(trimmed_email, trimmed_password) then
+                                Ui.showInfoMessage(T("Setting saved successfully!"))
+                                close_dialog_after_action = true
+                            end
+                        else
+                            Config.saveSetting(Config.SETTINGS_USERNAME_KEY, trimmed_email)
+                            Config.saveSetting(Config.SETTINGS_PASSWORD_KEY, trimmed_password)
+                            Ui.showInfoMessage(T("Setting saved successfully!"))
+                            close_dialog_after_action = true
+                        end
+                        if close_dialog_after_action then
+                            _closeAndUntrackDialog(dialog)
+                        end
+                    end,
+                },
+            },
+        },
+    }
+    _showAndTrackDialog(dialog)
+    --dialog:onShowKeyboard()
+    return dialog
 end
 
 return Ui

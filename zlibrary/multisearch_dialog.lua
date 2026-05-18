@@ -29,6 +29,8 @@ local SearchDialog = InputContainer:extend{
     on_similar_books_callback = nil,
     current_page_loaded = nil,
     has_more_api_results = nil,
+    show_cover = nil,
+    list_per_page = nil,
     books = nil,
     _position = nil,
     _cache = nil,
@@ -237,6 +239,7 @@ function SearchDialog:_getMenuItems(books)
     local mandatory_func = current_toggle and current_toggle.mandatory_func
     
     local title, author, menu_text, mandatory_text
+    local is_show_cover = self.show_cover
     for i, book in ipairs(books) do
         title = book.title or T("Untitled")
         author = book.author or T("Unknown Author")
@@ -249,7 +252,7 @@ function SearchDialog:_getMenuItems(books)
             mandatory = mandatory_text,
             book_id = book.id,
             hash = book.hash,
-            cover = book.cover,
+            cover = is_show_cover and book.cover or nil,
         })
     end
     return menu_items
@@ -293,7 +296,7 @@ function SearchDialog:fetchAndShow()
     end
 
     -- automatically enter search
-    if not self.def_position and self._cache:hasValidCache() then
+    if not self.def_position then
         self.on_search_callback(self.def_search_input)
     end
 end
@@ -311,7 +314,9 @@ function SearchDialog:createMenuContainer(books, height)
             show_captions = true,
             is_borderless = true,
             multilines_show_more_text = true,
-            show_parent = self
+            show_parent = self,
+            show_cover = self.show_cover,
+            list_per_page = self.list_per_page,
         }
     else
         self.menu_container.item_table = menu_items
@@ -449,12 +454,8 @@ function SearchDialog:setToggleTitle(position, title)
         return
     end
     self.toggle_items[position].text = title or ""
-
-    -- Update the toggle switch text directly instead of rebuilding the entire widget
-    if self.toggle_switch and self.toggle_switch.toggle then
-        self.toggle_switch.toggle[position] = title or ""
-        self.toggle_switch:update()
-    end
+    -- -- static widget modification requires init
+    self:init()
     UIManager:setDirty("all", "ui")
 end
 

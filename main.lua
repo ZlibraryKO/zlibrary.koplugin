@@ -30,6 +30,7 @@ local Zlibrary = WidgetContainer:extend{
 
 function Zlibrary:onDispatcherRegisterActions()
     Dispatcher:registerAction("zlibrary_search", { category="none", event="ZlibrarySearch", title=T("Z-library search"), general=true,})
+    Dispatcher:registerAction("zlibrary_mybook", { category="none", event="ZlibrarySearch", title=string.format("%s %s", T("Z-library"), T("My books")), arg="mybooks",general=true,})
 end
 
 function Zlibrary:init()
@@ -52,13 +53,18 @@ function Zlibrary:init()
     end
 end
 
-function Zlibrary:onZlibrarySearch()
-    local def_search_input
-    if self.ui and self.ui.doc_settings and self.ui.doc_settings.data.doc_props then
-      local doc_props = self.ui.doc_settings.data.doc_props
-      def_search_input = doc_props.authors or doc_props.title
+function Zlibrary:onZlibrarySearch(act_page)
+    if act_page == "mybooks" then
+        local mybooks_tab_downloaded = 1
+        self:showMyBooksDialog(mybooks_tab_downloaded)
+    else
+        local def_search_input
+        if self.ui and self.ui.doc_settings and self.ui.doc_settings.data.doc_props then
+            local doc_props = self.ui.doc_settings.data.doc_props
+            def_search_input = doc_props.authors or doc_props.title
+        end
+        self:showMultiSearchDialog(nil, def_search_input)
     end
-    self:showMultiSearchDialog(nil, def_search_input)
     return true
 end
 
@@ -159,10 +165,32 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
             end
         end
 
+        local function initOrResetItem(item, seed)
+            if not item then return end
+            item.mandatory = "\u{23F3} " .. T("Queued")
+            item.mandatory_dim = false
+            item.bold = false
+            item.callback = Device:hasClipboard() and function()
+                Device.input.setClipboardText("https://" .. getCleanUrl(seed.url))
+                Ui.showInfoMessage(T("Selection copied to clipboard."))
+            end or nil
+        end
+
+        local function resetAllItems()
+            if is_interactive and connection_menu and connection_menu.item_table then
+                for i, seed in ipairs(valid_seeds) do
+                    local pos = i + offset
+                    initOrResetItem(connection_menu.item_table[pos], seed)
+                end
+                connection_menu:updateItems(nil, true)
+            end
+        end
+
         local function start_discover_task()
             is_discovering = true
             first_working_url = nil
             
+            resetAllItems()
             self.discover_channel:executeBatch({
                 items = valid_seeds,
                 aggregate = true,
@@ -186,7 +214,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                     if type(result) ~= "table" then result = {} end
 
                     -- UI update logic
-                    if is_interactive and connection_menu then
+                    if is_interactive and connection_menu and UIManager:isWidgetShown(connection_menu) then
                         local pos = idx + offset
                         local item = connection_menu.item_table[pos]
                         if item then
@@ -317,19 +345,17 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
         local last_check = check_cache:get("result", 600)
         local has_last_check = (type(last_check) == "table")
         for _, seed in ipairs(valid_seeds) do
-            local d_url = getCleanUrl(seed.url)
-            local item_mandatory = "\u{23F3} " .. T("Queued")
-            local item_mandatory_dim = false
-            local item_callback = Device:hasClipboard() and function()
-                Device.input.setClipboardText("https://" .. d_url)
-                Ui.showInfoMessage(T("Selection copied to clipboard."))
-            end or nil
+            local item = {
+                text = string.format("[%s] %s", seed.src, getCleanUrl(seed.url)),
+                show_indicator = false
+            }
+            initOrResetItem(item, seed)
             -- has cache
             if has_last_check and type(last_check[seed.url]) == "table" then
                 local url_last_check = last_check[seed.url]
                 if url_last_check.success then
-                    item_mandatory = string.format("\u{2714} %dms", url_last_check.elapsed or 0)
-                    item_callback = function()
+                    item.mandatory = string.format("\u{2714} %dms", url_last_check.elapsed or 0)
+                    item.callback = function()
                         local ok, err = Config.setAndValidateBaseUrl(seed.url)
                         if ok then
                             Ui.showInfoMessage(string.format("%s : %s", T("Set base URL"), seed.url))
@@ -339,18 +365,12 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                         end
                     end
                 else
-                    item_mandatory = "\u{2718} " .. T("Failed")
-                    item_mandatory_dim = true
-                    item_callback = function() Ui.showInfoMessage(url_last_check.error or T("Unknown error")) end
+                     item.mandatory = "\u{2718} " .. T("Failed")
+                     item.mandatory_dim = true
+                    item.callback = function() Ui.showInfoMessage(url_last_check.error or T("Unknown error")) end
                 end
             end
-            table.insert(menu_items, {
-                text = string.format("[%s] %s", seed.src, d_url),
-                mandatory = item_mandatory,
-                mandatory_dim = item_mandatory_dim,
-                show_indicator = false,
-                callback = item_callback
-            })
+            table.insert(menu_items, item)
         end
         
         table.insert(menu_items, { text = "---" })
@@ -372,7 +392,7 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
         end)
     end
 
-    if domains_cache:get("domains", 172800) or not NetworkMgr:isConnected() then
+    if domains_cache:get("domains", 172800, true) or not NetworkMgr:isConnected() then
         executeDiscovery()
     else
         refreshDomainsCache(executeDiscovery)
@@ -398,30 +418,16 @@ function Zlibrary:addToMainMenu(menu_items)
                             end,
                         },
                         {
-                            text = T("Set email"),
+                            text = T("Set credentials"),
                             keep_menu_open = true,
                             callback = function()
-                                Ui.showGenericInputDialog(
-                                    T("Set email"),
-                                    Config.SETTINGS_USERNAME_KEY,
-                                    Config.getSetting(Config.SETTINGS_USERNAME_KEY),
-                                    false
-                                )
-                            end,
-                        },
-                        {
-                            text = T("Set password"),
-                            keep_menu_open = true,
-                            callback = function()
-                                Ui.showGenericInputDialog(
-                                    T("Set password"),
-                                    Config.SETTINGS_PASSWORD_KEY,
-                                    Config.getSetting(Config.SETTINGS_PASSWORD_KEY),
-                                    true
-                                )
-                            end,
-                        },
-                        {
+                                Ui.showCredentialsDialog(nil, function()
+                                    self:login(function(success)
+                                        if success then Ui.showInfoMessage(T("Login successful!")) end
+                                    end)
+                                 end)
+                            end 
+                    }, {
                             text = T("Verify credentials"),
                             keep_menu_open = true,
                             callback = function()
@@ -432,15 +438,48 @@ function Zlibrary:addToMainMenu(menu_items)
                                 end)
                             end,
                             separator = true,
-                        },
-                        {
+                        }, {
                             text = T("Set download directory"),
                             keep_menu_open = true,
                             callback = function()
                                 Ui.showDownloadDirectoryDialog()
                             end,
-                        },
-                        {
+                        }, {
+                                text = T("View Settings"),
+                                keep_menu_open = true,
+                                sub_item_table = { {
+                                    text = T("Search Covers"),
+                                    keep_menu_open = true,
+                                    checked_func = function()
+                                        return Config.getViewSettings().show_cover_search ~= false
+                                    end,
+                                    callback = function() 
+                                        local opts = Config.getViewSettings()
+                                        opts.show_cover_search = not opts.show_cover_search
+                                        Config.setViewSettings(opts)
+                                    end, 
+                                },  {
+                                    text = T("Search Items/Page"),
+                                    keep_menu_open = true,
+                                    separator = true,
+                                    callback = Ui.createPerPageSettingCallback(T("Search Items/Page"), "search_per_page"),
+                                }, {
+                                    text = T("Browse Covers"),
+                                    keep_menu_open = true,
+                                    checked_func = function()
+                                        return Config.getViewSettings().show_cover_browse ~= false
+                                    end,
+                                    callback = function()
+                                        local opts = Config.getViewSettings()
+                                        opts.show_cover_browse = not opts.show_cover_browse
+                                        Config.setViewSettings(opts)
+                                    end,
+                                }, {
+                                    text = T("Browse Items/Page"),
+                                    keep_menu_open = true,
+                                    callback = Ui.createPerPageSettingCallback(T("Browse Items/Page"), "browse_per_page"),
+                                }},
+                        }, {
                             text = T("Search options"),
                             keep_menu_open = true,
                             separator = true,
@@ -462,19 +501,8 @@ function Zlibrary:addToMainMenu(menu_items)
                                 callback = function()
                                     Ui.showOrdersSelectionDialog(self.ui)
                                 end
-                            }, {
-                                text = T("Show covers"),
-                                keep_menu_open = true,
-                                checked_func = function()
-                                    return Config.getSearchCoverMode() == true
-                                end,
-                                callback = function()  
-                                    local is_show_cover = Config.getSearchCoverMode()
-                                    Config.setSearchCoverMode(not is_show_cover)
-                                end, 
                             }}
-                        },
-                        {
+                        }, {
                             text = T("Timeout settings"),
                             keep_menu_open = true,
                             separator = true,
@@ -547,21 +575,20 @@ function Zlibrary:addToMainMenu(menu_items)
                 {
                     text = T("Recommended"),
                     callback = function()
-                        local search_tab_recommended = 1
+                        local search_tab_recommended = 2
                         self:showMultiSearchDialog(search_tab_recommended)
                     end,
                 },
                 {
                     text = T("Most popular"),
                     callback = function()
-                        local search_tab_most_popular = 2
+                        local search_tab_most_popular = 1
                         self:showMultiSearchDialog(search_tab_most_popular)
                     end,
                 },{
                     text = T("My books"),
                     callback = function()
-                        local mybooks_tab_downloaded = 1
-                        self:showMyBooksDialog(mybooks_tab_downloaded)
+                        self:onZlibrarySearch("mybooks")
                     end,
                 },
             }
@@ -678,9 +705,12 @@ end
 
 function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
     local search_dialog
+    local opts = Config.getViewSettings()
     search_dialog = MultiSearchDialog:new{
         title = T("Z-library search"),
         def_position = def_position,
+        show_cover = opts.show_cover_browse ~= false,
+        list_per_page = opts.browse_per_page,
         def_search_input = def_search_input,
         on_select_book_callback = function(book)
             self:onSelectRecommendedBook(book)
@@ -692,23 +722,6 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
             self:searchSimilarBooks(book)
         end,
         toggle_items = {{
-            text = T("Recommended"),
-            cache_key = "recommended",
-            cache_expiry = 180000,
-            callback = function(widget, page, is_refresh)
-                self:_fetchBookList({
-                    api_method = Api.getRecommendedBooks,
-                    loading_text_key = T("Fetching recommended books..."),
-                    error_prefix_key = T("Failed to fetch recommended books"),
-                    operation_name = T("Recommended books"),
-                    log_context = "onShowRecommendedBooks",
-                    results_member_name = "current_recommended_books",
-                    display_menu_func = function(ui_self, books, plugin_self)
-                        widget:reloadFromBookData(books)
-                    end,
-                    requires_auth = true,
-                })
-            end},{
             text = T("Most popular"),
             cache_key = "popular",
             cache_expiry = 180000,
@@ -725,7 +738,24 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
                     end,
                     requires_auth = false,
                 })
-            end}
+            end}, {
+                text = T("Recommended"),
+                cache_key = "recommended",
+                cache_expiry = 180000,
+                callback = function(widget, page, is_refresh)
+                    self:_fetchBookList({
+                        api_method = Api.getRecommendedBooks,
+                        loading_text_key = T("Fetching recommended books..."),
+                        error_prefix_key = T("Failed to fetch recommended books"),
+                        operation_name = T("Recommended books"),
+                        log_context = "onShowRecommendedBooks",
+                        results_member_name = "current_recommended_books",
+                        display_menu_func = function(ui_self, books, plugin_self)
+                            widget:reloadFromBookData(books)
+                        end,
+                        requires_auth = true,
+                    })
+            end},
         }
     }
 
@@ -850,9 +880,12 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
              end
         end
 
+        local opts = Config.getViewSettings()
         my_books_dialog = MultiSearchDialog:new{
             title = T("Z-library My Books"),
             def_position = def_position,
+            show_cover = opts.show_cover_browse ~= false,
+            list_per_page = opts.browse_per_page,
             def_search_input = def_search_input,
             on_select_book_callback = function(book)
                 self:onSelectRecommendedBook(book)
@@ -870,45 +903,12 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                     self:validateDownloadQuota(function(precheck_ok)
                         if precheck_ok then
                             download_quota_status_string = get_quota_status() or ""
-                            widget:setToggleTitle(1, T("Downloaded") .. download_quota_status_string)  
+                            widget:setToggleTitle(2, T("Downloaded") .. download_quota_status_string)  
                         end
                     end)
                 end
             end,
-            toggle_items = {{
-                text = T("Downloaded") .. download_quota_status_string,
-                cache_key = "downloaded",
-                cache_expiry = 86400,
-                enable_pagination = true,
-                mandatory_func = function(book)
-                    return mandatory_format(book and book.date_download)
-                end,
-                callback = function(widget, page, is_refresh)
-                    self:_requestDispatcher({
-                        api_method = Api.getDownloadedBooks,
-                        loading_text_key = T("Getting your downloaded..."),
-                        error_prefix_key = T("Failed to fetch downloaded books"),
-                        operation_name = T("Downloaded books"),
-                        log_context = "onShowDownloadedBooks",
-                        hasValidApiResult = valid_api_result,
-                        resolve_result = function(ui_self, api_result, plugin_self)
-                            local books = api_result.books
-                            local current_page = page or 1
-                            local is_refresh_call = is_refresh
-
-                            widget:setPaginationState(api_result.has_more_results, current_page)
-                       
-                            if current_page == 1 then
-                                widget:reloadFromBookData(books)
-                            else
-                                -- Merge paginated results
-                                widget:appendBatchDataAndReload(books)
-                            end
-                            return is_refresh_call and plugin_self:resetDownloadQuotaCache()
-                        end,
-                        requires_auth = true,
-                    }, page)
-                end}, {
+            toggle_items = { {
                 text = T("Favorites"),
                 cache_key = "favorites",
                 cache_expiry = 86400,
@@ -940,37 +940,44 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                         end,
                         requires_auth = true,
                     }, page)
-                end},
+                end}, {
+                    text = T("Downloaded") .. download_quota_status_string,
+                    cache_key = "downloaded",
+                    cache_expiry = 86400,
+                    enable_pagination = true,
+                    mandatory_func = function(book)
+                        return mandatory_format(book and book.date_download)
+                    end,
+                    callback = function(widget, page, is_refresh)
+                        self:_requestDispatcher({
+                            api_method = Api.getDownloadedBooks,
+                            loading_text_key = T("Getting your downloaded..."),
+                            error_prefix_key = T("Failed to fetch downloaded books"),
+                            operation_name = T("Downloaded books"),
+                            log_context = "onShowDownloadedBooks",
+                            hasValidApiResult = valid_api_result,
+                            resolve_result = function(ui_self, api_result, plugin_self)
+                                local books = api_result.books
+                                local current_page = page or 1
+                                local is_refresh_call = is_refresh
+
+                                widget:setPaginationState(api_result.has_more_results, current_page)
+                        
+                                if current_page == 1 then
+                                    widget:reloadFromBookData(books)
+                                else
+                                    -- Merge paginated results
+                                    widget:appendBatchDataAndReload(books)
+                                end
+                                return is_refresh_call and plugin_self:resetDownloadQuotaCache()
+                            end,
+                            requires_auth = true,
+                     }, page)
+                 end},
             }}
 
         self.dialog_manager:trackDialog(my_books_dialog)
         my_books_dialog:fetchAndShow()
-end
-
-function Zlibrary:onShowRecommendedBooks()
-    self:_fetchBookList({
-        api_method = Api.getRecommendedBooks,
-        loading_text_key = T("Fetching recommended books..."),
-        error_prefix_key = T("Failed to fetch recommended books"),
-        operation_name = T("Recommended books"),
-        log_context = "onShowRecommendedBooks",
-        results_member_name = "current_recommended_books",
-        display_menu_func = Ui.showRecommendedBooksMenu,
-        requires_auth = true
-    })
-end
-
-function Zlibrary:onShowMostPopularBooks()
-    self:_fetchBookList({
-        api_method = Api.getMostPopularBooks,
-        loading_text_key = T("Fetching most popular books..."),
-        error_prefix_key = T("Failed to fetch most popular books"),
-        operation_name = T("Most popular books"),
-        log_context = "onShowMostPopularBooks",
-        results_member_name = "current_most_popular_books",
-        display_menu_func = Ui.showMostPopularBooksMenu,
-        requires_auth = false
-    })
 end
 
 function Zlibrary:searchSimilarBooks(book_stub)
@@ -1289,10 +1296,12 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
 
     local menu_items = {}
     logger.info(string.format("Zlibrary:displaySearchResults - Preparing menu items from %d initial results.", #initial_book_data_list))
+    local opts = Config.getViewSettings()
+    local  is_show_cover = opts.show_cover_search ~= false
 
     for i = 1, #initial_book_data_list do
         local book_menu_item_data = initial_book_data_list[i]
-        menu_items[i] = Ui.createBookMenuItem(book_menu_item_data, self)
+        menu_items[i] = Ui.createBookMenuItem(book_menu_item_data, self, is_show_cover)
     end
 
     if self.active_results_menu then
@@ -1347,7 +1356,7 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
                     local new_menu_items_to_add = {}
                     for _, book_api_data_transformed in ipairs(new_book_objects) do
                         table.insert(self.all_search_results_data, book_api_data_transformed)
-                        table.insert(new_menu_items_to_add, Ui.createBookMenuItem(book_api_data_transformed, self))
+                        table.insert(new_menu_items_to_add, Ui.createBookMenuItem(book_api_data_transformed, self, is_show_cover))
                     end
                     Ui.appendSearchResultsToMenu(menu_instance, new_menu_items_to_add)
                 else
@@ -1382,7 +1391,7 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
         return true
     end
 
-    self.active_results_menu = Ui.createSearchResultsMenu(self.ui, query_string, menu_items, on_goto_page_handler)
+    self.active_results_menu = Ui.createSearchResultsMenu(self.ui, query_string, menu_items, on_goto_page_handler,  opts)
 end
 
 function Zlibrary:downloadBook(book)

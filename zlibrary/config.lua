@@ -575,12 +575,13 @@ function Config.setBookCommentsTimeout(block_timeout, total_timeout)
     Config.setTimeoutConfig(Config.SETTINGS_TIMEOUT_BOOK_COMMENTS_KEY, block_timeout, total_timeout)
 end
 
-function Config.setSearchCoverMode(enabled)
-    Config.saveSetting("search_cover_mode", enabled)
+function Config.setViewSettings(opts)
+    if type(opts) ~= "table" then opts = {} end
+    return Config.getConfigRuntimeCache():insert("view_settings", opts)
 end
 
-function Config.getSearchCoverMode()
-    return Config.getSetting("search_cover_mode", true)
+function Config.getViewSettings()
+    return Config.getConfigRuntimeCache():get("view_settings") or {}
 end
 
 return Config

@@ -21,7 +21,8 @@ local M = Menu:extend{
     _debounce_timer_cancel = nil,
     _last_page_summary = nil,
     _last_page = nil,
-    list_cover_per_page = nil,
+    list_per_page = nil,
+    show_cover = nil,
     is_enable_shortcut = false,
 }
 -- fix no_title = true koreader crash
@@ -66,7 +67,6 @@ local function _updateItemsBuildUI(item, cover_w, cover_h)
     local cover_cache_path = cover_cache:get(item.hash)
 
     if cover_cache_path then
-        item._is_cover_cached = true
         item.state = CenterContainer:new{
             dimen = Geom:new{ w = cover_w, h = cover_h },
             ImageWidget:new{ 
@@ -106,8 +106,7 @@ local function _updateItemsBuildUI(item, cover_w, cover_h)
             }
         }
     }
-
-    return true
+    return false
 end
 
 function M:getCoverItemsPerPage()
@@ -128,119 +127,122 @@ function M:getCoverItemsPerPage()
 end
 
 function M:updateItems(select_number, no_recalculate_dimen)
-    local old_perpage = self.perpage or 14
-    local ok, err = pcall(function()
-        if not self.item_table or self.items_max_lines then return end
-        
-        local perpage = self.perpage
-        local current_page = self.page
-        local idx_offset = (current_page - 1) * perpage
-        
-        local first_item = self.item_table[idx_offset + 1]
-        if not (first_item and first_item.cover and first_item.hash) then return end
+    if not self.list_per_page then
+        self.list_per_page = self.show_cover and self:getCoverItemsPerPage() or G_reader_settings:readSetting("items_per_page") or 10
+    end
+    local perpage = self.perpage
+    local is_perpage_changed = (tonumber(perpage) ~= self.list_per_page)
+    if is_perpage_changed then self.items_per_page = self.list_per_page end
 
-        -- data digest, used to detect page changes
-        local new_last_page_summary = tostring(first_item.hash) .. "_" .. tostring(perpage)
-        if not self.list_cover_per_page then self.list_cover_per_page = self:getCoverItemsPerPage() end
-        local is_perpage_changed = (tonumber(perpage) ~= self.list_cover_per_page)
-        local is_page_unchanged = (current_page == self._last_page) 
-        local is_summary_changed = (new_last_page_summary ~= self._last_page_summary)
+    if self.show_cover then
+        local ok, err = pcall(function()
+            if not self.item_table or self.items_max_lines then return end
 
-        if is_perpage_changed or (is_page_unchanged and is_summary_changed) then
-            self.items_per_page = self.list_cover_per_page
-            self:_recalculateDimen()
-            perpage = self.perpage
-            current_page = self.page
-            idx_offset = (current_page - 1) * perpage
-        end
+            local current_page = self.page
+            local idx_offset = (current_page - 1) * perpage
+            local first_item = self.item_table[idx_offset + 1]
+            if not (first_item and first_item.hash ) then return end
 
-        local cover_h = self.item_dimen.h - 2 * Size.line.medium 
-        local cover_w = math.floor(cover_h * 2 / 3)
-        self.state_w = cover_w + 8 * Size.padding.small 
+            -- data digest, used to detect page changes
+            local new_last_page_summary = tostring(first_item.hash) .. "_" .. tostring(perpage)
+            local is_page_unchanged = (current_page == self._last_page) 
+            local is_summary_changed = (new_last_page_summary ~= self._last_page_summary)
 
-        for idx = 1, perpage do
-            local item = self.item_table[idx_offset + idx]
-            if item then _updateItemsBuildUI(item, cover_w, cover_h) end
-        end
-
-        self._last_page = current_page
-        if new_last_page_summary ~= self._last_page_summary then
-            logger.info("[menucovers] Page change detected, restarting task...")
-            self._last_page_summary = new_last_page_summary
-            self._cover_channel = self._cover_channel or AsyncHelper:createChannel("Menu_Covers", 4)
-            self._cover_channel:clearTasks()
-
-            -- debounce
-            if self._debounce_timer_cancel then 
-                self._debounce_timer_cancel() 
-                logger.dbg("[menucovers] Previous publish schedule cancelled")
+            if is_page_unchanged and is_summary_changed then
+                self.items_per_page = self.list_per_page
+                self:_recalculateDimen()
+                perpage = self.perpage
+                current_page = self.page
+                idx_offset = (current_page - 1) * perpage
             end
 
-            if not NetworkMgr:isConnected() then return false end
-            
-            self._debounce_timer_cancel = AsyncHelper.delay(1, function()
-                self._debounce_timer_cancel = nil
-                if self.page ~= current_page then return end
+            local cover_h = self.item_dimen.h - 2 * Size.line.medium 
+            local cover_w = math.floor(cover_h * 2 / 3)
+            self.state_w = cover_w + 8 * Size.padding.small 
 
-                logger.dbg("[menucovers] Stopped, collecting covers...")
+            for idx = 1, perpage do
+                local item = self.item_table[idx_offset + idx]
+                if item and item.hash then 
+                   item._is_cover_loaded =  _updateItemsBuildUI(item, cover_w, cover_h) 
+                end
+            end
+
+            self._last_page = current_page
+            if new_last_page_summary ~= self._last_page_summary then
+                logger.info("[menucovers] Page change detected, restarting task...")
+                self._last_page_summary = new_last_page_summary
+                self._cover_channel = self._cover_channel or AsyncHelper:createChannel("Menu_Covers", 4)
+                self._cover_channel:clearTasks()
+
+                -- debounce
+                if self._debounce_timer_cancel then 
+                    self._debounce_timer_cancel() 
+                    logger.dbg("[menucovers] Previous publish schedule cancelled")
+                end
+
+                if not NetworkMgr:isConnected() then return false end
                 
-                local missing_covers = {}
-                for idx = 1, perpage do
-                    local item = self.item_table[idx_offset + idx]
-                    if item and item.cover and item.hash then
-                        if not item._is_cover_cached then
-                            table.insert(missing_covers, { item = item })
-                        end
-                    end
-                end
+                self._debounce_timer_cancel = AsyncHelper.delay(1, function()
+                    self._debounce_timer_cancel = nil
+                    if self.page ~= current_page then return end
 
-                if #missing_covers == 0 then 
-                    logger.dbg("[menucovers] all covers ready")
-                    return 
-                end
-
-                local cover_cache = Cache:new{ type="cover" }
-                self._cover_channel:executeBatch({
-                    items = missing_covers,
-                    task_func = downloadCover,
-                    max_retries = 2,
-                   get_task_args = function(req)
-                        return { req.item.cover, req.item.hash }
-                    end,
-                    on_item_end = function(idx, req, success)
-                        req = req or {}
-                        if success and req.item and req.item.hash then
-                            local cover_cache_path = cover_cache:get(req.item.hash)
-                            if cover_cache_path and type(self) == "table" and self.page == current_page then
-                                  logger.dbg(" [covermenu]page unchanged, callback refresh menu item:", req.item.hash)
-                                  UIManager:nextTick(function()
-                                        self:updateItems(nil, true)
-                                        UIManager:setDirty(self, "ui")
-                                   end)
+                    logger.dbg("[menucovers] Stopped, collecting covers...")
+                    
+                    local missing_covers = {}
+                    local added_hashes = {}
+                    for idx = 1, perpage do
+                        local item = self.item_table[idx_offset + idx]
+                        if item and item.cover and item.hash then
+                            if not (item._is_cover_loaded or added_hashes[item.hash])  then
+                                table.insert(missing_covers, { item = item })
+                                added_hashes[item.hash]  = true
                             end
                         end
-                        return false 
-                    end,
-                })
-            end)
-        end
-    end)
+                    end
 
-    if not ok then
-        logger.err("[menucovers] Cover preprocessing crashed:", tostring(err))
-        self.items_per_page = old_perpage
-        self:_recalculateDimen()
-        pcall(Menu.updateItems, self, select_number, no_recalculate_dimen)
-    else
-        return Menu.updateItems(self, select_number, no_recalculate_dimen)
+                    if #missing_covers == 0 then 
+                        logger.dbg("[menucovers] all covers ready")
+                        return 
+                    end
+
+                    local cover_cache = Cache:new{ type="cover" }
+                    self._cover_channel:executeBatch({
+                        items = missing_covers,
+                        task_func = downloadCover,
+                        max_retries = 2,
+                    get_task_args = function(req)
+                            return { req.item.cover, req.item.hash }
+                        end,
+                        on_item_end = function(idx, req, success)
+                            req = req or {}
+                            if success and req.item and req.item.hash then
+                                local cover_cache_path = cover_cache:get(req.item.hash)
+                                if cover_cache_path and type(self) == "table" and self.page == current_page then
+                                    logger.dbg(" [covermenu]page unchanged, callback refresh menu item:", req.item.hash)
+                                    UIManager:nextTick(function()
+                                            self:updateItems(nil, true)
+                                            UIManager:setDirty(self, "ui")
+                                    end)
+                                end
+                            end
+                            return false 
+                        end,
+                    })
+                end)
+            end
+        end)
+        if not ok then
+            logger.err("[menucovers] Error in cover update:", tostring(err))
+        end
     end
+    return Menu.updateItems(self, select_number, no_recalculate_dimen)
 end
 
 function M:onCloseWidget()
     if self._cover_channel then self._cover_channel:clearTasks() end
     self._last_page_summary = nil
     self._last_page = nil
-    self.list_cover_per_page = nil
+    self.list_per_page = nil
     Menu.onCloseWidget(self)
 end
 

@@ -96,18 +96,18 @@ function KVCache:insert(key, table_data)
     return true
 end
 
-function KVCache:get(key, cache_expiry)
+function KVCache:get(key, cache_expiry, skip_rm)
     if not self._cache or type(key) ~= "string" then return nil end
     local entry = self._cache:readSetting(key)
     if not entry or type(entry) ~= "table" or not entry._at then
-        if entry then self:remove(key) end
+        if entry and not skip_rm then self:remove(key) end
         return nil
     end
 
     local expiry = tonumber(cache_expiry) or DEF_TTL_CACHE_EXPIRY
     local diff = os.time() - entry._at
     if diff < 0 or (expiry > 0 and diff > expiry) then
-        self:remove(key)
+        if not skip_rm then self:remove(key) end
         return nil
     end
     return entry.data
@@ -155,7 +155,7 @@ function BookInfoCache:insert(book_hash, info_table)
     return true
 end
 
-function BookInfoCache:get(book_hash, cache_expiry)
+function BookInfoCache:get(book_hash, cache_expiry, skip_rm)
     if type(book_hash) ~= "string" then return nil end
     local path = self:getPath(book_hash)
     if not util.fileExists(path) then return nil end
@@ -163,7 +163,7 @@ function BookInfoCache:get(book_hash, cache_expiry)
     local book_cache = LuaSettings:open(path)
     local info = book_cache:readSetting("info")
     if not info then
-        book_cache:purge()
+        if not skip_rm then book_cache:purge() end
         return nil 
     end
 
@@ -171,7 +171,7 @@ function BookInfoCache:get(book_hash, cache_expiry)
     if type(cache_expiry) == "number" and _at then
         local diff = os.time() - _at
         if diff < 0 or (cache_expiry > 0 and diff > cache_expiry) then
-            book_cache:purge()
+            if not skip_rm then book_cache:purge() end
             return nil
         end
     end

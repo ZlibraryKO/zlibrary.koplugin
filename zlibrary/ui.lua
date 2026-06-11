@@ -493,6 +493,17 @@ function Ui.appendSearchResultsToMenu(menu_instance, new_menu_items)
 end
 
 function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
+    if not Config.getViewSettings().full_book_details then
+        local Cache = require("zlibrary.cache")
+        book.cover_path = Cache:new{ type="cover" }:get(book.hash)
+        local ZlibBookDialog = require("zlibrary.bookdetails_dialog")
+        return ZlibBookDialog.showBookDetails(Ui, parent_zlibrary, book, clear_cache_callback)
+    else
+        return Ui.showFullBookDetails(parent_zlibrary, book, clear_cache_callback)
+    end
+end
+
+function Ui.showFullBookDetails(parent_zlibrary, book, clear_cache_callback)
     
     local is_cache = (type(clear_cache_callback) == "function")
     -- Could not cache favorite IDs, hide favorite feature on init
@@ -1130,7 +1141,7 @@ function Ui.showAllTimeoutConfigDialog(parent_ui)
     _showAndTrackDialog(main_menu)
 end
 
-function Ui.showCommentsDialog(parent_zlibrary, book_comments)
+function Ui.showCommentsDialog(parent_zlibrary, book_comments, is_only_render)
     if not (type(book_comments) == "table" and book_comments[1]) then
         Ui.showErrorMessage(T("No comments to display"))
         return
@@ -1194,13 +1205,14 @@ function Ui.showCommentsDialog(parent_zlibrary, book_comments)
 
         return table.concat(html_parts, "\n")
     end
-    
+
+    local rendered_html = generateCommentsHTML(book_comments)
+    local COMMENTS_CSS = "@page { margin: 0; };body{padding-top:0;}.comment-node{margin-top:0.8em;margin-bottom:0.8em;}.comment-reply{border-left:2px solid #ccc;padding-left:1em;}.comment-inner{padding-bottom:0.8em;border-bottom:1px solid #e0e0e0;}.comment-header{font-weight:bold;margin-bottom:0.5em;color:#333;}.comment-body{margin-bottom:0.5em;line-height:1.4;word-break:break-word;}.comment-meta{font-size:0.85em;color:#666;font-style:italic;}"
+    if is_only_render then return rendered_html, COMMENTS_CSS  end
+
     local Device = require("device")
     local Screen = Device.screen
     local FootnoteWidget = require("ui/widget/footnotewidget")
-
-    local COMMENTS_CSS = "body{padding-top:20px;}.comment-node{margin-top:1.2em;margin-bottom:1.2em;}.comment-reply{border-left:2px solid #ccc;padding-left:1em;}.comment-inner{padding-bottom:1em;border-bottom:1px solid #e0e0e0;}.comment-header{font-weight:bold;margin-bottom:0.5em;color:#333;}.comment-body{margin-bottom:0.5em;line-height:1.4;word-break:break-word;}.comment-meta{font-size:0.85em;color:#666;font-style:italic;}"
-
     local original_getHeight = Screen.getHeight
     Device.screen.getHeight = function(self)
         return original_getHeight(self) * 2
@@ -1208,7 +1220,7 @@ function Ui.showCommentsDialog(parent_zlibrary, book_comments)
 
     local comments_popup
     comments_popup = FootnoteWidget:new{
-        html = generateCommentsHTML(book_comments),
+        html = rendered_html,
         css = COMMENTS_CSS,
         close_callback = function() 
             UIManager:close(comments_popup) 

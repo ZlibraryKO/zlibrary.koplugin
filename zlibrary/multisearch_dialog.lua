@@ -41,6 +41,7 @@ function SearchDialog:init()
     self.height = Screen:getHeight()
     self._position = self.def_position or 1
     self.books = self.books or {}
+    self.build_focus_layout = not Device:isTouchDevice() and Device:hasDPad() and Device:useDPadAsActionKeys()
 
     if type(self.on_select_book_callback) ~= "function" then
         logger.warn("MultiSearchDialog on_select_book_callback is undefined")
@@ -73,7 +74,7 @@ function SearchDialog:init()
     local frame_padding = Size.padding.default
     local frame_bordersize = Size.border.thin
     local frame_inner_width = self.width - 2 * frame_padding - 2 * frame_bordersize
-    local frame_inner_hight = self.height - 2 * frame_padding - 2 * frame_bordersize
+    local frame_inner_height = self.height - 2 * frame_padding - 2 * frame_bordersize
 
     local titlebar = TitleBar:new{
         title = self.title,
@@ -119,6 +120,7 @@ function SearchDialog:init()
             end
         }
     }
+    self.toggle_switch:setPosition(self._position)
 
     local filter_group = HorizontalGroup:new{
         dimen = Geom:new{
@@ -128,19 +130,40 @@ function SearchDialog:init()
         self.toggle_switch ,
         force_refresh_button
     }
-    self.toggle_switch:setPosition(self._position)
 
-    local titlebar_size = titlebar:getSize()
-    local filter_size = self.toggle_switch:getSize()
-    local menu_container_height = frame_inner_hight - titlebar_size.h - filter_size.h
-    self.menu_container = self:createMenuContainer(self.books, menu_container_height)
-    self.container_parent = VerticalGroup:new{
-        dimen = Geom:new{
-            w = frame_inner_width,
-            h = menu_container_height
-        },
-        self.menu_container
+    self.compound_title_bar = VerticalGroup:new{
+        align = "left",
+        titlebar,
+        filter_group,
+        _titlebar = titlebar,
+        _toggle = self.toggle_switch,
+        _refresh = force_refresh_button,
     }
+
+    function self.compound_title_bar:getHeight() return self:getSize().h end
+    function self.compound_title_bar:setTitle(...) end
+    function self.compound_title_bar:setSubTitle(...) end
+    function self.compound_title_bar:setLeftIcon(...) end
+
+    local dialog = self 
+    function self.compound_title_bar:generateVerticalLayout()
+        local layout = {}
+        -- 保留基础 Titlebar 的焦点注入（防止底层 Menu 强依赖报错）
+        if self._titlebar and self._titlebar.generateVerticalLayout then
+            local tb_layout = self._titlebar:generateVerticalLayout()
+            if tb_layout then
+                for _, row in ipairs(tb_layout) do
+                    table.insert(layout, row)
+                end
+            end
+        end
+        if dialog.build_focus_layout then
+            table.insert(layout, { self._toggle, self._refresh })
+        end
+        return layout
+    end
+
+    self.menu_container = self:createMenuContainer(self.books, frame_inner_height)
 
     local frame = FrameContainer:new{
         width = self.width,
@@ -149,12 +172,7 @@ function SearchDialog:init()
         bordersize = frame_bordersize,
         bordercolor = Blitbuffer.COLOR_BLACK,
         padding = frame_padding,
-        VerticalGroup:new{
-            align = "left",
-            titlebar,
-            filter_group,
-            self.container_parent
-        }
+        self.menu_container
     }
     self[1] = frame
 
@@ -167,7 +185,8 @@ function SearchDialog:init()
     self.menu_container.onGotoPage = function(menu_instance, page)
         self:onMenuGotoPage(menu_instance, page)
     end
-    if Device:hasKeys() then
+    
+    if self.build_focus_layout then
         self.menu_container.key_events.Close = nil
         self.menu_container.key_events.FocusRight = nil
         self.menu_container.key_events.Right = nil
@@ -181,7 +200,7 @@ end
 
 function SearchDialog:onKeyPress(key)
     if type(key) ~= "table" then return false end
-    if key["Right"] or key["Tab"] then
+    if key["Tab"] or (self.build_focus_layout and key["Right"]) then
         local position = self._position + 1
         if position > #self.toggle_items then position = 1 end
         self.toggle_switch:togglePosition(position, true)
@@ -310,7 +329,8 @@ function SearchDialog:createMenuContainer(books, height)
             height = height,
             item_table = menu_items,
             is_popout = false,
-            no_title = true,
+            no_title = false,
+            custom_title_bar = self.compound_title_bar,
             show_captions = true,
             is_borderless = true,
             multilines_show_more_text = true,
@@ -450,13 +470,26 @@ end
 
 function SearchDialog:setToggleTitle(position, title)
     local toggle_items_count = #self.toggle_items
-    if position > toggle_items_count or position < 1 then
-        return
-    end
+    if position > toggle_items_count or position < 1 then return end
     self.toggle_items[position].text = title or ""
-    -- -- static widget modification requires init
-    self:init()
-    UIManager:setDirty("all", "ui")
+    if self.toggle_switch then
+        local success = false
+       if self.toggle_switch.buttons and self.toggle_switch.buttons[position] then
+            local target_button = self.toggle_switch.buttons[position]
+            if type(target_button.setText) == "function" then
+                target_button:setText(title or "")
+                success = true
+            end
+        end
+        if success then
+            UIManager:setDirty(self.toggle_switch, "ui")
+        else
+            self:free()
+            self.menu_container = nil 
+            self:init()
+            UIManager:setDirty("all", "ui")
+        end
+    end
 end
 
 return SearchDialog

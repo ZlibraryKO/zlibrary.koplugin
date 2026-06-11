@@ -477,7 +477,19 @@ function Zlibrary:addToMainMenu(menu_items)
                                 }, {
                                     text = T("Browse Items/Page"),
                                     keep_menu_open = true,
+                                    separator = true,
                                     callback = Ui.createPerPageSettingCallback(T("Browse Items/Page"), "browse_per_page"),
+                                }, {
+                                     text = T("Fullscreen Book Details"),
+                                    keep_menu_open = true,
+                                    checked_func = function()
+                                        return Config.getViewSettings().full_book_details == true
+                                    end,
+                                    callback = function()
+                                        local opts = Config.getViewSettings()
+                                        opts.full_book_details = not opts.full_book_details
+                                        Config.setViewSettings(opts)
+                                    end,
                                 }},
                         }, {
                             text = T("Search options"),
@@ -1582,9 +1594,9 @@ function Zlibrary:downloadAndShowCover(book)
     Ui.showCoverDialog(book_title, cover_cache_path)
 end
 
-function Zlibrary:fetchAndDisplayComments(book, skip_cache)
+function Zlibrary:fetchAndDisplayComments(book, skip_cache, callback)
     if not (book and book.id and book.hash) then
-        Ui.showErrorMessage(T("Book ID is required"))
+        Ui.showErrorMessage(T("Book ID is required."))
         return
     end
     
@@ -1593,7 +1605,11 @@ function Zlibrary:fetchAndDisplayComments(book, skip_cache)
     if not skip_cache then
         local book_comments_cache = book_cache:get(comments_key, 604800)
         if type(book_comments_cache) == "table" and book_comments_cache[1] then
-            Ui.showCommentsDialog(self, book_comments_cache)
+            if not callback then
+                Ui.showCommentsDialog(self, book_comments_cache)
+            else
+                callback(Ui.showCommentsDialog(self, book_comments_cache, true))
+            end
             return
         end
     end
@@ -1603,8 +1619,12 @@ function Zlibrary:fetchAndDisplayComments(book, skip_cache)
     end
 
     local on_success = function(ui_self, api_result, plugin_self)
-        Ui.showCommentsDialog(self, api_result.comments)
         book_cache:insert(comments_key, api_result.comments)
+        if not callback then
+            Ui.showCommentsDialog(self, api_result.comments)
+        else
+            callback(Ui.showCommentsDialog(self, api_result.comments, true))
+        end
     end
 
     self:_requestDispatcher({

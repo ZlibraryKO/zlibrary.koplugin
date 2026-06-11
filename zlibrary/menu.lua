@@ -5,16 +5,17 @@ local CenterContainer = require("ui/widget/container/centercontainer")
 local FrameContainer = require("ui/widget/container/framecontainer")
 local TextBoxWidget = require("ui/widget/textboxwidget")
 local ImageWidget = require("ui/widget/imagewidget")
-local AsyncHelper = require("zlibrary.async_helper")
-local Api = require("zlibrary.api")
 local util = require("util")
-local RenderImage = require("ui/renderimage")
 local UIManager = require("ui/uimanager") 
 local Geom = require("ui/geometry")
 local Size = require("ui/size")
-local Cache = require("zlibrary.cache")
 local logger = require("logger")
 local Menu = require("ui/widget/menu")
+local PreLoader = require("zlibrary.preloader").Preloader
+local PreHelper = require("zlibrary.preloader").helper
+local AsyncHelper = require("zlibrary.async_helper")
+local Api = require("zlibrary.api")
+local Cache = require("zlibrary.cache")
 
 local M = Menu:extend{
     _cover_channel = nil,
@@ -35,29 +36,6 @@ end
 function M:init()
     self._is_closed = false
     Menu.init(self)
-end
-local function downloadCover(url, book_hash)
-    if type(url) ~= "string" or type(book_hash) ~= "string" then return false end
-    local cover_cache = Cache:new{ type="cover" }
-    local cache_path = cover_cache:get(book_hash)
-    if cache_path then return true end
-    local temp_path = cover_cache:getTempPath(book_hash)
-    util.removeFile(temp_path)
-    local res = Api.downloadBookCover(url, temp_path)
-    if not res or res.error or not res.success then
-        util.removeFile(temp_path)
-        -- if return false, retry
-        return false
-    end
-    local ok, cover_bb = pcall(RenderImage.renderImageFile, RenderImage, temp_path, false, nil, nil)
-    if not ok or not cover_bb then
-        logger.err("[downloadCover] Image rendering failed or corrupted, deleted:", url)
-        util.removeFile(temp_path)
-        return false
-    end
-    if cover_bb.free then cover_bb:free() end
-    cover_cache:insert(book_hash, temp_path)
-    return true
 end
 
 local function _updateItemsBuildUI(item, cover_w, cover_h)
@@ -159,6 +137,9 @@ function M:_updateCoverItems(select_number, no_recalculate_dimen)
                     added_hashes[item.hash] = true
                 end
             end
+            if item and item.book_id and item.hash then
+                PreLoader.getBookDetails(item.book_id, item.hash)
+            end
         end
 
         if #missing_covers == 0 then
@@ -169,7 +150,7 @@ function M:_updateCoverItems(select_number, no_recalculate_dimen)
         local cover_cache = Cache:new{ type = "cover" }
         self._cover_channel:executeBatch({
             items = missing_covers,
-            task_func = downloadCover,
+            task_func = PreHelper.downloadCover,
             max_retries = 2,
             get_task_args = function(req)
                 return {req.item.cover, req.item.hash}

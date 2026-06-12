@@ -23,7 +23,7 @@ local GestureRange = require("ui/gesturerange")
 local logger = require("logger")
 local util = require("util")
 local T = require("zlibrary.gettext")
-
+local Cache = require("zlibrary.cache")
 
 local function applyRoundedCorners(frame_widget, border_size)
     local r = math.floor(Screen:scaleBySize(6))
@@ -90,14 +90,11 @@ local function restore_dimen(w, saved_y)
     end
 end
 
--- 为什么不在父容器实现？因为ButtonDialog会全屏阻止
 local function makeClickable(content_widget, callback)
     local container = InputContainer:new{
         ges_events = {TapCustom = { GestureRange:new{ ges = "tap" } }}, 
         content_widget 
     }
-    -- TODO: 去掉移动函数shift_dimen_up, restore_dimen 使用getRefreshRegion来实现
-    -- TODO：如果被包装的内容有自定义刷新范围，透传给点击容器
     if content_widget.getRefreshRegion then
         container.getRefreshRegion = function(self) return content_widget:getRefreshRegion() end
     end
@@ -116,6 +113,7 @@ local BookDetailsDialog = InputContainer:extend{
     title = nil,
     title_align = "center",
     view_state = "menu",
+    _is_closed = nil,
 }
 
 function BookDetailsDialog:init()
@@ -135,8 +133,8 @@ function BookDetailsDialog:init()
     }
     self:_buildInnerDialog()
     if not self.has_favorite_ids_cache then 
-        self.parent_zlibrary:validateFavoriteBookIds(function(precheck_ok)
-            if precheck_ok and UIManager:isWidgetShown(self) then
+        self.parent_zlibrary.preLoader.getFavoriteBookIds(function(precheck_ok)
+            if precheck_ok == true and UIManager:isWidgetShown(self) then
                 self:switchState(self.view_state)
             end
         end)
@@ -257,7 +255,7 @@ function BookDetailsDialog:_buildContent()
     local content_group = VerticalGroup:new{ not_focusable = true, header_widget }
 
     if self.view_state == "description" and self.book.description and self.book.description ~= "" then
-        table.insert(content_group, self:_buildHtmlSection("  简介  ", self.book.description))
+        table.insert(content_group, self:_buildHtmlSection(string.format("  %s  ", T("Profile")), self.book.description))
     elseif self.view_state == "comments" and self.book.comments_html and self.book.comments_html ~= "" then
         table.insert(content_group, self:_buildHtmlSection(string.format("  %s  ", T("Comments")), self.book.comments_html, self.book.comments_css))
     end
@@ -335,13 +333,23 @@ function BookDetailsDialog:_generateMetaLines()
     if self.book.lang and self.book.lang ~= "N/A" then 
         table.insert(tech_parts, self.book.lang) 
     end
+    if self.book.rating and self.book.rating ~= "N/A" then
+        local rating_num = tonumber(self.book.rating)
+        if rating_num then
+            self.book.rating = string.format("%.1f", rating_num)
+            table.insert(tech_parts, self.book.rating)
+        end
+    end
     if #tech_parts > 0 then table.insert(meta_lines, table.concat(tech_parts, " | ")) end
 
     return meta_lines
 end
 
 function BookDetailsDialog:_buildCoverComponent()
-    local cached_cover_path = self.book.cover_path
+    local book_hash = self.book.hash
+    local cover_url = self.book.cover
+    local cover_cache = Cache:new{ type="cover" }
+    local cached_cover_path = cover_cache:get(book_hash)
     local cover_inner_widget
     if cached_cover_path and util.fileExists(cached_cover_path) then
         cover_inner_widget = ImageWidget:new{
@@ -350,8 +358,17 @@ function BookDetailsDialog:_buildCoverComponent()
     else
         cover_inner_widget = CenterContainer:new{
             dimen = Geom:new{ w = self.cover_max_w, h = self.cover_max_h },
-            TextWidget:new{ text = "\u{F03E}\n\n" .. T("Cover"), face = self.fonts.cover, align = "center", fgcolor = Blitbuffer.COLOR_DARK_GRAY }
+            TextWidget:new{ text = "\u{23F3}\n\n" .. T("Cover"), face = self.fonts.cover, align = "center", fgcolor = Blitbuffer.COLOR_DARK_GRAY }
         }
+
+        local preLoader = self.parent_zlibrary and self.parent_zlibrary.preLoader
+        if preLoader and preLoader.getBookCover and cover_url and cover_url ~= "" and book_hash then
+             preLoader.getBookCover(cover_url, book_hash, function(is_cached)
+                    if is_cached == true and self._is_closed ~= true then
+                        self:refreshCoverImage(cover_cache:get(book_hash))
+                    end
+            end)
+        end
     end
     local backgrounds = {
         Blitbuffer.COLOR_LIGHT_GRAY,
@@ -378,12 +395,9 @@ function BookDetailsDialog:_applyCoverPaintShadow(cover_component)
         shift_dimen_up(widget, offset, saved_y)
         local target_y = y and (y - offset) or nil
 
-        -- 直接使用判空来保证安全，不要用 pcall
         if widget.dimen and x and target_y then
             local w, h = widget.dimen.w, widget.dimen.h
-            -- 画右侧阴影
             bb:paintRect(x + w, target_y + shadow_thickness, shadow_thickness, h - shadow_thickness, shadow_color)
-            -- 画底部阴影
             bb:paintRect(x + shadow_thickness, target_y + h, w, shadow_thickness, shadow_color)
         end
         
@@ -419,24 +433,24 @@ function BookDetailsDialog:_buildButtons()
     if self.book.format and self.book.format ~= "N/A" then
         if self.book.download then
             table.insert(dialog_buttons, {{
-                text = "\u{F019C}  " .. string.format("%s (%s)", T("Download"), self.book.format:upper()), align = "left",
+                text = "\u{F019}  " .. string.format("%s (%s)", T("Download"), self.book.format:upper()), align = "left",
                 callback = function() self:onDownloadClick() end
             }})
         else
             table.insert(dialog_buttons, {{
-                text = "\u{F019C}  " .. string.format("%s: %s (Not available)", T("Format"), self.book.format:upper()),
+                text = "\u{F019}  " .. string.format("%s: %s (Not available)", T("Format"), self.book.format:upper()),
                 align = "left", enabled = false
             }})
         end
     elseif self.book.download then
         table.insert(dialog_buttons, {{
-            text = "\u{F019C}  " .. T("Download book"), align = "left",
+            text = "\u{F019}  " .. T("Download book"), align = "left",
             callback = function() self:onDownloadClick() end 
         }})
     end
 
     table.insert(dialog_buttons, {{
-        text = "\u{F02FD}  " .. T("Book description"), align = "left",
+        text = "\u{F02D}  " .. T("Profile"), align = "left",
         callback = function() 
             if self.book.description and self.book.description ~= "" then
                     self:switchState("description")
@@ -506,8 +520,6 @@ function BookDetailsDialog:switchState(new_state, is_new)
         end
     end
     self:free()
-
-    -- 解除旧对象的引用，防止被重新调用或造成内存泄漏
     self.inner_dialog = nil
     self.scrollable_html = nil
     self.cover_frame = nil
@@ -552,7 +564,7 @@ function BookDetailsDialog:_generateFavoriteButtonDef(in_favorites)
 end
 
 function BookDetailsDialog:refreshCoverImage(new_image_path)
-    if not new_image_path or not util.fileExists(new_image_path) then return end
+    if not (new_image_path and util.fileExists(new_image_path)) then return end
     if self.cover_frame then
         local new_cover_widget = ImageWidget:new{
             file = new_image_path, width = self.cover_max_w, height = self.cover_max_h, scale_factor = 0, file_do_cache = true, alpha = false
@@ -568,6 +580,7 @@ function BookDetailsDialog:refreshCoverImage(new_image_path)
 end
 
 function BookDetailsDialog:onCloseWidget()
+    self._is_closed = true
     if self.inner_dialog and type(self.inner_dialog.onCloseWidget) == "function" then
         self.inner_dialog:onCloseWidget()
     end
@@ -603,7 +616,6 @@ function BookDetailsDialog:_sanitizeBookData(raw)
     book.publisher = type(raw.publisher) == "string" and raw.publisher or ""
     book.series = type(raw.series) == "string" and raw.series or ""
     book.description = type(raw.description) == "string" and raw.description or ""
-    book.cover_path = type(raw.cover_path) == "string" and raw.cover_path or nil
     book.cover = type(raw.cover) == "string" and raw.cover or nil
     book.pages = tonumber(raw.pages) or 0
     book.download = raw.download
@@ -614,6 +626,8 @@ function BookDetailsDialog:_sanitizeBookData(raw)
     book.format = type(raw.format) == "string" and raw.format:upper() or "N/A"
     book.size = type(raw.size) == "string" and raw.size or "N/A"
     book.lang = type(raw.lang) == "string" and raw.lang or "N/A"
+    book.rating = type(raw.rating) == "string" and raw.rating or "N/A"
+    book.filesize = raw.filesize
     return book
 end
 

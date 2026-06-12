@@ -1,10 +1,11 @@
+local RenderImage = require("ui/renderimage")
+local NetworkMgr = require("ui/network/manager")
+local util = require("util")
+local logger = require("logger")
 local Config = require("zlibrary.config")
 local Api = require("zlibrary.api")
 local Cache = require("zlibrary.cache")
 local AsyncHelper = require("zlibrary.async_helper")
-local RenderImage = require("ui/renderimage")
-local util = require("util")
-local logger = require("logger")
 
 local ApiHelper = {}
 function ApiHelper.fetchWithAuth(api_method, ...)
@@ -51,6 +52,8 @@ function  ApiHelper.cacheBookDetails(book_id, book_hash)
                  if type(res) == "table" and type(res.book) == "table" then
                         book_cache:insert(book_hash, res.book)
                         return true
+                 else
+                        return false
                  end
         end
 end
@@ -83,6 +86,7 @@ function  Preloader.getFavoriteBookIds(callback)
         if type(cached_ids) == "table" and next(cached_ids) then
                 if has_callback then callback(true) end
         else
+                if not NetworkMgr:isConnected() then return has_callback and callback(false) end
                 local task = function()
                         return ApiHelper.fetchWithAuth(Api.getFavoriteBookIds)
                 end
@@ -102,23 +106,11 @@ function  Preloader.getFavoriteBookIds(callback)
 end
 function  Preloader.getBookDetails(book_id, book_hash, callback)
         local has_callback = type(callback) == "function"
-        local book_cache = Cache:new{ type="bookinfo" }
-        local book_details_cache = book_cache:get(book_hash, 604800)
-        if type(book_details_cache) == "table" and book_details_cache.title then
-                if has_callback then callback(true) end
-        else
-                local task = function()
-                        return ApiHelper.fetchWithAuth(Api.getBookDetails, book_id, book_hash)
-                end
-                Preloader.channel:pushTask(task, function(success, res)
-                        local is_ok = false
-                        if type(res) == "table" and type(res.book) == "table" then
-                                book_cache:insert(book_hash, res.book)
-                                is_ok = true
-                        end
-                        if has_callback then callback(is_ok) end
-                end)
-        end
+        if not NetworkMgr:isConnected() then return has_callback and callback(false) end
+        local task = function() return ApiHelper.cacheBookDetails(book_id, book_hash) end
+        Preloader.channel:pushTask(task, function(success, res)
+                if has_callback then callback(success and res ==true) end 
+        end)
 end
 function  Preloader.getBookComments(book_id, book_hash, callback)
         local has_callback = type(callback) == "function"
@@ -128,6 +120,7 @@ function  Preloader.getBookComments(book_id, book_hash, callback)
         if type(book_comments_cache) == "table" then
                 if has_callback then callback(true) end
         else
+                if not NetworkMgr:isConnected() then return has_callback and callback(false) end
                 local task = function()
                         return Api.getBookComments(book_id, book_hash)
                 end
@@ -149,6 +142,7 @@ function  Preloader.getMostPopularBooks(callback)
         if type(has_cache) == "table" then
                 if has_callback then callback(true) end
         else
+                if not NetworkMgr:isConnected() then return has_callback and callback(false) end
                 local task = function()
                         return Api.getMostPopularBooks()
                 end
@@ -170,6 +164,7 @@ function  Preloader.getRecommendedBooks(callback)
         if type(has_cache) == "table" then
                 if has_callback then callback(true) end
         else
+                if not NetworkMgr:isConnected() then return has_callback and callback(false) end
                 local task = function()
                         return Api.getRecommendedBooks()
                 end
@@ -183,5 +178,13 @@ function  Preloader.getRecommendedBooks(callback)
                 end)
         end
 end
+function  Preloader.getBookCover(url, book_hash, callback)
+        local has_callback = type(callback) == "function"
+        if not NetworkMgr:isConnected() then return has_callback and callback(false) end
+        local task = function() return ApiHelper.downloadCover(url, book_hash) end
+        Preloader.channel:pushTask(task, function(success, res)
+                if has_callback then callback(success and res ==true) end 
+        end)
+end
 
-return {Preloader=Preloader, helper=ApiHelper}
+return {Preloader=Preloader, helper =ApiHelper}

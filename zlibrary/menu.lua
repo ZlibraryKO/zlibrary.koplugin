@@ -36,6 +36,9 @@ end
 function M:init()
     self._is_closed = false
     Menu.init(self)
+    if self.show_cover then
+        PreLoader.getFavoriteBookIds()
+    end
 end
 
 local function _updateItemsBuildUI(item, cover_w, cover_h)
@@ -113,7 +116,7 @@ function M:_updateCoverItems(select_number, no_recalculate_dimen)
     logger.info("[menucovers] Page change detected, restarting task...")
     self._last_page_summary = new_last_page_summary
     self._cover_channel = self._cover_channel or AsyncHelper:createChannel("Menu_Covers", 4)
-    self._cover_channel:clearTasks()
+    self:_clearTasks()
     -- debounce
     if self._debounce_timer_cancel then
         self._debounce_timer_cancel()
@@ -139,6 +142,7 @@ function M:_updateCoverItems(select_number, no_recalculate_dimen)
             end
             if item and item.book_id and item.hash then
                 PreLoader.getBookDetails(item.book_id, item.hash)
+                PreLoader.getBookComments(item.book_id, item.hash)
             end
         end
 
@@ -153,7 +157,7 @@ function M:_updateCoverItems(select_number, no_recalculate_dimen)
             task_func = PreHelper.downloadCover,
             max_retries = 2,
             get_task_args = function(req)
-                return {req.item.cover, req.item.hash}
+                return {req.item.cover, req.item.hash, true}
             end,
             on_item_end = function(idx, req, success)
                 if self._is_closed or self.page ~= current_page then return false end
@@ -191,8 +195,13 @@ function M:updateItems(select_number, no_recalculate_dimen)
     return Menu.updateItems(self, select_number, no_recalculate_dimen)
 end
 
-function M:onCloseWidget()
+function M:_clearTasks()
     if self._cover_channel then self._cover_channel:clearTasks() end
+    if PreLoader and PreLoader.channel then PreLoader.channel:clearTasks() end
+end
+
+function M:onCloseWidget()
+    self:_clearTasks()
     self._last_page_summary = nil
     self._is_closed = true
     self.list_per_page = nil

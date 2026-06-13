@@ -811,8 +811,6 @@ function Ui.showTimeoutConfigDialog(parent_ui, timeout_name, timeout_key, getter
         end
     })
     
-
-    
     dialog_menu = Menu:new{
         title = string.format(T("%s Timeout Settings"), timeout_name),
         subtitle = Config.formatTimeoutForDisplay(current_timeout),
@@ -966,105 +964,6 @@ function Ui.showAllTimeoutConfigDialog(parent_ui)
         title_bar_fm_style = true,
     }
     _showAndTrackDialog(main_menu)
-end
-
-function Ui.showCommentsDialog(parent_zlibrary, book_comments, is_only_render)
-    if not (type(book_comments) == "table" and book_comments[1]) then
-        Ui.showErrorMessage(T("No comments to display"))
-        return
-    end
-
-    local function generateCommentsHTML(comments)
-        local html_parts = {}
-        local roots = {}
-        local children = {}
-
-        -- comments are in reverse order
-        for i = #comments, 1, -1 do
-            local comment = comments[i]
-            local pid = comment.parent_id
-            if pid and pid ~= "" and pid ~= 0 then
-                if not children[pid] then children[pid] = {} end
-                table.insert(children[pid], comment)
-            else
-                table.insert(roots, comment)
-            end
-        end
-
-        -- Flatten if parent_id exists but root node not found
-        if #roots == 0 and #comments > 0 then
-            roots = comments
-        end
-
-        local function renderComment(comment, depth)
-            local user = comment.user or {}
-            local user_name = user.name or "Anonymous"
-            local is_premium = user.isPremium and "⭐" or ""
-            local date_str = comment.dateRelative or comment.date or ""
-            local text = comment.text or ""
-
-            local inline_style = depth > 0 and string.format(' style="margin-left: %sem;"', depth * 1.5) or ""
-            local reply_class = depth > 0 and " comment-reply" or ""
-
-            local comment_html = string.format([[
-            <div class="comment-node%s"%s>
-                <div class="comment-inner">
-                    <div class="comment-header">%s <span>%s</span></div>
-                    <div class="comment-body">%s</div>
-                    <div class="comment-meta">%s</div>
-                </div>
-            </div>
-            ]], reply_class, inline_style, user_name, is_premium, text, date_str)
-
-            table.insert(html_parts, comment_html)
-
-            local child_comments = children[comment.id]
-            if child_comments then
-                for _, child in ipairs(child_comments) do
-                    renderComment(child, depth + 1)
-                end
-            end
-        end
-
-        for _, root_comment in ipairs(roots) do
-            renderComment(root_comment, 0)
-        end
-
-        return table.concat(html_parts, "\n")
-    end
-
-    local rendered_html = generateCommentsHTML(book_comments)
-    local COMMENTS_CSS = "@page { margin: 0; };body{padding-top:0;}.comment-node{margin-top:0.8em;margin-bottom:0.8em;}.comment-reply{border-left:2px solid #ccc;padding-left:1em;}.comment-inner{padding-bottom:0.8em;border-bottom:1px solid #e0e0e0;}.comment-header{font-weight:bold;margin-bottom:0.5em;color:#333;}.comment-body{margin-bottom:0.5em;line-height:1.4;word-break:break-word;}.comment-meta{font-size:0.85em;color:#666;font-style:italic;}"
-    if is_only_render then return rendered_html, COMMENTS_CSS  end
-
-    local Device = require("device")
-    local Screen = Device.screen
-    local FootnoteWidget = require("ui/widget/footnotewidget")
-    local original_getHeight = Screen.getHeight
-    Device.screen.getHeight = function(self)
-        return original_getHeight(self) * 2
-    end
-
-    local comments_popup
-    comments_popup = FootnoteWidget:new{
-        html = rendered_html,
-        css = COMMENTS_CSS,
-        close_callback = function() 
-            UIManager:close(comments_popup) 
-        end,
-        dialog = UIManager:getTopmostVisibleWidget(),
-        doc_margins = {
-            left = Screen:scaleBySize(20),
-            right = Screen:scaleBySize(20),
-            top = Screen:scaleBySize(20),
-            bottom = Screen:scaleBySize(20),
-        },
-        doc_font_size = Screen:scaleBySize(23),
-        covers_footer = false,
-    }
-    
-    Device.screen.getHeight = original_getHeight 
-    _showAndTrackDialog(comments_popup)
 end
 
 function Ui.showUrlCheckProgress(parent_zlibrary, menu_items, close_callback)

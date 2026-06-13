@@ -69,27 +69,6 @@ local function applyRoundedCorners(frame_widget, border_size)
     end
 end
 
-local function shift_dimen_up(w, offset, saved_y)
-    if type(w) ~= "table" then return end
-    if w.dimen and w.dimen.y then
-        saved_y[w] = w.dimen.y
-        w.dimen.y = saved_y[w] - offset
-    end
-    for i = 1, #w do 
-        shift_dimen_up(w[i], offset, saved_y) 
-    end
-end
-
-local function restore_dimen(w, saved_y)
-    if type(w) ~= "table" then return end
-    if w.dimen and w.dimen.y and saved_y[w] then 
-        w.dimen.y = saved_y[w] 
-    end
-    for i = 1, #w do 
-        restore_dimen(w[i], saved_y) 
-    end
-end
-
 local function makeClickable(content_widget, callback)
     local container = InputContainer:new{
         ges_events = {TapCustom = { GestureRange:new{ ges = "tap" } }}, 
@@ -100,8 +79,8 @@ local function makeClickable(content_widget, callback)
     end
     function container:onTapCustom(_, ges)
        local target_dimen = self.dimen or (self[1] and self[1].dimen)
-        local hit_box = self.getRefreshRegion and self:getRefreshRegion() or target_dimen
-        if hit_box and ges and ges.pos and hit_box:contains(ges.pos) then
+        local hit_box = (type(self.getRefreshRegion) == "function" and self:getRefreshRegion()) or target_dimen
+        if hit_box and hit_box.contains and ges and ges.pos and hit_box:contains(ges.pos) then
             return callback(self, ges)
         end
         return false 
@@ -119,6 +98,7 @@ local BookDetailsDialog = InputContainer:extend{
 function BookDetailsDialog:init()
     self.book = self:_sanitizeBookData(self.raw_book or {})
     self.raw_book = nil
+    self._is_closed = nil
     self.is_cache = (type(self.clear_cache_callback) == "function")
     self.has_favorite_ids_cache = self.parent_zlibrary:isBookInFavorites()
     self.full_title = util.htmlEntitiesToUtf8(self.book.title)
@@ -162,7 +142,6 @@ function BookDetailsDialog:_buildInnerDialog()
     end
     self[1] = self.inner_dialog
 end
-
 
 function BookDetailsDialog:_calculateDimensions()
     self.border = Size.border.thin
@@ -254,9 +233,9 @@ function BookDetailsDialog:_buildContent()
 
     local content_group = VerticalGroup:new{ not_focusable = true, header_widget }
 
-    if self.view_state == "description" and self.book.description and self.book.description ~= "" then
+    if self.view_state == "description" and self.book.description  then
         table.insert(content_group, self:_buildHtmlSection(string.format("  %s  ", T("Profile")), self.book.description))
-    elseif self.view_state == "comments" and self.book.comments_html and self.book.comments_html ~= "" then
+    elseif self.view_state == "comments" and self.book.comments_html  then
         table.insert(content_group, self:_buildHtmlSection(string.format("  %s  ", T("Comments")), self.book.comments_html, self.book.comments_css))
     end
 
@@ -273,9 +252,9 @@ function BookDetailsDialog:_buildHtmlSection(divider_text, raw_html, css)
         a { text-decoration: none; }
         img, iframe { display: none !important; }
     ]]
-    if self.view_state == "comments" then
-      engine_css = css
-    end 
+    if self.view_state == "comments" and type(css) == "string" and css ~= "" then
+        engine_css = css
+    end
     local safe_h = math.floor(math.max(Screen:getHeight() - self.framed_h - Screen:scaleBySize(520), Screen:scaleBySize(200)))
     self.scrollable_html = ScrollHtmlWidget:new{ 
         html_body = clean_html, 
@@ -321,8 +300,8 @@ function BookDetailsDialog:_generateMetaLines()
         table.insert(meta_lines, util.htmlEntitiesToUtf8(self.book.series)) 
     end
     local tech_parts = {}
-    if self.book.format and self.book.format ~= "N/A" then 
-        table.insert(tech_parts, self.book.format:upper()) 
+    if self.book.lang and self.book.lang ~= "N/A" then 
+        table.insert(tech_parts, self.book.lang) 
     end
     if self.book.size and self.book.size ~= "N/A" then 
         table.insert(tech_parts, self.book.size) 
@@ -330,15 +309,15 @@ function BookDetailsDialog:_generateMetaLines()
     if self.book.pages and self.book.pages ~= 0 then
         table.insert(tech_parts, self.book.pages .. " " .. T("pages"))
     end
-    if self.book.lang and self.book.lang ~= "N/A" then 
-        table.insert(tech_parts, self.book.lang) 
-    end
     if self.book.rating and self.book.rating ~= "N/A" then
         local rating_num = tonumber(self.book.rating)
         if rating_num then
             self.book.rating = string.format("%.1f", rating_num)
             table.insert(tech_parts, self.book.rating)
         end
+    end
+    if self.book.format and self.book.format ~= "N/A" then 
+        table.insert(tech_parts, self.book.format:upper()) 
     end
     if #tech_parts > 0 then table.insert(meta_lines, table.concat(tech_parts, " | ")) end
 
@@ -389,20 +368,14 @@ function BookDetailsDialog:_applyCoverPaintShadow(cover_component)
     local offset = self.pop_out_offset
     local shadow_thickness = math.floor(Screen:scaleBySize(5))
     local shadow_color = Blitbuffer.COLOR_GRAY_D
-
     cover_component.paintTo = function(widget, bb, x, y)
-        local saved_y = {}
-        shift_dimen_up(widget, offset, saved_y)
         local target_y = y and (y - offset) or nil
-
         if widget.dimen and x and target_y then
             local w, h = widget.dimen.w, widget.dimen.h
             bb:paintRect(x + w, target_y + shadow_thickness, shadow_thickness, h - shadow_thickness, shadow_color)
             bb:paintRect(x + shadow_thickness, target_y + h, w, shadow_thickness, shadow_color)
         end
-        
         orig_cover_paintTo(widget, bb, x, target_y)
-        restore_dimen(widget, saved_y)
     end
 end
 
@@ -451,27 +424,18 @@ function BookDetailsDialog:_buildButtons()
 
     table.insert(dialog_buttons, {{
         text = "\u{F02D}  " .. T("Profile"), align = "left",
-        callback = function() 
-            if self.book.description and self.book.description ~= "" then
-                    self:switchState("description")
-            else
-                self.Ui_module.showSimpleMessageDialog(T("Notice"), T("No description available."))
-            end 
-        end
+        callback = function() self:switchState("description") end
     }})
 
     table.insert(dialog_buttons, {{
         text = "\u{F0E5}  " .. T("Comments"), align = "left",
         callback = function()
             if type(self.parent_zlibrary.fetchAndDisplayComments) == "function" then
-                self.parent_zlibrary:fetchAndDisplayComments(self.book, false, function(comments_html, css)
-                    if comments_html and comments_html ~= "" then
-                        self.book.comments_html = comments_html
-                        self.book.comments_css= css
-                        self:switchState("comments")
-                    else
-                        self.Ui_module.showSimpleMessageDialog(T("Notice"), T("No comments available."))
-                    end
+                self.parent_zlibrary:fetchAndDisplayComments(self.book, false, function(book_comments)
+                    local comments_html, css = self:_renderComments(book_comments)
+                    self.book.comments_html = comments_html
+                    self.book.comments_css= css
+                    self:switchState("comments")
                 end)
             end
         end
@@ -518,17 +482,25 @@ function BookDetailsDialog:switchState(new_state, is_new)
         if type(self.inner_dialog.onCloseWidget) == "function" then
             self.inner_dialog:onCloseWidget()
         end
+        if type(self.inner_dialog.free) == "function" then
+            self.inner_dialog:free()
+        end
     end
-    self:free()
+    -- self:free()
+    self[1] = nil
     self.inner_dialog = nil
     self.scrollable_html = nil
     self.cover_frame = nil
     self:_buildInnerDialog()
   -- UIManager:setDirty("all", "flashui")
-   UIManager:setDirty("all", function()
-        local refresh_dimen = orig_dimen and orig_dimen:combine(self:getRefreshRegion())
+  UIManager:setDirty("all", function()
+        local current_region = self:getRefreshRegion()
+        local refresh_dimen = current_region
+        if orig_dimen and type(orig_dimen.combine) == "function" then
+            refresh_dimen = orig_dimen:combine(current_region)
+        end
         return "ui", refresh_dimen
-   end)
+    end)
 end
 
 function BookDetailsDialog:_generateFavoriteButtonDef(in_favorites)
@@ -579,16 +551,6 @@ function BookDetailsDialog:refreshCoverImage(new_image_path)
     end
 end
 
-function BookDetailsDialog:onCloseWidget()
-    self._is_closed = true
-    if self.inner_dialog and type(self.inner_dialog.onCloseWidget) == "function" then
-        self.inner_dialog:onCloseWidget()
-    end
-    UIManager:setDirty(self.inner_dialog, function()
-        return "flashui", self:getRefreshRegion()
-   end)
-end
-
 function BookDetailsDialog:getRefreshRegion()
     local inner = self.inner_dialog or self[1]
     if inner then
@@ -607,6 +569,71 @@ function BookDetailsDialog:getRefreshRegion()
     return self.dimen
 end
 
+function BookDetailsDialog:_renderComments(book_comments)
+    if not (type(book_comments) == "table" and type(book_comments[1]) == "table") then 
+        return T("No Comments"), "@page { margin: 0; }"
+    end
+    local function generateCommentsHTML(comments)
+        local html_parts = {}
+        local roots = {}
+        local children = {}
+
+        -- comments are in reverse order
+        for i = #comments, 1, -1 do
+            local comment = comments[i]
+            local pid = comment.parent_id
+            if pid and pid ~= "" and pid ~= 0 then
+                if not children[pid] then children[pid] = {} end
+                table.insert(children[pid], comment)
+            else
+                table.insert(roots, comment)
+            end
+        end
+
+        -- Flatten if parent_id exists but root node not found
+        if #roots == 0 and #comments > 0 then roots = comments end
+
+        local function renderComment(comment, depth)
+            local user = comment.user or {}
+            local user_name = user.name or "Anonymous"
+            local is_premium = user.isPremium and "⭐" or ""
+            local date_str = comment.dateRelative or comment.date or ""
+            local text = comment.text or ""
+
+            local inline_style = depth > 0 and string.format(' style="margin-left: %sem;"', depth * 1.5) or ""
+            local reply_class = depth > 0 and " comment-reply" or ""
+
+            local comment_html = string.format([[
+            <div class="comment-node%s"%s>
+                <div class="comment-inner">
+                    <div class="comment-header">%s <span>%s</span></div>
+                    <div class="comment-body">%s</div>
+                    <div class="comment-meta">%s</div>
+                </div>
+            </div>
+            ]], reply_class, inline_style, user_name, is_premium, text, date_str)
+
+            table.insert(html_parts, comment_html)
+
+            local child_comments = children[comment.id]
+            if child_comments then
+                for _, child in ipairs(child_comments) do
+                    renderComment(child, depth + 1)
+                end
+            end
+        end
+
+        for _, root_comment in ipairs(roots) do
+            renderComment(root_comment, 0)
+        end
+        return table.concat(html_parts, "\n")
+    end
+
+    local rendered_html = generateCommentsHTML(book_comments)
+    local COMMENTS_CSS = "@page { margin: 0; };body{padding-top:0;}.comment-node{margin-top:0.8em;margin-bottom:0.8em;}.comment-reply{border-left:2px solid #ccc;padding-left:1em;}.comment-inner{padding-bottom:0.8em;border-bottom:1px solid #e0e0e0;}.comment-header{font-weight:bold;margin-bottom:0.5em;color:#333;}.comment-body{margin-bottom:0.5em;line-height:1.4;word-break:break-word;}.comment-meta{font-size:0.85em;color:#666;font-style:italic;}"
+    return rendered_html, COMMENTS_CSS 
+end
+
 function BookDetailsDialog:_sanitizeBookData(raw)
     local book = {}
     book.id =raw.id
@@ -615,7 +642,7 @@ function BookDetailsDialog:_sanitizeBookData(raw)
     book.author = type(raw.author) == "string" and raw.author or ""
     book.publisher = type(raw.publisher) == "string" and raw.publisher or ""
     book.series = type(raw.series) == "string" and raw.series or ""
-    book.description = type(raw.description) == "string" and raw.description or ""
+    book.description = (type(raw.description) == "string" and raw.description ~= "") and raw.description or T("No Description")
     book.cover = type(raw.cover) == "string" and raw.cover or nil
     book.pages = tonumber(raw.pages) or 0
     book.download = raw.download
@@ -631,8 +658,18 @@ function BookDetailsDialog:_sanitizeBookData(raw)
     return book
 end
 
+function BookDetailsDialog:onCloseWidget()
+    self._is_closed = true
+    if self.inner_dialog and type(self.inner_dialog.onCloseWidget) == "function" then
+        self.inner_dialog:onCloseWidget()
+    end
+    UIManager:setDirty(self.inner_dialog, function()
+        return "flashui", self:getRefreshRegion()
+   end)
+end
+
 local function showBookDetails(Ui_module, parent_zlibrary, book, clear_cache_callback)
-     if not(type(book) == "table" and book.hash and book.title)then
+     if not(type(book) == "table" and book.hash and book.title and book.id)then
         logger.warn("BookDetailsDialog: Cannot show details, invalid book data")
         return nil
     end
@@ -645,7 +682,7 @@ local function showBookDetails(Ui_module, parent_zlibrary, book, clear_cache_cal
     }
     UIManager:show(dialog, function()  
          return "ui", dialog:getRefreshRegion()  
-    end)  
+    end) 
     return dialog
 end
 

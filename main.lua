@@ -1492,29 +1492,17 @@ function Zlibrary:downloadAndShowCover(book)
     local cover_url = book.cover
     local book_hash = book.hash
     local book_title = book.title
-
     if not (cover_url and book_hash) then
         logger.warn("Zlibrary:downloadAndShowCover - parameter error")
         return
     end
-
-    local cover_cache = Cache:new{ type="cover" }
-    local cover_cache_path = cover_cache:get(book_hash)
-    if not cover_cache_path then
-        local temp_path = cover_cache:getTempPath(book_hash)
-        -- avoid conflicts (extremely low probability)
-        if util.fileExists(temp_path) then return end
-        local download_result = Api.downloadBookCover(cover_url, temp_path)
-        if download_result.error or not download_result.success then
-            util.removeFile(temp_path)
-            Ui.showErrorMessage(tostring(download_result.error))
-            return
-        else
-            cover_cache:insert(book_hash,temp_path)
-        end
-    end
-    cover_cache_path = cover_cache:get(book_hash)
-    Ui.showCoverDialog(book_title, cover_cache_path)
+    self.preLoader.getBookCover(cover_url, book_hash, function(is_ok)
+            if is_ok == true then
+                    local cover_cache = Cache:new{ type="cover" }
+                     local cover_cache_path = cover_cache:get(book_hash)
+                     if cover_cache_path then Ui.showCoverDialog(book_title, cover_cache_path) end
+            end
+    end)
 end
 
 function Zlibrary:fetchAndDisplayComments(book, skip_cache, callback)
@@ -1527,12 +1515,8 @@ function Zlibrary:fetchAndDisplayComments(book, skip_cache, callback)
     local comments_key = string.format("%s_comments", book.hash)
     if not skip_cache then
         local book_comments_cache = book_cache:get(comments_key, 604800)
-        if type(book_comments_cache) == "table" and book_comments_cache[1] then
-            if not callback then
-                Ui.showCommentsDialog(self, book_comments_cache)
-            else
-                callback(Ui.showCommentsDialog(self, book_comments_cache, true))
-            end
+        if type(book_comments_cache) == "table" then
+             if callback then callback(book_comments_cache) end
             return
         end
     end
@@ -1543,11 +1527,7 @@ function Zlibrary:fetchAndDisplayComments(book, skip_cache, callback)
 
     local on_success = function(ui_self, api_result, plugin_self)
         book_cache:insert(comments_key, api_result.comments)
-        if not callback then
-            Ui.showCommentsDialog(self, api_result.comments)
-        else
-            callback(Ui.showCommentsDialog(self, api_result.comments, true))
-        end
+        if callback then callback(api_result.comments) end
     end
 
     self:_requestDispatcher({
@@ -1559,7 +1539,7 @@ function Zlibrary:fetchAndDisplayComments(book, skip_cache, callback)
         resolve_result = on_success,
         requires_auth = false,
         hasValidApiResult = function(api_result)
-            local ok = type(api_result) == "table" and type(api_result.comments) == "table" and type(api_result.comments[1]) == "table"
+            local ok = type(api_result) == "table" and type(api_result.comments) == "table"
             return ok, not ok and T("No comments to display")
         end,
     }, book.id)

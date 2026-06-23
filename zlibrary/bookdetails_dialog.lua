@@ -579,7 +579,6 @@ function BookDetailsDialog:_renderComments(book_comments)
         local roots = {}
         local children = {}
 
-        -- comments are in reverse order
         for i = #comments, 1, -1 do
             local comment = comments[i]
             local pid = comment.parent_id

@@ -111,7 +111,6 @@ function SearchDialog:init()
         values = toggle_values,
         config = {
             onConfigChoose = function(_, _values, name, event, args, _position)
-                -- compatible with older versions
                 local position = type(_position) == "number" and _position or tonumber(name)
                 UIManager:nextTick(function()
                     self:ToggleSwitchCallBack(position)
@@ -147,7 +146,6 @@ function SearchDialog:init()
     local dialog = self 
     function self.compound_title_bar:generateVerticalLayout()
         local layout = {}
-        -- 保留基础 Titlebar 的焦点注入（防止底层 Menu 强依赖报错）
         if self._titlebar and self._titlebar.generateVerticalLayout then
             local tb_layout = self._titlebar:generateVerticalLayout()
             if tb_layout then
@@ -214,7 +212,6 @@ function SearchDialog:onKeyPress(key)
         self:forceFetchAndReloadMenu()
         return true
     elseif key["Back"] then
-        -- Handle exit
         UIManager:close(self)
         return true
     end
@@ -234,7 +231,6 @@ function SearchDialog:ToggleSwitchCallBack(_position)
     if cache_key then
         local cache_books = self._cache:get(cache_key, cache_expiry)
         if cache_books then
-            -- use cached data
             self:reloadFromBookData(cache_books, true)
             return true
         end
@@ -270,7 +266,6 @@ function SearchDialog:_getMenuItems(books)
     return menu_items
 end
 
--- call function to fetch and process data
 function SearchDialog:_fetchAndProcessData(page, is_refresh)
     local current_toggle = self:getActiveItem()
     local item_callback = current_toggle and current_toggle.callback
@@ -306,8 +301,7 @@ function SearchDialog:fetchAndShow()
     if type(self.on_fetch_and_show) == "function" then 
         self.on_fetch_and_show(self)
     end
-
-    -- automatically enter search
+    
     if not self.def_position then
         self.on_search_callback(self.def_search_input)
     end

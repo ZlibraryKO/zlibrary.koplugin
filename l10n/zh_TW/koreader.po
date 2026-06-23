@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 09:25+0000\n"
+"POT-Creation-Date: 2026-05-18 09:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese <zh@li.org>\n"
@@ -21,6 +21,9 @@ msgstr "[[一個用於從Z-圖書館搜索和下載書籍的插件。]]"
 msgid "Z-library search"
 msgstr "Z-圖書館搜索"
 
+msgid "My books"
+msgstr ""
+
 msgid "Operation failed, please retry."
 msgstr ""
 
@@ -32,6 +35,12 @@ msgstr ""
 
 msgid "Failed to find a working base URL."
 msgstr "無法找到可用的基礎 URL。"
+
+msgid "Queued"
+msgstr ""
+
+msgid "Selection copied to clipboard."
+msgstr ""
 
 msgid "Checking"
 msgstr ""
@@ -66,12 +75,6 @@ msgstr ""
 msgid "Discovery is already running..."
 msgstr ""
 
-msgid "Queued"
-msgstr ""
-
-msgid "Selection copied to clipboard."
-msgstr ""
-
 msgid "Refresh Dynamic Domains"
 msgstr ""
 
@@ -81,20 +84,32 @@ msgstr "返回"
 msgid "Settings"
 msgstr "設置"
 
-msgid "Set email"
-msgstr "設置電子郵件"
-
-msgid "Set password"
-msgstr "設置密碼"
-
-msgid "Verify credentials"
-msgstr "驗證憑證"
+msgid "Set credentials"
+msgstr ""
 
 msgid "Login successful!"
 msgstr "登入成功！"
 
+msgid "Verify credentials"
+msgstr "驗證憑證"
+
 msgid "Set download directory"
 msgstr "設置下載目錄"
+
+msgid "View Settings"
+msgstr ""
+
+msgid "Search Covers"
+msgstr ""
+
+msgid "Search Items/Page"
+msgstr ""
+
+msgid "Browse Covers"
+msgstr ""
+
+msgid "Browse Items/Page"
+msgstr ""
 
 msgid "Search options"
 msgstr ""
@@ -106,9 +121,6 @@ msgid "Select search formats"
 msgstr "選擇搜索格式"
 
 msgid "Select search order"
-msgstr ""
-
-msgid "Show covers"
 msgstr ""
 
 msgid "Timeout settings"
@@ -153,23 +165,11 @@ msgstr "推薦"
 msgid "Most popular"
 msgstr "最熱門"
 
-msgid "My books"
-msgstr ""
-
 msgid "Operation"
 msgstr ""
 
 msgid "No books found, please try again"
 msgstr "未找到書籍，請重試"
-
-msgid "Fetching recommended books..."
-msgstr "正在獲取推薦書籍..."
-
-msgid "Failed to fetch recommended books"
-msgstr "獲取推薦書籍失敗"
-
-msgid "Recommended books"
-msgstr ""
 
 msgid "Fetching most popular books..."
 msgstr "正在獲取熱門書籍..."
@@ -178,6 +178,15 @@ msgid "Failed to fetch most popular books"
 msgstr "獲取熱門書籍失敗"
 
 msgid "Most popular books"
+msgstr ""
+
+msgid "Fetching recommended books..."
+msgstr "正在獲取推薦書籍..."
+
+msgid "Failed to fetch recommended books"
+msgstr "獲取推薦書籍失敗"
+
+msgid "Recommended books"
 msgstr ""
 
 msgid "Syncing your download limit..."
@@ -207,15 +216,6 @@ msgstr ""
 msgid "Downloaded"
 msgstr ""
 
-msgid "Getting your downloaded..."
-msgstr ""
-
-msgid "Failed to fetch downloaded books"
-msgstr ""
-
-msgid "Downloaded books"
-msgstr ""
-
 msgid "Favorites"
 msgstr ""
 
@@ -226,6 +226,15 @@ msgid "Failed to fetch favorite books"
 msgstr ""
 
 msgid "Favorite books"
+msgstr ""
+
+msgid "Getting your downloaded..."
+msgstr ""
+
+msgid "Failed to fetch downloaded books"
+msgstr ""
+
+msgid "Downloaded books"
 msgstr ""
 
 msgid "Finding similar books..."
@@ -750,23 +759,12 @@ msgstr "關閉此對話框後關閉 Wi-Fi"
 msgid "Open book"
 msgstr "打開書籍"
 
-msgid "Z-library Recommended Books"
-msgstr "Z-圖書館推薦書籍"
-
-msgid "Z-library Most Popular Books"
-msgstr "Z-圖書館熱門書籍"
+#, lua-format
+msgid "No %s found, please try again. Sometimes this requires a couple of retries."
+msgstr ""
 
 msgid "Z-library Similar Books"
 msgstr ""
-
-msgid "Fetch most recommended book from Z-library?"
-msgstr "從Z-圖書館獲取最推薦書籍？"
-
-msgid "OK"
-msgstr "確定"
-
-msgid "Fetch most popular books from Z-library?"
-msgstr "從Z-圖書館獲取熱門書籍？"
 
 msgid "Retrying search for \""
 msgstr "正在重試搜索\""
@@ -875,6 +873,42 @@ msgstr "所有逾時設定已重設為預設值"
 
 msgid "Timeout Settings"
 msgstr "逾時設定"
+
+msgid "Email Address"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "Enter password"
+msgstr ""
+
+msgid "Please fill in all fields"
+msgstr ""
+
+msgid "Feature not implemented"
+msgstr ""
+
+#~ msgid "Set email"
+#~ msgstr "設置電子郵件"
+
+#~ msgid "Set password"
+#~ msgstr "設置密碼"
+
+#~ msgid "Z-library Recommended Books"
+#~ msgstr "Z-圖書館推薦書籍"
+
+#~ msgid "Z-library Most Popular Books"
+#~ msgstr "Z-圖書館熱門書籍"
+
+#~ msgid "Fetch most recommended book from Z-library?"
+#~ msgstr "從Z-圖書館獲取最推薦書籍？"
+
+#~ msgid "OK"
+#~ msgstr "確定"
+
+#~ msgid "Fetch most popular books from Z-library?"
+#~ msgstr "從Z-圖書館獲取熱門書籍？"
 
 #~ msgid "Network not available. Please connect and try again."
 #~ msgstr "網路無法使用。請連線後再試一次。"

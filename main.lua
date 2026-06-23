@@ -51,6 +51,7 @@ function Zlibrary:init()
     else
         logger.warn("self.ui or self.ui.menu not initialized in Zlibrary:init")
     end
+    self.preLoader = require("zlibrary.preloader").Preloader
 end
 
 function Zlibrary:onZlibrarySearch(act_page)
@@ -772,34 +773,6 @@ function Zlibrary:getDownloadQuotaCache()
     return Config.getConfigRuntimeCache():get("download_quota_status", 10800)
 end
 
--- Run completion callback (precheck_ok)
-function Zlibrary:validateDownloadQuota(callback)
-    local has_callback = type(callback) == "function"
-
-    local quota_status = Config.getConfigRuntimeCache():get("download_quota_status")
-    if type(quota_status) == "table" and next(quota_status) then
-        return has_callback and callback(true)
-    end
-
-    self:_requestDispatcher({
-        api_method = Api.getDownloadQuotaStatus,
-        loading_text_key = T("Syncing your download limit..."),
-        error_prefix_key = T("failed to load download quota status"),
-        operation_name = T("Sync download quota"),
-        log_context = "validateDownloadQuota",
-        requires_auth = true,
-        resolve_result = function(ui_self, api_result, plugin_self)
-            if type(api_result) == "table" and type(api_result.quota_status) == "table" then
-                Config.getConfigRuntimeCache():insert("download_quota_status", api_result.quota_status)
-                return has_callback and callback(true)                
-            else
-                logger.warn("failed to load download quota status")
-                return has_callback and callback(false)
-            end
-        end,
-    })
-end
-
 function Zlibrary:isBookInFavorites(book_stub)
     local cached_ids = Config.getConfigRuntimeCache():get("favorite_book_ids", 1800)
     if not (book_stub and book_stub.id) then return type(cached_ids) == "table" end
@@ -810,44 +783,6 @@ end
 function Zlibrary:resetFavoritesCache(is_all)
     Config.getConfigRuntimeCache():remove("favorite_book_ids")
     if is_all then Cache:new({ name = "multi_search" }):remove("favorites") end
-end
-
-function Zlibrary:validateFavoriteBookIds(callback)
-    local has_callback = type(callback) == "function"
-    
-    -- The cache list exists，includes empty array
-    if self:isBookInFavorites() then
-        return has_callback and callback(true)
-    end
-
-    local refresh_favorited_book_ids = function(ui_self, api_result, plugin_self)
-
-        -- Favorites list empty is still success
-        if type(api_result) == "table" and type(api_result.books) == "table" then
-            local book_ids = {}
-            for _, book in ipairs(api_result.books) do
-                book_ids[tostring(book.id)] = true
-            end
-
-            -- Allow favorites to be empty in cache
-            Config.getConfigRuntimeCache():insert("favorite_book_ids", book_ids)
-
-            return has_callback and callback(true)
-        else
-            logger.warn("failed to load favorite book id list")
-            return has_callback and callback(false)
-        end
-    end
-
-    self:_requestDispatcher({
-        api_method = Api.getFavoriteBookIds,
-        loading_text_key = T("Syncing favorites summary…"),
-        error_prefix_key = T("failed to load favorite book id list"),
-        operation_name = T("Sync favorites summary"),
-        log_context = "validateFavoriteBookIds",
-        resolve_result = refresh_favorited_book_ids,
-        requires_auth = true,
-    })
 end
 
 function Zlibrary:showMyBooksDialog(def_position, def_search_input)
@@ -900,8 +835,8 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
             on_fetch_and_show = function(widget)
                 -- refresh download quota cache
                 if download_quota_status_string == "" then
-                    self:validateDownloadQuota(function(precheck_ok)
-                        if precheck_ok then
+                    self.preLoader.getDownloadQuotaStatus(function(precheck_ok)
+                        if precheck_ok == true then
                             download_quota_status_string = get_quota_status() or ""
                             widget:setToggleTitle(2, T("Downloaded") .. download_quota_status_string)  
                         end
@@ -1557,34 +1492,22 @@ function Zlibrary:downloadAndShowCover(book)
     local cover_url = book.cover
     local book_hash = book.hash
     local book_title = book.title
-
     if not (cover_url and book_hash) then
         logger.warn("Zlibrary:downloadAndShowCover - parameter error")
         return
     end
-
-    local cover_cache = Cache:new{ type="cover" }
-    local cover_cache_path = cover_cache:get(book_hash)
-    if not cover_cache_path then
-        local temp_path = cover_cache:getTempPath(book_hash)
-        -- avoid conflicts (extremely low probability)
-        if util.fileExists(temp_path) then return end
-        local download_result = Api.downloadBookCover(cover_url, temp_path)
-        if download_result.error or not download_result.success then
-            util.removeFile(temp_path)
-            Ui.showErrorMessage(tostring(download_result.error))
-            return
-        else
-            cover_cache:insert(book_hash,temp_path)
-        end
-    end
-    cover_cache_path = cover_cache:get(book_hash)
-    Ui.showCoverDialog(book_title, cover_cache_path)
+    self.preLoader.getBookCover(cover_url, book_hash, function(is_ok)
+            if is_ok == true then
+                    local cover_cache = Cache:new{ type="cover" }
+                     local cover_cache_path = cover_cache:get(book_hash)
+                     Ui.showCoverDialog(book_title, cover_cache_path)
+            end
+    end)
 end
 
-function Zlibrary:fetchAndDisplayComments(book, skip_cache)
+function Zlibrary:fetchAndDisplayComments(book, skip_cache, callback)
     if not (book and book.id and book.hash) then
-        Ui.showErrorMessage(T("Book ID is required"))
+        Ui.showErrorMessage(T("Book ID is required."))
         return
     end
     
@@ -1592,8 +1515,8 @@ function Zlibrary:fetchAndDisplayComments(book, skip_cache)
     local comments_key = string.format("%s_comments", book.hash)
     if not skip_cache then
         local book_comments_cache = book_cache:get(comments_key, 604800)
-        if type(book_comments_cache) == "table" and book_comments_cache[1] then
-            Ui.showCommentsDialog(self, book_comments_cache)
+        if type(book_comments_cache) == "table" then
+             if callback then callback(book_comments_cache) end
             return
         end
     end
@@ -1603,8 +1526,8 @@ function Zlibrary:fetchAndDisplayComments(book, skip_cache)
     end
 
     local on_success = function(ui_self, api_result, plugin_self)
-        Ui.showCommentsDialog(self, api_result.comments)
         book_cache:insert(comments_key, api_result.comments)
+        if callback then callback(api_result.comments) end
     end
 
     self:_requestDispatcher({
@@ -1616,7 +1539,7 @@ function Zlibrary:fetchAndDisplayComments(book, skip_cache)
         resolve_result = on_success,
         requires_auth = false,
         hasValidApiResult = function(api_result)
-            local ok = type(api_result) == "table" and type(api_result.comments) == "table" and type(api_result.comments[1]) == "table"
+            local ok = type(api_result) == "table" and type(api_result.comments) == "table"
             return ok, not ok and T("No comments to display")
         end,
     }, book.id)

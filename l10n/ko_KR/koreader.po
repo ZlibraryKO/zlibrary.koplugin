@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 09:25+0000\n"
+"POT-Creation-Date: 2026-05-18 09:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,6 +21,9 @@ msgstr "[[Z-라이브러리에서 책을 검색하고 다운로드할 수 있는
 msgid "Z-library search"
 msgstr "Z-라이브러리 검색"
 
+msgid "My books"
+msgstr ""
+
 msgid "Operation failed, please retry."
 msgstr ""
 
@@ -32,6 +35,12 @@ msgstr ""
 
 msgid "Failed to find a working base URL."
 msgstr "작동하는 기본 URL을 찾지 못했습니다."
+
+msgid "Queued"
+msgstr ""
+
+msgid "Selection copied to clipboard."
+msgstr ""
 
 msgid "Checking"
 msgstr ""
@@ -66,12 +75,6 @@ msgstr ""
 msgid "Discovery is already running..."
 msgstr ""
 
-msgid "Queued"
-msgstr ""
-
-msgid "Selection copied to clipboard."
-msgstr ""
-
 msgid "Refresh Dynamic Domains"
 msgstr ""
 
@@ -81,20 +84,32 @@ msgstr "뒤로"
 msgid "Settings"
 msgstr "설정"
 
-msgid "Set email"
-msgstr "이메일 설정"
-
-msgid "Set password"
-msgstr "비밀번호 설정"
-
-msgid "Verify credentials"
-msgstr "자격 증명 확인"
+msgid "Set credentials"
+msgstr ""
 
 msgid "Login successful!"
 msgstr "로그인 성공!"
 
+msgid "Verify credentials"
+msgstr "자격 증명 확인"
+
 msgid "Set download directory"
 msgstr "다운로드 디렉토리 설정"
+
+msgid "View Settings"
+msgstr ""
+
+msgid "Search Covers"
+msgstr ""
+
+msgid "Search Items/Page"
+msgstr ""
+
+msgid "Browse Covers"
+msgstr ""
+
+msgid "Browse Items/Page"
+msgstr ""
 
 msgid "Search options"
 msgstr ""
@@ -106,9 +121,6 @@ msgid "Select search formats"
 msgstr "검색 형식 선택"
 
 msgid "Select search order"
-msgstr ""
-
-msgid "Show covers"
 msgstr ""
 
 msgid "Timeout settings"
@@ -153,23 +165,11 @@ msgstr "추천"
 msgid "Most popular"
 msgstr "인기순"
 
-msgid "My books"
-msgstr ""
-
 msgid "Operation"
 msgstr ""
 
 msgid "No books found, please try again"
 msgstr "책을 찾을 수 없습니다. 다시 시도해 주세요."
-
-msgid "Fetching recommended books..."
-msgstr "추천 도서 가져오는 중..."
-
-msgid "Failed to fetch recommended books"
-msgstr "추천 도서를 가져오지 못했습니다"
-
-msgid "Recommended books"
-msgstr ""
 
 msgid "Fetching most popular books..."
 msgstr "인기 도서 가져오는 중..."
@@ -178,6 +178,15 @@ msgid "Failed to fetch most popular books"
 msgstr "인기 도서를 가져오지 못했습니다"
 
 msgid "Most popular books"
+msgstr ""
+
+msgid "Fetching recommended books..."
+msgstr "추천 도서 가져오는 중..."
+
+msgid "Failed to fetch recommended books"
+msgstr "추천 도서를 가져오지 못했습니다"
+
+msgid "Recommended books"
 msgstr ""
 
 msgid "Syncing your download limit..."
@@ -207,15 +216,6 @@ msgstr ""
 msgid "Downloaded"
 msgstr ""
 
-msgid "Getting your downloaded..."
-msgstr ""
-
-msgid "Failed to fetch downloaded books"
-msgstr ""
-
-msgid "Downloaded books"
-msgstr ""
-
 msgid "Favorites"
 msgstr ""
 
@@ -226,6 +226,15 @@ msgid "Failed to fetch favorite books"
 msgstr ""
 
 msgid "Favorite books"
+msgstr ""
+
+msgid "Getting your downloaded..."
+msgstr ""
+
+msgid "Failed to fetch downloaded books"
+msgstr ""
+
+msgid "Downloaded books"
 msgstr ""
 
 msgid "Finding similar books..."
@@ -750,23 +759,12 @@ msgstr "이 대화 상자를 닫은 후 Wi-Fi 끄기"
 msgid "Open book"
 msgstr "도서 열기"
 
-msgid "Z-library Recommended Books"
-msgstr "Z-라이브러리 추천 도서"
-
-msgid "Z-library Most Popular Books"
-msgstr "Z-라이브러리 인기 도서"
+#, lua-format
+msgid "No %s found, please try again. Sometimes this requires a couple of retries."
+msgstr ""
 
 msgid "Z-library Similar Books"
 msgstr ""
-
-msgid "Fetch most recommended book from Z-library?"
-msgstr "Z-라이브러리에서 가장 추천받는 도서를 가져오시겠습니까?"
-
-msgid "OK"
-msgstr "확인"
-
-msgid "Fetch most popular books from Z-library?"
-msgstr "Z-라이브러리에서 인기 도서를 가져오시겠습니까?"
 
 msgid "Retrying search for \""
 msgstr "\" 검색을 다시 시도하는 중"
@@ -875,6 +873,42 @@ msgstr "모든 타임아웃 설정이 기본값으로 재설정되었습니다"
 
 msgid "Timeout Settings"
 msgstr "타임아웃 설정"
+
+msgid "Email Address"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "Enter password"
+msgstr ""
+
+msgid "Please fill in all fields"
+msgstr ""
+
+msgid "Feature not implemented"
+msgstr ""
+
+#~ msgid "Set email"
+#~ msgstr "이메일 설정"
+
+#~ msgid "Set password"
+#~ msgstr "비밀번호 설정"
+
+#~ msgid "Z-library Recommended Books"
+#~ msgstr "Z-라이브러리 추천 도서"
+
+#~ msgid "Z-library Most Popular Books"
+#~ msgstr "Z-라이브러리 인기 도서"
+
+#~ msgid "Fetch most recommended book from Z-library?"
+#~ msgstr "Z-라이브러리에서 가장 추천받는 도서를 가져오시겠습니까?"
+
+#~ msgid "OK"
+#~ msgstr "확인"
+
+#~ msgid "Fetch most popular books from Z-library?"
+#~ msgstr "Z-라이브러리에서 인기 도서를 가져오시겠습니까?"
 
 #~ msgid "Network not available. Please connect and try again."
 #~ msgstr "네트워크를 사용할 수 없습니다. 연결 후 다시 시도하세요."

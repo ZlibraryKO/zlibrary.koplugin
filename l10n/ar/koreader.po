@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 09:25+0000\n"
+"POT-Creation-Date: 2026-05-18 09:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,6 +21,9 @@ msgstr "[[مكون إضافي للبحث عن الكتب وتنزيلها من Z
 msgid "Z-library search"
 msgstr "البحث في Z-library"
 
+msgid "My books"
+msgstr ""
+
 msgid "Operation failed, please retry."
 msgstr ""
 
@@ -32,6 +35,12 @@ msgstr ""
 
 msgid "Failed to find a working base URL."
 msgstr "فشل العثور على عنوان URL أساسي متاح."
+
+msgid "Queued"
+msgstr ""
+
+msgid "Selection copied to clipboard."
+msgstr ""
 
 msgid "Checking"
 msgstr ""
@@ -66,12 +75,6 @@ msgstr ""
 msgid "Discovery is already running..."
 msgstr ""
 
-msgid "Queued"
-msgstr ""
-
-msgid "Selection copied to clipboard."
-msgstr ""
-
 msgid "Refresh Dynamic Domains"
 msgstr ""
 
@@ -81,20 +84,32 @@ msgstr "رجوع"
 msgid "Settings"
 msgstr "الإعدادات"
 
-msgid "Set email"
-msgstr "تعيين البريد الإلكتروني"
-
-msgid "Set password"
-msgstr "تعيين كلمة المرور"
-
-msgid "Verify credentials"
-msgstr "التحقق من بيانات الاعتماد"
+msgid "Set credentials"
+msgstr ""
 
 msgid "Login successful!"
 msgstr "تم تسجيل الدخول بنجاح!"
 
+msgid "Verify credentials"
+msgstr "التحقق من بيانات الاعتماد"
+
 msgid "Set download directory"
 msgstr "تعيين دليل التنزيل"
+
+msgid "View Settings"
+msgstr ""
+
+msgid "Search Covers"
+msgstr ""
+
+msgid "Search Items/Page"
+msgstr ""
+
+msgid "Browse Covers"
+msgstr ""
+
+msgid "Browse Items/Page"
+msgstr ""
 
 msgid "Search options"
 msgstr ""
@@ -106,9 +121,6 @@ msgid "Select search formats"
 msgstr "تحديد تنسيقات البحث"
 
 msgid "Select search order"
-msgstr ""
-
-msgid "Show covers"
 msgstr ""
 
 msgid "Timeout settings"
@@ -153,23 +165,11 @@ msgstr "موصى به"
 msgid "Most popular"
 msgstr "الأكثر شعبية"
 
-msgid "My books"
-msgstr ""
-
 msgid "Operation"
 msgstr ""
 
 msgid "No books found, please try again"
 msgstr "لم يتم العثور على كتب، يرجى المحاولة مرة أخرى"
-
-msgid "Fetching recommended books..."
-msgstr "جلب الكتب الموصى بها..."
-
-msgid "Failed to fetch recommended books"
-msgstr "فشل جلب الكتب الموصى بها"
-
-msgid "Recommended books"
-msgstr ""
 
 msgid "Fetching most popular books..."
 msgstr "جلب الكتب الأكثر شعبية..."
@@ -178,6 +178,15 @@ msgid "Failed to fetch most popular books"
 msgstr "فشل جلب الكتب الأكثر شعبية"
 
 msgid "Most popular books"
+msgstr ""
+
+msgid "Fetching recommended books..."
+msgstr "جلب الكتب الموصى بها..."
+
+msgid "Failed to fetch recommended books"
+msgstr "فشل جلب الكتب الموصى بها"
+
+msgid "Recommended books"
 msgstr ""
 
 msgid "Syncing your download limit..."
@@ -207,15 +216,6 @@ msgstr ""
 msgid "Downloaded"
 msgstr ""
 
-msgid "Getting your downloaded..."
-msgstr ""
-
-msgid "Failed to fetch downloaded books"
-msgstr ""
-
-msgid "Downloaded books"
-msgstr ""
-
 msgid "Favorites"
 msgstr ""
 
@@ -226,6 +226,15 @@ msgid "Failed to fetch favorite books"
 msgstr ""
 
 msgid "Favorite books"
+msgstr ""
+
+msgid "Getting your downloaded..."
+msgstr ""
+
+msgid "Failed to fetch downloaded books"
+msgstr ""
+
+msgid "Downloaded books"
 msgstr ""
 
 msgid "Finding similar books..."
@@ -750,23 +759,12 @@ msgstr "إيقاف تشغيل Wi-Fi بعد إغلاق هذا الحوار"
 msgid "Open book"
 msgstr "فتح الكتاب"
 
-msgid "Z-library Recommended Books"
-msgstr "الكتب الموصى بها في Z-library"
-
-msgid "Z-library Most Popular Books"
-msgstr "الكتب الأكثر شعبية في Z-library"
+#, lua-format
+msgid "No %s found, please try again. Sometimes this requires a couple of retries."
+msgstr ""
 
 msgid "Z-library Similar Books"
 msgstr ""
-
-msgid "Fetch most recommended book from Z-library?"
-msgstr "جلب الكتاب الأكثر توصية من Z-library؟"
-
-msgid "OK"
-msgstr "موافق"
-
-msgid "Fetch most popular books from Z-library?"
-msgstr "جلب الكتب الأكثر شعبية من Z-library؟"
 
 msgid "Retrying search for \""
 msgstr "إعادة محاولة البحث عن \""
@@ -875,6 +873,42 @@ msgstr "تم إعادة تعيين جميع إعدادات المهلة الزم
 
 msgid "Timeout Settings"
 msgstr "إعدادات المهلة الزمنية"
+
+msgid "Email Address"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "Enter password"
+msgstr ""
+
+msgid "Please fill in all fields"
+msgstr ""
+
+msgid "Feature not implemented"
+msgstr ""
+
+#~ msgid "Set email"
+#~ msgstr "تعيين البريد الإلكتروني"
+
+#~ msgid "Set password"
+#~ msgstr "تعيين كلمة المرور"
+
+#~ msgid "Z-library Recommended Books"
+#~ msgstr "الكتب الموصى بها في Z-library"
+
+#~ msgid "Z-library Most Popular Books"
+#~ msgstr "الكتب الأكثر شعبية في Z-library"
+
+#~ msgid "Fetch most recommended book from Z-library?"
+#~ msgstr "جلب الكتاب الأكثر توصية من Z-library؟"
+
+#~ msgid "OK"
+#~ msgstr "موافق"
+
+#~ msgid "Fetch most popular books from Z-library?"
+#~ msgstr "جلب الكتب الأكثر شعبية من Z-library؟"
 
 #~ msgid "Network not available. Please connect and try again."
 #~ msgstr "الشبكة غير متاحة. يرجى الاتصال والمحاولة مرة أخرى."

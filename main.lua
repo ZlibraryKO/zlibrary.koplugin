@@ -1500,7 +1500,7 @@ function Zlibrary:downloadAndShowCover(book)
             if is_ok == true then
                     local cover_cache = Cache:new{ type="cover" }
                      local cover_cache_path = cover_cache:get(book_hash)
-                     if cover_cache_path then Ui.showCoverDialog(book_title, cover_cache_path) end
+                     Ui.showCoverDialog(book_title, cover_cache_path)
             end
     end)
 end

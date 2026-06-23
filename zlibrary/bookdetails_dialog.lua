@@ -130,13 +130,13 @@ function BookDetailsDialog:_buildInnerDialog()
         title_align = self.title_align,
         buttons = dialog_buttons,
         --dismissable = false,
-        _added_widgets = { content }
+        _added_widgets = { content },
+        show_parent = self,
     }
     local wrapper = self
     self.inner_dialog.onClose = function()
         UIManager:close(wrapper)
     end
-    self.inner_dialog.parent = self
     if self.scrollable_html then
         self.scrollable_html.dialog = self
     end
@@ -162,7 +162,7 @@ function BookDetailsDialog:_calculateDimensions()
 end
 
 function BookDetailsDialog:_buildContent()
-    local vstack = VerticalGroup:new{ align = "left" }
+    local vstack = VerticalGroup:new{ align = "left", not_focusable = true}
     local title_face = self.fonts.title
     local face_height = title_face.ftsize:getHeightAndAscender()
     local title_max_h = math.floor(face_height * 2.2)
@@ -390,6 +390,7 @@ function BookDetailsDialog:_buildButtons()
     if self.view_state ~= "menu" then
         table.insert(dialog_buttons, {{
             text = "\u{21A9}  " .. T("Back"),  align = "left",
+            preselect = true,
             callback = function() self:switchState("menu") end
         }})
         return dialog_buttons
@@ -397,6 +398,7 @@ function BookDetailsDialog:_buildButtons()
 
      table.insert(dialog_buttons, {{
         text = "\u{F002}  " .. T("More Similar Books"), align = "left",
+        preselect = true,
         callback = function()
             UIManager:close(self)
             self.parent_zlibrary:searchSimilarBooks(self.book)
@@ -486,14 +488,13 @@ function BookDetailsDialog:switchState(new_state, is_new)
             self.inner_dialog:free()
         end
     end
-    -- self:free()
     self[1] = nil
     self.inner_dialog = nil
     self.scrollable_html = nil
     self.cover_frame = nil
     self:_buildInnerDialog()
-  -- UIManager:setDirty("all", "flashui")
-  UIManager:setDirty("all", function()
+    -- UIManager:setDirty("all", "flashui")
+    UIManager:setDirty("all", function()
         local current_region = self:getRefreshRegion()
         local refresh_dimen = current_region
         if orig_dimen and type(orig_dimen.combine) == "function" then

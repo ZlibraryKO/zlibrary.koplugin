@@ -27,6 +27,7 @@ local SearchDialog = InputContainer:extend{
     on_search_callback = nil,
     on_select_book_callback = nil,
     on_similar_books_callback = nil,
+    on_fetch_and_show = nil,
     current_page_loaded = nil,
     has_more_api_results = nil,
     show_cover = nil,
@@ -67,9 +68,7 @@ function SearchDialog:init()
     end
 
     local toggle_items_count = #self.toggle_items
-    if self._position > toggle_items_count then
-        self._position = toggle_items_count
-    end
+    self._position = math.max(1, math.min(self._position, toggle_items_count))
 
     local frame_padding = Size.padding.default
     local frame_bordersize = Size.border.thin
@@ -220,12 +219,6 @@ function SearchDialog:onKeyPress(key)
         return true
     end
     return InputContainer.onKeyPress(self, key)
-end
-
--- Add method to handle clean exit
-function SearchDialog:onClose()
-    UIManager:close(self)
-    return true
 end
 
 function SearchDialog:ToggleSwitchCallBack(_position)
@@ -468,27 +461,26 @@ function SearchDialog:getActiveItemCacheKey()
     end
 end
 
-function SearchDialog:setToggleTitle(position, title)
+function SearchDialog:setToggleTitle(position, title)  
+    local toggle_switch = self.toggle_switch
     local toggle_items_count = #self.toggle_items
-    if position > toggle_items_count or position < 1 then return end
-    self.toggle_items[position].text = title or ""
-    if self.toggle_switch then
-        local success = false
-       if self.toggle_switch.buttons and self.toggle_switch.buttons[position] then
-            local target_button = self.toggle_switch.buttons[position]
-            if type(target_button.setText) == "function" then
-                target_button:setText(title or "")
-                success = true
-            end
-        end
-        if success then
-            UIManager:setDirty(self.toggle_switch, "ui")
-        else
-            self:free()
-            self.menu_container = nil 
-            self:init()
-            UIManager:setDirty("all", "ui")
-        end
+     if position > toggle_items_count or position < 1 then return end
+    if not (toggle_switch.toggle_content and toggle_switch.n_pos) then return end  
+      
+    local n_pos = toggle_switch.n_pos  
+    local row = math.ceil(position / n_pos)  
+    local col = ((position - 1) % n_pos) + 1  
+      
+    local button = toggle_switch.toggle_content[row][col]  
+    if button and button[1] and button[1][1] then  
+        button[1][1]:setText(title)  
+        UIManager:setDirty("all", "ui")
+    else
+        self.toggle_items[position].text = title or ""
+        self:free()
+        self.menu_container = nil 
+        self:init()
+        UIManager:setDirty("all", "ui")
     end
 end
 

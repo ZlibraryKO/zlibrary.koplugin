@@ -27,6 +27,7 @@ local SearchDialog = InputContainer:extend{
     on_search_callback = nil,
     on_select_book_callback = nil,
     on_similar_books_callback = nil,
+    on_fetch_and_show = nil,
     current_page_loaded = nil,
     has_more_api_results = nil,
     show_cover = nil,
@@ -41,6 +42,7 @@ function SearchDialog:init()
     self.height = Screen:getHeight()
     self._position = self.def_position or 1
     self.books = self.books or {}
+    self.build_focus_layout = not Device:isTouchDevice() and Device:hasDPad() and Device:useDPadAsActionKeys()
 
     if type(self.on_select_book_callback) ~= "function" then
         logger.warn("MultiSearchDialog on_select_book_callback is undefined")
@@ -66,14 +68,12 @@ function SearchDialog:init()
     end
 
     local toggle_items_count = #self.toggle_items
-    if self._position > toggle_items_count then
-        self._position = toggle_items_count
-    end
+    self._position = math.max(1, math.min(self._position, toggle_items_count))
 
     local frame_padding = Size.padding.default
     local frame_bordersize = Size.border.thin
     local frame_inner_width = self.width - 2 * frame_padding - 2 * frame_bordersize
-    local frame_inner_hight = self.height - 2 * frame_padding - 2 * frame_bordersize
+    local frame_inner_height = self.height - 2 * frame_padding - 2 * frame_bordersize
 
     local titlebar = TitleBar:new{
         title = self.title,
@@ -111,7 +111,6 @@ function SearchDialog:init()
         values = toggle_values,
         config = {
             onConfigChoose = function(_, _values, name, event, args, _position)
-                -- compatible with older versions
                 local position = type(_position) == "number" and _position or tonumber(name)
                 UIManager:nextTick(function()
                     self:ToggleSwitchCallBack(position)
@@ -119,6 +118,7 @@ function SearchDialog:init()
             end
         }
     }
+    self.toggle_switch:setPosition(self._position)
 
     local filter_group = HorizontalGroup:new{
         dimen = Geom:new{
@@ -128,19 +128,39 @@ function SearchDialog:init()
         self.toggle_switch ,
         force_refresh_button
     }
-    self.toggle_switch:setPosition(self._position)
 
-    local titlebar_size = titlebar:getSize()
-    local filter_size = self.toggle_switch:getSize()
-    local menu_container_height = frame_inner_hight - titlebar_size.h - filter_size.h
-    self.menu_container = self:createMenuContainer(self.books, menu_container_height)
-    self.container_parent = VerticalGroup:new{
-        dimen = Geom:new{
-            w = frame_inner_width,
-            h = menu_container_height
-        },
-        self.menu_container
+    self.compound_title_bar = VerticalGroup:new{
+        align = "left",
+        titlebar,
+        filter_group,
+        _titlebar = titlebar,
+        _toggle = self.toggle_switch,
+        _refresh = force_refresh_button,
     }
+
+    function self.compound_title_bar:getHeight() return self:getSize().h end
+    function self.compound_title_bar:setTitle(...) end
+    function self.compound_title_bar:setSubTitle(...) end
+    function self.compound_title_bar:setLeftIcon(...) end
+
+    local dialog = self 
+    function self.compound_title_bar:generateVerticalLayout()
+        local layout = {}
+        if self._titlebar and self._titlebar.generateVerticalLayout then
+            local tb_layout = self._titlebar:generateVerticalLayout()
+            if tb_layout then
+                for _, row in ipairs(tb_layout) do
+                    table.insert(layout, row)
+                end
+            end
+        end
+        if dialog.build_focus_layout then
+            table.insert(layout, { self._toggle, self._refresh })
+        end
+        return layout
+    end
+
+    self.menu_container = self:createMenuContainer(self.books, frame_inner_height)
 
     local frame = FrameContainer:new{
         width = self.width,
@@ -149,12 +169,7 @@ function SearchDialog:init()
         bordersize = frame_bordersize,
         bordercolor = Blitbuffer.COLOR_BLACK,
         padding = frame_padding,
-        VerticalGroup:new{
-            align = "left",
-            titlebar,
-            filter_group,
-            self.container_parent
-        }
+        self.menu_container
     }
     self[1] = frame
 
@@ -167,7 +182,8 @@ function SearchDialog:init()
     self.menu_container.onGotoPage = function(menu_instance, page)
         self:onMenuGotoPage(menu_instance, page)
     end
-    if Device:hasKeys() then
+    
+    if self.build_focus_layout then
         self.menu_container.key_events.Close = nil
         self.menu_container.key_events.FocusRight = nil
         self.menu_container.key_events.Right = nil
@@ -181,7 +197,7 @@ end
 
 function SearchDialog:onKeyPress(key)
     if type(key) ~= "table" then return false end
-    if key["Right"] or key["Tab"] then
+    if key["Tab"] or (self.build_focus_layout and key["Right"]) then
         local position = self._position + 1
         if position > #self.toggle_items then position = 1 end
         self.toggle_switch:togglePosition(position, true)
@@ -196,17 +212,10 @@ function SearchDialog:onKeyPress(key)
         self:forceFetchAndReloadMenu()
         return true
     elseif key["Back"] then
-        -- Handle exit
         UIManager:close(self)
         return true
     end
     return InputContainer.onKeyPress(self, key)
-end
-
--- Add method to handle clean exit
-function SearchDialog:onClose()
-    UIManager:close(self)
-    return true
 end
 
 function SearchDialog:ToggleSwitchCallBack(_position)
@@ -222,7 +231,6 @@ function SearchDialog:ToggleSwitchCallBack(_position)
     if cache_key then
         local cache_books = self._cache:get(cache_key, cache_expiry)
         if cache_books then
-            -- use cached data
             self:reloadFromBookData(cache_books, true)
             return true
         end
@@ -258,7 +266,6 @@ function SearchDialog:_getMenuItems(books)
     return menu_items
 end
 
--- call function to fetch and process data
 function SearchDialog:_fetchAndProcessData(page, is_refresh)
     local current_toggle = self:getActiveItem()
     local item_callback = current_toggle and current_toggle.callback
@@ -294,8 +301,7 @@ function SearchDialog:fetchAndShow()
     if type(self.on_fetch_and_show) == "function" then 
         self.on_fetch_and_show(self)
     end
-
-    -- automatically enter search
+    
     if not self.def_position then
         self.on_search_callback(self.def_search_input)
     end
@@ -310,7 +316,8 @@ function SearchDialog:createMenuContainer(books, height)
             height = height,
             item_table = menu_items,
             is_popout = false,
-            no_title = true,
+            no_title = false,
+            custom_title_bar = self.compound_title_bar,
             show_captions = true,
             is_borderless = true,
             multilines_show_more_text = true,
@@ -448,15 +455,27 @@ function SearchDialog:getActiveItemCacheKey()
     end
 end
 
-function SearchDialog:setToggleTitle(position, title)
+function SearchDialog:setToggleTitle(position, title)  
+    local toggle_switch = self.toggle_switch
     local toggle_items_count = #self.toggle_items
-    if position > toggle_items_count or position < 1 then
-        return
+     if position > toggle_items_count or position < 1 then return end
+    if not (toggle_switch.toggle_content and toggle_switch.n_pos) then return end  
+      
+    local n_pos = toggle_switch.n_pos  
+    local row = math.ceil(position / n_pos)  
+    local col = ((position - 1) % n_pos) + 1  
+      
+    local button = toggle_switch.toggle_content[row][col]  
+    if button and button[1] and button[1][1] then  
+        button[1][1]:setText(title)  
+        UIManager:setDirty("all", "ui")
+    else
+        self.toggle_items[position].text = title or ""
+        self:free()
+        self.menu_container = nil 
+        self:init()
+        UIManager:setDirty("all", "ui")
     end
-    self.toggle_items[position].text = title or ""
-    -- -- static widget modification requires init
-    self:init()
-    UIManager:setDirty("all", "ui")
 end
 
 return SearchDialog

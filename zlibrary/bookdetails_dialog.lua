@@ -135,7 +135,11 @@ function BookDetailsDialog:_buildInnerDialog()
     }
     local wrapper = self
     self.inner_dialog.onClose = function()
-        UIManager:close(wrapper)
+        if wrapper.view_state == "menu" then
+            UIManager:close(wrapper)
+        else
+            wrapper:switchState("menu")
+        end
     end
     if self.scrollable_html then
         self.scrollable_html.dialog = self
@@ -502,6 +506,7 @@ function BookDetailsDialog:switchState(new_state, is_new)
         end
         return "ui", refresh_dimen
     end)
+    -- self.inner_dialog:moveFocusTo(1, 1)
 end
 
 function BookDetailsDialog:_generateFavoriteButtonDef(in_favorites)

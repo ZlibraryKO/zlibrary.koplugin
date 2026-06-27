@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-18 09:29+0000\n"
+"POT-Creation-Date: 2026-06-27 09:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -189,24 +189,6 @@ msgstr "Не удалось загрузить рекомендуемые кни
 msgid "Recommended books"
 msgstr ""
 
-msgid "Syncing your download limit..."
-msgstr ""
-
-msgid "failed to load download quota status"
-msgstr ""
-
-msgid "Sync download quota"
-msgstr ""
-
-msgid "Syncing favorites summary…"
-msgstr ""
-
-msgid "failed to load favorite book id list"
-msgstr ""
-
-msgid "Sync favorites summary"
-msgstr ""
-
 msgid "API returned an error, please try again"
 msgstr ""
 
@@ -329,7 +311,7 @@ msgstr "Скачать"
 msgid "Retrying download..."
 msgstr ""
 
-msgid "Book ID is required"
+msgid "Book ID is required."
 msgstr ""
 
 msgid "Loading comments..."
@@ -506,9 +488,6 @@ msgstr ""
 msgid "API returned an error for favorite book."
 msgstr ""
 
-msgid "Book ID is required."
-msgstr ""
-
 msgid "Failed to fetch book comments (no response body)."
 msgstr ""
 
@@ -516,6 +495,39 @@ msgid "Failed to parse book comments response."
 msgstr ""
 
 msgid "API returned an error for book comments."
+msgstr ""
+
+msgid "Profile"
+msgstr ""
+
+msgid "pages"
+msgstr ""
+
+msgid "Cover"
+msgstr ""
+
+msgid "More Similar Books"
+msgstr ""
+
+msgid "Format"
+msgstr ""
+
+msgid "Download book"
+msgstr ""
+
+msgid "Refresh"
+msgstr ""
+
+msgid "Remove From Favorites"
+msgstr ""
+
+msgid "Add To Favorites"
+msgstr ""
+
+msgid "No Comments"
+msgstr ""
+
+msgid "No Description"
 msgstr ""
 
 msgid "Best match"
@@ -551,9 +563,6 @@ msgstr "Неизвестный автор"
 
 msgid "Author"
 msgstr "Автор"
-
-msgid "More Similar Books"
-msgstr ""
 
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "Ошибка обновления: Не удалось определить место установки плагина."
@@ -698,53 +707,6 @@ msgstr "Рейтинг"
 msgid "Search Results"
 msgstr "Результаты поиска"
 
-msgid "Book Details"
-msgstr "Детали книги"
-
-msgid "Description"
-msgstr "Описание"
-
-msgid "Full Title"
-msgstr "Полное название"
-
-msgid "Cover"
-msgstr ""
-
-msgid "(tap to view)"
-msgstr ""
-
-msgid "Language"
-msgstr "Язык"
-
-#, lua-format
-msgid "Format: %s (tap to download)"
-msgstr "Формат: %s (нажмите для скачивания)"
-
-#, lua-format
-msgid "Format: %s (Download not available)"
-msgstr "Формат: %s (Скачивание недоступно)"
-
-msgid "Download Book (Unknown Format)"
-msgstr "Скачать книгу (Неизвестный формат)"
-
-msgid "Size"
-msgstr "Размер"
-
-msgid "Pages"
-msgstr "Страницы"
-
-msgid "Publisher"
-msgstr "Издательство"
-
-msgid "Series"
-msgstr "Серия"
-
-msgid "Remove From Favorites"
-msgstr ""
-
-msgid "Add To Favorites"
-msgstr ""
-
 #, lua-format
 msgid "Download \"%s\"?"
 msgstr "Скачать \"%s\"?"
@@ -765,6 +727,9 @@ msgstr ""
 
 msgid "Z-library Similar Books"
 msgstr ""
+
+msgid "Book Details"
+msgstr "Детали книги"
 
 msgid "Retrying search for \""
 msgstr "Повторный поиск для \""
@@ -888,6 +853,38 @@ msgstr ""
 
 msgid "Feature not implemented"
 msgstr ""
+
+#~ msgid "Description"
+#~ msgstr "Описание"
+
+#~ msgid "Full Title"
+#~ msgstr "Полное название"
+
+#~ msgid "Language"
+#~ msgstr "Язык"
+
+#, lua-format
+#~ msgid "Format: %s (tap to download)"
+#~ msgstr "Формат: %s (нажмите для скачивания)"
+
+#, lua-format
+#~ msgid "Format: %s (Download not available)"
+#~ msgstr "Формат: %s (Скачивание недоступно)"
+
+#~ msgid "Download Book (Unknown Format)"
+#~ msgstr "Скачать книгу (Неизвестный формат)"
+
+#~ msgid "Size"
+#~ msgstr "Размер"
+
+#~ msgid "Pages"
+#~ msgstr "Страницы"
+
+#~ msgid "Publisher"
+#~ msgstr "Издательство"
+
+#~ msgid "Series"
+#~ msgstr "Серия"
 
 #~ msgid "Set email"
 #~ msgstr "Установить email"

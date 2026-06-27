@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-18 09:29+0000\n"
+"POT-Creation-Date: 2026-06-27 09:03+0000\n"
 "PO-Revision-Date: 2026-04-03 00:00+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
@@ -189,24 +189,6 @@ msgstr "获取推荐书籍失败"
 msgid "Recommended books"
 msgstr "推荐书籍"
 
-msgid "Syncing your download limit..."
-msgstr "正在同步下载配额..."
-
-msgid "failed to load download quota status"
-msgstr "加载下载配额状态失败"
-
-msgid "Sync download quota"
-msgstr "同步下载配额"
-
-msgid "Syncing favorites summary…"
-msgstr "正在同步收藏摘要..."
-
-msgid "failed to load favorite book id list"
-msgstr "加载收藏书籍ID列表失败"
-
-msgid "Sync favorites summary"
-msgstr "同步收藏摘要"
-
 msgid "API returned an error, please try again"
 msgstr "API 返回错误，请重试"
 
@@ -329,8 +311,8 @@ msgstr "下载"
 msgid "Retrying download..."
 msgstr "正在重试下载..."
 
-msgid "Book ID is required"
-msgstr ""
+msgid "Book ID is required."
+msgstr "未指定书籍id"
 
 msgid "Loading comments..."
 msgstr "加载评论中。。。"
@@ -506,9 +488,6 @@ msgstr "解析收藏书籍响应失败。"
 msgid "API returned an error for favorite book."
 msgstr "API返回了收藏书籍的错误。"
 
-msgid "Book ID is required."
-msgstr "未指定书籍id"
-
 msgid "Failed to fetch book comments (no response body)."
 msgstr "获取书籍评论失败。"
 
@@ -517,6 +496,39 @@ msgstr "获取书籍评论失败。"
 
 msgid "API returned an error for book comments."
 msgstr "获取书籍评论出错。"
+
+msgid "Profile"
+msgstr ""
+
+msgid "pages"
+msgstr ""
+
+msgid "Cover"
+msgstr "封面"
+
+msgid "More Similar Books"
+msgstr "更多相似书籍"
+
+msgid "Format"
+msgstr ""
+
+msgid "Download book"
+msgstr ""
+
+msgid "Refresh"
+msgstr ""
+
+msgid "Remove From Favorites"
+msgstr "从收藏夹移除"
+
+msgid "Add To Favorites"
+msgstr "添加到收藏夹"
+
+msgid "No Comments"
+msgstr ""
+
+msgid "No Description"
+msgstr ""
 
 msgid "Best match"
 msgstr "最佳匹配"
@@ -551,9 +563,6 @@ msgstr "未知作者"
 
 msgid "Author"
 msgstr "作者"
-
-msgid "More Similar Books"
-msgstr "更多相似书籍"
 
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "更新失败：无法确定插件安装位置。"
@@ -698,53 +707,6 @@ msgstr "评分"
 msgid "Search Results"
 msgstr "搜索结果"
 
-msgid "Book Details"
-msgstr "书籍详情"
-
-msgid "Description"
-msgstr "描述"
-
-msgid "Full Title"
-msgstr "完整标题"
-
-msgid "Cover"
-msgstr "封面"
-
-msgid "(tap to view)"
-msgstr "（点击查看）"
-
-msgid "Language"
-msgstr "语言"
-
-#, lua-format
-msgid "Format: %s (tap to download)"
-msgstr "格式：%s(点击下载)"
-
-#, lua-format
-msgid "Format: %s (Download not available)"
-msgstr "格式：%s(不可下载)"
-
-msgid "Download Book (Unknown Format)"
-msgstr "下载书籍(未知格式)"
-
-msgid "Size"
-msgstr "大小"
-
-msgid "Pages"
-msgstr "页数"
-
-msgid "Publisher"
-msgstr "出版商"
-
-msgid "Series"
-msgstr "系列"
-
-msgid "Remove From Favorites"
-msgstr "从收藏夹移除"
-
-msgid "Add To Favorites"
-msgstr "添加到收藏夹"
-
 #, lua-format
 msgid "Download \"%s\"?"
 msgstr "下载\"%s\"？"
@@ -765,6 +727,9 @@ msgstr ""
 
 msgid "Z-library Similar Books"
 msgstr "Z-library 相似书籍"
+
+msgid "Book Details"
+msgstr "书籍详情"
 
 msgid "Retrying search for \""
 msgstr "正在重试搜索\""
@@ -888,6 +853,59 @@ msgstr ""
 
 msgid "Feature not implemented"
 msgstr ""
+
+#~ msgid "Syncing your download limit..."
+#~ msgstr "正在同步下载配额..."
+
+#~ msgid "failed to load download quota status"
+#~ msgstr "加载下载配额状态失败"
+
+#~ msgid "Sync download quota"
+#~ msgstr "同步下载配额"
+
+#~ msgid "Syncing favorites summary…"
+#~ msgstr "正在同步收藏摘要..."
+
+#~ msgid "failed to load favorite book id list"
+#~ msgstr "加载收藏书籍ID列表失败"
+
+#~ msgid "Sync favorites summary"
+#~ msgstr "同步收藏摘要"
+
+#~ msgid "Description"
+#~ msgstr "描述"
+
+#~ msgid "Full Title"
+#~ msgstr "完整标题"
+
+#~ msgid "(tap to view)"
+#~ msgstr "（点击查看）"
+
+#~ msgid "Language"
+#~ msgstr "语言"
+
+#, lua-format
+#~ msgid "Format: %s (tap to download)"
+#~ msgstr "格式：%s(点击下载)"
+
+#, lua-format
+#~ msgid "Format: %s (Download not available)"
+#~ msgstr "格式：%s(不可下载)"
+
+#~ msgid "Download Book (Unknown Format)"
+#~ msgstr "下载书籍(未知格式)"
+
+#~ msgid "Size"
+#~ msgstr "大小"
+
+#~ msgid "Pages"
+#~ msgstr "页数"
+
+#~ msgid "Publisher"
+#~ msgstr "出版商"
+
+#~ msgid "Series"
+#~ msgstr "系列"
 
 #~ msgid "Set email"
 #~ msgstr "设置邮箱"

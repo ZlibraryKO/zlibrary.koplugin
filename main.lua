@@ -1392,17 +1392,9 @@ function Zlibrary:downloadBook(book)
                 user_session and user_session.user_key, referer_url, progress_callback)
         end
 
+        -- AsyncHelper.run delivers any result carrying .error to on_error, so api_result never has one
+        -- here; on_error_download owns every failure, including the auth retry.
         local function on_success_download(api_result)
-            if api_result and api_result.error and retry_on_auth_error and Api.isAuthenticationError(api_result.error) then
-                Ui.closeMessage(loading_msg)
-                self:login(function(login_ok)
-                    if login_ok then
-                        attemptDownload(false)
-                    end
-                end)
-                return
-            end
-
             Ui.closeMessage(loading_msg)
             if api_result and api_result.success then
 
@@ -1439,13 +1431,9 @@ function Zlibrary:downloadBook(book)
                 end
             )
             else
-                local fail_msg = (api_result and api_result.message) or T("Download failed: Unknown error")
-                if api_result and api_result.error and string.find(api_result.error, "Download limit reached or file is an HTML page", 1, true) then
-                    fail_msg = T("Download limit reached. Please try again later or check your account.")
-                elseif api_result and api_result.error then
-                    fail_msg = api_result.error
-                end
-                Ui.showErrorMessage(fail_msg)
+                -- Only reachable when the task returned no result at all; a result carrying .error
+                -- went to on_error_download instead.
+                Ui.showErrorMessage((api_result and api_result.message) or T("Download failed: Unknown error"))
             end
         end
 

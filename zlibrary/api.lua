@@ -23,16 +23,15 @@ function Api.isAuthenticationError(error_message)
     
     local error_str = tostring(error_message)
 
-    if string.find(error_str, "Please login", 1, true) ~= nil or 
+    if string.find(error_str, "Please login", 1, true) ~= nil or
        string.find(error_str, "Incorrect email or password", 1, true) ~= nil then
         return true
     end
-    
 
-    if string.find(error_str, "Download limit reached", 1, true) ~= nil then
-        return true
-    end
-    
+    -- A download-limit error is deliberately NOT treated as an authentication error. The session is
+    -- valid; the quota is spent. Re-authenticating cannot fix it, and treating it as auth made every
+    -- quota hit re-submit the user's credentials and repeat the whole download before finally
+    -- reporting the limit.
     return false
 end
 

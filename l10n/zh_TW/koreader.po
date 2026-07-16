@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-16 20:19+0200\n"
+"POT-Creation-Date: 2026-07-16 21:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese <zh@li.org>\n"
@@ -378,6 +378,9 @@ msgid "Failed to open target file"
 msgstr ""
 
 msgid "Download limit reached or file is an HTML page"
+msgstr ""
+
+msgid "Failed to save downloaded file"
 msgstr ""
 
 msgid "Download HTTP Error"

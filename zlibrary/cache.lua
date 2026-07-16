@@ -9,6 +9,14 @@ local logger = require("logger")
 local DEF_TTL_CACHE_EXPIRY = 432000 -- 5 days
 local BASE_CACHE_DIR = DataStorage:getDataDir() .. "/cache/zlibrary"
 
+-- book_hash arrives verbatim from the server's JSON and is pasted straight into a filesystem path,
+-- so it has to be treated as untrusted: a hash containing a slash or ".." would steer the cache's
+-- writes, reads and unlinks outside BASE_CACHE_DIR. Real z-library hashes are hex, so accepting only
+-- word characters, underscores and dashes rejects traversal without rejecting anything genuine.
+local function _isValidBookHash(book_hash)
+    return type(book_hash) == "string" and book_hash:match("^[%w_-]+$") ~= nil
+end
+
 local BaseCache = {}
 BaseCache.__index = BaseCache
 
@@ -145,7 +153,7 @@ function BookInfoCache:getPath(book_hash)
 end
 
 function BookInfoCache:insert(book_hash, info_table)
-    if type(book_hash) ~= "string" or type(info_table) ~= "table" then return false end
+    if not _isValidBookHash(book_hash) or type(info_table) ~= "table" then return false end
     self:_ensurePath(self._target_dir)
     local path = self:getPath(book_hash)
     local book_cache = LuaSettings:open(path)
@@ -156,7 +164,7 @@ function BookInfoCache:insert(book_hash, info_table)
 end
 
 function BookInfoCache:get(book_hash, cache_expiry, skip_rm)
-    if type(book_hash) ~= "string" then return nil end
+    if not _isValidBookHash(book_hash) then return nil end
     local path = self:getPath(book_hash)
     if not util.fileExists(path) then return nil end
 
@@ -179,7 +187,7 @@ function BookInfoCache:get(book_hash, cache_expiry, skip_rm)
 end
 
 function BookInfoCache:remove(book_hash)
-    if type(book_hash) ~= "string" then return false end
+    if not _isValidBookHash(book_hash) then return false end
     local path = self:getPath(book_hash)
     if util.fileExists(path) then
         return os.remove(path)
@@ -204,13 +212,13 @@ function CoverCache:getPath(book_hash)
 end
 
 function CoverCache:getTempPath(book_hash)
-    if type(book_hash) ~= "string" or book_hash == "" then return nil end
+    if not _isValidBookHash(book_hash) then return nil end
     self:_ensurePath(self._target_dir)
     return ("%s/%s.jpg.downloading"):format(self._target_dir, book_hash)
 end
 
 function CoverCache:insert(book_hash, source_file_path)
-    if type(book_hash) ~= "string" or type(source_file_path) ~= "string" then return false end
+    if not _isValidBookHash(book_hash) or type(source_file_path) ~= "string" then return false end
     if not util.fileExists(source_file_path) then return false end
     self:_ensurePath(self._target_dir)
     local target_path = self:getPath(book_hash)
@@ -221,7 +229,7 @@ function CoverCache:insert(book_hash, source_file_path)
 end
 
 function CoverCache:get(book_hash, cache_expiry)
-    if type(book_hash) ~= "string" or book_hash == "" then return nil end
+    if not _isValidBookHash(book_hash) then return nil end
     local path = self:getPath(book_hash)
     if util.fileExists(path) then 
         if type(cache_expiry) == "number" then
@@ -240,7 +248,7 @@ function CoverCache:get(book_hash, cache_expiry)
 end
 
 function CoverCache:remove(book_hash)
-    if type(book_hash) ~= "string" or book_hash == "" then return false end
+    if not _isValidBookHash(book_hash) then return false end
     local path = self:getPath(book_hash)
     local temp_path = self:getTempPath(book_hash)
     

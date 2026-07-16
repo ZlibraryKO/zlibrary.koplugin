@@ -106,7 +106,7 @@ jobs:
                     echo "Failed to update $po_file!"
                 fi
                 echo "Checking and compiling $po_file ..."
-                msgfmt --check-format --verbose "$po_file" \
+                msgfmt --check-format --verbose -o /dev/null "$po_file" \
                   && msgfmt "$po_file" -o "${po_file%.po}.mo" \
                   && echo "Compiled successfully: ${po_file%.po}.mo" \
                   || echo "Errors in $po_file"

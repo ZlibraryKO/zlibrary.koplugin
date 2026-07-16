@@ -373,11 +373,15 @@ function Api.login(email, password, is_redir_callback)
         return result
     end
 
-    local data, _, err_msg = json.decode(http_result.body)
+    -- json.decode raises on an unparseable body rather than returning an error, so it needs the
+    -- pcall the other decode sites already use; without it a Cloudflare challenge or any HTML error
+    -- page escapes Api.login as a raw Lua error. json.decode.simple maps json null to nil -- without
+    -- it null decodes to a function sentinel, which is truthy and defeats the guards below.
+    local success, data = pcall(json.decode, http_result.body, json.decode.simple)
 
-    if not data or type(data) ~= "table" then
-        result.error = http_result.error or (T("Login failed: Invalid response format") .. (err_msg and (". " .. err_msg) or ""))
-        logger.err(string.format("Zlibrary:Api.login - END (JSON error) - Error: %s", result.error))
+    if not success or type(data) ~= "table" then
+        result.error = http_result.error or T("Login failed: Invalid response format")
+        logger.err(string.format("Zlibrary:Api.login - END (JSON error) - Error: %s, Body: %s", result.error, tostring(http_result.body)))
         return result
     end
 
@@ -486,16 +490,20 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
         return result
     end
 
-    local data, _, err_msg = json.decode(http_result.body)
+    -- See Api.login: the pcall catches the unparseable body json.decode raises on, and
+    -- json.decode.simple keeps json null from decoding to a truthy function sentinel.
+    local success, data = pcall(json.decode, http_result.body, json.decode.simple)
 
-    if not data or type(data) ~= "table" then
-        result.error = T("Invalid response format from server") .. (err_msg and (": " .. err_msg) or "")
-        logger.err(string.format("Zlibrary:Api.search - END (JSON error) - Error: %s, Body: %s", result.error, http_result.body))
+    if not success or type(data) ~= "table" then
+        result.error = T("Invalid response format from server")
+        logger.err(string.format("Zlibrary:Api.search - END (JSON error) - Error: %s, Body: %s", result.error, tostring(http_result.body)))
         return result
     end
 
     if data.error then
-        result.error = T("Search API error") .. ": " .. (data.error.message or data.error)
+        -- data.error may be a string or an object; guard the index the way _extractErrorFromJsonBody does.
+        local api_message = (type(data.error) == "table" and data.error.message) or data.error
+        result.error = T("Search API error") .. ": " .. tostring(api_message)
         logger.warn(string.format("Zlibrary:Api.search - END (API error in response) - Error: %s", result.error))
         return result
     end

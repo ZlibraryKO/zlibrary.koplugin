@@ -990,8 +990,8 @@ function Ui.showUrlCheckProgress(parent_zlibrary, menu_items, close_callback)
         title_bar_fm_style = true,
         single_line = true,
     }
-    function menu:onCloseWidget() 
-        if type(close_callback) == "" then close_callback() end
+    function menu:onCloseWidget()
+        if type(close_callback) == "function" then close_callback() end
         Menu.onCloseWidget(self)
     end
     _showAndTrackDialog(menu)

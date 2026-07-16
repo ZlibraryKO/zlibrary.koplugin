@@ -2,6 +2,7 @@ local util = require("util")
 local logger = require("logger")
 local DataStorage = require("datastorage")
 local LuaSettings = require("luasettings")
+local socket_url = require("socket.url")
 local T = require("zlibrary.gettext")
 local Cache = require("zlibrary.cache")
 
@@ -187,13 +188,36 @@ function Config.clearCacheRealUrl()
     return Config.getConfigRuntimeCache():remove("api_real_url")
 end
 
+-- scheme://host[:port] of a url, or nil when it has no parsable origin.
+local function _getUrlOrigin(url)
+    if type(url) ~= "string" or url == "" then
+        return nil
+    end
+    local parsed = socket_url.parse(url)
+    if not (parsed and parsed.scheme and parsed.host) then
+        return nil
+    end
+    return socket_url.build({
+        scheme = parsed.scheme,
+        host = parsed.host,
+        port = parsed.port,
+    })
+end
+
 function Config.setCacheRealUrl(original_url, real_url)
     if not (original_url and real_url) then
         return
     end
-    
-    local base_url = Config.getBaseUrl(true)
-    if not (base_url and string.find(original_url, base_url, 1, true)) then
+
+    -- The redirected request was built by Config.getBaseUrl(), which prefers the cached real url
+    -- over the configured one, so accept either origin. Matching only the configured one would
+    -- reject every hop after the first (A -> B -> C never records C) and leave onRedirect
+    -- retrying the stale host.
+    local origin = _getUrlOrigin(original_url)
+    if not origin then
+        return
+    end
+    if origin ~= _getUrlOrigin(Config.getBaseUrl(true)) and origin ~= _getUrlOrigin(Config.getCacheRealUrl()) then
         return
     end
 
@@ -202,6 +226,26 @@ function Config.setCacheRealUrl(original_url, real_url)
     end
 
     return Config.getConfigRuntimeCache():insert("api_real_url", real_url)
+end
+
+-- Drop the cached redirect target when that very host is the one that just failed.
+-- The cache is otherwise write-once and expire-only, so a target that goes bad keeps every
+-- request pointed at it for the rest of its TTL. Only a failure from the pinned host itself
+-- clears it: a failure from any other host says nothing about whether the pin is still good.
+-- Returns true when a pin was dropped.
+function Config.clearCacheRealUrlIfPinned(url)
+    local cached_url = Config.getCacheRealUrl()
+    if not cached_url then
+        return false
+    end
+
+    local origin = _getUrlOrigin(url)
+    if not origin or origin ~= _getUrlOrigin(cached_url) then
+        return false
+    end
+
+    Config.clearCacheRealUrl()
+    return true
 end
 
 function Config.getBaseUrl(is_original)

@@ -521,11 +521,24 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
     end
 
     local result = { success = false, error = nil }
-    local file, err_open = io.open(target_filepath, "wb")
+
+    -- Download into a sibling temp file and rename onto target_filepath only once the whole body has
+    -- arrived. Opening target_filepath directly would truncate an existing book before the first byte
+    -- is fetched, and every failure below would then delete it -- so a quota-blocked re-download of a
+    -- book the user already owns would destroy their copy. CoverCache does the same thing for covers.
+    local temp_filepath = target_filepath .. ".downloading"
+    local file, err_open = io.open(temp_filepath, "wb")
     if not file then
         result.error = T("Failed to open target file") .. ": " .. (err_open or T("Unknown error"))
         logger.err(string.format("Zlibrary:Api.downloadBook - END (File open error) - Error: %s", result.error))
         return result
+    end
+
+    -- The sink closes the handle at end of stream, but not when the request fails before it is ever
+    -- called, so close defensively; a double close is harmless here.
+    local function discardTempFile()
+        pcall(function() file:close() end)
+        pcall(os.remove, temp_filepath)
     end
 
     local headers = { ["User-Agent"] = Config.USER_AGENT }
@@ -552,7 +565,7 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
 
     if http_result.error and not (http_result.status_code and http_result.headers) then
         result.error = http_result.error
-        pcall(os.remove, target_filepath)
+        discardTempFile()
         logger.err(string.format("Zlibrary:Api.downloadBook - END (Request error) - Error: %s", result.error))
         return result
     end
@@ -560,17 +573,27 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
     local content_type = http_result.headers and http_result.headers["content-type"]
     if content_type and string.find(string.lower(content_type), "text/html") then
         result.error = T("Download limit reached or file is an HTML page")
-        pcall(os.remove, target_filepath)
+        discardTempFile()
         logger.warn(string.format("Zlibrary:Api.downloadBook - END (HTML content detected) - URL: %s, Status: %s, Content-Type: %s", download_url, tostring(http_result.status_code), content_type))
         return result
     end
 
     if http_result.error or (http_result.status_code and http_result.status_code ~= 200) then
         result.error = http_result.error or string.format("%s: %s", T("HTTP Error"), http_result.status_code)
-        pcall(os.remove, target_filepath)
+        discardTempFile()
         logger.err(string.format("Zlibrary:Api.downloadBook - END (Download error) - Error: %s, Status: %s", result.error, tostring(http_result.status_code)))
         return result
     else
+        pcall(function() file:close() end)
+        -- Same directory, so this is an atomic replace; the user's copy is only ever replaced by a
+        -- complete download.
+        local renamed, err_rename = os.rename(temp_filepath, target_filepath)
+        if not renamed then
+            result.error = T("Failed to save downloaded file") .. ": " .. tostring(err_rename or T("Unknown error"))
+            discardTempFile()
+            logger.err(string.format("Zlibrary:Api.downloadBook - END (Rename error) - Error: %s", result.error))
+            return result
+        end
         result.success = true
         logger.info(string.format("Zlibrary:Api.downloadBook - END (Success) - Target: %s", target_filepath))
         return result

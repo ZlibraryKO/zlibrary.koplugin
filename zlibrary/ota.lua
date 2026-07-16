@@ -190,15 +190,13 @@ function Ota.installUpdate(zip_filepath, plugin_base_path)
     local unzip_command = string.format("unzip -o '%s' -d '%s' -x '%s'", zip_filepath, target_unzip_dir, excluded_file_path_in_zip)
     logger.info("Zlibrary:Ota.installUpdate - Executing: " .. unzip_command)
 
-    local ok, err_code, err_msg_os = os.execute(unzip_command)
+    -- LuaJIT keeps Lua 5.1's os.execute: it returns the raw system() status as a single number and
+    -- nothing else, so the extra return values were always nil and, worse, 0 is truthy in Lua --
+    -- `if not ok` could never fire. Compare against 0, as KOReader does at every other call site.
+    local exec_status = os.execute(unzip_command)
 
-    if not ok then
-        local error_detail = "Unknown error"
-        if type(err_code) == "number" then
-            error_detail = "Exit code: " .. err_code
-        elseif type(err_msg_os) == "string" then
-            error_detail = err_msg_os
-        end
+    if exec_status ~= 0 then
+        local error_detail = "unzip status: " .. tostring(exec_status)
         logger.err("Zlibrary:Ota.installUpdate - Failed to extract ZIP: " .. error_detail .. " Command: " .. unzip_command)
         _show_ota_final_message(T("Update installation failed."), true)
         return { error = "Failed to extract update package: " .. error_detail }

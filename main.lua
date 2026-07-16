@@ -200,7 +200,10 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                 
                 on_start = function(idx, seed)
                     local pos = idx + offset
-                    if is_interactive and connection_menu then
+                    -- Match the on_item_end guard below: clearTasks cannot recall a probe that has
+                    -- already forked, so this can still fire after the menu is gone, and
+                    -- updateItems would repaint through show_parent onto whatever is on screen now.
+                    if is_interactive and connection_menu and UIManager:isWidgetShown(connection_menu) then
                         local item = connection_menu.item_table[pos]
                         if item then
                             item.mandatory = "\u{27F3} " .. T("Checking")
@@ -386,10 +389,13 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
             if connection_menu and connection_menu.onFirstPage then connection_menu:onFirstPage() end
         end})
 
-        connection_menu = Ui.showUrlCheckProgress(self, menu_items, function() 
-            self.discover_channel:clearTasks()
-            is_discovering = false
+        connection_menu = Ui.showUrlCheckProgress(self, menu_items, function()
+            -- Clear the state BEFORE clearTasks: it runs the session abort hooks synchronously, and
+            -- the batch hook calls on_batch_end -> finishDiscovery, which would otherwise still see
+            -- first_working_url and set the base URL the user just walked away from.
             first_working_url = nil
+            is_discovering = false
+            self.discover_channel:clearTasks()
         end)
     end
 

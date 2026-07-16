@@ -35,6 +35,18 @@ function Api.isAuthenticationError(error_message)
     return false
 end
 
+-- util.trim indexes its argument directly, with no nil guard, so a missing field raises instead of
+-- falling back. Json null decodes to a function sentinel, which raises the same way, and a trimmed
+-- empty string is truthy, so an `or` fallback after the call would not catch it either. Check the
+-- type first and treat blank as missing.
+local function _safeTrim(value, default)
+    if type(value) ~= "string" then
+        return default
+    end
+    local trimmed = util.trim(value)
+    return trimmed ~= "" and trimmed or default
+end
+
 local function _transformApiBookData(api_books)
     if not api_books or type(api_books) ~= "table" then
         return {}
@@ -59,8 +71,8 @@ local function _transformApiBookData(api_books)
             table.insert(transformed_books, {
                 id =book.id,
                 hash =book.hash,
-                title = util.trim(book.title) or "Unknown Title",
-                author = util.trim(book.author) or "Unknown Author",
+                title = _safeTrim(book.title, "Unknown Title"),
+                author = _safeTrim(book.author, "Unknown Author"),
                 year = book.year or "N/A",
                 format = book.extension or "N/A",
                 size = book.filesizeString or book.filesize or "N/A",

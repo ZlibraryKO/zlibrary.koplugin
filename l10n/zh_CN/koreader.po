@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-16 17:50+0000\n"
+"POT-Creation-Date: 2026-07-16 20:19+0200\n"
 "PO-Revision-Date: 2026-04-03 00:00+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
@@ -326,11 +326,17 @@ msgstr "评论"
 msgid "No comments to display"
 msgstr "没有评论展示"
 
+msgid "Could not find the server address"
+msgstr ""
+
 msgid "Request timed out - please check your connection and try again"
 msgstr "请求超时 - 请检查您的连接后重试"
 
 msgid "Network request failed"
 msgstr "网络请求失败"
+
+msgid "The Z-library address may be wrong or no longer exist."
+msgstr ""
 
 msgid "Network connection error - please check your internet connection and try again"
 msgstr "网络连接错误 - 请检查您的网络连接后重试"
@@ -743,6 +749,10 @@ msgstr "网络连接错误"
 #, lua-format
 msgid "%s failed due to a timeout%s. Would you like to retry?"
 msgstr "%s因超时%s失败。您要重试吗？"
+
+#, lua-format
+msgid "%s failed because the server address could not be found. Would you like to retry?"
+msgstr ""
 
 #, lua-format
 msgid "%s failed due to a network error. Would you like to retry?"

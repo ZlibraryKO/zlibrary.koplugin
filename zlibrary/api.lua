@@ -867,17 +867,12 @@ function Api.getDownloadLink(user_id, user_key, book_id, book_hash)
     local download_link = file_data.downloadLink
 
     if not download_link then
-        logger.warn("Api.getDownloadLink - No download link in response: ", http_result.body)
         -- The endpoint answers 200 with success=1 and the file record, but no link, when the account
-        -- may not download it right now -- an exhausted daily quota being the usual reason. It says
-        -- why in disallowDownloadMessage, which names the limit and how long until it resets, so
-        -- prefer it over a generic string. It arrives as HTML.
+        -- may not download right now -- an exhausted daily quota being the usual reason. Its own
+        -- disallowDownloadMessage explains why and names the reset time, but it is HTML and only ever
+        -- English, so it stays in the log and the user gets the translated message instead.
+        logger.warn("Api.getDownloadLink - No download link in response: ", http_result.body)
         if file_data.allowDownload == false then
-            local reason = type(file_data.disallowDownloadMessage) == "string"
-                and util.trim(util.htmlToPlainText(file_data.disallowDownloadMessage)) or nil
-            if reason and reason ~= "" then
-                return { error = reason }
-            end
             return { error = T("Download limit reached. Please try again later or check your account.") }
         end
         return { error = T("No download link provided in API response.") }

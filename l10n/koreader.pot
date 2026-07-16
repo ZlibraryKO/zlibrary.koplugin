@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-27 09:03+0000\n"
+"POT-Creation-Date: 2026-07-16 17:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -73,7 +73,7 @@ msgstr ""
 msgid "Failed"
 msgstr ""
 
-#: main.lua:238 main.lua:371 zlibrary/api.lua:485 zlibrary/api.lua:544
+#: main.lua:238 main.lua:371 zlibrary/api.lua:494 zlibrary/api.lua:553
 msgid "Unknown error"
 msgstr ""
 
@@ -418,7 +418,7 @@ msgstr ""
 msgid "Retrying download..."
 msgstr ""
 
-#: main.lua:1510 zlibrary/api.lua:1214
+#: main.lua:1510 zlibrary/api.lua:1223
 msgid "Book ID is required."
 msgstr ""
 
@@ -439,7 +439,7 @@ msgstr ""
 msgid "No comments to display"
 msgstr ""
 
-#: zlibrary/api.lua:211 zlibrary/api.lua:232
+#: zlibrary/api.lua:211 zlibrary/api.lua:238
 msgid "Request timed out - please check your connection and try again"
 msgstr ""
 
@@ -447,229 +447,229 @@ msgstr ""
 msgid "Network request failed"
 msgstr ""
 
-#: zlibrary/api.lua:234
+#: zlibrary/api.lua:240
 msgid ""
 "Network connection error - please check your internet connection and try "
 "again"
 msgstr ""
 
-#: zlibrary/api.lua:266 zlibrary/api.lua:528
+#: zlibrary/api.lua:275 zlibrary/api.lua:537
 msgid "HTTP Error"
 msgstr ""
 
-#: zlibrary/api.lua:266
+#: zlibrary/api.lua:275
 msgid "Unknown Status"
 msgstr ""
 
-#: zlibrary/api.lua:282 zlibrary/api.lua:371
+#: zlibrary/api.lua:291 zlibrary/api.lua:380
 msgid ""
 "The Z-library server address (URL) is not set. Please configure it in the Z-"
 "library plugin settings."
 msgstr ""
 
-#: zlibrary/api.lua:319
+#: zlibrary/api.lua:328
 msgid "Login failed: Empty response from server"
 msgstr ""
 
-#: zlibrary/api.lua:327
+#: zlibrary/api.lua:336
 msgid "Login failed: Invalid response format"
 msgstr ""
 
-#: zlibrary/api.lua:339 zlibrary/api.lua:354
+#: zlibrary/api.lua:348 zlibrary/api.lua:363
 msgid "Login failed"
 msgstr ""
 
-#: zlibrary/api.lua:345
+#: zlibrary/api.lua:354
 msgid "Login failed: Invalid session data"
 msgstr ""
 
-#: zlibrary/api.lua:354
+#: zlibrary/api.lua:363
 msgid "Credentials rejected or invalid response"
 msgstr ""
 
-#: zlibrary/api.lua:432
+#: zlibrary/api.lua:441
 msgid "No response received from server - please try again"
 msgstr ""
 
-#: zlibrary/api.lua:440
+#: zlibrary/api.lua:449
 msgid "Invalid response format from server"
 msgstr ""
 
-#: zlibrary/api.lua:446
+#: zlibrary/api.lua:455
 msgid "Search API error"
 msgstr ""
 
-#: zlibrary/api.lua:485 zlibrary/api.lua:544
+#: zlibrary/api.lua:494 zlibrary/api.lua:553
 msgid "Failed to open target file"
 msgstr ""
 
-#: zlibrary/api.lua:521
+#: zlibrary/api.lua:530
 msgid "Download limit reached or file is an HTML page"
 msgstr ""
 
-#: zlibrary/api.lua:575
+#: zlibrary/api.lua:584
 msgid "Download HTTP Error"
 msgstr ""
 
-#: zlibrary/api.lua:590 zlibrary/api.lua:638 zlibrary/api.lua:804
-#: zlibrary/api.lua:857 zlibrary/api.lua:916 zlibrary/api.lua:971
-#: zlibrary/api.lua:1020 zlibrary/api.lua:1067 zlibrary/api.lua:1114
+#: zlibrary/api.lua:599 zlibrary/api.lua:647 zlibrary/api.lua:813
+#: zlibrary/api.lua:866 zlibrary/api.lua:925 zlibrary/api.lua:980
+#: zlibrary/api.lua:1029 zlibrary/api.lua:1076 zlibrary/api.lua:1123
 msgid "Z-library server URL not configured."
 msgstr ""
 
-#: zlibrary/api.lua:616
+#: zlibrary/api.lua:625
 msgid "Failed to fetch recommended books (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:622
+#: zlibrary/api.lua:631
 msgid "Failed to parse recommended books response."
 msgstr ""
 
-#: zlibrary/api.lua:627
+#: zlibrary/api.lua:636
 msgid "API returned an error for recommended books."
 msgstr ""
 
-#: zlibrary/api.lua:664
+#: zlibrary/api.lua:673
 msgid "Failed to fetch most popular books (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:670
+#: zlibrary/api.lua:679
 msgid "Failed to parse most popular books response."
 msgstr ""
 
-#: zlibrary/api.lua:675
+#: zlibrary/api.lua:684
 msgid "API returned an error for most popular books."
 msgstr ""
 
-#: zlibrary/api.lua:686 zlibrary/api.lua:741 zlibrary/api.lua:1222
+#: zlibrary/api.lua:695 zlibrary/api.lua:750 zlibrary/api.lua:1231
 msgid "Z-library server URL not configured or book identifiers missing."
 msgstr ""
 
-#: zlibrary/api.lua:714
+#: zlibrary/api.lua:723
 msgid "Failed to fetch book details (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:720
+#: zlibrary/api.lua:729
 msgid "Failed to parse book details response."
 msgstr ""
 
-#: zlibrary/api.lua:725
+#: zlibrary/api.lua:734
 msgid "API returned an error for book details."
 msgstr ""
 
-#: zlibrary/api.lua:731
+#: zlibrary/api.lua:740
 msgid "Failed to process book details."
 msgstr ""
 
-#: zlibrary/api.lua:769
+#: zlibrary/api.lua:778
 msgid "Failed to fetch download link (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:775
+#: zlibrary/api.lua:784
 msgid "Failed to parse download link response."
 msgstr ""
 
-#: zlibrary/api.lua:780
+#: zlibrary/api.lua:789
 msgid "API returned an error for download link."
 msgstr ""
 
-#: zlibrary/api.lua:788
+#: zlibrary/api.lua:797
 msgid "No download link provided in API response."
 msgstr ""
 
-#: zlibrary/api.lua:832
+#: zlibrary/api.lua:841
 msgid "Failed to fetch similar books (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:838
+#: zlibrary/api.lua:847
 msgid "Failed to parse similar books response."
 msgstr ""
 
-#: zlibrary/api.lua:843
+#: zlibrary/api.lua:852
 msgid "API returned an error for similar books."
 msgstr ""
 
-#: zlibrary/api.lua:885
+#: zlibrary/api.lua:894
 msgid "Failed to fetch downloaded books (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:892
+#: zlibrary/api.lua:901
 msgid "Failed to parse downloaded books response."
 msgstr ""
 
-#: zlibrary/api.lua:897
+#: zlibrary/api.lua:906
 msgid "API returned an error for downloaded books."
 msgstr ""
 
-#: zlibrary/api.lua:944
+#: zlibrary/api.lua:953
 msgid "Failed to fetch favorite books (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:950
+#: zlibrary/api.lua:959
 msgid "Failed to parse favorite books response."
 msgstr ""
 
-#: zlibrary/api.lua:955
+#: zlibrary/api.lua:964
 msgid "API returned an error for favorite books."
 msgstr ""
 
-#: zlibrary/api.lua:999
+#: zlibrary/api.lua:1008
 msgid "Failed to fetch unfavorite book (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:1005
+#: zlibrary/api.lua:1014
 msgid "Failed to parse unfavorite book response."
 msgstr ""
 
-#: zlibrary/api.lua:1010
+#: zlibrary/api.lua:1019
 msgid "API returned an error for unfavorite book."
 msgstr ""
 
-#: zlibrary/api.lua:1046
+#: zlibrary/api.lua:1055
 msgid "Failed to fetch download quota status (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:1052
+#: zlibrary/api.lua:1061
 msgid "Failed to parse download quota status response."
 msgstr ""
 
-#: zlibrary/api.lua:1057
+#: zlibrary/api.lua:1066
 msgid "API returned an error for download quota status."
 msgstr ""
 
-#: zlibrary/api.lua:1093
+#: zlibrary/api.lua:1102
 msgid "Failed to fetch favorite-book IDs (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:1099
+#: zlibrary/api.lua:1108
 msgid "Failed to parse favorite-book IDs."
 msgstr ""
 
-#: zlibrary/api.lua:1104
+#: zlibrary/api.lua:1113
 msgid "API returned an error for favorite-book IDs."
 msgstr ""
 
-#: zlibrary/api.lua:1142
+#: zlibrary/api.lua:1151
 msgid "Failed to fetch favorite book (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:1148
+#: zlibrary/api.lua:1157
 msgid "Failed to parse favorite book response."
 msgstr ""
 
-#: zlibrary/api.lua:1153
+#: zlibrary/api.lua:1162
 msgid "API returned an error for favorite book."
 msgstr ""
 
-#: zlibrary/api.lua:1250
+#: zlibrary/api.lua:1259
 msgid "Failed to fetch book comments (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:1258
+#: zlibrary/api.lua:1267
 msgid "Failed to parse book comments response."
 msgstr ""
 
-#: zlibrary/api.lua:1265
+#: zlibrary/api.lua:1274
 msgid "API returned an error for book comments."
 msgstr ""
 

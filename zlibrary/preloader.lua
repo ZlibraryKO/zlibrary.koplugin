@@ -26,7 +26,9 @@ function ApiHelper.downloadCover(url, book_hash, skip_conflicts)
     local cache_path = cover_cache:get(book_hash)
     if cache_path then return true end
     local temp_path = cover_cache:getTempPath(book_hash)
-   if util.fileExists(temp_path) and skip_conflicts then return false end
+    -- nil when the server's hash is not usable as a path component; util.fileExists would raise on it
+    if not temp_path then return false end
+    if util.fileExists(temp_path) and skip_conflicts then return false end
     util.removeFile(temp_path)
     local res = Api.downloadBookCover(url, temp_path)
     if not res or res.error or not res.success then

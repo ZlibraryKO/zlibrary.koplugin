@@ -638,8 +638,12 @@ function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel
                       string.find(error_string, "sink timeout")
     local is_network_error = string.find(error_string, T("Network connection error")) or
                             string.find(error_string, T("Network request failed"))
-    
-    if is_http_400 or is_timeout or is_network_error then
+    -- A dead or misspelled base URL never resolves, so retrying alone can only fail again.
+    -- Offer auto-discovery alongside Retry, the same way a timeout does.
+    local is_dns_error = string.find(error_string, Api.DNS_ERROR_TEXT, 1, true) ~= nil
+    local offer_discover = (is_timeout or is_dns_error) and true or nil
+
+    if is_http_400 or is_timeout or is_network_error or is_dns_error then
         local retry_message
         if is_timeout then
             -- Get timeout info to show to user
@@ -668,6 +672,8 @@ function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel
                 timeout_info = string.format(" (%ds)", book_timeout[1])
             end
             retry_message = string.format(T("%s failed due to a timeout%s. Would you like to retry?"), operation_name, timeout_info)
+        elseif is_dns_error then
+            retry_message = string.format(T("%s failed because the server address could not be found. Would you like to retry?"), operation_name)
         elseif is_network_error then
             retry_message = string.format(T("%s failed due to a network error. Would you like to retry?"), operation_name)
         else
@@ -691,8 +697,8 @@ function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel
                     end
                     cancel_callback(err_msg)
                 end,
-                other_buttons_first = is_timeout and true or nil,
-                other_buttons = is_timeout and {{{ 
+                other_buttons_first = offer_discover,
+                other_buttons = offer_discover and {{{
                     text = string.format("%s&%s",T("Auto-discover base URL"), T("Retry")), 
                     callback = function()  
                         if loading_msg_to_close then  

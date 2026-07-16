@@ -212,7 +212,10 @@ function Api.makeHttpRequest(options)
         else
             result.error = T("Network request failed") .. ": " .. error_msg
         end
-        logger.err(string.format("Zlibrary:Api.makeHttpRequest - END (pcall error) - Error: %s", result.error))
+        logger.err(string.format(
+            "Zlibrary:Api.makeHttpRequest - END (pcall error) - %s %s - raw=[%s] elapsed=%dms - Error: %s",
+            tostring(request_params.method), tostring(options.url),
+            error_msg, result.elapsed or -1, result.error))
         return result
     end
 
@@ -224,16 +227,22 @@ function Api.makeHttpRequest(options)
     end
 
     if type(result.status_code) ~= "number" then
+        -- socket.http is socket.protect'd: on a transport failure it returns (nil, err),
+        -- so r_code holds the underlying LuaSocket/LuaSec error string, not a status code.
         local status_str = tostring(result.status_code)
-        if string.find(status_str, "wantread") or 
-           string.find(status_str, "timeout") or 
-           string.find(status_str, "closed") or
-           string.find(status_str, "sink timeout") then
+        result.transport_error = status_str
+        if string.find(status_str, "wantread", 1, true) or
+           string.find(status_str, "wantwrite", 1, true) or
+           string.find(status_str, "timeout", 1, true) or
+           string.find(status_str, "closed", 1, true) then
             result.error = T("Request timed out - please check your connection and try again")
         else
             result.error = T("Network connection error - please check your internet connection and try again")
         end
-        logger.err(string.format("Zlibrary:Api.makeHttpRequest - END (Invalid response code type) - Error: %s", result.error))
+        logger.err(string.format(
+            "Zlibrary:Api.makeHttpRequest - END (Invalid response code type) - %s %s - transport_error=[%s] (type %s) elapsed=%dms - Error: %s",
+            tostring(request_params.method), tostring(options.url),
+            status_str, type(result.status_code), result.elapsed or -1, result.error))
         return result
     end
 

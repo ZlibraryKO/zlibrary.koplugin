@@ -107,6 +107,9 @@ local function _checkAndHandleRedirect(skip_check, status_code, current_url)
         headers = { ["User-Agent"] = Config.USER_AGENT },
         timeout = {5, 10},
         redirect = true,
+        -- This probe only reads the redirect target; it must not disturb the cached one,
+        -- which the onRedirect callback below is about to read to rebuild the retry URL.
+        skipRedirectCache = true,
     })
     
     result.has_redirect = true
@@ -224,6 +227,19 @@ function Api.makeHttpRequest(options)
 
     if not options.sink then
         result.body = table.concat(response_body_table)
+    end
+
+    -- A pinned redirect target that fails at the transport layer, or answers 5xx, is not usable.
+    -- Drop it now instead of keeping every request on it until the TTL lapses. 4xx must not clear
+    -- the pin: a 401 or a download limit is a healthy host answering, not a broken one. 3xx must
+    -- not either, since the redirect handling below still needs the pin to rebuild the retry URL.
+    if not options.skipRedirectCache and
+       (type(result.status_code) ~= "number" or result.status_code >= 500) then
+        if Config.clearCacheRealUrlIfPinned(options.url) then
+            logger.info(string.format(
+                "Zlibrary:Api.makeHttpRequest - Dropped cached redirect target; it failed: %s (status: %s)",
+                tostring(options.url), tostring(result.status_code)))
+        end
     end
 
     if type(result.status_code) ~= "number" then

@@ -11,6 +11,11 @@ local T = require("zlibrary.gettext")
 
 local Api = {}
 
+-- Leading text of the name-resolution error built in Api.makeHttpRequest.
+-- Ui.showRetryErrorDialog matches on this exact value to offer base URL auto-discovery,
+-- so both sides must share the message id for the match to survive translation.
+Api.DNS_ERROR_TEXT = T("Could not find the server address")
+
 function Api.isAuthenticationError(error_message)
     if not error_message then
         return false
@@ -236,6 +241,17 @@ function Api.makeHttpRequest(options)
            string.find(status_str, "timeout", 1, true) or
            string.find(status_str, "closed", 1, true) then
             result.error = T("Request timed out - please check your connection and try again")
+        elseif string.find(status_str, "name resolution", 1, true) or
+               string.find(status_str, "host or service not provided", 1, true) then
+            -- getaddrinfo failed, so the address never resolved and nothing was sent. The
+            -- connection itself is usually fine, and telling the user to check it sends them
+            -- after the wrong problem: the base URL is dead or misspelled. LuaSocket returns
+            -- these strings as fixed C literals, so matching them is locale-safe.
+            local parsed = socket_url.parse(options.url or "")
+            result.error = string.format("%s (%s). %s",
+                Api.DNS_ERROR_TEXT,
+                (parsed and parsed.host) or tostring(options.url),
+                T("The Z-library address may be wrong or no longer exist."))
         else
             result.error = T("Network connection error - please check your internet connection and try again")
         end

@@ -1446,7 +1446,6 @@ function Zlibrary:downloadBook(book)
                     fail_msg = api_result.error
                 end
                 Ui.showErrorMessage(fail_msg)
-                pcall(os.remove, target_filepath)
             end
         end
 
@@ -1465,7 +1464,6 @@ function Zlibrary:downloadBook(book)
             if string.find(error_string, "Download limit reached or file is an HTML page", 1, true) then
                 Ui.closeMessage(loading_msg)
                 Ui.showErrorMessage(T("Download limit reached. Please try again later or check your account."))
-                pcall(os.remove, target_filepath)
                 return
             end
             
@@ -1475,8 +1473,9 @@ function Zlibrary:downloadBook(book)
                 loading_msg, progress_callback = Ui.showBookDownloadProgress(book, T("Retrying download..."))
                 AsyncHelper.run(task_download, on_success_download, on_error_download, loading_msg)
             end, function(final_err_msg)
-                -- Cancel callback - user already knows about the error
-                pcall(os.remove, target_filepath)
+                -- Cancel callback - user already knows about the error. Nothing to clean up:
+                -- Api.downloadBook discards its own temp file, and this path is also reached when
+                -- Api.getDownloadLink failed and no file was ever created.
             end, loading_msg)
         end
 

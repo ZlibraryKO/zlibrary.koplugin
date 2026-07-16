@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-16 20:19+0200\n"
+"POT-Creation-Date: 2026-07-16 21:26+0200\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -385,6 +385,9 @@ msgstr "Неуспешно отваряне на целевия файл"
 
 msgid "Download limit reached or file is an HTML page"
 msgstr "Достигнат лимит за изтегляне или файлът е HTML страница"
+
+msgid "Failed to save downloaded file"
+msgstr ""
 
 msgid "Download HTTP Error"
 msgstr "HTTP грешка при изтегляне"

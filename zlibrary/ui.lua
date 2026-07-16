@@ -245,15 +245,21 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
                     return #new_selected_values
                 else
                     Config.deleteSetting(setting_key)
+                    -- Return the count rather than falling off the end: selecting nothing is a
+                    -- normal outcome, and the callers below need a number.
+                    return 0
                 end
             end)
 
             UIManager:close(selection_menu)
             if ok then
+                local selected_count = err or 0
                 if type(ok_callback) == "function" then
-                    ok_callback(err)
+                    ok_callback(selected_count)
+                elseif selected_count > 0 then
+                    Ui.showInfoMessage(string.format(T("%d items selected for %s."), selected_count, title))
                 else
-                    Ui.showInfoMessage(string.format(T("%d items selected for %s."), err, title))
+                    Ui.showInfoMessage(string.format(T("Filter cleared for %s."), title))
                 end
             else
                 logger.err("Zlibrary:Ui._editConfigOptionsDialog - Error during onClose for %s: %s", title, tostring(err))

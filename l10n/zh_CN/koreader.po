@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-16 21:26+0200\n"
+"POT-Creation-Date: 2026-07-17 07:43+0200\n"
 "PO-Revision-Date: 2026-04-03 00:00+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
@@ -308,8 +308,11 @@ msgstr "达到下载限制。请稍后重试或检查您的账户。"
 msgid "Download"
 msgstr "下载"
 
-msgid "Retrying download..."
-msgstr "正在重试下载..."
+msgid "Retrying download… (tap to cancel)"
+msgstr ""
+
+msgid "Download cancelled."
+msgstr ""
 
 msgid "Book ID is required."
 msgstr "未指定书籍id"
@@ -643,8 +646,8 @@ msgstr "正在下载更新..."
 msgid "Download failed. Please try again later."
 msgstr "下载失败。请稍后重试。"
 
-msgid "Downloading…"
-msgstr "正在下载..."
+msgid "Downloading… (tap to cancel)"
+msgstr ""
 
 msgid "Close"
 msgstr "关闭"
@@ -866,6 +869,12 @@ msgstr ""
 
 msgid "Feature not implemented"
 msgstr ""
+
+#~ msgid "Retrying download..."
+#~ msgstr "正在重试下载..."
+
+#~ msgid "Downloading…"
+#~ msgstr "正在下载..."
 
 #~ msgid "Syncing your download limit..."
 #~ msgstr "正在同步下载配额..."

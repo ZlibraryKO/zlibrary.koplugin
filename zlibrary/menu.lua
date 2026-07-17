@@ -140,15 +140,13 @@ function M:_updateCoverItems(select_number, no_recalculate_dimen)
                     added_hashes[item.hash] = true
                 end
             end
-            if item and item.book_id and item.hash then
-                -- Warm the book-details cache: tapping a cover to open a book is the common next
-                -- action, so this usually pays off. Comments are NOT prefetched: they are only seen
-                -- when the user explicitly opens the comments view, so prefetching them for every
-                -- visible item on every page settle was mostly wasted requests -- and on a slow
-                -- mirror those doomed background fetches stall for the full timeout and crowd out the
-                -- foreground calls. fetchAndDisplayComments loads them on demand when actually opened.
-                PreLoader.getBookDetails(item.book_id, item.hash)
-            end
+            -- Book details and comments are deliberately NOT prefetched here. Doing so fired one
+            -- request per visible item on every page settle -- a burst of ~14 speculative calls to
+            -- the API for books the reader mostly never opens. Device logs showed the z-library API
+            -- tarpitting that burst (15s stalls, independent of mirror or wifi), which is the server
+            -- defending a free service against exactly this. Both load on demand instead: book
+            -- details when a cover is tapped, comments when the comments view is opened. Covers still
+            -- prefetch because they come from a separate CDN and are what the grid actually displays.
         end
 
         if #missing_covers == 0 then

@@ -76,7 +76,7 @@ function Ui.showLoadingMessage(text)
 end
 
 function Ui.showBookDownloadProgress(book, custom_title)
-    local title = custom_title or T("Downloading…")
+    local title = custom_title or T("Downloading… (tap to cancel)")
     if not (type(book) == "table" and book.filesize) then
         return Ui.showLoadingMessage(title)
     end

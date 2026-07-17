@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-16 21:26+0200\n"
+"POT-Creation-Date: 2026-07-17 07:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -308,7 +308,10 @@ msgstr "Limite de téléchargement atteinte. Veuillez réessayer plus tard ou v�
 msgid "Download"
 msgstr "Télécharger"
 
-msgid "Retrying download..."
+msgid "Retrying download… (tap to cancel)"
+msgstr ""
+
+msgid "Download cancelled."
 msgstr ""
 
 msgid "Book ID is required."
@@ -643,8 +646,8 @@ msgstr "Téléchargement de la mise à jour..."
 msgid "Download failed. Please try again later."
 msgstr "Échec du téléchargement. Veuillez réessayer plus tard."
 
-msgid "Downloading…"
-msgstr "Téléchargement en cours…"
+msgid "Downloading… (tap to cancel)"
+msgstr ""
 
 msgid "Close"
 msgstr "Fermer"
@@ -866,6 +869,9 @@ msgstr ""
 
 msgid "Feature not implemented"
 msgstr ""
+
+#~ msgid "Downloading…"
+#~ msgstr "Téléchargement en cours…"
 
 #~ msgid "Description"
 #~ msgstr "Description"

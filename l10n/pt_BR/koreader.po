@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-16 21:26+0200\n"
+"POT-Creation-Date: 2026-07-17 07:43+0200\n"
 "PO-Revision-Date: 2025-05-28 15:14-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -309,7 +309,10 @@ msgstr "Limite de download atingido. Por favor, tente novamente mais tarde ou ve
 msgid "Download"
 msgstr "Baixar"
 
-msgid "Retrying download..."
+msgid "Retrying download… (tap to cancel)"
+msgstr ""
+
+msgid "Download cancelled."
 msgstr ""
 
 msgid "Book ID is required."
@@ -644,8 +647,8 @@ msgstr "Baixando atualização..."
 msgid "Download failed. Please try again later."
 msgstr "Falha no download. Por favor, tente novamente mais tarde."
 
-msgid "Downloading…"
-msgstr "Baixando…"
+msgid "Downloading… (tap to cancel)"
+msgstr ""
 
 msgid "Close"
 msgstr "Fechar"
@@ -867,6 +870,9 @@ msgstr ""
 
 msgid "Feature not implemented"
 msgstr ""
+
+#~ msgid "Downloading…"
+#~ msgstr "Baixando…"
 
 #~ msgid "Description"
 #~ msgstr "Descrição"

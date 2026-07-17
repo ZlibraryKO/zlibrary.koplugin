@@ -180,6 +180,19 @@ function Config.getConfigRuntimeCache()
     return Config._runtime_cache
 end
 
+-- A forked child inherits a copy of the parent's in-memory settings but SHARES the file behind them.
+-- Anything it writes is invisible to the parent, is clobbered by the parent's next flush, and can
+-- destroy it outright: KVCache:remove purges the file when its last key goes, and LuaSettings:flush
+-- renames the file aside before rewriting it, which is not atomic across processes. Children run to
+-- os.exit, so their writes are worthless anyway. Neuter the writes and keep the reads: `get` still
+-- resolves through the metatable, so the child can still read the base URL it inherited.
+function Config.disableRuntimeCacheWrites()
+    local cache = Config.getConfigRuntimeCache()
+    cache.insert = function() return false end
+    cache.remove = function() return false end
+    cache.clear = function() return true end
+end
+
 function Config.getCacheRealUrl()
     return Config.getConfigRuntimeCache():get("api_real_url", 600)
 end

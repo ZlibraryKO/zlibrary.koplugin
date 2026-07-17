@@ -503,6 +503,25 @@ function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
     return ZlibBookDialog.showBookDetails(Ui, parent_zlibrary, book, clear_cache_callback)
 end
 
+function Ui.confirmRemoveDownloaded(title, ok_callback)
+    local text = string.format(T("Remove \"%s\" from your downloaded books?"), title or T("Unknown Title"))
+    if _plugin_instance and _plugin_instance.dialog_manager then
+        _plugin_instance.dialog_manager:showConfirmDialog({
+            text = text,
+            ok_text = T("Remove"),
+            ok_callback = ok_callback,
+            cancel_text = T("Cancel")
+        })
+    else
+        UIManager:show(ConfirmBox:new{
+            text = text,
+            ok_text = T("Remove"),
+            ok_callback = ok_callback,
+            cancel_text = T("Cancel")
+        })
+    end
+end
+
 function Ui.confirmDownload(filename, ok_callback)
     if _plugin_instance and _plugin_instance.dialog_manager then
         _plugin_instance.dialog_manager:showConfirmDialog({

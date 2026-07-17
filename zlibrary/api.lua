@@ -1069,6 +1069,58 @@ function Api.getFavoriteBooks(user_id, user_key, page, order)
     return { has_more_results = has_more_results, books = transformed_books }
 end
 
+-- Removes the book from the account's download history on the server. The list under My Books is that
+-- history, so there is nothing local to delete here -- the entry may well have been downloaded on
+-- another device. Same shape as unfavoriteBook: a GET that answers with success = 1.
+function Api.deleteDownloadedBook(user_id, user_key, book_stub)
+    local url = type(book_stub) == "table" and Config.getDeleteDownloadedUrl(book_stub.id) or nil
+    if not url then
+        logger.warn("Api.deleteDownloadedBook - Base URL not configured or book id missing")
+        return { error = T("Z-library server URL not configured.") }
+    end
+
+    local headers = {
+        ['Content-Type'] = 'application/x-www-form-urlencoded',
+        ["User-Agent"] = Config.USER_AGENT,
+    }
+    if user_id and user_key then
+        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
+    end
+
+    local http_result = Api.makeHttpRequest{
+        url = url,
+        method = "GET",
+        headers = headers,
+        timeout = Config.getPopularTimeout(),
+        onRedirect = function()
+            return Config.getDeleteDownloadedUrl(book_stub.id)
+        end,
+    }
+
+    if http_result.error then
+        logger.warn("Api.deleteDownloadedBook - HTTP request error: ", http_result.error)
+        return { error = http_result.error }
+    end
+
+    if not http_result.body then
+        logger.warn("Api.deleteDownloadedBook - No response body")
+        return { error = T("Failed to remove the book from downloaded (no response body).") }
+    end
+
+    local success, data = pcall(json.decode, http_result.body, json.decode.simple)
+    if not success or type(data) ~= "table" then
+        logger.warn("Api.deleteDownloadedBook - Failed to decode JSON: ", http_result.body)
+        return { error = T("Failed to parse the remove from downloaded response.") }
+    end
+
+    if data.success ~= 1 then
+        logger.warn("Api.deleteDownloadedBook - API error: ", http_result.body)
+        return { error = data.message or T("API returned an error for remove from downloaded.") }
+    end
+
+    return { success = true }
+end
+
 function Api.unfavoriteBook(user_id, user_key, book_stub)
     local url = Config.getUnFavoriteUrl(book_stub.id)
     if not url then

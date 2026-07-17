@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 07:43+0200\n"
+"POT-Creation-Date: 2026-07-17 09:34+0200\n"
 "PO-Revision-Date: 2026-04-03 00:00+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
@@ -210,6 +210,9 @@ msgstr "获取收藏书籍失败"
 msgid "Favorite books"
 msgstr "收藏的书籍"
 
+msgid "Remove from downloaded"
+msgstr ""
+
 msgid "Getting your downloaded..."
 msgstr "正在获取已下载书籍..."
 
@@ -227,6 +230,18 @@ msgstr "未找到相似书籍"
 
 msgid "Similar books"
 msgstr "相似书籍"
+
+msgid "Removing book from downloaded…"
+msgstr ""
+
+msgid "Failed to remove book from downloaded"
+msgstr ""
+
+msgid "remove from downloaded"
+msgstr ""
+
+msgid "Book removed from downloaded, please refresh"
+msgstr ""
 
 msgid "Removing book from favorites…"
 msgstr "正在从收藏夹移除书籍..."
@@ -463,6 +478,15 @@ msgstr "解析收藏书籍响应失败。"
 
 msgid "API returned an error for favorite books."
 msgstr "API返回了收藏书籍的错误。"
+
+msgid "Failed to remove the book from downloaded (no response body)."
+msgstr ""
+
+msgid "Failed to parse the remove from downloaded response."
+msgstr ""
+
+msgid "API returned an error for remove from downloaded."
+msgstr ""
 
 msgid "Failed to fetch unfavorite book (no response body)."
 msgstr "取消收藏书籍失败(无响应体)。"
@@ -718,6 +742,13 @@ msgstr "评分"
 
 msgid "Search Results"
 msgstr "搜索结果"
+
+#, lua-format
+msgid "Remove \"%s\" from your downloaded books?"
+msgstr ""
+
+msgid "Remove"
+msgstr ""
 
 #, lua-format
 msgid "Download \"%s\"?"

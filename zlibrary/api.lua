@@ -530,6 +530,21 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
     return result
 end
 
+-- The file Api.downloadBook writes into before renaming it onto the target. Exposed so a caller that
+-- kills the download -- which skips downloadBook's own cleanup -- can sweep what it left behind, and so
+-- a progress watcher can stat it. Keeps the suffix in one place.
+function Api.getDownloadTempPath(target_filepath)
+    if type(target_filepath) ~= "string" then return nil end
+    return target_filepath .. ".downloading"
+end
+
+function Api.discardDownloadTempFile(target_filepath)
+    local temp_filepath = Api.getDownloadTempPath(target_filepath)
+    if temp_filepath then
+        pcall(os.remove, temp_filepath)
+    end
+end
+
 function Api.downloadBook(download_url, target_filepath, user_id, user_key, referer_url, progress_callback)
     logger.info(string.format("Zlibrary:Api.downloadBook - START - URL: %s, Target: %s", download_url, target_filepath))
 
@@ -545,7 +560,7 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
     -- arrived. Opening target_filepath directly would truncate an existing book before the first byte
     -- is fetched, and every failure below would then delete it -- so a quota-blocked re-download of a
     -- book the user already owns would destroy their copy. CoverCache does the same thing for covers.
-    local temp_filepath = target_filepath .. ".downloading"
+    local temp_filepath = Api.getDownloadTempPath(target_filepath)
     local file, err_open = io.open(temp_filepath, "wb")
     if not file then
         result.error = T("Failed to open target file") .. ": " .. (err_open or T("Unknown error"))

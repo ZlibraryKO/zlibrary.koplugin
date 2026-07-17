@@ -36,12 +36,18 @@ Config.DEFAULT_DOWNLOAD_DIR_FALLBACK = G_reader_settings:readSetting("home_dir")
 Config.USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
 Config.SEARCH_RESULTS_LIMIT = 30
 
--- Timeout configuration for different operations (block_timeout, total_timeout)
+-- Timeout configuration for different operations: { block_timeout, total_timeout }.
+-- block_timeout limits a single socket read; total_timeout limits the whole transfer, but only once
+-- data is flowing -- socketutil enforces it through a sink that starts ticking on the first received
+-- chunk. Before any byte arrives (a connect stall, or a server slow to first byte) only block_timeout
+-- applies, so a stalled request fails at min(block, total). Keep block <= total (or total = -1 for
+-- "no total limit") so the block value is the one that governs a stall; a block larger than total is
+-- capped by total and never takes effect.
 Config.TIMEOUT_LOGIN = { 10, 15 }        -- Login operations
 Config.TIMEOUT_SEARCH = { 15, 15 }       -- Search operations
-Config.TIMEOUT_BOOK_DETAILS = { 15, 5 }  -- Book details operations
-Config.TIMEOUT_RECOMMENDED = { 30, 15 }  -- Recommended books operations
-Config.TIMEOUT_POPULAR = { 30, 15 }      -- Popular books operations
+Config.TIMEOUT_BOOK_DETAILS = { 15, 15 } -- Book details operations
+Config.TIMEOUT_RECOMMENDED = { 15, 30 }  -- Recommended books operations
+Config.TIMEOUT_POPULAR = { 15, 30 }      -- Popular books operations
 Config.TIMEOUT_DOWNLOAD = { 15, -1 }    -- Book download operations (infinite total timeout if data flows)
 Config.TIMEOUT_COVER = { 5, 15 }        -- Cover image operations
 Config.TIMEOUT_BOOK_COMMENTS = { 10, 15 } -- Comments operations

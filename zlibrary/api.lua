@@ -47,6 +47,22 @@ local function _safeTrim(value, default)
     return trimmed ~= "" and trimmed or default
 end
 
+-- A cover is fetched straight from this URL, so it has to be absolute. z-library returns the relative
+-- placeholder "/img/cover-not-exists.png" for books with no cover; that parses to no host, so trying
+-- to download it fails at once with "invalid host" and then retries the whole way through the cover
+-- channel's retry budget -- three dead requests per coverless book on every page. Treat any cover
+-- without a host as absent so it is skipped everywhere item.cover is checked.
+local function _usableCoverUrl(cover)
+    if type(cover) ~= "string" or cover == "" then
+        return nil
+    end
+    local parsed = socket_url.parse(cover)
+    if not (parsed and parsed.host) then
+        return nil
+    end
+    return cover
+end
+
 local function _transformApiBookData(api_books)
     if not api_books or type(api_books) ~= "table" then
         return {}
@@ -84,7 +100,7 @@ local function _transformApiBookData(api_books)
                 date_download = book.date_download,
                 date_saved = book.date_saved,
                 needs_detail_fetch = needs_detail_fetch,
-                cover = book.cover,
+                cover = _usableCoverUrl(book.cover),
                 description = book.description,
                 publisher = book.publisher,
                 series = book.series,

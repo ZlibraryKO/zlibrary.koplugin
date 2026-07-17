@@ -217,7 +217,7 @@ msgid "Favorite books"
 msgstr "Любими книги"
 
 msgid "Remove from downloaded"
-msgstr ""
+msgstr "Премахване от изтеглени"
 
 msgid "Getting your downloaded..."
 msgstr "Зареждане на изтеглените книги..."
@@ -238,13 +238,13 @@ msgid "Similar books"
 msgstr "Подобни книги"
 
 msgid "Removing book from downloaded…"
-msgstr ""
+msgstr "Премахване на книгата от изтеглени…"
 
 msgid "Failed to remove book from downloaded"
-msgstr ""
+msgstr "Неуспешно премахване на книгата от изтеглени"
 
 msgid "Book removed from downloaded, please refresh"
-msgstr ""
+msgstr "Книгата е премахната от изтеглени, моля опреснете"
 
 msgid "Removing book from favorites…"
 msgstr "Премахване на книгата от любими…"
@@ -253,7 +253,7 @@ msgid "Failed to remove book from favorites"
 msgstr "Неуспешно премахване на книгата от любими"
 
 msgid "Unfavorite book"
-msgstr ""
+msgstr "Премахване от любими"
 
 msgid "Book removed from favorites, please refresh"
 msgstr "Книгата е премахната от любими, моля опреснете"
@@ -327,10 +327,10 @@ msgid "Download"
 msgstr "Изтегляне"
 
 msgid "Retrying download… (tap to cancel)"
-msgstr ""
+msgstr "Повторен опит за изтегляне… (докоснете за отказ)"
 
 msgid "Download cancelled."
-msgstr ""
+msgstr "Изтеглянето е отменено."
 
 msgid "Book ID is required."
 msgstr "Изисква се ID на книгата."
@@ -348,7 +348,7 @@ msgid "No comments to display"
 msgstr "Няма коментари за показване"
 
 msgid "Could not find the server address"
-msgstr ""
+msgstr "Не може да се намери адресът на сървъра"
 
 msgid "Request timed out - please check your connection and try again"
 msgstr "Заявката изтече — проверете връзката си и опитайте отново"
@@ -357,7 +357,7 @@ msgid "Network request failed"
 msgstr "Мрежовата заявка неуспешна"
 
 msgid "The Z-library address may be wrong or no longer exist."
-msgstr ""
+msgstr "Адресът на Z-library може да е грешен или вече да не съществува."
 
 msgid "Network connection error - please check your internet connection and try again"
 msgstr "Грешка в мрежовата връзка — проверете интернет връзката си и опитайте отново"
@@ -402,7 +402,7 @@ msgid "Download limit reached or file is an HTML page"
 msgstr "Достигнат лимит за изтегляне или файлът е HTML страница"
 
 msgid "Failed to save downloaded file"
-msgstr ""
+msgstr "Неуспешно запазване на изтегления файл"
 
 msgid "Download HTTP Error"
 msgstr "HTTP грешка при изтегляне"
@@ -483,13 +483,13 @@ msgid "API returned an error for favorite books."
 msgstr "API върна грешка за любими книги."
 
 msgid "Failed to remove the book from downloaded (no response body)."
-msgstr ""
+msgstr "Неуспешно премахване на книгата от изтеглени (няма тяло на отговора)."
 
 msgid "Failed to parse the remove from downloaded response."
-msgstr ""
+msgstr "Неуспешен разбор на отговора при премахване от изтеглени."
 
 msgid "API returned an error for remove from downloaded."
-msgstr ""
+msgstr "API върна грешка при премахване от изтеглени."
 
 msgid "Failed to fetch unfavorite book (no response body)."
 msgstr "Неуспешно зареждане при премахване от любими (няма тяло на отговора)."
@@ -674,7 +674,7 @@ msgid "Download failed. Please try again later."
 msgstr "Изтеглянето неуспешно. Опитайте отново по-късно."
 
 msgid "Downloading… (tap to cancel)"
-msgstr ""
+msgstr "Изтегляне… (докоснете за отказ)"
 
 msgid "Close"
 msgstr "Затваряне"
@@ -748,10 +748,10 @@ msgstr "Резултати от търсенето"
 
 #, lua-format
 msgid "Remove \"%s\" from your downloaded books?"
-msgstr ""
+msgstr "Премахване на „%s“ от изтеглените ви книги?"
 
 msgid "Remove"
-msgstr ""
+msgstr "Премахване"
 
 #, lua-format
 msgid "Download \"%s\"?"
@@ -792,7 +792,7 @@ msgstr "%s неуспешно поради изтекло време%s. Жела
 
 #, lua-format
 msgid "%s failed because the server address could not be found. Would you like to retry?"
-msgstr ""
+msgstr "%s неуспешно, защото адресът на сървъра не беше намерен. Желаете ли да опитате отново?"
 
 #, lua-format
 msgid "%s failed due to a network error. Would you like to retry?"

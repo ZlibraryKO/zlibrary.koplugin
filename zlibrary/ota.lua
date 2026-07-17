@@ -386,6 +386,10 @@ function Ota.startUpdateProcess(plugin_path_from_main)
             logger.info("Zlibrary:Ota.startUpdateProcess - User cancelled update.")
         end
     }
+    -- Every other exit from the update check goes through _show_ota_final_message, which closes the
+    -- status widget for us. This one does not, so "Checking for updates..." would sit behind the
+    -- dialog for as long as the user takes to answer -- still claiming to be checking.
+    _close_current_ota_status_widget()
     UIManager:show(confirm_dialog)
 end
 

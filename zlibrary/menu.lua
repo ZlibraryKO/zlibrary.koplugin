@@ -141,8 +141,13 @@ function M:_updateCoverItems(select_number, no_recalculate_dimen)
                 end
             end
             if item and item.book_id and item.hash then
+                -- Warm the book-details cache: tapping a cover to open a book is the common next
+                -- action, so this usually pays off. Comments are NOT prefetched: they are only seen
+                -- when the user explicitly opens the comments view, so prefetching them for every
+                -- visible item on every page settle was mostly wasted requests -- and on a slow
+                -- mirror those doomed background fetches stall for the full timeout and crowd out the
+                -- foreground calls. fetchAndDisplayComments loads them on demand when actually opened.
                 PreLoader.getBookDetails(item.book_id, item.hash)
-                PreLoader.getBookComments(item.book_id, item.hash)
             end
         end
 

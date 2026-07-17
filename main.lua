@@ -1505,7 +1505,7 @@ function Zlibrary:downloadBook(book)
                 -- Retry callback. Re-enter attemptDownload so the retry gets its own wrap: this runs
                 -- from a fresh event, outside any coroutine, and an unwrapped dismissable run silently
                 -- falls back to blocking in-process.
-                attemptDownload(retry_on_auth_error, T("Retrying download..."))
+                attemptDownload(retry_on_auth_error, T("Retrying download… (tap to cancel)"))
             end, function(final_err_msg)
                 -- Cancel callback - user already knows about the error. Nothing to clean up:
                 -- Api.downloadBook discards its own temp file, and this path is also reached when

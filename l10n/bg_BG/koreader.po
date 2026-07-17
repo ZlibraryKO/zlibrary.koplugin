@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-16 21:26+0200\n"
+"POT-Creation-Date: 2026-07-17 07:43+0200\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -314,8 +314,11 @@ msgstr "Достигнат лимит за изтегляне. Опитайте 
 msgid "Download"
 msgstr "Изтегляне"
 
-msgid "Retrying download..."
-msgstr "Повторен опит за изтегляне..."
+msgid "Retrying download… (tap to cancel)"
+msgstr ""
+
+msgid "Download cancelled."
+msgstr ""
 
 msgid "Book ID is required."
 msgstr "Изисква се ID на книгата."
@@ -649,8 +652,8 @@ msgstr "Изтегляне на актуализацията..."
 msgid "Download failed. Please try again later."
 msgstr "Изтеглянето неуспешно. Опитайте отново по-късно."
 
-msgid "Downloading…"
-msgstr "Изтегляне…"
+msgid "Downloading… (tap to cancel)"
+msgstr ""
 
 msgid "Close"
 msgstr "Затваряне"
@@ -872,6 +875,12 @@ msgstr ""
 
 msgid "Feature not implemented"
 msgstr ""
+
+#~ msgid "Retrying download..."
+#~ msgstr "Повторен опит за изтегляне..."
+
+#~ msgid "Downloading…"
+#~ msgstr "Изтегляне…"
 
 #~ msgid "Syncing your download limit..."
 #~ msgstr "Синхронизиране на лимита за изтегляне..."

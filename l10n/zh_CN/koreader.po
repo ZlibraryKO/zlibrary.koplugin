@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 09:34+0200\n"
+"POT-Creation-Date: 2026-07-17 09:52+0200\n"
 "PO-Revision-Date: 2026-04-03 00:00+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
@@ -237,9 +237,6 @@ msgstr ""
 msgid "Failed to remove book from downloaded"
 msgstr ""
 
-msgid "remove from downloaded"
-msgstr ""
-
 msgid "Book removed from downloaded, please refresh"
 msgstr ""
 
@@ -249,8 +246,8 @@ msgstr "正在从收藏夹移除书籍..."
 msgid "Failed to remove book from favorites"
 msgstr "从收藏夹移除书籍失败"
 
-msgid "unfavorite book"
-msgstr "取消收藏"
+msgid "Unfavorite book"
+msgstr ""
 
 msgid "Book removed from favorites, please refresh"
 msgstr "书籍已从收藏夹移除，请刷新"
@@ -900,6 +897,9 @@ msgstr ""
 
 msgid "Feature not implemented"
 msgstr ""
+
+#~ msgid "unfavorite book"
+#~ msgstr "取消收藏"
 
 #~ msgid "Retrying download..."
 #~ msgstr "正在重试下载..."

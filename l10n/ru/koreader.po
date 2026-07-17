@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 09:34+0200\n"
+"POT-Creation-Date: 2026-07-17 09:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -237,9 +237,6 @@ msgstr ""
 msgid "Failed to remove book from downloaded"
 msgstr ""
 
-msgid "remove from downloaded"
-msgstr ""
-
 msgid "Book removed from downloaded, please refresh"
 msgstr ""
 
@@ -249,7 +246,7 @@ msgstr ""
 msgid "Failed to remove book from favorites"
 msgstr ""
 
-msgid "unfavorite book"
+msgid "Unfavorite book"
 msgstr ""
 
 msgid "Book removed from favorites, please refresh"

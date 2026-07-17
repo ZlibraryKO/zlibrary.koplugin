@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 09:34+0200\n"
+"POT-Creation-Date: 2026-07-17 09:52+0200\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -243,9 +243,6 @@ msgstr ""
 msgid "Failed to remove book from downloaded"
 msgstr ""
 
-msgid "remove from downloaded"
-msgstr ""
-
 msgid "Book removed from downloaded, please refresh"
 msgstr ""
 
@@ -255,8 +252,8 @@ msgstr "Премахване на книгата от любими…"
 msgid "Failed to remove book from favorites"
 msgstr "Неуспешно премахване на книгата от любими"
 
-msgid "unfavorite book"
-msgstr "премахване от любими"
+msgid "Unfavorite book"
+msgstr ""
 
 msgid "Book removed from favorites, please refresh"
 msgstr "Книгата е премахната от любими, моля опреснете"
@@ -906,6 +903,9 @@ msgstr ""
 
 msgid "Feature not implemented"
 msgstr ""
+
+#~ msgid "unfavorite book"
+#~ msgstr "премахване от любими"
 
 #~ msgid "Retrying download..."
 #~ msgstr "Повторен опит за изтегляне..."

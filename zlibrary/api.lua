@@ -99,56 +99,49 @@ local function _transformApiBookData(api_books)
     return is_single and transformed_books[1] or transformed_books
 end
 
-local function _checkAndHandleRedirect(skip_check, status_code, current_url)
+-- Reads the mirror's new address out of a 30x that the caller has already received. The headers
+-- come from that very response: makeHttpRequest only asks for this check when options.redirect was
+-- falsy, and that is the same flag it hands LuaSocket, so nothing was followed and the Location is
+-- still there for the taking. This used to re-fetch the URL with a HEAD instead, which could not
+-- work: the probe set redirect = true, so LuaSocket followed the chain itself and handed back the
+-- final 200, and a final response carries no Location. Every redirect therefore ended in "empty
+-- Location header" and no mirror move was ever followed.
+local function _checkAndHandleRedirect(skip_check, status_code, current_url, headers)
 
     local result = { has_redirect = nil, real_url = nil, status_code = nil, error = nil }
     local redirect_codes = { [301] = true, [302] = true, [303] = true, [307] = true }
-    if skip_check or type(current_url) ~= "string" or current_url == "" or 
+    if skip_check or type(current_url) ~= "string" or current_url == "" or
         type(status_code) ~= "number" or not redirect_codes[status_code]  then
             return result
     end
-    
+
     local current_url_parse = socket_url.parse(current_url)
-    local current_url_base = socket_url.build({
-                scheme = current_url_parse.scheme,
-                host = current_url_parse.host
-        })
 
-    logger.dbg("Request URL: " .. current_url .. ", Redirect Target: " .. current_url_base ..
-           ", Status Code: " .. tostring(status_code) .. ", Is Redirect: " .. tostring(redirect_codes[status_code]))
-
-    local http_result = Api.makeHttpRequest({
-        url = current_url,
-        method = "HEAD",
-        headers = { ["User-Agent"] = Config.USER_AGENT },
-        timeout = {5, 10},
-        redirect = true,
-        -- This probe only reads the redirect target; it must not disturb the cached one,
-        -- which the onRedirect callback below is about to read to rebuild the retry URL.
-        skipRedirectCache = true,
-    })
-    
     result.has_redirect = true
-    result.status_code = http_result.status_code
+    result.status_code = status_code
 
-    local real_url = http_result.headers and (http_result.headers.location or http_result.headers.Location)
+    -- LuaSocket lower-cases the header names it parses; Location is a belt-and-braces fallback.
+    local real_url = type(headers) == "table" and (headers.location or headers.Location) or nil
     if type(real_url) ~= "string" or real_url == "" then
-        logger.err("Redirect failed: empty Location header.", http_result.headers)
-        result.error = string.format("Redirect failed: empty Location header. %s", tostring(http_result.error))
+        logger.err("Zlibrary:Api - Redirect carried no Location header:", headers)
+        result.error = string.format("Redirect from %s carried no Location header", current_url)
         return result
     end
 
     local real_url_parse = socket_url.parse(real_url)
     local real_url_host = real_url_parse.host
     if real_url_host and real_url_parse.scheme and real_url_host ~= current_url_parse.host then
-        
+        logger.dbg(string.format("Zlibrary:Api - %s redirects to another host: %s -> %s",
+            tostring(status_code), tostring(current_url_parse.host), real_url_host))
         result.real_url = real_url
         result.real_url_base = socket_url.build({
                 scheme = real_url_parse.scheme,
                 host = real_url_host
         })
     else
-        result.error = string.format("Invalid or unchanged Location header. %s", tostring(http_result.error))
+        -- A relative or same-host Location is an ordinary in-site redirect, not a mirror move:
+        -- there is no new base URL to pin and nothing for onRedirect to rebuild against.
+        result.error = string.format("Redirect target is not another host: %s", real_url)
     end
     return result
 end
@@ -290,7 +283,7 @@ function Api.makeHttpRequest(options)
     end
 
     local skip_redirect_check = options.redirect or type(options.onRedirect) ~= "function"
-    local redir_res = _checkAndHandleRedirect(skip_redirect_check, result.status_code, options.url)
+    local redir_res = _checkAndHandleRedirect(skip_redirect_check, result.status_code, options.url, result.headers)
     if redir_res.has_redirect then
         if redir_res.real_url and redir_res.real_url_base then
             if not options.skipRedirectCache then
@@ -305,7 +298,11 @@ function Api.makeHttpRequest(options)
                  return redirect_next_step(redir_res)
             end
         elseif redir_res.error then
-            result = redir_res
+            -- Only the reason is worth keeping: redir_res describes why the redirect was not
+            -- followable, it is not a response. Overwriting result with it used to throw away the
+            -- real body, headers and elapsed time and replace the status with the probe's own.
+            -- Leave the response intact and let the status handling below report it.
+            logger.info("Zlibrary:Api.makeHttpRequest - Not following redirect: " .. tostring(redir_res.error))
         end
     end
 

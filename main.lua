@@ -963,7 +963,8 @@ function Zlibrary:deleteDownloadedBook(book_stub, on_success)
         api_method = Api.deleteDownloadedBook,
         loading_text_key = T("Removing book from downloaded…"),
         error_prefix_key = T("Failed to remove book from downloaded"),
-        operation_name = T("remove from downloaded"),
+        -- Ui.showRetryErrorDialog builds "%s failed due to …" from this, so it starts a sentence.
+        operation_name = T("Remove from downloaded"),
         log_context = "deleteDownloadedBook",
         resolve_result = function(ui_self, api_result, plugin_self)
             if api_result and api_result.success == true then
@@ -994,7 +995,7 @@ function Zlibrary:unfavoriteBook(book_stub, on_success)
         api_method = Api.unfavoriteBook,
         loading_text_key = T("Removing book from favorites…"),
         error_prefix_key = T("Failed to remove book from favorites"),
-        operation_name = T("unfavorite book"),
+        operation_name = T("Unfavorite book"),
         log_context = "unfavoriteBook",
         resolve_result = function(ui_self, api_result, plugin_self)
             if api_result and api_result.success == true then

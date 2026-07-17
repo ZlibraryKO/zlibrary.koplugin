@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 09:34+0200\n"
+"POT-Creation-Date: 2026-07-17 09:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -256,7 +256,7 @@ msgstr ""
 msgid "Recommended books"
 msgstr ""
 
-#: main.lua:811 main.lua:982 main.lua:1013 main.lua:1043
+#: main.lua:811 main.lua:983 main.lua:1014 main.lua:1044
 msgid "API returned an error, please try again"
 msgstr ""
 
@@ -284,7 +284,7 @@ msgstr ""
 msgid "Favorite books"
 msgstr ""
 
-#: main.lua:896
+#: main.lua:896 main.lua:967
 msgid "Remove from downloaded"
 msgstr ""
 
@@ -320,147 +320,143 @@ msgstr ""
 msgid "Failed to remove book from downloaded"
 msgstr ""
 
-#: main.lua:966
-msgid "remove from downloaded"
-msgstr ""
-
-#: main.lua:976
+#: main.lua:977
 msgid "Book removed from downloaded, please refresh"
 msgstr ""
 
-#: main.lua:995
+#: main.lua:996
 msgid "Removing book from favorites…"
 msgstr ""
 
-#: main.lua:996
+#: main.lua:997
 msgid "Failed to remove book from favorites"
 msgstr ""
 
-#: main.lua:997
-msgid "unfavorite book"
+#: main.lua:998
+msgid "Unfavorite book"
 msgstr ""
 
-#: main.lua:1007
+#: main.lua:1008
 msgid "Book removed from favorites, please refresh"
 msgstr ""
 
-#: main.lua:1027
+#: main.lua:1028
 msgid "Adding book to favorites…"
 msgstr ""
 
-#: main.lua:1028
+#: main.lua:1029
 msgid "Failed to add book to favorites"
 msgstr ""
 
-#: main.lua:1029
+#: main.lua:1030
 msgid "Favorite book"
 msgstr ""
 
-#: main.lua:1037
+#: main.lua:1038
 msgid "Book added to favorites, please refresh"
 msgstr ""
 
-#: main.lua:1078 main.lua:1106
+#: main.lua:1079 main.lua:1107
 msgid "Fetching book details..."
 msgstr ""
 
-#: main.lua:1079 main.lua:1115
+#: main.lua:1080 main.lua:1116
 msgid "Failed to fetch book details"
 msgstr ""
 
-#: main.lua:1080 main.lua:1133 zlibrary/ui.lua:905
+#: main.lua:1081 main.lua:1134 zlibrary/ui.lua:905
 msgid "Book details"
 msgstr ""
 
-#: main.lua:1086 main.lua:1121
+#: main.lua:1087 main.lua:1122
 msgid "Could not retrieve book details."
 msgstr ""
 
-#: main.lua:1158
+#: main.lua:1159
 msgid "Please set both username and password first."
 msgstr ""
 
-#: main.lua:1163
+#: main.lua:1164
 msgid "Logging in..."
 msgstr ""
 
-#: main.lua:1183 zlibrary/ui.lua:885
+#: main.lua:1184 zlibrary/ui.lua:885
 msgid "Login"
 msgstr ""
 
-#: main.lua:1204
+#: main.lua:1205
 msgid "Searching for \""
 msgstr ""
 
-#: main.lua:1237
+#: main.lua:1238
 msgid "No results found for \""
 msgstr ""
 
-#: main.lua:1307
+#: main.lua:1308
 #, lua-format
 msgid "Loading more results (Page %s)..."
 msgstr ""
 
-#: main.lua:1332 main.lua:1366
+#: main.lua:1333 main.lua:1367
 msgid "Failed to load more results"
 msgstr ""
 
-#: main.lua:1350
+#: main.lua:1351
 msgid "No more results found."
 msgstr ""
 
-#: main.lua:1390
+#: main.lua:1391
 msgid "Book identifiers missing. Cannot download."
 msgstr ""
 
-#: main.lua:1411
+#: main.lua:1412
 #, lua-format
 msgid "Cannot create downloads directory: %s"
 msgstr ""
 
-#: main.lua:1507
+#: main.lua:1508
 msgid "Could not open reader UI."
 msgstr ""
 
-#: main.lua:1524 main.lua:1585 main.lua:1597 main.lua:1603
+#: main.lua:1525 main.lua:1586 main.lua:1598 main.lua:1604
 msgid "Download failed: Unknown error"
 msgstr ""
 
-#: main.lua:1542 zlibrary/api.lua:891
+#: main.lua:1543 zlibrary/api.lua:891
 msgid "Download limit reached. Please try again later or check your account."
 msgstr ""
 
-#: main.lua:1547 zlibrary/bookdetails_dialog.lua:415 zlibrary/ui.lua:529
+#: main.lua:1548 zlibrary/bookdetails_dialog.lua:415 zlibrary/ui.lua:529
 #: zlibrary/ui.lua:536 zlibrary/ui.lua:935
 msgid "Download"
 msgstr ""
 
-#: main.lua:1551
+#: main.lua:1552
 msgid "Retrying download… (tap to cancel)"
 msgstr ""
 
-#: main.lua:1596
+#: main.lua:1597
 msgid "Download cancelled."
 msgstr ""
 
-#: main.lua:1637 zlibrary/api.lua:1371
+#: main.lua:1638 zlibrary/api.lua:1371
 msgid "Book ID is required."
 msgstr ""
 
-#: main.lua:1662
+#: main.lua:1663
 msgid "Loading comments..."
 msgstr ""
 
-#: main.lua:1663
+#: main.lua:1664
 msgid "Failed to load comments"
 msgstr ""
 
-#: main.lua:1664 zlibrary/bookdetails_dialog.lua:243
+#: main.lua:1665 zlibrary/bookdetails_dialog.lua:243
 #: zlibrary/bookdetails_dialog.lua:437 zlibrary/ui.lua:950 zlibrary/ui.lua:955
 msgid "Comments"
 msgstr ""
 
-#: main.lua:1670
+#: main.lua:1671
 msgid "No comments to display"
 msgstr ""
 

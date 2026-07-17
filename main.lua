@@ -890,6 +890,18 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                     mandatory_func = function(book)
                         return mandatory_format(book and book.date_download)
                     end,
+                    -- Offered on a long press, and only on this tab. Confirm first: this edits the
+                    -- account's history on the server and cannot be undone from here.
+                    book_action = {
+                        text = T("Remove from downloaded"),
+                        callback = function(widget, book)
+                            Ui.confirmRemoveDownloaded(book.title, function()
+                                self:deleteDownloadedBook(book, function()
+                                    widget:forceFetchAndReloadMenu()
+                                end)
+                            end)
+                        end,
+                    },
                     callback = function(widget, page, is_refresh)
                         self:_requestDispatcher({
                             api_method = Api.getDownloadedBooks,
@@ -940,6 +952,37 @@ function Zlibrary:searchSimilarBooks(book_stub)
         end,
         requires_auth = true,
     }, book_stub.id, book_stub.hash)
+end
+
+function Zlibrary:deleteDownloadedBook(book_stub, on_success)
+    if not (type(book_stub) == "table" and book_stub.id) then
+        logger.warn("Zlibrary.deleteDownloadedBook - parameter error")
+        return
+    end
+    self:_requestDispatcher({
+        api_method = Api.deleteDownloadedBook,
+        loading_text_key = T("Removing book from downloaded…"),
+        error_prefix_key = T("Failed to remove book from downloaded"),
+        operation_name = T("remove from downloaded"),
+        log_context = "deleteDownloadedBook",
+        resolve_result = function(ui_self, api_result, plugin_self)
+            if api_result and api_result.success == true then
+                -- The server counts downloads against the daily quota, and the tab's title shows it,
+                -- so let it be re-read rather than keep showing a figure this may have changed.
+                plugin_self:resetDownloadQuotaCache()
+                if type(on_success) == "function" then
+                    on_success()
+                else
+                    Ui.showInfoMessage(T("Book removed from downloaded, please refresh"))
+                end
+            end
+        end,
+        hasValidApiResult = function(api_result)
+            local ok = type(api_result) == "table"
+            return ok, not ok and T("API returned an error, please try again")
+        end,
+        requires_auth = true,
+    }, book_stub)
 end
 
 function Zlibrary:unfavoriteBook(book_stub, on_success)

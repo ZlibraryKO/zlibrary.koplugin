@@ -561,12 +561,6 @@ end
 function Api.downloadBook(download_url, target_filepath, user_id, user_key, referer_url, progress_callback)
     logger.info(string.format("Zlibrary:Api.downloadBook - START - URL: %s, Target: %s", download_url, target_filepath))
 
-    if Config.isTestModeEnabled() then
-        logger.info("Zlibrary:Api.downloadBook - Test mode enabled, creating fake successful download")
-        logger.info(string.format("Zlibrary:Api.downloadBook - END (Test mode success) - Target: %s", target_filepath))
-        return { success = true, error = nil }
-    end
-
     local result = { success = false, error = nil }
 
     -- Download into a sibling temp file and rename onto target_filepath only once the whole body has

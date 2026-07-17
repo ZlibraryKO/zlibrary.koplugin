@@ -561,22 +561,6 @@ function Zlibrary:addToMainMenu(menu_items)
                                             Cache:new{ name = "_domains_cache" }:clear()
                                             Ui.showInfoMessage(T("Runtime cache cleared."))
                                         end,
-                                    }, {
-                                        text = T("Test mode"),
-                                        keep_menu_open = true,
-                                        checked_func = function()
-                                            return Config.isTestModeEnabled()
-                                        end,
-                                        callback = function()
-                                            local is_enabled = Config.isTestModeEnabled()
-                                            if is_enabled then
-                                                Config.setTestMode(false)
-                                                Ui.showInfoMessage(T("Test mode disabled. Normal download behavior restored."))
-                                            else
-                                                Config.setTestMode(true)
-                                                Ui.showInfoMessage(T("Test mode enabled. Downloads will always succeed."))
-                                            end
-                                        end,
                                     },
                                 }
                             end

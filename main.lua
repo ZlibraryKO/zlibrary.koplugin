@@ -20,6 +20,7 @@ local Cache = require("zlibrary.cache")
 local Device = require("device")
 local MultiSearchDialog = require("zlibrary.multisearch_dialog")
 local DialogManager = require("zlibrary.dialog_manager")
+local Trapper = require("ui/trapper")
 
 local Zlibrary = WidgetContainer:extend{
     name = T("Z-library"),
@@ -1373,33 +1374,45 @@ function Zlibrary:downloadBook(book)
     local target_filepath = target_dir .. "/" .. filename
     logger.info(string.format("Zlibrary:downloadBook - Target filepath: %s", target_filepath))
 
-    local function attemptDownload(retry_on_auth_error)
-        retry_on_auth_error = retry_on_auth_error == nil and true or retry_on_auth_error
-        
-        local user_session = Config.getUserSession()
-        local referer_url = book.href and Config.getBookUrl(book.href) or nil
+    local attemptDownload
 
-        local loading_msg, progress_callback = Ui.showBookDownloadProgress(book)
+    -- Resolving the link and fetching the body both block for as long as the network takes. Run them in
+    -- a forked child so the UI loop keeps running and the user can tap to cancel: the child cannot yield
+    -- out of socket.http (it sits behind socket.protect's C frame), but it does not need to -- blocking
+    -- is fine over there, and Trapper yields in the parent while it waits.
+    local function runDownloadInSubprocess(user_session, referer_url)
+        return Trapper:dismissableRunInSubprocess(function()
+            -- This process exists only to return a result table, and it shares the cache file with the
+            -- parent. Nothing it writes there can help, and some of it would destroy the parent's copy.
+            Config.disableRuntimeCacheWrites()
 
-        local function task_download()
-            -- Always fetch the download link from the new endpoint
             logger.info(string.format("Zlibrary:downloadBook - Fetching download link from endpoint for book ID: %s", book.id))
             local link_result = Api.getDownloadLink(user_session and user_session.user_id,
                 user_session and user_session.user_key, book.id, book.hash)
-            
+
             if link_result.error then
                 return { success = false, error = link_result.error }
             end
-            
-            local final_download_url = link_result.download_link
-            logger.info(string.format("Zlibrary:downloadBook - Got download link from endpoint: %s", final_download_url))
-            
-            return Api.downloadBook(final_download_url, target_filepath, user_session and user_session.user_id,
-                user_session and user_session.user_key, referer_url, progress_callback)
-        end
 
-        -- AsyncHelper.run delivers any result carrying .error to on_error, so api_result never has one
-        -- here; on_error_download owns every failure, including the auth retry.
+            logger.info(string.format("Zlibrary:downloadBook - Got download link from endpoint: %s", link_result.download_link))
+
+            -- No progress callback: it would run in this process and could not reach the parent's
+            -- dialog. The parent watches the temp file instead.
+            return Api.downloadBook(link_result.download_link, target_filepath,
+                user_session and user_session.user_id, user_session and user_session.user_key,
+                referer_url, nil)
+        end, false) -- false: an invisible trap widget that swallows the dismissing tap
+    end
+
+    attemptDownload = function(retry_on_auth_error, progress_title)
+        retry_on_auth_error = retry_on_auth_error == nil and true or retry_on_auth_error
+
+        local user_session = Config.getUserSession()
+        local referer_url = book.href and Config.getBookUrl(book.href) or nil
+        local loading_msg
+
+        -- The wrap below routes any result carrying .error to on_error_download, so api_result never
+        -- has one here; on_error_download owns every failure, including the auth retry.
         local function on_success_download(api_result)
             Ui.closeMessage(loading_msg)
             if api_result and api_result.success then
@@ -1463,9 +1476,10 @@ function Zlibrary:downloadBook(book)
             
             -- Use retry dialog for timeout and network errors
             Ui.showRetryErrorDialog(err_msg, T("Download"), function()
-                -- Retry callback
-                loading_msg, progress_callback = Ui.showBookDownloadProgress(book, T("Retrying download..."))
-                AsyncHelper.run(task_download, on_success_download, on_error_download, loading_msg)
+                -- Retry callback. Re-enter attemptDownload so the retry gets its own wrap: this runs
+                -- from a fresh event, outside any coroutine, and an unwrapped dismissable run silently
+                -- falls back to blocking in-process.
+                attemptDownload(retry_on_auth_error, T("Retrying download..."))
             end, function(final_err_msg)
                 -- Cancel callback - user already knows about the error. Nothing to clean up:
                 -- Api.downloadBook discards its own temp file, and this path is also reached when
@@ -1473,7 +1487,54 @@ function Zlibrary:downloadBook(book)
             end, loading_msg)
         end
 
-        AsyncHelper.run(task_download, on_success_download, on_error_download, loading_msg)
+        Trapper:wrap(function()
+            -- A previous download that was killed never got to clean up after itself.
+            Api.discardDownloadTempFile(target_filepath)
+
+            loading_msg = Ui.showBookDownloadProgress(book, progress_title)
+
+            -- Trapper polls the child at up to one second, so a cancel can land after the child has
+            -- already renamed the finished book into place. Remember what was there first, so that
+            -- case is reported as the success it is instead of stranding a complete book.
+            local target_before = lfs.attributes(target_filepath, "modification")
+
+            -- Trapper returns false both for "user dismissed" and for "fork failed". A dismiss cannot
+            -- happen without at least one yield, and a fork failure never reaches the poll loop, so
+            -- this tells the two apart.
+            local yielded = false
+            UIManager:nextTick(function() yielded = true end)
+
+            local ok, completed, api_result = pcall(runDownloadInSubprocess, user_session, referer_url)
+
+            if not ok then
+                logger.err("Zlibrary:downloadBook - Download failed: " .. tostring(completed))
+                Ui.closeMessage(loading_msg)
+                Ui.showErrorMessage(T("Download failed: Unknown error"))
+                return
+            end
+
+            if not completed then
+                if lfs.attributes(target_filepath, "modification") ~= target_before then
+                    -- The rename beat the kill; the book is whole.
+                    return on_success_download({ success = true })
+                end
+                Api.discardDownloadTempFile(target_filepath)
+                Ui.closeMessage(loading_msg)
+                Ui.showInfoMessage(yielded and T("Download cancelled.")
+                    or T("Download failed: Unknown error"))
+                return
+            end
+
+            if not api_result then
+                Ui.closeMessage(loading_msg)
+                Ui.showErrorMessage(T("Download failed: Unknown error"))
+                return
+            end
+            if api_result.error then
+                return on_error_download(api_result.error)
+            end
+            on_success_download(api_result)
+        end)
     end
 
     Ui.confirmDownload(filename, function()

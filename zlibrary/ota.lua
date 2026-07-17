@@ -1,5 +1,5 @@
 local logger = require("logger")
-local ltn12 = require("ltn12")
+local socketutil = require("socketutil")
 local json = require("json")
 local T = require("zlibrary.gettext")
 local ConfirmBox = require("ui/widget/confirmbox")
@@ -7,6 +7,7 @@ local UIManager = require("ui/uimanager")
 local util = require("util")
 local NetworkMgr = require("ui/network/manager")
 local Api = require("zlibrary.api")
+local Config = require("zlibrary.config")
 local Ui = require("zlibrary.ui")
 local DataStorage = require("datastorage")
 
@@ -166,13 +167,17 @@ function Ota.downloadUpdate(url, destination_path)
         return result
     end
 
-    local sink = ltn12.sink.file(file)
+    -- A bare number is not a budget: it becomes socketutil:set_timeout(300), and that does
+    -- `total_timeout or 15`. So `timeout = 300` bought 300 seconds of tolerated SILENCE plus a 15s
+    -- total nobody asked for. The pair matches Api.downloadBook: give up after 15s of no data, but
+    -- let a healthy transfer take as long as it needs.
+    local sink = socketutil.file_sink(file)
     local http_options = {
         url = url,
         method = "GET",
         headers = { ["User-Agent"] = "KOReader-ZLibrary-Plugin" },
         sink = sink,
-        timeout = 300,
+        timeout = Config.getDownloadTimeout(),
         redirect = true,
     }
 

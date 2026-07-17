@@ -211,7 +211,7 @@ msgid "Favorite books"
 msgstr "收藏的书籍"
 
 msgid "Remove from downloaded"
-msgstr ""
+msgstr "从已下载中移除"
 
 msgid "Getting your downloaded..."
 msgstr "正在获取已下载书籍..."
@@ -232,13 +232,13 @@ msgid "Similar books"
 msgstr "相似书籍"
 
 msgid "Removing book from downloaded…"
-msgstr ""
+msgstr "正在从已下载中移除书籍…"
 
 msgid "Failed to remove book from downloaded"
-msgstr ""
+msgstr "从已下载中移除书籍失败"
 
 msgid "Book removed from downloaded, please refresh"
-msgstr ""
+msgstr "书籍已从已下载中移除，请刷新"
 
 msgid "Removing book from favorites…"
 msgstr "正在从收藏夹移除书籍..."
@@ -247,7 +247,7 @@ msgid "Failed to remove book from favorites"
 msgstr "从收藏夹移除书籍失败"
 
 msgid "Unfavorite book"
-msgstr ""
+msgstr "取消收藏书籍"
 
 msgid "Book removed from favorites, please refresh"
 msgstr "书籍已从收藏夹移除，请刷新"
@@ -321,10 +321,10 @@ msgid "Download"
 msgstr "下载"
 
 msgid "Retrying download… (tap to cancel)"
-msgstr ""
+msgstr "正在重试下载…(点击取消)"
 
 msgid "Download cancelled."
-msgstr ""
+msgstr "下载已取消。"
 
 msgid "Book ID is required."
 msgstr "未指定书籍id"
@@ -342,7 +342,7 @@ msgid "No comments to display"
 msgstr "没有评论展示"
 
 msgid "Could not find the server address"
-msgstr ""
+msgstr "找不到服务器地址"
 
 msgid "Request timed out - please check your connection and try again"
 msgstr "请求超时 - 请检查您的连接后重试"
@@ -351,7 +351,7 @@ msgid "Network request failed"
 msgstr "网络请求失败"
 
 msgid "The Z-library address may be wrong or no longer exist."
-msgstr ""
+msgstr "Z-library 地址可能有误或已不存在。"
 
 msgid "Network connection error - please check your internet connection and try again"
 msgstr "网络连接错误 - 请检查您的网络连接后重试"
@@ -396,7 +396,7 @@ msgid "Download limit reached or file is an HTML page"
 msgstr "已达下载限制或文件为HTML页面"
 
 msgid "Failed to save downloaded file"
-msgstr ""
+msgstr "保存下载文件失败"
 
 msgid "Download HTTP Error"
 msgstr "下载 HTTP 错误"
@@ -477,13 +477,13 @@ msgid "API returned an error for favorite books."
 msgstr "API返回了收藏书籍的错误。"
 
 msgid "Failed to remove the book from downloaded (no response body)."
-msgstr ""
+msgstr "从已下载中移除书籍失败(无响应体)。"
 
 msgid "Failed to parse the remove from downloaded response."
-msgstr ""
+msgstr "解析从已下载中移除的响应失败。"
 
 msgid "API returned an error for remove from downloaded."
-msgstr ""
+msgstr "API返回了从已下载中移除的错误。"
 
 msgid "Failed to fetch unfavorite book (no response body)."
 msgstr "取消收藏书籍失败(无响应体)。"
@@ -668,7 +668,7 @@ msgid "Download failed. Please try again later."
 msgstr "下载失败。请稍后重试。"
 
 msgid "Downloading… (tap to cancel)"
-msgstr ""
+msgstr "正在下载…(点击取消)"
 
 msgid "Close"
 msgstr "关闭"
@@ -742,10 +742,10 @@ msgstr "搜索结果"
 
 #, lua-format
 msgid "Remove \"%s\" from your downloaded books?"
-msgstr ""
+msgstr "从您的已下载书籍中移除\"%s\"？"
 
 msgid "Remove"
-msgstr ""
+msgstr "移除"
 
 #, lua-format
 msgid "Download \"%s\"?"
@@ -786,7 +786,7 @@ msgstr "%s因超时%s失败。您要重试吗？"
 
 #, lua-format
 msgid "%s failed because the server address could not be found. Would you like to retry?"
-msgstr ""
+msgstr "%s因找不到服务器地址失败。您要重试吗？"
 
 #, lua-format
 msgid "%s failed due to a network error. Would you like to retry?"

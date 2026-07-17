@@ -211,7 +211,7 @@ msgid "Favorite books"
 msgstr ""
 
 msgid "Remove from downloaded"
-msgstr ""
+msgstr "الإزالة من التنزيلات"
 
 msgid "Getting your downloaded..."
 msgstr ""
@@ -232,13 +232,13 @@ msgid "Similar books"
 msgstr ""
 
 msgid "Removing book from downloaded…"
-msgstr ""
+msgstr "جارٍ إزالة الكتاب من التنزيلات…"
 
 msgid "Failed to remove book from downloaded"
-msgstr ""
+msgstr "فشل إزالة الكتاب من التنزيلات"
 
 msgid "Book removed from downloaded, please refresh"
-msgstr ""
+msgstr "تمت إزالة الكتاب من التنزيلات، يرجى التحديث"
 
 msgid "Removing book from favorites…"
 msgstr ""
@@ -247,7 +247,7 @@ msgid "Failed to remove book from favorites"
 msgstr ""
 
 msgid "Unfavorite book"
-msgstr ""
+msgstr "إزالة الكتاب من المفضلة"
 
 msgid "Book removed from favorites, please refresh"
 msgstr ""
@@ -321,10 +321,10 @@ msgid "Download"
 msgstr "تنزيل"
 
 msgid "Retrying download… (tap to cancel)"
-msgstr ""
+msgstr "إعادة محاولة التنزيل… (اضغط للإلغاء)"
 
 msgid "Download cancelled."
-msgstr ""
+msgstr "تم إلغاء التنزيل."
 
 msgid "Book ID is required."
 msgstr ""
@@ -342,7 +342,7 @@ msgid "No comments to display"
 msgstr ""
 
 msgid "Could not find the server address"
-msgstr ""
+msgstr "تعذر العثور على عنوان الخادم"
 
 msgid "Request timed out - please check your connection and try again"
 msgstr ""
@@ -351,7 +351,7 @@ msgid "Network request failed"
 msgstr ""
 
 msgid "The Z-library address may be wrong or no longer exist."
-msgstr ""
+msgstr "قد يكون عنوان Z-library خاطئًا أو لم يعد موجودًا."
 
 msgid "Network connection error - please check your internet connection and try again"
 msgstr ""
@@ -396,7 +396,7 @@ msgid "Download limit reached or file is an HTML page"
 msgstr ""
 
 msgid "Failed to save downloaded file"
-msgstr ""
+msgstr "فشل حفظ الملف المنزَّل"
 
 msgid "Download HTTP Error"
 msgstr ""
@@ -477,13 +477,13 @@ msgid "API returned an error for favorite books."
 msgstr ""
 
 msgid "Failed to remove the book from downloaded (no response body)."
-msgstr ""
+msgstr "فشل إزالة الكتاب من التنزيلات (لا يوجد نص استجابة)."
 
 msgid "Failed to parse the remove from downloaded response."
-msgstr ""
+msgstr "فشل تحليل استجابة الإزالة من التنزيلات."
 
 msgid "API returned an error for remove from downloaded."
-msgstr ""
+msgstr "أرجع API خطأ للإزالة من التنزيلات."
 
 msgid "Failed to fetch unfavorite book (no response body)."
 msgstr ""
@@ -668,7 +668,7 @@ msgid "Download failed. Please try again later."
 msgstr "فشل التنزيل. يرجى المحاولة مرة أخرى لاحقًا."
 
 msgid "Downloading… (tap to cancel)"
-msgstr ""
+msgstr "جارٍ التنزيل… (اضغط للإلغاء)"
 
 msgid "Close"
 msgstr "إغلاق"
@@ -742,10 +742,10 @@ msgstr "نتائج البحث"
 
 #, lua-format
 msgid "Remove \"%s\" from your downloaded books?"
-msgstr ""
+msgstr "إزالة \"%s\" من كتبك المنزَّلة؟"
 
 msgid "Remove"
-msgstr ""
+msgstr "إزالة"
 
 #, lua-format
 msgid "Download \"%s\"?"
@@ -786,7 +786,7 @@ msgstr "فشل %s بسبب انتهاء المهلة الزمنية%s. هل تر
 
 #, lua-format
 msgid "%s failed because the server address could not be found. Would you like to retry?"
-msgstr ""
+msgstr "فشل %s بسبب تعذر العثور على عنوان الخادم. هل تريد المحاولة مرة أخرى؟"
 
 #, lua-format
 msgid "%s failed due to a network error. Would you like to retry?"

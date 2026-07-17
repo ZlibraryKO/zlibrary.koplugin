@@ -211,7 +211,7 @@ msgid "Favorite books"
 msgstr ""
 
 msgid "Remove from downloaded"
-msgstr ""
+msgstr "Retirer des téléchargements"
 
 msgid "Getting your downloaded..."
 msgstr ""
@@ -232,13 +232,13 @@ msgid "Similar books"
 msgstr ""
 
 msgid "Removing book from downloaded…"
-msgstr ""
+msgstr "Retrait du livre des téléchargements…"
 
 msgid "Failed to remove book from downloaded"
-msgstr ""
+msgstr "Échec du retrait du livre des téléchargements"
 
 msgid "Book removed from downloaded, please refresh"
-msgstr ""
+msgstr "Livre retiré des téléchargements, veuillez actualiser"
 
 msgid "Removing book from favorites…"
 msgstr ""
@@ -247,7 +247,7 @@ msgid "Failed to remove book from favorites"
 msgstr ""
 
 msgid "Unfavorite book"
-msgstr ""
+msgstr "Retirer des favoris"
 
 msgid "Book removed from favorites, please refresh"
 msgstr ""
@@ -321,10 +321,10 @@ msgid "Download"
 msgstr "Télécharger"
 
 msgid "Retrying download… (tap to cancel)"
-msgstr ""
+msgstr "Nouvelle tentative de téléchargement… (appuyez pour annuler)"
 
 msgid "Download cancelled."
-msgstr ""
+msgstr "Téléchargement annulé."
 
 msgid "Book ID is required."
 msgstr ""
@@ -342,7 +342,7 @@ msgid "No comments to display"
 msgstr ""
 
 msgid "Could not find the server address"
-msgstr ""
+msgstr "Impossible de trouver l'adresse du serveur"
 
 msgid "Request timed out - please check your connection and try again"
 msgstr ""
@@ -351,7 +351,7 @@ msgid "Network request failed"
 msgstr ""
 
 msgid "The Z-library address may be wrong or no longer exist."
-msgstr ""
+msgstr "L'adresse Z-library est peut-être incorrecte ou n'existe plus."
 
 msgid "Network connection error - please check your internet connection and try again"
 msgstr ""
@@ -396,7 +396,7 @@ msgid "Download limit reached or file is an HTML page"
 msgstr ""
 
 msgid "Failed to save downloaded file"
-msgstr ""
+msgstr "Échec de l'enregistrement du fichier téléchargé"
 
 msgid "Download HTTP Error"
 msgstr ""
@@ -477,13 +477,13 @@ msgid "API returned an error for favorite books."
 msgstr ""
 
 msgid "Failed to remove the book from downloaded (no response body)."
-msgstr ""
+msgstr "Échec du retrait du livre des téléchargements (pas de corps de réponse)."
 
 msgid "Failed to parse the remove from downloaded response."
-msgstr ""
+msgstr "Échec de l'analyse de la réponse du retrait des téléchargements."
 
 msgid "API returned an error for remove from downloaded."
-msgstr ""
+msgstr "L'API a retourné une erreur pour le retrait des téléchargements."
 
 msgid "Failed to fetch unfavorite book (no response body)."
 msgstr ""
@@ -668,7 +668,7 @@ msgid "Download failed. Please try again later."
 msgstr "Échec du téléchargement. Veuillez réessayer plus tard."
 
 msgid "Downloading… (tap to cancel)"
-msgstr ""
+msgstr "Téléchargement… (appuyez pour annuler)"
 
 msgid "Close"
 msgstr "Fermer"
@@ -742,10 +742,10 @@ msgstr "Résultats de recherche"
 
 #, lua-format
 msgid "Remove \"%s\" from your downloaded books?"
-msgstr ""
+msgstr "Retirer \"%s\" de vos livres téléchargés ?"
 
 msgid "Remove"
-msgstr ""
+msgstr "Retirer"
 
 #, lua-format
 msgid "Download \"%s\"?"
@@ -786,7 +786,7 @@ msgstr "%s a échoué en raison d'un délai d'expiration%s. Voulez-vous réessay
 
 #, lua-format
 msgid "%s failed because the server address could not be found. Would you like to retry?"
-msgstr ""
+msgstr "%s a échoué car l'adresse du serveur est introuvable. Voulez-vous réessayer ?"
 
 #, lua-format
 msgid "%s failed due to a network error. Would you like to retry?"

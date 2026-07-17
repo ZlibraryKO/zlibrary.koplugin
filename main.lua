@@ -1376,6 +1376,32 @@ function Zlibrary:downloadBook(book)
 
     local attemptDownload
 
+    -- The child owns the socket, so it cannot drive the parent's progress bar. It does not need to:
+    -- it is already writing the bytes to a file we know the name of. Watch that instead. Legal only
+    -- because the dismissable run yields while it waits, so UIManager is live to run this.
+    -- Not via Trapper's pipe: any byte readable there is taken as the child's final result, which
+    -- would both corrupt it and re-block the parent until the child exits.
+    local function startProgressPoll(target_filepath, progress_callback, progress_max)
+        if not progress_callback or not progress_max then return function() end end
+        local temp_filepath = Api.getDownloadTempPath(target_filepath)
+        local stopped = false
+        local poll
+        poll = function()
+            if stopped then return end
+            local size = lfs.attributes(temp_filepath, "size")
+            -- nil while the link is still being resolved, and again once the child has renamed the
+            -- file onto the target: neither is a reset to zero. Clamp because the reported size is
+            -- catalogue metadata and the body can overrun it; setPercentage does not clamp itself.
+            if size then progress_callback(math.min(size, progress_max)) end
+            UIManager:scheduleIn(1, poll)
+        end
+        UIManager:scheduleIn(1, poll)
+        return function()
+            stopped = true
+            UIManager:unschedule(poll)
+        end
+    end
+
     -- Resolving the link and fetching the body both block for as long as the network takes. Run them in
     -- a forked child so the UI loop keeps running and the user can tap to cancel: the child cannot yield
     -- out of socket.http (it sits behind socket.protect's C frame), but it does not need to -- blocking
@@ -1491,7 +1517,8 @@ function Zlibrary:downloadBook(book)
             -- A previous download that was killed never got to clean up after itself.
             Api.discardDownloadTempFile(target_filepath)
 
-            loading_msg = Ui.showBookDownloadProgress(book, progress_title)
+            local progress_callback
+            loading_msg, progress_callback = Ui.showBookDownloadProgress(book, progress_title)
 
             -- Trapper polls the child at up to one second, so a cancel can land after the child has
             -- already renamed the finished book into place. Remember what was there first, so that
@@ -1504,7 +1531,10 @@ function Zlibrary:downloadBook(book)
             local yielded = false
             UIManager:nextTick(function() yielded = true end)
 
+            local stop_poll = startProgressPoll(target_filepath, progress_callback, book.filesize)
             local ok, completed, api_result = pcall(runDownloadInSubprocess, user_session, referer_url)
+            -- After the pcall, so a throw cannot leave the poll rescheduling against a closed dialog.
+            stop_poll()
 
             if not ok then
                 logger.err("Zlibrary:downloadBook - Download failed: " .. tostring(completed))

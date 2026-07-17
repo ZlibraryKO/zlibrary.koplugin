@@ -254,10 +254,15 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                     end
 
                     -- early return
-                    if success and not first_working_url then
+                    -- `success` only says the probe ran and returned something. Api.healthCheck reports a
+                    -- dead mirror by RETURNING { success = false }, which is a perfectly successful task,
+                    -- so the health check's own verdict has to be read too -- exactly as the item display
+                    -- above does. Without it the first probe to come back wins, and a mirror that fails
+                    -- instantly (NXDOMAIN answers in ~30ms) beats every mirror that actually works.
+                    if success and result.success and not first_working_url then
                         first_working_url = seed.url
                         -- return true to break all subsequent tasks
-                        if not is_interactive then return true end 
+                        if not is_interactive then return true end
                     end
                     return false
                 end,
@@ -317,7 +322,11 @@ function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
                                 -- queue-jump detection
                                 self.discover_channel:pushTask(health_check_task, function(success, res)
                                     if type(res) ~= "table" then res = {} end
-                                    local status = success and string.format("\u{2714} %dms", res.elapsed or 0) or ("\u{2718} " .. tostring(res.error or ""))
+                                    -- Same as on_item_end: a returned { success = false } is a successful
+                                    -- task reporting a dead mirror, so both have to hold for a tick.
+                                    local status = (success and res.success)
+                                        and string.format("\u{2714} %dms", res.elapsed or 0)
+                                        or ("\u{2718} " .. tostring(res.error or ""))
                                     real = Config.getCacheRealUrl()
                                     local final_info = string.format(" %s \n %s", status, real and (T("Mirror site redirected to: ") .. real) or "")
                                     if dlg then

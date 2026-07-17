@@ -394,6 +394,21 @@ function SearchDialog:onMenuHold(item)
             end
         }})
     end
+
+    -- A tab may offer an action that only makes sense on its own list, e.g. removing a book from the
+    -- downloaded history. Read it off the active tab rather than test the position, so the tabs stay
+    -- free to move.
+    local active_item = self:getActiveItem()
+    local book_action = type(active_item) == "table" and active_item.book_action or nil
+    if book.id and type(book_action) == "table" and type(book_action.callback) == "function" then
+        table.insert(buttons, {{
+            text = book_action.text,
+            callback = function()
+                UIManager:close(dialog)
+                book_action.callback(self, book)
+            end
+        }})
+    end
     dialog = ButtonDialog:new{
         buttons = buttons,
         title = string.format("\u{f002} %s", T("Search")),

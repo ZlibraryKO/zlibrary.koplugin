@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 07:43+0200\n"
+"POT-Creation-Date: 2026-07-17 09:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -210,6 +210,9 @@ msgstr ""
 msgid "Favorite books"
 msgstr ""
 
+msgid "Remove from downloaded"
+msgstr ""
+
 msgid "Getting your downloaded..."
 msgstr ""
 
@@ -226,6 +229,18 @@ msgid "No similar books found"
 msgstr ""
 
 msgid "Similar books"
+msgstr ""
+
+msgid "Removing book from downloaded…"
+msgstr ""
+
+msgid "Failed to remove book from downloaded"
+msgstr ""
+
+msgid "remove from downloaded"
+msgstr ""
+
+msgid "Book removed from downloaded, please refresh"
 msgstr ""
 
 msgid "Removing book from favorites…"
@@ -462,6 +477,15 @@ msgid "Failed to parse favorite books response."
 msgstr ""
 
 msgid "API returned an error for favorite books."
+msgstr ""
+
+msgid "Failed to remove the book from downloaded (no response body)."
+msgstr ""
+
+msgid "Failed to parse the remove from downloaded response."
+msgstr ""
+
+msgid "API returned an error for remove from downloaded."
 msgstr ""
 
 msgid "Failed to fetch unfavorite book (no response body)."
@@ -718,6 +742,13 @@ msgstr "Beoordeling"
 
 msgid "Search Results"
 msgstr "Zoekresultaten"
+
+#, lua-format
+msgid "Remove \"%s\" from your downloaded books?"
+msgstr ""
+
+msgid "Remove"
+msgstr ""
 
 #, lua-format
 msgid "Download \"%s\"?"

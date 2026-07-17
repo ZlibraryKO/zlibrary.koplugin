@@ -429,6 +429,12 @@ function Config.getFavoriteBookIdsUrl()
     return base and (base .. "/eapi/user/book/saved?order=saved_date&page=1&limit=" .. limit)
 end
 
+function Config.getDeleteDownloadedUrl(book_id)
+    local base = Config.getBaseUrl()
+    if not base or not book_id then return nil end
+    return base .. string.format("/eapi/user/book/%s/delete", book_id)
+end
+
 function Config.getUnFavoriteUrl(book_id)
     local base = Config.getBaseUrl()
     if not base or not book_id then return nil end

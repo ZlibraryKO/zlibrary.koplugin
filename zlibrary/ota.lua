@@ -66,6 +66,31 @@ local function getCurrentPluginVersion(plugin_base_path)
     end
 end
 
+-- The release workflow publishes zlibrary_plugin_v<version>.zip. Pick the update archive out of the
+-- release by name: a release can carry more than one asset -- a second archive, a checksum, a
+-- signature -- and the API does not promise any particular order, so taking the first one means a
+-- future asset could silently redirect the updater at the wrong file. Fall back to any zip, so
+-- renaming the artefact cannot strand everyone on an old version with no way to update.
+local UPDATE_ASSET_NAME_PATTERN = "^zlibrary_plugin_.*%.zip$"
+
+local function selectUpdateAsset(assets)
+    if type(assets) ~= "table" then return nil end
+
+    local first_zip
+    for _, asset in ipairs(assets) do
+        if type(asset) == "table" and type(asset.name) == "string"
+                and type(asset.browser_download_url) == "string" then
+            if asset.name:match(UPDATE_ASSET_NAME_PATTERN) then
+                return asset
+            end
+            if not first_zip and asset.name:match("%.zip$") then
+                first_zip = asset
+            end
+        end
+    end
+    return first_zip
+end
+
 local function isVersionOlder(version1, version2)
     if not version1 or not version2 then return false end
 
@@ -277,14 +302,16 @@ function Ota.startUpdateProcess(plugin_path_from_main)
         return
     end
 
-    if not assets[1] or type(assets[1]) ~= "table" or not assets[1].browser_download_url then
-        logger.warn("Zlibrary:Ota.startUpdateProcess - No download URL found in the first release asset.")
+    local asset = selectUpdateAsset(assets)
+    if not asset then
+        logger.warn("Zlibrary:Ota.startUpdateProcess - No update archive among the release assets.")
         _show_ota_final_message(T("Could not find a download link for the update."), true)
         return
     end
 
-    local download_url = assets[1].browser_download_url
-    local asset_name = assets[1].name or "zlibrary_plugin_update.zip"
+    local download_url = asset.browser_download_url
+    local asset_name = asset.name
+    logger.info("Zlibrary:Ota.startUpdateProcess - Selected release asset: " .. asset_name)
 
     local current_version = getCurrentPluginVersion(plugin_path_from_main)
     if not current_version then

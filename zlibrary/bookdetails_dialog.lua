@@ -137,6 +137,18 @@ function BookDetailsDialog:_buildInnerDialog()
         _added_widgets = { content },
         show_parent = self,
     }
+    -- ButtonDialog wraps itself in a MovableContainer, so the dialog can be dragged around by
+    -- hold-and-pan. Nothing here benefits from being repositioned, and it is easy to knock askew by
+    -- accident: MovableContainer listens for touch/hold/pan/swipe across the WHOLE screen, which
+    -- also puts it in competition with the description's own swipe-to-scroll. MovableContainer
+    -- supports an `unmovable` flag for exactly this, but ButtonDialog does not forward it and the
+    -- gestures are registered during init, so clear them here instead. The container itself has to
+    -- stay: ButtonDialog uses self.movable.dimen for its refresh region and tap-outside handling.
+    if self.inner_dialog.movable then
+        self.inner_dialog.movable.unmovable = true
+        self.inner_dialog.movable.ges_events = {}
+    end
+
     local wrapper = self
     self.inner_dialog.onClose = function()
         if wrapper.view_state == "menu" then

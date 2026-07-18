@@ -235,6 +235,10 @@ function BookDetailsDialog:_buildContent()
         return Geom:new{ w = size.w, h = math.floor(size.h - offset + Screen:scaleBySize(5)) }
     end
 
+    -- Remember what the header actually costs (the override above already discounts the cover's
+    -- pop-out shadow) so _buildHtmlSection can give the rest of the screen to the text.
+    self._header_h = header_widget:getSize().h
+
     local content_group = VerticalGroup:new{ not_focusable = true, header_widget }
 
     if self.view_state == "description" and self.book.description  then
@@ -259,34 +263,53 @@ function BookDetailsDialog:_buildHtmlSection(divider_text, raw_html, css)
     if self.view_state == "comments" and type(css) == "string" and css ~= "" then
         engine_css = css
     end
-    local safe_h = math.floor(math.max(Screen:getHeight() - self.framed_h - Screen:scaleBySize(520), Screen:scaleBySize(200)))
-    self.scrollable_html = ScrollHtmlWidget:new{ 
-        html_body = clean_html, 
-        width = self.avail_w, 
-        scroll_bar_width = Screen:scaleBySize(2),
-        text_scroll_span = Screen:scaleBySize(3),
-        css = engine_css, 
-        height = safe_h 
-    }
-
-    table.insert(section_group, VerticalSpan:new{ width = math.floor(Screen:scaleBySize(15)) })
-    
+    -- Build the divider first so its real height can be measured before sizing the text area.
+    local top_span_h = math.floor(Screen:scaleBySize(15))
+    local bottom_span_h = math.floor(Screen:scaleBySize(10))
     local desc_text_widget = TextWidget:new{ text = divider_text, face = self.fonts.meta, fgcolor = Blitbuffer.COLOR_GRAY_3 }
     local text_size = desc_text_widget:getSize()
     local line_h = math.max(1, math.floor(Screen:scaleBySize(1)))
     local left_line_w = math.max(0, math.floor((self.avail_w - text_size.w) / 2))
     local right_line_w = math.max(0, self.avail_w - left_line_w - text_size.w)
-    
+    local divider_block_h = top_span_h + math.max(text_size.h, line_h) + bottom_span_h
+
+    -- Give the text everything the screen has left. This section is only ever rendered in the
+    -- "description" and "comments" views, and _buildButtons returns early for those with a single
+    -- "Back" button -- the full menu button stack is not on screen here. The previous reservation of
+    -- scaleBySize(520) was sized for that absent stack: on a 1264x1680 screen it withheld ~1096px,
+    -- so the calculation produced ~74px and collapsed onto its own 200px floor, leaving a small
+    -- reading area inside a mostly empty dialog. Reserve what is actually drawn instead -- the
+    -- measured header and divider, plus one button row and the dialog's frame.
+    local button_and_frame_h = Screen:scaleBySize(150)
+    local header_h = self._header_h or self.framed_h
+    local available_h = Screen:getHeight() - header_h - divider_block_h - button_and_frame_h
+    -- Take what is available rather than clamping up to a fixed floor. scaleBySize keys off the
+    -- SHORTER screen edge, so in landscape a scaled floor can be taller than the height that is
+    -- actually left and would push the dialog off-screen. The guard below only catches degenerate
+    -- geometry, where a cramped area still beats an unusable one.
+    local safe_h = math.floor(math.max(available_h, Screen:scaleBySize(120)))
+
+    self.scrollable_html = ScrollHtmlWidget:new{
+        html_body = clean_html,
+        width = self.avail_w,
+        scroll_bar_width = Screen:scaleBySize(2),
+        text_scroll_span = Screen:scaleBySize(3),
+        css = engine_css,
+        height = safe_h
+    }
+
+    table.insert(section_group, VerticalSpan:new{ width = top_span_h })
+
     table.insert(section_group, HorizontalGroup:new{
         align = "center",
         LineWidget:new{ dimen = Geom:new{ w = left_line_w, h = line_h }, background = Blitbuffer.COLOR_GRAY_3, style = "solid" },
         desc_text_widget,
         LineWidget:new{ dimen = Geom:new{ w = right_line_w, h = line_h }, background = Blitbuffer.COLOR_GRAY_3, style = "solid" }
     })
-    
-    table.insert(section_group, VerticalSpan:new{ width = math.floor(Screen:scaleBySize(10)) })
+
+    table.insert(section_group, VerticalSpan:new{ width = bottom_span_h })
     table.insert(section_group, FrameContainer:new{ padding = 0, bordersize = 0, self.scrollable_html })
-    
+
     return section_group
 end
 

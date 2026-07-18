@@ -6,6 +6,7 @@ local Geom = require("ui/geometry")
 local Size = require("ui/size")
 local UIManager = require("ui/uimanager")
 local ButtonDialog = require("ui/widget/buttondialog")
+local ButtonTable = require("ui/widget/buttontable")
 local InputContainer = require("ui/widget/container/inputcontainer")
 local FrameContainer = require("ui/widget/container/framecontainer")
 local LeftContainer = require("ui/widget/container/leftcontainer")
@@ -123,8 +124,11 @@ end
 
 function BookDetailsDialog:_buildInnerDialog()
     self:_calculateDimensions()
-    local content = self:_buildContent()
+    -- Buttons first: their height decides how much is left for the content, and it differs per view
+    -- (the description and comments views collapse to a single "Back" row).
     local dialog_buttons = self:_buildButtons()
+    self._content_h = self:_contentBudget(dialog_buttons)
+    local content = self:_buildContent()
     self.inner_dialog = ButtonDialog:new{
         title = self.title,
         title_align = self.title_align,
@@ -145,6 +149,35 @@ function BookDetailsDialog:_buildInnerDialog()
         self.scrollable_html.dialog = self
     end
     self[1] = self.inner_dialog
+end
+
+-- How much vertical room the content (header + divider + text) may use in the current view.
+--
+-- The dialog has to be the same height in every view, otherwise it visibly jumps when you press
+-- Profile or Comments. ButtonDialog sizes itself to what it holds, and everything except our content
+-- and the button rows is constant, so keeping (content + buttons) constant keeps the whole dialog
+-- constant. Measure the real button block for this view -- it is the full stack in the menu but a
+-- single "Back" row in the others -- and hand the remainder to the content. A view with fewer
+-- buttons simply gets more reading room, at the same overall size.
+--
+-- Note the chrome figure below need not be perfect: an error in it shifts every view equally, so it
+-- can make the dialog slightly smaller or larger overall but can never reintroduce the jump.
+function BookDetailsDialog:_contentBudget(buttons)
+    local probe = ButtonTable:new{
+        buttons = buttons,
+        width = self.dlg_w - 2 * Size.border.window - 2 * Size.padding.button,
+        show_parent = self,
+    }
+    local buttons_h = probe:getSize().h
+    if type(probe.free) == "function" then probe:free() end
+
+    -- ButtonDialog's own paddings/margins, plus the frame it wraps our content in.
+    local chrome_h = 2 * Size.padding.buttontable + 2 * Size.margin.default
+                   + 2 * Size.padding.large + 2 * Size.margin.title
+                   + Size.line.medium
+
+    local target_h = math.floor(Screen:getHeight() * 0.95)
+    return math.max(target_h - buttons_h - chrome_h, Screen:scaleBySize(120))
 end
 
 function BookDetailsDialog:_calculateDimensions()
@@ -241,10 +274,20 @@ function BookDetailsDialog:_buildContent()
 
     local content_group = VerticalGroup:new{ not_focusable = true, header_widget }
 
-    if self.view_state == "description" and self.book.description  then
-        table.insert(content_group, self:_buildHtmlSection(string.format("  %s  ", T("Profile")), self.book.description))
-    elseif self.view_state == "comments" and self.book.comments_html  then
+    if self.view_state == "comments" and self.book.comments_html then
         table.insert(content_group, self:_buildHtmlSection(string.format("  %s  ", T("Comments")), self.book.comments_html, self.book.comments_css))
+    elseif self.book.description and self.book.description ~= "" then
+        -- The menu view shows the description as well, not just the "description" view. That is what
+        -- keeps the dialog one size: every view fills the same content budget, and pressing Profile
+        -- only trades the button stack for more reading room rather than resizing the dialog.
+        table.insert(content_group, self:_buildHtmlSection(string.format("  %s  ", T("Profile")), self.book.description))
+    else
+        -- Nothing to render (a book with no description): still take up the budget, so a book
+        -- without one does not open a shorter dialog than a book with one.
+        local pad_h = self._content_h - (self._header_h or self.framed_h)
+        if pad_h > 0 then
+            table.insert(content_group, VerticalSpan:new{ width = math.floor(pad_h) })
+        end
     end
 
     return content_group
@@ -273,20 +316,17 @@ function BookDetailsDialog:_buildHtmlSection(divider_text, raw_html, css)
     local right_line_w = math.max(0, self.avail_w - left_line_w - text_size.w)
     local divider_block_h = top_span_h + math.max(text_size.h, line_h) + bottom_span_h
 
-    -- Give the text everything the screen has left. This section is only ever rendered in the
-    -- "description" and "comments" views, and _buildButtons returns early for those with a single
-    -- "Back" button -- the full menu button stack is not on screen here. The previous reservation of
-    -- scaleBySize(520) was sized for that absent stack: on a 1264x1680 screen it withheld ~1096px,
-    -- so the calculation produced ~74px and collapsed onto its own 200px floor, leaving a small
-    -- reading area inside a mostly empty dialog. Reserve what is actually drawn instead -- the
-    -- measured header and divider, plus one button row and the dialog's frame.
-    local button_and_frame_h = Screen:scaleBySize(150)
+    -- Fill the content budget _contentBudget() worked out for this view: whatever is left after the
+    -- measured header and this divider. The budget already accounts for the button rows actually on
+    -- screen, so every view ends up the same overall height. The old code instead subtracted a
+    -- hardcoded scaleBySize(520) -- a reservation for the full menu button stack, which is never
+    -- shown alongside this section. On a 1264x1680 screen that withheld ~1096px, produced ~74px and
+    -- collapsed onto its own floor: a small band of text in a mostly empty dialog.
     local header_h = self._header_h or self.framed_h
-    local available_h = Screen:getHeight() - header_h - divider_block_h - button_and_frame_h
-    -- Take what is available rather than clamping up to a fixed floor. scaleBySize keys off the
-    -- SHORTER screen edge, so in landscape a scaled floor can be taller than the height that is
-    -- actually left and would push the dialog off-screen. The guard below only catches degenerate
-    -- geometry, where a cramped area still beats an unusable one.
+    local available_h = (self._content_h or Screen:getHeight()) - header_h - divider_block_h
+    -- Guard degenerate geometry only. Do not clamp up to a large scaled floor: scaleBySize keys off
+    -- the SHORTER screen edge, so in landscape such a floor can exceed the height actually left and
+    -- push the dialog off-screen.
     local safe_h = math.floor(math.max(available_h, Screen:scaleBySize(120)))
 
     self.scrollable_html = ScrollHtmlWidget:new{

@@ -177,7 +177,9 @@ function BookDetailsDialog:_contentBudget(buttons)
                    + Size.line.medium
 
     local target_h = math.floor(Screen:getHeight() * 0.95)
-    return math.max(target_h - buttons_h - chrome_h, Screen:scaleBySize(120))
+    -- The margin above the popped-out cover comes out of the same budget, so it shifts the content
+    -- down without making the dialog taller.
+    return math.max(target_h - buttons_h - chrome_h - (self.cover_top_margin or 0), Screen:scaleBySize(120))
 end
 
 function BookDetailsDialog:_calculateDimensions()
@@ -186,6 +188,11 @@ function BookDetailsDialog:_calculateDimensions()
     self.left_padding = math.floor(Screen:scaleBySize(16))
     self.right_padding = math.floor(Screen:scaleBySize(20))
     self.pop_out_offset = math.floor(Screen:scaleBySize(40))
+    -- _applyCoverPaintShadow paints the cover at (y - pop_out_offset), so it deliberately floats
+    -- above its layout slot. Without a little room above, it crowds the top of the dialog. This span
+    -- is taken out of the content budget in _contentBudget, so adding it cannot change the dialog's
+    -- overall height. Tune this to taste -- it is the only knob for the gap above the cover.
+    self.cover_top_margin = math.floor(Screen:scaleBySize(12))
     
     self.dlg_w = math.floor(math.min(Screen:getWidth(), Screen:getHeight()) * 0.95)
     self.avail_w = math.floor(self.dlg_w - 2 * (Size.border.window + Size.padding.button) - 2 * (Size.padding.default + Size.margin.default))
@@ -272,7 +279,11 @@ function BookDetailsDialog:_buildContent()
     -- pop-out shadow) so _buildHtmlSection can give the rest of the screen to the text.
     self._header_h = header_widget:getSize().h
 
-    local content_group = VerticalGroup:new{ not_focusable = true, header_widget }
+    local content_group = VerticalGroup:new{ not_focusable = true }
+    if self.cover_top_margin and self.cover_top_margin > 0 then
+        table.insert(content_group, VerticalSpan:new{ width = self.cover_top_margin })
+    end
+    table.insert(content_group, header_widget)
 
     if self.view_state == "comments" and self.book.comments_html then
         table.insert(content_group, self:_buildHtmlSection(string.format("  %s  ", T("Comments")), self.book.comments_html, self.book.comments_css))

@@ -291,7 +291,22 @@ function BookDetailsDialog:_buildContent()
         -- The menu view shows the description as well, not just the "description" view. That is what
         -- keeps the dialog one size: every view fills the same content budget, and pressing Profile
         -- only trades the button stack for more reading room rather than resizing the dialog.
-        table.insert(content_group, self:_buildHtmlSection(string.format("  %s  ", T("Profile")), self.book.description))
+        local section = self:_buildHtmlSection(string.format("  %s  ", T("Profile")), self.book.description)
+
+        -- In the menu view the description is only a preview, so tapping it opens the full view --
+        -- the same thing the Profile button does. ScrollHtmlWidget claims taps for scrolling
+        -- (onTapScrollText pages up or down by tap position) and only reports the event handled when
+        -- it actually scrolled, so wrapping this in a tap container would expand only once the
+        -- preview hit its end. Repurpose the widget's own tap handler instead, which leaves swipe
+        -- and the page keys scrolling the preview as before.
+        if self.view_state == "menu" and self.scrollable_html then
+            self.scrollable_html.onTapScrollText = function()
+                self:switchState("description")
+                return true
+            end
+        end
+
+        table.insert(content_group, section)
     else
         -- No description at all. Say so rather than leaving a blank region, which reads like
         -- something failed to load, and still fill the budget so a book without a description does

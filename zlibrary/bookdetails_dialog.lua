@@ -6,6 +6,7 @@ local Geom = require("ui/geometry")
 local Size = require("ui/size")
 local UIManager = require("ui/uimanager")
 local ButtonDialog = require("ui/widget/buttondialog")
+local ButtonTable = require("ui/widget/buttontable")
 local InputContainer = require("ui/widget/container/inputcontainer")
 local FrameContainer = require("ui/widget/container/framecontainer")
 local LeftContainer = require("ui/widget/container/leftcontainer")
@@ -123,8 +124,11 @@ end
 
 function BookDetailsDialog:_buildInnerDialog()
     self:_calculateDimensions()
-    local content = self:_buildContent()
+    -- Buttons first: their height decides how much is left for the content, and it differs per view
+    -- (the description and comments views collapse to a single "Back" row).
     local dialog_buttons = self:_buildButtons()
+    self._content_h = self:_contentBudget(dialog_buttons)
+    local content = self:_buildContent()
     self.inner_dialog = ButtonDialog:new{
         title = self.title,
         title_align = self.title_align,
@@ -147,12 +151,48 @@ function BookDetailsDialog:_buildInnerDialog()
     self[1] = self.inner_dialog
 end
 
+-- How much vertical room the content (header + divider + text) may use in the current view.
+--
+-- The dialog has to be the same height in every view, otherwise it visibly jumps when you press
+-- Profile or Comments. ButtonDialog sizes itself to what it holds, and everything except our content
+-- and the button rows is constant, so keeping (content + buttons) constant keeps the whole dialog
+-- constant. Measure the real button block for this view -- it is the full stack in the menu but a
+-- single "Back" row in the others -- and hand the remainder to the content. A view with fewer
+-- buttons simply gets more reading room, at the same overall size.
+--
+-- Note the chrome figure below need not be perfect: an error in it shifts every view equally, so it
+-- can make the dialog slightly smaller or larger overall but can never reintroduce the jump.
+function BookDetailsDialog:_contentBudget(buttons)
+    local probe = ButtonTable:new{
+        buttons = buttons,
+        width = self.dlg_w - 2 * Size.border.window - 2 * Size.padding.button,
+        show_parent = self,
+    }
+    local buttons_h = probe:getSize().h
+    if type(probe.free) == "function" then probe:free() end
+
+    -- ButtonDialog's own paddings/margins, plus the frame it wraps our content in.
+    local chrome_h = 2 * Size.padding.buttontable + 2 * Size.margin.default
+                   + 2 * Size.padding.large + 2 * Size.margin.title
+                   + Size.line.medium
+
+    local target_h = math.floor(Screen:getHeight() * 0.95)
+    -- The margin above the popped-out cover comes out of the same budget, so it shifts the content
+    -- down without making the dialog taller.
+    return math.max(target_h - buttons_h - chrome_h - (self.cover_top_margin or 0), Screen:scaleBySize(120))
+end
+
 function BookDetailsDialog:_calculateDimensions()
     self.border = Size.border.thin
     self.gap = math.floor(Screen:scaleBySize(16))
     self.left_padding = math.floor(Screen:scaleBySize(16))
     self.right_padding = math.floor(Screen:scaleBySize(20))
     self.pop_out_offset = math.floor(Screen:scaleBySize(40))
+    -- _applyCoverPaintShadow paints the cover at (y - pop_out_offset), so it deliberately floats
+    -- above its layout slot. Without a little room above, it crowds the top of the dialog. This span
+    -- is taken out of the content budget in _contentBudget, so adding it cannot change the dialog's
+    -- overall height. Tune this to taste -- it is the only knob for the gap above the cover.
+    self.cover_top_margin = math.floor(Screen:scaleBySize(12))
     
     self.dlg_w = math.floor(math.min(Screen:getWidth(), Screen:getHeight()) * 0.95)
     self.avail_w = math.floor(self.dlg_w - 2 * (Size.border.window + Size.padding.button) - 2 * (Size.padding.default + Size.margin.default))
@@ -235,12 +275,30 @@ function BookDetailsDialog:_buildContent()
         return Geom:new{ w = size.w, h = math.floor(size.h - offset + Screen:scaleBySize(5)) }
     end
 
-    local content_group = VerticalGroup:new{ not_focusable = true, header_widget }
+    -- Remember what the header actually costs (the override above already discounts the cover's
+    -- pop-out shadow) so _buildHtmlSection can give the rest of the screen to the text.
+    self._header_h = header_widget:getSize().h
 
-    if self.view_state == "description" and self.book.description  then
-        table.insert(content_group, self:_buildHtmlSection(string.format("  %s  ", T("Profile")), self.book.description))
-    elseif self.view_state == "comments" and self.book.comments_html  then
+    local content_group = VerticalGroup:new{ not_focusable = true }
+    if self.cover_top_margin and self.cover_top_margin > 0 then
+        table.insert(content_group, VerticalSpan:new{ width = self.cover_top_margin })
+    end
+    table.insert(content_group, header_widget)
+
+    if self.view_state == "comments" and self.book.comments_html then
         table.insert(content_group, self:_buildHtmlSection(string.format("  %s  ", T("Comments")), self.book.comments_html, self.book.comments_css))
+    elseif self.book.description and self.book.description ~= "" then
+        -- The menu view shows the description as well, not just the "description" view. That is what
+        -- keeps the dialog one size: every view fills the same content budget, and pressing Profile
+        -- only trades the button stack for more reading room rather than resizing the dialog.
+        table.insert(content_group, self:_buildHtmlSection(string.format("  %s  ", T("Profile")), self.book.description))
+    else
+        -- No description at all. Say so rather than leaving a blank region, which reads like
+        -- something failed to load, and still fill the budget so a book without a description does
+        -- not open a shorter dialog than one with it.
+        table.insert(content_group, self:_buildHtmlSection(
+            string.format("  %s  ", T("Profile")),
+            string.format("<div>%s</div>", T("No description available"))))
     end
 
     return content_group
@@ -259,34 +317,50 @@ function BookDetailsDialog:_buildHtmlSection(divider_text, raw_html, css)
     if self.view_state == "comments" and type(css) == "string" and css ~= "" then
         engine_css = css
     end
-    local safe_h = math.floor(math.max(Screen:getHeight() - self.framed_h - Screen:scaleBySize(520), Screen:scaleBySize(200)))
-    self.scrollable_html = ScrollHtmlWidget:new{ 
-        html_body = clean_html, 
-        width = self.avail_w, 
-        scroll_bar_width = Screen:scaleBySize(2),
-        text_scroll_span = Screen:scaleBySize(3),
-        css = engine_css, 
-        height = safe_h 
-    }
-
-    table.insert(section_group, VerticalSpan:new{ width = math.floor(Screen:scaleBySize(15)) })
-    
+    -- Build the divider first so its real height can be measured before sizing the text area.
+    local top_span_h = math.floor(Screen:scaleBySize(15))
+    local bottom_span_h = math.floor(Screen:scaleBySize(10))
     local desc_text_widget = TextWidget:new{ text = divider_text, face = self.fonts.meta, fgcolor = Blitbuffer.COLOR_GRAY_3 }
     local text_size = desc_text_widget:getSize()
     local line_h = math.max(1, math.floor(Screen:scaleBySize(1)))
     local left_line_w = math.max(0, math.floor((self.avail_w - text_size.w) / 2))
     local right_line_w = math.max(0, self.avail_w - left_line_w - text_size.w)
-    
+    local divider_block_h = top_span_h + math.max(text_size.h, line_h) + bottom_span_h
+
+    -- Fill the content budget _contentBudget() worked out for this view: whatever is left after the
+    -- measured header and this divider. The budget already accounts for the button rows actually on
+    -- screen, so every view ends up the same overall height. The old code instead subtracted a
+    -- hardcoded scaleBySize(520) -- a reservation for the full menu button stack, which is never
+    -- shown alongside this section. On a 1264x1680 screen that withheld ~1096px, produced ~74px and
+    -- collapsed onto its own floor: a small band of text in a mostly empty dialog.
+    local header_h = self._header_h or self.framed_h
+    local available_h = (self._content_h or Screen:getHeight()) - header_h - divider_block_h
+    -- Guard degenerate geometry only. Do not clamp up to a large scaled floor: scaleBySize keys off
+    -- the SHORTER screen edge, so in landscape such a floor can exceed the height actually left and
+    -- push the dialog off-screen.
+    local safe_h = math.floor(math.max(available_h, Screen:scaleBySize(120)))
+
+    self.scrollable_html = ScrollHtmlWidget:new{
+        html_body = clean_html,
+        width = self.avail_w,
+        scroll_bar_width = Screen:scaleBySize(2),
+        text_scroll_span = Screen:scaleBySize(3),
+        css = engine_css,
+        height = safe_h
+    }
+
+    table.insert(section_group, VerticalSpan:new{ width = top_span_h })
+
     table.insert(section_group, HorizontalGroup:new{
         align = "center",
         LineWidget:new{ dimen = Geom:new{ w = left_line_w, h = line_h }, background = Blitbuffer.COLOR_GRAY_3, style = "solid" },
         desc_text_widget,
         LineWidget:new{ dimen = Geom:new{ w = right_line_w, h = line_h }, background = Blitbuffer.COLOR_GRAY_3, style = "solid" }
     })
-    
-    table.insert(section_group, VerticalSpan:new{ width = math.floor(Screen:scaleBySize(10)) })
+
+    table.insert(section_group, VerticalSpan:new{ width = bottom_span_h })
     table.insert(section_group, FrameContainer:new{ padding = 0, bordersize = 0, self.scrollable_html })
-    
+
     return section_group
 end
 
@@ -428,10 +502,15 @@ function BookDetailsDialog:_buildButtons()
         }})
     end
 
-    table.insert(dialog_buttons, {{
-        text = "\u{F02D}  " .. T("Profile"), align = "left",
-        callback = function() self:switchState("description") end
-    }})
+    -- Only offer Profile when there is a description to expand. The menu view already shows it, so
+    -- this button trades the button stack for more reading room; with nothing to read it would lead
+    -- to a dead-end view holding only a "Back" button.
+    if self.book.description and self.book.description ~= "" then
+        table.insert(dialog_buttons, {{
+            text = "\u{F02D}  " .. T("Profile"), align = "left",
+            callback = function() self:switchState("description") end
+        }})
+    end
 
     table.insert(dialog_buttons, {{
         text = "\u{F0E5}  " .. T("Comments"), align = "left",
@@ -647,7 +726,11 @@ function BookDetailsDialog:_sanitizeBookData(raw)
     book.author = type(raw.author) == "string" and raw.author or ""
     book.publisher = type(raw.publisher) == "string" and raw.publisher or ""
     book.series = type(raw.series) == "string" and raw.series or ""
-    book.description = (type(raw.description) == "string" and raw.description ~= "") and raw.description or T("No Description")
+    -- Record an absent description as "", the way title/author/publisher/series above do. It used to
+    -- substitute a "No Description" string, which made a missing description indistinguishable from
+    -- a book whose description is literally those words -- and left callers no way to detect the
+    -- absence and react to it.
+    book.description = type(raw.description) == "string" and raw.description or ""
     book.cover = type(raw.cover) == "string" and raw.cover or nil
     book.pages = tonumber(raw.pages) or 0
     book.download = raw.download

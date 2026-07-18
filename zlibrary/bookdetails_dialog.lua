@@ -293,12 +293,12 @@ function BookDetailsDialog:_buildContent()
         -- only trades the button stack for more reading room rather than resizing the dialog.
         table.insert(content_group, self:_buildHtmlSection(string.format("  %s  ", T("Profile")), self.book.description))
     else
-        -- Nothing to render (a book with no description): still take up the budget, so a book
-        -- without one does not open a shorter dialog than a book with one.
-        local pad_h = self._content_h - (self._header_h or self.framed_h)
-        if pad_h > 0 then
-            table.insert(content_group, VerticalSpan:new{ width = math.floor(pad_h) })
-        end
+        -- No description at all. Say so rather than leaving a blank region, which reads like
+        -- something failed to load, and still fill the budget so a book without a description does
+        -- not open a shorter dialog than one with it.
+        table.insert(content_group, self:_buildHtmlSection(
+            string.format("  %s  ", T("Profile")),
+            string.format("<div>%s</div>", T("No description available"))))
     end
 
     return content_group
@@ -502,10 +502,15 @@ function BookDetailsDialog:_buildButtons()
         }})
     end
 
-    table.insert(dialog_buttons, {{
-        text = "\u{F02D}  " .. T("Profile"), align = "left",
-        callback = function() self:switchState("description") end
-    }})
+    -- Only offer Profile when there is a description to expand. The menu view already shows it, so
+    -- this button trades the button stack for more reading room; with nothing to read it would lead
+    -- to a dead-end view holding only a "Back" button.
+    if self.book.description and self.book.description ~= "" then
+        table.insert(dialog_buttons, {{
+            text = "\u{F02D}  " .. T("Profile"), align = "left",
+            callback = function() self:switchState("description") end
+        }})
+    end
 
     table.insert(dialog_buttons, {{
         text = "\u{F0E5}  " .. T("Comments"), align = "left",
@@ -721,7 +726,11 @@ function BookDetailsDialog:_sanitizeBookData(raw)
     book.author = type(raw.author) == "string" and raw.author or ""
     book.publisher = type(raw.publisher) == "string" and raw.publisher or ""
     book.series = type(raw.series) == "string" and raw.series or ""
-    book.description = (type(raw.description) == "string" and raw.description ~= "") and raw.description or T("No Description")
+    -- Record an absent description as "", the way title/author/publisher/series above do. It used to
+    -- substitute a "No Description" string, which made a missing description indistinguishable from
+    -- a book whose description is literally those words -- and left callers no way to detect the
+    -- absence and react to it.
+    book.description = type(raw.description) == "string" and raw.description or ""
     book.cover = type(raw.cover) == "string" and raw.cover or nil
     book.pages = tonumber(raw.pages) or 0
     book.download = raw.download

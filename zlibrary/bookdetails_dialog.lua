@@ -273,8 +273,14 @@ function BookDetailsDialog:_buildContent()
         self_ref.parent_zlibrary:downloadAndShowCover(self_ref.book)
         return true
     end)
+    -- The row must be tall enough for whichever column is taller. The cover used to decide this on
+    -- its own, which held while it was always the tallest thing here -- but now that it is capped
+    -- against a short landscape screen, the metadata column can outgrow it, and a row sized to the
+    -- cover alone lets whatever follows be drawn straight through the text.
+    local text_col_h = vstack:getSize().h
+    local header_box_h = math.max(self.framed_h, text_col_h)
     local header_widget = LeftContainer:new{
-        dimen = Geom:new{ w = self.avail_w, h = self.framed_h },
+        dimen = Geom:new{ w = self.avail_w, h = header_box_h },
         HorizontalGroup:new{
             align = "center",
             HorizontalSpan:new{ width = self.left_padding },
@@ -288,7 +294,11 @@ function BookDetailsDialog:_buildContent()
     local offset = self.pop_out_offset
     header_widget.getSize = function(widget)
         local size = orig_header_getSize(widget)
-        return Geom:new{ w = size.w, h = math.floor(size.h - offset + Screen:scaleBySize(5)) }
+        -- The cover is painted `offset` above its slot, so the slot may end that much sooner. The
+        -- text column is not popped out, though, so never report less than it actually occupies --
+        -- otherwise the divider and text below are laid out over the metadata line.
+        local popped_h = math.floor(size.h - offset + Screen:scaleBySize(5))
+        return Geom:new{ w = size.w, h = math.max(popped_h, text_col_h) }
     end
 
     -- Remember what the header actually costs (the override above already discounts the cover's

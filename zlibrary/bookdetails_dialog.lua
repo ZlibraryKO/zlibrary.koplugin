@@ -198,7 +198,11 @@ function BookDetailsDialog:_calculateDimensions()
     self.avail_w = math.floor(self.dlg_w - 2 * (Size.border.window + Size.padding.button) - 2 * (Size.padding.default + Size.margin.default))
 
     self.cover_max_w = math.floor(Screen:scaleBySize(160))
-    self.cover_max_h = math.floor(Screen:scaleBySize(240))
+    -- scaleBySize keys off the SHORTER screen edge, so an uncapped cover is exactly as tall in
+    -- landscape as in portrait -- about 40% of a short screen. Together with the button stack that
+    -- leaves nothing for the text and makes ButtonDialog wrap the buttons in a scroll container.
+    -- Cap against the real screen height; in portrait this is not binding.
+    self.cover_max_h = math.min(math.floor(Screen:scaleBySize(240)), math.floor(Screen:getHeight() * 0.30))
     self.framed_h = self.cover_max_h + 2 * self.border
     self.cover_total_w = self.cover_max_w + 2 * self.border
     
@@ -285,9 +289,20 @@ function BookDetailsDialog:_buildContent()
     end
     table.insert(content_group, header_widget)
 
+    -- Is there room for a text section at all? On a short landscape screen the cover and the full
+    -- button stack nearly fill the height on their own, and forcing a section in anyway pushes the
+    -- dialog past the screen -- at which point ButtonDialog wraps the buttons in a scroll container
+    -- and the reader is left fighting two nested scrolling areas. In that case the menu view pads
+    -- instead and the Profile button remains the way in. The other views only ever carry one button,
+    -- so they always have room.
+    local header_h = self._header_h or self.framed_h
+    local text_room = (self._content_h or 0) - header_h - Screen:scaleBySize(45)
+    local has_room = self.view_state ~= "menu" or text_room >= Screen:scaleBySize(80)
+    local has_description = self.book.description and self.book.description ~= ""
+
     if self.view_state == "comments" and self.book.comments_html then
         table.insert(content_group, self:_buildHtmlSection(string.format("  %s  ", T("Comments")), self.book.comments_html, self.book.comments_css))
-    elseif self.book.description and self.book.description ~= "" then
+    elseif has_description and has_room then
         -- The menu view shows the description as well, not just the "description" view. That is what
         -- keeps the dialog one size: every view fills the same content budget, and pressing Profile
         -- only trades the button stack for more reading room rather than resizing the dialog.
@@ -307,13 +322,20 @@ function BookDetailsDialog:_buildContent()
         end
 
         table.insert(content_group, section)
-    else
+    elseif not has_description and has_room then
         -- No description at all. Say so rather than leaving a blank region, which reads like
         -- something failed to load, and still fill the budget so a book without a description does
         -- not open a shorter dialog than one with it.
         table.insert(content_group, self:_buildHtmlSection(
             string.format("  %s  ", T("Profile")),
             string.format("<div>%s</div>", T("No description available"))))
+    else
+        -- No room for any text section (a short landscape screen). Pad to the budget so the dialog
+        -- keeps one size across views, and leave the height to the buttons rather than overflowing.
+        local pad_h = (self._content_h or 0) - header_h
+        if pad_h > 0 then
+            table.insert(content_group, VerticalSpan:new{ width = math.floor(pad_h) })
+        end
     end
 
     return content_group

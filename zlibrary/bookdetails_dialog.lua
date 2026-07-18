@@ -137,6 +137,18 @@ function BookDetailsDialog:_buildInnerDialog()
         _added_widgets = { content },
         show_parent = self,
     }
+    -- ButtonDialog wraps itself in a MovableContainer, so the dialog can be dragged around by
+    -- hold-and-pan. Nothing here benefits from being repositioned, and it is easy to knock askew by
+    -- accident: MovableContainer listens for touch/hold/pan/swipe across the WHOLE screen, which
+    -- also puts it in competition with the description's own swipe-to-scroll. MovableContainer
+    -- supports an `unmovable` flag for exactly this, but ButtonDialog does not forward it and the
+    -- gestures are registered during init, so clear them here instead. The container itself has to
+    -- stay: ButtonDialog uses self.movable.dimen for its refresh region and tap-outside handling.
+    if self.inner_dialog.movable then
+        self.inner_dialog.movable.unmovable = true
+        self.inner_dialog.movable.ges_events = {}
+    end
+
     local wrapper = self
     self.inner_dialog.onClose = function()
         if wrapper.view_state == "menu" then
@@ -198,7 +210,11 @@ function BookDetailsDialog:_calculateDimensions()
     self.avail_w = math.floor(self.dlg_w - 2 * (Size.border.window + Size.padding.button) - 2 * (Size.padding.default + Size.margin.default))
 
     self.cover_max_w = math.floor(Screen:scaleBySize(160))
-    self.cover_max_h = math.floor(Screen:scaleBySize(240))
+    -- scaleBySize keys off the SHORTER screen edge, so an uncapped cover is exactly as tall in
+    -- landscape as in portrait -- about 40% of a short screen. Together with the button stack that
+    -- leaves nothing for the text and makes ButtonDialog wrap the buttons in a scroll container.
+    -- Cap against the real screen height; in portrait this is not binding.
+    self.cover_max_h = math.min(math.floor(Screen:scaleBySize(240)), math.floor(Screen:getHeight() * 0.30))
     self.framed_h = self.cover_max_h + 2 * self.border
     self.cover_total_w = self.cover_max_w + 2 * self.border
     
@@ -257,8 +273,14 @@ function BookDetailsDialog:_buildContent()
         self_ref.parent_zlibrary:downloadAndShowCover(self_ref.book)
         return true
     end)
+    -- The row must be tall enough for whichever column is taller. The cover used to decide this on
+    -- its own, which held while it was always the tallest thing here -- but now that it is capped
+    -- against a short landscape screen, the metadata column can outgrow it, and a row sized to the
+    -- cover alone lets whatever follows be drawn straight through the text.
+    local text_col_h = vstack:getSize().h
+    local header_box_h = math.max(self.framed_h, text_col_h)
     local header_widget = LeftContainer:new{
-        dimen = Geom:new{ w = self.avail_w, h = self.framed_h },
+        dimen = Geom:new{ w = self.avail_w, h = header_box_h },
         HorizontalGroup:new{
             align = "center",
             HorizontalSpan:new{ width = self.left_padding },
@@ -272,7 +294,11 @@ function BookDetailsDialog:_buildContent()
     local offset = self.pop_out_offset
     header_widget.getSize = function(widget)
         local size = orig_header_getSize(widget)
-        return Geom:new{ w = size.w, h = math.floor(size.h - offset + Screen:scaleBySize(5)) }
+        -- The cover is painted `offset` above its slot, so the slot may end that much sooner. The
+        -- text column is not popped out, though, so never report less than it actually occupies --
+        -- otherwise the divider and text below are laid out over the metadata line.
+        local popped_h = math.floor(size.h - offset + Screen:scaleBySize(5))
+        return Geom:new{ w = size.w, h = math.max(popped_h, text_col_h) }
     end
 
     -- Remember what the header actually costs (the override above already discounts the cover's
@@ -285,20 +311,53 @@ function BookDetailsDialog:_buildContent()
     end
     table.insert(content_group, header_widget)
 
+    -- Is there room for a text section at all? On a short landscape screen the cover and the full
+    -- button stack nearly fill the height on their own, and forcing a section in anyway pushes the
+    -- dialog past the screen -- at which point ButtonDialog wraps the buttons in a scroll container
+    -- and the reader is left fighting two nested scrolling areas. In that case the menu view pads
+    -- instead and the Profile button remains the way in. The other views only ever carry one button,
+    -- so they always have room.
+    local header_h = self._header_h or self.framed_h
+    local text_room = (self._content_h or 0) - header_h - Screen:scaleBySize(45)
+    local has_room = self.view_state ~= "menu" or text_room >= Screen:scaleBySize(80)
+    local has_description = self.book.description and self.book.description ~= ""
+
     if self.view_state == "comments" and self.book.comments_html then
         table.insert(content_group, self:_buildHtmlSection(string.format("  %s  ", T("Comments")), self.book.comments_html, self.book.comments_css))
-    elseif self.book.description and self.book.description ~= "" then
+    elseif has_description and has_room then
         -- The menu view shows the description as well, not just the "description" view. That is what
         -- keeps the dialog one size: every view fills the same content budget, and pressing Profile
         -- only trades the button stack for more reading room rather than resizing the dialog.
-        table.insert(content_group, self:_buildHtmlSection(string.format("  %s  ", T("Profile")), self.book.description))
-    else
+        local section = self:_buildHtmlSection(string.format("  %s  ", T("Profile")), self.book.description)
+
+        -- In the menu view the description is only a preview, so tapping it opens the full view --
+        -- the same thing the Profile button does. ScrollHtmlWidget claims taps for scrolling
+        -- (onTapScrollText pages up or down by tap position) and only reports the event handled when
+        -- it actually scrolled, so wrapping this in a tap container would expand only once the
+        -- preview hit its end. Repurpose the widget's own tap handler instead, which leaves swipe
+        -- and the page keys scrolling the preview as before.
+        if self.view_state == "menu" and self.scrollable_html then
+            self.scrollable_html.onTapScrollText = function()
+                self:switchState("description")
+                return true
+            end
+        end
+
+        table.insert(content_group, section)
+    elseif not has_description and has_room then
         -- No description at all. Say so rather than leaving a blank region, which reads like
         -- something failed to load, and still fill the budget so a book without a description does
         -- not open a shorter dialog than one with it.
         table.insert(content_group, self:_buildHtmlSection(
             string.format("  %s  ", T("Profile")),
             string.format("<div>%s</div>", T("No description available"))))
+    else
+        -- No room for any text section (a short landscape screen). Pad to the budget so the dialog
+        -- keeps one size across views, and leave the height to the buttons rather than overflowing.
+        local pad_h = (self._content_h or 0) - header_h
+        if pad_h > 0 then
+            table.insert(content_group, VerticalSpan:new{ width = math.floor(pad_h) })
+        end
     end
 
     return content_group

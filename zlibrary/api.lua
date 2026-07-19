@@ -195,6 +195,28 @@ function Api.makeHttpRequest(options)
         sink_to_use = socketutil.table_sink(response_body_table)
     end
 
+    -- Time to first byte, recorded by wrapping whichever sink is in play.
+    --
+    -- `elapsed` alone cannot distinguish the two failures that look identical in the log but call
+    -- for opposite fixes. A timeout that never saw a byte means the connection was accepted and the
+    -- server then never answered -- a fresh attempt often succeeds within seconds, so failing fast
+    -- and retrying is the right response. A timeout that arrives after data had started means the
+    -- transfer stalled or crawled, where retrying only re-downloads what was already coming.
+    --
+    -- Note the block timeout resets on every chunk, so a slow but steady transfer is not what dies
+    -- here: a stall is. Which of the two we are looking at is exactly what this measures.
+    local start_time            -- assigned just before the request; the closure below reads it then
+    local first_byte_ms = nil
+    do
+        local inner_sink = sink_to_use
+        sink_to_use = function(chunk, err)
+            if not first_byte_ms and chunk and chunk ~= "" and start_time then
+                first_byte_ms = time.to_ms(time.since(start_time))
+            end
+            return inner_sink(chunk, err)
+        end
+    end
+
     if options.timeout then
         if type(options.timeout) == "table" then
             socketutil:set_timeout(options.timeout[1], options.timeout[2])
@@ -217,9 +239,10 @@ function Api.makeHttpRequest(options)
 
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Timeout: %s", request_params.url, request_params.method, tostring(options.timeout)))
     
-    local start_time = time.now()
+    start_time = time.now()
     local req_ok, r_val, r_code, r_headers_tbl, r_status_str = pcall(http.request, request_params)
     result.elapsed = time.to_ms(time.since(start_time))
+    result.first_byte_ms = first_byte_ms
 
     if options.timeout then
         socketutil:reset_timeout()
@@ -241,14 +264,16 @@ function Api.makeHttpRequest(options)
             result.error = T("Network request failed") .. ": " .. error_msg
         end
         logger.err(string.format(
-            "Zlibrary:Api.makeHttpRequest - END (pcall error) - %s %s - raw=[%s] elapsed=%dms - Error: %s",
+            "Zlibrary:Api.makeHttpRequest - END (pcall error) - %s %s - raw=[%s] elapsed=%dms first_byte=%s - Error: %s",
             tostring(request_params.method), tostring(options.url),
-            error_msg, result.elapsed or -1, result.error))
+            error_msg, result.elapsed or -1,
+            first_byte_ms and (first_byte_ms .. "ms") or "none", result.error))
         return result
     end
 
     result.status_code = r_code
     result.headers = r_headers_tbl
+
 
     if not options.sink then
         result.body = table.concat(response_body_table)
@@ -272,10 +297,29 @@ function Api.makeHttpRequest(options)
         -- so r_code holds the underlying LuaSocket/LuaSec error string, not a status code.
         local status_str = tostring(result.status_code)
         result.transport_error = status_str
-        if string.find(status_str, "wantread", 1, true) or
+        local is_timeout = string.find(status_str, "wantread", 1, true) or
            string.find(status_str, "wantwrite", 1, true) or
            string.find(status_str, "timeout", 1, true) or
-           string.find(status_str, "closed", 1, true) then
+           string.find(status_str, "closed", 1, true)
+
+        -- A timeout where not one byte ever arrived means the connection was accepted and the server
+        -- then said nothing. Device logs show that is transient and per-connection: the same URL,
+        -- retried moments later, answered in about 1.5s after stalling for 10s. So retry it once.
+        --
+        -- Deliberately narrow. Only when no byte arrived: if the response had started and then
+        -- stalled, a retry just re-fetches what was already coming. Only once, and only when the
+        -- caller opted in, so background work never retries against what is a free service. And only
+        -- when we own the sink, since re-running a caller's sink would write its output twice.
+        if options.retry_on_stall and not options._retried and is_timeout
+                and first_byte_ms == nil and not options.sink then
+            options._retried = true
+            logger.info(string.format(
+                "Zlibrary:Api.makeHttpRequest - stalled with no response after %dms, retrying once - %s %s",
+                result.elapsed or -1, tostring(request_params.method), tostring(options.url)))
+            return Api.makeHttpRequest(options)
+        end
+
+        if is_timeout then
             result.error = T("Request timed out - please check your connection and try again")
         elseif string.find(status_str, "name resolution", 1, true) or
                string.find(status_str, "host or service not provided", 1, true) then
@@ -292,9 +336,10 @@ function Api.makeHttpRequest(options)
             result.error = T("Network connection error - please check your internet connection and try again")
         end
         logger.err(string.format(
-            "Zlibrary:Api.makeHttpRequest - END (Invalid response code type) - %s %s - transport_error=[%s] (type %s) elapsed=%dms - Error: %s",
+            "Zlibrary:Api.makeHttpRequest - END (Invalid response code type) - %s %s - transport_error=[%s] (type %s) elapsed=%dms first_byte=%s - Error: %s",
             tostring(request_params.method), tostring(options.url),
-            status_str, type(result.status_code), result.elapsed or -1, result.error))
+            status_str, type(result.status_code), result.elapsed or -1,
+            first_byte_ms and (first_byte_ms .. "ms") or "none", result.error))
         return result
     end
 
@@ -484,6 +529,9 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
         headers = headers,
         source = ltn12.source.string(body),
         timeout = Config.getSearchTimeout(),
+        -- Retry once if the server accepts the connection and then never answers; the user
+        -- asked for this, and such a stall is transient. See makeHttpRequest.
+        retry_on_stall = true,
         onRedirect = (not is_redir_callback) and function()
             return function(redir_res) return Api.search(query, user_id, user_key, languages, extensions, order, page, true) end
         end,
@@ -711,6 +759,7 @@ function Api.getRecommendedBooks(user_id, user_key)
         method = "GET",
         headers = headers,
         timeout = Config.getRecommendedTimeout(),
+        retry_on_stall = true,
         onRedirect = Config.getRecommendedBooksUrl,
     }
     
@@ -759,6 +808,7 @@ function Api.getMostPopularBooks(user_id, user_key)
         method = "GET",
         headers = headers,
         timeout = Config.getPopularTimeout(),
+        retry_on_stall = true,
         onRedirect = Config.getMostPopularBooksUrl,
     }
 
@@ -807,6 +857,7 @@ function Api.getBookDetails(user_id, user_key, book_id, book_hash)
         method = "GET",
         headers = headers,
         timeout = Config.getBookDetailsTimeout(),
+        retry_on_stall = true,
         onRedirect = function()
             return Config.getBookDetailsUrl(book_id, book_hash)
         end,
@@ -862,6 +913,7 @@ function Api.getDownloadLink(user_id, user_key, book_id, book_hash)
         method = "GET",
         headers = headers,
         timeout = Config.getBookDetailsTimeout(),
+        retry_on_stall = true,
         onRedirect = function()
             return Config.getDownloadLinkUrl(book_id, book_hash)
         end,
@@ -1399,6 +1451,7 @@ function Api.getBookComments(user_id, user_key, book_id)
         method = "GET",
         headers = headers,
         timeout = Config.getBookCommentsTimeout(),
+        retry_on_stall = true,
         onRedirect = function()
             return Config.getBookCommentsUrl(book_id)
         end

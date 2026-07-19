@@ -297,10 +297,29 @@ function Api.makeHttpRequest(options)
         -- so r_code holds the underlying LuaSocket/LuaSec error string, not a status code.
         local status_str = tostring(result.status_code)
         result.transport_error = status_str
-        if string.find(status_str, "wantread", 1, true) or
+        local is_timeout = string.find(status_str, "wantread", 1, true) or
            string.find(status_str, "wantwrite", 1, true) or
            string.find(status_str, "timeout", 1, true) or
-           string.find(status_str, "closed", 1, true) then
+           string.find(status_str, "closed", 1, true)
+
+        -- A timeout where not one byte ever arrived means the connection was accepted and the server
+        -- then said nothing. Device logs show that is transient and per-connection: the same URL,
+        -- retried moments later, answered in about 1.5s after stalling for 10s. So retry it once.
+        --
+        -- Deliberately narrow. Only when no byte arrived: if the response had started and then
+        -- stalled, a retry just re-fetches what was already coming. Only once, and only when the
+        -- caller opted in, so background work never retries against what is a free service. And only
+        -- when we own the sink, since re-running a caller's sink would write its output twice.
+        if options.retry_on_stall and not options._retried and is_timeout
+                and first_byte_ms == nil and not options.sink then
+            options._retried = true
+            logger.info(string.format(
+                "Zlibrary:Api.makeHttpRequest - stalled with no response after %dms, retrying once - %s %s",
+                result.elapsed or -1, tostring(request_params.method), tostring(options.url)))
+            return Api.makeHttpRequest(options)
+        end
+
+        if is_timeout then
             result.error = T("Request timed out - please check your connection and try again")
         elseif string.find(status_str, "name resolution", 1, true) or
                string.find(status_str, "host or service not provided", 1, true) then
@@ -510,6 +529,9 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
         headers = headers,
         source = ltn12.source.string(body),
         timeout = Config.getSearchTimeout(),
+        -- Retry once if the server accepts the connection and then never answers; the user
+        -- asked for this, and such a stall is transient. See makeHttpRequest.
+        retry_on_stall = true,
         onRedirect = (not is_redir_callback) and function()
             return function(redir_res) return Api.search(query, user_id, user_key, languages, extensions, order, page, true) end
         end,
@@ -734,6 +756,7 @@ function Api.getRecommendedBooks(user_id, user_key)
         method = "GET",
         headers = headers,
         timeout = Config.getRecommendedTimeout(),
+        retry_on_stall = true,
         onRedirect = Config.getRecommendedBooksUrl,
     }
     
@@ -782,6 +805,7 @@ function Api.getMostPopularBooks(user_id, user_key)
         method = "GET",
         headers = headers,
         timeout = Config.getPopularTimeout(),
+        retry_on_stall = true,
         onRedirect = Config.getMostPopularBooksUrl,
     }
 
@@ -830,6 +854,7 @@ function Api.getBookDetails(user_id, user_key, book_id, book_hash)
         method = "GET",
         headers = headers,
         timeout = Config.getBookDetailsTimeout(),
+        retry_on_stall = true,
         onRedirect = function()
             return Config.getBookDetailsUrl(book_id, book_hash)
         end,
@@ -885,6 +910,7 @@ function Api.getDownloadLink(user_id, user_key, book_id, book_hash)
         method = "GET",
         headers = headers,
         timeout = Config.getBookDetailsTimeout(),
+        retry_on_stall = true,
         onRedirect = function()
             return Config.getDownloadLinkUrl(book_id, book_hash)
         end,
@@ -1422,6 +1448,7 @@ function Api.getBookComments(user_id, user_key, book_id)
         method = "GET",
         headers = headers,
         timeout = Config.getBookCommentsTimeout(),
+        retry_on_stall = true,
         onRedirect = function()
             return Config.getBookCommentsUrl(book_id)
         end

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 11:20+0200\n"
+"POT-Creation-Date: 2026-07-19 13:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -310,8 +310,8 @@ msgstr "Download mislukt: Onbekende fout"
 msgid "Download limit reached. Please try again later or check your account."
 msgstr "Downloadlimiet bereikt. Probeer het later opnieuw of controleer je account."
 
-msgid "Download"
-msgstr "Downloaden"
+msgid "Book download"
+msgstr "Boekdownload"
 
 msgid "Retrying download… (tap to cancel)"
 msgstr "Download opnieuw proberen… (tik om te annuleren)"
@@ -537,6 +537,9 @@ msgstr "Omslag"
 
 msgid "More Similar Books"
 msgstr "Meer vergelijkbare boeken"
+
+msgid "Download"
+msgstr "Downloaden"
 
 msgid "Format"
 msgstr "Formaat"
@@ -768,6 +771,9 @@ msgstr "Boekdetails"
 msgid "Retrying search for \"%s\"..."
 msgstr "Zoekopdracht opnieuw proberen voor \"%s\"..."
 
+msgid "Book search"
+msgstr "Boekzoekopdracht"
+
 msgid "Request timed out"
 msgstr "Time-out van verzoek"
 
@@ -860,7 +866,7 @@ msgid "Cover download timeouts"
 msgstr "Omslag download timeouts"
 
 msgid "Cover download"
-msgstr "Omslag download"
+msgstr "Omslagdownload"
 
 msgid "Reset all timeouts to defaults"
 msgstr "Alle timeouts naar standaardwaarden herstellen"

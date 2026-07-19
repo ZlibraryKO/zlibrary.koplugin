@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 11:20+0200\n"
+"POT-Creation-Date: 2026-07-19 13:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese <zh@li.org>\n"
@@ -310,8 +310,8 @@ msgstr "下載失敗：未知錯誤"
 msgid "Download limit reached. Please try again later or check your account."
 msgstr "達到下載限制。請稍後重試或檢查您的帳戶。"
 
-msgid "Download"
-msgstr "下載"
+msgid "Book download"
+msgstr "書籍下載"
 
 msgid "Retrying download… (tap to cancel)"
 msgstr "正在重試下載… (點擊取消)"
@@ -537,6 +537,9 @@ msgstr "封面"
 
 msgid "More Similar Books"
 msgstr "更多相似書籍"
+
+msgid "Download"
+msgstr "下載"
 
 msgid "Format"
 msgstr "格式"
@@ -767,6 +770,9 @@ msgstr "書籍詳情"
 #, lua-format
 msgid "Retrying search for \"%s\"..."
 msgstr "正在重試搜索\"%s\"..."
+
+msgid "Book search"
+msgstr "書籍搜尋"
 
 msgid "Request timed out"
 msgstr "請求逾時"

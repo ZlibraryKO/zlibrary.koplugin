@@ -649,7 +649,9 @@ function Ui.showSearchErrorDialog(err_msg, query, user_session, selected_languag
         original_on_error(err)
     end
     
-    Ui.showRetryErrorDialog(err_msg, T("Search"), retry_callback, cancel_callback, loading_msg_to_close, "search")
+    -- "Book search", not "Search": this heads a sentence ("%s failed due to a timeout"),
+    -- and the bare verb KOReader supplies for "Search" cannot be a subject in every language.
+    Ui.showRetryErrorDialog(err_msg, T("Book search"), retry_callback, cancel_callback, loading_msg_to_close, "search")
 end
 
 -- Operations carry a stable, untranslated key. The timeout hint used to be picked by
@@ -886,7 +888,7 @@ function Ui.showAllTimeoutConfigDialog(parent_ui)
                 return Config.formatTimeoutForDisplay(Config.getSearchTimeout())
             end,
             callback = function()
-                Ui.showTimeoutConfigDialog(parent_ui, T("Search"), Config.SETTINGS_TIMEOUT_SEARCH_KEY,
+                Ui.showTimeoutConfigDialog(parent_ui, T("Book search"), Config.SETTINGS_TIMEOUT_SEARCH_KEY,
                     Config.getSearchTimeout, Config.setSearchTimeout, refreshMainDialog)
             end
         },
@@ -926,7 +928,7 @@ function Ui.showAllTimeoutConfigDialog(parent_ui)
                 return Config.formatTimeoutForDisplay(Config.getDownloadTimeout())
             end,
             callback = function()
-                Ui.showTimeoutConfigDialog(parent_ui, T("Download"), Config.SETTINGS_TIMEOUT_DOWNLOAD_KEY,
+                Ui.showTimeoutConfigDialog(parent_ui, T("Book download"), Config.SETTINGS_TIMEOUT_DOWNLOAD_KEY,
                     Config.getDownloadTimeout, Config.setDownloadTimeout, refreshMainDialog)
             end
         },

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 11:20+0200\n"
+"POT-Creation-Date: 2026-07-19 13:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -310,8 +310,8 @@ msgstr "Descarga fallida: Error desconocido"
 msgid "Download limit reached. Please try again later or check your account."
 msgstr "Límite de descarga alcanzado. Por favor, intente de nuevo más tarde o revise su cuenta."
 
-msgid "Download"
-msgstr "Descargar"
+msgid "Book download"
+msgstr "Descarga de libro"
 
 msgid "Retrying download… (tap to cancel)"
 msgstr "Reintentando descarga… (toque para cancelar)"
@@ -537,6 +537,9 @@ msgstr "Portada"
 
 msgid "More Similar Books"
 msgstr "Más libros similares"
+
+msgid "Download"
+msgstr "Descargar"
 
 msgid "Format"
 msgstr "Formato"
@@ -767,6 +770,9 @@ msgstr "Detalles del libro"
 #, lua-format
 msgid "Retrying search for \"%s\"..."
 msgstr "Reintentando búsqueda para \"%s\"..."
+
+msgid "Book search"
+msgstr "Búsqueda de libros"
 
 msgid "Request timed out"
 msgstr "Se agotó el tiempo de espera"

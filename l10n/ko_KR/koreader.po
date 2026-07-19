@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 11:20+0200\n"
+"POT-Creation-Date: 2026-07-19 13:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -310,8 +310,8 @@ msgstr "다운로드 실패: 알 수 없는 오류"
 msgid "Download limit reached. Please try again later or check your account."
 msgstr "다운로드 제한에 도달했습니다. 나중에 다시 시도하거나 계정을 확인하세요."
 
-msgid "Download"
-msgstr "다운로드"
+msgid "Book download"
+msgstr "도서 다운로드"
 
 msgid "Retrying download… (tap to cancel)"
 msgstr "다운로드 다시 시도 중… (탭하여 취소)"
@@ -537,6 +537,9 @@ msgstr "표지"
 
 msgid "More Similar Books"
 msgstr "비슷한 책 더 보기"
+
+msgid "Download"
+msgstr "다운로드"
 
 msgid "Format"
 msgstr "형식"
@@ -767,6 +770,9 @@ msgstr "도서 세부정보"
 #, lua-format
 msgid "Retrying search for \"%s\"..."
 msgstr "\"%s\" 다시 검색 중..."
+
+msgid "Book search"
+msgstr "도서 검색"
 
 msgid "Request timed out"
 msgstr "요청 시간 초과"

@@ -1541,7 +1541,7 @@ function Zlibrary:downloadBook(book)
             end
             
             -- Use retry dialog for timeout and network errors
-            Ui.showRetryErrorDialog(err_msg, T("Download"), function()
+            Ui.showRetryErrorDialog(err_msg, T("Book download"), function()
                 -- Retry callback. Re-enter attemptDownload so the retry gets its own wrap: this runs
                 -- from a fresh event, outside any coroutine, and an unwrapped dismissable run silently
                 -- falls back to blocking in-process.

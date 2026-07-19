@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 11:20+0200\n"
+"POT-Creation-Date: 2026-07-19 13:38+0200\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -316,8 +316,8 @@ msgstr "Изтеглянето неуспешно: Непозната грешк
 msgid "Download limit reached. Please try again later or check your account."
 msgstr "Достигнат лимит за изтегляне. Опитайте по-късно или проверете акаунта си."
 
-msgid "Download"
-msgstr "Изтегляне"
+msgid "Book download"
+msgstr "Изтегляне на книга"
 
 msgid "Retrying download… (tap to cancel)"
 msgstr "Повторен опит за изтегляне… (докоснете за отказ)"
@@ -543,6 +543,9 @@ msgstr "Корица"
 
 msgid "More Similar Books"
 msgstr "Още подобни книги"
+
+msgid "Download"
+msgstr "Изтегляне"
 
 msgid "Format"
 msgstr "Формат"
@@ -773,6 +776,9 @@ msgstr "Детайли за книгата"
 #, lua-format
 msgid "Retrying search for \"%s\"..."
 msgstr "Повторен опит за търсене на \"%s\"..."
+
+msgid "Book search"
+msgstr "Търсене на книги"
 
 msgid "Request timed out"
 msgstr "Заявката изтече"

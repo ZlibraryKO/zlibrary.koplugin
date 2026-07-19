@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 11:20+0200\n"
+"POT-Creation-Date: 2026-07-19 13:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -310,8 +310,8 @@ msgstr "Ошибка загрузки: Неизвестная ошибка"
 msgid "Download limit reached. Please try again later or check your account."
 msgstr "Достигнут лимит загрузок. Попробуйте позже или проверьте свой аккаунт."
 
-msgid "Download"
-msgstr "Скачать"
+msgid "Book download"
+msgstr "Загрузка книги"
 
 msgid "Retrying download… (tap to cancel)"
 msgstr "Повторная загрузка… (нажмите для отмены)"
@@ -537,6 +537,9 @@ msgstr "Обложка"
 
 msgid "More Similar Books"
 msgstr "Ещё похожие книги"
+
+msgid "Download"
+msgstr "Скачать"
 
 msgid "Format"
 msgstr "Формат"
@@ -767,6 +770,9 @@ msgstr "Детали книги"
 #, lua-format
 msgid "Retrying search for \"%s\"..."
 msgstr "Повторный поиск для \"%s\"..."
+
+msgid "Book search"
+msgstr "Поиск книг"
 
 msgid "Request timed out"
 msgstr "Время ожидания истекло"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 11:20+0200\n"
+"POT-Creation-Date: 2026-07-19 13:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -310,8 +310,8 @@ msgstr "ダウンロードに失敗しました：不明なエラー"
 msgid "Download limit reached. Please try again later or check your account."
 msgstr "ダウンロード上限に達しました。後でもう一度お試しいただくか、アカウントをご確認ください。"
 
-msgid "Download"
-msgstr "ダウンロード"
+msgid "Book download"
+msgstr "書籍ダウンロード"
 
 msgid "Retrying download… (tap to cancel)"
 msgstr "ダウンロードを再試行中…（タップしてキャンセル）"
@@ -537,6 +537,9 @@ msgstr "表紙"
 
 msgid "More Similar Books"
 msgstr "類似書籍をもっと見る"
+
+msgid "Download"
+msgstr "ダウンロード"
 
 msgid "Format"
 msgstr "形式"
@@ -767,6 +770,9 @@ msgstr "書籍の詳細"
 #, lua-format
 msgid "Retrying search for \"%s\"..."
 msgstr "再検索中: \"%s\"..."
+
+msgid "Book search"
+msgstr "書籍検索"
 
 msgid "Request timed out"
 msgstr "リクエストがタイムアウトしました"

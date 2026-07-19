@@ -636,7 +636,7 @@ end
 
 function Ui.showSearchErrorDialog(err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page, loading_msg_to_close, original_on_success, original_on_error)
     local retry_callback = function()
-        local new_loading_msg = Ui.showLoadingMessage(T("Retrying search for \"") .. query .. "\"...")
+        local new_loading_msg = Ui.showLoadingMessage(string.format(T("Retrying search for \"%s\"..."), query))
         local retry_task = function()
             return Api.search(query, user_session.user_id, user_session.user_key, selected_languages, selected_extensions, selected_order, current_page)
         end

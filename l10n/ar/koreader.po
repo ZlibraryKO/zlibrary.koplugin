@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 19:31+0000\n"
+"POT-Creation-Date: 2026-07-19 10:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,28 +22,28 @@ msgid "Z-library search"
 msgstr "البحث في Z-library"
 
 msgid "My books"
-msgstr ""
+msgstr "كتبي"
 
 msgid "Operation failed, please retry."
-msgstr ""
+msgstr "فشلت العملية، يرجى إعادة المحاولة."
 
 msgid "Fetching domains..."
-msgstr ""
+msgstr "جارٍ جلب النطاقات..."
 
 msgid "Successfully set base URL to: "
-msgstr ""
+msgstr "تم تعيين عنوان URL الأساسي إلى:"
 
 msgid "Failed to find a working base URL."
 msgstr "فشل العثور على عنوان URL أساسي متاح."
 
 msgid "Queued"
-msgstr ""
+msgstr "في قائمة الانتظار"
 
 msgid "Selection copied to clipboard."
-msgstr ""
+msgstr "تم نسخ التحديد إلى الحافظة."
 
 msgid "Checking"
-msgstr ""
+msgstr "جارٍ التحقق"
 
 msgid "Set base URL"
 msgstr "تعيين عنوان URL الأساسي"
@@ -52,31 +52,31 @@ msgid "Invalid Base URL."
 msgstr "عنوان URL الأساسي غير صالح."
 
 msgid "Failed"
-msgstr ""
+msgstr "فشل"
 
 msgid "Unknown error"
-msgstr ""
+msgstr "خطأ غير معروف"
 
 msgid "Searching for working Z-library server..."
 msgstr "جارٍ البحث عن خادم Z-library متاح..."
 
 msgid "Current Base URL:"
-msgstr ""
+msgstr "عنوان URL الأساسي الحالي:"
 
 msgid "Mirror site redirected to: "
-msgstr ""
+msgstr "أعاد الموقع المرآة التوجيه إلى:"
 
 msgid "Auto-discover base URL"
 msgstr "الاكتشاف التلقائي لعنوان URL الأساسي"
 
 msgid "Network unavailable."
-msgstr ""
+msgstr "الشبكة غير متاحة."
 
 msgid "Discovery is already running..."
-msgstr ""
+msgstr "الاكتشاف قيد التشغيل بالفعل..."
 
 msgid "Refresh Dynamic Domains"
-msgstr ""
+msgstr "تحديث النطاقات الديناميكية"
 
 msgid "Back"
 msgstr "رجوع"
@@ -85,7 +85,7 @@ msgid "Settings"
 msgstr "الإعدادات"
 
 msgid "Set credentials"
-msgstr ""
+msgstr "تعيين بيانات الاعتماد"
 
 msgid "Login successful!"
 msgstr "تم تسجيل الدخول بنجاح!"
@@ -97,22 +97,22 @@ msgid "Set download directory"
 msgstr "تعيين دليل التنزيل"
 
 msgid "View Settings"
-msgstr ""
+msgstr "إعدادات العرض"
 
 msgid "Search Covers"
-msgstr ""
+msgstr "أغلفة البحث"
 
 msgid "Search Items/Page"
-msgstr ""
+msgstr "عناصر البحث/الصفحة"
 
 msgid "Browse Covers"
-msgstr ""
+msgstr "أغلفة التصفح"
 
 msgid "Browse Items/Page"
-msgstr ""
+msgstr "عناصر التصفح/الصفحة"
 
 msgid "Search options"
-msgstr ""
+msgstr "خيارات البحث"
 
 msgid "Select search languages"
 msgstr "تحديد لغات البحث"
@@ -121,7 +121,7 @@ msgid "Select search formats"
 msgstr "تحديد تنسيقات البحث"
 
 msgid "Select search order"
-msgstr ""
+msgstr "اختر ترتيب البحث"
 
 msgid "Timeout settings"
 msgstr "إعدادات المهلة الزمنية"
@@ -133,28 +133,19 @@ msgid "Error: Plugin path not found. Cannot check for updates."
 msgstr "خطأ: لم يتم العثور على مسار المكون الإضافي. لا يمكن التحقق من التحديثات."
 
 msgid "Developer options"
-msgstr ""
+msgstr "خيارات المطور"
 
 msgid "Clear user session"
-msgstr ""
+msgstr "مسح جلسة المستخدم"
 
 msgid "Session cleared. You will need to login again."
-msgstr ""
+msgstr "تم مسح الجلسة. ستحتاج إلى تسجيل الدخول مجددًا."
 
 msgid "Clear runtime cache"
-msgstr ""
+msgstr "مسح ذاكرة التخزين المؤقت"
 
 msgid "Runtime cache cleared."
-msgstr ""
-
-msgid "Test mode"
-msgstr ""
-
-msgid "Test mode disabled. Normal download behavior restored."
-msgstr ""
-
-msgid "Test mode enabled. Downloads will always succeed."
-msgstr ""
+msgstr "تم مسح ذاكرة التخزين المؤقت."
 
 msgid "Search"
 msgstr "بحث"
@@ -166,7 +157,7 @@ msgid "Most popular"
 msgstr "الأكثر شعبية"
 
 msgid "Operation"
-msgstr ""
+msgstr "العملية"
 
 msgid "No books found, please try again"
 msgstr "لم يتم العثور على كتب، يرجى المحاولة مرة أخرى"
@@ -178,7 +169,7 @@ msgid "Failed to fetch most popular books"
 msgstr "فشل جلب الكتب الأكثر شعبية"
 
 msgid "Most popular books"
-msgstr ""
+msgstr "الكتب الأكثر شعبية"
 
 msgid "Fetching recommended books..."
 msgstr "جلب الكتب الموصى بها..."
@@ -187,49 +178,49 @@ msgid "Failed to fetch recommended books"
 msgstr "فشل جلب الكتب الموصى بها"
 
 msgid "Recommended books"
-msgstr ""
+msgstr "الكتب الموصى بها"
 
 msgid "API returned an error, please try again"
-msgstr ""
+msgstr "أرجع API خطأ، يرجى إعادة المحاولة"
 
 msgid "Z-library My Books"
-msgstr ""
+msgstr "كتبي في Z-library"
 
 msgid "Downloaded"
-msgstr ""
+msgstr "المُنزَّلة"
 
 msgid "Favorites"
-msgstr ""
+msgstr "المفضلة"
 
 msgid "Getting your favorites..."
-msgstr ""
+msgstr "جارٍ جلب مفضلتك..."
 
 msgid "Failed to fetch favorite books"
-msgstr ""
+msgstr "فشل جلب الكتب المفضلة"
 
 msgid "Favorite books"
-msgstr ""
+msgstr "الكتب المفضلة"
 
 msgid "Remove from downloaded"
 msgstr "الإزالة من التنزيلات"
 
 msgid "Getting your downloaded..."
-msgstr ""
+msgstr "جارٍ جلب تنزيلاتك..."
 
 msgid "Failed to fetch downloaded books"
-msgstr ""
+msgstr "فشل جلب الكتب المُنزَّلة"
 
 msgid "Downloaded books"
-msgstr ""
+msgstr "الكتب المُنزَّلة"
 
 msgid "Finding similar books..."
-msgstr ""
+msgstr "جارٍ البحث عن كتب مشابهة..."
 
 msgid "No similar books found"
-msgstr ""
+msgstr "لم يتم العثور على كتب مشابهة"
 
 msgid "Similar books"
-msgstr ""
+msgstr "كتب مشابهة"
 
 msgid "Removing book from downloaded…"
 msgstr "جارٍ إزالة الكتاب من التنزيلات…"
@@ -241,28 +232,28 @@ msgid "Book removed from downloaded, please refresh"
 msgstr "تمت إزالة الكتاب من التنزيلات، يرجى التحديث"
 
 msgid "Removing book from favorites…"
-msgstr ""
+msgstr "جارٍ إزالة الكتاب من المفضلة…"
 
 msgid "Failed to remove book from favorites"
-msgstr ""
+msgstr "فشلت إزالة الكتاب من المفضلة"
 
 msgid "Unfavorite book"
 msgstr "إزالة الكتاب من المفضلة"
 
 msgid "Book removed from favorites, please refresh"
-msgstr ""
+msgstr "تمت إزالة الكتاب من المفضلة، يرجى التحديث"
 
 msgid "Adding book to favorites…"
-msgstr ""
+msgstr "جارٍ إضافة الكتاب إلى المفضلة…"
 
 msgid "Failed to add book to favorites"
-msgstr ""
+msgstr "فشلت إضافة الكتاب إلى المفضلة"
 
 msgid "Favorite book"
-msgstr ""
+msgstr "كتاب مفضل"
 
 msgid "Book added to favorites, please refresh"
-msgstr ""
+msgstr "تمت إضافة الكتاب إلى المفضلة، يرجى التحديث"
 
 msgid "Fetching book details..."
 msgstr "جلب تفاصيل الكتاب..."
@@ -271,7 +262,7 @@ msgid "Failed to fetch book details"
 msgstr "فشل جلب تفاصيل الكتاب"
 
 msgid "Book details"
-msgstr ""
+msgstr "تفاصيل الكتاب"
 
 msgid "Could not retrieve book details."
 msgstr "تعذر استرداد تفاصيل الكتاب."
@@ -285,11 +276,13 @@ msgstr "تسجيل الدخول..."
 msgid "Login"
 msgstr "تسجيل الدخول"
 
-msgid "Searching for \""
-msgstr "البحث عن \""
+#, lua-format
+msgid "Searching for \"%s\"..."
+msgstr "البحث عن \"%s\"..."
 
-msgid "No results found for \""
-msgstr "لا توجد نتائج لـ \""
+#, lua-format
+msgid "No results found for \"%s\"."
+msgstr "لا توجد نتائج لـ \"%s\"."
 
 #, lua-format
 msgid "Loading more results (Page %s)..."
@@ -302,7 +295,7 @@ msgid "No more results found."
 msgstr "لم يتم العثور على المزيد من النتائج."
 
 msgid "Book identifiers missing. Cannot download."
-msgstr ""
+msgstr "معرّفات الكتاب مفقودة. تعذر التنزيل."
 
 #, lua-format
 msgid "Cannot create downloads directory: %s"
@@ -327,79 +320,79 @@ msgid "Download cancelled."
 msgstr "تم إلغاء التنزيل."
 
 msgid "Book ID is required."
-msgstr ""
+msgstr "معرّف الكتاب مطلوب."
 
 msgid "Loading comments..."
-msgstr ""
+msgstr "جارٍ تحميل التعليقات..."
 
 msgid "Failed to load comments"
-msgstr ""
+msgstr "فشل تحميل التعليقات"
 
 msgid "Comments"
-msgstr ""
+msgstr "التعليقات"
 
 msgid "No comments to display"
-msgstr ""
+msgstr "لا توجد تعليقات لعرضها"
 
 msgid "Could not find the server address"
 msgstr "تعذر العثور على عنوان الخادم"
 
 msgid "Request timed out - please check your connection and try again"
-msgstr ""
+msgstr "انتهت مهلة الطلب - يرجى التحقق من اتصالك وإعادة المحاولة"
 
 msgid "Network request failed"
-msgstr ""
+msgstr "فشل طلب الشبكة"
 
 msgid "The Z-library address may be wrong or no longer exist."
 msgstr "قد يكون عنوان Z-library خاطئًا أو لم يعد موجودًا."
 
 msgid "Network connection error - please check your internet connection and try again"
-msgstr ""
+msgstr "خطأ في اتصال الشبكة - يرجى التحقق من اتصال الإنترنت وإعادة المحاولة"
 
 msgid "HTTP Error"
-msgstr ""
+msgstr "خطأ HTTP"
 
 msgid "Unknown Status"
-msgstr ""
+msgstr "حالة غير معروفة"
 
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
-msgstr ""
+msgstr "لم يتم تعيين عنوان خادم Z-library (URL). يرجى ضبطه في إعدادات مكون Z-library الإضافي."
 
 msgid "Login failed: Empty response from server"
-msgstr ""
+msgstr "فشل تسجيل الدخول: استجابة فارغة من الخادم"
 
 msgid "Login failed: Invalid response format"
-msgstr ""
+msgstr "فشل تسجيل الدخول: صيغة استجابة غير صالحة"
 
 msgid "Login failed"
-msgstr ""
+msgstr "فشل تسجيل الدخول"
 
 msgid "Login failed: Invalid session data"
-msgstr ""
+msgstr "فشل تسجيل الدخول: بيانات جلسة غير صالحة"
 
 msgid "Credentials rejected or invalid response"
-msgstr ""
+msgstr "تم رفض بيانات الاعتماد أو استجابة غير صالحة"
 
 msgid "No response received from server - please try again"
-msgstr ""
+msgstr "لم يتم تلقي استجابة من الخادم - يرجى إعادة المحاولة"
 
 msgid "Invalid response format from server"
-msgstr ""
+msgstr "صيغة استجابة غير صالحة من الخادم"
 
 msgid "Search API error"
-msgstr ""
+msgstr "خطأ في API البحث"
 
 msgid "Failed to open target file"
-msgstr ""
+msgstr "فشل فتح الملف الهدف"
 
 msgid "Download limit reached or file is an HTML page"
-msgstr ""
+msgstr "تم بلوغ حد التنزيل أو الملف صفحة HTML"
 
 msgid "Failed to save downloaded file"
 msgstr "فشل حفظ الملف المنزَّل"
 
 msgid "Download HTTP Error"
-msgstr ""
+msgstr "خطأ HTTP في التنزيل"
 
 msgid "Z-library server URL not configured."
 msgstr "عنوان URL لخادم Z-library غير مكون."
@@ -438,43 +431,43 @@ msgid "Failed to process book details."
 msgstr "فشل معالجة تفاصيل الكتاب."
 
 msgid "Failed to fetch download link (no response body)."
-msgstr ""
+msgstr "فشل جلب رابط التنزيل (لا يوجد محتوى استجابة)."
 
 msgid "Failed to parse download link response."
-msgstr ""
+msgstr "فشل تحليل استجابة رابط التنزيل."
 
 msgid "API returned an error for download link."
-msgstr ""
+msgstr "أرجع API خطأ لرابط التنزيل."
 
 msgid "No download link provided in API response."
-msgstr ""
+msgstr "لم يُقدَّم رابط تنزيل في استجابة API."
 
 msgid "Failed to fetch similar books (no response body)."
-msgstr ""
+msgstr "فشل جلب الكتب المشابهة (لا يوجد محتوى استجابة)."
 
 msgid "Failed to parse similar books response."
-msgstr ""
+msgstr "فشل تحليل استجابة الكتب المشابهة."
 
 msgid "API returned an error for similar books."
-msgstr ""
+msgstr "أرجع API خطأ للكتب المشابهة."
 
 msgid "Failed to fetch downloaded books (no response body)."
-msgstr ""
+msgstr "فشل جلب الكتب المُنزَّلة (لا يوجد محتوى استجابة)."
 
 msgid "Failed to parse downloaded books response."
-msgstr ""
+msgstr "فشل تحليل استجابة الكتب المُنزَّلة."
 
 msgid "API returned an error for downloaded books."
-msgstr ""
+msgstr "أرجع API خطأ للكتب المُنزَّلة."
 
 msgid "Failed to fetch favorite books (no response body)."
-msgstr ""
+msgstr "فشل جلب الكتب المفضلة (لا يوجد محتوى استجابة)."
 
 msgid "Failed to parse favorite books response."
-msgstr ""
+msgstr "فشل تحليل استجابة الكتب المفضلة."
 
 msgid "API returned an error for favorite books."
-msgstr ""
+msgstr "أرجع API خطأ للكتب المفضلة."
 
 msgid "Failed to remove the book from downloaded (no response body)."
 msgstr "فشل إزالة الكتاب من التنزيلات (لا يوجد نص استجابة)."
@@ -486,88 +479,88 @@ msgid "API returned an error for remove from downloaded."
 msgstr "أرجع API خطأ للإزالة من التنزيلات."
 
 msgid "Failed to fetch unfavorite book (no response body)."
-msgstr ""
+msgstr "فشل جلب إزالة الكتاب من المفضلة (لا يوجد محتوى استجابة)."
 
 msgid "Failed to parse unfavorite book response."
-msgstr ""
+msgstr "فشل تحليل استجابة إزالة الكتاب من المفضلة."
 
 msgid "API returned an error for unfavorite book."
-msgstr ""
+msgstr "أرجع API خطأ لإزالة الكتاب من المفضلة."
 
 msgid "Failed to fetch download quota status (no response body)."
-msgstr ""
+msgstr "فشل جلب حالة حصة التنزيل (لا يوجد محتوى استجابة)."
 
 msgid "Failed to parse download quota status response."
-msgstr ""
+msgstr "فشل تحليل استجابة حالة حصة التنزيل."
 
 msgid "API returned an error for download quota status."
-msgstr ""
+msgstr "أرجع API خطأ لحالة حصة التنزيل."
 
 msgid "Failed to fetch favorite-book IDs (no response body)."
-msgstr ""
+msgstr "فشل جلب معرّفات الكتب المفضلة (لا يوجد محتوى استجابة)."
 
 msgid "Failed to parse favorite-book IDs."
-msgstr ""
+msgstr "فشل تحليل معرّفات الكتب المفضلة."
 
 msgid "API returned an error for favorite-book IDs."
-msgstr ""
+msgstr "أرجع API خطأ لمعرّفات الكتب المفضلة."
 
 msgid "Failed to fetch favorite book (no response body)."
-msgstr ""
+msgstr "فشل جلب الكتاب المفضل (لا يوجد محتوى استجابة)."
 
 msgid "Failed to parse favorite book response."
-msgstr ""
+msgstr "فشل تحليل استجابة الكتاب المفضل."
 
 msgid "API returned an error for favorite book."
-msgstr ""
+msgstr "أرجع API خطأ للكتاب المفضل."
 
 msgid "Failed to fetch book comments (no response body)."
-msgstr ""
+msgstr "فشل جلب تعليقات الكتاب (لا يوجد محتوى استجابة)."
 
 msgid "Failed to parse book comments response."
-msgstr ""
+msgstr "فشل تحليل استجابة تعليقات الكتاب."
 
 msgid "API returned an error for book comments."
-msgstr ""
+msgstr "أرجع API خطأ لتعليقات الكتاب."
 
 msgid "Profile"
-msgstr ""
+msgstr "الملف الشخصي"
+
+msgid "No description available"
+msgstr "لا يوجد وصف"
 
 msgid "pages"
-msgstr ""
+msgstr "صفحات"
 
 msgid "Cover"
-msgstr ""
+msgstr "الغلاف"
 
 msgid "More Similar Books"
-msgstr ""
+msgstr "مزيد من الكتب المشابهة"
 
 msgid "Format"
-msgstr ""
+msgstr "الصيغة"
 
 msgid "Download book"
-msgstr ""
+msgstr "تنزيل الكتاب"
 
 msgid "Refresh"
-msgstr ""
+msgstr "تحديث"
 
 msgid "Remove From Favorites"
-msgstr ""
+msgstr "إزالة من المفضلة"
 
 msgid "Add To Favorites"
-msgstr ""
+msgstr "إضافة إلى المفضلة"
 
 msgid "No Comments"
-msgstr ""
-
-msgid "No Description"
-msgstr ""
+msgstr "لا توجد تعليقات"
 
 msgid "Best match"
-msgstr ""
+msgstr "الأكثر مطابقة"
 
 msgid "Recently added"
-msgstr ""
+msgstr "المضاف حديثًا"
 
 msgid "Title"
 msgstr "العنوان"
@@ -576,10 +569,10 @@ msgid "Year"
 msgstr "السنة"
 
 msgid "File size"
-msgstr ""
+msgstr "حجم الملف"
 
 msgid "Default"
-msgstr ""
+msgstr "الافتراضي"
 
 msgid "infinite"
 msgstr "لا نهائي"
@@ -729,7 +722,7 @@ msgid "Please enter a search term."
 msgstr "الرجاء إدخال مصطلح بحث."
 
 msgid "Sort by"
-msgstr ""
+msgstr "الترتيب حسب"
 
 msgid "Unknown Title"
 msgstr "عنوان غير معروف"
@@ -763,22 +756,23 @@ msgstr "فتح الكتاب"
 
 #, lua-format
 msgid "No %s found, please try again. Sometimes this requires a couple of retries."
-msgstr ""
+msgstr "لم يتم العثور على %s، يرجى إعادة المحاولة. أحيانًا يتطلب ذلك عدة محاولات."
 
 msgid "Z-library Similar Books"
-msgstr ""
+msgstr "كتب Z-library المشابهة"
 
 msgid "Book Details"
 msgstr "تفاصيل الكتاب"
 
-msgid "Retrying search for \""
-msgstr "إعادة محاولة البحث عن \""
+#, lua-format
+msgid "Retrying search for \"%s\"..."
+msgstr "إعادة محاولة البحث عن \"%s\"..."
 
 msgid "Request timed out"
-msgstr ""
+msgstr "انتهت مهلة الطلب"
 
 msgid "Network connection error"
-msgstr ""
+msgstr "خطأ في اتصال الشبكة"
 
 #, lua-format
 msgid "%s failed due to a timeout%s. Would you like to retry?"
@@ -884,19 +878,28 @@ msgid "Timeout Settings"
 msgstr "إعدادات المهلة الزمنية"
 
 msgid "Email Address"
-msgstr ""
+msgstr "البريد الإلكتروني"
 
 msgid "Password"
-msgstr ""
+msgstr "كلمة المرور"
 
 msgid "Enter password"
-msgstr ""
+msgstr "أدخل كلمة المرور"
 
 msgid "Please fill in all fields"
-msgstr ""
+msgstr "يرجى ملء جميع الحقول"
 
 msgid "Feature not implemented"
-msgstr ""
+msgstr "الميزة غير متوفرة"
+
+#~ msgid "Retrying search for \""
+#~ msgstr "إعادة محاولة البحث عن \""
+
+#~ msgid "Searching for \""
+#~ msgstr "البحث عن \""
+
+#~ msgid "No results found for \""
+#~ msgstr "لا توجد نتائج لـ \""
 
 #~ msgid "Downloading…"
 #~ msgstr "جارٍ التنزيل..."

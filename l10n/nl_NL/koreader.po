@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 19:31+0000\n"
+"POT-Creation-Date: 2026-07-19 10:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,28 +22,28 @@ msgid "Z-library search"
 msgstr "Z-library zoeken"
 
 msgid "My books"
-msgstr ""
+msgstr "Mijn boeken"
 
 msgid "Operation failed, please retry."
-msgstr ""
+msgstr "Bewerking mislukt, probeer het opnieuw."
 
 msgid "Fetching domains..."
-msgstr ""
+msgstr "Domeinen ophalen..."
 
 msgid "Successfully set base URL to: "
-msgstr ""
+msgstr "Basis-URL succesvol ingesteld op:"
 
 msgid "Failed to find a working base URL."
 msgstr "Kan geen werkende basis-URL vinden."
 
 msgid "Queued"
-msgstr ""
+msgstr "In wachtrij"
 
 msgid "Selection copied to clipboard."
-msgstr ""
+msgstr "Selectie gekopieerd naar klembord."
 
 msgid "Checking"
-msgstr ""
+msgstr "Controleren"
 
 msgid "Set base URL"
 msgstr "Stel basis-URL in"
@@ -52,31 +52,31 @@ msgid "Invalid Base URL."
 msgstr "Ongeldige basis-URL."
 
 msgid "Failed"
-msgstr ""
+msgstr "Mislukt"
 
 msgid "Unknown error"
-msgstr ""
+msgstr "Onbekende fout"
 
 msgid "Searching for working Z-library server..."
 msgstr "Zoeken naar werkende Z-library server..."
 
 msgid "Current Base URL:"
-msgstr ""
+msgstr "Huidige basis-URL:"
 
 msgid "Mirror site redirected to: "
-msgstr ""
+msgstr "Mirrorsite doorverwezen naar:"
 
 msgid "Auto-discover base URL"
 msgstr "Basis-URL automatisch ontdekken"
 
 msgid "Network unavailable."
-msgstr ""
+msgstr "Netwerk niet beschikbaar."
 
 msgid "Discovery is already running..."
-msgstr ""
+msgstr "Detectie loopt al..."
 
 msgid "Refresh Dynamic Domains"
-msgstr ""
+msgstr "Dynamische domeinen vernieuwen"
 
 msgid "Back"
 msgstr "Terug"
@@ -85,7 +85,7 @@ msgid "Settings"
 msgstr "Instellingen"
 
 msgid "Set credentials"
-msgstr ""
+msgstr "Inloggegevens instellen"
 
 msgid "Login successful!"
 msgstr "Succesvol ingelogd!"
@@ -97,22 +97,22 @@ msgid "Set download directory"
 msgstr "Downloadmap instellen"
 
 msgid "View Settings"
-msgstr ""
+msgstr "Weergave-instellingen"
 
 msgid "Search Covers"
-msgstr ""
+msgstr "Omslagen bij zoeken"
 
 msgid "Search Items/Page"
-msgstr ""
+msgstr "Zoekitems/pagina"
 
 msgid "Browse Covers"
-msgstr ""
+msgstr "Omslagen bij bladeren"
 
 msgid "Browse Items/Page"
-msgstr ""
+msgstr "Bladeritems/pagina"
 
 msgid "Search options"
-msgstr ""
+msgstr "Zoekopties"
 
 msgid "Select search languages"
 msgstr "Selecteer zoektaal"
@@ -121,7 +121,7 @@ msgid "Select search formats"
 msgstr "Selecteer zoekformaten"
 
 msgid "Select search order"
-msgstr ""
+msgstr "Zoekvolgorde selecteren"
 
 msgid "Timeout settings"
 msgstr "Timeout-instellingen"
@@ -133,28 +133,19 @@ msgid "Error: Plugin path not found. Cannot check for updates."
 msgstr "Fout: plug-inpad niet gevonden. Kan niet op updates controleren."
 
 msgid "Developer options"
-msgstr ""
+msgstr "Ontwikkelaarsopties"
 
 msgid "Clear user session"
-msgstr ""
+msgstr "Gebruikerssessie wissen"
 
 msgid "Session cleared. You will need to login again."
-msgstr ""
+msgstr "Sessie gewist. Je moet opnieuw inloggen."
 
 msgid "Clear runtime cache"
-msgstr ""
+msgstr "Runtime-cache wissen"
 
 msgid "Runtime cache cleared."
-msgstr ""
-
-msgid "Test mode"
-msgstr ""
-
-msgid "Test mode disabled. Normal download behavior restored."
-msgstr ""
-
-msgid "Test mode enabled. Downloads will always succeed."
-msgstr ""
+msgstr "Runtime-cache gewist."
 
 msgid "Search"
 msgstr "Zoeken"
@@ -166,7 +157,7 @@ msgid "Most popular"
 msgstr "Meest populair"
 
 msgid "Operation"
-msgstr ""
+msgstr "Bewerking"
 
 msgid "No books found, please try again"
 msgstr "Geen boeken gevonden, probeer het opnieuw"
@@ -178,7 +169,7 @@ msgid "Failed to fetch most popular books"
 msgstr "Kan meest populaire boeken niet ophalen"
 
 msgid "Most popular books"
-msgstr ""
+msgstr "Meest populaire boeken"
 
 msgid "Fetching recommended books..."
 msgstr "Aanbevolen boeken ophalen..."
@@ -187,49 +178,49 @@ msgid "Failed to fetch recommended books"
 msgstr "Kan aanbevolen boeken niet ophalen"
 
 msgid "Recommended books"
-msgstr ""
+msgstr "Aanbevolen boeken"
 
 msgid "API returned an error, please try again"
-msgstr ""
+msgstr "API retourneerde een fout, probeer het opnieuw"
 
 msgid "Z-library My Books"
-msgstr ""
+msgstr "Z-library mijn boeken"
 
 msgid "Downloaded"
-msgstr ""
+msgstr "Gedownload"
 
 msgid "Favorites"
-msgstr ""
+msgstr "Favorieten"
 
 msgid "Getting your favorites..."
-msgstr ""
+msgstr "Je favorieten ophalen..."
 
 msgid "Failed to fetch favorite books"
-msgstr ""
+msgstr "Kan favoriete boeken niet ophalen"
 
 msgid "Favorite books"
-msgstr ""
+msgstr "Favoriete boeken"
 
 msgid "Remove from downloaded"
 msgstr "Verwijderen uit gedownloade boeken"
 
 msgid "Getting your downloaded..."
-msgstr ""
+msgstr "Je downloads ophalen..."
 
 msgid "Failed to fetch downloaded books"
-msgstr ""
+msgstr "Kan gedownloade boeken niet ophalen"
 
 msgid "Downloaded books"
-msgstr ""
+msgstr "Gedownloade boeken"
 
 msgid "Finding similar books..."
-msgstr ""
+msgstr "Vergelijkbare boeken zoeken..."
 
 msgid "No similar books found"
-msgstr ""
+msgstr "Geen vergelijkbare boeken gevonden"
 
 msgid "Similar books"
-msgstr ""
+msgstr "Vergelijkbare boeken"
 
 msgid "Removing book from downloaded…"
 msgstr "Boek verwijderen uit gedownloade boeken…"
@@ -241,28 +232,28 @@ msgid "Book removed from downloaded, please refresh"
 msgstr "Boek verwijderd uit gedownloade boeken, vernieuw de lijst"
 
 msgid "Removing book from favorites…"
-msgstr ""
+msgstr "Boek verwijderen uit favorieten…"
 
 msgid "Failed to remove book from favorites"
-msgstr ""
+msgstr "Kan boek niet uit favorieten verwijderen"
 
 msgid "Unfavorite book"
 msgstr "Boek uit favorieten verwijderen"
 
 msgid "Book removed from favorites, please refresh"
-msgstr ""
+msgstr "Boek verwijderd uit favorieten, vernieuw de lijst"
 
 msgid "Adding book to favorites…"
-msgstr ""
+msgstr "Boek toevoegen aan favorieten…"
 
 msgid "Failed to add book to favorites"
-msgstr ""
+msgstr "Kan boek niet aan favorieten toevoegen"
 
 msgid "Favorite book"
-msgstr ""
+msgstr "Favoriet boek"
 
 msgid "Book added to favorites, please refresh"
-msgstr ""
+msgstr "Boek toegevoegd aan favorieten, vernieuw de lijst"
 
 msgid "Fetching book details..."
 msgstr "Boekdetails ophalen..."
@@ -271,7 +262,7 @@ msgid "Failed to fetch book details"
 msgstr "Kan boekdetails niet ophalen"
 
 msgid "Book details"
-msgstr ""
+msgstr "Boekdetails"
 
 msgid "Could not retrieve book details."
 msgstr "Kan boekdetails niet ophalen."
@@ -285,11 +276,13 @@ msgstr "Bezig met inloggen..."
 msgid "Login"
 msgstr "Inloggen"
 
-msgid "Searching for \""
-msgstr "Zoeken naar \""
+#, lua-format
+msgid "Searching for \"%s\"..."
+msgstr "Zoeken naar \"%s\"..."
 
-msgid "No results found for \""
-msgstr "Geen resultaten gevonden voor \""
+#, lua-format
+msgid "No results found for \"%s\"."
+msgstr "Geen resultaten gevonden voor \"%s\"."
 
 #, lua-format
 msgid "Loading more results (Page %s)..."
@@ -302,7 +295,7 @@ msgid "No more results found."
 msgstr "Geen extra resultaten gevonden."
 
 msgid "Book identifiers missing. Cannot download."
-msgstr ""
+msgstr "Boek-ID's ontbreken. Downloaden niet mogelijk."
 
 #, lua-format
 msgid "Cannot create downloads directory: %s"
@@ -327,79 +320,79 @@ msgid "Download cancelled."
 msgstr "Download geannuleerd."
 
 msgid "Book ID is required."
-msgstr ""
+msgstr "Boek-ID is vereist."
 
 msgid "Loading comments..."
-msgstr ""
+msgstr "Reacties laden..."
 
 msgid "Failed to load comments"
-msgstr ""
+msgstr "Kan reacties niet laden"
 
 msgid "Comments"
-msgstr ""
+msgstr "Reacties"
 
 msgid "No comments to display"
-msgstr ""
+msgstr "Geen reacties om weer te geven"
 
 msgid "Could not find the server address"
 msgstr "Kan het serveradres niet vinden"
 
 msgid "Request timed out - please check your connection and try again"
-msgstr ""
+msgstr "Time-out van verzoek - controleer je verbinding en probeer het opnieuw"
 
 msgid "Network request failed"
-msgstr ""
+msgstr "Netwerkverzoek mislukt"
 
 msgid "The Z-library address may be wrong or no longer exist."
 msgstr "Het Z-library-adres is mogelijk onjuist of bestaat niet meer."
 
 msgid "Network connection error - please check your internet connection and try again"
-msgstr ""
+msgstr "Netwerkverbindingsfout - controleer je internetverbinding en probeer het opnieuw"
 
 msgid "HTTP Error"
-msgstr ""
+msgstr "HTTP-fout"
 
 msgid "Unknown Status"
-msgstr ""
+msgstr "Onbekende status"
 
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
-msgstr ""
+msgstr "Het Z-library serveradres (URL) is niet ingesteld. Stel dit in bij de Z-library plugin-instellingen."
 
 msgid "Login failed: Empty response from server"
-msgstr ""
+msgstr "Inloggen mislukt: leeg antwoord van server"
 
 msgid "Login failed: Invalid response format"
-msgstr ""
+msgstr "Inloggen mislukt: ongeldige antwoordindeling"
 
 msgid "Login failed"
-msgstr ""
+msgstr "Inloggen mislukt"
 
 msgid "Login failed: Invalid session data"
-msgstr ""
+msgstr "Inloggen mislukt: ongeldige sessiegegevens"
 
 msgid "Credentials rejected or invalid response"
-msgstr ""
+msgstr "Inloggegevens geweigerd of ongeldig antwoord"
 
 msgid "No response received from server - please try again"
-msgstr ""
+msgstr "Geen antwoord van server ontvangen - probeer het opnieuw"
 
 msgid "Invalid response format from server"
-msgstr ""
+msgstr "Ongeldige antwoordindeling van server"
 
 msgid "Search API error"
-msgstr ""
+msgstr "Zoek-API-fout"
 
 msgid "Failed to open target file"
-msgstr ""
+msgstr "Kan doelbestand niet openen"
 
 msgid "Download limit reached or file is an HTML page"
-msgstr ""
+msgstr "Downloadlimiet bereikt of bestand is een HTML-pagina"
 
 msgid "Failed to save downloaded file"
 msgstr "Kan gedownload bestand niet opslaan"
 
 msgid "Download HTTP Error"
-msgstr ""
+msgstr "HTTP-fout bij downloaden"
 
 msgid "Z-library server URL not configured."
 msgstr "Z-library server-URL is niet geconfigureerd."
@@ -438,43 +431,43 @@ msgid "Failed to process book details."
 msgstr "Kan boekdetails niet verwerken."
 
 msgid "Failed to fetch download link (no response body)."
-msgstr ""
+msgstr "Kan downloadlink niet ophalen (geen antwoordinhoud)."
 
 msgid "Failed to parse download link response."
-msgstr ""
+msgstr "Kan antwoord van downloadlink niet verwerken."
 
 msgid "API returned an error for download link."
-msgstr ""
+msgstr "API retourneerde een fout voor downloadlink."
 
 msgid "No download link provided in API response."
-msgstr ""
+msgstr "Geen downloadlink in API-antwoord."
 
 msgid "Failed to fetch similar books (no response body)."
-msgstr ""
+msgstr "Kan vergelijkbare boeken niet ophalen (geen antwoordinhoud)."
 
 msgid "Failed to parse similar books response."
-msgstr ""
+msgstr "Kan antwoord van vergelijkbare boeken niet verwerken."
 
 msgid "API returned an error for similar books."
-msgstr ""
+msgstr "API retourneerde een fout voor vergelijkbare boeken."
 
 msgid "Failed to fetch downloaded books (no response body)."
-msgstr ""
+msgstr "Kan gedownloade boeken niet ophalen (geen antwoordinhoud)."
 
 msgid "Failed to parse downloaded books response."
-msgstr ""
+msgstr "Kan antwoord van gedownloade boeken niet verwerken."
 
 msgid "API returned an error for downloaded books."
-msgstr ""
+msgstr "API retourneerde een fout voor gedownloade boeken."
 
 msgid "Failed to fetch favorite books (no response body)."
-msgstr ""
+msgstr "Kan favoriete boeken niet ophalen (geen antwoordinhoud)."
 
 msgid "Failed to parse favorite books response."
-msgstr ""
+msgstr "Kan antwoord van favoriete boeken niet verwerken."
 
 msgid "API returned an error for favorite books."
-msgstr ""
+msgstr "API retourneerde een fout voor favoriete boeken."
 
 msgid "Failed to remove the book from downloaded (no response body)."
 msgstr "Kan het boek niet verwijderen uit gedownloade boeken (geen response body)."
@@ -486,88 +479,88 @@ msgid "API returned an error for remove from downloaded."
 msgstr "API retourneerde een fout voor verwijderen uit gedownloade boeken."
 
 msgid "Failed to fetch unfavorite book (no response body)."
-msgstr ""
+msgstr "Kan favoriet verwijderen niet ophalen (geen antwoordinhoud)."
 
 msgid "Failed to parse unfavorite book response."
-msgstr ""
+msgstr "Kan antwoord van favoriet verwijderen niet verwerken."
 
 msgid "API returned an error for unfavorite book."
-msgstr ""
+msgstr "API retourneerde een fout voor favoriet verwijderen."
 
 msgid "Failed to fetch download quota status (no response body)."
-msgstr ""
+msgstr "Kan downloadquotumstatus niet ophalen (geen antwoordinhoud)."
 
 msgid "Failed to parse download quota status response."
-msgstr ""
+msgstr "Kan antwoord van downloadquotumstatus niet verwerken."
 
 msgid "API returned an error for download quota status."
-msgstr ""
+msgstr "API retourneerde een fout voor downloadquotumstatus."
 
 msgid "Failed to fetch favorite-book IDs (no response body)."
-msgstr ""
+msgstr "Kan favoriete-boek-ID's niet ophalen (geen antwoordinhoud)."
 
 msgid "Failed to parse favorite-book IDs."
-msgstr ""
+msgstr "Kan favoriete-boek-ID's niet verwerken."
 
 msgid "API returned an error for favorite-book IDs."
-msgstr ""
+msgstr "API retourneerde een fout voor favoriete-boek-ID's."
 
 msgid "Failed to fetch favorite book (no response body)."
-msgstr ""
+msgstr "Kan favoriet boek niet ophalen (geen antwoordinhoud)."
 
 msgid "Failed to parse favorite book response."
-msgstr ""
+msgstr "Kan antwoord van favoriet boek niet verwerken."
 
 msgid "API returned an error for favorite book."
-msgstr ""
+msgstr "API retourneerde een fout voor favoriet boek."
 
 msgid "Failed to fetch book comments (no response body)."
-msgstr ""
+msgstr "Kan boekreacties niet ophalen (geen antwoordinhoud)."
 
 msgid "Failed to parse book comments response."
-msgstr ""
+msgstr "Kan antwoord van boekreacties niet verwerken."
 
 msgid "API returned an error for book comments."
-msgstr ""
+msgstr "API retourneerde een fout voor boekreacties."
 
 msgid "Profile"
-msgstr ""
+msgstr "Profiel"
+
+msgid "No description available"
+msgstr "Geen beschrijving beschikbaar"
 
 msgid "pages"
-msgstr ""
+msgstr "pagina's"
 
 msgid "Cover"
-msgstr ""
+msgstr "Omslag"
 
 msgid "More Similar Books"
-msgstr ""
+msgstr "Meer vergelijkbare boeken"
 
 msgid "Format"
-msgstr ""
+msgstr "Formaat"
 
 msgid "Download book"
-msgstr ""
+msgstr "Boek downloaden"
 
 msgid "Refresh"
-msgstr ""
+msgstr "Vernieuwen"
 
 msgid "Remove From Favorites"
-msgstr ""
+msgstr "Uit favorieten verwijderen"
 
 msgid "Add To Favorites"
-msgstr ""
+msgstr "Aan favorieten toevoegen"
 
 msgid "No Comments"
-msgstr ""
-
-msgid "No Description"
-msgstr ""
+msgstr "Geen reacties"
 
 msgid "Best match"
-msgstr ""
+msgstr "Beste overeenkomst"
 
 msgid "Recently added"
-msgstr ""
+msgstr "Recent toegevoegd"
 
 msgid "Title"
 msgstr "Titel"
@@ -576,10 +569,10 @@ msgid "Year"
 msgstr "Jaar"
 
 msgid "File size"
-msgstr ""
+msgstr "Bestandsgrootte"
 
 msgid "Default"
-msgstr ""
+msgstr "Standaard"
 
 msgid "infinite"
 msgstr "oneindig"
@@ -729,7 +722,7 @@ msgid "Please enter a search term."
 msgstr "Voer een zoekterm in."
 
 msgid "Sort by"
-msgstr ""
+msgstr "Sorteren op"
 
 msgid "Unknown Title"
 msgstr "Onbekende titel"
@@ -763,22 +756,23 @@ msgstr "Boek openen"
 
 #, lua-format
 msgid "No %s found, please try again. Sometimes this requires a couple of retries."
-msgstr ""
+msgstr "Geen %s gevonden, probeer het opnieuw. Soms zijn een paar pogingen nodig."
 
 msgid "Z-library Similar Books"
-msgstr ""
+msgstr "Z-library vergelijkbare boeken"
 
 msgid "Book Details"
 msgstr "Boekdetails"
 
-msgid "Retrying search for \""
-msgstr "Zoekopdracht opnieuw proberen voor \""
+#, lua-format
+msgid "Retrying search for \"%s\"..."
+msgstr "Zoekopdracht opnieuw proberen voor \"%s\"..."
 
 msgid "Request timed out"
-msgstr ""
+msgstr "Time-out van verzoek"
 
 msgid "Network connection error"
-msgstr ""
+msgstr "Netwerkverbindingsfout"
 
 #, lua-format
 msgid "%s failed due to a timeout%s. Would you like to retry?"
@@ -805,7 +799,7 @@ msgstr "Blok timeout: %s seconden"
 
 #, lua-format
 msgid "Total timeout: %s"
-msgstr ""
+msgstr "Totale timeout: %s"
 
 msgid "seconds"
 msgstr "seconden"
@@ -884,19 +878,28 @@ msgid "Timeout Settings"
 msgstr "Timeout-instellingen"
 
 msgid "Email Address"
-msgstr ""
+msgstr "E-mailadres"
 
 msgid "Password"
-msgstr ""
+msgstr "Wachtwoord"
 
 msgid "Enter password"
-msgstr ""
+msgstr "Voer wachtwoord in"
 
 msgid "Please fill in all fields"
-msgstr ""
+msgstr "Vul alle velden in"
 
 msgid "Feature not implemented"
-msgstr ""
+msgstr "Functie niet geïmplementeerd"
+
+#~ msgid "Retrying search for \""
+#~ msgstr "Zoekopdracht opnieuw proberen voor \""
+
+#~ msgid "Searching for \""
+#~ msgstr "Zoeken naar \""
+
+#~ msgid "No results found for \""
+#~ msgstr "Geen resultaten gevonden voor \""
 
 #~ msgid "Downloading…"
 #~ msgstr "Bezig met downloaden…"

@@ -1195,7 +1195,7 @@ function Zlibrary:performSearch(query)
         retry_on_auth_error = retry_on_auth_error == nil and true or retry_on_auth_error
         
         local user_session = Config.getUserSession()
-        local loading_msg = Ui.showLoadingMessage(T("Searching for \"") .. query .. "\"...")
+        local loading_msg = Ui.showLoadingMessage(string.format(T("Searching for \"%s\"..."), query))
 
         local selected_languages = Config.getSearchLanguages()
         local selected_extensions = Config.getSearchExtensions()
@@ -1228,7 +1228,7 @@ function Zlibrary:performSearch(query)
 
             if not api_result.results or #api_result.results == 0 then
                 Ui.closeMessage(loading_msg)
-                Ui.showInfoMessage(T("No results found for \"") .. query .. "\".")
+                Ui.showInfoMessage(string.format(T("No results found for \"%s\"."), query))
                 return
             end
 

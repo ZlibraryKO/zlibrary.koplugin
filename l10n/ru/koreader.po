@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 19:31+0000\n"
+"POT-Creation-Date: 2026-07-19 10:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -22,28 +22,28 @@ msgid "Z-library search"
 msgstr "Поиск в Z-библиотеке"
 
 msgid "My books"
-msgstr ""
+msgstr "Мои книги"
 
 msgid "Operation failed, please retry."
-msgstr ""
+msgstr "Операция не удалась, повторите попытку."
 
 msgid "Fetching domains..."
-msgstr ""
+msgstr "Получение доменов..."
 
 msgid "Successfully set base URL to: "
-msgstr ""
+msgstr "Базовый URL успешно установлен:"
 
 msgid "Failed to find a working base URL."
 msgstr "Не удалось найти рабочий базовый URL."
 
 msgid "Queued"
-msgstr ""
+msgstr "В очереди"
 
 msgid "Selection copied to clipboard."
-msgstr ""
+msgstr "Выделенное скопировано в буфер обмена."
 
 msgid "Checking"
-msgstr ""
+msgstr "Проверка"
 
 msgid "Set base URL"
 msgstr "Установить базовый URL"
@@ -52,31 +52,31 @@ msgid "Invalid Base URL."
 msgstr "Некорректный базовый URL."
 
 msgid "Failed"
-msgstr ""
+msgstr "Не удалось"
 
 msgid "Unknown error"
-msgstr ""
+msgstr "Неизвестная ошибка"
 
 msgid "Searching for working Z-library server..."
 msgstr "Поиск работающего сервера Z-library..."
 
 msgid "Current Base URL:"
-msgstr ""
+msgstr "Текущий базовый URL:"
 
 msgid "Mirror site redirected to: "
-msgstr ""
+msgstr "Зеркало перенаправило на:"
 
 msgid "Auto-discover base URL"
 msgstr "Автоматическое обнаружение базового URL"
 
 msgid "Network unavailable."
-msgstr ""
+msgstr "Сеть недоступна."
 
 msgid "Discovery is already running..."
-msgstr ""
+msgstr "Поиск доменов уже выполняется..."
 
 msgid "Refresh Dynamic Domains"
-msgstr ""
+msgstr "Обновить динамические домены"
 
 msgid "Back"
 msgstr "Назад"
@@ -85,7 +85,7 @@ msgid "Settings"
 msgstr "Настройки"
 
 msgid "Set credentials"
-msgstr ""
+msgstr "Указать учётные данные"
 
 msgid "Login successful!"
 msgstr "Вход выполнен успешно!"
@@ -97,22 +97,22 @@ msgid "Set download directory"
 msgstr "Установить папку для загрузок"
 
 msgid "View Settings"
-msgstr ""
+msgstr "Настройки просмотра"
 
 msgid "Search Covers"
-msgstr ""
+msgstr "Обложки в поиске"
 
 msgid "Search Items/Page"
-msgstr ""
+msgstr "Элементов на странице (поиск)"
 
 msgid "Browse Covers"
-msgstr ""
+msgstr "Обложки в обзоре"
 
 msgid "Browse Items/Page"
-msgstr ""
+msgstr "Элементов на странице (обзор)"
 
 msgid "Search options"
-msgstr ""
+msgstr "Параметры поиска"
 
 msgid "Select search languages"
 msgstr "Выбрать языки для поиска"
@@ -121,7 +121,7 @@ msgid "Select search formats"
 msgstr "Выбрать форматы для поиска"
 
 msgid "Select search order"
-msgstr ""
+msgstr "Выберите порядок сортировки"
 
 msgid "Timeout settings"
 msgstr "Настройки таймаута"
@@ -133,28 +133,19 @@ msgid "Error: Plugin path not found. Cannot check for updates."
 msgstr "Ошибка: Путь к плагину не найден. Невозможно проверить обновления."
 
 msgid "Developer options"
-msgstr ""
+msgstr "Параметры разработчика"
 
 msgid "Clear user session"
-msgstr ""
+msgstr "Очистить сессию пользователя"
 
 msgid "Session cleared. You will need to login again."
-msgstr ""
+msgstr "Сессия очищена. Потребуется войти заново."
 
 msgid "Clear runtime cache"
-msgstr ""
+msgstr "Очистить кэш"
 
 msgid "Runtime cache cleared."
-msgstr ""
-
-msgid "Test mode"
-msgstr ""
-
-msgid "Test mode disabled. Normal download behavior restored."
-msgstr ""
-
-msgid "Test mode enabled. Downloads will always succeed."
-msgstr ""
+msgstr "Кэш очищен."
 
 msgid "Search"
 msgstr "Поиск"
@@ -166,7 +157,7 @@ msgid "Most popular"
 msgstr "Популярные"
 
 msgid "Operation"
-msgstr ""
+msgstr "Операция"
 
 msgid "No books found, please try again"
 msgstr "Книги не найдены, попробуйте еще раз"
@@ -178,7 +169,7 @@ msgid "Failed to fetch most popular books"
 msgstr "Не удалось загрузить популярные книги"
 
 msgid "Most popular books"
-msgstr ""
+msgstr "Популярные книги"
 
 msgid "Fetching recommended books..."
 msgstr "Загрузка рекомендуемых книг..."
@@ -187,49 +178,49 @@ msgid "Failed to fetch recommended books"
 msgstr "Не удалось загрузить рекомендуемые книги"
 
 msgid "Recommended books"
-msgstr ""
+msgstr "Рекомендуемые книги"
 
 msgid "API returned an error, please try again"
-msgstr ""
+msgstr "API вернул ошибку, повторите попытку"
 
 msgid "Z-library My Books"
-msgstr ""
+msgstr "Z-library: мои книги"
 
 msgid "Downloaded"
-msgstr ""
+msgstr "Скачанные"
 
 msgid "Favorites"
-msgstr ""
+msgstr "Избранное"
 
 msgid "Getting your favorites..."
-msgstr ""
+msgstr "Загрузка избранного..."
 
 msgid "Failed to fetch favorite books"
-msgstr ""
+msgstr "Не удалось получить избранные книги"
 
 msgid "Favorite books"
-msgstr ""
+msgstr "Избранные книги"
 
 msgid "Remove from downloaded"
 msgstr "Удаление из скачанных"
 
 msgid "Getting your downloaded..."
-msgstr ""
+msgstr "Загрузка скачанных..."
 
 msgid "Failed to fetch downloaded books"
-msgstr ""
+msgstr "Не удалось получить скачанные книги"
 
 msgid "Downloaded books"
-msgstr ""
+msgstr "Скачанные книги"
 
 msgid "Finding similar books..."
-msgstr ""
+msgstr "Поиск похожих книг..."
 
 msgid "No similar books found"
-msgstr ""
+msgstr "Похожие книги не найдены"
 
 msgid "Similar books"
-msgstr ""
+msgstr "Похожие книги"
 
 msgid "Removing book from downloaded…"
 msgstr "Удаление книги из скачанных…"
@@ -241,28 +232,28 @@ msgid "Book removed from downloaded, please refresh"
 msgstr "Книга удалена из скачанных, обновите список"
 
 msgid "Removing book from favorites…"
-msgstr ""
+msgstr "Удаление книги из избранного…"
 
 msgid "Failed to remove book from favorites"
-msgstr ""
+msgstr "Не удалось удалить книгу из избранного"
 
 msgid "Unfavorite book"
 msgstr "Удаление из избранного"
 
 msgid "Book removed from favorites, please refresh"
-msgstr ""
+msgstr "Книга удалена из избранного, обновите список"
 
 msgid "Adding book to favorites…"
-msgstr ""
+msgstr "Добавление книги в избранное…"
 
 msgid "Failed to add book to favorites"
-msgstr ""
+msgstr "Не удалось добавить книгу в избранное"
 
 msgid "Favorite book"
-msgstr ""
+msgstr "Избранная книга"
 
 msgid "Book added to favorites, please refresh"
-msgstr ""
+msgstr "Книга добавлена в избранное, обновите список"
 
 msgid "Fetching book details..."
 msgstr "Получение деталей книги..."
@@ -271,7 +262,7 @@ msgid "Failed to fetch book details"
 msgstr "Не удалось получить детали книги"
 
 msgid "Book details"
-msgstr ""
+msgstr "Детали книги"
 
 msgid "Could not retrieve book details."
 msgstr "Не удалось получить информацию о книге."
@@ -285,11 +276,13 @@ msgstr "Выполняется вход..."
 msgid "Login"
 msgstr "Вход"
 
-msgid "Searching for \""
-msgstr "Поиск \""
+#, lua-format
+msgid "Searching for \"%s\"..."
+msgstr "Поиск \"%s\"..."
 
-msgid "No results found for \""
-msgstr "Ничего не найдено для \""
+#, lua-format
+msgid "No results found for \"%s\"."
+msgstr "Ничего не найдено для \"%s\"."
 
 #, lua-format
 msgid "Loading more results (Page %s)..."
@@ -302,7 +295,7 @@ msgid "No more results found."
 msgstr "Больше результатов не найдено."
 
 msgid "Book identifiers missing. Cannot download."
-msgstr ""
+msgstr "Отсутствуют идентификаторы книги. Скачивание невозможно."
 
 #, lua-format
 msgid "Cannot create downloads directory: %s"
@@ -327,79 +320,79 @@ msgid "Download cancelled."
 msgstr "Загрузка отменена."
 
 msgid "Book ID is required."
-msgstr ""
+msgstr "Требуется ID книги."
 
 msgid "Loading comments..."
-msgstr ""
+msgstr "Загрузка комментариев..."
 
 msgid "Failed to load comments"
-msgstr ""
+msgstr "Не удалось загрузить комментарии"
 
 msgid "Comments"
-msgstr ""
+msgstr "Комментарии"
 
 msgid "No comments to display"
-msgstr ""
+msgstr "Нет комментариев для отображения"
 
 msgid "Could not find the server address"
 msgstr "Не удалось найти адрес сервера"
 
 msgid "Request timed out - please check your connection and try again"
-msgstr ""
+msgstr "Время ожидания истекло — проверьте подключение и повторите попытку"
 
 msgid "Network request failed"
-msgstr ""
+msgstr "Сетевой запрос не удался"
 
 msgid "The Z-library address may be wrong or no longer exist."
 msgstr "Возможно, адрес Z-library неверен или больше не существует."
 
 msgid "Network connection error - please check your internet connection and try again"
-msgstr ""
+msgstr "Ошибка сетевого подключения — проверьте интернет-соединение и повторите попытку"
 
 msgid "HTTP Error"
-msgstr ""
+msgstr "Ошибка HTTP"
 
 msgid "Unknown Status"
-msgstr ""
+msgstr "Неизвестный статус"
 
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
-msgstr ""
+msgstr "Адрес сервера Z-library (URL) не задан. Пожалуйста, укажите его в настройках плагина Z-library."
 
 msgid "Login failed: Empty response from server"
-msgstr ""
+msgstr "Ошибка входа: пустой ответ от сервера"
 
 msgid "Login failed: Invalid response format"
-msgstr ""
+msgstr "Ошибка входа: неверный формат ответа"
 
 msgid "Login failed"
-msgstr ""
+msgstr "Ошибка входа"
 
 msgid "Login failed: Invalid session data"
-msgstr ""
+msgstr "Ошибка входа: неверные данные сессии"
 
 msgid "Credentials rejected or invalid response"
-msgstr ""
+msgstr "Учётные данные отклонены или неверный ответ"
 
 msgid "No response received from server - please try again"
-msgstr ""
+msgstr "Нет ответа от сервера — повторите попытку"
 
 msgid "Invalid response format from server"
-msgstr ""
+msgstr "Неверный формат ответа от сервера"
 
 msgid "Search API error"
-msgstr ""
+msgstr "Ошибка API поиска"
 
 msgid "Failed to open target file"
-msgstr ""
+msgstr "Не удалось открыть целевой файл"
 
 msgid "Download limit reached or file is an HTML page"
-msgstr ""
+msgstr "Достигнут лимит загрузок или файл является HTML-страницей"
 
 msgid "Failed to save downloaded file"
 msgstr "Не удалось сохранить скачанный файл"
 
 msgid "Download HTTP Error"
-msgstr ""
+msgstr "Ошибка HTTP при загрузке"
 
 msgid "Z-library server URL not configured."
 msgstr "URL сервера Z-библиотеки не настроен."
@@ -438,43 +431,43 @@ msgid "Failed to process book details."
 msgstr "Не удалось обработать детали книги."
 
 msgid "Failed to fetch download link (no response body)."
-msgstr ""
+msgstr "Не удалось получить ссылку для скачивания (нет тела ответа)."
 
 msgid "Failed to parse download link response."
-msgstr ""
+msgstr "Не удалось разобрать ответ со ссылкой для скачивания."
 
 msgid "API returned an error for download link."
-msgstr ""
+msgstr "API вернул ошибку для ссылки скачивания."
 
 msgid "No download link provided in API response."
-msgstr ""
+msgstr "В ответе API нет ссылки для скачивания."
 
 msgid "Failed to fetch similar books (no response body)."
-msgstr ""
+msgstr "Не удалось получить похожие книги (нет тела ответа)."
 
 msgid "Failed to parse similar books response."
-msgstr ""
+msgstr "Не удалось разобрать ответ с похожими книгами."
 
 msgid "API returned an error for similar books."
-msgstr ""
+msgstr "API вернул ошибку для похожих книг."
 
 msgid "Failed to fetch downloaded books (no response body)."
-msgstr ""
+msgstr "Не удалось получить скачанные книги (нет тела ответа)."
 
 msgid "Failed to parse downloaded books response."
-msgstr ""
+msgstr "Не удалось разобрать ответ со скачанными книгами."
 
 msgid "API returned an error for downloaded books."
-msgstr ""
+msgstr "API вернул ошибку для скачанных книг."
 
 msgid "Failed to fetch favorite books (no response body)."
-msgstr ""
+msgstr "Не удалось получить избранные книги (нет тела ответа)."
 
 msgid "Failed to parse favorite books response."
-msgstr ""
+msgstr "Не удалось разобрать ответ с избранными книгами."
 
 msgid "API returned an error for favorite books."
-msgstr ""
+msgstr "API вернул ошибку для избранных книг."
 
 msgid "Failed to remove the book from downloaded (no response body)."
 msgstr "Не удалось удалить книгу из скачанных (нет тела ответа)."
@@ -486,88 +479,88 @@ msgid "API returned an error for remove from downloaded."
 msgstr "API вернул ошибку для удаления из скачанных."
 
 msgid "Failed to fetch unfavorite book (no response body)."
-msgstr ""
+msgstr "Не удалось удалить книгу из избранного (нет тела ответа)."
 
 msgid "Failed to parse unfavorite book response."
-msgstr ""
+msgstr "Не удалось разобрать ответ об удалении из избранного."
 
 msgid "API returned an error for unfavorite book."
-msgstr ""
+msgstr "API вернул ошибку при удалении из избранного."
 
 msgid "Failed to fetch download quota status (no response body)."
-msgstr ""
+msgstr "Не удалось получить статус лимита загрузок (нет тела ответа)."
 
 msgid "Failed to parse download quota status response."
-msgstr ""
+msgstr "Не удалось разобрать ответ о статусе лимита загрузок."
 
 msgid "API returned an error for download quota status."
-msgstr ""
+msgstr "API вернул ошибку для статуса лимита загрузок."
 
 msgid "Failed to fetch favorite-book IDs (no response body)."
-msgstr ""
+msgstr "Не удалось получить ID избранных книг (нет тела ответа)."
 
 msgid "Failed to parse favorite-book IDs."
-msgstr ""
+msgstr "Не удалось разобрать ID избранных книг."
 
 msgid "API returned an error for favorite-book IDs."
-msgstr ""
+msgstr "API вернул ошибку для ID избранных книг."
 
 msgid "Failed to fetch favorite book (no response body)."
-msgstr ""
+msgstr "Не удалось добавить книгу в избранное (нет тела ответа)."
 
 msgid "Failed to parse favorite book response."
-msgstr ""
+msgstr "Не удалось разобрать ответ о добавлении в избранное."
 
 msgid "API returned an error for favorite book."
-msgstr ""
+msgstr "API вернул ошибку при добавлении в избранное."
 
 msgid "Failed to fetch book comments (no response body)."
-msgstr ""
+msgstr "Не удалось получить комментарии к книге (нет тела ответа)."
 
 msgid "Failed to parse book comments response."
-msgstr ""
+msgstr "Не удалось разобрать ответ с комментариями к книге."
 
 msgid "API returned an error for book comments."
-msgstr ""
+msgstr "API вернул ошибку для комментариев к книге."
 
 msgid "Profile"
-msgstr ""
+msgstr "Профиль"
+
+msgid "No description available"
+msgstr "Описание отсутствует"
 
 msgid "pages"
-msgstr ""
+msgstr "страниц"
 
 msgid "Cover"
-msgstr ""
+msgstr "Обложка"
 
 msgid "More Similar Books"
-msgstr ""
+msgstr "Ещё похожие книги"
 
 msgid "Format"
-msgstr ""
+msgstr "Формат"
 
 msgid "Download book"
-msgstr ""
+msgstr "Скачать книгу"
 
 msgid "Refresh"
-msgstr ""
+msgstr "Обновить"
 
 msgid "Remove From Favorites"
-msgstr ""
+msgstr "Удалить из избранного"
 
 msgid "Add To Favorites"
-msgstr ""
+msgstr "Добавить в избранное"
 
 msgid "No Comments"
-msgstr ""
-
-msgid "No Description"
-msgstr ""
+msgstr "Нет комментариев"
 
 msgid "Best match"
-msgstr ""
+msgstr "По релевантности"
 
 msgid "Recently added"
-msgstr ""
+msgstr "Недавно добавленные"
 
 msgid "Title"
 msgstr "Название"
@@ -576,10 +569,10 @@ msgid "Year"
 msgstr "Год"
 
 msgid "File size"
-msgstr ""
+msgstr "Размер файла"
 
 msgid "Default"
-msgstr ""
+msgstr "По умолчанию"
 
 msgid "infinite"
 msgstr "бесконечно"
@@ -729,7 +722,7 @@ msgid "Please enter a search term."
 msgstr "Пожалуйста, введите поисковый запрос."
 
 msgid "Sort by"
-msgstr ""
+msgstr "Сортировать по"
 
 msgid "Unknown Title"
 msgstr "Неизвестное название"
@@ -763,22 +756,23 @@ msgstr "Открыть книгу"
 
 #, lua-format
 msgid "No %s found, please try again. Sometimes this requires a couple of retries."
-msgstr ""
+msgstr "%s не найдены, пожалуйста, повторите попытку. Иногда требуется несколько попыток."
 
 msgid "Z-library Similar Books"
-msgstr ""
+msgstr "Z-library: похожие книги"
 
 msgid "Book Details"
 msgstr "Детали книги"
 
-msgid "Retrying search for \""
-msgstr "Повторный поиск для \""
+#, lua-format
+msgid "Retrying search for \"%s\"..."
+msgstr "Повторный поиск для \"%s\"..."
 
 msgid "Request timed out"
-msgstr ""
+msgstr "Время ожидания истекло"
 
 msgid "Network connection error"
-msgstr ""
+msgstr "Ошибка сетевого подключения"
 
 #, lua-format
 msgid "%s failed due to a timeout%s. Would you like to retry?"
@@ -884,19 +878,28 @@ msgid "Timeout Settings"
 msgstr "Настройки таймаута"
 
 msgid "Email Address"
-msgstr ""
+msgstr "Адрес эл. почты"
 
 msgid "Password"
-msgstr ""
+msgstr "Пароль"
 
 msgid "Enter password"
-msgstr ""
+msgstr "Введите пароль"
 
 msgid "Please fill in all fields"
-msgstr ""
+msgstr "Пожалуйста, заполните все поля"
 
 msgid "Feature not implemented"
-msgstr ""
+msgstr "Функция не реализована"
+
+#~ msgid "Retrying search for \""
+#~ msgstr "Повторный поиск для \""
+
+#~ msgid "Searching for \""
+#~ msgstr "Поиск \""
+
+#~ msgid "No results found for \""
+#~ msgstr "Ничего не найдено для \""
 
 #~ msgid "Downloading…"
 #~ msgstr "Загрузка…"

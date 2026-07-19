@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 19:31+0000\n"
+"POT-Creation-Date: 2026-07-19 10:25+0200\n"
 "PO-Revision-Date: 2026-04-03 00:00+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
@@ -25,25 +25,25 @@ msgid "My books"
 msgstr "我的书籍"
 
 msgid "Operation failed, please retry."
-msgstr ""
+msgstr "操作失败，请重试。"
 
 msgid "Fetching domains..."
-msgstr ""
+msgstr "正在获取域名..."
 
 msgid "Successfully set base URL to: "
-msgstr ""
+msgstr "已成功设置基础URL为："
 
 msgid "Failed to find a working base URL."
 msgstr "未能找到可用的入口网址。"
 
 msgid "Queued"
-msgstr ""
+msgstr "排队中"
 
 msgid "Selection copied to clipboard."
-msgstr ""
+msgstr "已复制所选内容到剪贴板。"
 
 msgid "Checking"
-msgstr ""
+msgstr "检查中"
 
 msgid "Set base URL"
 msgstr "设置入口网址"
@@ -52,7 +52,7 @@ msgid "Invalid Base URL."
 msgstr "入口网址无效。"
 
 msgid "Failed"
-msgstr ""
+msgstr "失败"
 
 msgid "Unknown error"
 msgstr "未知错误"
@@ -61,22 +61,22 @@ msgid "Searching for working Z-library server..."
 msgstr "正在搜索可用的 Z-library 服务器..."
 
 msgid "Current Base URL:"
-msgstr ""
+msgstr "当前基础URL："
 
 msgid "Mirror site redirected to: "
-msgstr ""
+msgstr "镜像站点已重定向至："
 
 msgid "Auto-discover base URL"
 msgstr "自动发现入口网址"
 
 msgid "Network unavailable."
-msgstr ""
+msgstr "网络不可用。"
 
 msgid "Discovery is already running..."
-msgstr ""
+msgstr "检测已在进行中..."
 
 msgid "Refresh Dynamic Domains"
-msgstr ""
+msgstr "刷新动态域名"
 
 msgid "Back"
 msgstr "返回"
@@ -85,7 +85,7 @@ msgid "Settings"
 msgstr "设置"
 
 msgid "Set credentials"
-msgstr ""
+msgstr "设置账号信息"
 
 msgid "Login successful!"
 msgstr "登录成功！"
@@ -97,19 +97,19 @@ msgid "Set download directory"
 msgstr "设置下载目录"
 
 msgid "View Settings"
-msgstr ""
+msgstr "视图设置"
 
 msgid "Search Covers"
-msgstr ""
+msgstr "搜索封面"
 
 msgid "Search Items/Page"
-msgstr ""
+msgstr "搜索每页条目"
 
 msgid "Browse Covers"
-msgstr ""
+msgstr "浏览封面"
 
 msgid "Browse Items/Page"
-msgstr ""
+msgstr "浏览每页条目"
 
 msgid "Search options"
 msgstr "搜索选项"
@@ -146,15 +146,6 @@ msgstr "清除运行时缓存"
 
 msgid "Runtime cache cleared."
 msgstr "运行时缓存已清除。"
-
-msgid "Test mode"
-msgstr "测试模式"
-
-msgid "Test mode disabled. Normal download behavior restored."
-msgstr "测试模式已关闭。已恢复正常下载行为。"
-
-msgid "Test mode enabled. Downloads will always succeed."
-msgstr "测试模式已开启。下载将始终成功。"
 
 msgid "Search"
 msgstr "搜索"
@@ -285,11 +276,13 @@ msgstr "正在登录..."
 msgid "Login"
 msgstr "登录"
 
-msgid "Searching for \""
-msgstr "正在搜索\""
+#, lua-format
+msgid "Searching for \"%s\"..."
+msgstr "正在搜索\"%s\"..."
 
-msgid "No results found for \""
-msgstr "未找到\""
+#, lua-format
+msgid "No results found for \"%s\"."
+msgstr "未找到\"%s\"."
 
 #, lua-format
 msgid "Loading more results (Page %s)..."
@@ -531,10 +524,13 @@ msgid "API returned an error for book comments."
 msgstr "获取书籍评论出错。"
 
 msgid "Profile"
-msgstr ""
+msgstr "个人资料"
+
+msgid "No description available"
+msgstr "暂无简介"
 
 msgid "pages"
-msgstr ""
+msgstr "页"
 
 msgid "Cover"
 msgstr "封面"
@@ -543,13 +539,13 @@ msgid "More Similar Books"
 msgstr "更多相似书籍"
 
 msgid "Format"
-msgstr ""
+msgstr "格式"
 
 msgid "Download book"
-msgstr ""
+msgstr "下载书籍"
 
 msgid "Refresh"
-msgstr ""
+msgstr "刷新"
 
 msgid "Remove From Favorites"
 msgstr "从收藏夹移除"
@@ -558,10 +554,7 @@ msgid "Add To Favorites"
 msgstr "添加到收藏夹"
 
 msgid "No Comments"
-msgstr ""
-
-msgid "No Description"
-msgstr ""
+msgstr "暂无评论"
 
 msgid "Best match"
 msgstr "最佳匹配"
@@ -763,7 +756,7 @@ msgstr "打开书籍"
 
 #, lua-format
 msgid "No %s found, please try again. Sometimes this requires a couple of retries."
-msgstr ""
+msgstr "未找到%s，请重试。有时需要多试几次。"
 
 msgid "Z-library Similar Books"
 msgstr "Z-library 相似书籍"
@@ -771,8 +764,9 @@ msgstr "Z-library 相似书籍"
 msgid "Book Details"
 msgstr "书籍详情"
 
-msgid "Retrying search for \""
-msgstr "正在重试搜索\""
+#, lua-format
+msgid "Retrying search for \"%s\"..."
+msgstr "正在重试搜索\"%s\"..."
 
 msgid "Request timed out"
 msgstr "请求超时"
@@ -884,19 +878,37 @@ msgid "Timeout Settings"
 msgstr "超时设置"
 
 msgid "Email Address"
-msgstr ""
+msgstr "电子邮箱"
 
 msgid "Password"
-msgstr ""
+msgstr "密码"
 
 msgid "Enter password"
-msgstr ""
+msgstr "输入密码"
 
 msgid "Please fill in all fields"
-msgstr ""
+msgstr "请填写所有字段"
 
 msgid "Feature not implemented"
-msgstr ""
+msgstr "功能尚未实现"
+
+#~ msgid "Retrying search for \""
+#~ msgstr "正在重试搜索\""
+
+#~ msgid "Searching for \""
+#~ msgstr "正在搜索\""
+
+#~ msgid "No results found for \""
+#~ msgstr "未找到\""
+
+#~ msgid "Test mode"
+#~ msgstr "测试模式"
+
+#~ msgid "Test mode disabled. Normal download behavior restored."
+#~ msgstr "测试模式已关闭。已恢复正常下载行为。"
+
+#~ msgid "Test mode enabled. Downloads will always succeed."
+#~ msgstr "测试模式已开启。下载将始终成功。"
 
 #~ msgid "unfavorite book"
 #~ msgstr "取消收藏"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 19:31+0000\n"
+"POT-Creation-Date: 2026-07-19 10:25+0200\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -91,7 +91,7 @@ msgid "Settings"
 msgstr "Настройки"
 
 msgid "Set credentials"
-msgstr ""
+msgstr "Задаване на данни за вход"
 
 msgid "Login successful!"
 msgstr "Успешно влизане!"
@@ -103,19 +103,19 @@ msgid "Set download directory"
 msgstr "Задаване на папка за изтегляне"
 
 msgid "View Settings"
-msgstr ""
+msgstr "Настройки на изгледа"
 
 msgid "Search Covers"
-msgstr ""
+msgstr "Корици при търсене"
 
 msgid "Search Items/Page"
-msgstr ""
+msgstr "Търсене: резултати/стр."
 
 msgid "Browse Covers"
-msgstr ""
+msgstr "Корици при разглеждане"
 
 msgid "Browse Items/Page"
-msgstr ""
+msgstr "Разглеждане: резултати/стр."
 
 msgid "Search options"
 msgstr "Настройки за търсене"
@@ -152,15 +152,6 @@ msgstr "Изчистване на кеша"
 
 msgid "Runtime cache cleared."
 msgstr "Кешът е изчистен."
-
-msgid "Test mode"
-msgstr "Тестов режим"
-
-msgid "Test mode disabled. Normal download behavior restored."
-msgstr "Тестовият режим е изключен. Нормалното изтегляне е възстановено."
-
-msgid "Test mode enabled. Downloads will always succeed."
-msgstr "Тестовият режим е включен. Изтеглянията винаги ще успяват."
 
 msgid "Search"
 msgstr "Търсене"
@@ -291,11 +282,13 @@ msgstr "Влизане..."
 msgid "Login"
 msgstr "Влизане"
 
-msgid "Searching for \""
-msgstr "Търсене на \""
+#, lua-format
+msgid "Searching for \"%s\"..."
+msgstr "Търсене на \"%s\"..."
 
-msgid "No results found for \""
-msgstr "Няма намерени резултати за \""
+#, lua-format
+msgid "No results found for \"%s\"."
+msgstr "Няма намерени резултати за \"%s\"."
 
 #, lua-format
 msgid "Loading more results (Page %s)..."
@@ -537,10 +530,13 @@ msgid "API returned an error for book comments."
 msgstr "API върна грешка за коментарите на книгата."
 
 msgid "Profile"
-msgstr ""
+msgstr "Профил"
+
+msgid "No description available"
+msgstr "Няма налично описание"
 
 msgid "pages"
-msgstr ""
+msgstr "страници"
 
 msgid "Cover"
 msgstr "Корица"
@@ -549,13 +545,13 @@ msgid "More Similar Books"
 msgstr "Още подобни книги"
 
 msgid "Format"
-msgstr ""
+msgstr "Формат"
 
 msgid "Download book"
-msgstr ""
+msgstr "Изтегляне на книга"
 
 msgid "Refresh"
-msgstr ""
+msgstr "Обновяване"
 
 msgid "Remove From Favorites"
 msgstr "Премахване от любими"
@@ -564,10 +560,7 @@ msgid "Add To Favorites"
 msgstr "Добавяне към любими"
 
 msgid "No Comments"
-msgstr ""
-
-msgid "No Description"
-msgstr ""
+msgstr "Няма коментари"
 
 msgid "Best match"
 msgstr "Най-добро съвпадение"
@@ -769,7 +762,7 @@ msgstr "Отваряне на книга"
 
 #, lua-format
 msgid "No %s found, please try again. Sometimes this requires a couple of retries."
-msgstr ""
+msgstr "Не са намерени %s, опитайте отново. Понякога са нужни няколко опита."
 
 msgid "Z-library Similar Books"
 msgstr "Подобни книги от Z-library"
@@ -777,8 +770,9 @@ msgstr "Подобни книги от Z-library"
 msgid "Book Details"
 msgstr "Детайли за книгата"
 
-msgid "Retrying search for \""
-msgstr "Повторен опит за търсене на \""
+#, lua-format
+msgid "Retrying search for \"%s\"..."
+msgstr "Повторен опит за търсене на \"%s\"..."
 
 msgid "Request timed out"
 msgstr "Заявката изтече"
@@ -890,19 +884,37 @@ msgid "Timeout Settings"
 msgstr "Настройки за таймаут"
 
 msgid "Email Address"
-msgstr ""
+msgstr "Имейл адрес"
 
 msgid "Password"
-msgstr ""
+msgstr "Парола"
 
 msgid "Enter password"
-msgstr ""
+msgstr "Въведете парола"
 
 msgid "Please fill in all fields"
-msgstr ""
+msgstr "Попълнете всички полета"
 
 msgid "Feature not implemented"
-msgstr ""
+msgstr "Функцията не е реализирана"
+
+#~ msgid "Retrying search for \""
+#~ msgstr "Повторен опит за търсене на \""
+
+#~ msgid "Searching for \""
+#~ msgstr "Търсене на \""
+
+#~ msgid "No results found for \""
+#~ msgstr "Няма намерени резултати за \""
+
+#~ msgid "Test mode"
+#~ msgstr "Тестов режим"
+
+#~ msgid "Test mode disabled. Normal download behavior restored."
+#~ msgstr "Тестовият режим е изключен. Нормалното изтегляне е възстановено."
+
+#~ msgid "Test mode enabled. Downloads will always succeed."
+#~ msgstr "Тестовият режим е включен. Изтеглянията винаги ще успяват."
 
 #~ msgid "unfavorite book"
 #~ msgstr "премахване от любими"

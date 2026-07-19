@@ -636,7 +636,7 @@ end
 
 function Ui.showSearchErrorDialog(err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page, loading_msg_to_close, original_on_success, original_on_error)
     local retry_callback = function()
-        local new_loading_msg = Ui.showLoadingMessage(T("Retrying search for \"") .. query .. "\"...")
+        local new_loading_msg = Ui.showLoadingMessage(string.format(T("Retrying search for \"%s\"..."), query))
         local retry_task = function()
             return Api.search(query, user_session.user_id, user_session.user_key, selected_languages, selected_extensions, selected_order, current_page)
         end
@@ -649,10 +649,27 @@ function Ui.showSearchErrorDialog(err_msg, query, user_session, selected_languag
         original_on_error(err)
     end
     
-    Ui.showRetryErrorDialog(err_msg, T("Search"), retry_callback, cancel_callback, loading_msg_to_close)
+    -- "Book search", not "Search": this names an operation in the retry dialog and the timeout
+    -- menu, so it has to be a noun. KOReader's "Search" is a button imperative, and the shim
+    -- would hand us that instead of ours -- see the msgid comment in showRetryErrorDialog.
+    Ui.showRetryErrorDialog(err_msg, T("Book search"), retry_callback, cancel_callback, loading_msg_to_close, "search")
 end
 
-function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel_callback, loading_msg_to_close)
+-- Operations carry a stable, untranslated key. The timeout hint used to be picked by
+-- matching English literals ("search", "login") against operation_name, which is already
+-- translated -- so outside English nothing ever matched and the hint silently vanished.
+local TIMEOUT_GETTERS = {
+    search       = Config.getSearchTimeout,
+    login        = Config.getLoginTimeout,
+    recommended  = Config.getRecommendedTimeout,
+    popular      = Config.getPopularTimeout,
+    cover        = Config.getCoverTimeout,
+    download     = Config.getDownloadTimeout,
+    book_details = Config.getBookDetailsTimeout,
+    comments     = Config.getBookCommentsTimeout,
+}
+
+function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel_callback, loading_msg_to_close, operation_key)
     local error_string = tostring(err_msg)
     
 
@@ -671,38 +688,24 @@ function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel
     if is_http_400 or is_timeout or is_network_error or is_dns_error then
         local retry_message
         if is_timeout then
-            -- Get timeout info to show to user
             local timeout_info = ""
-            local operation_lower = string.lower(tostring(operation_name))
-            if string.find(operation_lower, "search") then
-                local search_timeout = Config.getSearchTimeout()
-                timeout_info = string.format(" (%ds)", search_timeout[1])
-            elseif string.find(operation_lower, "login") then
-                local login_timeout = Config.getLoginTimeout()
-                timeout_info = string.format(" (%ds)", login_timeout[1])
-            elseif string.find(operation_lower, "recommend") then
-                local rec_timeout = Config.getRecommendedTimeout()
-                timeout_info = string.format(" (%ds)", rec_timeout[1])
-            elseif string.find(operation_lower, "popular") then
-                local pop_timeout = Config.getPopularTimeout()
-                timeout_info = string.format(" (%ds)", pop_timeout[1])
-            elseif string.find(operation_lower, "cover") then
-                local cover_timeout = Config.getCoverTimeout()
-                timeout_info = string.format(" (%ds)", cover_timeout[1])
-            elseif string.find(operation_lower, "download") then
-                local download_timeout = Config.getDownloadTimeout()
-                timeout_info = string.format(" (%ds)", download_timeout[1])
-            elseif string.find(operation_lower, "book") or string.find(operation_lower, "details") then
-                local book_timeout = Config.getBookDetailsTimeout()
-                timeout_info = string.format(" (%ds)", book_timeout[1])
+            local timeout_getter = operation_key and TIMEOUT_GETTERS[operation_key]
+            if timeout_getter then
+                timeout_info = string.format(" (%ds)", timeout_getter()[1])
             end
-            retry_message = string.format(T("%s failed due to a timeout%s. Would you like to retry?"), operation_name, timeout_info)
+            -- Impersonal on purpose. These used to read "%s failed …", putting the operation
+            -- name in subject position, where the predicate has to agree with it. Half the
+            -- names are plural ("Comments", "Book details", "Popular books"), so ten of the
+            -- fourteen locales disagreed: "Kommentare ist fehlgeschlagen", "Commentaires a
+            -- échoué", "Komentarze nie powiodło się". No noun can fix that -- the frame has
+            -- to stop making the name a subject.
+            retry_message = string.format(T("Could not complete \"%s\" due to a timeout%s. Would you like to retry?"), operation_name, timeout_info)
         elseif is_dns_error then
-            retry_message = string.format(T("%s failed because the server address could not be found. Would you like to retry?"), operation_name)
+            retry_message = string.format(T("Could not complete \"%s\" because the server address could not be found. Would you like to retry?"), operation_name)
         elseif is_network_error then
-            retry_message = string.format(T("%s failed due to a network error. Would you like to retry?"), operation_name)
+            retry_message = string.format(T("Could not complete \"%s\" due to a network error. Would you like to retry?"), operation_name)
         else
-            retry_message = string.format(T("%s failed due to a temporary issue. Would you like to retry?"), operation_name)
+            retry_message = string.format(T("Could not complete \"%s\" due to a temporary issue. Would you like to retry?"), operation_name)
         end
         
         if _plugin_instance and _plugin_instance.dialog_manager then
@@ -825,7 +828,8 @@ function Ui.showTimeoutConfigDialog(parent_ui, timeout_name, timeout_key, getter
     
     table.insert(dialog_items, {
         text = T("Reset to defaults"),
-        mandatory = "\u{1F5D8}",
+        -- U+1F5D8 is in no font KOReader bundles; F021 is the refresh glyph used elsewhere.
+        mandatory = "\u{F021}",
         callback = function()
             if _plugin_instance and _plugin_instance.dialog_manager then
                 _plugin_instance.dialog_manager:showConfirmDialog({
@@ -882,7 +886,7 @@ function Ui.showAllTimeoutConfigDialog(parent_ui)
                 return Config.formatTimeoutForDisplay(Config.getLoginTimeout())
             end,
             callback = function()
-                Ui.showTimeoutConfigDialog(parent_ui, T("Login"), Config.SETTINGS_TIMEOUT_LOGIN_KEY, 
+                Ui.showTimeoutConfigDialog(parent_ui, T("Sign-in"), Config.SETTINGS_TIMEOUT_LOGIN_KEY, 
                     Config.getLoginTimeout, Config.setLoginTimeout, refreshMainDialog)
             end
         },
@@ -892,7 +896,7 @@ function Ui.showAllTimeoutConfigDialog(parent_ui)
                 return Config.formatTimeoutForDisplay(Config.getSearchTimeout())
             end,
             callback = function()
-                Ui.showTimeoutConfigDialog(parent_ui, T("Search"), Config.SETTINGS_TIMEOUT_SEARCH_KEY,
+                Ui.showTimeoutConfigDialog(parent_ui, T("Book search"), Config.SETTINGS_TIMEOUT_SEARCH_KEY,
                     Config.getSearchTimeout, Config.setSearchTimeout, refreshMainDialog)
             end
         },
@@ -932,7 +936,7 @@ function Ui.showAllTimeoutConfigDialog(parent_ui)
                 return Config.formatTimeoutForDisplay(Config.getDownloadTimeout())
             end,
             callback = function()
-                Ui.showTimeoutConfigDialog(parent_ui, T("Download"), Config.SETTINGS_TIMEOUT_DOWNLOAD_KEY,
+                Ui.showTimeoutConfigDialog(parent_ui, T("Book download"), Config.SETTINGS_TIMEOUT_DOWNLOAD_KEY,
                     Config.getDownloadTimeout, Config.setDownloadTimeout, refreshMainDialog)
             end
         },

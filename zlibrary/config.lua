@@ -44,6 +44,15 @@ Config.SEARCH_RESULTS_LIMIT = 30
 -- "no total limit") so the block value is the one that governs a stall; a block larger than total is
 -- capped by total and never takes effect.
 Config.TIMEOUT_LOGIN = { 10, 15 }        -- Login operations
+-- Keep the block timeouts generous. They are the deadline for a request that has produced no data
+-- at all, and that is also what decides whether retry_on_stall (api.lua) fires -- so a tight value
+-- does double damage on a poor connection: it cuts off requests that were merely slow to arrive,
+-- and then mistakes them for a stalled server and retries, doubling the wait and the load.
+--
+-- The measurements these were checked against came from a fibre connection, where transfer time was
+-- 1-4ms and the whole wait was the server thinking, so they say nothing about someone whose network
+-- adds handshake round-trips of its own. Fifteen seconds without a single byte is genuinely stuck
+-- almost anywhere; ten is not. Users who want to fail faster can lower these in the settings.
 Config.TIMEOUT_SEARCH = { 15, 15 }       -- Search operations
 Config.TIMEOUT_BOOK_DETAILS = { 15, 15 } -- Book details operations
 Config.TIMEOUT_RECOMMENDED = { 15, 30 }  -- Recommended books operations
@@ -549,14 +558,6 @@ end
 
 function Config.setTurnOffWifiAfterDownload(turn_off)
     Config.saveSetting(Config.SETTINGS_TURN_OFF_WIFI_AFTER_DOWNLOAD_KEY, turn_off)
-end
-
-function Config.isTestModeEnabled()
-    return Config.getSetting("zlibrary_test_mode", false)
-end
-
-function Config.setTestMode(enabled)
-    Config.saveSetting("zlibrary_test_mode", enabled)
 end
 
 -- Timeout configuration functions

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 13:38+0200\n"
+"POT-Creation-Date: 2026-07-19 14:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -781,20 +781,20 @@ msgid "Network connection error"
 msgstr "ネットワーク接続エラー"
 
 #, lua-format
-msgid "%s failed due to a timeout%s. Would you like to retry?"
-msgstr "%sがタイムアウト%sのため失敗しました。再試行しますか？"
+msgid "Could not complete \"%s\" due to a timeout%s. Would you like to retry?"
+msgstr "「%s」はタイムアウト%sのため完了できませんでした。再試行しますか？"
 
 #, lua-format
-msgid "%s failed because the server address could not be found. Would you like to retry?"
-msgstr "%sはサーバーアドレスが見つからなかったため失敗しました。再試行しますか？"
+msgid "Could not complete \"%s\" because the server address could not be found. Would you like to retry?"
+msgstr "「%s」はサーバーアドレスが見つからないため完了できませんでした。再試行しますか？"
 
 #, lua-format
-msgid "%s failed due to a network error. Would you like to retry?"
-msgstr "%sがネットワークエラーのため失敗しました。再試行しますか？"
+msgid "Could not complete \"%s\" due to a network error. Would you like to retry?"
+msgstr "「%s」はネットワークエラーのため完了できませんでした。再試行しますか？"
 
 #, lua-format
-msgid "%s failed due to a temporary issue. Would you like to retry?"
-msgstr "%sが一時的な問題のため失敗しました。再試行しますか？"
+msgid "Could not complete \"%s\" due to a temporary issue. Would you like to retry?"
+msgstr "「%s」は一時的な問題のため完了できませんでした。再試行しますか？"
 
 msgid "Retry"
 msgstr "再試行"
@@ -897,6 +897,22 @@ msgstr "すべての項目を入力してください"
 
 msgid "Feature not implemented"
 msgstr "この機能は未実装です"
+
+#, lua-format
+#~ msgid "%s failed due to a timeout%s. Would you like to retry?"
+#~ msgstr "%sがタイムアウト%sのため失敗しました。再試行しますか？"
+
+#, lua-format
+#~ msgid "%s failed because the server address could not be found. Would you like to retry?"
+#~ msgstr "%sはサーバーアドレスが見つからなかったため失敗しました。再試行しますか？"
+
+#, lua-format
+#~ msgid "%s failed due to a network error. Would you like to retry?"
+#~ msgstr "%sがネットワークエラーのため失敗しました。再試行しますか？"
+
+#, lua-format
+#~ msgid "%s failed due to a temporary issue. Would you like to retry?"
+#~ msgstr "%sが一時的な問題のため失敗しました。再試行しますか？"
 
 #~ msgid "Login"
 #~ msgstr "ログイン"

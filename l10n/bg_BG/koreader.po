@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 13:38+0200\n"
+"POT-Creation-Date: 2026-07-19 14:00+0200\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -787,20 +787,20 @@ msgid "Network connection error"
 msgstr "Грешка в мрежовата връзка"
 
 #, lua-format
-msgid "%s failed due to a timeout%s. Would you like to retry?"
-msgstr "%s неуспешно поради изтекло време%s. Желаете ли да опитате отново?"
+msgid "Could not complete \"%s\" due to a timeout%s. Would you like to retry?"
+msgstr "Заявката „%s“ е неуспешна поради изтичане на времето%s. Искате ли да опитате отново?"
 
 #, lua-format
-msgid "%s failed because the server address could not be found. Would you like to retry?"
-msgstr "%s неуспешно, защото адресът на сървъра не беше намерен. Желаете ли да опитате отново?"
+msgid "Could not complete \"%s\" because the server address could not be found. Would you like to retry?"
+msgstr "Заявката „%s“ е неуспешна, защото адресът на сървъра не беше намерен. Искате ли да опитате отново?"
 
 #, lua-format
-msgid "%s failed due to a network error. Would you like to retry?"
-msgstr "%s неуспешно поради мрежова грешка. Желаете ли да опитате отново?"
+msgid "Could not complete \"%s\" due to a network error. Would you like to retry?"
+msgstr "Заявката „%s“ е неуспешна поради мрежова грешка. Искате ли да опитате отново?"
 
 #, lua-format
-msgid "%s failed due to a temporary issue. Would you like to retry?"
-msgstr "%s неуспешно поради временен проблем. Желаете ли да опитате отново?"
+msgid "Could not complete \"%s\" due to a temporary issue. Would you like to retry?"
+msgstr "Заявката „%s“ е неуспешна поради временен проблем. Искате ли да опитате отново?"
 
 msgid "Retry"
 msgstr "Повторен опит"
@@ -903,6 +903,22 @@ msgstr "Попълнете всички полета"
 
 msgid "Feature not implemented"
 msgstr "Функцията не е реализирана"
+
+#, lua-format
+#~ msgid "%s failed due to a timeout%s. Would you like to retry?"
+#~ msgstr "%s неуспешно поради изтекло време%s. Желаете ли да опитате отново?"
+
+#, lua-format
+#~ msgid "%s failed because the server address could not be found. Would you like to retry?"
+#~ msgstr "%s неуспешно, защото адресът на сървъра не беше намерен. Желаете ли да опитате отново?"
+
+#, lua-format
+#~ msgid "%s failed due to a network error. Would you like to retry?"
+#~ msgstr "%s неуспешно поради мрежова грешка. Желаете ли да опитате отново?"
+
+#, lua-format
+#~ msgid "%s failed due to a temporary issue. Would you like to retry?"
+#~ msgstr "%s неуспешно поради временен проблем. Желаете ли да опитате отново?"
 
 #~ msgid "Login"
 #~ msgstr "Влизане"

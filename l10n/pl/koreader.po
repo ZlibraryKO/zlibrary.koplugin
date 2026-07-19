@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 13:38+0200\n"
+"POT-Creation-Date: 2026-07-19 14:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -781,20 +781,20 @@ msgid "Network connection error"
 msgstr "Błąd połączenia sieciowego"
 
 #, lua-format
-msgid "%s failed due to a timeout%s. Would you like to retry?"
-msgstr "%s nie powiodło się z powodu przekroczenia limitu czasu%s. Czy chcesz spróbować ponownie?"
+msgid "Could not complete \"%s\" due to a timeout%s. Would you like to retry?"
+msgstr "Nie udało się wykonać: „%s”. Przekroczono limit czasu%s. Czy spróbować ponownie?"
 
 #, lua-format
-msgid "%s failed because the server address could not be found. Would you like to retry?"
-msgstr "%s nie powiodło się, ponieważ nie znaleziono adresu serwera. Czy chcesz spróbować ponownie?"
+msgid "Could not complete \"%s\" because the server address could not be found. Would you like to retry?"
+msgstr "Nie udało się wykonać: „%s”. Nie znaleziono adresu serwera. Czy spróbować ponownie?"
 
 #, lua-format
-msgid "%s failed due to a network error. Would you like to retry?"
-msgstr "%s nie powiodło się z powodu błędu sieci. Czy chcesz spróbować ponownie?"
+msgid "Could not complete \"%s\" due to a network error. Would you like to retry?"
+msgstr "Nie udało się wykonać: „%s”. Wystąpił błąd sieci. Czy spróbować ponownie?"
 
 #, lua-format
-msgid "%s failed due to a temporary issue. Would you like to retry?"
-msgstr "%s nie powiodło się z powodu tymczasowego problemu. Czy chcesz spróbować ponownie?"
+msgid "Could not complete \"%s\" due to a temporary issue. Would you like to retry?"
+msgstr "Nie udało się wykonać: „%s”. Wystąpił tymczasowy problem. Czy spróbować ponownie?"
 
 msgid "Retry"
 msgstr "Spróbuj ponownie"
@@ -897,6 +897,22 @@ msgstr "Wypełnij wszystkie pola"
 
 msgid "Feature not implemented"
 msgstr "Funkcja niedostępna"
+
+#, lua-format
+#~ msgid "%s failed due to a timeout%s. Would you like to retry?"
+#~ msgstr "%s nie powiodło się z powodu przekroczenia limitu czasu%s. Czy chcesz spróbować ponownie?"
+
+#, lua-format
+#~ msgid "%s failed because the server address could not be found. Would you like to retry?"
+#~ msgstr "%s nie powiodło się, ponieważ nie znaleziono adresu serwera. Czy chcesz spróbować ponownie?"
+
+#, lua-format
+#~ msgid "%s failed due to a network error. Would you like to retry?"
+#~ msgstr "%s nie powiodło się z powodu błędu sieci. Czy chcesz spróbować ponownie?"
+
+#, lua-format
+#~ msgid "%s failed due to a temporary issue. Would you like to retry?"
+#~ msgstr "%s nie powiodło się z powodu tymczasowego problemu. Czy chcesz spróbować ponownie?"
 
 #~ msgid "Login"
 #~ msgstr "Logowanie"

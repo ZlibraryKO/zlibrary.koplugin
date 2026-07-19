@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 13:38+0200\n"
+"POT-Creation-Date: 2026-07-19 14:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -781,20 +781,20 @@ msgid "Network connection error"
 msgstr "خطأ في اتصال الشبكة"
 
 #, lua-format
-msgid "%s failed due to a timeout%s. Would you like to retry?"
-msgstr "فشل %s بسبب انتهاء المهلة الزمنية%s. هل تريد المحاولة مرة أخرى؟"
+msgid "Could not complete \"%s\" due to a timeout%s. Would you like to retry?"
+msgstr "تعذر إكمال \"%s\" بسبب انتهاء المهلة الزمنية%s. هل تريد المحاولة مرة أخرى؟"
 
 #, lua-format
-msgid "%s failed because the server address could not be found. Would you like to retry?"
-msgstr "فشل %s بسبب تعذر العثور على عنوان الخادم. هل تريد المحاولة مرة أخرى؟"
+msgid "Could not complete \"%s\" because the server address could not be found. Would you like to retry?"
+msgstr "تعذر إكمال \"%s\" بسبب عدم العثور على عنوان الخادم. هل تريد المحاولة مرة أخرى؟"
 
 #, lua-format
-msgid "%s failed due to a network error. Would you like to retry?"
-msgstr "فشل %s بسبب خطأ في الشبكة. هل تريد المحاولة مرة أخرى؟"
+msgid "Could not complete \"%s\" due to a network error. Would you like to retry?"
+msgstr "تعذر إكمال \"%s\" بسبب خطأ في الشبكة. هل تريد المحاولة مرة أخرى؟"
 
 #, lua-format
-msgid "%s failed due to a temporary issue. Would you like to retry?"
-msgstr "فشل %s بسبب مشكلة مؤقتة. هل تريد المحاولة مرة أخرى؟"
+msgid "Could not complete \"%s\" due to a temporary issue. Would you like to retry?"
+msgstr "تعذر إكمال \"%s\" بسبب مشكلة مؤقتة. هل تريد المحاولة مرة أخرى؟"
 
 msgid "Retry"
 msgstr "إعادة المحاولة"
@@ -897,6 +897,22 @@ msgstr "يرجى ملء جميع الحقول"
 
 msgid "Feature not implemented"
 msgstr "الميزة غير متوفرة"
+
+#, lua-format
+#~ msgid "%s failed due to a timeout%s. Would you like to retry?"
+#~ msgstr "فشل %s بسبب انتهاء المهلة الزمنية%s. هل تريد المحاولة مرة أخرى؟"
+
+#, lua-format
+#~ msgid "%s failed because the server address could not be found. Would you like to retry?"
+#~ msgstr "فشل %s بسبب تعذر العثور على عنوان الخادم. هل تريد المحاولة مرة أخرى؟"
+
+#, lua-format
+#~ msgid "%s failed due to a network error. Would you like to retry?"
+#~ msgstr "فشل %s بسبب خطأ في الشبكة. هل تريد المحاولة مرة أخرى؟"
+
+#, lua-format
+#~ msgid "%s failed due to a temporary issue. Would you like to retry?"
+#~ msgstr "فشل %s بسبب مشكلة مؤقتة. هل تريد المحاولة مرة أخرى؟"
 
 #~ msgid "Login"
 #~ msgstr "تسجيل الدخول"

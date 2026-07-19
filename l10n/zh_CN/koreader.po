@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 13:38+0200\n"
+"POT-Creation-Date: 2026-07-19 14:00+0200\n"
 "PO-Revision-Date: 2026-04-03 00:00+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
@@ -781,20 +781,20 @@ msgid "Network connection error"
 msgstr "网络连接错误"
 
 #, lua-format
-msgid "%s failed due to a timeout%s. Would you like to retry?"
-msgstr "%s因超时%s失败。您要重试吗？"
+msgid "Could not complete \"%s\" due to a timeout%s. Would you like to retry?"
+msgstr "无法完成“%s”：请求超时%s。是否重试？"
 
 #, lua-format
-msgid "%s failed because the server address could not be found. Would you like to retry?"
-msgstr "%s因找不到服务器地址失败。您要重试吗？"
+msgid "Could not complete \"%s\" because the server address could not be found. Would you like to retry?"
+msgstr "无法完成“%s”：找不到服务器地址。是否重试？"
 
 #, lua-format
-msgid "%s failed due to a network error. Would you like to retry?"
-msgstr "%s因网络错误失败。您要重试吗？"
+msgid "Could not complete \"%s\" due to a network error. Would you like to retry?"
+msgstr "无法完成“%s”：网络错误。是否重试？"
 
 #, lua-format
-msgid "%s failed due to a temporary issue. Would you like to retry?"
-msgstr "%s因临时问题失败。您要重试吗？"
+msgid "Could not complete \"%s\" due to a temporary issue. Would you like to retry?"
+msgstr "无法完成“%s”：出现临时问题。是否重试？"
 
 msgid "Retry"
 msgstr "重试"
@@ -897,6 +897,22 @@ msgstr "请填写所有字段"
 
 msgid "Feature not implemented"
 msgstr "功能尚未实现"
+
+#, lua-format
+#~ msgid "%s failed due to a timeout%s. Would you like to retry?"
+#~ msgstr "%s因超时%s失败。您要重试吗？"
+
+#, lua-format
+#~ msgid "%s failed because the server address could not be found. Would you like to retry?"
+#~ msgstr "%s因找不到服务器地址失败。您要重试吗？"
+
+#, lua-format
+#~ msgid "%s failed due to a network error. Would you like to retry?"
+#~ msgstr "%s因网络错误失败。您要重试吗？"
+
+#, lua-format
+#~ msgid "%s failed due to a temporary issue. Would you like to retry?"
+#~ msgstr "%s因临时问题失败。您要重试吗？"
 
 #~ msgid "Login"
 #~ msgstr "登录"

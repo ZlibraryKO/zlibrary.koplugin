@@ -649,8 +649,9 @@ function Ui.showSearchErrorDialog(err_msg, query, user_session, selected_languag
         original_on_error(err)
     end
     
-    -- "Book search", not "Search": this heads a sentence ("%s failed due to a timeout"),
-    -- and the bare verb KOReader supplies for "Search" cannot be a subject in every language.
+    -- "Book search", not "Search": this names an operation in the retry dialog and the timeout
+    -- menu, so it has to be a noun. KOReader's "Search" is a button imperative, and the shim
+    -- would hand us that instead of ours -- see the msgid comment in showRetryErrorDialog.
     Ui.showRetryErrorDialog(err_msg, T("Book search"), retry_callback, cancel_callback, loading_msg_to_close, "search")
 end
 
@@ -692,13 +693,19 @@ function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel
             if timeout_getter then
                 timeout_info = string.format(" (%ds)", timeout_getter()[1])
             end
-            retry_message = string.format(T("%s failed due to a timeout%s. Would you like to retry?"), operation_name, timeout_info)
+            -- Impersonal on purpose. These used to read "%s failed …", putting the operation
+            -- name in subject position, where the predicate has to agree with it. Half the
+            -- names are plural ("Comments", "Book details", "Popular books"), so ten of the
+            -- fourteen locales disagreed: "Kommentare ist fehlgeschlagen", "Commentaires a
+            -- échoué", "Komentarze nie powiodło się". No noun can fix that -- the frame has
+            -- to stop making the name a subject.
+            retry_message = string.format(T("Could not complete \"%s\" due to a timeout%s. Would you like to retry?"), operation_name, timeout_info)
         elseif is_dns_error then
-            retry_message = string.format(T("%s failed because the server address could not be found. Would you like to retry?"), operation_name)
+            retry_message = string.format(T("Could not complete \"%s\" because the server address could not be found. Would you like to retry?"), operation_name)
         elseif is_network_error then
-            retry_message = string.format(T("%s failed due to a network error. Would you like to retry?"), operation_name)
+            retry_message = string.format(T("Could not complete \"%s\" due to a network error. Would you like to retry?"), operation_name)
         else
-            retry_message = string.format(T("%s failed due to a temporary issue. Would you like to retry?"), operation_name)
+            retry_message = string.format(T("Could not complete \"%s\" due to a temporary issue. Would you like to retry?"), operation_name)
         end
         
         if _plugin_instance and _plugin_instance.dialog_manager then

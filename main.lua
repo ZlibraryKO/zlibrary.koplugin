@@ -958,7 +958,8 @@ function Zlibrary:deleteDownloadedBook(book_stub, on_success)
         api_method = Api.deleteDownloadedBook,
         loading_text_key = T("Removing book from downloaded…"),
         error_prefix_key = T("Failed to remove book from downloaded"),
-        -- Ui.showRetryErrorDialog builds "%s failed due to …" from this, so it starts a sentence.
+        -- Ui.showRetryErrorDialog quotes this inside "Could not complete \"%s\" …", so it names
+        -- an operation rather than starting a sentence. A noun; no leading capital needed.
         operation_name = T("Remove from downloaded"),
         log_context = "deleteDownloadedBook",
         resolve_result = function(ui_self, api_result, plugin_self)

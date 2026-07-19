@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 13:38+0200\n"
+"POT-Creation-Date: 2026-07-19 14:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -781,20 +781,20 @@ msgid "Network connection error"
 msgstr "네트워크 연결 오류"
 
 #, lua-format
-msgid "%s failed due to a timeout%s. Would you like to retry?"
-msgstr "%s이(가) 타임아웃%s으로 실패했습니다. 다시 시도하시겠습니까?"
+msgid "Could not complete \"%s\" due to a timeout%s. Would you like to retry?"
+msgstr "시간 초과로 “%s” 작업을 완료하지 못했습니다%s. 다시 시도하시겠습니까?"
 
 #, lua-format
-msgid "%s failed because the server address could not be found. Would you like to retry?"
-msgstr "%s이(가) 서버 주소를 찾을 수 없어 실패했습니다. 다시 시도하시겠습니까?"
+msgid "Could not complete \"%s\" because the server address could not be found. Would you like to retry?"
+msgstr "서버 주소를 찾을 수 없어 “%s” 작업을 완료하지 못했습니다. 다시 시도하시겠습니까?"
 
 #, lua-format
-msgid "%s failed due to a network error. Would you like to retry?"
-msgstr "%s이(가) 네트워크 오류로 실패했습니다. 다시 시도하시겠습니까?"
+msgid "Could not complete \"%s\" due to a network error. Would you like to retry?"
+msgstr "네트워크 오류로 “%s” 작업을 완료하지 못했습니다. 다시 시도하시겠습니까?"
 
 #, lua-format
-msgid "%s failed due to a temporary issue. Would you like to retry?"
-msgstr "%s이(가) 일시적인 문제로 실패했습니다. 다시 시도하시겠습니까?"
+msgid "Could not complete \"%s\" due to a temporary issue. Would you like to retry?"
+msgstr "일시적인 문제로 “%s” 작업을 완료하지 못했습니다. 다시 시도하시겠습니까?"
 
 msgid "Retry"
 msgstr "다시 시도"
@@ -897,6 +897,22 @@ msgstr "모든 항목을 입력하세요"
 
 msgid "Feature not implemented"
 msgstr "구현되지 않은 기능입니다"
+
+#, lua-format
+#~ msgid "%s failed due to a timeout%s. Would you like to retry?"
+#~ msgstr "%s이(가) 타임아웃%s으로 실패했습니다. 다시 시도하시겠습니까?"
+
+#, lua-format
+#~ msgid "%s failed because the server address could not be found. Would you like to retry?"
+#~ msgstr "%s이(가) 서버 주소를 찾을 수 없어 실패했습니다. 다시 시도하시겠습니까?"
+
+#, lua-format
+#~ msgid "%s failed due to a network error. Would you like to retry?"
+#~ msgstr "%s이(가) 네트워크 오류로 실패했습니다. 다시 시도하시겠습니까?"
+
+#, lua-format
+#~ msgid "%s failed due to a temporary issue. Would you like to retry?"
+#~ msgstr "%s이(가) 일시적인 문제로 실패했습니다. 다시 시도하시겠습니까?"
 
 #~ msgid "Login"
 #~ msgstr "로그인"

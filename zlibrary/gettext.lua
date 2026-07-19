@@ -19,6 +19,10 @@ local changeLang = function(new_lang)
     local original_translation = GetText.translation
     local original_wrapUntranslated_func = GetText.wrapUntranslated
     local original_current_lang = GetText.current_lang
+    -- changeLang rebuilds getPlural from the catalogue's Plural-Forms header
+    -- (koreader frontend/gettext.lua:220), so loading ours leaves KOReader's global
+    -- plural selector pointing at OUR header. Restore it with the rest.
+    local original_getPlural = GetText.getPlural
 
     GetText.dirname = NewGetText.dirname
 
@@ -47,6 +51,7 @@ local changeLang = function(new_lang)
     GetText.dirname = original_l10n_dirname
     GetText.wrapUntranslated = original_wrapUntranslated_func
     GetText.current_lang = original_current_lang
+    GetText.getPlural = original_getPlural
 
     original_translation = nil
     original_context = nil

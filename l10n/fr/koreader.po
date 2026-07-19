@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 10:25+0200\n"
+"POT-Creation-Date: 2026-07-19 11:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -273,8 +273,8 @@ msgstr "Veuillez d'abord définir le nom d'utilisateur et le mot de passe."
 msgid "Logging in..."
 msgstr "Connexion en cours..."
 
-msgid "Login"
-msgstr "Connexion"
+msgid "Sign-in"
+msgstr "Identification"
 
 #, lua-format
 msgid "Searching for \"%s\"..."
@@ -891,6 +891,9 @@ msgstr "Veuillez remplir tous les champs"
 
 msgid "Feature not implemented"
 msgstr "Fonctionnalité non implémentée"
+
+#~ msgid "Login"
+#~ msgstr "Connexion"
 
 #~ msgid "Retrying search for \""
 #~ msgstr "Nouvelle tentative de recherche pour \""

@@ -649,10 +649,24 @@ function Ui.showSearchErrorDialog(err_msg, query, user_session, selected_languag
         original_on_error(err)
     end
     
-    Ui.showRetryErrorDialog(err_msg, T("Search"), retry_callback, cancel_callback, loading_msg_to_close)
+    Ui.showRetryErrorDialog(err_msg, T("Search"), retry_callback, cancel_callback, loading_msg_to_close, "search")
 end
 
-function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel_callback, loading_msg_to_close)
+-- Operations carry a stable, untranslated key. The timeout hint used to be picked by
+-- matching English literals ("search", "login") against operation_name, which is already
+-- translated -- so outside English nothing ever matched and the hint silently vanished.
+local TIMEOUT_GETTERS = {
+    search       = Config.getSearchTimeout,
+    login        = Config.getLoginTimeout,
+    recommended  = Config.getRecommendedTimeout,
+    popular      = Config.getPopularTimeout,
+    cover        = Config.getCoverTimeout,
+    download     = Config.getDownloadTimeout,
+    book_details = Config.getBookDetailsTimeout,
+    comments     = Config.getBookCommentsTimeout,
+}
+
+function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel_callback, loading_msg_to_close, operation_key)
     local error_string = tostring(err_msg)
     
 
@@ -671,30 +685,10 @@ function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel
     if is_http_400 or is_timeout or is_network_error or is_dns_error then
         local retry_message
         if is_timeout then
-            -- Get timeout info to show to user
             local timeout_info = ""
-            local operation_lower = string.lower(tostring(operation_name))
-            if string.find(operation_lower, "search") then
-                local search_timeout = Config.getSearchTimeout()
-                timeout_info = string.format(" (%ds)", search_timeout[1])
-            elseif string.find(operation_lower, "login") then
-                local login_timeout = Config.getLoginTimeout()
-                timeout_info = string.format(" (%ds)", login_timeout[1])
-            elseif string.find(operation_lower, "recommend") then
-                local rec_timeout = Config.getRecommendedTimeout()
-                timeout_info = string.format(" (%ds)", rec_timeout[1])
-            elseif string.find(operation_lower, "popular") then
-                local pop_timeout = Config.getPopularTimeout()
-                timeout_info = string.format(" (%ds)", pop_timeout[1])
-            elseif string.find(operation_lower, "cover") then
-                local cover_timeout = Config.getCoverTimeout()
-                timeout_info = string.format(" (%ds)", cover_timeout[1])
-            elseif string.find(operation_lower, "download") then
-                local download_timeout = Config.getDownloadTimeout()
-                timeout_info = string.format(" (%ds)", download_timeout[1])
-            elseif string.find(operation_lower, "book") or string.find(operation_lower, "details") then
-                local book_timeout = Config.getBookDetailsTimeout()
-                timeout_info = string.format(" (%ds)", book_timeout[1])
+            local timeout_getter = operation_key and TIMEOUT_GETTERS[operation_key]
+            if timeout_getter then
+                timeout_info = string.format(" (%ds)", timeout_getter()[1])
             end
             retry_message = string.format(T("%s failed due to a timeout%s. Would you like to retry?"), operation_name, timeout_info)
         elseif is_dns_error then
@@ -882,7 +876,7 @@ function Ui.showAllTimeoutConfigDialog(parent_ui)
                 return Config.formatTimeoutForDisplay(Config.getLoginTimeout())
             end,
             callback = function()
-                Ui.showTimeoutConfigDialog(parent_ui, T("Login"), Config.SETTINGS_TIMEOUT_LOGIN_KEY, 
+                Ui.showTimeoutConfigDialog(parent_ui, T("Sign-in"), Config.SETTINGS_TIMEOUT_LOGIN_KEY, 
                     Config.getLoginTimeout, Config.setLoginTimeout, refreshMainDialog)
             end
         },

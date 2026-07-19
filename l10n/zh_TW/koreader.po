@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 10:25+0200\n"
+"POT-Creation-Date: 2026-07-19 11:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese <zh@li.org>\n"
@@ -273,7 +273,7 @@ msgstr "請先設置用戶名和密碼。"
 msgid "Logging in..."
 msgstr "正在登入..."
 
-msgid "Login"
+msgid "Sign-in"
 msgstr "登入"
 
 #, lua-format
@@ -891,6 +891,9 @@ msgstr "請填寫所有欄位"
 
 msgid "Feature not implemented"
 msgstr "功能尚未實現"
+
+#~ msgid "Login"
+#~ msgstr "登入"
 
 #~ msgid "Retrying search for \""
 #~ msgstr "正在重試搜索\""

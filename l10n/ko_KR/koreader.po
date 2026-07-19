@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 10:25+0200\n"
+"POT-Creation-Date: 2026-07-19 11:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -273,7 +273,7 @@ msgstr "먼저 사용자 이름과 비밀번호를 모두 설정하세요."
 msgid "Logging in..."
 msgstr "로그인 중..."
 
-msgid "Login"
+msgid "Sign-in"
 msgstr "로그인"
 
 #, lua-format
@@ -891,6 +891,9 @@ msgstr "모든 항목을 입력하세요"
 
 msgid "Feature not implemented"
 msgstr "구현되지 않은 기능입니다"
+
+#~ msgid "Login"
+#~ msgstr "로그인"
 
 #~ msgid "Retrying search for \""
 #~ msgstr "\" 검색을 다시 시도하는 중"

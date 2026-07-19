@@ -682,7 +682,7 @@ function Zlibrary:_requestDispatcher(options, ...)
             end, function(final_err_msg)
                 -- Cancel callback - user already knows about the error
                 return on_finally and on_finally(false)
-            end, loading_msg)
+            end, loading_msg, options.operation_key)
         end
 
         AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
@@ -732,6 +732,7 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
                     loading_text_key = T("Fetching most popular books..."),
                     error_prefix_key = T("Failed to fetch most popular books"),
                     operation_name = T("Most popular books"),
+                    operation_key = "popular",
                     log_context = "onShowMostPopularBooks",
                     results_member_name = "current_most_popular_books",
                     display_menu_func = function(ui_self, books, plugin_self)
@@ -749,6 +750,7 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
                         loading_text_key = T("Fetching recommended books..."),
                         error_prefix_key = T("Failed to fetch recommended books"),
                         operation_name = T("Recommended books"),
+                        operation_key = "recommended",
                         log_context = "onShowRecommendedBooks",
                         results_member_name = "current_recommended_books",
                         display_menu_func = function(ui_self, books, plugin_self)
@@ -1072,6 +1074,7 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
         loading_text_key = T("Fetching book details..."),
         error_prefix_key = T("Failed to fetch book details"),
         operation_name = T("Book details"),
+        operation_key = "book_details",
         log_context = "onSelectRecommendedBook",
         resolve_result = on_success,
         requires_auth = true,
@@ -1129,7 +1132,7 @@ function Zlibrary:onSelectSearchBook(book_data)
                 attemptBookDetails()
             end, function(final_err_msg)
                 -- Cancel callback - user already knows about the error
-            end, loading_msg)
+            end, loading_msg, "book_details")
         end
 
         AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
@@ -1174,11 +1177,11 @@ function Zlibrary:login(callback)
     end
 
     local on_error_handler = function(err_msg)
-        Ui.showRetryErrorDialog(err_msg, T("Login"), function()
+        Ui.showRetryErrorDialog(err_msg, T("Sign-in"), function()
             self:login(callback)
         end, function(final_err_msg)
             if callback then callback(false) end
-        end, loading_msg)
+        end, loading_msg, "login")
     end
 
     AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
@@ -1547,7 +1550,7 @@ function Zlibrary:downloadBook(book)
                 -- Cancel callback - user already knows about the error. Nothing to clean up:
                 -- Api.downloadBook discards its own temp file, and this path is also reached when
                 -- Api.getDownloadLink failed and no file was ever created.
-            end, loading_msg)
+            end, loading_msg, "download")
         end
 
         Trapper:wrap(function()
@@ -1656,6 +1659,7 @@ function Zlibrary:fetchAndDisplayComments(book, skip_cache, callback)
         loading_text_key = T("Loading comments..."),
         error_prefix_key = T("Failed to load comments"),
         operation_name = T("Comments"),
+        operation_key = "comments",
         log_context = "fetchAndDisplayComments",
         resolve_result = on_success,
         requires_auth = false,

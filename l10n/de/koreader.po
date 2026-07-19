@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 10:25+0200\n"
+"POT-Creation-Date: 2026-07-19 11:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -273,7 +273,7 @@ msgstr "Bitte legen Sie zuerst Benutzernamen und Passwort fest."
 msgid "Logging in..."
 msgstr "Anmeldung läuft..."
 
-msgid "Login"
+msgid "Sign-in"
 msgstr "Anmeldung"
 
 #, lua-format
@@ -891,6 +891,9 @@ msgstr "Bitte füllen Sie alle Felder aus"
 
 msgid "Feature not implemented"
 msgstr "Funktion nicht implementiert"
+
+#~ msgid "Login"
+#~ msgstr "Anmeldung"
 
 #~ msgid "Retrying search for \""
 #~ msgstr "Suche wird erneut versucht für \""

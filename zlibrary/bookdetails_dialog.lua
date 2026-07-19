@@ -243,7 +243,10 @@ function BookDetailsDialog:_buildContent()
         table.insert(vstack, VerticalSpan:new{ width = math.floor(Screen:scaleBySize(8)) })
         local author_group = HorizontalGroup:new{
             TextWidget:new{
-                text = "\u{F0013} " .. self.full_author,
+                -- Search glyph: tapping the author searches for them. U+F0013 was here, a
+                -- Nerd Fonts Material-Design codepoint that the bundled symbols.ttf does not
+                -- carry -- it has nothing at all in U+F0000-F1FFF -- so it drew as a box.
+                text = "\u{F002} " .. self.full_author,
                 face = self.fonts.author,
                 max_width = math.floor(self.text_col_w - Screen:scaleBySize(25)),
                 truncation = "end"

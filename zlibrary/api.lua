@@ -195,6 +195,28 @@ function Api.makeHttpRequest(options)
         sink_to_use = socketutil.table_sink(response_body_table)
     end
 
+    -- Time to first byte, recorded by wrapping whichever sink is in play.
+    --
+    -- `elapsed` alone cannot distinguish the two failures that look identical in the log but call
+    -- for opposite fixes. A timeout that never saw a byte means the connection was accepted and the
+    -- server then never answered -- a fresh attempt often succeeds within seconds, so failing fast
+    -- and retrying is the right response. A timeout that arrives after data had started means the
+    -- transfer stalled or crawled, where retrying only re-downloads what was already coming.
+    --
+    -- Note the block timeout resets on every chunk, so a slow but steady transfer is not what dies
+    -- here: a stall is. Which of the two we are looking at is exactly what this measures.
+    local start_time            -- assigned just before the request; the closure below reads it then
+    local first_byte_ms = nil
+    do
+        local inner_sink = sink_to_use
+        sink_to_use = function(chunk, err)
+            if not first_byte_ms and chunk and chunk ~= "" and start_time then
+                first_byte_ms = time.to_ms(time.since(start_time))
+            end
+            return inner_sink(chunk, err)
+        end
+    end
+
     if options.timeout then
         if type(options.timeout) == "table" then
             socketutil:set_timeout(options.timeout[1], options.timeout[2])
@@ -217,9 +239,10 @@ function Api.makeHttpRequest(options)
 
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Timeout: %s", request_params.url, request_params.method, tostring(options.timeout)))
     
-    local start_time = time.now()
+    start_time = time.now()
     local req_ok, r_val, r_code, r_headers_tbl, r_status_str = pcall(http.request, request_params)
     result.elapsed = time.to_ms(time.since(start_time))
+    result.first_byte_ms = first_byte_ms
 
     if options.timeout then
         socketutil:reset_timeout()
@@ -241,14 +264,16 @@ function Api.makeHttpRequest(options)
             result.error = T("Network request failed") .. ": " .. error_msg
         end
         logger.err(string.format(
-            "Zlibrary:Api.makeHttpRequest - END (pcall error) - %s %s - raw=[%s] elapsed=%dms - Error: %s",
+            "Zlibrary:Api.makeHttpRequest - END (pcall error) - %s %s - raw=[%s] elapsed=%dms first_byte=%s - Error: %s",
             tostring(request_params.method), tostring(options.url),
-            error_msg, result.elapsed or -1, result.error))
+            error_msg, result.elapsed or -1,
+            first_byte_ms and (first_byte_ms .. "ms") or "none", result.error))
         return result
     end
 
     result.status_code = r_code
     result.headers = r_headers_tbl
+
 
     if not options.sink then
         result.body = table.concat(response_body_table)
@@ -292,9 +317,10 @@ function Api.makeHttpRequest(options)
             result.error = T("Network connection error - please check your internet connection and try again")
         end
         logger.err(string.format(
-            "Zlibrary:Api.makeHttpRequest - END (Invalid response code type) - %s %s - transport_error=[%s] (type %s) elapsed=%dms - Error: %s",
+            "Zlibrary:Api.makeHttpRequest - END (Invalid response code type) - %s %s - transport_error=[%s] (type %s) elapsed=%dms first_byte=%s - Error: %s",
             tostring(request_params.method), tostring(options.url),
-            status_str, type(result.status_code), result.elapsed or -1, result.error))
+            status_str, type(result.status_code), result.elapsed or -1,
+            first_byte_ms and (first_byte_ms .. "ms") or "none", result.error))
         return result
     end
 

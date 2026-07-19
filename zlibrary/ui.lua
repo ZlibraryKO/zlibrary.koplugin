@@ -828,7 +828,8 @@ function Ui.showTimeoutConfigDialog(parent_ui, timeout_name, timeout_key, getter
     
     table.insert(dialog_items, {
         text = T("Reset to defaults"),
-        mandatory = "\u{1F5D8}",
+        -- U+1F5D8 is in no font KOReader bundles; F021 is the refresh glyph used elsewhere.
+        mandatory = "\u{F021}",
         callback = function()
             if _plugin_instance and _plugin_instance.dialog_manager then
                 _plugin_instance.dialog_manager:showConfirmDialog({

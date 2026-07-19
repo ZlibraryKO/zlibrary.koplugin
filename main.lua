@@ -682,7 +682,7 @@ function Zlibrary:_requestDispatcher(options, ...)
             end, function(final_err_msg)
                 -- Cancel callback - user already knows about the error
                 return on_finally and on_finally(false)
-            end, loading_msg)
+            end, loading_msg, options.operation_key)
         end
 
         AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
@@ -732,6 +732,7 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
                     loading_text_key = T("Fetching most popular books..."),
                     error_prefix_key = T("Failed to fetch most popular books"),
                     operation_name = T("Most popular books"),
+                    operation_key = "popular",
                     log_context = "onShowMostPopularBooks",
                     results_member_name = "current_most_popular_books",
                     display_menu_func = function(ui_self, books, plugin_self)
@@ -749,6 +750,7 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
                         loading_text_key = T("Fetching recommended books..."),
                         error_prefix_key = T("Failed to fetch recommended books"),
                         operation_name = T("Recommended books"),
+                        operation_key = "recommended",
                         log_context = "onShowRecommendedBooks",
                         results_member_name = "current_recommended_books",
                         display_menu_func = function(ui_self, books, plugin_self)
@@ -956,7 +958,8 @@ function Zlibrary:deleteDownloadedBook(book_stub, on_success)
         api_method = Api.deleteDownloadedBook,
         loading_text_key = T("Removing book from downloaded…"),
         error_prefix_key = T("Failed to remove book from downloaded"),
-        -- Ui.showRetryErrorDialog builds "%s failed due to …" from this, so it starts a sentence.
+        -- Ui.showRetryErrorDialog quotes this inside "Could not complete \"%s\" …", so it names
+        -- an operation rather than starting a sentence. A noun; no leading capital needed.
         operation_name = T("Remove from downloaded"),
         log_context = "deleteDownloadedBook",
         resolve_result = function(ui_self, api_result, plugin_self)
@@ -1072,6 +1075,7 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
         loading_text_key = T("Fetching book details..."),
         error_prefix_key = T("Failed to fetch book details"),
         operation_name = T("Book details"),
+        operation_key = "book_details",
         log_context = "onSelectRecommendedBook",
         resolve_result = on_success,
         requires_auth = true,
@@ -1129,7 +1133,7 @@ function Zlibrary:onSelectSearchBook(book_data)
                 attemptBookDetails()
             end, function(final_err_msg)
                 -- Cancel callback - user already knows about the error
-            end, loading_msg)
+            end, loading_msg, "book_details")
         end
 
         AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
@@ -1174,11 +1178,11 @@ function Zlibrary:login(callback)
     end
 
     local on_error_handler = function(err_msg)
-        Ui.showRetryErrorDialog(err_msg, T("Login"), function()
+        Ui.showRetryErrorDialog(err_msg, T("Sign-in"), function()
             self:login(callback)
         end, function(final_err_msg)
             if callback then callback(false) end
-        end, loading_msg)
+        end, loading_msg, "login")
     end
 
     AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
@@ -1195,7 +1199,7 @@ function Zlibrary:performSearch(query)
         retry_on_auth_error = retry_on_auth_error == nil and true or retry_on_auth_error
         
         local user_session = Config.getUserSession()
-        local loading_msg = Ui.showLoadingMessage(T("Searching for \"") .. query .. "\"...")
+        local loading_msg = Ui.showLoadingMessage(string.format(T("Searching for \"%s\"..."), query))
 
         local selected_languages = Config.getSearchLanguages()
         local selected_extensions = Config.getSearchExtensions()
@@ -1228,7 +1232,7 @@ function Zlibrary:performSearch(query)
 
             if not api_result.results or #api_result.results == 0 then
                 Ui.closeMessage(loading_msg)
-                Ui.showInfoMessage(T("No results found for \"") .. query .. "\".")
+                Ui.showInfoMessage(string.format(T("No results found for \"%s\"."), query))
                 return
             end
 
@@ -1538,7 +1542,7 @@ function Zlibrary:downloadBook(book)
             end
             
             -- Use retry dialog for timeout and network errors
-            Ui.showRetryErrorDialog(err_msg, T("Download"), function()
+            Ui.showRetryErrorDialog(err_msg, T("Book download"), function()
                 -- Retry callback. Re-enter attemptDownload so the retry gets its own wrap: this runs
                 -- from a fresh event, outside any coroutine, and an unwrapped dismissable run silently
                 -- falls back to blocking in-process.
@@ -1547,7 +1551,7 @@ function Zlibrary:downloadBook(book)
                 -- Cancel callback - user already knows about the error. Nothing to clean up:
                 -- Api.downloadBook discards its own temp file, and this path is also reached when
                 -- Api.getDownloadLink failed and no file was ever created.
-            end, loading_msg)
+            end, loading_msg, "download")
         end
 
         Trapper:wrap(function()
@@ -1656,6 +1660,7 @@ function Zlibrary:fetchAndDisplayComments(book, skip_cache, callback)
         loading_text_key = T("Loading comments..."),
         error_prefix_key = T("Failed to load comments"),
         operation_name = T("Comments"),
+        operation_key = "comments",
         log_context = "fetchAndDisplayComments",
         resolve_result = on_success,
         requires_auth = false,

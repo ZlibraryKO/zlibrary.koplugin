@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 19:31+0000\n"
+"POT-Creation-Date: 2026-07-19 14:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese <zh@li.org>\n"
@@ -22,28 +22,28 @@ msgid "Z-library search"
 msgstr "Z-圖書館搜索"
 
 msgid "My books"
-msgstr ""
+msgstr "我的書籍"
 
 msgid "Operation failed, please retry."
-msgstr ""
+msgstr "操作失敗，請重試。"
 
 msgid "Fetching domains..."
-msgstr ""
+msgstr "正在獲取域名..."
 
 msgid "Successfully set base URL to: "
-msgstr ""
+msgstr "已成功將基礎網址設置為:"
 
 msgid "Failed to find a working base URL."
 msgstr "無法找到可用的基礎 URL。"
 
 msgid "Queued"
-msgstr ""
+msgstr "已排隊"
 
 msgid "Selection copied to clipboard."
-msgstr ""
+msgstr "已複製所選內容到剪貼板。"
 
 msgid "Checking"
-msgstr ""
+msgstr "檢查中"
 
 msgid "Set base URL"
 msgstr "設置基礎網址"
@@ -52,31 +52,31 @@ msgid "Invalid Base URL."
 msgstr "無效的基礎網址。"
 
 msgid "Failed"
-msgstr ""
+msgstr "失敗"
 
 msgid "Unknown error"
-msgstr ""
+msgstr "未知錯誤"
 
 msgid "Searching for working Z-library server..."
 msgstr "正在尋找可用的 Z-library 伺服器..."
 
 msgid "Current Base URL:"
-msgstr ""
+msgstr "當前基礎網址:"
 
 msgid "Mirror site redirected to: "
-msgstr ""
+msgstr "鏡像站點重定向至:"
 
 msgid "Auto-discover base URL"
 msgstr "自動發現基礎 URL"
 
 msgid "Network unavailable."
-msgstr ""
+msgstr "網絡不可用。"
 
 msgid "Discovery is already running..."
-msgstr ""
+msgstr "探測已在進行中..."
 
 msgid "Refresh Dynamic Domains"
-msgstr ""
+msgstr "刷新動態域名"
 
 msgid "Back"
 msgstr "返回"
@@ -85,7 +85,7 @@ msgid "Settings"
 msgstr "設置"
 
 msgid "Set credentials"
-msgstr ""
+msgstr "設置憑證"
 
 msgid "Login successful!"
 msgstr "登入成功！"
@@ -97,22 +97,22 @@ msgid "Set download directory"
 msgstr "設置下載目錄"
 
 msgid "View Settings"
-msgstr ""
+msgstr "查看設置"
 
 msgid "Search Covers"
-msgstr ""
+msgstr "搜索封面"
 
 msgid "Search Items/Page"
-msgstr ""
+msgstr "搜索每頁項目數"
 
 msgid "Browse Covers"
-msgstr ""
+msgstr "瀏覽封面"
 
 msgid "Browse Items/Page"
-msgstr ""
+msgstr "瀏覽每頁項目數"
 
 msgid "Search options"
-msgstr ""
+msgstr "搜索選項"
 
 msgid "Select search languages"
 msgstr "選擇搜索語言"
@@ -121,7 +121,7 @@ msgid "Select search formats"
 msgstr "選擇搜索格式"
 
 msgid "Select search order"
-msgstr ""
+msgstr "選擇搜索排序"
 
 msgid "Timeout settings"
 msgstr "逾時設定"
@@ -133,28 +133,19 @@ msgid "Error: Plugin path not found. Cannot check for updates."
 msgstr "錯誤：未找到插件路徑。無法檢查更新。"
 
 msgid "Developer options"
-msgstr ""
+msgstr "開發者選項"
 
 msgid "Clear user session"
-msgstr ""
+msgstr "清除用戶會話"
 
 msgid "Session cleared. You will need to login again."
-msgstr ""
+msgstr "會話已清除。您需要重新登錄。"
 
 msgid "Clear runtime cache"
-msgstr ""
+msgstr "清除運行時緩存"
 
 msgid "Runtime cache cleared."
-msgstr ""
-
-msgid "Test mode"
-msgstr ""
-
-msgid "Test mode disabled. Normal download behavior restored."
-msgstr ""
-
-msgid "Test mode enabled. Downloads will always succeed."
-msgstr ""
+msgstr "運行時緩存已清除。"
 
 msgid "Search"
 msgstr "搜索"
@@ -166,7 +157,7 @@ msgid "Most popular"
 msgstr "最熱門"
 
 msgid "Operation"
-msgstr ""
+msgstr "操作"
 
 msgid "No books found, please try again"
 msgstr "未找到書籍，請重試"
@@ -178,7 +169,7 @@ msgid "Failed to fetch most popular books"
 msgstr "獲取熱門書籍失敗"
 
 msgid "Most popular books"
-msgstr ""
+msgstr "最熱門書籍"
 
 msgid "Fetching recommended books..."
 msgstr "正在獲取推薦書籍..."
@@ -187,49 +178,49 @@ msgid "Failed to fetch recommended books"
 msgstr "獲取推薦書籍失敗"
 
 msgid "Recommended books"
-msgstr ""
+msgstr "推薦書籍"
 
 msgid "API returned an error, please try again"
-msgstr ""
+msgstr "API返回錯誤，請重試"
 
 msgid "Z-library My Books"
-msgstr ""
+msgstr "Z-library 我的書籍"
 
 msgid "Downloaded"
-msgstr ""
+msgstr "已下載"
 
 msgid "Favorites"
-msgstr ""
+msgstr "收藏"
 
 msgid "Getting your favorites..."
-msgstr ""
+msgstr "正在獲取收藏..."
 
 msgid "Failed to fetch favorite books"
-msgstr ""
+msgstr "獲取收藏書籍失敗"
 
 msgid "Favorite books"
-msgstr ""
+msgstr "收藏書籍"
 
 msgid "Remove from downloaded"
 msgstr "從已下載移除"
 
 msgid "Getting your downloaded..."
-msgstr ""
+msgstr "正在獲取已下載..."
 
 msgid "Failed to fetch downloaded books"
-msgstr ""
+msgstr "獲取已下載書籍失敗"
 
 msgid "Downloaded books"
-msgstr ""
+msgstr "已下載書籍"
 
 msgid "Finding similar books..."
-msgstr ""
+msgstr "正在查找相似書籍..."
 
 msgid "No similar books found"
-msgstr ""
+msgstr "未找到相似書籍"
 
 msgid "Similar books"
-msgstr ""
+msgstr "相似書籍"
 
 msgid "Removing book from downloaded…"
 msgstr "正在從已下載移除書籍…"
@@ -241,28 +232,28 @@ msgid "Book removed from downloaded, please refresh"
 msgstr "書籍已從已下載移除，請重新整理"
 
 msgid "Removing book from favorites…"
-msgstr ""
+msgstr "正在取消收藏…"
 
 msgid "Failed to remove book from favorites"
-msgstr ""
+msgstr "取消收藏失敗"
 
 msgid "Unfavorite book"
 msgstr "取消收藏書籍"
 
 msgid "Book removed from favorites, please refresh"
-msgstr ""
+msgstr "已取消收藏，請刷新"
 
 msgid "Adding book to favorites…"
-msgstr ""
+msgstr "正在加入收藏…"
 
 msgid "Failed to add book to favorites"
-msgstr ""
+msgstr "加入收藏失敗"
 
 msgid "Favorite book"
-msgstr ""
+msgstr "收藏書籍"
 
 msgid "Book added to favorites, please refresh"
-msgstr ""
+msgstr "已加入收藏，請刷新"
 
 msgid "Fetching book details..."
 msgstr "正在獲取書籍詳情..."
@@ -271,7 +262,7 @@ msgid "Failed to fetch book details"
 msgstr "獲取書籍詳情失敗"
 
 msgid "Book details"
-msgstr ""
+msgstr "書籍詳情"
 
 msgid "Could not retrieve book details."
 msgstr "無法獲取書籍詳情。"
@@ -282,14 +273,16 @@ msgstr "請先設置用戶名和密碼。"
 msgid "Logging in..."
 msgstr "正在登入..."
 
-msgid "Login"
+msgid "Sign-in"
 msgstr "登入"
 
-msgid "Searching for \""
-msgstr "正在搜索\""
+#, lua-format
+msgid "Searching for \"%s\"..."
+msgstr "正在搜索\"%s\"..."
 
-msgid "No results found for \""
-msgstr "未找到\""
+#, lua-format
+msgid "No results found for \"%s\"."
+msgstr "未找到\"%s\"."
 
 #, lua-format
 msgid "Loading more results (Page %s)..."
@@ -302,7 +295,7 @@ msgid "No more results found."
 msgstr "沒有更多結果。"
 
 msgid "Book identifiers missing. Cannot download."
-msgstr ""
+msgstr "缺少書籍標識，無法下載。"
 
 #, lua-format
 msgid "Cannot create downloads directory: %s"
@@ -317,8 +310,8 @@ msgstr "下載失敗：未知錯誤"
 msgid "Download limit reached. Please try again later or check your account."
 msgstr "達到下載限制。請稍後重試或檢查您的帳戶。"
 
-msgid "Download"
-msgstr "下載"
+msgid "Book download"
+msgstr "書籍下載"
 
 msgid "Retrying download… (tap to cancel)"
 msgstr "正在重試下載… (點擊取消)"
@@ -327,79 +320,79 @@ msgid "Download cancelled."
 msgstr "下載已取消。"
 
 msgid "Book ID is required."
-msgstr ""
+msgstr "需要書籍ID。"
 
 msgid "Loading comments..."
-msgstr ""
+msgstr "正在載入評論..."
 
 msgid "Failed to load comments"
-msgstr ""
+msgstr "載入評論失敗"
 
 msgid "Comments"
-msgstr ""
+msgstr "評論"
 
 msgid "No comments to display"
-msgstr ""
+msgstr "沒有可顯示的評論"
 
 msgid "Could not find the server address"
 msgstr "找不到伺服器位址"
 
 msgid "Request timed out - please check your connection and try again"
-msgstr ""
+msgstr "請求逾時 - 請檢查網絡連接後重試"
 
 msgid "Network request failed"
-msgstr ""
+msgstr "網絡請求失敗"
 
 msgid "The Z-library address may be wrong or no longer exist."
 msgstr "Z-library 位址可能有誤或已不存在。"
 
 msgid "Network connection error - please check your internet connection and try again"
-msgstr ""
+msgstr "網絡連接錯誤 - 請檢查網絡連接後重試"
 
 msgid "HTTP Error"
-msgstr ""
+msgstr "HTTP 錯誤"
 
 msgid "Unknown Status"
-msgstr ""
+msgstr "未知狀態"
 
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
-msgstr ""
+msgstr "未設置 Z-library 伺服器地址（URL）。請在 Z-library 插件設置中配置。"
 
 msgid "Login failed: Empty response from server"
-msgstr ""
+msgstr "登錄失敗：伺服器返回空響應"
 
 msgid "Login failed: Invalid response format"
-msgstr ""
+msgstr "登錄失敗：響應格式無效"
 
 msgid "Login failed"
-msgstr ""
+msgstr "登錄失敗"
 
 msgid "Login failed: Invalid session data"
-msgstr ""
+msgstr "登錄失敗：會話數據無效"
 
 msgid "Credentials rejected or invalid response"
-msgstr ""
+msgstr "憑證被拒絕或響應無效"
 
 msgid "No response received from server - please try again"
-msgstr ""
+msgstr "未收到伺服器響應 - 請重試"
 
 msgid "Invalid response format from server"
-msgstr ""
+msgstr "伺服器響應格式無效"
 
 msgid "Search API error"
-msgstr ""
+msgstr "搜索 API 錯誤"
 
 msgid "Failed to open target file"
-msgstr ""
+msgstr "打開目標文件失敗"
 
 msgid "Download limit reached or file is an HTML page"
-msgstr ""
+msgstr "已達下載上限或文件為 HTML 頁面"
 
 msgid "Failed to save downloaded file"
 msgstr "保存下載文件失敗"
 
 msgid "Download HTTP Error"
-msgstr ""
+msgstr "下載 HTTP 錯誤"
 
 msgid "Z-library server URL not configured."
 msgstr "未配置Z-圖書館服務器網址。"
@@ -438,43 +431,43 @@ msgid "Failed to process book details."
 msgstr "處理書籍詳情失敗。"
 
 msgid "Failed to fetch download link (no response body)."
-msgstr ""
+msgstr "獲取下載鏈接失敗（無響應內容）。"
 
 msgid "Failed to parse download link response."
-msgstr ""
+msgstr "解析下載鏈接響應失敗。"
 
 msgid "API returned an error for download link."
-msgstr ""
+msgstr "API返回下載鏈接錯誤。"
 
 msgid "No download link provided in API response."
-msgstr ""
+msgstr "API響應中未提供下載鏈接。"
 
 msgid "Failed to fetch similar books (no response body)."
-msgstr ""
+msgstr "獲取相似書籍失敗（無響應內容）。"
 
 msgid "Failed to parse similar books response."
-msgstr ""
+msgstr "解析相似書籍響應失敗。"
 
 msgid "API returned an error for similar books."
-msgstr ""
+msgstr "API返回相似書籍錯誤。"
 
 msgid "Failed to fetch downloaded books (no response body)."
-msgstr ""
+msgstr "獲取已下載書籍失敗（無響應內容）。"
 
 msgid "Failed to parse downloaded books response."
-msgstr ""
+msgstr "解析已下載書籍響應失敗。"
 
 msgid "API returned an error for downloaded books."
-msgstr ""
+msgstr "API返回已下載書籍錯誤。"
 
 msgid "Failed to fetch favorite books (no response body)."
-msgstr ""
+msgstr "獲取收藏書籍失敗（無響應內容）。"
 
 msgid "Failed to parse favorite books response."
-msgstr ""
+msgstr "解析收藏書籍響應失敗。"
 
 msgid "API returned an error for favorite books."
-msgstr ""
+msgstr "API返回收藏書籍錯誤。"
 
 msgid "Failed to remove the book from downloaded (no response body)."
 msgstr "從已下載移除書籍失敗(無響應內容)。"
@@ -486,88 +479,91 @@ msgid "API returned an error for remove from downloaded."
 msgstr "API返回從已下載移除錯誤。"
 
 msgid "Failed to fetch unfavorite book (no response body)."
-msgstr ""
+msgstr "取消收藏失敗（無響應內容）。"
 
 msgid "Failed to parse unfavorite book response."
-msgstr ""
+msgstr "解析取消收藏響應失敗。"
 
 msgid "API returned an error for unfavorite book."
-msgstr ""
+msgstr "API返回取消收藏錯誤。"
 
 msgid "Failed to fetch download quota status (no response body)."
-msgstr ""
+msgstr "獲取下載配額狀態失敗（無響應內容）。"
 
 msgid "Failed to parse download quota status response."
-msgstr ""
+msgstr "解析下載配額狀態響應失敗。"
 
 msgid "API returned an error for download quota status."
-msgstr ""
+msgstr "API返回下載配額狀態錯誤。"
 
 msgid "Failed to fetch favorite-book IDs (no response body)."
-msgstr ""
+msgstr "獲取收藏書籍ID失敗（無響應內容）。"
 
 msgid "Failed to parse favorite-book IDs."
-msgstr ""
+msgstr "解析收藏書籍ID失敗。"
 
 msgid "API returned an error for favorite-book IDs."
-msgstr ""
+msgstr "API返回收藏書籍ID錯誤。"
 
 msgid "Failed to fetch favorite book (no response body)."
-msgstr ""
+msgstr "加入收藏失敗（無響應內容）。"
 
 msgid "Failed to parse favorite book response."
-msgstr ""
+msgstr "解析加入收藏響應失敗。"
 
 msgid "API returned an error for favorite book."
-msgstr ""
+msgstr "API返回加入收藏錯誤。"
 
 msgid "Failed to fetch book comments (no response body)."
-msgstr ""
+msgstr "獲取書籍評論失敗（無響應內容）。"
 
 msgid "Failed to parse book comments response."
-msgstr ""
+msgstr "解析書籍評論響應失敗。"
 
 msgid "API returned an error for book comments."
-msgstr ""
+msgstr "API返回書籍評論錯誤。"
 
 msgid "Profile"
-msgstr ""
+msgstr "個人資料"
+
+msgid "No description available"
+msgstr "無可用簡介"
 
 msgid "pages"
-msgstr ""
+msgstr "頁"
 
 msgid "Cover"
-msgstr ""
+msgstr "封面"
 
 msgid "More Similar Books"
-msgstr ""
+msgstr "更多相似書籍"
+
+msgid "Download"
+msgstr "下載"
 
 msgid "Format"
-msgstr ""
+msgstr "格式"
 
 msgid "Download book"
-msgstr ""
+msgstr "下載書籍"
 
 msgid "Refresh"
-msgstr ""
+msgstr "刷新"
 
 msgid "Remove From Favorites"
-msgstr ""
+msgstr "取消收藏"
 
 msgid "Add To Favorites"
-msgstr ""
+msgstr "加入收藏"
 
 msgid "No Comments"
-msgstr ""
-
-msgid "No Description"
-msgstr ""
+msgstr "無評論"
 
 msgid "Best match"
-msgstr ""
+msgstr "最佳匹配"
 
 msgid "Recently added"
-msgstr ""
+msgstr "最近添加"
 
 msgid "Title"
 msgstr "標題"
@@ -576,10 +572,10 @@ msgid "Year"
 msgstr "年份"
 
 msgid "File size"
-msgstr ""
+msgstr "文件大小"
 
 msgid "Default"
-msgstr ""
+msgstr "預設"
 
 msgid "infinite"
 msgstr "無限"
@@ -729,7 +725,7 @@ msgid "Please enter a search term."
 msgstr "請輸入搜索詞。"
 
 msgid "Sort by"
-msgstr ""
+msgstr "排序方式"
 
 msgid "Unknown Title"
 msgstr "未知標題"
@@ -763,38 +759,42 @@ msgstr "打開書籍"
 
 #, lua-format
 msgid "No %s found, please try again. Sometimes this requires a couple of retries."
-msgstr ""
+msgstr "未找到%s，請重試。有時需要多試幾次。"
 
 msgid "Z-library Similar Books"
-msgstr ""
+msgstr "Z-library 相似書籍"
 
 msgid "Book Details"
 msgstr "書籍詳情"
 
-msgid "Retrying search for \""
-msgstr "正在重試搜索\""
+#, lua-format
+msgid "Retrying search for \"%s\"..."
+msgstr "正在重試搜索\"%s\"..."
+
+msgid "Book search"
+msgstr "書籍搜尋"
 
 msgid "Request timed out"
-msgstr ""
+msgstr "請求逾時"
 
 msgid "Network connection error"
-msgstr ""
+msgstr "網絡連接錯誤"
 
 #, lua-format
-msgid "%s failed due to a timeout%s. Would you like to retry?"
-msgstr "%s因逾時%s失敗。您要重試嗎？"
+msgid "Could not complete \"%s\" due to a timeout%s. Would you like to retry?"
+msgstr "無法完成「%s」：逾時%s。您要重試嗎？"
 
 #, lua-format
-msgid "%s failed because the server address could not be found. Would you like to retry?"
-msgstr "%s因找不到伺服器位址失敗。您要重試嗎？"
+msgid "Could not complete \"%s\" because the server address could not be found. Would you like to retry?"
+msgstr "無法完成「%s」：找不到伺服器位址。您要重試嗎？"
 
 #, lua-format
-msgid "%s failed due to a network error. Would you like to retry?"
-msgstr "%s因網路錯誤失敗。您要重試嗎？"
+msgid "Could not complete \"%s\" due to a network error. Would you like to retry?"
+msgstr "無法完成「%s」：網路錯誤。您要重試嗎？"
 
 #, lua-format
-msgid "%s failed due to a temporary issue. Would you like to retry?"
-msgstr "%s因臨時問題失敗。您要重試嗎？"
+msgid "Could not complete \"%s\" due to a temporary issue. Would you like to retry?"
+msgstr "無法完成「%s」：發生暫時性問題。您要重試嗎？"
 
 msgid "Retry"
 msgstr "重試"
@@ -884,19 +884,47 @@ msgid "Timeout Settings"
 msgstr "逾時設定"
 
 msgid "Email Address"
-msgstr ""
+msgstr "電子郵箱"
 
 msgid "Password"
-msgstr ""
+msgstr "密碼"
 
 msgid "Enter password"
-msgstr ""
+msgstr "輸入密碼"
 
 msgid "Please fill in all fields"
-msgstr ""
+msgstr "請填寫所有欄位"
 
 msgid "Feature not implemented"
-msgstr ""
+msgstr "功能尚未實現"
+
+#, lua-format
+#~ msgid "%s failed due to a timeout%s. Would you like to retry?"
+#~ msgstr "%s因逾時%s失敗。您要重試嗎？"
+
+#, lua-format
+#~ msgid "%s failed because the server address could not be found. Would you like to retry?"
+#~ msgstr "%s因找不到伺服器位址失敗。您要重試嗎？"
+
+#, lua-format
+#~ msgid "%s failed due to a network error. Would you like to retry?"
+#~ msgstr "%s因網路錯誤失敗。您要重試嗎？"
+
+#, lua-format
+#~ msgid "%s failed due to a temporary issue. Would you like to retry?"
+#~ msgstr "%s因臨時問題失敗。您要重試嗎？"
+
+#~ msgid "Login"
+#~ msgstr "登入"
+
+#~ msgid "Retrying search for \""
+#~ msgstr "正在重試搜索\""
+
+#~ msgid "Searching for \""
+#~ msgstr "正在搜索\""
+
+#~ msgid "No results found for \""
+#~ msgstr "未找到\""
 
 #~ msgid "Downloading…"
 #~ msgstr "正在下載…"

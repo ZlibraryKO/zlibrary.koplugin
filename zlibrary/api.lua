@@ -642,7 +642,10 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
 end
 
 function Api.downloadBookCover(download_url, target_filepath)
-    logger.info(string.format("Zlibrary:Api.downloadBookCover - START - URL: %s, Target: %s", download_url, target_filepath))
+    -- dbg, not info: a page of results fetches dozens of covers, and a START/END pair each buried
+    -- everything else in the log. Api.makeHttpRequest already logs its own START at dbg, so this
+    -- matches. Failures below stay at err, and are the part worth seeing.
+    logger.dbg(string.format("Zlibrary:Api.downloadBookCover - START - URL: %s, Target: %s", download_url, target_filepath))
     local result = { success = false, error = nil }
     local file, err_open = io.open(target_filepath, "wb")
     if not file then
@@ -683,7 +686,7 @@ function Api.downloadBookCover(download_url, target_filepath)
         return result
     end
 
-    logger.info("Zlibrary:Api.downloadBookCover - END (Success)")
+    logger.dbg("Zlibrary:Api.downloadBookCover - END (Success)")
     result.success = true
     return result
 end

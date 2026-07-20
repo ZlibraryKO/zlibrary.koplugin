@@ -462,18 +462,26 @@ function Ui.createBookMenuItem(book_data, parent_zlibrary_instance, is_show_cove
             end
         end,
         keep_menu_open = true,
-       -- original_book_data_ref = book_data,
+        -- Carried so a hold on this row can act on the book without re-deriving it. Costs
+        -- nothing: the tap callback above already closes over the same table.
+        book_data = book_data,
         book_id = book_data.id,
         hash = book_data.hash,
         cover = is_show_cover and book_data.cover or nil,
     }
 end
 
-function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_items, on_goto_page_handler, opts)
+-- on_new_search, when given, puts a magnifying glass in the title bar that reopens the search
+-- input. The results page had no way back to the search box: you closed it, found the menu and
+-- started again. The multi-search screen has had this button all along, so this is parity rather
+-- than a new idea, and it is the only route available -- TitleBar exposes callbacks for its
+-- icons and not for the title text, so tapping the "Search Results: x" caption is not an option.
+function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_items, on_goto_page_handler, opts, on_new_search, on_hold_book)
     local search_order_name = Config.getSearchOrderName()
     local menu = Menu:new{
         title = _colon_concat(T("Search Results"), query_string),
         subtitle = string.format("%s: %s", T("Sort by"), search_order_name),
+        title_bar_left_icon = on_new_search and "appbar.search" or nil,
         item_table = initial_menu_items,
         parent = parent_ui_ref,
         items_per_page = 10,
@@ -486,6 +494,20 @@ function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_it
         list_per_page =opts and opts.search_per_page,
         show_cover = opts and opts.show_cover_search ~= false,
     }
+    if on_new_search then
+        -- Menu calls this as a method, so the menu itself arrives as the first argument.
+        menu.onLeftButtonTap = function() on_new_search() end
+    end
+    if on_hold_book then
+        -- Menu calls this as a method too, hence the discarded first argument. Returning true
+        -- marks the hold handled so the list does not also act on it.
+        menu.onMenuHold = function(_, item)
+            if item and item.book_data then
+                on_hold_book(item.book_data)
+            end
+            return true
+        end
+    end
     _showAndTrackDialog(menu)
     return menu
 end
@@ -544,8 +566,30 @@ end
 function Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, ok_open_callback, cancel_callback)
     local turn_off_wifi = default_turn_off_wifi
 
+    -- Downloading several books in a row means answering this dialog several times, which a user
+    -- asked to be able to switch off.
+    --
+    -- Skipping it leaves Wi-Fi alone, whatever the stored preference says. That preference is
+    -- "Turn off Wi-Fi after closing this dialog" -- there is no dialog here and nothing being
+    -- closed, so there is nothing for it to be after. It also lives only on this dialog, so
+    -- honouring it here would keep a background action running that the user can no longer see
+    -- or change. Anyone wanting Wi-Fi managed for them still has the prompt.
+    --
+    -- The notice matters as much as the skipping. This dialog is the only sign most people get
+    -- that a download worked; replacing one that demands an answer with one that dismisses
+    -- itself is the point, and replacing it with silence would be a different, worse feature.
+    if Config.getSkipOpenBookPrompt() then
+        Ui.showInfoMessage(string.format(T("\"%s\" downloaded."), filename))
+        if cancel_callback then cancel_callback(false) end
+        return
+    end
+
     local function showDialog()
-        local full_text = string.format(T("\"%s\" downloaded successfully. Open it now?"), filename)
+        -- No filename. It is built as "<title> - <author>.<format>", which for anything with a
+        -- long title runs to a paragraph, and this dialog already carries two buttons and the
+        -- Wi-Fi toggle's own long label. The user tapped download on a specific book moments
+        -- ago, so naming it back to them buys little for the height it costs.
+        local full_text = T("Book downloaded successfully. Open it now?")
 
         local dialog
         local other_buttons = nil
@@ -683,15 +727,18 @@ function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel
     -- A dead or misspelled base URL never resolves, so retrying alone can only fail again.
     -- Offer auto-discovery alongside Retry, the same way a timeout does.
     local is_dns_error = string.find(error_string, Api.DNS_ERROR_TEXT, 1, true) ~= nil
-    local offer_discover = (is_timeout or is_dns_error) and true or nil
+    -- A mirror behind a bot check will answer the same way however often it is asked, so Retry
+    -- alone is useless here. Another server is the only fix, so surface that button.
+    local is_blocked = string.find(error_string, Api.BLOCKED_TEXT, 1, true) ~= nil
+    local offer_discover = (is_timeout or is_dns_error or is_blocked) and true or nil
 
-    if is_http_400 or is_timeout or is_network_error or is_dns_error then
+    if is_http_400 or is_timeout or is_network_error or is_dns_error or is_blocked then
         local retry_message
         if is_timeout then
             local timeout_info = ""
             local timeout_getter = operation_key and TIMEOUT_GETTERS[operation_key]
             if timeout_getter then
-                timeout_info = string.format(" (%ds)", timeout_getter()[1])
+                timeout_info = " (" .. Config.formatSeconds(timeout_getter()[1]) .. ")"
             end
             -- Impersonal on purpose. These used to read "%s failed …", putting the operation
             -- name in subject position, where the predicate has to agree with it. Half the
@@ -704,6 +751,13 @@ function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel
             retry_message = string.format(T("Could not complete \"%s\" because the server address could not be found. Would you like to retry?"), operation_name)
         elseif is_network_error then
             retry_message = string.format(T("Could not complete \"%s\" due to a network error. Would you like to retry?"), operation_name)
+        elseif is_blocked then
+            -- Use the error as it stands. It already names the host and says what to do, and it
+            -- is not about the operation at all -- the server is walled, so which call hit the
+            -- wall is beside the point. Falling through to the generic branch below was worse
+            -- than unhelpful: it replaced this with "due to a temporary issue", and this is the
+            -- one failure here that is not temporary.
+            retry_message = error_string
         else
             retry_message = string.format(T("Could not complete \"%s\" due to a temporary issue. Would you like to retry?"), operation_name)
         end
@@ -765,8 +819,8 @@ function Ui.showTimeoutConfigDialog(parent_ui, timeout_name, timeout_key, getter
         block_timeout = updated_timeout[1]
         total_timeout = updated_timeout[2]
         
-        dialog_items[1].text = string.format(T("Block timeout: %s seconds"), tostring(block_timeout))
-        dialog_items[2].text = string.format(T("Total timeout: %s"), total_timeout == -1 and T("infinite") or (tostring(total_timeout) .. " " .. T("seconds")))
+        dialog_items[1].text = string.format(T("Block timeout: %s"), Config.formatSeconds(block_timeout))
+        dialog_items[2].text = string.format(T("Total timeout: %s"), total_timeout == -1 and T("infinite") or Config.formatSeconds(total_timeout))
         
         if dialog_menu then
             dialog_menu.subtitle = Config.formatTimeoutForDisplay(updated_timeout)
@@ -775,7 +829,7 @@ function Ui.showTimeoutConfigDialog(parent_ui, timeout_name, timeout_key, getter
     end
     
     table.insert(dialog_items, {
-        text = string.format(T("Block timeout: %s seconds"), tostring(block_timeout)),
+        text = string.format(T("Block timeout: %s"), Config.formatSeconds(block_timeout)),
         mandatory = "\u{25B7}",
         callback = function()
             Ui.showGenericInputDialog(
@@ -799,7 +853,7 @@ function Ui.showTimeoutConfigDialog(parent_ui, timeout_name, timeout_key, getter
     })
     
     table.insert(dialog_items, {
-        text = string.format(T("Total timeout: %s"), total_timeout == -1 and T("infinite") or (tostring(total_timeout) .. " " .. T("seconds"))),
+        text = string.format(T("Total timeout: %s"), total_timeout == -1 and T("infinite") or Config.formatSeconds(total_timeout)),
         mandatory = "\u{25B7}",
         callback = function()
             Ui.showGenericInputDialog(

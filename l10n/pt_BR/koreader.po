@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 15:03+0000\n"
+"POT-Creation-Date: 2026-07-20 11:41+0200\n"
 "PO-Revision-Date: 2025-05-28 15:14-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -96,6 +96,9 @@ msgstr "Verificar credenciais"
 
 msgid "Set download directory"
 msgstr "Definir diretório de download"
+
+msgid "Ask to open after download"
+msgstr "Perguntar se deseja abrir após o download"
 
 msgid "View Settings"
 msgstr "Configurações de exibição"
@@ -295,6 +298,9 @@ msgstr "Falha ao carregar mais resultados"
 msgid "No more results found."
 msgstr "Nenhum outro resultado encontrado."
 
+msgid "This book's file type is unknown, so it cannot be downloaded."
+msgstr "O formato deste livro é desconhecido, portanto não é possível baixá-lo."
+
 msgid "Book identifiers missing. Cannot download."
 msgstr "Identificadores do livro ausentes. Não é possível baixar."
 
@@ -338,6 +344,9 @@ msgstr "Nenhum comentário para exibir"
 msgid "Could not find the server address"
 msgstr "Não foi possível encontrar o endereço do servidor"
 
+msgid "This Z-library server is refusing automated access"
+msgstr "Este servidor Z-library recusa acesso automatizado"
+
 msgid "Request timed out - please check your connection and try again"
 msgstr "Tempo esgotado - verifique sua conexão e tente novamente"
 
@@ -349,6 +358,12 @@ msgstr "O endereço da Z-library pode estar errado ou não existir mais."
 
 msgid "Network connection error - please check your internet connection and try again"
 msgstr "Erro de conexão de rede - verifique sua conexão com a internet e tente novamente"
+
+msgid "Too many redirects"
+msgstr "Muitos redirecionamentos"
+
+msgid "Try a different Z-library server."
+msgstr "Tente outro servidor Z-library."
 
 msgid "HTTP Error"
 msgstr "Erro HTTP"
@@ -578,6 +593,10 @@ msgstr "Tamanho do arquivo"
 msgid "Default"
 msgstr "Padrão"
 
+#, lua-format
+msgid "%ds"
+msgstr "%ds"
+
 msgid "infinite"
 msgstr "infinito"
 
@@ -749,8 +768,11 @@ msgid "Download \"%s\"?"
 msgstr "Baixar \"%s\"?"
 
 #, lua-format
-msgid "\"%s\" downloaded successfully. Open it now?"
-msgstr "\"%s\" baixado com sucesso. Abrir agora?"
+msgid "\"%s\" downloaded."
+msgstr "\"%s\" baixado."
+
+msgid "Book downloaded successfully. Open it now?"
+msgstr "Livro baixado com sucesso. Abrir agora?"
 
 msgid "Turn off Wi-Fi after closing this dialog"
 msgstr "Desligar Wi-Fi após fechar este diálogo"
@@ -801,15 +823,12 @@ msgid "Retry"
 msgstr "Tentar novamente"
 
 #, lua-format
-msgid "Block timeout: %s seconds"
-msgstr "Timeout de bloco: %s segundos"
+msgid "Block timeout: %s"
+msgstr "Timeout de bloco: %s"
 
 #, lua-format
 msgid "Total timeout: %s"
 msgstr "Timeout total: %s"
-
-msgid "seconds"
-msgstr "segundos"
 
 #, lua-format
 msgid "Set %s block timeout (seconds)"
@@ -898,6 +917,20 @@ msgstr "Por favor, preencha todos os campos"
 
 msgid "Feature not implemented"
 msgstr "Recurso não implementado"
+
+#~ msgid "Download this book?"
+#~ msgstr "Baixar este livro?"
+
+#, lua-format
+#~ msgid "\"%s\" downloaded successfully. Open it now?"
+#~ msgstr "\"%s\" baixado com sucesso. Abrir agora?"
+
+#, lua-format
+#~ msgid "Block timeout: %s seconds"
+#~ msgstr "Timeout de bloco: %s segundos"
+
+#~ msgid "seconds"
+#~ msgstr "segundos"
 
 #, lua-format
 #~ msgid "%s failed due to a timeout%s. Would you like to retry?"

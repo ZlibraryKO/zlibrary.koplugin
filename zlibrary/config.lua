@@ -21,6 +21,7 @@ Config.SETTINGS_SEARCH_EXTENSIONS_KEY = "zlibrary_search_extensions"
 Config.SETTINGS_SEARCH_ORDERS_KEY = "zlibrary_search_order"
 Config.SETTINGS_DOWNLOAD_DIR_KEY = "zlibrary_download_dir"
 Config.SETTINGS_TURN_OFF_WIFI_AFTER_DOWNLOAD_KEY = "zlibrary_turn_off_wifi_after_download"
+Config.SETTINGS_SKIP_OPEN_BOOK_PROMPT_KEY = "zlibrary_skip_open_book_prompt"
 Config.SETTINGS_TIMEOUT_LOGIN_KEY = "zlibrary_timeout_login"
 Config.SETTINGS_TIMEOUT_SEARCH_KEY = "zlibrary_timeout_search"
 Config.SETTINGS_TIMEOUT_BOOK_DETAILS_KEY = "zlibrary_timeout_book_details"
@@ -116,7 +117,9 @@ Config.SUPPORTED_LANGUAGES = {
     { name = "Русский", value = "russian" },
     { name = "Српски", value = "serbian" },
     { name = "Español", value = "spanish" },
-    { name = "తెలుగు", value = "telugu" },
+    -- Latin, unlike its neighbours: KOReader bundles no font covering Telugu, so the native
+    -- name renders as six empty boxes. A name that can be read beats one that cannot.
+    { name = "Telugu", value = "telugu" },
     { name = "ไทย", value = "thai" },
     { name = "繁體中文", value = "traditional chinese" },
     { name = "Türkçe", value = "turkish" },
@@ -161,7 +164,11 @@ Config.SEED_URLS = { -- List of known Z-library base URLs extracted from the And
     "https://lib-africa.sk/",
     "https://z-library.do/",
     "https://z-lib.gd/",
-    "https://1lib.sk/",
+    "https://1lib.sk/", -- July 2026: behind a DiamWall browser check the plugin cannot pass, so
+                        -- the API is unreachable. Left in the list because that is the operator's
+                        -- setting of the day, not a property of the domain: discovery health-checks
+                        -- it, fails it in two requests and moves on, and it starts working again by
+                        -- itself if the check is ever lifted.
     "https://z-lib.gl/",
     "https://z-library.rs/", -- these last 3 don't seem to work currently (May 2026), but may be worth trying in the future
     "https://z-lib.do/",
@@ -560,6 +567,16 @@ function Config.setTurnOffWifiAfterDownload(turn_off)
     Config.saveSetting(Config.SETTINGS_TURN_OFF_WIFI_AFTER_DOWNLOAD_KEY, turn_off)
 end
 
+-- Off by default: the prompt is the only confirmation most people get that a download finished,
+-- so quietening it has to be asked for.
+function Config.getSkipOpenBookPrompt()
+    return Config.getSetting(Config.SETTINGS_SKIP_OPEN_BOOK_PROMPT_KEY, false)
+end
+
+function Config.setSkipOpenBookPrompt(skip)
+    Config.saveSetting(Config.SETTINGS_SKIP_OPEN_BOOK_PROMPT_KEY, skip)
+end
+
 -- Timeout configuration functions
 function Config.getTimeoutConfig(timeout_key, default_timeout)
     local saved_timeout = Config.getSetting(timeout_key)
@@ -605,11 +622,20 @@ function Config.getBookCommentsTimeout()
     return Config.getTimeoutConfig(Config.SETTINGS_TIMEOUT_BOOK_COMMENTS_KEY, Config.TIMEOUT_BOOK_COMMENTS)
 end
 
+-- Seconds in the compact form the menus and dialogs use.
+--
+-- The unit has to live inside the translated string. It is not "s" everywhere -- Korean writes
+-- 15초, Japanese 15秒 -- and appending it in Lua also hard-codes a space that CJK does not want
+-- and that some languages put elsewhere. Same reason the retry templates stopped concatenating.
+function Config.formatSeconds(seconds)
+    return string.format(T("%ds"), seconds)
+end
+
 function Config.formatTimeoutForDisplay(timeout_pair)
     local block_timeout = timeout_pair[1]
     local total_timeout = timeout_pair[2]
     
-    local total_display = total_timeout == -1 and T("infinite") or (tostring(total_timeout) .. "s")
+    local total_display = total_timeout == -1 and T("infinite") or Config.formatSeconds(total_timeout)
     return string.format(T("Block: %ds, Total: %s"), block_timeout, total_display)
 end
 

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 15:03+0000\n"
+"POT-Creation-Date: 2026-07-20 11:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -95,6 +95,9 @@ msgstr "認証情報を確認"
 
 msgid "Set download directory"
 msgstr "ダウンロードディレクトリを設定"
+
+msgid "Ask to open after download"
+msgstr "ダウンロード後に開くか確認"
 
 msgid "View Settings"
 msgstr "表示設定"
@@ -294,6 +297,9 @@ msgstr "追加結果の読み込みに失敗しました"
 msgid "No more results found."
 msgstr "これ以上の結果は見つかりませんでした。"
 
+msgid "This book's file type is unknown, so it cannot be downloaded."
+msgstr "この書籍のファイル形式が不明なため、ダウンロードできません。"
+
 msgid "Book identifiers missing. Cannot download."
 msgstr "書籍の識別子がありません。ダウンロードできません。"
 
@@ -337,6 +343,9 @@ msgstr "表示するコメントはありません"
 msgid "Could not find the server address"
 msgstr "サーバーアドレスが見つかりませんでした"
 
+msgid "This Z-library server is refusing automated access"
+msgstr "このZ-libraryサーバーは自動アクセスを拒否しています"
+
 msgid "Request timed out - please check your connection and try again"
 msgstr "リクエストがタイムアウトしました - 接続を確認して再試行してください"
 
@@ -348,6 +357,12 @@ msgstr "Z-libraryのアドレスが間違っているか、存在しなくなっ
 
 msgid "Network connection error - please check your internet connection and try again"
 msgstr "ネットワーク接続エラー - インターネット接続を確認して再試行してください"
+
+msgid "Too many redirects"
+msgstr "リダイレクトが多すぎます"
+
+msgid "Try a different Z-library server."
+msgstr "別のZ-libraryサーバーをお試しください。"
 
 msgid "HTTP Error"
 msgstr "HTTPエラー"
@@ -577,6 +592,10 @@ msgstr "ファイルサイズ"
 msgid "Default"
 msgstr "デフォルト"
 
+#, lua-format
+msgid "%ds"
+msgstr "%d秒"
+
 msgid "infinite"
 msgstr "無限"
 
@@ -748,8 +767,11 @@ msgid "Download \"%s\"?"
 msgstr "\"%s\" をダウンロードしますか？"
 
 #, lua-format
-msgid "\"%s\" downloaded successfully. Open it now?"
-msgstr "\"%s\" のダウンロードが完了しました。今すぐ開きますか？"
+msgid "\"%s\" downloaded."
+msgstr "「%s」をダウンロードしました。"
+
+msgid "Book downloaded successfully. Open it now?"
+msgstr "書籍のダウンロードが完了しました。今すぐ開きますか？"
 
 msgid "Turn off Wi-Fi after closing this dialog"
 msgstr "このダイアログを閉じた後にWi-Fiをオフにする"
@@ -800,15 +822,12 @@ msgid "Retry"
 msgstr "再試行"
 
 #, lua-format
-msgid "Block timeout: %s seconds"
-msgstr "ブロックタイムアウト：%s秒"
+msgid "Block timeout: %s"
+msgstr "ブロックタイムアウト：%s"
 
 #, lua-format
 msgid "Total timeout: %s"
 msgstr "合計タイムアウト：%s"
-
-msgid "seconds"
-msgstr "秒"
 
 #, lua-format
 msgid "Set %s block timeout (seconds)"
@@ -897,6 +916,20 @@ msgstr "すべての項目を入力してください"
 
 msgid "Feature not implemented"
 msgstr "この機能は未実装です"
+
+#~ msgid "Download this book?"
+#~ msgstr "この書籍をダウンロードしますか？"
+
+#, lua-format
+#~ msgid "\"%s\" downloaded successfully. Open it now?"
+#~ msgstr "\"%s\" のダウンロードが完了しました。今すぐ開きますか？"
+
+#, lua-format
+#~ msgid "Block timeout: %s seconds"
+#~ msgstr "ブロックタイムアウト：%s秒"
+
+#~ msgid "seconds"
+#~ msgstr "秒"
 
 #, lua-format
 #~ msgid "%s failed due to a timeout%s. Would you like to retry?"

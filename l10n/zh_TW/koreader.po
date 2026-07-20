@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 15:03+0000\n"
+"POT-Creation-Date: 2026-07-20 11:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese <zh@li.org>\n"
@@ -95,6 +95,9 @@ msgstr "驗證憑證"
 
 msgid "Set download directory"
 msgstr "設置下載目錄"
+
+msgid "Ask to open after download"
+msgstr "下載後詢問是否打開"
 
 msgid "View Settings"
 msgstr "查看設置"
@@ -294,6 +297,9 @@ msgstr "加載更多結果失敗"
 msgid "No more results found."
 msgstr "沒有更多結果。"
 
+msgid "This book's file type is unknown, so it cannot be downloaded."
+msgstr "此書籍的文件格式未知，無法下載。"
+
 msgid "Book identifiers missing. Cannot download."
 msgstr "缺少書籍標識，無法下載。"
 
@@ -337,6 +343,9 @@ msgstr "沒有可顯示的評論"
 msgid "Could not find the server address"
 msgstr "找不到伺服器位址"
 
+msgid "This Z-library server is refusing automated access"
+msgstr "此 Z-library 伺服器拒絕自動存取"
+
 msgid "Request timed out - please check your connection and try again"
 msgstr "請求逾時 - 請檢查網絡連接後重試"
 
@@ -348,6 +357,12 @@ msgstr "Z-library 位址可能有誤或已不存在。"
 
 msgid "Network connection error - please check your internet connection and try again"
 msgstr "網絡連接錯誤 - 請檢查網絡連接後重試"
+
+msgid "Too many redirects"
+msgstr "重新導向次數過多"
+
+msgid "Try a different Z-library server."
+msgstr "請嘗試其他 Z-library 伺服器。"
 
 msgid "HTTP Error"
 msgstr "HTTP 錯誤"
@@ -577,6 +592,10 @@ msgstr "文件大小"
 msgid "Default"
 msgstr "預設"
 
+#, lua-format
+msgid "%ds"
+msgstr "%d秒"
+
 msgid "infinite"
 msgstr "無限"
 
@@ -748,8 +767,11 @@ msgid "Download \"%s\"?"
 msgstr "下載\"%s\"？"
 
 #, lua-format
-msgid "\"%s\" downloaded successfully. Open it now?"
-msgstr "\"%s\"下載成功。現在打開嗎？"
+msgid "\"%s\" downloaded."
+msgstr "「%s」下載完成。"
+
+msgid "Book downloaded successfully. Open it now?"
+msgstr "書籍下載成功。現在打開嗎？"
 
 msgid "Turn off Wi-Fi after closing this dialog"
 msgstr "關閉此對話框後關閉 Wi-Fi"
@@ -800,15 +822,12 @@ msgid "Retry"
 msgstr "重試"
 
 #, lua-format
-msgid "Block timeout: %s seconds"
-msgstr "區塊逾時：%s秒"
+msgid "Block timeout: %s"
+msgstr "區塊逾時：%s"
 
 #, lua-format
 msgid "Total timeout: %s"
 msgstr "總逾時：%s"
-
-msgid "seconds"
-msgstr "秒"
 
 #, lua-format
 msgid "Set %s block timeout (seconds)"
@@ -897,6 +916,20 @@ msgstr "請填寫所有欄位"
 
 msgid "Feature not implemented"
 msgstr "功能尚未實現"
+
+#~ msgid "Download this book?"
+#~ msgstr "下載此書？"
+
+#, lua-format
+#~ msgid "\"%s\" downloaded successfully. Open it now?"
+#~ msgstr "\"%s\"下載成功。現在打開嗎？"
+
+#, lua-format
+#~ msgid "Block timeout: %s seconds"
+#~ msgstr "區塊逾時：%s秒"
+
+#~ msgid "seconds"
+#~ msgstr "秒"
 
 #, lua-format
 #~ msgid "%s failed due to a timeout%s. Would you like to retry?"

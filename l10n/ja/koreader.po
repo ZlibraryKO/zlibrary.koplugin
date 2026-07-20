@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 09:56+0000\n"
+"POT-Creation-Date: 2026-07-20 22:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,74 +24,17 @@ msgstr "Z-library検索"
 msgid "My books"
 msgstr "マイブック"
 
-msgid "Operation failed, please retry."
-msgstr "操作に失敗しました。再試行してください。"
-
-msgid "Fetching domains..."
-msgstr "ドメインを取得中..."
-
-msgid "Successfully set base URL to: "
-msgstr "ベースURLを次に設定しました:"
-
-msgid "Failed to find a working base URL."
-msgstr "動作するベースURLが見つかりませんでした。"
-
-msgid "Queued"
-msgstr "待機中"
-
-msgid "Selection copied to clipboard."
-msgstr "選択範囲をクリップボードにコピーしました。"
-
-msgid "Checking"
-msgstr "確認中"
+msgid "Settings"
+msgstr "設定"
 
 msgid "Set base URL"
 msgstr "ベースURLを設定"
-
-msgid "Invalid Base URL."
-msgstr "無効なベースURLです。"
-
-msgid "Failed"
-msgstr "失敗"
-
-msgid "Unknown error"
-msgstr "不明なエラー"
-
-msgid "Searching for working Z-library server..."
-msgstr "動作中のZ-libraryサーバーを検索しています..."
-
-msgid "Current Base URL:"
-msgstr "現在のベースURL:"
-
-msgid "Mirror site redirected to: "
-msgstr "ミラーサイトのリダイレクト先:"
-
-msgid "Auto-discover base URL"
-msgstr "ベースURLを自動検出"
-
-msgid "Network unavailable."
-msgstr "ネットワークが利用できません。"
-
-msgid "Discovery is already running..."
-msgstr "検出は既に実行中です..."
-
-msgid "Refresh Dynamic Domains"
-msgstr "動的ドメインを更新"
-
-msgid "Back"
-msgstr "戻る"
-
-msgid "Settings"
-msgstr "設定"
 
 msgid "Set credentials"
 msgstr "認証情報を設定"
 
 msgid "Login successful!"
 msgstr "ログインに成功しました！"
-
-msgid "Verify credentials"
-msgstr "認証情報を確認"
 
 msgid "Set download directory"
 msgstr "ダウンロードディレクトリを設定"
@@ -135,8 +78,18 @@ msgstr "アップデートを確認"
 msgid "Error: Plugin path not found. Cannot check for updates."
 msgstr "エラー：プラグインのパスが見つかりません。アップデートを確認できません。"
 
-msgid "Developer options"
-msgstr "開発者オプション"
+msgid "Advanced"
+msgstr "詳細設定"
+
+msgid "Clear credentials"
+msgstr "認証情報をクリア"
+
+#, lua-format
+msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
+msgstr "認証情報はクリアされましたが、%sによって再び設定されます。これを防ぐにはそのファイルを編集してください。"
+
+msgid "Credentials cleared."
+msgstr "認証情報がクリアされました。"
 
 msgid "Clear user session"
 msgstr "ユーザーセッションをクリア"
@@ -270,11 +223,14 @@ msgstr "書籍の詳細"
 msgid "Could not retrieve book details."
 msgstr "書籍の詳細を取得できませんでした。"
 
-msgid "Please set both username and password first."
-msgstr "まずユーザー名とパスワードを設定してください。"
-
 msgid "Logging in..."
 msgstr "ログイン中..."
+
+msgid "Credentials saved, but they could not be checked right now."
+msgstr "認証情報は保存されましたが、現時点では確認できませんでした。"
+
+msgid "Please set both username and password first."
+msgstr "まずユーザー名とパスワードを設定してください。"
 
 msgid "Sign-in"
 msgstr "ログイン"
@@ -297,34 +253,6 @@ msgstr "追加結果の読み込みに失敗しました"
 msgid "No more results found."
 msgstr "これ以上の結果は見つかりませんでした。"
 
-msgid "This book's file type is unknown, so it cannot be downloaded."
-msgstr "この書籍のファイル形式が不明なため、ダウンロードできません。"
-
-msgid "Book identifiers missing. Cannot download."
-msgstr "書籍の識別子がありません。ダウンロードできません。"
-
-#, lua-format
-msgid "Cannot create downloads directory: %s"
-msgstr "ダウンロードディレクトリを作成できません: %s"
-
-msgid "Could not open reader UI."
-msgstr "リーダーUIを開けませんでした。"
-
-msgid "Download failed: Unknown error"
-msgstr "ダウンロードに失敗しました：不明なエラー"
-
-msgid "Download limit reached. Please try again later or check your account."
-msgstr "ダウンロード上限に達しました。後でもう一度お試しいただくか、アカウントをご確認ください。"
-
-msgid "Book download"
-msgstr "書籍ダウンロード"
-
-msgid "Retrying download… (tap to cancel)"
-msgstr "ダウンロードを再試行中…（タップしてキャンセル）"
-
-msgid "Download cancelled."
-msgstr "ダウンロードをキャンセルしました。"
-
 msgid "Book ID is required."
 msgstr "書籍IDが必要です。"
 
@@ -345,6 +273,9 @@ msgstr "サーバーアドレスが見つかりませんでした"
 
 msgid "This Z-library server is refusing automated access"
 msgstr "このZ-libraryサーバーは自動アクセスを拒否しています"
+
+msgid "Credentials rejected or invalid response"
+msgstr "認証情報が拒否されたか、応答が不正です"
 
 msgid "Request timed out - please check your connection and try again"
 msgstr "リクエストがタイムアウトしました - 接続を確認して再試行してください"
@@ -385,9 +316,6 @@ msgstr "ログインに失敗しました"
 msgid "Login failed: Invalid session data"
 msgstr "ログインに失敗しました：セッションデータが不正です"
 
-msgid "Credentials rejected or invalid response"
-msgstr "認証情報が拒否されたか、応答が不正です"
-
 msgid "No response received from server - please try again"
 msgstr "サーバーから応答がありません - 再試行してください"
 
@@ -399,6 +327,9 @@ msgstr "検索APIエラー"
 
 msgid "Failed to open target file"
 msgstr "対象ファイルを開けませんでした"
+
+msgid "Unknown error"
+msgstr "不明なエラー"
 
 msgid "Download limit reached or file is an HTML page"
 msgstr "ダウンロード上限に達したか、ファイルがHTMLページです"
@@ -453,6 +384,9 @@ msgstr "ダウンロードリンクの応答の解析に失敗しました。"
 
 msgid "API returned an error for download link."
 msgstr "ダウンロードリンクに対してAPIがエラーを返しました。"
+
+msgid "Download limit reached. Please try again later or check your account."
+msgstr "ダウンロード上限に達しました。後でもう一度お試しいただくか、アカウントをご確認ください。"
 
 msgid "No download link provided in API response."
 msgstr "APIの応答にダウンロードリンクがありません。"
@@ -550,6 +484,9 @@ msgstr "ページ"
 msgid "Cover"
 msgstr "表紙"
 
+msgid "Back"
+msgstr "戻る"
+
 msgid "More Similar Books"
 msgstr "類似書籍をもっと見る"
 
@@ -602,6 +539,79 @@ msgstr "無限"
 #, lua-format
 msgid "Block: %ds, Total: %s"
 msgstr "ブロック：%d秒、合計：%s"
+
+msgid "Operation failed, please retry."
+msgstr "操作に失敗しました。再試行してください。"
+
+msgid "Fetching domains..."
+msgstr "ドメインを取得中..."
+
+msgid "Successfully set base URL to: "
+msgstr "ベースURLを次に設定しました:"
+
+msgid "Failed to find a working base URL."
+msgstr "動作するベースURLが見つかりませんでした。"
+
+msgid "Queued"
+msgstr "待機中"
+
+msgid "Selection copied to clipboard."
+msgstr "選択範囲をクリップボードにコピーしました。"
+
+msgid "Checking"
+msgstr "確認中"
+
+msgid "Invalid Base URL."
+msgstr "無効なベースURLです。"
+
+msgid "Failed"
+msgstr "失敗"
+
+msgid "Searching for working Z-library server..."
+msgstr "動作中のZ-libraryサーバーを検索しています..."
+
+msgid "Current Base URL:"
+msgstr "現在のベースURL:"
+
+msgid "Mirror site redirected to: "
+msgstr "ミラーサイトのリダイレクト先:"
+
+msgid "Auto-discover base URL"
+msgstr "ベースURLを自動検出"
+
+msgid "Network unavailable."
+msgstr "ネットワークが利用できません。"
+
+msgid "Discovery is already running..."
+msgstr "検出は既に実行中です..."
+
+msgid "Refresh Dynamic Domains"
+msgstr "動的ドメインを更新"
+
+msgid "This book's file type is unknown, so it cannot be downloaded."
+msgstr "この書籍のファイル形式が不明なため、ダウンロードできません。"
+
+msgid "Book identifiers missing. Cannot download."
+msgstr "書籍の識別子がありません。ダウンロードできません。"
+
+#, lua-format
+msgid "Cannot create downloads directory: %s"
+msgstr "ダウンロードディレクトリを作成できません: %s"
+
+msgid "Could not open reader UI."
+msgstr "リーダーUIを開けませんでした。"
+
+msgid "Download failed: Unknown error"
+msgstr "ダウンロードに失敗しました：不明なエラー"
+
+msgid "Book download"
+msgstr "書籍ダウンロード"
+
+msgid "Retrying download… (tap to cancel)"
+msgstr "ダウンロードを再試行中…（タップしてキャンセル）"
+
+msgid "Download cancelled."
+msgstr "ダウンロードをキャンセルしました。"
 
 msgid "Untitled"
 msgstr "無題"
@@ -762,6 +772,12 @@ msgstr "\"%s\" をダウンロード済みの書籍から削除しますか？"
 msgid "Remove"
 msgstr "削除"
 
+msgid "Clear your stored username and password?"
+msgstr "保存されているユーザー名とパスワードをクリアしますか？"
+
+msgid "Clear"
+msgstr "クリア"
+
 #, lua-format
 msgid "Download \"%s\"?"
 msgstr "\"%s\" をダウンロードしますか？"
@@ -911,11 +927,20 @@ msgstr "パスワード"
 msgid "Enter password"
 msgstr "パスワードを入力"
 
+msgid "Set and verify"
+msgstr "設定して確認"
+
 msgid "Please fill in all fields"
 msgstr "すべての項目を入力してください"
 
-msgid "Feature not implemented"
-msgstr "この機能は未実装です"
+#~ msgid "Verify credentials"
+#~ msgstr "認証情報を確認"
+
+#~ msgid "Developer options"
+#~ msgstr "開発者オプション"
+
+#~ msgid "Feature not implemented"
+#~ msgstr "この機能は未実装です"
 
 #~ msgid "Download this book?"
 #~ msgstr "この書籍をダウンロードしますか？"

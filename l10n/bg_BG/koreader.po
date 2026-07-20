@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 09:56+0000\n"
+"POT-Creation-Date: 2026-07-20 22:20+0200\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -30,74 +30,17 @@ msgstr "Търсене в Z-library"
 msgid "My books"
 msgstr "Моите книги"
 
-msgid "Operation failed, please retry."
-msgstr "Операцията е неуспешна, моля опитайте отново."
-
-msgid "Fetching domains..."
-msgstr "Извличане на домейни…"
-
-msgid "Successfully set base URL to: "
-msgstr "Основният URL е зададен успешно: "
-
-msgid "Failed to find a working base URL."
-msgstr "Неуспешно намиране на работещ основен URL."
-
-msgid "Queued"
-msgstr "В опашката"
-
-msgid "Selection copied to clipboard."
-msgstr "Селекцията е копирана в клипборда."
-
-msgid "Checking"
-msgstr "Проверка"
+msgid "Settings"
+msgstr "Настройки"
 
 msgid "Set base URL"
 msgstr "Задаване на основен URL"
-
-msgid "Invalid Base URL."
-msgstr "Невалиден основен URL."
-
-msgid "Failed"
-msgstr "Неуспешно"
-
-msgid "Unknown error"
-msgstr "Непозната грешка"
-
-msgid "Searching for working Z-library server..."
-msgstr "Търсене на работещ сървър на Z-library..."
-
-msgid "Current Base URL:"
-msgstr "Текущ основен URL:"
-
-msgid "Mirror site redirected to: "
-msgstr "Огледалният сайт пренасочи към: "
-
-msgid "Auto-discover base URL"
-msgstr "Автоматично намиране на основен URL"
-
-msgid "Network unavailable."
-msgstr "Мрежата не е налична."
-
-msgid "Discovery is already running..."
-msgstr "Търсенето вече е в ход…"
-
-msgid "Refresh Dynamic Domains"
-msgstr "Обновяване на динамичните домейни"
-
-msgid "Back"
-msgstr "Назад"
-
-msgid "Settings"
-msgstr "Настройки"
 
 msgid "Set credentials"
 msgstr "Задаване на данни за вход"
 
 msgid "Login successful!"
 msgstr "Успешно влизане!"
-
-msgid "Verify credentials"
-msgstr "Проверка на данните"
 
 msgid "Set download directory"
 msgstr "Задаване на папка за изтегляне"
@@ -141,8 +84,18 @@ msgstr "Проверка за актуализации"
 msgid "Error: Plugin path not found. Cannot check for updates."
 msgstr "Грешка: Пътят до приставката не е намерен. Не може да се провери за актуализации."
 
-msgid "Developer options"
-msgstr "Опции за разработчици"
+msgid "Advanced"
+msgstr "Разширени"
+
+msgid "Clear credentials"
+msgstr "Изчистване на данните за вход"
+
+#, lua-format
+msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
+msgstr "Данните за вход са изчистени, но %s все още ги задава. Редактирайте този файл, за да спрете това."
+
+msgid "Credentials cleared."
+msgstr "Данните за вход са изчистени."
 
 msgid "Clear user session"
 msgstr "Изчистване на потребителската сесия"
@@ -276,11 +229,14 @@ msgstr "Детайли за книгата"
 msgid "Could not retrieve book details."
 msgstr "Не може да се получат детайли за книгата."
 
-msgid "Please set both username and password first."
-msgstr "Моля, задайте първо потребителско име и парола."
-
 msgid "Logging in..."
 msgstr "Влизане..."
+
+msgid "Credentials saved, but they could not be checked right now."
+msgstr "Данните за вход са запазени, но в момента не могат да бъдат проверени."
+
+msgid "Please set both username and password first."
+msgstr "Моля, задайте първо потребителско име и парола."
 
 msgid "Sign-in"
 msgstr "Влизане"
@@ -303,34 +259,6 @@ msgstr "Неуспешно зареждане на още резултати"
 msgid "No more results found."
 msgstr "Няма повече резултати."
 
-msgid "This book's file type is unknown, so it cannot be downloaded."
-msgstr "Форматът на тази книга е неизвестен, затова не може да бъде изтеглена."
-
-msgid "Book identifiers missing. Cannot download."
-msgstr "Липсват идентификатори на книгата. Изтеглянето е невъзможно."
-
-#, lua-format
-msgid "Cannot create downloads directory: %s"
-msgstr "Не може да се създаде папка за изтегляне: %s"
-
-msgid "Could not open reader UI."
-msgstr "Не може да се отвори интерфейсът на четеца."
-
-msgid "Download failed: Unknown error"
-msgstr "Изтеглянето неуспешно: Непозната грешка"
-
-msgid "Download limit reached. Please try again later or check your account."
-msgstr "Достигнат лимит за изтегляне. Опитайте по-късно или проверете акаунта си."
-
-msgid "Book download"
-msgstr "Изтегляне на книга"
-
-msgid "Retrying download… (tap to cancel)"
-msgstr "Повторен опит за изтегляне… (докоснете за отказ)"
-
-msgid "Download cancelled."
-msgstr "Изтеглянето е отменено."
-
 msgid "Book ID is required."
 msgstr "Изисква се ID на книгата."
 
@@ -351,6 +279,9 @@ msgstr "Не може да се намери адресът на сървъра"
 
 msgid "This Z-library server is refusing automated access"
 msgstr "Този сървър на Z-library блокира автоматизирания достъп"
+
+msgid "Credentials rejected or invalid response"
+msgstr "Отхвърлени идентификационни данни или невалиден отговор"
 
 msgid "Request timed out - please check your connection and try again"
 msgstr "Заявката изтече — проверете връзката си и опитайте отново"
@@ -391,9 +322,6 @@ msgstr "Неуспешно влизане"
 msgid "Login failed: Invalid session data"
 msgstr "Неуспешно влизане: Невалидни данни за сесията"
 
-msgid "Credentials rejected or invalid response"
-msgstr "Отхвърлени идентификационни данни или невалиден отговор"
-
 msgid "No response received from server - please try again"
 msgstr "Не е получен отговор от сървъра — опитайте отново"
 
@@ -405,6 +333,9 @@ msgstr "Грешка в API за търсене"
 
 msgid "Failed to open target file"
 msgstr "Неуспешно отваряне на целевия файл"
+
+msgid "Unknown error"
+msgstr "Непозната грешка"
 
 msgid "Download limit reached or file is an HTML page"
 msgstr "Достигнат лимит за изтегляне или файлът е HTML страница"
@@ -459,6 +390,9 @@ msgstr "Неуспешен разбор на отговора за линк за
 
 msgid "API returned an error for download link."
 msgstr "API върна грешка за линк за изтегляне."
+
+msgid "Download limit reached. Please try again later or check your account."
+msgstr "Достигнат лимит за изтегляне. Опитайте по-късно или проверете акаунта си."
 
 msgid "No download link provided in API response."
 msgstr "В отговора на API не е предоставен линк за изтегляне."
@@ -556,6 +490,9 @@ msgstr "страници"
 msgid "Cover"
 msgstr "Корица"
 
+msgid "Back"
+msgstr "Назад"
+
 msgid "More Similar Books"
 msgstr "Още подобни книги"
 
@@ -608,6 +545,79 @@ msgstr "безкрайно"
 #, lua-format
 msgid "Block: %ds, Total: %s"
 msgstr "Блок: %d сек, Общо: %s"
+
+msgid "Operation failed, please retry."
+msgstr "Операцията е неуспешна, моля опитайте отново."
+
+msgid "Fetching domains..."
+msgstr "Извличане на домейни…"
+
+msgid "Successfully set base URL to: "
+msgstr "Основният URL е зададен успешно: "
+
+msgid "Failed to find a working base URL."
+msgstr "Неуспешно намиране на работещ основен URL."
+
+msgid "Queued"
+msgstr "В опашката"
+
+msgid "Selection copied to clipboard."
+msgstr "Селекцията е копирана в клипборда."
+
+msgid "Checking"
+msgstr "Проверка"
+
+msgid "Invalid Base URL."
+msgstr "Невалиден основен URL."
+
+msgid "Failed"
+msgstr "Неуспешно"
+
+msgid "Searching for working Z-library server..."
+msgstr "Търсене на работещ сървър на Z-library..."
+
+msgid "Current Base URL:"
+msgstr "Текущ основен URL:"
+
+msgid "Mirror site redirected to: "
+msgstr "Огледалният сайт пренасочи към: "
+
+msgid "Auto-discover base URL"
+msgstr "Автоматично намиране на основен URL"
+
+msgid "Network unavailable."
+msgstr "Мрежата не е налична."
+
+msgid "Discovery is already running..."
+msgstr "Търсенето вече е в ход…"
+
+msgid "Refresh Dynamic Domains"
+msgstr "Обновяване на динамичните домейни"
+
+msgid "This book's file type is unknown, so it cannot be downloaded."
+msgstr "Форматът на тази книга е неизвестен, затова не може да бъде изтеглена."
+
+msgid "Book identifiers missing. Cannot download."
+msgstr "Липсват идентификатори на книгата. Изтеглянето е невъзможно."
+
+#, lua-format
+msgid "Cannot create downloads directory: %s"
+msgstr "Не може да се създаде папка за изтегляне: %s"
+
+msgid "Could not open reader UI."
+msgstr "Не може да се отвори интерфейсът на четеца."
+
+msgid "Download failed: Unknown error"
+msgstr "Изтеглянето неуспешно: Непозната грешка"
+
+msgid "Book download"
+msgstr "Изтегляне на книга"
+
+msgid "Retrying download… (tap to cancel)"
+msgstr "Повторен опит за изтегляне… (докоснете за отказ)"
+
+msgid "Download cancelled."
+msgstr "Изтеглянето е отменено."
 
 msgid "Untitled"
 msgstr "Без заглавие"
@@ -768,6 +778,12 @@ msgstr "Премахване на „%s“ от изтеглените ви кн
 msgid "Remove"
 msgstr "Премахване"
 
+msgid "Clear your stored username and password?"
+msgstr "Да се изчистят ли запазените потребителско име и парола?"
+
+msgid "Clear"
+msgstr "Изчистване"
+
 #, lua-format
 msgid "Download \"%s\"?"
 msgstr "Изтегляне на „%s“?"
@@ -917,11 +933,20 @@ msgstr "Парола"
 msgid "Enter password"
 msgstr "Въведете парола"
 
+msgid "Set and verify"
+msgstr "Задаване и проверка"
+
 msgid "Please fill in all fields"
 msgstr "Попълнете всички полета"
 
-msgid "Feature not implemented"
-msgstr "Функцията не е реализирана"
+#~ msgid "Verify credentials"
+#~ msgstr "Проверка на данните"
+
+#~ msgid "Developer options"
+#~ msgstr "Опции за разработчици"
+
+#~ msgid "Feature not implemented"
+#~ msgstr "Функцията не е реализирана"
 
 #~ msgid "Download this book?"
 #~ msgstr "Изтегляне на тази книга?"

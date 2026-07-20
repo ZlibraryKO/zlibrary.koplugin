@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 09:56+0000\n"
+"POT-Creation-Date: 2026-07-20 22:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,74 +24,17 @@ msgstr "Z-library zoeken"
 msgid "My books"
 msgstr "Mijn boeken"
 
-msgid "Operation failed, please retry."
-msgstr "Bewerking mislukt, probeer het opnieuw."
-
-msgid "Fetching domains..."
-msgstr "Domeinen ophalen..."
-
-msgid "Successfully set base URL to: "
-msgstr "Basis-URL succesvol ingesteld op:"
-
-msgid "Failed to find a working base URL."
-msgstr "Kan geen werkende basis-URL vinden."
-
-msgid "Queued"
-msgstr "In wachtrij"
-
-msgid "Selection copied to clipboard."
-msgstr "Selectie gekopieerd naar klembord."
-
-msgid "Checking"
-msgstr "Controleren"
+msgid "Settings"
+msgstr "Instellingen"
 
 msgid "Set base URL"
 msgstr "Stel basis-URL in"
-
-msgid "Invalid Base URL."
-msgstr "Ongeldige basis-URL."
-
-msgid "Failed"
-msgstr "Mislukt"
-
-msgid "Unknown error"
-msgstr "Onbekende fout"
-
-msgid "Searching for working Z-library server..."
-msgstr "Zoeken naar werkende Z-library server..."
-
-msgid "Current Base URL:"
-msgstr "Huidige basis-URL:"
-
-msgid "Mirror site redirected to: "
-msgstr "Mirrorsite doorverwezen naar:"
-
-msgid "Auto-discover base URL"
-msgstr "Basis-URL automatisch ontdekken"
-
-msgid "Network unavailable."
-msgstr "Netwerk niet beschikbaar."
-
-msgid "Discovery is already running..."
-msgstr "Detectie loopt al..."
-
-msgid "Refresh Dynamic Domains"
-msgstr "Dynamische domeinen vernieuwen"
-
-msgid "Back"
-msgstr "Terug"
-
-msgid "Settings"
-msgstr "Instellingen"
 
 msgid "Set credentials"
 msgstr "Inloggegevens instellen"
 
 msgid "Login successful!"
 msgstr "Succesvol ingelogd!"
-
-msgid "Verify credentials"
-msgstr "Inloggegevens verifiëren"
 
 msgid "Set download directory"
 msgstr "Downloadmap instellen"
@@ -135,8 +78,18 @@ msgstr "Controleren op updates"
 msgid "Error: Plugin path not found. Cannot check for updates."
 msgstr "Fout: plug-inpad niet gevonden. Kan niet op updates controleren."
 
-msgid "Developer options"
-msgstr "Ontwikkelaarsopties"
+msgid "Advanced"
+msgstr "Geavanceerd"
+
+msgid "Clear credentials"
+msgstr "Inloggegevens wissen"
+
+#, lua-format
+msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
+msgstr "Inloggegevens gewist, maar %s stelt ze nog steeds in. Bewerk dat bestand om dat te voorkomen."
+
+msgid "Credentials cleared."
+msgstr "Inloggegevens gewist."
 
 msgid "Clear user session"
 msgstr "Gebruikerssessie wissen"
@@ -270,11 +223,14 @@ msgstr "Boekdetails"
 msgid "Could not retrieve book details."
 msgstr "Kan boekdetails niet ophalen."
 
-msgid "Please set both username and password first."
-msgstr "Stel eerst zowel gebruikersnaam als wachtwoord in."
-
 msgid "Logging in..."
 msgstr "Bezig met inloggen..."
+
+msgid "Credentials saved, but they could not be checked right now."
+msgstr "Inloggegevens opgeslagen, maar ze konden nu niet worden geverifieerd."
+
+msgid "Please set both username and password first."
+msgstr "Stel eerst zowel gebruikersnaam als wachtwoord in."
 
 msgid "Sign-in"
 msgstr "Inloggen"
@@ -297,34 +253,6 @@ msgstr "Kan geen extra resultaten laden"
 msgid "No more results found."
 msgstr "Geen extra resultaten gevonden."
 
-msgid "This book's file type is unknown, so it cannot be downloaded."
-msgstr "Het formaat van dit boek is onbekend, dus het kan niet worden gedownload."
-
-msgid "Book identifiers missing. Cannot download."
-msgstr "Boek-ID's ontbreken. Downloaden niet mogelijk."
-
-#, lua-format
-msgid "Cannot create downloads directory: %s"
-msgstr "Kan downloadmap niet aanmaken: %s"
-
-msgid "Could not open reader UI."
-msgstr "Kan de reader-interface niet openen."
-
-msgid "Download failed: Unknown error"
-msgstr "Download mislukt: Onbekende fout"
-
-msgid "Download limit reached. Please try again later or check your account."
-msgstr "Downloadlimiet bereikt. Probeer het later opnieuw of controleer je account."
-
-msgid "Book download"
-msgstr "Boekdownload"
-
-msgid "Retrying download… (tap to cancel)"
-msgstr "Download opnieuw proberen… (tik om te annuleren)"
-
-msgid "Download cancelled."
-msgstr "Download geannuleerd."
-
 msgid "Book ID is required."
 msgstr "Boek-ID is vereist."
 
@@ -345,6 +273,9 @@ msgstr "Kan het serveradres niet vinden"
 
 msgid "This Z-library server is refusing automated access"
 msgstr "Deze Z-library server weigert geautomatiseerde toegang"
+
+msgid "Credentials rejected or invalid response"
+msgstr "Inloggegevens geweigerd of ongeldig antwoord"
 
 msgid "Request timed out - please check your connection and try again"
 msgstr "Time-out van verzoek - controleer je verbinding en probeer het opnieuw"
@@ -385,9 +316,6 @@ msgstr "Inloggen mislukt"
 msgid "Login failed: Invalid session data"
 msgstr "Inloggen mislukt: ongeldige sessiegegevens"
 
-msgid "Credentials rejected or invalid response"
-msgstr "Inloggegevens geweigerd of ongeldig antwoord"
-
 msgid "No response received from server - please try again"
 msgstr "Geen antwoord van server ontvangen - probeer het opnieuw"
 
@@ -399,6 +327,9 @@ msgstr "Zoek-API-fout"
 
 msgid "Failed to open target file"
 msgstr "Kan doelbestand niet openen"
+
+msgid "Unknown error"
+msgstr "Onbekende fout"
 
 msgid "Download limit reached or file is an HTML page"
 msgstr "Downloadlimiet bereikt of bestand is een HTML-pagina"
@@ -453,6 +384,9 @@ msgstr "Kan antwoord van downloadlink niet verwerken."
 
 msgid "API returned an error for download link."
 msgstr "API retourneerde een fout voor downloadlink."
+
+msgid "Download limit reached. Please try again later or check your account."
+msgstr "Downloadlimiet bereikt. Probeer het later opnieuw of controleer je account."
 
 msgid "No download link provided in API response."
 msgstr "Geen downloadlink in API-antwoord."
@@ -550,6 +484,9 @@ msgstr "pagina's"
 msgid "Cover"
 msgstr "Omslag"
 
+msgid "Back"
+msgstr "Terug"
+
 msgid "More Similar Books"
 msgstr "Meer vergelijkbare boeken"
 
@@ -602,6 +539,79 @@ msgstr "oneindig"
 #, lua-format
 msgid "Block: %ds, Total: %s"
 msgstr "Blok: %ds, Totaal: %s"
+
+msgid "Operation failed, please retry."
+msgstr "Bewerking mislukt, probeer het opnieuw."
+
+msgid "Fetching domains..."
+msgstr "Domeinen ophalen..."
+
+msgid "Successfully set base URL to: "
+msgstr "Basis-URL succesvol ingesteld op:"
+
+msgid "Failed to find a working base URL."
+msgstr "Kan geen werkende basis-URL vinden."
+
+msgid "Queued"
+msgstr "In wachtrij"
+
+msgid "Selection copied to clipboard."
+msgstr "Selectie gekopieerd naar klembord."
+
+msgid "Checking"
+msgstr "Controleren"
+
+msgid "Invalid Base URL."
+msgstr "Ongeldige basis-URL."
+
+msgid "Failed"
+msgstr "Mislukt"
+
+msgid "Searching for working Z-library server..."
+msgstr "Zoeken naar werkende Z-library server..."
+
+msgid "Current Base URL:"
+msgstr "Huidige basis-URL:"
+
+msgid "Mirror site redirected to: "
+msgstr "Mirrorsite doorverwezen naar:"
+
+msgid "Auto-discover base URL"
+msgstr "Basis-URL automatisch ontdekken"
+
+msgid "Network unavailable."
+msgstr "Netwerk niet beschikbaar."
+
+msgid "Discovery is already running..."
+msgstr "Detectie loopt al..."
+
+msgid "Refresh Dynamic Domains"
+msgstr "Dynamische domeinen vernieuwen"
+
+msgid "This book's file type is unknown, so it cannot be downloaded."
+msgstr "Het formaat van dit boek is onbekend, dus het kan niet worden gedownload."
+
+msgid "Book identifiers missing. Cannot download."
+msgstr "Boek-ID's ontbreken. Downloaden niet mogelijk."
+
+#, lua-format
+msgid "Cannot create downloads directory: %s"
+msgstr "Kan downloadmap niet aanmaken: %s"
+
+msgid "Could not open reader UI."
+msgstr "Kan de reader-interface niet openen."
+
+msgid "Download failed: Unknown error"
+msgstr "Download mislukt: Onbekende fout"
+
+msgid "Book download"
+msgstr "Boekdownload"
+
+msgid "Retrying download… (tap to cancel)"
+msgstr "Download opnieuw proberen… (tik om te annuleren)"
+
+msgid "Download cancelled."
+msgstr "Download geannuleerd."
 
 msgid "Untitled"
 msgstr "Zonder titel"
@@ -762,6 +772,12 @@ msgstr "\"%s\" verwijderen uit je gedownloade boeken?"
 msgid "Remove"
 msgstr "Verwijderen"
 
+msgid "Clear your stored username and password?"
+msgstr "Je opgeslagen gebruikersnaam en wachtwoord wissen?"
+
+msgid "Clear"
+msgstr "Wissen"
+
 #, lua-format
 msgid "Download \"%s\"?"
 msgstr "\"%s\" downloaden?"
@@ -911,11 +927,20 @@ msgstr "Wachtwoord"
 msgid "Enter password"
 msgstr "Voer wachtwoord in"
 
+msgid "Set and verify"
+msgstr "Instellen en verifiëren"
+
 msgid "Please fill in all fields"
 msgstr "Vul alle velden in"
 
-msgid "Feature not implemented"
-msgstr "Functie niet geïmplementeerd"
+#~ msgid "Verify credentials"
+#~ msgstr "Inloggegevens verifiëren"
+
+#~ msgid "Developer options"
+#~ msgstr "Ontwikkelaarsopties"
+
+#~ msgid "Feature not implemented"
+#~ msgstr "Functie niet geïmplementeerd"
 
 #~ msgid "Download this book?"
 #~ msgstr "Dit boek downloaden?"

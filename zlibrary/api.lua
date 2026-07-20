@@ -68,6 +68,26 @@ local function _usableCoverUrl(cover)
     return cover
 end
 
+-- The header block every authenticated JSON call sends.
+--
+-- Twelve call sites wrote this out by hand, two of them with the keys in a different order, and
+-- fourteen carried a verbatim copy of the cookie line. Nothing varied between them, so there was
+-- nothing for the duplication to buy -- only twelve places to update if the session format ever
+-- changes, and twelve chances to miss one.
+--
+-- Calls that genuinely differ keep their own headers: login sends a Content-Length, downloadBook
+-- a Referer, and the cover fetch sends no cookie at all.
+local function _authedHeaders(user_id, user_key)
+    local headers = {
+        ["Content-Type"] = "application/x-www-form-urlencoded",
+        ["User-Agent"] = Config.USER_AGENT,
+    }
+    if user_id and user_key then
+        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
+    end
+    return headers
+end
+
 local function _transformApiBookData(api_books)
     if not api_books or type(api_books) ~= "table" then
         return {}
@@ -979,13 +999,7 @@ function Api.getRecommendedBooks(user_id, user_key)
         return { error = T("Z-library server URL not configured.") }
     end
 
-    local headers = {
-        ['Content-Type'] = 'application/x-www-form-urlencoded',
-        ["User-Agent"] = Config.USER_AGENT,
-    }
-    if user_id and user_key then
-        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
-    end
+    local headers = _authedHeaders(user_id, user_key)
     
     local http_result = Api.makeHttpRequest{
         url = url,
@@ -1028,13 +1042,7 @@ function Api.getMostPopularBooks(user_id, user_key)
         return { error = T("Z-library server URL not configured.") }
     end
 
-    local headers = {
-        ['Content-Type'] = 'application/x-www-form-urlencoded',
-        ["User-Agent"] = Config.USER_AGENT,
-    }
-    if user_id and user_key then
-        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
-    end
+    local headers = _authedHeaders(user_id, user_key)
 
     local http_result = Api.makeHttpRequest{
         url = url,
@@ -1077,13 +1085,7 @@ function Api.getBookDetails(user_id, user_key, book_id, book_hash)
         return { error = T("Z-library server URL not configured or book identifiers missing.") }
     end
 
-    local headers = {
-        ["User-Agent"] = Config.USER_AGENT,
-        ['Content-Type'] = 'application/x-www-form-urlencoded',
-    }
-    if user_id and user_key then
-        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
-    end
+    local headers = _authedHeaders(user_id, user_key)
 
     local http_result = Api.makeHttpRequest{
         url = url,
@@ -1133,13 +1135,7 @@ function Api.getDownloadLink(user_id, user_key, book_id, book_hash)
         return { error = T("Z-library server URL not configured or book identifiers missing.") }
     end
 
-    local headers = {
-        ["User-Agent"] = Config.USER_AGENT,
-        ['Content-Type'] = 'application/x-www-form-urlencoded',
-    }
-    if user_id and user_key then
-        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
-    end
+    local headers = _authedHeaders(user_id, user_key)
 
     local http_result = Api.makeHttpRequest{
         url = url,
@@ -1204,13 +1200,7 @@ function Api.getSimilarBooks(user_id, user_key, book_id, book_hash)
         return { error = T("Z-library server URL not configured.") }
     end
 
-    local headers = {
-        ['Content-Type'] = 'application/x-www-form-urlencoded',
-        ["User-Agent"] = Config.USER_AGENT,
-    }
-    if user_id and user_key then
-        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
-    end
+    local headers = _authedHeaders(user_id, user_key)
 
     local http_result = Api.makeHttpRequest{
         url = url,
@@ -1257,13 +1247,7 @@ function Api.getDownloadedBooks(user_id, user_key, page, order)
         return { error = T("Z-library server URL not configured.") }
     end
 
-    local headers = {
-        ['Content-Type'] = 'application/x-www-form-urlencoded',
-        ["User-Agent"] = Config.USER_AGENT,
-    }
-    if user_id and user_key then
-        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
-    end
+    local headers = _authedHeaders(user_id, user_key)
 
     local http_result = Api.makeHttpRequest{
         url = url,
@@ -1316,13 +1300,7 @@ function Api.getFavoriteBooks(user_id, user_key, page, order)
         return { error = T("Z-library server URL not configured.") }
     end
 
-    local headers = {
-        ['Content-Type'] = 'application/x-www-form-urlencoded',
-        ["User-Agent"] = Config.USER_AGENT,
-    }
-    if user_id and user_key then
-        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
-    end
+    local headers = _authedHeaders(user_id, user_key)
 
     local http_result = Api.makeHttpRequest{
         url = url,
@@ -1374,13 +1352,7 @@ function Api.deleteDownloadedBook(user_id, user_key, book_stub)
         return { error = T("Z-library server URL not configured.") }
     end
 
-    local headers = {
-        ['Content-Type'] = 'application/x-www-form-urlencoded',
-        ["User-Agent"] = Config.USER_AGENT,
-    }
-    if user_id and user_key then
-        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
-    end
+    local headers = _authedHeaders(user_id, user_key)
 
     local http_result = Api.makeHttpRequest{
         url = url,
@@ -1423,13 +1395,7 @@ function Api.unfavoriteBook(user_id, user_key, book_stub)
         return { error = T("Z-library server URL not configured.") }
     end
 
-    local headers = {
-        ['Content-Type'] = 'application/x-www-form-urlencoded',
-        ["User-Agent"] = Config.USER_AGENT,
-    }
-    if user_id and user_key then
-        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
-    end
+    local headers = _authedHeaders(user_id, user_key)
 
     local http_result = Api.makeHttpRequest{
         url = url,
@@ -1472,13 +1438,7 @@ function Api.getDownloadQuotaStatus(user_id, user_key)
         return { error = T("Z-library server URL not configured.") }
     end
 
-    local headers = {
-        ['Content-Type'] = 'application/x-www-form-urlencoded',
-        ["User-Agent"] = Config.USER_AGENT,
-    }
-    if user_id and user_key then
-        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
-    end
+    local headers = _authedHeaders(user_id, user_key)
 
     local http_result = Api.makeHttpRequest{
         url = url,
@@ -1519,13 +1479,7 @@ function Api.getFavoriteBookIds(user_id, user_key)
         return { error = T("Z-library server URL not configured.") }
     end
 
-    local headers = {
-        ['Content-Type'] = 'application/x-www-form-urlencoded',
-        ["User-Agent"] = Config.USER_AGENT,
-    }
-    if user_id and user_key then
-        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
-    end
+    local headers = _authedHeaders(user_id, user_key)
 
     local http_result = Api.makeHttpRequest{
         url = url,
@@ -1566,13 +1520,7 @@ function Api.favoriteBook(user_id, user_key, book_stub)
         return { error = T("Z-library server URL not configured.") }
     end
 
-    local headers = {
-        ['Content-Type'] = 'application/x-www-form-urlencoded',
-        ["User-Agent"] = Config.USER_AGENT,
-    }
-    if user_id and user_key then
-        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
-    end
+    local headers = _authedHeaders(user_id, user_key)
 
     local http_result = Api.makeHttpRequest{
         url = url,

@@ -462,6 +462,17 @@ function Zlibrary:addToMainMenu(menu_items)
                                 Ui.showDownloadDirectoryDialog()
                             end,
                         }, {
+                            -- Sits beside the download directory rather than under View Settings:
+                            -- it changes what happens after a download, not how a list looks.
+                            text = T("Ask to open after download"),
+                            keep_menu_open = true,
+                            checked_func = function()
+                                return not Config.getSkipOpenBookPrompt()
+                            end,
+                            callback = function()
+                                Config.setSkipOpenBookPrompt(not Config.getSkipOpenBookPrompt())
+                            end,
+                        }, {
                                 text = T("View Settings"),
                                 keep_menu_open = true,
                                 sub_item_table = { {

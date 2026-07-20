@@ -21,6 +21,7 @@ Config.SETTINGS_SEARCH_EXTENSIONS_KEY = "zlibrary_search_extensions"
 Config.SETTINGS_SEARCH_ORDERS_KEY = "zlibrary_search_order"
 Config.SETTINGS_DOWNLOAD_DIR_KEY = "zlibrary_download_dir"
 Config.SETTINGS_TURN_OFF_WIFI_AFTER_DOWNLOAD_KEY = "zlibrary_turn_off_wifi_after_download"
+Config.SETTINGS_SKIP_OPEN_BOOK_PROMPT_KEY = "zlibrary_skip_open_book_prompt"
 Config.SETTINGS_TIMEOUT_LOGIN_KEY = "zlibrary_timeout_login"
 Config.SETTINGS_TIMEOUT_SEARCH_KEY = "zlibrary_timeout_search"
 Config.SETTINGS_TIMEOUT_BOOK_DETAILS_KEY = "zlibrary_timeout_book_details"
@@ -564,6 +565,16 @@ end
 
 function Config.setTurnOffWifiAfterDownload(turn_off)
     Config.saveSetting(Config.SETTINGS_TURN_OFF_WIFI_AFTER_DOWNLOAD_KEY, turn_off)
+end
+
+-- Off by default: the prompt is the only confirmation most people get that a download finished,
+-- so quietening it has to be asked for.
+function Config.getSkipOpenBookPrompt()
+    return Config.getSetting(Config.SETTINGS_SKIP_OPEN_BOOK_PROMPT_KEY, false)
+end
+
+function Config.setSkipOpenBookPrompt(skip)
+    Config.saveSetting(Config.SETTINGS_SKIP_OPEN_BOOK_PROMPT_KEY, skip)
 end
 
 -- Timeout configuration functions

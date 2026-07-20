@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 10:11+0200\n"
+"POT-Creation-Date: 2026-07-20 10:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese <zh@li.org>\n"
@@ -95,6 +95,9 @@ msgstr "驗證憑證"
 
 msgid "Set download directory"
 msgstr "設置下載目錄"
+
+msgid "Ask to open after download"
+msgstr "下載後詢問是否打開"
 
 msgid "View Settings"
 msgstr "查看設置"
@@ -759,6 +762,10 @@ msgstr "移除"
 #, lua-format
 msgid "Download \"%s\"?"
 msgstr "下載\"%s\"？"
+
+#, lua-format
+msgid "\"%s\" downloaded."
+msgstr "「%s」下載完成。"
 
 #, lua-format
 msgid "\"%s\" downloaded successfully. Open it now?"

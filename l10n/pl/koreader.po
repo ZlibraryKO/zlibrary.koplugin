@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 10:11+0200\n"
+"POT-Creation-Date: 2026-07-20 10:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -95,6 +95,9 @@ msgstr "Zweryfikuj dane logowania"
 
 msgid "Set download directory"
 msgstr "Ustaw katalog pobierania"
+
+msgid "Ask to open after download"
+msgstr "Pytanie o otwarcie po pobraniu"
 
 msgid "View Settings"
 msgstr "Ustawienia widoku"
@@ -759,6 +762,10 @@ msgstr "Usuń"
 #, lua-format
 msgid "Download \"%s\"?"
 msgstr "Pobrać \"%s\"?"
+
+#, lua-format
+msgid "\"%s\" downloaded."
+msgstr "Pobrano „%s”."
 
 #, lua-format
 msgid "\"%s\" downloaded successfully. Open it now?"

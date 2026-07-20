@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 10:11+0200\n"
+"POT-Creation-Date: 2026-07-20 10:58+0200\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -101,6 +101,9 @@ msgstr "Проверка на данните"
 
 msgid "Set download directory"
 msgstr "Задаване на папка за изтегляне"
+
+msgid "Ask to open after download"
+msgstr "Питане за отваряне след изтегляне"
 
 msgid "View Settings"
 msgstr "Настройки на изгледа"
@@ -765,6 +768,10 @@ msgstr "Премахване"
 #, lua-format
 msgid "Download \"%s\"?"
 msgstr "Изтегляне на „%s“?"
+
+#, lua-format
+msgid "\"%s\" downloaded."
+msgstr "„%s“ е изтеглен."
 
 #, lua-format
 msgid "\"%s\" downloaded successfully. Open it now?"

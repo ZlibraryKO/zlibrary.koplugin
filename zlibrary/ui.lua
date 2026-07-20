@@ -554,6 +554,22 @@ end
 function Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, ok_open_callback, cancel_callback)
     local turn_off_wifi = default_turn_off_wifi
 
+    -- Downloading several books in a row means answering this dialog several times, which a user
+    -- asked to be able to switch off. Two things have to survive that.
+    --
+    -- The dialog is also where the Wi-Fi toggle lives, so skipping it must still act on the
+    -- stored preference rather than quietly leaving the radio on -- hence the cancel path, which
+    -- is what already handles "finished, not opening".
+    --
+    -- And it is the only sign most people get that the download worked. Replacing a dialog that
+    -- demands an answer with one that dismisses itself is the point; replacing it with silence
+    -- would be a different and worse feature.
+    if Config.getSkipOpenBookPrompt() then
+        Ui.showInfoMessage(string.format(T("\"%s\" downloaded."), filename))
+        if cancel_callback then cancel_callback(turn_off_wifi) end
+        return
+    end
+
     local function showDialog()
         local full_text = string.format(T("\"%s\" downloaded successfully. Open it now?"), filename)
 

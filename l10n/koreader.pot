@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 10:11+0200\n"
+"POT-Creation-Date: 2026-07-20 10:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,11 +25,11 @@ msgstr ""
 msgid "[[A plugin to search and download books from Z-library.]]"
 msgstr ""
 
-#: main.lua:33 main.lua:711 zlibrary/multisearch_dialog.lua:21
+#: main.lua:33 main.lua:722 zlibrary/multisearch_dialog.lua:21
 msgid "Z-library search"
 msgstr ""
 
-#: main.lua:34 main.lua:590
+#: main.lua:34 main.lua:601
 msgid "My books"
 msgstr ""
 
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Checking"
 msgstr ""
 
-#: main.lua:233 main.lua:309 main.lua:375 main.lua:431 zlibrary/ui.lua:1017
+#: main.lua:233 main.lua:309 main.lua:375 main.lua:431 zlibrary/ui.lua:1043
 msgid "Set base URL"
 msgstr ""
 
@@ -73,8 +73,8 @@ msgstr ""
 msgid "Failed"
 msgstr ""
 
-#: main.lua:242 main.lua:384 zlibrary/api.lua:854 zlibrary/api.lua:914
-#: zlibrary/api.lua:933
+#: main.lua:242 main.lua:384 zlibrary/api.lua:874 zlibrary/api.lua:934
+#: zlibrary/api.lua:953
 msgid "Unknown error"
 msgstr ""
 
@@ -90,7 +90,7 @@ msgstr ""
 msgid "Mirror site redirected to: "
 msgstr ""
 
-#: main.lua:346 zlibrary/ui.lua:740
+#: main.lua:346 zlibrary/ui.lua:766
 msgid "Auto-discover base URL"
 msgstr ""
 
@@ -107,7 +107,7 @@ msgid "Refresh Dynamic Domains"
 msgstr ""
 
 #: main.lua:398 zlibrary/bookdetails_dialog.lua:532
-#: zlibrary/bookdetails_dialog.lua:606 zlibrary/ui.lua:627
+#: zlibrary/bookdetails_dialog.lua:606 zlibrary/ui.lua:653
 msgid "Back"
 msgstr ""
 
@@ -115,7 +115,7 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: main.lua:438 zlibrary/ui.lua:1060
+#: main.lua:438 zlibrary/ui.lua:1086
 msgid "Set credentials"
 msgstr ""
 
@@ -123,7 +123,7 @@ msgstr ""
 msgid "Login successful!"
 msgstr ""
 
-#: main.lua:448 zlibrary/ui.lua:1078
+#: main.lua:448 zlibrary/ui.lua:1104
 msgid "Verify credentials"
 msgstr ""
 
@@ -131,320 +131,324 @@ msgstr ""
 msgid "Set download directory"
 msgstr ""
 
-#: main.lua:465
+#: main.lua:467
+msgid "Ask to open after download"
+msgstr ""
+
+#: main.lua:476
 msgid "View Settings"
 msgstr ""
 
-#: main.lua:468
+#: main.lua:479
 msgid "Search Covers"
 msgstr ""
 
-#: main.lua:479 main.lua:482
+#: main.lua:490 main.lua:493
 msgid "Search Items/Page"
 msgstr ""
 
-#: main.lua:484
+#: main.lua:495
 msgid "Browse Covers"
 msgstr ""
 
-#: main.lua:495 main.lua:497
+#: main.lua:506 main.lua:508
 msgid "Browse Items/Page"
 msgstr ""
 
-#: main.lua:500
+#: main.lua:511
 msgid "Search options"
 msgstr ""
 
-#: main.lua:504 zlibrary/ui.lua:278 zlibrary/ui.lua:410
+#: main.lua:515 zlibrary/ui.lua:278 zlibrary/ui.lua:410
 msgid "Select search languages"
 msgstr ""
 
-#: main.lua:510 zlibrary/ui.lua:282 zlibrary/ui.lua:418
+#: main.lua:521 zlibrary/ui.lua:282 zlibrary/ui.lua:418
 msgid "Select search formats"
 msgstr ""
 
-#: main.lua:516 zlibrary/ui.lua:286
+#: main.lua:527 zlibrary/ui.lua:286
 msgid "Select search order"
 msgstr ""
 
-#: main.lua:523
+#: main.lua:534
 msgid "Timeout settings"
 msgstr ""
 
-#: main.lua:531
+#: main.lua:542
 msgid "Check for updates"
 msgstr ""
 
-#: main.lua:539
+#: main.lua:550
 msgid "Error: Plugin path not found. Cannot check for updates."
 msgstr ""
 
-#: main.lua:544
+#: main.lua:555
 msgid "Developer options"
 msgstr ""
 
-#: main.lua:550
+#: main.lua:561
 msgid "Clear user session"
 msgstr ""
 
-#: main.lua:554
+#: main.lua:565
 msgid "Session cleared. You will need to login again."
 msgstr ""
 
-#: main.lua:557
+#: main.lua:568
 msgid "Clear runtime cache"
 msgstr ""
 
-#: main.lua:562
+#: main.lua:573
 msgid "Runtime cache cleared."
 msgstr ""
 
-#: main.lua:571 zlibrary/multisearch_dialog.lua:414 zlibrary/ui.lua:383
+#: main.lua:582 zlibrary/multisearch_dialog.lua:414 zlibrary/ui.lua:383
 msgid "Search"
 msgstr ""
 
-#: main.lua:577 main.lua:744
+#: main.lua:588 main.lua:755
 msgid "Recommended"
 msgstr ""
 
-#: main.lua:584 main.lua:726 zlibrary/config.lua:146
+#: main.lua:595 main.lua:737 zlibrary/config.lua:147
 msgid "Most popular"
 msgstr ""
 
-#: main.lua:679
+#: main.lua:690
 msgid "Operation"
 msgstr ""
 
-#: main.lua:697
+#: main.lua:708
 msgid "No books found, please try again"
 msgstr ""
 
-#: main.lua:732
+#: main.lua:743
 msgid "Fetching most popular books..."
 msgstr ""
 
-#: main.lua:733
+#: main.lua:744
 msgid "Failed to fetch most popular books"
 msgstr ""
 
-#: main.lua:734
+#: main.lua:745
 msgid "Most popular books"
 msgstr ""
 
-#: main.lua:750
+#: main.lua:761
 msgid "Fetching recommended books..."
 msgstr ""
 
-#: main.lua:751
+#: main.lua:762
 msgid "Failed to fetch recommended books"
 msgstr ""
 
-#: main.lua:752 zlibrary/ui.lua:929
+#: main.lua:763 zlibrary/ui.lua:955
 msgid "Recommended books"
 msgstr ""
 
-#: main.lua:806 main.lua:979 main.lua:1010 main.lua:1040
+#: main.lua:817 main.lua:990 main.lua:1021 main.lua:1051
 msgid "API returned an error, please try again"
 msgstr ""
 
-#: main.lua:822
+#: main.lua:833
 msgid "Z-library My Books"
 msgstr ""
 
-#: main.lua:843 main.lua:881
+#: main.lua:854 main.lua:892
 msgid "Downloaded"
 msgstr ""
 
-#: main.lua:849
+#: main.lua:860
 msgid "Favorites"
 msgstr ""
 
-#: main.lua:859
+#: main.lua:870
 msgid "Getting your favorites..."
 msgstr ""
 
-#: main.lua:860
+#: main.lua:871
 msgid "Failed to fetch favorite books"
 msgstr ""
 
-#: main.lua:861
+#: main.lua:872
 msgid "Favorite books"
 msgstr ""
 
-#: main.lua:891 main.lua:963
+#: main.lua:902 main.lua:974
 msgid "Remove from downloaded"
 msgstr ""
 
-#: main.lua:903
+#: main.lua:914
 msgid "Getting your downloaded..."
 msgstr ""
 
-#: main.lua:904
+#: main.lua:915
 msgid "Failed to fetch downloaded books"
 msgstr ""
 
-#: main.lua:905
+#: main.lua:916
 msgid "Downloaded books"
 msgstr ""
 
-#: main.lua:939
+#: main.lua:950
 msgid "Finding similar books..."
 msgstr ""
 
-#: main.lua:940
+#: main.lua:951
 msgid "No similar books found"
 msgstr ""
 
-#: main.lua:941
+#: main.lua:952
 msgid "Similar books"
 msgstr ""
 
-#: main.lua:959
+#: main.lua:970
 msgid "Removing book from downloaded…"
 msgstr ""
 
-#: main.lua:960
+#: main.lua:971
 msgid "Failed to remove book from downloaded"
 msgstr ""
 
-#: main.lua:973
+#: main.lua:984
 msgid "Book removed from downloaded, please refresh"
 msgstr ""
 
-#: main.lua:992
+#: main.lua:1003
 msgid "Removing book from favorites…"
 msgstr ""
 
-#: main.lua:993
+#: main.lua:1004
 msgid "Failed to remove book from favorites"
 msgstr ""
 
-#: main.lua:994
+#: main.lua:1005
 msgid "Unfavorite book"
 msgstr ""
 
-#: main.lua:1004
+#: main.lua:1015
 msgid "Book removed from favorites, please refresh"
 msgstr ""
 
-#: main.lua:1024
+#: main.lua:1035
 msgid "Adding book to favorites…"
 msgstr ""
 
-#: main.lua:1025
+#: main.lua:1036
 msgid "Failed to add book to favorites"
 msgstr ""
 
-#: main.lua:1026
+#: main.lua:1037
 msgid "Favorite book"
 msgstr ""
 
-#: main.lua:1034
+#: main.lua:1045
 msgid "Book added to favorites, please refresh"
 msgstr ""
 
-#: main.lua:1075 main.lua:1104
+#: main.lua:1086 main.lua:1115
 msgid "Fetching book details..."
 msgstr ""
 
-#: main.lua:1076 main.lua:1113
+#: main.lua:1087 main.lua:1124
 msgid "Failed to fetch book details"
 msgstr ""
 
-#: main.lua:1077 main.lua:1131 zlibrary/ui.lua:919
+#: main.lua:1088 main.lua:1142 zlibrary/ui.lua:945
 msgid "Book details"
 msgstr ""
 
-#: main.lua:1084 main.lua:1119
+#: main.lua:1095 main.lua:1130
 msgid "Could not retrieve book details."
 msgstr ""
 
-#: main.lua:1156
+#: main.lua:1167
 msgid "Please set both username and password first."
 msgstr ""
 
-#: main.lua:1161
+#: main.lua:1172
 msgid "Logging in..."
 msgstr ""
 
-#: main.lua:1181 zlibrary/ui.lua:899
+#: main.lua:1192 zlibrary/ui.lua:925
 msgid "Sign-in"
 msgstr ""
 
-#: main.lua:1202
+#: main.lua:1213
 #, lua-format
 msgid "Searching for \"%s\"..."
 msgstr ""
 
-#: main.lua:1235
+#: main.lua:1246
 #, lua-format
 msgid "No results found for \"%s\"."
 msgstr ""
 
-#: main.lua:1305
+#: main.lua:1316
 #, lua-format
 msgid "Loading more results (Page %s)..."
 msgstr ""
 
-#: main.lua:1330 main.lua:1364
+#: main.lua:1341 main.lua:1375
 msgid "Failed to load more results"
 msgstr ""
 
-#: main.lua:1348
+#: main.lua:1359
 msgid "No more results found."
 msgstr ""
 
-#: main.lua:1388
+#: main.lua:1402
 msgid "Book identifiers missing. Cannot download."
 msgstr ""
 
-#: main.lua:1409
+#: main.lua:1423
 #, lua-format
 msgid "Cannot create downloads directory: %s"
 msgstr ""
 
-#: main.lua:1505
+#: main.lua:1519
 msgid "Could not open reader UI."
 msgstr ""
 
-#: main.lua:1522 main.lua:1583 main.lua:1595 main.lua:1601
+#: main.lua:1536 main.lua:1597 main.lua:1609 main.lua:1615
 msgid "Download failed: Unknown error"
 msgstr ""
 
-#: main.lua:1540 zlibrary/api.lua:1186
+#: main.lua:1554 zlibrary/api.lua:1182
 msgid "Download limit reached. Please try again later or check your account."
 msgstr ""
 
-#: main.lua:1545 zlibrary/ui.lua:949
+#: main.lua:1559 zlibrary/ui.lua:975
 msgid "Book download"
 msgstr ""
 
-#: main.lua:1549
+#: main.lua:1563
 msgid "Retrying download… (tap to cancel)"
 msgstr ""
 
-#: main.lua:1594
+#: main.lua:1608
 msgid "Download cancelled."
 msgstr ""
 
-#: main.lua:1635 zlibrary/api.lua:1666
+#: main.lua:1649 zlibrary/api.lua:1614
 msgid "Book ID is required."
 msgstr ""
 
-#: main.lua:1660
+#: main.lua:1674
 msgid "Loading comments..."
 msgstr ""
 
-#: main.lua:1661
+#: main.lua:1675
 msgid "Failed to load comments"
 msgstr ""
 
-#: main.lua:1662 zlibrary/bookdetails_dialog.lua:329
-#: zlibrary/bookdetails_dialog.lua:578 zlibrary/ui.lua:964 zlibrary/ui.lua:969
+#: main.lua:1676 zlibrary/bookdetails_dialog.lua:329
+#: zlibrary/bookdetails_dialog.lua:578 zlibrary/ui.lua:990 zlibrary/ui.lua:995
 msgid "Comments"
 msgstr ""
 
-#: main.lua:1669
+#: main.lua:1683
 msgid "No comments to display"
 msgstr ""
 
@@ -456,266 +460,266 @@ msgstr ""
 msgid "This Z-library server is refusing automated access"
 msgstr ""
 
-#: zlibrary/api.lua:435 zlibrary/api.lua:496
+#: zlibrary/api.lua:455 zlibrary/api.lua:516
 msgid "Request timed out - please check your connection and try again"
 msgstr ""
 
-#: zlibrary/api.lua:437 zlibrary/ui.lua:682
+#: zlibrary/api.lua:457 zlibrary/ui.lua:708
 msgid "Network request failed"
 msgstr ""
 
-#: zlibrary/api.lua:507
+#: zlibrary/api.lua:527
 msgid "The Z-library address may be wrong or no longer exist."
 msgstr ""
 
-#: zlibrary/api.lua:509
+#: zlibrary/api.lua:529
 msgid ""
 "Network connection error - please check your internet connection and try "
 "again"
 msgstr ""
 
-#: zlibrary/api.lua:563 zlibrary/api.lua:573
+#: zlibrary/api.lua:583 zlibrary/api.lua:593
 msgid "Too many redirects"
 msgstr ""
 
-#: zlibrary/api.lua:602
+#: zlibrary/api.lua:622
 msgid "Try a different Z-library server."
 msgstr ""
 
-#: zlibrary/api.lua:609 zlibrary/api.lua:904
+#: zlibrary/api.lua:629 zlibrary/api.lua:924
 msgid "HTTP Error"
 msgstr ""
 
-#: zlibrary/api.lua:609
+#: zlibrary/api.lua:629
 msgid "Unknown Status"
 msgstr ""
 
-#: zlibrary/api.lua:625 zlibrary/api.lua:718
+#: zlibrary/api.lua:645 zlibrary/api.lua:738
 msgid ""
 "The Z-library server address (URL) is not set. Please configure it in the Z-"
 "library plugin settings."
 msgstr ""
 
-#: zlibrary/api.lua:662
+#: zlibrary/api.lua:682
 msgid "Login failed: Empty response from server"
 msgstr ""
 
-#: zlibrary/api.lua:674
+#: zlibrary/api.lua:694
 msgid "Login failed: Invalid response format"
 msgstr ""
 
-#: zlibrary/api.lua:686 zlibrary/api.lua:701
+#: zlibrary/api.lua:706 zlibrary/api.lua:721
 msgid "Login failed"
 msgstr ""
 
-#: zlibrary/api.lua:692
+#: zlibrary/api.lua:712
 msgid "Login failed: Invalid session data"
 msgstr ""
 
-#: zlibrary/api.lua:701
+#: zlibrary/api.lua:721
 msgid "Credentials rejected or invalid response"
 msgstr ""
 
-#: zlibrary/api.lua:782
+#: zlibrary/api.lua:802
 msgid "No response received from server - please try again"
 msgstr ""
 
-#: zlibrary/api.lua:792
+#: zlibrary/api.lua:812
 msgid "Invalid response format from server"
 msgstr ""
 
-#: zlibrary/api.lua:800
+#: zlibrary/api.lua:820
 msgid "Search API error"
 msgstr ""
 
-#: zlibrary/api.lua:854 zlibrary/api.lua:933
+#: zlibrary/api.lua:874 zlibrary/api.lua:953
 msgid "Failed to open target file"
 msgstr ""
 
-#: zlibrary/api.lua:897
+#: zlibrary/api.lua:917
 msgid "Download limit reached or file is an HTML page"
 msgstr ""
 
-#: zlibrary/api.lua:914
+#: zlibrary/api.lua:934
 msgid "Failed to save downloaded file"
 msgstr ""
 
-#: zlibrary/api.lua:964
+#: zlibrary/api.lua:984
 msgid "Download HTTP Error"
 msgstr ""
 
-#: zlibrary/api.lua:979 zlibrary/api.lua:1028 zlibrary/api.lua:1204
-#: zlibrary/api.lua:1257 zlibrary/api.lua:1316 zlibrary/api.lua:1374
-#: zlibrary/api.lua:1423 zlibrary/api.lua:1472 zlibrary/api.lua:1519
-#: zlibrary/api.lua:1566
+#: zlibrary/api.lua:999 zlibrary/api.lua:1042 zlibrary/api.lua:1200
+#: zlibrary/api.lua:1247 zlibrary/api.lua:1300 zlibrary/api.lua:1352
+#: zlibrary/api.lua:1395 zlibrary/api.lua:1438 zlibrary/api.lua:1479
+#: zlibrary/api.lua:1520
 msgid "Z-library server URL not configured."
 msgstr ""
 
-#: zlibrary/api.lua:1006
+#: zlibrary/api.lua:1020
 msgid "Failed to fetch recommended books (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:1012
+#: zlibrary/api.lua:1026
 msgid "Failed to parse recommended books response."
 msgstr ""
 
-#: zlibrary/api.lua:1017
+#: zlibrary/api.lua:1031
 msgid "API returned an error for recommended books."
 msgstr ""
 
-#: zlibrary/api.lua:1055
+#: zlibrary/api.lua:1063
 msgid "Failed to fetch most popular books (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:1061
+#: zlibrary/api.lua:1069
 msgid "Failed to parse most popular books response."
 msgstr ""
 
-#: zlibrary/api.lua:1066
+#: zlibrary/api.lua:1074
 msgid "API returned an error for most popular books."
 msgstr ""
 
-#: zlibrary/api.lua:1077 zlibrary/api.lua:1133 zlibrary/api.lua:1674
+#: zlibrary/api.lua:1085 zlibrary/api.lua:1135 zlibrary/api.lua:1622
 msgid "Z-library server URL not configured or book identifiers missing."
 msgstr ""
 
-#: zlibrary/api.lua:1106
+#: zlibrary/api.lua:1108
 msgid "Failed to fetch book details (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:1112
+#: zlibrary/api.lua:1114
 msgid "Failed to parse book details response."
 msgstr ""
 
-#: zlibrary/api.lua:1117
+#: zlibrary/api.lua:1119
 msgid "API returned an error for book details."
 msgstr ""
 
-#: zlibrary/api.lua:1123
+#: zlibrary/api.lua:1125
 msgid "Failed to process book details."
 msgstr ""
 
-#: zlibrary/api.lua:1162
+#: zlibrary/api.lua:1158
 msgid "Failed to fetch download link (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:1168
+#: zlibrary/api.lua:1164
 msgid "Failed to parse download link response."
 msgstr ""
 
-#: zlibrary/api.lua:1173
+#: zlibrary/api.lua:1169
 msgid "API returned an error for download link."
 msgstr ""
 
-#: zlibrary/api.lua:1188
+#: zlibrary/api.lua:1184
 msgid "No download link provided in API response."
 msgstr ""
 
-#: zlibrary/api.lua:1232
+#: zlibrary/api.lua:1222
 msgid "Failed to fetch similar books (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:1238
+#: zlibrary/api.lua:1228
 msgid "Failed to parse similar books response."
 msgstr ""
 
-#: zlibrary/api.lua:1243
+#: zlibrary/api.lua:1233
 msgid "API returned an error for similar books."
 msgstr ""
 
-#: zlibrary/api.lua:1285
+#: zlibrary/api.lua:1269
 msgid "Failed to fetch downloaded books (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:1292
+#: zlibrary/api.lua:1276
 msgid "Failed to parse downloaded books response."
 msgstr ""
 
-#: zlibrary/api.lua:1297
+#: zlibrary/api.lua:1281
 msgid "API returned an error for downloaded books."
 msgstr ""
 
-#: zlibrary/api.lua:1344
+#: zlibrary/api.lua:1322
 msgid "Failed to fetch favorite books (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:1350
+#: zlibrary/api.lua:1328
 msgid "Failed to parse favorite books response."
 msgstr ""
 
-#: zlibrary/api.lua:1355
+#: zlibrary/api.lua:1333
 msgid "API returned an error for favorite books."
 msgstr ""
 
-#: zlibrary/api.lua:1402
+#: zlibrary/api.lua:1374
 msgid "Failed to remove the book from downloaded (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:1408
+#: zlibrary/api.lua:1380
 msgid "Failed to parse the remove from downloaded response."
 msgstr ""
 
-#: zlibrary/api.lua:1413
+#: zlibrary/api.lua:1385
 msgid "API returned an error for remove from downloaded."
 msgstr ""
 
-#: zlibrary/api.lua:1451
+#: zlibrary/api.lua:1417
 msgid "Failed to fetch unfavorite book (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:1457
+#: zlibrary/api.lua:1423
 msgid "Failed to parse unfavorite book response."
 msgstr ""
 
-#: zlibrary/api.lua:1462
+#: zlibrary/api.lua:1428
 msgid "API returned an error for unfavorite book."
 msgstr ""
 
-#: zlibrary/api.lua:1498
+#: zlibrary/api.lua:1458
 msgid "Failed to fetch download quota status (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:1504
+#: zlibrary/api.lua:1464
 msgid "Failed to parse download quota status response."
 msgstr ""
 
-#: zlibrary/api.lua:1509
+#: zlibrary/api.lua:1469
 msgid "API returned an error for download quota status."
 msgstr ""
 
-#: zlibrary/api.lua:1545
+#: zlibrary/api.lua:1499
 msgid "Failed to fetch favorite-book IDs (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:1551
+#: zlibrary/api.lua:1505
 msgid "Failed to parse favorite-book IDs."
 msgstr ""
 
-#: zlibrary/api.lua:1556
+#: zlibrary/api.lua:1510
 msgid "API returned an error for favorite-book IDs."
 msgstr ""
 
-#: zlibrary/api.lua:1594
+#: zlibrary/api.lua:1542
 msgid "Failed to fetch favorite book (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:1600
+#: zlibrary/api.lua:1548
 msgid "Failed to parse favorite book response."
 msgstr ""
 
-#: zlibrary/api.lua:1605
+#: zlibrary/api.lua:1553
 msgid "API returned an error for favorite book."
 msgstr ""
 
-#: zlibrary/api.lua:1703
+#: zlibrary/api.lua:1651
 msgid "Failed to fetch book comments (no response body)."
 msgstr ""
 
-#: zlibrary/api.lua:1711
+#: zlibrary/api.lua:1659
 msgid "Failed to parse book comments response."
 msgstr ""
 
-#: zlibrary/api.lua:1718
+#: zlibrary/api.lua:1666
 msgid "API returned an error for book comments."
 msgstr ""
 
@@ -740,7 +744,7 @@ msgstr ""
 msgid "More Similar Books"
 msgstr ""
 
-#: zlibrary/bookdetails_dialog.lua:551 zlibrary/ui.lua:529 zlibrary/ui.lua:536
+#: zlibrary/bookdetails_dialog.lua:551 zlibrary/ui.lua:539 zlibrary/ui.lua:546
 msgid "Download"
 msgstr ""
 
@@ -768,41 +772,41 @@ msgstr ""
 msgid "No Comments"
 msgstr ""
 
-#: zlibrary/config.lua:147
+#: zlibrary/config.lua:148
 msgid "Best match"
 msgstr ""
 
-#: zlibrary/config.lua:148
+#: zlibrary/config.lua:149
 msgid "Recently added"
 msgstr ""
 
-#: zlibrary/config.lua:149 zlibrary/config.lua:150
+#: zlibrary/config.lua:150 zlibrary/config.lua:151
 #: zlibrary/multisearch_dialog.lua:369
 msgid "Title"
 msgstr ""
 
-#: zlibrary/config.lua:151
+#: zlibrary/config.lua:152
 msgid "Year"
 msgstr ""
 
-#: zlibrary/config.lua:152 zlibrary/config.lua:153
+#: zlibrary/config.lua:153 zlibrary/config.lua:154
 msgid "File size"
 msgstr ""
 
-#: zlibrary/config.lua:546
+#: zlibrary/config.lua:547
 msgid "Default"
 msgstr ""
 
-#: zlibrary/config.lua:620
+#: zlibrary/config.lua:631
 #, lua-format
 msgid "%ds"
 msgstr ""
 
-#: zlibrary/config.lua:627 zlibrary/ui.lua:779 zlibrary/ui.lua:812
+#: zlibrary/config.lua:638 zlibrary/ui.lua:805 zlibrary/ui.lua:838
 msgid "infinite"
 msgstr ""
 
-#: zlibrary/config.lua:628
+#: zlibrary/config.lua:639
 #, lua-format
 msgid "Block: %ds, Total: %s"
 msgstr ""
@@ -906,9 +910,9 @@ msgid "Update"
 msgstr ""
 
 #: zlibrary/ota.lua:349 zlibrary/ui.lua:299 zlibrary/ui.lua:423
-#: zlibrary/ui.lua:513 zlibrary/ui.lua:520 zlibrary/ui.lua:531
-#: zlibrary/ui.lua:538 zlibrary/ui.lua:725 zlibrary/ui.lua:848
-#: zlibrary/ui.lua:984 zlibrary/ui.lua:1072
+#: zlibrary/ui.lua:523 zlibrary/ui.lua:530 zlibrary/ui.lua:541
+#: zlibrary/ui.lua:548 zlibrary/ui.lua:751 zlibrary/ui.lua:874
+#: zlibrary/ui.lua:1010 zlibrary/ui.lua:1098
 msgid "Cancel"
 msgstr ""
 
@@ -924,7 +928,7 @@ msgstr ""
 msgid "Downloading… (tap to cancel)"
 msgstr ""
 
-#: zlibrary/ui.lua:149 zlibrary/ui.lua:156 zlibrary/ui.lua:573
+#: zlibrary/ui.lua:149 zlibrary/ui.lua:156 zlibrary/ui.lua:599
 msgid "Close"
 msgstr ""
 
@@ -951,12 +955,12 @@ msgstr ""
 msgid "Filter cleared for %s."
 msgstr ""
 
-#: zlibrary/ui.lua:304 zlibrary/ui.lua:1094
+#: zlibrary/ui.lua:304 zlibrary/ui.lua:1120
 msgid "Set"
 msgstr ""
 
-#: zlibrary/ui.lua:311 zlibrary/ui.lua:318 zlibrary/ui.lua:1048
-#: zlibrary/ui.lua:1106 zlibrary/ui.lua:1112
+#: zlibrary/ui.lua:311 zlibrary/ui.lua:318 zlibrary/ui.lua:1074
+#: zlibrary/ui.lua:1132 zlibrary/ui.lua:1138
 msgid "Setting saved successfully!"
 msgstr ""
 
@@ -1000,11 +1004,11 @@ msgstr ""
 msgid "Please enter a search term."
 msgstr ""
 
-#: zlibrary/ui.lua:399 zlibrary/ui.lua:476
+#: zlibrary/ui.lua:399 zlibrary/ui.lua:481
 msgid "Sort by"
 msgstr ""
 
-#: zlibrary/ui.lua:434 zlibrary/ui.lua:507
+#: zlibrary/ui.lua:434 zlibrary/ui.lua:517
 msgid "Unknown Title"
 msgstr ""
 
@@ -1012,218 +1016,223 @@ msgstr ""
 msgid "Rating"
 msgstr ""
 
-#: zlibrary/ui.lua:475
+#: zlibrary/ui.lua:480
 msgid "Search Results"
 msgstr ""
 
-#: zlibrary/ui.lua:507
+#: zlibrary/ui.lua:517
 #, lua-format
 msgid "Remove \"%s\" from your downloaded books?"
 msgstr ""
 
-#: zlibrary/ui.lua:511 zlibrary/ui.lua:518
+#: zlibrary/ui.lua:521 zlibrary/ui.lua:528
 msgid "Remove"
 msgstr ""
 
-#: zlibrary/ui.lua:528 zlibrary/ui.lua:535
+#: zlibrary/ui.lua:538 zlibrary/ui.lua:545
 #, lua-format
 msgid "Download \"%s\"?"
 msgstr ""
 
-#: zlibrary/ui.lua:548
+#: zlibrary/ui.lua:568
+#, lua-format
+msgid "\"%s\" downloaded."
+msgstr ""
+
+#: zlibrary/ui.lua:574
 #, lua-format
 msgid "\"%s\" downloaded successfully. Open it now?"
 msgstr ""
 
-#: zlibrary/ui.lua:556
+#: zlibrary/ui.lua:582
 msgid "Turn off Wi-Fi after closing this dialog"
 msgstr ""
 
-#: zlibrary/ui.lua:569
+#: zlibrary/ui.lua:595
 msgid "Open book"
 msgstr ""
 
-#: zlibrary/ui.lua:603
+#: zlibrary/ui.lua:629
 #, lua-format
 msgid ""
 "No %s found, please try again. Sometimes this requires a couple of retries."
 msgstr ""
 
-#: zlibrary/ui.lua:608
+#: zlibrary/ui.lua:634
 msgid "Z-library Similar Books"
 msgstr ""
 
-#: zlibrary/ui.lua:625
+#: zlibrary/ui.lua:651
 msgid "Book Details"
 msgstr ""
 
-#: zlibrary/ui.lua:639
+#: zlibrary/ui.lua:665
 #, lua-format
 msgid "Retrying search for \"%s\"..."
 msgstr ""
 
-#: zlibrary/ui.lua:655 zlibrary/ui.lua:909
+#: zlibrary/ui.lua:681 zlibrary/ui.lua:935
 msgid "Book search"
 msgstr ""
 
-#: zlibrary/ui.lua:677
+#: zlibrary/ui.lua:703
 msgid "Request timed out"
 msgstr ""
 
-#: zlibrary/ui.lua:681
+#: zlibrary/ui.lua:707
 msgid "Network connection error"
 msgstr ""
 
-#: zlibrary/ui.lua:705
+#: zlibrary/ui.lua:731
 #, lua-format
 msgid "Could not complete \"%s\" due to a timeout%s. Would you like to retry?"
 msgstr ""
 
-#: zlibrary/ui.lua:707
+#: zlibrary/ui.lua:733
 #, lua-format
 msgid ""
 "Could not complete \"%s\" because the server address could not be found. "
 "Would you like to retry?"
 msgstr ""
 
-#: zlibrary/ui.lua:709
+#: zlibrary/ui.lua:735
 #, lua-format
 msgid ""
 "Could not complete \"%s\" due to a network error. Would you like to retry?"
 msgstr ""
 
-#: zlibrary/ui.lua:718
+#: zlibrary/ui.lua:744
 #, lua-format
 msgid ""
 "Could not complete \"%s\" due to a temporary issue. Would you like to retry?"
 msgstr ""
 
-#: zlibrary/ui.lua:724 zlibrary/ui.lua:740
+#: zlibrary/ui.lua:750 zlibrary/ui.lua:766
 msgid "Retry"
 msgstr ""
 
-#: zlibrary/ui.lua:778 zlibrary/ui.lua:788
+#: zlibrary/ui.lua:804 zlibrary/ui.lua:814
 #, lua-format
 msgid "Block timeout: %s"
 msgstr ""
 
-#: zlibrary/ui.lua:779 zlibrary/ui.lua:812
+#: zlibrary/ui.lua:805 zlibrary/ui.lua:838
 #, lua-format
 msgid "Total timeout: %s"
 msgstr ""
 
-#: zlibrary/ui.lua:792
+#: zlibrary/ui.lua:818
 #, lua-format
 msgid "Set %s block timeout (seconds)"
 msgstr ""
 
-#: zlibrary/ui.lua:803
+#: zlibrary/ui.lua:829
 msgid "Please enter a valid number (minimum 1 second)"
 msgstr ""
 
-#: zlibrary/ui.lua:816
+#: zlibrary/ui.lua:842
 #, lua-format
 msgid "Set %s total timeout (seconds, -1 for infinite)"
 msgstr ""
 
-#: zlibrary/ui.lua:827
+#: zlibrary/ui.lua:853
 msgid "Please enter a valid number (minimum 1 second or -1 for infinite)"
 msgstr ""
 
-#: zlibrary/ui.lua:840
+#: zlibrary/ui.lua:866
 msgid "Reset to defaults"
 msgstr ""
 
-#: zlibrary/ui.lua:846
+#: zlibrary/ui.lua:872
 #, lua-format
 msgid "Reset %s timeouts to default values?"
 msgstr ""
 
-#: zlibrary/ui.lua:847
+#: zlibrary/ui.lua:873
 msgid "Reset"
 msgstr ""
 
-#: zlibrary/ui.lua:852
+#: zlibrary/ui.lua:878
 msgid "Timeout settings reset to defaults"
 msgstr ""
 
-#: zlibrary/ui.lua:860
+#: zlibrary/ui.lua:886
 #, lua-format
 msgid "%s Timeout Settings"
 msgstr ""
 
-#: zlibrary/ui.lua:894
+#: zlibrary/ui.lua:920
 msgid "Login timeouts"
 msgstr ""
 
-#: zlibrary/ui.lua:904
+#: zlibrary/ui.lua:930
 msgid "Search timeouts"
 msgstr ""
 
-#: zlibrary/ui.lua:914
+#: zlibrary/ui.lua:940
 msgid "Book details timeouts"
 msgstr ""
 
-#: zlibrary/ui.lua:924
+#: zlibrary/ui.lua:950
 msgid "Recommended books timeouts"
 msgstr ""
 
-#: zlibrary/ui.lua:934
+#: zlibrary/ui.lua:960
 msgid "Popular books timeouts"
 msgstr ""
 
-#: zlibrary/ui.lua:939
+#: zlibrary/ui.lua:965
 msgid "Popular books"
 msgstr ""
 
-#: zlibrary/ui.lua:944
+#: zlibrary/ui.lua:970
 msgid "Download timeouts"
 msgstr ""
 
-#: zlibrary/ui.lua:954
+#: zlibrary/ui.lua:980
 msgid "Cover download timeouts"
 msgstr ""
 
-#: zlibrary/ui.lua:959
+#: zlibrary/ui.lua:985
 msgid "Cover download"
 msgstr ""
 
-#: zlibrary/ui.lua:977
+#: zlibrary/ui.lua:1003
 msgid "Reset all timeouts to defaults"
 msgstr ""
 
-#: zlibrary/ui.lua:982
+#: zlibrary/ui.lua:1008
 msgid "Reset all timeout settings to default values?"
 msgstr ""
 
-#: zlibrary/ui.lua:983
+#: zlibrary/ui.lua:1009
 msgid "Reset All"
 msgstr ""
 
-#: zlibrary/ui.lua:994
+#: zlibrary/ui.lua:1020
 msgid "All timeout settings reset to defaults"
 msgstr ""
 
-#: zlibrary/ui.lua:1004
+#: zlibrary/ui.lua:1030
 msgid "Timeout Settings"
 msgstr ""
 
-#: zlibrary/ui.lua:1062
+#: zlibrary/ui.lua:1088
 msgid "Email Address"
 msgstr ""
 
-#: zlibrary/ui.lua:1066
+#: zlibrary/ui.lua:1092
 msgid "Password"
 msgstr ""
 
-#: zlibrary/ui.lua:1068
+#: zlibrary/ui.lua:1094
 msgid "Enter password"
 msgstr ""
 
-#: zlibrary/ui.lua:1084 zlibrary/ui.lua:1100
+#: zlibrary/ui.lua:1110 zlibrary/ui.lua:1126
 msgid "Please fill in all fields"
 msgstr ""
 
-#: zlibrary/ui.lua:1090
+#: zlibrary/ui.lua:1116
 msgid "Feature not implemented"
 msgstr ""

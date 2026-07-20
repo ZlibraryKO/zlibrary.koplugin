@@ -116,7 +116,9 @@ Config.SUPPORTED_LANGUAGES = {
     { name = "Русский", value = "russian" },
     { name = "Српски", value = "serbian" },
     { name = "Español", value = "spanish" },
-    { name = "తెలుగు", value = "telugu" },
+    -- Latin, unlike its neighbours: KOReader bundles no font covering Telugu, so the native
+    -- name renders as six empty boxes. A name that can be read beats one that cannot.
+    { name = "Telugu", value = "telugu" },
     { name = "ไทย", value = "thai" },
     { name = "繁體中文", value = "traditional chinese" },
     { name = "Türkçe", value = "turkish" },

@@ -1374,7 +1374,10 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
         return true
     end
 
-    self.active_results_menu = Ui.createSearchResultsMenu(self.ui, query_string, menu_items, on_goto_page_handler,  opts)
+    -- Seed the box with the query that produced this page: refining a search is far more common
+    -- than starting an unrelated one, and an empty box throws that away.
+    self.active_results_menu = Ui.createSearchResultsMenu(self.ui, query_string, menu_items, on_goto_page_handler, opts,
+        function() Ui.showSearchDialog(self, query_string) end)
 end
 
 function Zlibrary:downloadBook(book)

@@ -1676,7 +1676,7 @@ function Zlibrary:onExit()
         logger.info("Zlibrary:onExit - Cleaning up " .. self.dialog_manager:getDialogCount() .. " remaining dialogs")
         self.dialog_manager:closeAllDialogs()
     end
-    Cache.autoCacheCleanup()
+    Cache.autoCacheCleanup(Config.getConfigRuntimeCache())
 end
 
 function Zlibrary:onCloseWidget()
@@ -1684,7 +1684,7 @@ function Zlibrary:onCloseWidget()
         logger.info("Zlibrary:onCloseWidget - Cleaning up " .. self.dialog_manager:getDialogCount() .. " remaining dialogs")
         self.dialog_manager:closeAllDialogs()
     end
-    Cache.autoCacheCleanup()
+    Cache.autoCacheCleanup(Config.getConfigRuntimeCache())
 end
 
 return Zlibrary

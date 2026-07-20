@@ -295,15 +295,22 @@ function M:new(o)
     return obj
 end
 
-function M.autoCacheCleanup()
+-- The store that remembers when the last sweep ran is passed in rather than fetched.
+--
+-- Reaching for Config here made the two modules require each other: config needs Cache because
+-- it constructs cache instances, and this was the only thing pulling the other way. The cycle
+-- was real but hidden, deferred to call time by requiring inside the function, which meant it
+-- worked while leaving the modules mutually dependent. Cache is a leaf again now.
+function M.autoCacheCleanup(timestamp_store)
+    if not timestamp_store then
+        logger.warn("Cache.autoCacheCleanup - called with no timestamp store, skipping the sweep")
+        return
+    end
     local CACHE_CLEAN_INTERVAL = 86400
     local current_time = os.time()
-    local Config = require("zlibrary.config")
-    local runtime_cache = Config.getConfigRuntimeCache()
-    local last_cleaned_at = tonumber(runtime_cache:get("last_cleaned_at"))
+    local last_cleaned_at = tonumber(timestamp_store:get("last_cleaned_at"))
     if not last_cleaned_at or (current_time - last_cleaned_at) > CACHE_CLEAN_INTERVAL then
-        runtime_cache:insert("last_cleaned_at", os.time())
-        local logger = require("logger")
+        timestamp_store:insert("last_cleaned_at", os.time())
         logger.info("Cache: Starting global GC clean...")
         local cover_cache = M:new({type="cover"})
         cover_cache:gc_clean()

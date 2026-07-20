@@ -161,7 +161,11 @@ Config.SEED_URLS = { -- List of known Z-library base URLs extracted from the And
     "https://lib-africa.sk/",
     "https://z-library.do/",
     "https://z-lib.gd/",
-    -- "https://1lib.sk/", -- July 2026: behind a DiamWall browser check, so the API is unreachable
+    "https://1lib.sk/", -- July 2026: behind a DiamWall browser check the plugin cannot pass, so
+                        -- the API is unreachable. Left in the list because that is the operator's
+                        -- setting of the day, not a property of the domain: discovery health-checks
+                        -- it, fails it in two requests and moves on, and it starts working again by
+                        -- itself if the check is ever lifted.
     "https://z-lib.gl/",
     "https://z-library.rs/", -- these last 3 don't seem to work currently (May 2026), but may be worth trying in the future
     "https://z-lib.do/",

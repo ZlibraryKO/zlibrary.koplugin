@@ -176,6 +176,90 @@ end
 -- otherwise recurse until the stack goes; five is what browsers and curl settle on.
 local MAX_REDIRECT_HOPS = 5
 
+-- Attribute names that appear in a Set-Cookie beside the pair that matters. LuaSocket folds
+-- repeated headers into a single comma-separated string, and an Expires date carries a comma of
+-- its own, so splitting the header correctly is guesswork. Scan every name=value in it instead
+-- and discard the ones that are attributes -- nothing else in a Set-Cookie looks like a pair.
+local COOKIE_ATTRIBUTES = {
+    expires = true, ["max-age"] = true, domain = true, path = true, secure = true,
+    httponly = true, samesite = true, partitioned = true, priority = true,
+    version = true, comment = true,
+}
+
+-- Cookies set by a 30x, carried to the hop that follows it and scoped to the host that issued
+-- them.
+--
+-- Some mirrors sit behind a WAF that answers with 307 plus Set-Cookie and expects the cookie
+-- returned; DiamWall in front of 1lib.sk does exactly that. Without this the retry is identical
+-- to the request that was just challenged, so the mirror challenges it again and the chain
+-- repeats until the loop guard ends it -- which is the sign-in failure users reported.
+--
+-- Deliberately per-request rather than a session-wide jar: the cookie never touches disk, never
+-- outlives the request that earned it, and only ever goes back to the host that set it. A later
+-- request that gets challenged answers its own challenge the same way. Returns true when
+-- something new was learned, which is what lets the loop guard allow one more attempt at a URL.
+local function _rememberCookies(options, from_url, headers)
+    local raw = type(headers) == "table" and (headers["set-cookie"] or headers["Set-Cookie"]) or nil
+    if type(raw) ~= "string" or raw == "" then
+        return false
+    end
+    local parsed = socket_url.parse(from_url or "")
+    local host = parsed and parsed.host
+    if not host then
+        return false
+    end
+
+    options._cookies = options._cookies or {}
+    local jar = options._cookies[host] or {}
+    options._cookies[host] = jar
+
+    local learned = false
+    for name, value in string.gmatch(raw, "([^%s;,=]+)%s*=%s*([^;,]*)") do
+        if not COOKIE_ATTRIBUTES[string.lower(name)] and jar[name] ~= value then
+            jar[name] = value
+            learned = true
+        end
+    end
+    return learned
+end
+
+-- Rebuild the Cookie header from the caller's own value plus whatever this chain has picked up
+-- for the host being addressed. The caller's value is captured once and rebuilt from every time,
+-- so following several hops cannot append the same cookie twice.
+local function _applyCookies(options)
+    local jar = options._cookies
+    if not jar then
+        return
+    end
+    local parsed = socket_url.parse(options.url or "")
+    local cookies = parsed and parsed.host and jar[parsed.host]
+    if not cookies or not next(cookies) then
+        return
+    end
+
+    if options._cookie_header_base == nil then
+        options._cookie_header_base =
+            (type(options.headers) == "table" and options.headers["Cookie"]) or false
+    end
+
+    local parts = {}
+    if type(options._cookie_header_base) == "string" and options._cookie_header_base ~= "" then
+        table.insert(parts, options._cookie_header_base)
+    end
+    for name, value in pairs(cookies) do
+        table.insert(parts, name .. "=" .. value)
+    end
+
+    local headers = {}
+    if type(options.headers) == "table" then
+        for k, v in pairs(options.headers) do
+            headers[k] = v
+        end
+    end
+    headers["Cookie"] = table.concat(parts, "; ")
+    options.headers = headers
+end
+
 -- 307 and 308 exist precisely to preserve the method and body. 303 mandates a GET, and 301/302
 -- are turned into one by every real client -- which is the whole reason these requests are issued
 -- with redirect=false and handled here. Dropping the body also means dropping the headers that
@@ -275,6 +359,8 @@ function Api.makeHttpRequest(options)
     if not body_source and type(options.body) == "string" then
         body_source = ltn12.source.string(options.body)
     end
+
+    _applyCookies(options)
 
     local request_params = {
         url = options.url,
@@ -424,12 +510,18 @@ function Api.makeHttpRequest(options)
             -- free service to reach a conclusion available on the first hop. Stop at the first
             -- repeat. Browsers report loops as "too many redirects" as well, so the message users
             -- see stays the one they will recognise.
+            -- Take any cookie the 30x set before deciding whether this is a loop: a challenge is
+            -- answered by re-requesting the very same URL, so a repeat that carries a cookie we
+            -- did not have before is progress, not a loop. MAX_REDIRECT_HOPS still bounds it if a
+            -- host keeps issuing fresh cookies forever.
+            local learned_cookies = _rememberCookies(options, options.url, result.headers)
+
             local seen = options._redirect_seen
             if not seen then
                 seen = { [options.url] = true }
                 options._redirect_seen = seen
             end
-            if seen[redir_res.real_url] then
+            if seen[redir_res.real_url] and not learned_cookies then
                 result.error = string.format("%s (%s)", T("Too many redirects"), tostring(redir_res.real_url))
                 logger.err(string.format(
                     "Zlibrary:Api.makeHttpRequest - Redirect loop: %s was already requested, not following it again",

@@ -554,8 +554,30 @@ end
 function Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, ok_open_callback, cancel_callback)
     local turn_off_wifi = default_turn_off_wifi
 
+    -- Downloading several books in a row means answering this dialog several times, which a user
+    -- asked to be able to switch off.
+    --
+    -- Skipping it leaves Wi-Fi alone, whatever the stored preference says. That preference is
+    -- "Turn off Wi-Fi after closing this dialog" -- there is no dialog here and nothing being
+    -- closed, so there is nothing for it to be after. It also lives only on this dialog, so
+    -- honouring it here would keep a background action running that the user can no longer see
+    -- or change. Anyone wanting Wi-Fi managed for them still has the prompt.
+    --
+    -- The notice matters as much as the skipping. This dialog is the only sign most people get
+    -- that a download worked; replacing one that demands an answer with one that dismisses
+    -- itself is the point, and replacing it with silence would be a different, worse feature.
+    if Config.getSkipOpenBookPrompt() then
+        Ui.showInfoMessage(string.format(T("\"%s\" downloaded."), filename))
+        if cancel_callback then cancel_callback(false) end
+        return
+    end
+
     local function showDialog()
-        local full_text = string.format(T("\"%s\" downloaded successfully. Open it now?"), filename)
+        -- No filename. It is built as "<title> - <author>.<format>", which for anything with a
+        -- long title runs to a paragraph, and this dialog already carries two buttons and the
+        -- Wi-Fi toggle's own long label. The user tapped download on a specific book moments
+        -- ago, so naming it back to them buys little for the height it costs.
+        local full_text = T("Book downloaded successfully. Open it now?")
 
         local dialog
         local other_buttons = nil

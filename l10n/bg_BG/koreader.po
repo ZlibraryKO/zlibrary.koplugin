@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 10:11+0200\n"
+"POT-Creation-Date: 2026-07-20 11:12+0200\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -101,6 +101,9 @@ msgstr "Проверка на данните"
 
 msgid "Set download directory"
 msgstr "Задаване на папка за изтегляне"
+
+msgid "Ask to open after download"
+msgstr "Питане за отваряне след изтегляне"
 
 msgid "View Settings"
 msgstr "Настройки на изгледа"
@@ -767,8 +770,11 @@ msgid "Download \"%s\"?"
 msgstr "Изтегляне на „%s“?"
 
 #, lua-format
-msgid "\"%s\" downloaded successfully. Open it now?"
-msgstr "„%s“ беше изтеглен успешно. Искате ли да го отворите сега?"
+msgid "\"%s\" downloaded."
+msgstr "„%s“ е изтеглен."
+
+msgid "Book downloaded successfully. Open it now?"
+msgstr "Книгата е изтеглена успешно. Искате ли да я отворите сега?"
 
 msgid "Turn off Wi-Fi after closing this dialog"
 msgstr "Изключване на Wi-Fi след затваряне на диалога"
@@ -913,6 +919,10 @@ msgstr "Попълнете всички полета"
 
 msgid "Feature not implemented"
 msgstr "Функцията не е реализирана"
+
+#, lua-format
+#~ msgid "\"%s\" downloaded successfully. Open it now?"
+#~ msgstr "„%s“ беше изтеглен успешно. Искате ли да го отворите сега?"
 
 #, lua-format
 #~ msgid "Block timeout: %s seconds"

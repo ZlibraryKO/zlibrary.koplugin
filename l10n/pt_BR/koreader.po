@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 10:11+0200\n"
+"POT-Creation-Date: 2026-07-20 11:12+0200\n"
 "PO-Revision-Date: 2025-05-28 15:14-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -96,6 +96,9 @@ msgstr "Verificar credenciais"
 
 msgid "Set download directory"
 msgstr "Definir diretório de download"
+
+msgid "Ask to open after download"
+msgstr "Perguntar se deseja abrir após o download"
 
 msgid "View Settings"
 msgstr "Configurações de exibição"
@@ -762,8 +765,11 @@ msgid "Download \"%s\"?"
 msgstr "Baixar \"%s\"?"
 
 #, lua-format
-msgid "\"%s\" downloaded successfully. Open it now?"
-msgstr "\"%s\" baixado com sucesso. Abrir agora?"
+msgid "\"%s\" downloaded."
+msgstr "\"%s\" baixado."
+
+msgid "Book downloaded successfully. Open it now?"
+msgstr "Livro baixado com sucesso. Abrir agora?"
 
 msgid "Turn off Wi-Fi after closing this dialog"
 msgstr "Desligar Wi-Fi após fechar este diálogo"
@@ -908,6 +914,10 @@ msgstr "Por favor, preencha todos os campos"
 
 msgid "Feature not implemented"
 msgstr "Recurso não implementado"
+
+#, lua-format
+#~ msgid "\"%s\" downloaded successfully. Open it now?"
+#~ msgstr "\"%s\" baixado com sucesso. Abrir agora?"
 
 #, lua-format
 #~ msgid "Block timeout: %s seconds"

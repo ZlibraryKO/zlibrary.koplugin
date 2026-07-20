@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 10:11+0200\n"
+"POT-Creation-Date: 2026-07-20 11:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -95,6 +95,9 @@ msgstr "Inloggegevens verifiëren"
 
 msgid "Set download directory"
 msgstr "Downloadmap instellen"
+
+msgid "Ask to open after download"
+msgstr "Vragen om te openen na downloaden"
 
 msgid "View Settings"
 msgstr "Weergave-instellingen"
@@ -761,8 +764,11 @@ msgid "Download \"%s\"?"
 msgstr "\"%s\" downloaden?"
 
 #, lua-format
-msgid "\"%s\" downloaded successfully. Open it now?"
-msgstr "\"%s\" is succesvol gedownload. Nu openen?"
+msgid "\"%s\" downloaded."
+msgstr "\"%s\" gedownload."
+
+msgid "Book downloaded successfully. Open it now?"
+msgstr "Boek succesvol gedownload. Nu openen?"
 
 msgid "Turn off Wi-Fi after closing this dialog"
 msgstr "Wi-Fi uitschakelen na sluiten van dit dialoog"
@@ -907,6 +913,10 @@ msgstr "Vul alle velden in"
 
 msgid "Feature not implemented"
 msgstr "Functie niet geïmplementeerd"
+
+#, lua-format
+#~ msgid "\"%s\" downloaded successfully. Open it now?"
+#~ msgstr "\"%s\" is succesvol gedownload. Nu openen?"
 
 #, lua-format
 #~ msgid "Block timeout: %s seconds"

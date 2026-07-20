@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 10:11+0200\n"
+"POT-Creation-Date: 2026-07-20 11:12+0200\n"
 "PO-Revision-Date: 2026-04-03 00:00+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
@@ -95,6 +95,9 @@ msgstr "验证凭证"
 
 msgid "Set download directory"
 msgstr "设置下载目录"
+
+msgid "Ask to open after download"
+msgstr "下载后询问是否打开"
 
 msgid "View Settings"
 msgstr "视图设置"
@@ -761,8 +764,11 @@ msgid "Download \"%s\"?"
 msgstr "下载\"%s\"？"
 
 #, lua-format
-msgid "\"%s\" downloaded successfully. Open it now?"
-msgstr "\"%s\"下载成功。现在打开吗？"
+msgid "\"%s\" downloaded."
+msgstr "“%s”下载完成。"
+
+msgid "Book downloaded successfully. Open it now?"
+msgstr "书籍下载成功。现在打开吗？"
 
 msgid "Turn off Wi-Fi after closing this dialog"
 msgstr "关闭此对话框后关闭Wi-Fi"
@@ -907,6 +913,10 @@ msgstr "请填写所有字段"
 
 msgid "Feature not implemented"
 msgstr "功能尚未实现"
+
+#, lua-format
+#~ msgid "\"%s\" downloaded successfully. Open it now?"
+#~ msgstr "\"%s\"下载成功。现在打开吗？"
 
 #, lua-format
 #~ msgid "Block timeout: %s seconds"

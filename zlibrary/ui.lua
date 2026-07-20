@@ -573,7 +573,11 @@ function Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, ok
     end
 
     local function showDialog()
-        local full_text = string.format(T("\"%s\" downloaded successfully. Open it now?"), filename)
+        -- No filename. It is built as "<title> - <author>.<format>", which for anything with a
+        -- long title runs to a paragraph, and this dialog already carries two buttons and the
+        -- Wi-Fi toggle's own long label. The user tapped download on a specific book moments
+        -- ago, so naming it back to them buys little for the height it costs.
+        local full_text = T("Book downloaded successfully. Open it now?")
 
         local dialog
         local other_buttons = nil

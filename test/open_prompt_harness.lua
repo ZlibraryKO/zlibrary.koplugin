@@ -60,8 +60,13 @@ end
 -- ---------------------------------------------------------------- prompt on (the default)
 local on = run(false, false)
 r.check("prompt on: a dialog is built", on.dialog ~= nil, "no ConfirmBox")
-r.check("prompt on: it names the file",
-        on.dialog and tostring(on.dialog.text):find("Dune.epub", 1, true) ~= nil,
+-- Deliberately does NOT name the file. Filenames here are "<title> - <author>.<format>" and
+-- run long, and this dialog already carries two buttons plus the Wi-Fi toggle's own label.
+r.check("prompt on: it says the download succeeded",
+        on.dialog and tostring(on.dialog.text):find("downloaded successfully", 1, true) ~= nil,
+        "text = " .. tostring(on.dialog and on.dialog.text))
+r.check("prompt on: it does not repeat the filename",
+        on.dialog and tostring(on.dialog.text):find("Dune.epub", 1, true) == nil,
         "text = " .. tostring(on.dialog and on.dialog.text))
 r.check("prompt on: it offers to open the book",
         on.dialog and on.dialog.ok_text ~= nil, "no ok_text")

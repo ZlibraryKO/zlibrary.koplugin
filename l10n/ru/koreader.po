@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 10:58+0200\n"
+"POT-Creation-Date: 2026-07-20 11:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -767,9 +767,8 @@ msgstr "Скачать \"%s\"?"
 msgid "\"%s\" downloaded."
 msgstr "«%s»: загрузка завершена."
 
-#, lua-format
-msgid "\"%s\" downloaded successfully. Open it now?"
-msgstr "\"%s\" успешно скачана. Открыть сейчас?"
+msgid "Book downloaded successfully. Open it now?"
+msgstr "Книга успешно скачана. Открыть сейчас?"
 
 msgid "Turn off Wi-Fi after closing this dialog"
 msgstr "Отключить Wi-Fi после закрытия этого диалога"
@@ -914,6 +913,10 @@ msgstr "Пожалуйста, заполните все поля"
 
 msgid "Feature not implemented"
 msgstr "Функция не реализована"
+
+#, lua-format
+#~ msgid "\"%s\" downloaded successfully. Open it now?"
+#~ msgstr "\"%s\" успешно скачана. Открыть сейчас?"
 
 #, lua-format
 #~ msgid "Block timeout: %s seconds"

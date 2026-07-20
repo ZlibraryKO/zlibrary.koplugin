@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 10:58+0200\n"
+"POT-Creation-Date: 2026-07-20 11:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -767,9 +767,8 @@ msgstr "\"%s\"을(를) 다운로드하시겠습니까?"
 msgid "\"%s\" downloaded."
 msgstr "“%s” 다운로드 완료."
 
-#, lua-format
-msgid "\"%s\" downloaded successfully. Open it now?"
-msgstr "\"%s\"이(가) 성공적으로 다운로드되었습니다. 지금 열까요?"
+msgid "Book downloaded successfully. Open it now?"
+msgstr "도서가 성공적으로 다운로드되었습니다. 지금 열까요?"
 
 msgid "Turn off Wi-Fi after closing this dialog"
 msgstr "이 대화 상자를 닫은 후 Wi-Fi 끄기"
@@ -914,6 +913,10 @@ msgstr "모든 항목을 입력하세요"
 
 msgid "Feature not implemented"
 msgstr "구현되지 않은 기능입니다"
+
+#, lua-format
+#~ msgid "\"%s\" downloaded successfully. Open it now?"
+#~ msgstr "\"%s\"이(가) 성공적으로 다운로드되었습니다. 지금 열까요?"
 
 #, lua-format
 #~ msgid "Block timeout: %s seconds"

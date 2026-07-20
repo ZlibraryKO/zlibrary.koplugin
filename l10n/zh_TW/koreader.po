@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 10:58+0200\n"
+"POT-Creation-Date: 2026-07-20 11:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese <zh@li.org>\n"
@@ -767,9 +767,8 @@ msgstr "下載\"%s\"？"
 msgid "\"%s\" downloaded."
 msgstr "「%s」下載完成。"
 
-#, lua-format
-msgid "\"%s\" downloaded successfully. Open it now?"
-msgstr "\"%s\"下載成功。現在打開嗎？"
+msgid "Book downloaded successfully. Open it now?"
+msgstr "書籍下載成功。現在打開嗎？"
 
 msgid "Turn off Wi-Fi after closing this dialog"
 msgstr "關閉此對話框後關閉 Wi-Fi"
@@ -914,6 +913,10 @@ msgstr "請填寫所有欄位"
 
 msgid "Feature not implemented"
 msgstr "功能尚未實現"
+
+#, lua-format
+#~ msgid "\"%s\" downloaded successfully. Open it now?"
+#~ msgstr "\"%s\"下載成功。現在打開嗎？"
 
 #, lua-format
 #~ msgid "Block timeout: %s seconds"

@@ -694,7 +694,7 @@ function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel
             local timeout_info = ""
             local timeout_getter = operation_key and TIMEOUT_GETTERS[operation_key]
             if timeout_getter then
-                timeout_info = string.format(" (%ds)", timeout_getter()[1])
+                timeout_info = " (" .. Config.formatSeconds(timeout_getter()[1]) .. ")"
             end
             -- Impersonal on purpose. These used to read "%s failed …", putting the operation
             -- name in subject position, where the predicate has to agree with it. Half the
@@ -775,8 +775,8 @@ function Ui.showTimeoutConfigDialog(parent_ui, timeout_name, timeout_key, getter
         block_timeout = updated_timeout[1]
         total_timeout = updated_timeout[2]
         
-        dialog_items[1].text = string.format(T("Block timeout: %s seconds"), tostring(block_timeout))
-        dialog_items[2].text = string.format(T("Total timeout: %s"), total_timeout == -1 and T("infinite") or (tostring(total_timeout) .. " " .. T("seconds")))
+        dialog_items[1].text = string.format(T("Block timeout: %s"), Config.formatSeconds(block_timeout))
+        dialog_items[2].text = string.format(T("Total timeout: %s"), total_timeout == -1 and T("infinite") or Config.formatSeconds(total_timeout))
         
         if dialog_menu then
             dialog_menu.subtitle = Config.formatTimeoutForDisplay(updated_timeout)
@@ -785,7 +785,7 @@ function Ui.showTimeoutConfigDialog(parent_ui, timeout_name, timeout_key, getter
     end
     
     table.insert(dialog_items, {
-        text = string.format(T("Block timeout: %s seconds"), tostring(block_timeout)),
+        text = string.format(T("Block timeout: %s"), Config.formatSeconds(block_timeout)),
         mandatory = "\u{25B7}",
         callback = function()
             Ui.showGenericInputDialog(
@@ -809,7 +809,7 @@ function Ui.showTimeoutConfigDialog(parent_ui, timeout_name, timeout_key, getter
     })
     
     table.insert(dialog_items, {
-        text = string.format(T("Total timeout: %s"), total_timeout == -1 and T("infinite") or (tostring(total_timeout) .. " " .. T("seconds"))),
+        text = string.format(T("Total timeout: %s"), total_timeout == -1 and T("infinite") or Config.formatSeconds(total_timeout)),
         mandatory = "\u{25B7}",
         callback = function()
             Ui.showGenericInputDialog(

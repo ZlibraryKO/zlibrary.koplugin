@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 08:27+0200\n"
+"POT-Creation-Date: 2026-07-20 10:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -586,6 +586,10 @@ msgstr "حجم الملف"
 msgid "Default"
 msgstr "الافتراضي"
 
+#, lua-format
+msgid "%ds"
+msgstr "%d ثانية"
+
 msgid "infinite"
 msgstr "لا نهائي"
 
@@ -809,15 +813,12 @@ msgid "Retry"
 msgstr "إعادة المحاولة"
 
 #, lua-format
-msgid "Block timeout: %s seconds"
-msgstr "مهلة الكتلة: %s ثانية"
+msgid "Block timeout: %s"
+msgstr "مهلة الكتلة: %s"
 
 #, lua-format
 msgid "Total timeout: %s"
 msgstr "المهلة الإجمالية: %s"
-
-msgid "seconds"
-msgstr "ثواني"
 
 #, lua-format
 msgid "Set %s block timeout (seconds)"
@@ -906,6 +907,13 @@ msgstr "يرجى ملء جميع الحقول"
 
 msgid "Feature not implemented"
 msgstr "الميزة غير متوفرة"
+
+#, lua-format
+#~ msgid "Block timeout: %s seconds"
+#~ msgstr "مهلة الكتلة: %s ثانية"
+
+#~ msgid "seconds"
+#~ msgstr "ثواني"
 
 #, lua-format
 #~ msgid "%s failed due to a timeout%s. Would you like to retry?"

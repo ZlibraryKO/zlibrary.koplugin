@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 08:27+0200\n"
+"POT-Creation-Date: 2026-07-20 10:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -586,12 +586,16 @@ msgstr "Размер файла"
 msgid "Default"
 msgstr "По умолчанию"
 
+#, lua-format
+msgid "%ds"
+msgstr "%d с"
+
 msgid "infinite"
 msgstr "бесконечно"
 
 #, lua-format
 msgid "Block: %ds, Total: %s"
-msgstr "Блок: %ds, Всего: %s"
+msgstr "Блок: %d с, Всего: %s"
 
 msgid "Untitled"
 msgstr "Без названия"
@@ -809,15 +813,12 @@ msgid "Retry"
 msgstr "Повторить"
 
 #, lua-format
-msgid "Block timeout: %s seconds"
-msgstr "Таймаут блока: %s секунд"
+msgid "Block timeout: %s"
+msgstr "Таймаут блока: %s"
 
 #, lua-format
 msgid "Total timeout: %s"
 msgstr "Общий таймаут: %s"
-
-msgid "seconds"
-msgstr "секунд"
 
 #, lua-format
 msgid "Set %s block timeout (seconds)"
@@ -906,6 +907,13 @@ msgstr "Пожалуйста, заполните все поля"
 
 msgid "Feature not implemented"
 msgstr "Функция не реализована"
+
+#, lua-format
+#~ msgid "Block timeout: %s seconds"
+#~ msgstr "Таймаут блока: %s секунд"
+
+#~ msgid "seconds"
+#~ msgstr "секунд"
 
 #, lua-format
 #~ msgid "%s failed due to a timeout%s. Would you like to retry?"

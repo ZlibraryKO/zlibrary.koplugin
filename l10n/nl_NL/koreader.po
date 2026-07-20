@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 15:03+0000\n"
+"POT-Creation-Date: 2026-07-20 07:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -348,6 +348,9 @@ msgstr "Het Z-library-adres is mogelijk onjuist of bestaat niet meer."
 
 msgid "Network connection error - please check your internet connection and try again"
 msgstr "Netwerkverbindingsfout - controleer je internetverbinding en probeer het opnieuw"
+
+msgid "Too many redirects"
+msgstr "Te veel omleidingen"
 
 msgid "HTTP Error"
 msgstr "HTTP-fout"

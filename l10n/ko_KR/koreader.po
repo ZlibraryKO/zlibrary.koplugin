@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 15:03+0000\n"
+"POT-Creation-Date: 2026-07-20 07:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -348,6 +348,9 @@ msgstr "Z-library 주소가 잘못되었거나 더 이상 존재하지 않을 �
 
 msgid "Network connection error - please check your internet connection and try again"
 msgstr "네트워크 연결 오류 - 인터넷 연결을 확인한 후 다시 시도하세요"
+
+msgid "Too many redirects"
+msgstr "리디렉션이 너무 많음"
 
 msgid "HTTP Error"
 msgstr "HTTP 오류"

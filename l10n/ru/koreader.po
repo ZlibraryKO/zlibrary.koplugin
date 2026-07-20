@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 15:03+0000\n"
+"POT-Creation-Date: 2026-07-20 07:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -348,6 +348,9 @@ msgstr "Возможно, адрес Z-library неверен или больш�
 
 msgid "Network connection error - please check your internet connection and try again"
 msgstr "Ошибка сетевого подключения — проверьте интернет-соединение и повторите попытку"
+
+msgid "Too many redirects"
+msgstr "Слишком много перенаправлений"
 
 msgid "HTTP Error"
 msgstr "Ошибка HTTP"

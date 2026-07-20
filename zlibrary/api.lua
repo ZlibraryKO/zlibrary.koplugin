@@ -125,7 +125,7 @@ end
 local function _checkAndHandleRedirect(skip_check, status_code, current_url, headers)
 
     local result = { has_redirect = nil, real_url = nil, status_code = nil, error = nil }
-    local redirect_codes = { [301] = true, [302] = true, [303] = true, [307] = true }
+    local redirect_codes = { [301] = true, [302] = true, [303] = true, [307] = true, [308] = true }
     if skip_check or type(current_url) ~= "string" or current_url == "" or
         type(status_code) ~= "number" or not redirect_codes[status_code]  then
             return result
@@ -137,29 +137,69 @@ local function _checkAndHandleRedirect(skip_check, status_code, current_url, hea
     result.status_code = status_code
 
     -- LuaSocket lower-cases the header names it parses; Location is a belt-and-braces fallback.
-    local real_url = type(headers) == "table" and (headers.location or headers.Location) or nil
-    if type(real_url) ~= "string" or real_url == "" then
+    local location = type(headers) == "table" and (headers.location or headers.Location) or nil
+    if type(location) ~= "string" or location == "" then
         logger.err("Zlibrary:Api - Redirect carried no Location header:", headers)
         result.error = string.format("Redirect from %s carried no Location header", current_url)
         return result
     end
 
-    local real_url_parse = socket_url.parse(real_url)
-    local real_url_host = real_url_parse.host
-    if real_url_host and real_url_parse.scheme and real_url_host ~= current_url_parse.host then
+    -- Location is allowed to be relative (RFC 9110 10.2.2), and mirrors send every shape of it:
+    -- "/eapi/...", "login/", "//host/path". This used to require an absolute cross-host URL and
+    -- refuse everything else, so an ordinary in-site redirect surfaced to the user as a raw
+    -- "HTTP Error: 307". Resolve against the request URL instead, so there is always something
+    -- absolute to re-issue.
+    local real_url = socket_url.absolute(current_url, location)
+    local real_url_parse = real_url and socket_url.parse(real_url) or nil
+    if not (real_url_parse and real_url_parse.host and real_url_parse.scheme) then
+        result.error = string.format("Redirect target could not be resolved against %s: %s",
+            current_url, location)
+        return result
+    end
+    result.real_url = real_url
+
+    -- real_url_base is the mirror-move signal, and is deliberately set only for a cross-host hop:
+    -- that is the only case with a new base URL worth pinning, and the only case where onRedirect
+    -- has anything to rebuild. A same-host hop is an ordinary redirect and is simply followed.
+    if real_url_parse.host ~= current_url_parse.host then
         logger.dbg(string.format("Zlibrary:Api - %s redirects to another host: %s -> %s",
-            tostring(status_code), tostring(current_url_parse.host), real_url_host))
-        result.real_url = real_url
+            tostring(status_code), tostring(current_url_parse.host), real_url_parse.host))
         result.real_url_base = socket_url.build({
                 scheme = real_url_parse.scheme,
-                host = real_url_host
+                host = real_url_parse.host
         })
-    else
-        -- A relative or same-host Location is an ordinary in-site redirect, not a mirror move:
-        -- there is no new base URL to pin and nothing for onRedirect to rebuild against.
-        result.error = string.format("Redirect target is not another host: %s", real_url)
     end
     return result
+end
+
+-- How many hops a chain may take before giving up. Mirrors that point at each other would
+-- otherwise recurse until the stack goes; five is what browsers and curl settle on.
+local MAX_REDIRECT_HOPS = 5
+
+-- 307 and 308 exist precisely to preserve the method and body. 303 mandates a GET, and 301/302
+-- are turned into one by every real client -- which is the whole reason these requests are issued
+-- with redirect=false and handled here. Dropping the body also means dropping the headers that
+-- describe it, or the next request advertises a Content-Length it will not send.
+local function _applyRedirectMethod(options, status_code)
+    if status_code == 307 or status_code == 308 then
+        return
+    end
+    if string.upper(options.method or "GET") == "GET" then
+        return
+    end
+    options.method = "GET"
+    options.body = nil
+    options.source = nil
+    if type(options.headers) == "table" then
+        local kept = {}
+        for k, v in pairs(options.headers) do
+            local lk = string.lower(k)
+            if lk ~= "content-length" and lk ~= "content-type" then
+                kept[k] = v
+            end
+        end
+        options.headers = kept
+    end
 end
 
 local function _extractErrorFromJsonBody(body)
@@ -227,11 +267,20 @@ function Api.makeHttpRequest(options)
         end
     end
 
+    -- Build the body source per attempt. An ltn12 source is a one-shot generator, so any request
+    -- this function re-issues -- a redirect hop, or the stall retry below -- would otherwise go out
+    -- with an empty body while still advertising the original Content-Length. Callers hand over
+    -- options.body as a plain string and the source is made fresh here each time through.
+    local body_source = options.source
+    if not body_source and type(options.body) == "string" then
+        body_source = ltn12.source.string(options.body)
+    end
+
     local request_params = {
         url = options.url,
         method = options.method or "GET",
         headers = options.headers,
-        source = options.source,
+        source = body_source,
         sink = sink_to_use,
         -- zlibrary mirror redirects may break API paths; disabled by default.
         redirect = options.redirect or false,
@@ -343,21 +392,45 @@ function Api.makeHttpRequest(options)
         return result
     end
 
-    local skip_redirect_check = options.redirect or type(options.onRedirect) ~= "function"
+    -- Skip only when LuaSocket is already following the chain itself. This used to skip whenever
+    -- onRedirect was absent, which meant an ordinary redirect was never followed -- and neither was
+    -- any hop after the first, because the retry clears onRedirect. Both surfaced to the user as a
+    -- raw "HTTP Error: 307".
+    local skip_redirect_check = options.redirect and true or false
     local redir_res = _checkAndHandleRedirect(skip_redirect_check, result.status_code, options.url, result.headers)
     if redir_res.has_redirect then
-        if redir_res.real_url and redir_res.real_url_base then
-            if not options.skipRedirectCache then
+        if redir_res.real_url then
+            if redir_res.real_url_base and not options.skipRedirectCache then
                 Config.setCacheRealUrl(options.url, redir_res.real_url_base)
             end
-            local redirect_next_step = options.onRedirect()
-            if type(redirect_next_step) == "string" then
-                options.url = redirect_next_step
-                options.onRedirect = nil
-                return Api.makeHttpRequest(options)
-            elseif type(redirect_next_step) == "function" then
-                 return redirect_next_step(redir_res)
+            -- A mirror move, and the caller offered a rebuild: only it can reconstruct the API
+            -- path from config against the new base, so let it.
+            if redir_res.real_url_base and type(options.onRedirect) == "function" then
+                local redirect_next_step = options.onRedirect()
+                if type(redirect_next_step) == "string" then
+                    options.url = redirect_next_step
+                    options.onRedirect = nil
+                    return Api.makeHttpRequest(options)
+                elseif type(redirect_next_step) == "function" then
+                     return redirect_next_step(redir_res)
+                end
             end
+            -- Otherwise follow it here: an in-site redirect, or a mirror move on a request that
+            -- has no rebuild left to call.
+            local hops = (options._redirect_hops or 0) + 1
+            if hops > MAX_REDIRECT_HOPS then
+                result.error = string.format("%s (%s)", T("Too many redirects"), tostring(options.url))
+                logger.err(string.format(
+                    "Zlibrary:Api.makeHttpRequest - Redirect chain exceeded %d hops, giving up at %s",
+                    MAX_REDIRECT_HOPS, tostring(options.url)))
+                return result
+            end
+            logger.info(string.format("Zlibrary:Api.makeHttpRequest - Following %s: %s -> %s (hop %d)",
+                tostring(result.status_code), tostring(options.url), tostring(redir_res.real_url), hops))
+            options._redirect_hops = hops
+            _applyRedirectMethod(options, result.status_code)
+            options.url = redir_res.real_url
+            return Api.makeHttpRequest(options)
         elseif redir_res.error then
             -- Only the reason is worth keeping: redir_res describes why the redirect was not
             -- followable, it is not a response. Overwriting result with it used to throw away the
@@ -414,7 +487,7 @@ function Api.login(email, password, is_redir_callback)
             ["X-Requested-With"] = "XMLHttpRequest",
             ["Content-Length"] = tostring(#body),
         },
-        source = ltn12.source.string(body),
+        body = body,
         timeout = Config.getLoginTimeout(),
         -- Avoid redirects - 301/302 convert POST to GET per RFC.
         redirect = false,
@@ -527,7 +600,7 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
         url = search_url,
         method = "POST",
         headers = headers,
-        source = ltn12.source.string(body),
+        body = body,
         timeout = Config.getSearchTimeout(),
         -- Retry once if the server accepts the connection and then never answers; the user
         -- asked for this, and such a stall is transient. See makeHttpRequest.

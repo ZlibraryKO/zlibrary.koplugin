@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 15:03+0000\n"
+"POT-Creation-Date: 2026-07-20 07:39+0200\n"
 "PO-Revision-Date: 2026-04-03 00:00+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
@@ -348,6 +348,9 @@ msgstr "Z-library 地址可能有误或已不存在。"
 
 msgid "Network connection error - please check your internet connection and try again"
 msgstr "网络连接错误 - 请检查您的网络连接后重试"
+
+msgid "Too many redirects"
+msgstr "重定向次数过多"
 
 msgid "HTTP Error"
 msgstr "HTTP 错误"

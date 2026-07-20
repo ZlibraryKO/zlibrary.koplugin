@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 15:03+0000\n"
+"POT-Creation-Date: 2026-07-20 07:39+0200\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -354,6 +354,9 @@ msgstr "Адресът на Z-library може да е грешен или ве�
 
 msgid "Network connection error - please check your internet connection and try again"
 msgstr "Грешка в мрежовата връзка — проверете интернет връзката си и опитайте отново"
+
+msgid "Too many redirects"
+msgstr "Твърде много пренасочвания"
 
 msgid "HTTP Error"
 msgstr "HTTP грешка"

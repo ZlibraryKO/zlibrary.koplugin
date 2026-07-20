@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 08:27+0200\n"
+"POT-Creation-Date: 2026-07-20 10:11+0200\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -592,6 +592,10 @@ msgstr "Размер на файла"
 msgid "Default"
 msgstr "По подразбиране"
 
+#, lua-format
+msgid "%ds"
+msgstr "%d сек"
+
 msgid "infinite"
 msgstr "безкрайно"
 
@@ -815,15 +819,12 @@ msgid "Retry"
 msgstr "Повторен опит"
 
 #, lua-format
-msgid "Block timeout: %s seconds"
-msgstr "Таймаут на блок: %s секунди"
+msgid "Block timeout: %s"
+msgstr "Таймаут на блок: %s"
 
 #, lua-format
 msgid "Total timeout: %s"
 msgstr "Общ таймаут: %s"
-
-msgid "seconds"
-msgstr "секунди"
 
 #, lua-format
 msgid "Set %s block timeout (seconds)"
@@ -912,6 +913,13 @@ msgstr "Попълнете всички полета"
 
 msgid "Feature not implemented"
 msgstr "Функцията не е реализирана"
+
+#, lua-format
+#~ msgid "Block timeout: %s seconds"
+#~ msgstr "Таймаут на блок: %s секунди"
+
+#~ msgid "seconds"
+#~ msgstr "секунди"
 
 #, lua-format
 #~ msgid "%s failed due to a timeout%s. Would you like to retry?"

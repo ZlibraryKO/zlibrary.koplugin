@@ -611,11 +611,20 @@ function Config.getBookCommentsTimeout()
     return Config.getTimeoutConfig(Config.SETTINGS_TIMEOUT_BOOK_COMMENTS_KEY, Config.TIMEOUT_BOOK_COMMENTS)
 end
 
+-- Seconds in the compact form the menus and dialogs use.
+--
+-- The unit has to live inside the translated string. It is not "s" everywhere -- Korean writes
+-- 15초, Japanese 15秒 -- and appending it in Lua also hard-codes a space that CJK does not want
+-- and that some languages put elsewhere. Same reason the retry templates stopped concatenating.
+function Config.formatSeconds(seconds)
+    return string.format(T("%ds"), seconds)
+end
+
 function Config.formatTimeoutForDisplay(timeout_pair)
     local block_timeout = timeout_pair[1]
     local total_timeout = timeout_pair[2]
     
-    local total_display = total_timeout == -1 and T("infinite") or (tostring(total_timeout) .. "s")
+    local total_display = total_timeout == -1 and T("infinite") or Config.formatSeconds(total_timeout)
     return string.format(T("Block: %ds, Total: %s"), block_timeout, total_display)
 end
 

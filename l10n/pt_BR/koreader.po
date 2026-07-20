@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 08:27+0200\n"
+"POT-Creation-Date: 2026-07-20 10:11+0200\n"
 "PO-Revision-Date: 2025-05-28 15:14-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -587,6 +587,10 @@ msgstr "Tamanho do arquivo"
 msgid "Default"
 msgstr "Padrão"
 
+#, lua-format
+msgid "%ds"
+msgstr "%ds"
+
 msgid "infinite"
 msgstr "infinito"
 
@@ -810,15 +814,12 @@ msgid "Retry"
 msgstr "Tentar novamente"
 
 #, lua-format
-msgid "Block timeout: %s seconds"
-msgstr "Timeout de bloco: %s segundos"
+msgid "Block timeout: %s"
+msgstr "Timeout de bloco: %s"
 
 #, lua-format
 msgid "Total timeout: %s"
 msgstr "Timeout total: %s"
-
-msgid "seconds"
-msgstr "segundos"
 
 #, lua-format
 msgid "Set %s block timeout (seconds)"
@@ -907,6 +908,13 @@ msgstr "Por favor, preencha todos os campos"
 
 msgid "Feature not implemented"
 msgstr "Recurso não implementado"
+
+#, lua-format
+#~ msgid "Block timeout: %s seconds"
+#~ msgstr "Timeout de bloco: %s segundos"
+
+#~ msgid "seconds"
+#~ msgstr "segundos"
 
 #, lua-format
 #~ msgid "%s failed due to a timeout%s. Would you like to retry?"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 08:27+0200\n"
+"POT-Creation-Date: 2026-07-20 10:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -586,6 +586,10 @@ msgstr "ファイルサイズ"
 msgid "Default"
 msgstr "デフォルト"
 
+#, lua-format
+msgid "%ds"
+msgstr "%d秒"
+
 msgid "infinite"
 msgstr "無限"
 
@@ -809,15 +813,12 @@ msgid "Retry"
 msgstr "再試行"
 
 #, lua-format
-msgid "Block timeout: %s seconds"
-msgstr "ブロックタイムアウト：%s秒"
+msgid "Block timeout: %s"
+msgstr "ブロックタイムアウト：%s"
 
 #, lua-format
 msgid "Total timeout: %s"
 msgstr "合計タイムアウト：%s"
-
-msgid "seconds"
-msgstr "秒"
 
 #, lua-format
 msgid "Set %s block timeout (seconds)"
@@ -906,6 +907,13 @@ msgstr "すべての項目を入力してください"
 
 msgid "Feature not implemented"
 msgstr "この機能は未実装です"
+
+#, lua-format
+#~ msgid "Block timeout: %s seconds"
+#~ msgstr "ブロックタイムアウト：%s秒"
+
+#~ msgid "seconds"
+#~ msgstr "秒"
 
 #, lua-format
 #~ msgid "%s failed due to a timeout%s. Would you like to retry?"

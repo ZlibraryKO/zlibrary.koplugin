@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 08:27+0200\n"
+"POT-Creation-Date: 2026-07-20 10:11+0200\n"
 "PO-Revision-Date: 2026-04-03 00:00+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
@@ -586,6 +586,10 @@ msgstr "文件大小"
 msgid "Default"
 msgstr "默认"
 
+#, lua-format
+msgid "%ds"
+msgstr "%d秒"
+
 msgid "infinite"
 msgstr "无限"
 
@@ -809,15 +813,12 @@ msgid "Retry"
 msgstr "重试"
 
 #, lua-format
-msgid "Block timeout: %s seconds"
-msgstr "块超时：%s秒"
+msgid "Block timeout: %s"
+msgstr "块超时：%s"
 
 #, lua-format
 msgid "Total timeout: %s"
 msgstr "总超时：%s"
-
-msgid "seconds"
-msgstr "秒"
 
 #, lua-format
 msgid "Set %s block timeout (seconds)"
@@ -906,6 +907,13 @@ msgstr "请填写所有字段"
 
 msgid "Feature not implemented"
 msgstr "功能尚未实现"
+
+#, lua-format
+#~ msgid "Block timeout: %s seconds"
+#~ msgstr "块超时：%s秒"
+
+#~ msgid "seconds"
+#~ msgstr "秒"
 
 #, lua-format
 #~ msgid "%s failed due to a timeout%s. Would you like to retry?"

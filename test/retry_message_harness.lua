@@ -48,12 +48,26 @@ end
 local BLOCKED_TEXT = api_constant("BLOCKED_TEXT")
 local DNS_ERROR_TEXT = api_constant("DNS_ERROR_TEXT")
 
+-- The timeout branch renders its budget through Config.formatSeconds. Use the real one rather
+-- than a stand-in: the point of the "(10s)" assertion is that the hint carries the right number
+-- in the right shape, and a stub would only be asserting against itself.
+local Config
+do
+    local block = support.extract_block(PLUGIN .. "/zlibrary/config.lua",
+        "(\nfunction Config%.formatSeconds%(.-\nend\n)")
+    local chunk = assert(loadstring("local Config = ...\n" .. block .. "\nreturn Config",
+        "=formatSeconds"))
+    setfenv(chunk, { string = string, T = function(s) return s end })
+    Config = chunk({})
+end
+
 -- Run the real block against a raw error string, as showRetryErrorDialog would.
 local function classify(error_string)
     local env = {
         string = string,
         T = function(s) return s end,
         Api = { BLOCKED_TEXT = BLOCKED_TEXT, DNS_ERROR_TEXT = DNS_ERROR_TEXT },
+        Config = Config,
         error_string = error_string,
         operation_name = "Sign-in",
         operation_key = "login",

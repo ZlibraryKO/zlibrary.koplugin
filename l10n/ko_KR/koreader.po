@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 08:27+0200\n"
+"POT-Creation-Date: 2026-07-20 10:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -586,6 +586,10 @@ msgstr "파일 크기"
 msgid "Default"
 msgstr "기본값"
 
+#, lua-format
+msgid "%ds"
+msgstr "%d초"
+
 msgid "infinite"
 msgstr "무한"
 
@@ -809,15 +813,12 @@ msgid "Retry"
 msgstr "다시 시도"
 
 #, lua-format
-msgid "Block timeout: %s seconds"
-msgstr "블록 타임아웃: %s초"
+msgid "Block timeout: %s"
+msgstr "블록 타임아웃: %s"
 
 #, lua-format
 msgid "Total timeout: %s"
 msgstr "총 타임아웃: %s"
-
-msgid "seconds"
-msgstr "초"
 
 #, lua-format
 msgid "Set %s block timeout (seconds)"
@@ -906,6 +907,13 @@ msgstr "모든 항목을 입력하세요"
 
 msgid "Feature not implemented"
 msgstr "구현되지 않은 기능입니다"
+
+#, lua-format
+#~ msgid "Block timeout: %s seconds"
+#~ msgstr "블록 타임아웃: %s초"
+
+#~ msgid "seconds"
+#~ msgstr "초"
 
 #, lua-format
 #~ msgid "%s failed due to a timeout%s. Would you like to retry?"

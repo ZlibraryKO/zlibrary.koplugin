@@ -114,14 +114,24 @@ r.check("the search box is seeded with the current query",
         call ~= nil and call:find("query_string", 1, true) ~= nil,
         "call site: " .. tostring(call))
 
--- The download must be confirmed, not started on the hold itself: it spends quota and cannot be
--- undone, and this route never shows the detail view where the user would otherwise have looked.
-r.check("main.lua confirms before downloading on hold",
-        call ~= nil and call:find("confirmDownloadBook", 1, true) ~= nil,
+-- Holding must confirm, because it spends quota and cannot be undone -- but it must confirm
+-- ONCE. downloadBook already ends with Ui.confirmDownload, so asking again at the call site
+-- produced two dialogs back to back: "Download this book?" and then Download "<file>"?. Count
+-- the confirmations on the path rather than checking any single one is present, which is what
+-- an earlier version of this did and why it passed while the bug was live.
+r.check("holding routes into downloadBook",
+        call ~= nil and call:find("downloadBook(book)", 1, true) ~= nil,
         "call site: " .. tostring(call))
-r.check("the confirmation is what triggers the download",
-        call ~= nil and call:find("confirmDownloadBook", 1, true) < call:find("downloadBook(book)", 1, true),
-        "downloadBook is not inside the confirmation callback")
+-- Matches a call, not the word: the call site's own comment mentions confirming, and an
+-- earlier version of this check failed on that rather than on anything real.
+r.check("the hold call site does not confirm on its own",
+        call ~= nil and call:find("Ui.confirmDownload", 1, true) == nil,
+        "call site confirms as well as downloadBook: " .. tostring(call))
+
+local confirms = 0
+for _ in main_src:gmatch("Ui%.confirmDownload") do confirms = confirms + 1 end
+r.check("exactly one confirmation exists in the download path", confirms == 1,
+        confirms .. " calls to Ui.confirmDownload -- the user would answer that many dialogs")
 
 -- And the row has to carry the book, or the handler has nothing to act on.
 local ui_src = (function()
@@ -131,53 +141,5 @@ end)()
 r.check("menu rows carry their book",
         ui_src:find("book_data = book_data", 1, true) ~= nil,
         "createBookMenuItem does not attach the book")
-
--- ---------------------------------------------------------------- the confirmation itself
--- This dialog is the only thing the user sees before spending a download, so what it shows is
--- the feature. Driven from the real source for the same reason as everything else here.
-local confirm_block = support.extract_block(PLUGIN .. "/zlibrary/ui.lua",
-    "(\nfunction Ui%.confirmDownloadBook%(.-\nend\n)")
-
-local built_dialog, confirmed
-local confirmDownloadBook = (function()
-    local Ui = {}
-    local env = {
-        Ui = Ui, string = string, table = table, type = type, tostring = tostring,
-        T = function(s) return s end,
-        ConfirmBox = { new = function(_, spec) built_dialog = spec; return spec end },
-        UIManager = { show = function() end },
-        _plugin_instance = nil,
-    }
-    local chunk = assert(loadstring(confirm_block, "=confirmDownloadBook"))
-    setfenv(chunk, env)
-    chunk()
-    return Ui.confirmDownloadBook
-end)()
-
-built_dialog, confirmed = nil, false
-confirmDownloadBook({ title = "Dune", author = "Frank Herbert", format = "epub", size = "2.4 MB" },
-    function() confirmed = true end)
-local text = built_dialog and tostring(built_dialog.text) or ""
-r.check("confirmation shows the title", text:find("Dune", 1, true) ~= nil, "text = " .. text)
-r.check("confirmation shows the author", text:find("Frank Herbert", 1, true) ~= nil, "text = " .. text)
-r.check("confirmation shows the format in caps", text:find("EPUB", 1, true) ~= nil, "text = " .. text)
-r.check("confirmation shows the size", text:find("2.4 MB", 1, true) ~= nil, "text = " .. text)
-r.check("confirmation offers to download",
-        built_dialog and built_dialog.ok_text == "Download", "ok_text = " .. tostring(built_dialog and built_dialog.ok_text))
-r.check("confirmation can be declined",
-        built_dialog and built_dialog.cancel_text == "Cancel", "cancel_text = " .. tostring(built_dialog and built_dialog.cancel_text))
-r.check("nothing downloads until it is confirmed", not confirmed, "the callback fired unprompted")
-built_dialog.ok_callback()
-r.check("confirming triggers the download", confirmed, "the callback never fired")
-
--- A search result may be missing either field; the dialog must degrade rather than print "N/A"
--- or raise.
-built_dialog = nil
-confirmDownloadBook({ title = "Untitled", format = "N/A", size = "N/A" }, function() end)
-text = built_dialog and tostring(built_dialog.text) or ""
-r.check("missing format and size are omitted, not shown as N/A",
-        text:find("N/A", 1, true) == nil, "text = " .. text)
-r.check("the title still shows when nothing else is known",
-        text:find("Untitled", 1, true) ~= nil, "text = " .. text)
 
 r.finish()

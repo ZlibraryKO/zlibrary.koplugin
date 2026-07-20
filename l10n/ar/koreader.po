@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 11:20+0200\n"
+"POT-Creation-Date: 2026-07-20 11:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -763,9 +763,6 @@ msgstr "إزالة"
 msgid "Download \"%s\"?"
 msgstr "تنزيل \"%s\"؟"
 
-msgid "Download this book?"
-msgstr "تنزيل هذا الكتاب؟"
-
 #, lua-format
 msgid "\"%s\" downloaded."
 msgstr "تم تنزيل \"%s\"."
@@ -916,6 +913,9 @@ msgstr "يرجى ملء جميع الحقول"
 
 msgid "Feature not implemented"
 msgstr "الميزة غير متوفرة"
+
+#~ msgid "Download this book?"
+#~ msgstr "تنزيل هذا الكتاب؟"
 
 #, lua-format
 #~ msgid "\"%s\" downloaded successfully. Open it now?"

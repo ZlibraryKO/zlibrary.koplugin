@@ -563,46 +563,6 @@ function Ui.confirmDownload(filename, ok_callback)
     end
 end
 
--- Confirm a download started by holding a row in the results list.
---
--- That route skips the book detail view, so this dialog is the only place the user sees what
--- they are about to spend a download on. Downloads are quota-limited and cannot be taken back,
--- which is why holding does not simply start one.
-function Ui.confirmDownloadBook(book, ok_callback)
-    local lines = { book.title or T("Unknown Title") }
-    if type(book.author) == "string" and book.author ~= "" then
-        table.insert(lines, book.author)
-    end
-
-    local meta = {}
-    if book.format and book.format ~= "N/A" then
-        table.insert(meta, string.upper(tostring(book.format)))
-    end
-    if book.size and book.size ~= "N/A" then
-        table.insert(meta, tostring(book.size))
-    end
-    if #meta > 0 then
-        table.insert(lines, table.concat(meta, "  ·  "))
-    end
-
-    local text = string.format("%s\n\n%s", T("Download this book?"), table.concat(lines, "\n"))
-    if _plugin_instance and _plugin_instance.dialog_manager then
-        _plugin_instance.dialog_manager:showConfirmDialog({
-            text = text,
-            ok_text = T("Download"),
-            ok_callback = ok_callback,
-            cancel_text = T("Cancel"),
-        })
-    else
-        UIManager:show(ConfirmBox:new{
-            text = text,
-            ok_text = T("Download"),
-            ok_callback = ok_callback,
-            cancel_text = T("Cancel"),
-        })
-    end
-end
-
 function Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, ok_open_callback, cancel_callback)
     local turn_off_wifi = default_turn_off_wifi
 

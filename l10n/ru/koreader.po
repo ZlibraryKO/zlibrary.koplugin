@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 11:20+0200\n"
+"POT-Creation-Date: 2026-07-20 11:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -763,9 +763,6 @@ msgstr "Удалить"
 msgid "Download \"%s\"?"
 msgstr "Скачать \"%s\"?"
 
-msgid "Download this book?"
-msgstr "Скачать эту книгу?"
-
 #, lua-format
 msgid "\"%s\" downloaded."
 msgstr "«%s»: загрузка завершена."
@@ -916,6 +913,9 @@ msgstr "Пожалуйста, заполните все поля"
 
 msgid "Feature not implemented"
 msgstr "Функция не реализована"
+
+#~ msgid "Download this book?"
+#~ msgstr "Скачать эту книгу?"
 
 #, lua-format
 #~ msgid "\"%s\" downloaded successfully. Open it now?"

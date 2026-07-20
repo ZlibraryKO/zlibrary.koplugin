@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 11:20+0200\n"
+"POT-Creation-Date: 2026-07-20 11:29+0200\n"
 "PO-Revision-Date: 2025-05-28 15:14-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -764,9 +764,6 @@ msgstr "Remover"
 msgid "Download \"%s\"?"
 msgstr "Baixar \"%s\"?"
 
-msgid "Download this book?"
-msgstr "Baixar este livro?"
-
 #, lua-format
 msgid "\"%s\" downloaded."
 msgstr "\"%s\" baixado."
@@ -917,6 +914,9 @@ msgstr "Por favor, preencha todos os campos"
 
 msgid "Feature not implemented"
 msgstr "Recurso não implementado"
+
+#~ msgid "Download this book?"
+#~ msgstr "Baixar este livro?"
 
 #, lua-format
 #~ msgid "\"%s\" downloaded successfully. Open it now?"

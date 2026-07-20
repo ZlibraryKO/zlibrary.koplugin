@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 11:20+0200\n"
+"POT-Creation-Date: 2026-07-20 11:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese <zh@li.org>\n"
@@ -763,9 +763,6 @@ msgstr "移除"
 msgid "Download \"%s\"?"
 msgstr "下載\"%s\"？"
 
-msgid "Download this book?"
-msgstr "下載此書？"
-
 #, lua-format
 msgid "\"%s\" downloaded."
 msgstr "「%s」下載完成。"
@@ -916,6 +913,9 @@ msgstr "請填寫所有欄位"
 
 msgid "Feature not implemented"
 msgstr "功能尚未實現"
+
+#~ msgid "Download this book?"
+#~ msgstr "下載此書？"
 
 #, lua-format
 #~ msgid "\"%s\" downloaded successfully. Open it now?"

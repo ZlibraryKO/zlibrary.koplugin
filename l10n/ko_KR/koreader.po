@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 11:20+0200\n"
+"POT-Creation-Date: 2026-07-20 11:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -763,9 +763,6 @@ msgstr "제거"
 msgid "Download \"%s\"?"
 msgstr "\"%s\"을(를) 다운로드하시겠습니까?"
 
-msgid "Download this book?"
-msgstr "이 책을 다운로드하시겠습니까?"
-
 #, lua-format
 msgid "\"%s\" downloaded."
 msgstr "“%s” 다운로드 완료."
@@ -916,6 +913,9 @@ msgstr "모든 항목을 입력하세요"
 
 msgid "Feature not implemented"
 msgstr "구현되지 않은 기능입니다"
+
+#~ msgid "Download this book?"
+#~ msgstr "이 책을 다운로드하시겠습니까?"
 
 #, lua-format
 #~ msgid "\"%s\" downloaded successfully. Open it now?"

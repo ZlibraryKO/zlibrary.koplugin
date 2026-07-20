@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 11:20+0200\n"
+"POT-Creation-Date: 2026-07-20 11:29+0200\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -769,9 +769,6 @@ msgstr "Премахване"
 msgid "Download \"%s\"?"
 msgstr "Изтегляне на „%s“?"
 
-msgid "Download this book?"
-msgstr "Изтегляне на тази книга?"
-
 #, lua-format
 msgid "\"%s\" downloaded."
 msgstr "„%s“ е изтеглен."
@@ -922,6 +919,9 @@ msgstr "Попълнете всички полета"
 
 msgid "Feature not implemented"
 msgstr "Функцията не е реализирана"
+
+#~ msgid "Download this book?"
+#~ msgstr "Изтегляне на тази книга?"
 
 #, lua-format
 #~ msgid "\"%s\" downloaded successfully. Open it now?"

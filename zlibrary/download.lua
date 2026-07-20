@@ -86,6 +86,16 @@ function Download.fetchDetailsThenDownload(self, book_stub)
 end
 
 function Download.run(self, book)
+    -- A download always needs an account -- it counts against a quota. Ask before the radio and
+    -- before the request, rather than after the server rejects it: searching works signed out,
+    -- so this is the first point where a fresh install actually needs credentials.
+    if not Config.hasCredentials() then
+        self:login(function(login_ok)
+            if login_ok then self:downloadBook(book) end
+        end)
+        return
+    end
+
     if NetworkMgr:willRerunWhenOnline(function()
         self:downloadBook(book)
     end) then

@@ -21,6 +21,32 @@ Api.DNS_ERROR_TEXT = T("Could not find the server address")
 -- both sides must share the message id for that to survive translation.
 Api.BLOCKED_TEXT = T("This Z-library server is refusing automated access")
 
+-- Fallback text for a sign-in the server answered but would not accept. Exported for the same
+-- reason as the two above: Zlibrary:_promptForCredentials matches on it to tell "your password is
+-- wrong" apart from "we never got an answer", and a match on the English literal would hold in
+-- one locale out of fourteen.
+Api.CREDENTIALS_REJECTED_TEXT = T("Credentials rejected or invalid response")
+
+-- Did the server read these credentials and refuse them?
+--
+-- Positive matches only. Anything unrecognised -- a timeout, a dead mirror, a bot-challenge page,
+-- an unparseable body, a rate limit -- means no answer arrived, not that the password is wrong.
+-- Getting that default backwards would lock a reader out of storing credentials at all whenever
+-- their mirror is down, which is the common case for this plugin.
+--
+-- Separate from isAuthenticationError on purpose: that one drives session re-login on ordinary
+-- API calls, and widening it would change retry behaviour across the plugin for no benefit here.
+function Api.isCredentialRejection(error_message)
+    if not error_message then return false end
+    local error_str = tostring(error_message)
+    -- Server wording, which arrives untranslated.
+    if string.find(error_str, "Incorrect email or password", 1, true) then return true end
+    if string.find(error_str, "Please login", 1, true) then return true end
+    -- Our own fallback, matched by value so it survives translation.
+    if string.find(error_str, Api.CREDENTIALS_REJECTED_TEXT, 1, true) then return true end
+    return false
+end
+
 function Api.isAuthenticationError(error_message)
     if not error_message then
         return false
@@ -718,7 +744,7 @@ function Api.login(email, password, is_redir_callback)
     local user_key = session.remix_userkey or session.user_key or ""
 
     if user_id == "" or user_key == "" then
-        result.error = T("Login failed") .. ": " .. (session.message or data.message or T("Credentials rejected or invalid response"))
+        result.error = T("Login failed") .. ": " .. (session.message or data.message or Api.CREDENTIALS_REJECTED_TEXT)
         logger.warn(string.format("Zlibrary:Api.login - END (Credentials error) - Error: %s", result.error))
         return result
     end

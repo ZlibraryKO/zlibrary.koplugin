@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 11:29+0200\n"
+"POT-Creation-Date: 2026-07-20 11:41+0200\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -302,6 +302,9 @@ msgstr "Неуспешно зареждане на още резултати"
 
 msgid "No more results found."
 msgstr "Няма повече резултати."
+
+msgid "This book's file type is unknown, so it cannot be downloaded."
+msgstr "Форматът на тази книга е неизвестен, затова не може да бъде изтеглена."
 
 msgid "Book identifiers missing. Cannot download."
 msgstr "Липсват идентификатори на книгата. Изтеглянето е невъзможно."

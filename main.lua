@@ -1401,6 +1401,78 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
         function(book) self:downloadBook(book) end)
 end
 
+
+-- A file extension is only usable if it survives being pasted into a path.
+--
+-- Browse-list rows are stubs: they carry an id, a hash and a title, and the extension only
+-- arrives with the full book details. Missing, it came through as the literal "N/A" -- truthy,
+-- so the `or "unknown"` fallback never fired -- and the slash inside it turned
+-- "<title> - <author>.N/A.downloading" into a directory that does not exist. The download died
+-- at the open with "No such file or directory", naming a path no one had asked for.
+local function _usableFormat(format)
+    if type(format) ~= "string" then
+        return nil
+    end
+    local trimmed = util.trim(format)
+    if trimmed == "" or trimmed == "N/A" then
+        return nil
+    end
+    -- Accept only what looks like an extension rather than stripping what does not. Stripping
+    -- turns "a/b" into "ab" -- safe to write, but an invented type that opens in nothing --
+    -- whereas refusing it sends the caller to fetch the real one. Letters and digits only, and
+    -- short: every format this plugin handles is epub, pdf, mobi, azw3, djvu or fb2.
+    if not trimmed:match("^%w+$") or #trimmed > 8 then
+        return nil
+    end
+    return trimmed
+end
+
+-- Fetch a stub's full details, then download it. Only reached when the extension is unknown,
+-- which is the case for every row in the browse lists: they are summaries, and the file type
+-- arrives with the details. Tapping a row has always fetched them; this does the same for a
+-- download started from the list.
+function Zlibrary:_fetchDetailsThenDownload(book_stub)
+    local function attempt()
+        local user_session = Config.getUserSession()
+        local loading_msg = Ui.showLoadingMessage(T("Fetching book details..."))
+
+        local task = function()
+            return Api.getBookDetails(user_session and user_session.user_id,
+                user_session and user_session.user_key, book_stub.id, book_stub.hash)
+        end
+
+        local on_success = function(api_result)
+            Ui.closeMessage(loading_msg)
+            if api_result.error then
+                Ui.showErrorMessage(Ui.colonConcat(T("Failed to fetch book details"),
+                    tostring(api_result.error)))
+                return
+            end
+            if not api_result.book then
+                Ui.showErrorMessage(T("Could not retrieve book details."))
+                return
+            end
+            if not _usableFormat(api_result.book.format) then
+                -- Say so rather than inventing an extension: a file saved under the wrong one
+                -- opens in nothing.
+                Ui.showErrorMessage(T("This book's file type is unknown, so it cannot be downloaded."))
+                return
+            end
+            self:downloadBook(api_result.book)
+        end
+
+        local on_error_handler = function(err_msg)
+            Ui.showRetryErrorDialog(err_msg, T("Book details"), function()
+                attempt()
+            end, function() end, loading_msg, "book_details")
+        end
+
+        AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
+    end
+
+    attempt()
+end
+
 function Zlibrary:downloadBook(book)
     if NetworkMgr:willRerunWhenOnline(function()
         self:downloadBook(book)
@@ -1413,9 +1485,17 @@ function Zlibrary:downloadBook(book)
         return
     end
 
+    -- Downloading straight from a browse list means the extension has not been fetched yet.
+    -- Get the details first and come back, which is what opening the book would have done.
+    local book_format = _usableFormat(book.format)
+    if not book_format then
+        self:_fetchDetailsThenDownload(book)
+        return
+    end
+
     local safe_title = util.trim(book.title or "Unknown Title"):gsub("[/\\?%*:|\"<>%c]", "_")
     local safe_author = util.trim(book.author or "Unknown Author"):gsub("[/\\?%*:|\"<>%c]", "_")
-    local filename = string.format("%s - %s.%s", safe_title, safe_author, book.format or "unknown")
+    local filename = string.format("%s - %s.%s", safe_title, safe_author, book_format)
     logger.info(string.format("Zlibrary:downloadBook - Proposed filename: %s", filename))
 
     local target_dir = Config.getDownloadDir()

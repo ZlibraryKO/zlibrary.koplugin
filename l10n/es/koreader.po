@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 11:29+0200\n"
+"POT-Creation-Date: 2026-07-20 11:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -296,6 +296,9 @@ msgstr "No se pudieron cargar más resultados"
 
 msgid "No more results found."
 msgstr "No se encontraron más resultados."
+
+msgid "This book's file type is unknown, so it cannot be downloaded."
+msgstr "Se desconoce el formato de este libro, por lo que no se puede descargar."
 
 msgid "Book identifiers missing. Cannot download."
 msgstr "Faltan los identificadores del libro. No se puede descargar."

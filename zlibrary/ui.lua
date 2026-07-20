@@ -469,11 +469,17 @@ function Ui.createBookMenuItem(book_data, parent_zlibrary_instance, is_show_cove
     }
 end
 
-function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_items, on_goto_page_handler, opts)
+-- on_new_search, when given, puts a magnifying glass in the title bar that reopens the search
+-- input. The results page had no way back to the search box: you closed it, found the menu and
+-- started again. The multi-search screen has had this button all along, so this is parity rather
+-- than a new idea, and it is the only route available -- TitleBar exposes callbacks for its
+-- icons and not for the title text, so tapping the "Search Results: x" caption is not an option.
+function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_items, on_goto_page_handler, opts, on_new_search)
     local search_order_name = Config.getSearchOrderName()
     local menu = Menu:new{
         title = _colon_concat(T("Search Results"), query_string),
         subtitle = string.format("%s: %s", T("Sort by"), search_order_name),
+        title_bar_left_icon = on_new_search and "appbar.search" or nil,
         item_table = initial_menu_items,
         parent = parent_ui_ref,
         items_per_page = 10,
@@ -486,6 +492,10 @@ function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_it
         list_per_page =opts and opts.search_per_page,
         show_cover = opts and opts.show_cover_search ~= false,
     }
+    if on_new_search then
+        -- Menu calls this as a method, so the menu itself arrives as the first argument.
+        menu.onLeftButtonTap = function() on_new_search() end
+    end
     _showAndTrackDialog(menu)
     return menu
 end

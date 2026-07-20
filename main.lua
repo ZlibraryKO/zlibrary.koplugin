@@ -733,6 +733,9 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
         on_similar_books_callback = function(book)
             self:searchSimilarBooks(book)
         end,
+        on_download_book_callback = function(book)
+            self:downloadBook(book)
+        end,
         toggle_items = {{
             text = T("Most popular"),
             cache_key = "popular",
@@ -843,6 +846,9 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
             end,
             on_similar_books_callback = function(book)
                 self:searchSimilarBooks(book)
+            end,
+            on_download_book_callback = function(book)
+                self:downloadBook(book)
             end,
             -- Invoked in fetchAndShow to dynamically update the widget
             on_fetch_and_show = function(widget)

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 15:03+0000\n"
+"POT-Creation-Date: 2026-07-20 08:27+0200\n"
 "PO-Revision-Date: 2025-05-28 15:14-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -338,6 +338,9 @@ msgstr "Nenhum comentário para exibir"
 msgid "Could not find the server address"
 msgstr "Não foi possível encontrar o endereço do servidor"
 
+msgid "This Z-library server is refusing automated access"
+msgstr "Este servidor Z-library recusa acesso automatizado"
+
 msgid "Request timed out - please check your connection and try again"
 msgstr "Tempo esgotado - verifique sua conexão e tente novamente"
 
@@ -349,6 +352,12 @@ msgstr "O endereço da Z-library pode estar errado ou não existir mais."
 
 msgid "Network connection error - please check your internet connection and try again"
 msgstr "Erro de conexão de rede - verifique sua conexão com a internet e tente novamente"
+
+msgid "Too many redirects"
+msgstr "Muitos redirecionamentos"
+
+msgid "Try a different Z-library server."
+msgstr "Tente outro servidor Z-library."
 
 msgid "HTTP Error"
 msgstr "Erro HTTP"

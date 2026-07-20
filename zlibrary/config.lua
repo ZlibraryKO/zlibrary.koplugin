@@ -161,7 +161,7 @@ Config.SEED_URLS = { -- List of known Z-library base URLs extracted from the And
     "https://lib-africa.sk/",
     "https://z-library.do/",
     "https://z-lib.gd/",
-    "https://1lib.sk/",
+    -- "https://1lib.sk/", -- July 2026: behind a DiamWall browser check, so the API is unreachable
     "https://z-lib.gl/",
     "https://z-library.rs/", -- these last 3 don't seem to work currently (May 2026), but may be worth trying in the future
     "https://z-lib.do/",

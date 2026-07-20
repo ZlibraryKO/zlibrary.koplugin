@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 15:03+0000\n"
+"POT-Creation-Date: 2026-07-20 08:27+0200\n"
 "PO-Revision-Date: 2026-04-03 00:00+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
@@ -337,6 +337,9 @@ msgstr "没有评论展示"
 msgid "Could not find the server address"
 msgstr "找不到服务器地址"
 
+msgid "This Z-library server is refusing automated access"
+msgstr "此 Z-library 服务器拒绝自动访问"
+
 msgid "Request timed out - please check your connection and try again"
 msgstr "请求超时 - 请检查您的连接后重试"
 
@@ -348,6 +351,12 @@ msgstr "Z-library 地址可能有误或已不存在。"
 
 msgid "Network connection error - please check your internet connection and try again"
 msgstr "网络连接错误 - 请检查您的网络连接后重试"
+
+msgid "Too many redirects"
+msgstr "重定向次数过多"
+
+msgid "Try a different Z-library server."
+msgstr "请尝试其他 Z-library 服务器。"
 
 msgid "HTTP Error"
 msgstr "HTTP 错误"

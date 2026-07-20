@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 07:39+0200\n"
+"POT-Creation-Date: 2026-07-20 08:27+0200\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -343,6 +343,9 @@ msgstr "Няма коментари за показване"
 msgid "Could not find the server address"
 msgstr "Не може да се намери адресът на сървъра"
 
+msgid "This Z-library server is refusing automated access"
+msgstr "Този сървър на Z-library блокира автоматизирания достъп"
+
 msgid "Request timed out - please check your connection and try again"
 msgstr "Заявката изтече — проверете връзката си и опитайте отново"
 
@@ -357,6 +360,9 @@ msgstr "Грешка в мрежовата връзка — проверете �
 
 msgid "Too many redirects"
 msgstr "Твърде много пренасочвания"
+
+msgid "Try a different Z-library server."
+msgstr "Опитайте друг сървър на Z-library."
 
 msgid "HTTP Error"
 msgstr "HTTP грешка"

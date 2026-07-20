@@ -16,6 +16,11 @@ local Api = {}
 -- so both sides must share the message id for the match to survive translation.
 Api.DNS_ERROR_TEXT = T("Could not find the server address")
 
+-- Leading text of the bot-challenge error built in Api.makeHttpRequest, exported for the same
+-- reason as DNS_ERROR_TEXT: Ui.showRetryErrorDialog matches on it to offer auto-discovery, and
+-- both sides must share the message id for that to survive translation.
+Api.BLOCKED_TEXT = T("This Z-library server is refusing automated access")
+
 function Api.isAuthenticationError(error_message)
     if not error_message then
         return false
@@ -175,6 +180,39 @@ end
 -- How many hops a chain may take before giving up. Mirrors that point at each other would
 -- otherwise recurse until the stack goes; five is what browsers and curl settle on.
 local MAX_REDIRECT_HOPS = 5
+
+-- A mirror behind a bot-detection service answers an API call with an HTML "verifying your
+-- browser" interstitial instead of JSON. That is not an outage and retrying cannot clear it: the
+-- page wants a browser to run its JavaScript, which a KOReader plugin has no way to do, and
+-- working around a check the operator deliberately put up is not the job either. Recognise it,
+-- say so plainly, and let the caller offer auto-discovery -- a different mirror is the only thing
+-- that helps. Observed on 1lib.sk, which answers 513 with a DiamWall challenge page.
+local CHALLENGE_MARKERS = {
+    "Verifying your browser",
+    "DiamWall",
+    "/cdn-cgi/mitigation/",
+    "__cf_chl",
+    "Just a moment",
+    "Checking your browser",
+}
+
+local function _looksLikeBotChallenge(body)
+    if type(body) ~= "string" or body == "" then
+        return false
+    end
+    -- Only ever an HTML page where JSON was expected; bound the scan so a large body cannot
+    -- turn every failed request into a full-text search.
+    local head = string.sub(body, 1, 4096)
+    if not string.find(head, "<", 1, true) then
+        return false
+    end
+    for _, marker in ipairs(CHALLENGE_MARKERS) do
+        if string.find(head, marker, 1, true) then
+            return true
+        end
+    end
+    return false
+end
 
 -- Attribute names that appear in a Set-Cookie beside the pair that matters. LuaSocket folds
 -- repeated headers into a single comma-separated string, and an Expires date carries a comma of
@@ -556,7 +594,16 @@ function Api.makeHttpRequest(options)
     if result.status_code ~= 200 and result.status_code ~= 206 then
         if not result.error then
             local json_error = _extractErrorFromJsonBody(result.body)
-            if json_error then
+            if _looksLikeBotChallenge(result.body) then
+                local parsed = socket_url.parse(options.url or "")
+                result.error = string.format("%s (%s). %s",
+                    Api.BLOCKED_TEXT,
+                    (parsed and parsed.host) or tostring(options.url),
+                    T("Try a different Z-library server."))
+                logger.err(string.format(
+                    "Zlibrary:Api.makeHttpRequest - %s answered a bot-check page (status %s), not the API",
+                    tostring(options.url), tostring(result.status_code)))
+            elseif json_error then
                 result.error = json_error
             else
                 result.error = string.format("%s: %s (%s)", T("HTTP Error"), result.status_code, r_status_str or T("Unknown Status"))

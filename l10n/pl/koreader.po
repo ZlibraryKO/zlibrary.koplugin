@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 07:39+0200\n"
+"POT-Creation-Date: 2026-07-20 08:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -337,6 +337,9 @@ msgstr "Brak komentarzy do wyświetlenia"
 msgid "Could not find the server address"
 msgstr "Nie znaleziono adresu serwera"
 
+msgid "This Z-library server is refusing automated access"
+msgstr "Ten serwer Z-library blokuje zautomatyzowany dostęp"
+
 msgid "Request timed out - please check your connection and try again"
 msgstr "Przekroczono limit czasu – sprawdź połączenie i spróbuj ponownie"
 
@@ -351,6 +354,9 @@ msgstr "Błąd połączenia sieciowego – sprawdź połączenie z internetem i 
 
 msgid "Too many redirects"
 msgstr "Zbyt wiele przekierowań"
+
+msgid "Try a different Z-library server."
+msgstr "Spróbuj innego serwera Z-library."
 
 msgid "HTTP Error"
 msgstr "Błąd HTTP"

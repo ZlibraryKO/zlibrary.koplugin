@@ -683,9 +683,12 @@ function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel
     -- A dead or misspelled base URL never resolves, so retrying alone can only fail again.
     -- Offer auto-discovery alongside Retry, the same way a timeout does.
     local is_dns_error = string.find(error_string, Api.DNS_ERROR_TEXT, 1, true) ~= nil
-    local offer_discover = (is_timeout or is_dns_error) and true or nil
+    -- A mirror behind a bot check will answer the same way however often it is asked, so Retry
+    -- alone is useless here. Another server is the only fix, so surface that button.
+    local is_blocked = string.find(error_string, Api.BLOCKED_TEXT, 1, true) ~= nil
+    local offer_discover = (is_timeout or is_dns_error or is_blocked) and true or nil
 
-    if is_http_400 or is_timeout or is_network_error or is_dns_error then
+    if is_http_400 or is_timeout or is_network_error or is_dns_error or is_blocked then
         local retry_message
         if is_timeout then
             local timeout_info = ""

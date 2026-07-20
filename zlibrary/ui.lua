@@ -707,6 +707,13 @@ function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel
             retry_message = string.format(T("Could not complete \"%s\" because the server address could not be found. Would you like to retry?"), operation_name)
         elseif is_network_error then
             retry_message = string.format(T("Could not complete \"%s\" due to a network error. Would you like to retry?"), operation_name)
+        elseif is_blocked then
+            -- Use the error as it stands. It already names the host and says what to do, and it
+            -- is not about the operation at all -- the server is walled, so which call hit the
+            -- wall is beside the point. Falling through to the generic branch below was worse
+            -- than unhelpful: it replaced this with "due to a temporary issue", and this is the
+            -- one failure here that is not temporary.
+            retry_message = error_string
         else
             retry_message = string.format(T("Could not complete \"%s\" due to a temporary issue. Would you like to retry?"), operation_name)
         end

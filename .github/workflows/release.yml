@@ -153,12 +153,15 @@ jobs:
             echo "Info: 'l10n' directory not found. Skipping files from 'l10n'."
           fi
 
-          # Add README*.md *.md if it exists and is a file
+          # Add README*.md *.md if it exists and is a file.
+          # test/ is excluded: the harnesses there are for developing the plugin, not for running
+          # it, and at -maxdepth 2 test/README.md would otherwise be shipped to every user. The
+          # .lua finds above are already scoped tightly enough that no test code can reach the zip.
           while IFS= read -r -d $'\0' md_file; do
             if [ -f "$md_file" ]; then
               FILE_LINES="${FILE_LINES}${md_file}"$'\n'
             fi
-          done < <(find . -maxdepth 2 -type f -name '*.md' -print0)
+          done < <(find . -maxdepth 2 -type f -name '*.md' -not -path './test/*' -print0)
           
           # Add LICENSE if it exists and is a file
           if [ -f "LICENSE" ]; then

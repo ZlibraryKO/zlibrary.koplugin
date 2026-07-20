@@ -417,6 +417,27 @@ function Api.makeHttpRequest(options)
             end
             -- Otherwise follow it here: an in-site redirect, or a mirror move on a request that
             -- has no rebuild left to call.
+            --
+            -- A target already requested is a loop, and no number of hops escapes it. The observed
+            -- case is a WAF (DiamWall on 1lib.sk) answering 307 with a Location pointing back at the
+            -- request URL: following that spends the whole hop budget and seconds of wall clock on a
+            -- free service to reach a conclusion available on the first hop. Stop at the first
+            -- repeat. Browsers report loops as "too many redirects" as well, so the message users
+            -- see stays the one they will recognise.
+            local seen = options._redirect_seen
+            if not seen then
+                seen = { [options.url] = true }
+                options._redirect_seen = seen
+            end
+            if seen[redir_res.real_url] then
+                result.error = string.format("%s (%s)", T("Too many redirects"), tostring(redir_res.real_url))
+                logger.err(string.format(
+                    "Zlibrary:Api.makeHttpRequest - Redirect loop: %s was already requested, not following it again",
+                    tostring(redir_res.real_url)))
+                return result
+            end
+            seen[redir_res.real_url] = true
+
             local hops = (options._redirect_hops or 0) + 1
             if hops > MAX_REDIRECT_HOPS then
                 result.error = string.format("%s (%s)", T("Too many redirects"), tostring(options.url))

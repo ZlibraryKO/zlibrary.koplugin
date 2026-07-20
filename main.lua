@@ -1388,7 +1388,11 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
     -- Seed the box with the query that produced this page: refining a search is far more common
     -- than starting an unrelated one, and an empty box throws that away.
     self.active_results_menu = Ui.createSearchResultsMenu(self.ui, query_string, menu_items, on_goto_page_handler, opts,
-        function() Ui.showSearchDialog(self, query_string) end)
+        function() Ui.showSearchDialog(self, query_string) end,
+        -- Holding a row downloads it without opening the detail view. It goes through
+        -- downloadBook, which resolves the link from the id and hash a search result already
+        -- carries, so nothing else has to be fetched first.
+        function(book) Ui.confirmDownloadBook(book, function() self:downloadBook(book) end) end)
 end
 
 function Zlibrary:downloadBook(book)

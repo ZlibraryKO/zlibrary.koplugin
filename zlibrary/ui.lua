@@ -462,7 +462,9 @@ function Ui.createBookMenuItem(book_data, parent_zlibrary_instance, is_show_cove
             end
         end,
         keep_menu_open = true,
-       -- original_book_data_ref = book_data,
+        -- Carried so a hold on this row can act on the book without re-deriving it. Costs
+        -- nothing: the tap callback above already closes over the same table.
+        book_data = book_data,
         book_id = book_data.id,
         hash = book_data.hash,
         cover = is_show_cover and book_data.cover or nil,
@@ -474,7 +476,7 @@ end
 -- started again. The multi-search screen has had this button all along, so this is parity rather
 -- than a new idea, and it is the only route available -- TitleBar exposes callbacks for its
 -- icons and not for the title text, so tapping the "Search Results: x" caption is not an option.
-function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_items, on_goto_page_handler, opts, on_new_search)
+function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_items, on_goto_page_handler, opts, on_new_search, on_hold_book)
     local search_order_name = Config.getSearchOrderName()
     local menu = Menu:new{
         title = _colon_concat(T("Search Results"), query_string),
@@ -495,6 +497,16 @@ function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_it
     if on_new_search then
         -- Menu calls this as a method, so the menu itself arrives as the first argument.
         menu.onLeftButtonTap = function() on_new_search() end
+    end
+    if on_hold_book then
+        -- Menu calls this as a method too, hence the discarded first argument. Returning true
+        -- marks the hold handled so the list does not also act on it.
+        menu.onMenuHold = function(_, item)
+            if item and item.book_data then
+                on_hold_book(item.book_data)
+            end
+            return true
+        end
     end
     _showAndTrackDialog(menu)
     return menu
@@ -548,6 +560,46 @@ function Ui.confirmDownload(filename, ok_callback)
             cancel_text = T("Cancel")
         }
         UIManager:show(dialog)
+    end
+end
+
+-- Confirm a download started by holding a row in the results list.
+--
+-- That route skips the book detail view, so this dialog is the only place the user sees what
+-- they are about to spend a download on. Downloads are quota-limited and cannot be taken back,
+-- which is why holding does not simply start one.
+function Ui.confirmDownloadBook(book, ok_callback)
+    local lines = { book.title or T("Unknown Title") }
+    if type(book.author) == "string" and book.author ~= "" then
+        table.insert(lines, book.author)
+    end
+
+    local meta = {}
+    if book.format and book.format ~= "N/A" then
+        table.insert(meta, string.upper(tostring(book.format)))
+    end
+    if book.size and book.size ~= "N/A" then
+        table.insert(meta, tostring(book.size))
+    end
+    if #meta > 0 then
+        table.insert(lines, table.concat(meta, "  ·  "))
+    end
+
+    local text = string.format("%s\n\n%s", T("Download this book?"), table.concat(lines, "\n"))
+    if _plugin_instance and _plugin_instance.dialog_manager then
+        _plugin_instance.dialog_manager:showConfirmDialog({
+            text = text,
+            ok_text = T("Download"),
+            ok_callback = ok_callback,
+            cancel_text = T("Cancel"),
+        })
+    else
+        UIManager:show(ConfirmBox:new{
+            text = text,
+            ok_text = T("Download"),
+            ok_callback = ok_callback,
+            cancel_text = T("Cancel"),
+        })
     end
 end
 

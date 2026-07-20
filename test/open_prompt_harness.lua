@@ -79,15 +79,43 @@ r.check("prompt off: the report names the file",
         off.notified and tostring(off.notified):find("Dune.epub", 1, true) ~= nil,
         "message = " .. tostring(off.notified))
 
--- The Wi-Fi preference is carried by the dialog being skipped, so it has to be honoured anyway.
+-- The finish path still runs, because it is also what closes things down.
 r.check("prompt off: the finish path still runs", off.cancelled, "cancel_callback never fired")
-r.check("prompt off: Wi-Fi stays on when that is the preference",
+
+-- Wi-Fi is left alone, and that does not depend on the preference. "Turn off Wi-Fi after
+-- closing this dialog" has no meaning when no dialog appears, and the toggle for it lives on
+-- that same dialog -- so honouring it here would keep a background action running that the user
+-- can neither see nor change.
+r.check("prompt off: Wi-Fi untouched when the preference is off",
         off.wifi == false, "passed " .. tostring(off.wifi))
 
 local off_wifi = run(true, true)
-r.check("prompt off: Wi-Fi is still turned off when that is the preference",
-        off_wifi.wifi == true, "passed " .. tostring(off_wifi.wifi))
-r.check("prompt off: still reported with Wi-Fi off", off_wifi.notified ~= nil, "silent")
+r.check("prompt off: Wi-Fi untouched even when the preference is on",
+        off_wifi.wifi == false,
+        "passed " .. tostring(off_wifi.wifi) .. " -- the radio would be switched off invisibly")
+r.check("prompt off: still reported with the Wi-Fi preference on",
+        off_wifi.notified ~= nil, "silent")
+
+-- ---------------------------------------------------------------- the two paths, contrasted
+-- With the prompt shown, the preference is honoured as it always was: the checkbox is right
+-- there and the user is looking at it. With the prompt skipped, it is not. Assert both, so the
+-- difference stays a decision rather than becoming a bug either way.
+for _, pref in ipairs({ false, true }) do
+    shown, dialog_spec, skip_setting = nil, nil, false
+    local via_dialog
+    confirmOpenBook("Dune.epub", true, pref, function() end, function(w) via_dialog = w end)
+    local spec = dialog_spec
+    r.check("prompt on: a Close action exists (pref=" .. tostring(pref) .. ")",
+            spec and type(spec.cancel_callback) == "function", "no cancel_callback")
+    if spec and spec.cancel_callback then spec.cancel_callback() end
+    r.check("prompt on: the preference is honoured (pref=" .. tostring(pref) .. ")",
+            via_dialog == pref,
+            "dialog passed " .. tostring(via_dialog) .. " for preference " .. tostring(pref))
+
+    local via_skip = run(true, pref).wifi
+    r.check("prompt off: the preference is not acted on (pref=" .. tostring(pref) .. ")",
+            via_skip == false, "skip passed " .. tostring(via_skip))
+end
 
 -- ---------------------------------------------------------------- the setting itself
 local cfg_src = (function()

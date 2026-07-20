@@ -555,18 +555,20 @@ function Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, ok
     local turn_off_wifi = default_turn_off_wifi
 
     -- Downloading several books in a row means answering this dialog several times, which a user
-    -- asked to be able to switch off. Two things have to survive that.
+    -- asked to be able to switch off.
     --
-    -- The dialog is also where the Wi-Fi toggle lives, so skipping it must still act on the
-    -- stored preference rather than quietly leaving the radio on -- hence the cancel path, which
-    -- is what already handles "finished, not opening".
+    -- Skipping it leaves Wi-Fi alone, whatever the stored preference says. That preference is
+    -- "Turn off Wi-Fi after closing this dialog" -- there is no dialog here and nothing being
+    -- closed, so there is nothing for it to be after. It also lives only on this dialog, so
+    -- honouring it here would keep a background action running that the user can no longer see
+    -- or change. Anyone wanting Wi-Fi managed for them still has the prompt.
     --
-    -- And it is the only sign most people get that the download worked. Replacing a dialog that
-    -- demands an answer with one that dismisses itself is the point; replacing it with silence
-    -- would be a different and worse feature.
+    -- The notice matters as much as the skipping. This dialog is the only sign most people get
+    -- that a download worked; replacing one that demands an answer with one that dismisses
+    -- itself is the point, and replacing it with silence would be a different, worse feature.
     if Config.getSkipOpenBookPrompt() then
         Ui.showInfoMessage(string.format(T("\"%s\" downloaded."), filename))
-        if cancel_callback then cancel_callback(turn_off_wifi) end
+        if cancel_callback then cancel_callback(false) end
         return
     end
 

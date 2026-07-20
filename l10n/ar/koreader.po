@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 11:12+0200\n"
+"POT-Creation-Date: 2026-07-20 11:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -296,6 +296,9 @@ msgstr "فشل تحميل المزيد من النتائج"
 
 msgid "No more results found."
 msgstr "لم يتم العثور على المزيد من النتائج."
+
+msgid "This book's file type is unknown, so it cannot be downloaded."
+msgstr "صيغة ملف هذا الكتاب غير معروفة، لذا يتعذر تنزيله."
 
 msgid "Book identifiers missing. Cannot download."
 msgstr "معرّفات الكتاب مفقودة. تعذر التنزيل."
@@ -913,6 +916,9 @@ msgstr "يرجى ملء جميع الحقول"
 
 msgid "Feature not implemented"
 msgstr "الميزة غير متوفرة"
+
+#~ msgid "Download this book?"
+#~ msgstr "تنزيل هذا الكتاب؟"
 
 #, lua-format
 #~ msgid "\"%s\" downloaded successfully. Open it now?"

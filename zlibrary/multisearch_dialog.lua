@@ -395,6 +395,19 @@ function SearchDialog:onMenuHold(item)
         }})
     end
 
+    -- Downloading straight from the list, the same as holding a row in the search results. The
+    -- id and hash are what downloadBook needs to resolve a link, and it confirms on its own, so
+    -- nothing is asked here.
+    if book.id and book.hash and type(self.on_download_book_callback) == 'function' then
+        table.insert(buttons, {{
+            text = T("Download book"),
+            callback = function()
+                UIManager:close(dialog)
+                self.on_download_book_callback(book)
+            end
+        }})
+    end
+
     -- A tab may offer an action that only makes sense on its own list, e.g. removing a book from the
     -- downloaded history. Read it off the active tab rather than test the position, so the tabs stay
     -- free to move.

@@ -462,7 +462,9 @@ function Ui.createBookMenuItem(book_data, parent_zlibrary_instance, is_show_cove
             end
         end,
         keep_menu_open = true,
-       -- original_book_data_ref = book_data,
+        -- Carried so a hold on this row can act on the book without re-deriving it. Costs
+        -- nothing: the tap callback above already closes over the same table.
+        book_data = book_data,
         book_id = book_data.id,
         hash = book_data.hash,
         cover = is_show_cover and book_data.cover or nil,
@@ -474,7 +476,7 @@ end
 -- started again. The multi-search screen has had this button all along, so this is parity rather
 -- than a new idea, and it is the only route available -- TitleBar exposes callbacks for its
 -- icons and not for the title text, so tapping the "Search Results: x" caption is not an option.
-function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_items, on_goto_page_handler, opts, on_new_search)
+function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_items, on_goto_page_handler, opts, on_new_search, on_hold_book)
     local search_order_name = Config.getSearchOrderName()
     local menu = Menu:new{
         title = _colon_concat(T("Search Results"), query_string),
@@ -495,6 +497,16 @@ function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_it
     if on_new_search then
         -- Menu calls this as a method, so the menu itself arrives as the first argument.
         menu.onLeftButtonTap = function() on_new_search() end
+    end
+    if on_hold_book then
+        -- Menu calls this as a method too, hence the discarded first argument. Returning true
+        -- marks the hold handled so the list does not also act on it.
+        menu.onMenuHold = function(_, item)
+            if item and item.book_data then
+                on_hold_book(item.book_data)
+            end
+            return true
+        end
     end
     _showAndTrackDialog(menu)
     return menu

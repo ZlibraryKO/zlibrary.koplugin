@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 11:12+0200\n"
+"POT-Creation-Date: 2026-07-20 11:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -296,6 +296,9 @@ msgstr "추가 결과를 불러오지 못했습니다"
 
 msgid "No more results found."
 msgstr "더 이상 결과가 없습니다."
+
+msgid "This book's file type is unknown, so it cannot be downloaded."
+msgstr "이 도서의 파일 형식을 알 수 없어 다운로드할 수 없습니다."
 
 msgid "Book identifiers missing. Cannot download."
 msgstr "도서 식별자가 없습니다. 다운로드할 수 없습니다."
@@ -913,6 +916,9 @@ msgstr "모든 항목을 입력하세요"
 
 msgid "Feature not implemented"
 msgstr "구현되지 않은 기능입니다"
+
+#~ msgid "Download this book?"
+#~ msgstr "이 책을 다운로드하시겠습니까?"
 
 #, lua-format
 #~ msgid "\"%s\" downloaded successfully. Open it now?"

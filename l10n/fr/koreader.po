@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 11:12+0200\n"
+"POT-Creation-Date: 2026-07-20 11:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -296,6 +296,9 @@ msgstr "Échec du chargement de plus de résultats"
 
 msgid "No more results found."
 msgstr "Plus de résultats trouvés."
+
+msgid "This book's file type is unknown, so it cannot be downloaded."
+msgstr "Le format de ce livre est inconnu, son téléchargement est donc impossible."
 
 msgid "Book identifiers missing. Cannot download."
 msgstr "Identifiants du livre manquants. Téléchargement impossible."
@@ -913,6 +916,9 @@ msgstr "Veuillez remplir tous les champs"
 
 msgid "Feature not implemented"
 msgstr "Fonctionnalité non implémentée"
+
+#~ msgid "Download this book?"
+#~ msgstr "Télécharger ce livre ?"
 
 #, lua-format
 #~ msgid "\"%s\" downloaded successfully. Open it now?"

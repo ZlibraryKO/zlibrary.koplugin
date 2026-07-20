@@ -46,8 +46,10 @@ r.check("the function was recovered from ui.lua", type(createSearchResultsMenu) 
 -- ---------------------------------------------------------------- with a callback
 local opened_with = nil
 built, shown = nil, nil
+local held_book = nil
 local menu = createSearchResultsMenu({}, "dune", {}, function() end, {},
-    function() opened_with = "called" end)
+    function() opened_with = "called" end,
+    function(book) held_book = book end)
 
 r.check("results menu shows a search button",
         built and built.title_bar_left_icon == "appbar.search",
@@ -64,6 +66,25 @@ r.check("the query stays in the title", built and built.title == "Search Results
         "title = " .. tostring(built and built.title))
 r.check("the menu is still shown", shown ~= nil, "_showAndTrackDialog was not called")
 
+-- ---------------------------------------------------------------- holding a row
+-- Holding downloads without opening the detail view, so the row has to carry the book and the
+-- handler has to reach it. Menu invokes this as a method, so the menu arrives first.
+r.check("holding a row is handled", type(menu.onMenuHold) == "function",
+        "onMenuHold = " .. type(menu.onMenuHold))
+local BOOK = { id = "1", hash = "h", title = "Dune", author = "Herbert", format = "epub", size = "2 MB" }
+local handled = menu:onMenuHold({ book_data = BOOK })
+r.check("holding passes the book on", held_book == BOOK, "got " .. tostring(held_book))
+r.check("holding is marked handled", handled == true,
+        "returned " .. tostring(handled) .. " -- the list would act on it as well")
+
+-- A row without book data must not raise; menus carry other kinds of entry.
+held_book = nil
+local ok = pcall(function() return menu:onMenuHold({}) end)
+r.check("holding a row with no book does nothing and does not raise",
+        ok and held_book == nil, "raised or fired anyway")
+ok = pcall(function() return menu:onMenuHold(nil) end)
+r.check("holding nothing does not raise", ok, "raised on a nil item")
+
 -- ---------------------------------------------------------------- without one
 -- Every other caller passes nothing, and they must not gain a button that does nothing.
 built = nil
@@ -74,6 +95,8 @@ r.check("no callback means no button",
 r.check("no callback means no handler",
         plain.onLeftButtonTap == nil,
         "onLeftButtonTap = " .. type(plain.onLeftButtonTap))
+r.check("no hold callback means no hold handler",
+        plain.onMenuHold == nil, "onMenuHold = " .. type(plain.onMenuHold))
 
 -- ---------------------------------------------------------------- the wiring in main.lua
 -- The harness cannot run main.lua, but it can check the call site still passes a callback: the
@@ -90,5 +113,33 @@ r.check("main.lua passes a new-search callback",
 r.check("the search box is seeded with the current query",
         call ~= nil and call:find("query_string", 1, true) ~= nil,
         "call site: " .. tostring(call))
+
+-- Holding must confirm, because it spends quota and cannot be undone -- but it must confirm
+-- ONCE. downloadBook already ends with Ui.confirmDownload, so asking again at the call site
+-- produced two dialogs back to back: "Download this book?" and then Download "<file>"?. Count
+-- the confirmations on the path rather than checking any single one is present, which is what
+-- an earlier version of this did and why it passed while the bug was live.
+r.check("holding routes into downloadBook",
+        call ~= nil and call:find("downloadBook(book)", 1, true) ~= nil,
+        "call site: " .. tostring(call))
+-- Matches a call, not the word: the call site's own comment mentions confirming, and an
+-- earlier version of this check failed on that rather than on anything real.
+r.check("the hold call site does not confirm on its own",
+        call ~= nil and call:find("Ui.confirmDownload", 1, true) == nil,
+        "call site confirms as well as downloadBook: " .. tostring(call))
+
+local confirms = 0
+for _ in main_src:gmatch("Ui%.confirmDownload") do confirms = confirms + 1 end
+r.check("exactly one confirmation exists in the download path", confirms == 1,
+        confirms .. " calls to Ui.confirmDownload -- the user would answer that many dialogs")
+
+-- And the row has to carry the book, or the handler has nothing to act on.
+local ui_src = (function()
+    local fh = assert(io.open(PLUGIN .. "/zlibrary/ui.lua"))
+    local s = fh:read("*a"); fh:close(); return s
+end)()
+r.check("menu rows carry their book",
+        ui_src:find("book_data = book_data", 1, true) ~= nil,
+        "createBookMenuItem does not attach the book")
 
 r.finish()

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 11:12+0200\n"
+"POT-Creation-Date: 2026-07-20 11:41+0200\n"
 "PO-Revision-Date: 2026-04-03 00:00+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
@@ -296,6 +296,9 @@ msgstr "加载更多结果失败"
 
 msgid "No more results found."
 msgstr "没有更多结果。"
+
+msgid "This book's file type is unknown, so it cannot be downloaded."
+msgstr "此书籍的文件格式未知，无法下载。"
 
 msgid "Book identifiers missing. Cannot download."
 msgstr "缺少书籍标识符，无法下载。"
@@ -913,6 +916,9 @@ msgstr "请填写所有字段"
 
 msgid "Feature not implemented"
 msgstr "功能尚未实现"
+
+#~ msgid "Download this book?"
+#~ msgstr "下载此书？"
 
 #, lua-format
 #~ msgid "\"%s\" downloaded successfully. Open it now?"

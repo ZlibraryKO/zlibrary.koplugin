@@ -84,13 +84,23 @@ function Config.loadCredentialsFromFile(plugin_path)
     local identity = creds:readSetting("username") or creds:readSetting("email")
     if identity then
         Config.saveSetting(Config.SETTINGS_USERNAME_KEY, identity)
+        Config._credentials_from_file = true
         logger.info("Overriding Identity (Username/Email) from " .. Config.CREDENTIALS_FILENAME)
     end
     local password = creds:readSetting("password")
     if password then
         Config.saveSetting(Config.SETTINGS_PASSWORD_KEY, password)
+        Config._credentials_from_file = true
         logger.info("Overriding Password from " .. Config.CREDENTIALS_FILENAME)
     end
+end
+
+-- Whether the credentials in the settings came from zlibrary_credentials.lua rather than from
+-- the user typing them. It matters when clearing: this file is re-read on every init, which
+-- happens per UI, so anything it sets comes straight back and telling the user their
+-- credentials are gone would be a lie.
+function Config.credentialsComeFromFile()
+    return Config._credentials_from_file == true
 end
 
 -- Search-language filter. Each name is the language's own script where a bundled KOReader font
@@ -674,6 +684,18 @@ function Config.getCredentials()
     }
 end
 
+-- Whether an account has been set up at all. Operations that need one can ask before making a
+-- request that cannot succeed, rather than waiting for the server to say "Please login" -- which
+-- costs a round trip and depends on the server phrasing it that way.
+--
+-- Deliberately not consulted for search: the search endpoint answers without credentials, and
+-- being able to browse before signing in is worth keeping.
+function Config.hasCredentials()
+    local email = Config.getSetting(Config.SETTINGS_USERNAME_KEY)
+    local password = Config.getSetting(Config.SETTINGS_PASSWORD_KEY)
+    return email ~= nil and email ~= "" and password ~= nil and password ~= ""
+end
+
 function Config.getUserSession()
     return {
         user_id = Config.getSetting(Config.SETTINGS_USER_ID_KEY),
@@ -689,6 +711,34 @@ end
 function Config.clearUserSession()
     Config.deleteSetting(Config.SETTINGS_USER_ID_KEY)
     Config.deleteSetting(Config.SETTINGS_USER_KEY_KEY)
+end
+
+-- Drop everything cached that belongs to one account. Signing out while this survives leaves the
+-- next person looking at the previous reader's books.
+--
+-- What is deliberately kept: "popular" is fetched unauthenticated (requires_auth = false) and is
+-- the same list for everybody; api_real_url and the domain caches describe the server, not the
+-- reader; view_settings is a device preference; and the book-info and cover caches hold public
+-- metadata. Favourite state is not among them -- it lives in favorite_book_ids below.
+function Config.clearPersonalCaches()
+    local runtime = Config.getConfigRuntimeCache()
+    runtime:remove("download_quota_status")
+    runtime:remove("favorite_book_ids")
+
+    local multi_search = Cache:new{ name = "multi_search" }
+    for _, key in ipairs({ "recommended", "favorites", "downloaded" }) do
+        multi_search:remove(key)
+    end
+end
+
+-- Forget the account entirely: the stored username and password, the session tokens, and
+-- everything cached on their behalf. Clearing the session alone leaves the credentials behind,
+-- and the plugin simply signs back in with them on the next request.
+function Config.clearCredentials()
+    Config.deleteSetting(Config.SETTINGS_USERNAME_KEY)
+    Config.deleteSetting(Config.SETTINGS_PASSWORD_KEY)
+    Config.clearUserSession()
+    Config.clearPersonalCaches()
 end
 
 function Config.getDownloadDir()

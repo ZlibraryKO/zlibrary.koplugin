@@ -17,7 +17,8 @@ local r = support.reporter()
 -- ---------------------------------------------------------------- build the graph
 local MODULES = {
     "main", "zlibrary.api", "zlibrary.async_helper", "zlibrary.bookdetails_dialog",
-    "zlibrary.cache", "zlibrary.config", "zlibrary.dialog_manager", "zlibrary.gettext",
+    "zlibrary.cache", "zlibrary.config", "zlibrary.dialog_manager", "zlibrary.discovery", "zlibrary.download",
+    "zlibrary.gettext",
     "zlibrary.menu", "zlibrary.multisearch_dialog", "zlibrary.ota", "zlibrary.preloader",
     "zlibrary.ui",
 }

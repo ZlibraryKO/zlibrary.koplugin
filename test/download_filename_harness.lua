@@ -17,7 +17,7 @@ local PLUGIN = assert(arg[1], "usage: luajit download_filename_harness.lua <plug
 local support = dofile(PLUGIN .. "/test/support.lua")
 local r = support.reporter()
 
-local usableFormat = support.extract_function(PLUGIN .. "/main.lua", "_usableFormat", {
+local usableFormat = support.extract_function(PLUGIN .. "/zlibrary/download.lua", "_usableFormat", {
     type = type,
     util = { trim = function(s) return (s:gsub("^%s+", ""):gsub("%s+$", "")) end },
 })
@@ -66,8 +66,9 @@ for _, value in ipairs(hostile) do
 end
 
 -- ---------------------------------------------------------------- and the wiring
+-- Downloading moved out of main.lua into its own module; the filename is built there now.
 local main_src = (function()
-    local fh = assert(io.open(PLUGIN .. "/main.lua"))
+    local fh = assert(io.open(PLUGIN .. "/zlibrary/download.lua"))
     local s = fh:read("*a"); fh:close(); return s
 end)()
 
@@ -81,11 +82,13 @@ r.check("the raw format is no longer pasted into a filename",
 
 -- An unusable extension must send the caller to fetch details rather than guess one: a file
 -- saved under the wrong extension opens in nothing.
+-- The call goes back through the plugin method rather than straight to the module function:
+-- the body moved verbatim, and that is what keeps it verbatim.
 r.check("an unknown extension fetches the details first",
-        main_src:find("_fetchDetailsThenDownload(book)", 1, true) ~= nil,
+        main_src:find("self:_fetchDetailsThenDownload(book)", 1, true) ~= nil,
         "nothing recovers a missing extension")
 r.check("the fetch checks the extension it got back",
-        main_src:match("_fetchDetailsThenDownload.-_usableFormat%(api_result%.book%.format%)") ~= nil,
+        main_src:match("fetchDetailsThenDownload.-_usableFormat%(api_result%.book%.format%)") ~= nil,
         "the fetched details are used without checking the extension arrived")
 
 r.finish()

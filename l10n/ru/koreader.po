@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-21 16:53+0000\n"
+"POT-Creation-Date: 2026-07-21 18:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -24,74 +24,17 @@ msgstr "Поиск в Z-библиотеке"
 msgid "My books"
 msgstr "Мои книги"
 
-msgid "Operation failed, please retry."
-msgstr "Операция не удалась, повторите попытку."
-
-msgid "Fetching domains..."
-msgstr "Получение доменов..."
-
-msgid "Successfully set base URL to: "
-msgstr "Базовый URL успешно установлен:"
-
-msgid "Failed to find a working base URL."
-msgstr "Не удалось найти рабочий базовый URL."
-
-msgid "Queued"
-msgstr "В очереди"
-
-msgid "Selection copied to clipboard."
-msgstr "Выделенное скопировано в буфер обмена."
-
-msgid "Checking"
-msgstr "Проверка"
+msgid "Settings"
+msgstr "Настройки"
 
 msgid "Set base URL"
 msgstr "Установить базовый URL"
-
-msgid "Invalid Base URL."
-msgstr "Некорректный базовый URL."
-
-msgid "Failed"
-msgstr "Не удалось"
-
-msgid "Unknown error"
-msgstr "Неизвестная ошибка"
-
-msgid "Searching for working Z-library server..."
-msgstr "Поиск работающего сервера Z-library..."
-
-msgid "Current Base URL:"
-msgstr "Текущий базовый URL:"
-
-msgid "Mirror site redirected to: "
-msgstr "Зеркало перенаправило на:"
-
-msgid "Auto-discover base URL"
-msgstr "Автоматическое обнаружение базового URL"
-
-msgid "Network unavailable."
-msgstr "Сеть недоступна."
-
-msgid "Discovery is already running..."
-msgstr "Поиск доменов уже выполняется..."
-
-msgid "Refresh Dynamic Domains"
-msgstr "Обновить динамические домены"
-
-msgid "Back"
-msgstr "Назад"
-
-msgid "Settings"
-msgstr "Настройки"
 
 msgid "Set credentials"
 msgstr "Указать учётные данные"
 
 msgid "Login successful!"
 msgstr "Вход выполнен успешно!"
-
-msgid "Verify credentials"
-msgstr "Проверить учетные данные"
 
 msgid "Set download directory"
 msgstr "Установить папку для загрузок"
@@ -135,8 +78,18 @@ msgstr "Проверить обновления"
 msgid "Error: Plugin path not found. Cannot check for updates."
 msgstr "Ошибка: Путь к плагину не найден. Невозможно проверить обновления."
 
-msgid "Developer options"
-msgstr "Параметры разработчика"
+msgid "Advanced"
+msgstr "Дополнительно"
+
+msgid "Clear credentials"
+msgstr "Очистить учётные данные"
+
+#, lua-format
+msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
+msgstr "Учётные данные очищены, но %s задаёт их снова. Отредактируйте этот файл, чтобы это прекратить."
+
+msgid "Credentials cleared."
+msgstr "Учётные данные очищены."
 
 msgid "Clear user session"
 msgstr "Очистить сессию пользователя"
@@ -270,11 +223,14 @@ msgstr "Детали книги"
 msgid "Could not retrieve book details."
 msgstr "Не удалось получить информацию о книге."
 
-msgid "Please set both username and password first."
-msgstr "Пожалуйста, сначала укажите имя пользователя и пароль."
-
 msgid "Logging in..."
 msgstr "Выполняется вход..."
+
+msgid "Credentials saved, but they could not be checked right now."
+msgstr "Учётные данные сохранены, но проверить их сейчас не удалось."
+
+msgid "Please set both username and password first."
+msgstr "Пожалуйста, сначала укажите имя пользователя и пароль."
 
 msgid "Sign-in"
 msgstr "Вход"
@@ -297,34 +253,6 @@ msgstr "Не удалось загрузить дополнительные ре
 msgid "No more results found."
 msgstr "Больше результатов не найдено."
 
-msgid "This book's file type is unknown, so it cannot be downloaded."
-msgstr "Формат этой книги неизвестен, поэтому скачивание невозможно."
-
-msgid "Book identifiers missing. Cannot download."
-msgstr "Отсутствуют идентификаторы книги. Скачивание невозможно."
-
-#, lua-format
-msgid "Cannot create downloads directory: %s"
-msgstr "Не удалось создать папку для загрузок: %s"
-
-msgid "Could not open reader UI."
-msgstr "Не удалось открыть интерфейс читалки."
-
-msgid "Download failed: Unknown error"
-msgstr "Ошибка загрузки: Неизвестная ошибка"
-
-msgid "Download limit reached. Please try again later or check your account."
-msgstr "Достигнут лимит загрузок. Попробуйте позже или проверьте свой аккаунт."
-
-msgid "Book download"
-msgstr "Загрузка книги"
-
-msgid "Retrying download… (tap to cancel)"
-msgstr "Повторная загрузка… (нажмите для отмены)"
-
-msgid "Download cancelled."
-msgstr "Загрузка отменена."
-
 msgid "Book ID is required."
 msgstr "Требуется ID книги."
 
@@ -345,6 +273,9 @@ msgstr "Не удалось найти адрес сервера"
 
 msgid "This Z-library server is refusing automated access"
 msgstr "Этот сервер Z-library блокирует автоматический доступ"
+
+msgid "Credentials rejected or invalid response"
+msgstr "Учётные данные отклонены или неверный ответ"
 
 msgid "Request timed out - please check your connection and try again"
 msgstr "Время ожидания истекло — проверьте подключение и повторите попытку"
@@ -385,9 +316,6 @@ msgstr "Ошибка входа"
 msgid "Login failed: Invalid session data"
 msgstr "Ошибка входа: неверные данные сессии"
 
-msgid "Credentials rejected or invalid response"
-msgstr "Учётные данные отклонены или неверный ответ"
-
 msgid "No response received from server - please try again"
 msgstr "Нет ответа от сервера — повторите попытку"
 
@@ -399,6 +327,9 @@ msgstr "Ошибка API поиска"
 
 msgid "Failed to open target file"
 msgstr "Не удалось открыть целевой файл"
+
+msgid "Unknown error"
+msgstr "Неизвестная ошибка"
 
 msgid "Download limit reached or file is an HTML page"
 msgstr "Достигнут лимит загрузок или файл является HTML-страницей"
@@ -453,6 +384,9 @@ msgstr "Не удалось разобрать ответ со ссылкой д
 
 msgid "API returned an error for download link."
 msgstr "API вернул ошибку для ссылки скачивания."
+
+msgid "Download limit reached. Please try again later or check your account."
+msgstr "Достигнут лимит загрузок. Попробуйте позже или проверьте свой аккаунт."
 
 msgid "No download link provided in API response."
 msgstr "В ответе API нет ссылки для скачивания."
@@ -550,6 +484,9 @@ msgstr "страниц"
 msgid "Cover"
 msgstr "Обложка"
 
+msgid "Back"
+msgstr "Назад"
+
 msgid "More Similar Books"
 msgstr "Ещё похожие книги"
 
@@ -602,6 +539,79 @@ msgstr "бесконечно"
 #, lua-format
 msgid "Block: %ds, Total: %s"
 msgstr "Блок: %d с, Всего: %s"
+
+msgid "Operation failed, please retry."
+msgstr "Операция не удалась, повторите попытку."
+
+msgid "Fetching domains..."
+msgstr "Получение доменов..."
+
+msgid "Successfully set base URL to: "
+msgstr "Базовый URL успешно установлен:"
+
+msgid "Failed to find a working base URL."
+msgstr "Не удалось найти рабочий базовый URL."
+
+msgid "Queued"
+msgstr "В очереди"
+
+msgid "Selection copied to clipboard."
+msgstr "Выделенное скопировано в буфер обмена."
+
+msgid "Checking"
+msgstr "Проверка"
+
+msgid "Invalid Base URL."
+msgstr "Некорректный базовый URL."
+
+msgid "Failed"
+msgstr "Не удалось"
+
+msgid "Searching for working Z-library server..."
+msgstr "Поиск работающего сервера Z-library..."
+
+msgid "Current Base URL:"
+msgstr "Текущий базовый URL:"
+
+msgid "Mirror site redirected to: "
+msgstr "Зеркало перенаправило на:"
+
+msgid "Auto-discover base URL"
+msgstr "Автоматическое обнаружение базового URL"
+
+msgid "Network unavailable."
+msgstr "Сеть недоступна."
+
+msgid "Discovery is already running..."
+msgstr "Поиск доменов уже выполняется..."
+
+msgid "Refresh Dynamic Domains"
+msgstr "Обновить динамические домены"
+
+msgid "This book's file type is unknown, so it cannot be downloaded."
+msgstr "Формат этой книги неизвестен, поэтому скачивание невозможно."
+
+msgid "Book identifiers missing. Cannot download."
+msgstr "Отсутствуют идентификаторы книги. Скачивание невозможно."
+
+#, lua-format
+msgid "Cannot create downloads directory: %s"
+msgstr "Не удалось создать папку для загрузок: %s"
+
+msgid "Could not open reader UI."
+msgstr "Не удалось открыть интерфейс читалки."
+
+msgid "Download failed: Unknown error"
+msgstr "Ошибка загрузки: Неизвестная ошибка"
+
+msgid "Book download"
+msgstr "Загрузка книги"
+
+msgid "Retrying download… (tap to cancel)"
+msgstr "Повторная загрузка… (нажмите для отмены)"
+
+msgid "Download cancelled."
+msgstr "Загрузка отменена."
 
 msgid "Untitled"
 msgstr "Без названия"
@@ -768,6 +778,12 @@ msgstr "Удалить \"%s\" из скачанных книг?"
 msgid "Remove"
 msgstr "Удалить"
 
+msgid "Clear your stored username and password?"
+msgstr "Очистить сохранённые имя пользователя и пароль?"
+
+msgid "Clear"
+msgstr "Очистить"
+
 #, lua-format
 msgid "Download \"%s\"?"
 msgstr "Скачать \"%s\"?"
@@ -917,11 +933,20 @@ msgstr "Пароль"
 msgid "Enter password"
 msgstr "Введите пароль"
 
+msgid "Set and verify"
+msgstr "Указать и проверить"
+
 msgid "Please fill in all fields"
 msgstr "Пожалуйста, заполните все поля"
 
-msgid "Feature not implemented"
-msgstr "Функция не реализована"
+#~ msgid "Verify credentials"
+#~ msgstr "Проверить учетные данные"
+
+#~ msgid "Developer options"
+#~ msgstr "Параметры разработчика"
+
+#~ msgid "Feature not implemented"
+#~ msgstr "Функция не реализована"
 
 #~ msgid "Download this book?"
 #~ msgstr "Скачать эту книгу?"

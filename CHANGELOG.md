@@ -6,6 +6,63 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.42
+
+### Fixed
+
+**Signing in no longer dead-ends on a fresh install.** Anything that needs an account — a
+download, My Books, book details — used to fail with *"Please set both username and password
+first."* and stop there, leaving you to find *Menu → Z-library → Settings → Set credentials* on
+your own and start over. The plugin now asks for your credentials at that moment and carries on
+with whatever you were doing once you are signed in. Searching still works signed out, as before,
+so you can browse first and only sign in when you download.
+
+**A wrong password can be corrected in place.** Entering a bad username or password used to save
+it, close the dialog, try to sign in, and leave you with only an error message — the same dead
+end, one step later. Tapping **Set and verify** now checks what you typed against the server
+before keeping it: if the server rejects it, the dialog stays open with your entry intact so you
+can fix the typo. If the server cannot be reached at all — no Wi-Fi, a dead mirror — the
+credentials are saved anyway, with a note that they could not be checked yet, so a mirror being
+down never stops you storing them.
+
+### Added
+
+**Clear credentials.** A new entry under **Advanced** that signs you out completely: it forgets
+your stored username, password and session, and the cached lists tied to your account
+(recommended, favourites, downloaded). Handy before handing the device to someone else, or to
+switch accounts. If you set your credentials through the `zlibrary_credentials.lua` file, that
+file restores them on the next start — and the plugin now tells you so instead of reporting a
+clearing that will not stick.
+
+### Changed
+
+**"Developer options" is now "Advanced".** Clearing a saved password is not a developer action,
+and the new *Clear credentials* entry sits there beside the existing *Clear user session* and
+*Clear runtime cache*.
+
+**"Verify credentials" is gone — the action button verifies now.** The credentials dialog's
+button reads **Set and verify** and does both in one step, so the separate menu entry and dialog
+button it duplicated have been removed.
+
+### Internal
+
+The new sign-in strings are translated into all 14 locales. Test harnesses covering the sign-in
+flow, the credential-rejection classifier and the dialog teardown it relies on were added under
+`test/`.
+
+## 1.0.41
+
+### Added
+
+**Every Z-Library search language.** The language filter offered around 30; it now offers all the
+server lists — roughly 190. The languages that were already shown in their own script keep it; the
+rest use their English name.
+
+**A search box for the language list.** Choosing from ~190 rows meant a lot of scrolling. A
+magnifying glass in the picker's title bar now filters the list as you type, matching both the
+language's name and its code — so "ish" finds Irish, and "japanese" finds 日本語. Languages you have
+already selected are lifted to the top, so a handful of choices are not lost among the rest.
+
 ## 1.0.40
 
 ### Fixed

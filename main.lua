@@ -11,6 +11,8 @@ local WidgetContainer = require("ui/widget/container/widgetcontainer")
 local T = require("zlibrary.gettext")
 local Config = require("zlibrary.config")
 local Api = require("zlibrary.api")
+local Discovery = require("zlibrary.discovery")
+local Download = require("zlibrary.download")
 local Ui = require("zlibrary.ui")
 local ReaderUI = require("apps/reader/readerui")
 local AsyncHelper = require("zlibrary.async_helper")
@@ -28,6 +30,16 @@ local Zlibrary = WidgetContainer:extend{
     plugin_path = nil,
     dialog_manager = nil,
 }
+
+-- The first-run credentials prompt, shared by every caller that needs a sign-in.
+--
+-- File-local rather than an instance field on purpose: main.lua is required once, but KOReader
+-- instantiates the plugin per UI (FileManager and ReaderUI). An instance-scoped guard would let
+-- the two instances stack two dialogs on top of each other.
+--
+-- waiters is non-nil exactly while a prompt is on screen; callers arriving during that window
+-- queue behind it instead of opening a second one.
+local credential_prompt = { waiters = nil, dialog = nil }
 
 function Zlibrary:onDispatcherRegisterActions()
     Dispatcher:registerAction("zlibrary_search", { category="none", event="ZlibrarySearch", title=T("Z-library search"), general=true,})
@@ -70,350 +82,10 @@ function Zlibrary:onZlibrarySearch(act_page)
     return true
 end
 
+-- Delegates to zlibrary/discovery.lua. Kept as a method because the body recurses through it
+-- and Ui calls it on the plugin instance when it offers auto-discovery after a failure.
 function Zlibrary:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
-    if not is_interactive and NetworkMgr:willRerunWhenOnline(function()
-        self:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
-    end) then return end
-
-    logger.info("Zlibrary:autoDiscoverAndSetBaseUrl - START")
-    local loading_msg = false
-    local safe_close_loading_msg = function()
-        if type(loading_msg) == "table" then 
-            UIManager:close(loading_msg)
-            loading_msg = false
-        end
-    end
-    self.discover_channel = self.discover_channel or AsyncHelper:createChannel("findWorkingBaseUrl", 3, safe_close_loading_msg)
-
-    local function getCleanUrl(url)
-        if type(url) ~= "string" then return "" end
-        return url:gsub("^https?://", ""):gsub("/+$", "")
-    end
-
-    local domains_cache = Cache:new{ name = "_domains_cache" }
-    local check_cache = Cache:new{ name = "_domains_check_cache" }
-
-    local function refreshDomainsCache(callback)
-        local task_channel = self.discover_channel
-        local fetch_task = function()
-            logger.dbg("Zlibrary - Fetching dynamic domains...")
-            local response = Api.fetchDynamicDomains()
-            if response and response.success then
-                local domains_data = response.domains and response.domains.domains
-                if type(domains_data) == "table" then
-                    local flat = {}
-                    for _, item in ipairs(domains_data) do
-                        if type(item.domain) == "string" then table.insert(flat, item.domain) end
-                    end
-                    if #flat > 0 then 
-                        domains_cache:insert("domains", flat)
-                        return true 
-                    end
-                end
-            end
-            return false -- return false to allow retry
-        end
-        local on_callback = function(success, res)
-            safe_close_loading_msg()
-            if is_interactive and not (success and res) then
-                Ui.showErrorMessage(T("Operation failed, please retry."))
-            end
-            if callback then callback(success and res == true) end
-        end
-        task_channel:pushTask(fetch_task, on_callback, {
-            max_retries = 3,
-            insert_at_head = true,
-            on_start = function()
-                loading_msg = Ui.showLoadingMessage(T("Fetching domains..."))
-            end
-        })
-    end
-
-    local health_check_task = function(url) return Api.healthCheck(url, true) end
-
-    local function executeDiscovery()
-        local valid_seeds = {}
-        for _, item in ipairs(Config.getSeedUrls() or {}) do
-            local raw_url = type(item) == "table" and item.url or item
-            if type(raw_url) == "string" and raw_url ~= "" then
-                table.insert(valid_seeds, { url = raw_url:gsub("/$", ""), src = type(item) == "table" and item.src or "X" })
-            end
-        end
-
-        local connection_menu, updateBaseUrlItem
-        local first_working_url = nil
-        -- task status lock
-        local is_discovering = false
-        local max_idx = 1
-        local offset = 3
-
-        local function finishDiscovery()
-            is_discovering = false
-            safe_close_loading_msg()
-            if first_working_url then
-                local ok, err = Config.setAndValidateBaseUrl(first_working_url)
-                if ok then
-                    if not is_interactive and type(retry_callback) == "function" then
-                        retry_callback()
-                    else
-                        Ui.showInfoMessage(T("Successfully set base URL to: ") .. first_working_url)
-                        if updateBaseUrlItem then updateBaseUrlItem(first_working_url) end
-                    end
-                else
-                    logger.warn("Zlibrary - URL validation failed: " .. tostring(err))
-                end
-            elseif not is_interactive then
-                Ui.showErrorMessage(T("Failed to find a working base URL."))
-            end
-        end
-
-        local function initOrResetItem(item, seed)
-            if not item then return end
-            item.mandatory = "\u{23F3} " .. T("Queued")
-            item.mandatory_dim = false
-            item.bold = false
-            item.callback = Device:hasClipboard() and function()
-                Device.input.setClipboardText("https://" .. getCleanUrl(seed.url))
-                Ui.showInfoMessage(T("Selection copied to clipboard."))
-            end or nil
-        end
-
-        local function resetAllItems()
-            if is_interactive and connection_menu and connection_menu.item_table then
-                for i, seed in ipairs(valid_seeds) do
-                    local pos = i + offset
-                    initOrResetItem(connection_menu.item_table[pos], seed)
-                end
-                connection_menu:updateItems(nil, true)
-            end
-        end
-
-        local function start_discover_task()
-            is_discovering = true
-            first_working_url = nil
-            
-            resetAllItems()
-            self.discover_channel:executeBatch({
-                items = valid_seeds,
-                aggregate = true,
-                task_func = health_check_task,
-                get_task_args = function(seed) return { seed.url } end,
-                
-                on_start = function(idx, seed)
-                    local pos = idx + offset
-                    -- Match the on_item_end guard below: clearTasks cannot recall a probe that has
-                    -- already forked, so this can still fire after the menu is gone, and
-                    -- updateItems would repaint through show_parent onto whatever is on screen now.
-                    if is_interactive and connection_menu and UIManager:isWidgetShown(connection_menu) then
-                        local item = connection_menu.item_table[pos]
-                        if item then
-                            item.mandatory = "\u{27F3} " .. T("Checking")
-                            item.bold = true
-                            item.mandatory_dim = false
-                            connection_menu:updateItems(pos, true)
-                        end
-                    end
-                end,
-                
-                on_item_end = function(idx, seed, success, result)
-                    if type(result) ~= "table" then result = {} end
-
-                    -- UI update logic
-                    if is_interactive and connection_menu and UIManager:isWidgetShown(connection_menu) then
-                        local pos = idx + offset
-                        local item = connection_menu.item_table[pos]
-                        if item then
-                            item.bold = false
-                            if success and result.success then
-                                item.mandatory = string.format("\u{2714} %dms", result.elapsed or 0)
-                                item.mandatory_dim = false
-                                item.callback = function()
-                                    local ok, err = Config.setAndValidateBaseUrl(seed.url)
-                                    if ok then
-                                        Ui.showInfoMessage(string.format("%s : %s", T("Set base URL"), seed.url))
-                                        updateBaseUrlItem(seed.url)
-                                    else
-                                        Ui.showErrorMessage(T("Invalid Base URL.") .. " " .. tostring(err))
-                                    end
-                                end
-                            else
-                                item.mandatory = "\u{2718} " .. T("Failed")
-                                item.mandatory_dim = true
-                                item.callback = function() Ui.showInfoMessage(result.error or T("Unknown error")) end
-                            end
-                            
-                            -- auto page-turning logic
-                            max_idx = math.max(max_idx, pos)
-                            -- only go forward
-                            if connection_menu.page < connection_menu:getPageNumber(max_idx) then
-                                connection_menu:switchItemTable(nil, nil, max_idx)
-                            else
-                                connection_menu:updateItems(nil, true)
-                            end
-                        end
-                    end
-
-                    -- early return
-                    -- `success` only says the probe ran and returned something. Api.healthCheck reports a
-                    -- dead mirror by RETURNING { success = false }, which is a perfectly successful task,
-                    -- so the health check's own verdict has to be read too -- exactly as the item display
-                    -- above does. Without it the first probe to come back wins, and a mirror that fails
-                    -- instantly (NXDOMAIN answers in ~30ms) beats every mirror that actually works.
-                    if success and result.success and not first_working_url then
-                        first_working_url = seed.url
-                        -- return true to break all subsequent tasks
-                        if not is_interactive then return true end
-                    end
-                    return false
-                end,
-                on_batch_end = function(is_aborted, results_map)
-                    if not is_aborted and type(results_map) == "table" and next(results_map) then
-                        local filtered_results = {}
-                        for i, seed in ipairs(valid_seeds) do
-                            if type(seed) == "table" and seed.url and type(results_map[i]) == "table"  then
-                                filtered_results[seed.url] = results_map[i].result
-                            end
-                        end
-                        if next(filtered_results) then check_cache:insert("result", filtered_results) end
-                    end
-                    finishDiscovery()
-                end,
-            })
-        end
-
-        if not is_interactive then
-            -- block until done
-            loading_msg = Ui.showLoadingMessage(T("Searching for working Z-library server..."))
-            return start_discover_task() 
-        end
-
-        -- interactive part
-        updateBaseUrlItem = function(base)
-            if connection_menu and connection_menu.item_table and connection_menu.item_table[1] then
-                connection_menu.item_table[1].text = string.format("%s [ %s ]", T("Current Base URL:"), getCleanUrl(base))
-                connection_menu:updateItems(nil, true)
-            end
-        end
-
-        local check_status
-        local menu_items = {
-            {
-                text = string.format("%s  [ %s ]", T("Current Base URL:"), getCleanUrl(Config.getBaseUrl(true))),
-                mandatory = "\u{2699}",
-                callback = function()
-                    local base = Config.getBaseUrl(true)
-                    local real = Config.getCacheRealUrl()
-                    
-                    local build_dialog
-                    build_dialog = function(val, info)
-                        return Ui.showGenericInputDialog(T("Set base URL"), Config.SETTINGS_BASE_URL_KEY, val, false, function(in_val)
-                            local ok, err = Config.setAndValidateBaseUrl(in_val)
-                            if ok then updateBaseUrlItem(in_val); return true end
-                            Ui.showErrorMessage(err or T("Invalid Base URL.")); return false
-                        end, info)
-                    end
-                    
-                    local dlg = build_dialog(base, real and (T("Mirror site redirected to: ") .. real) or nil)
-                    
-                    if base and base ~= "" and NetworkMgr:isConnected() then
-                        if not check_status then
-                            -- with debounce
-                            check_status = UIManager:debounce(12, true, function()
-                                -- queue-jump detection
-                                self.discover_channel:pushTask(health_check_task, function(success, res)
-                                    if type(res) ~= "table" then res = {} end
-                                    -- Same as on_item_end: a returned { success = false } is a successful
-                                    -- task reporting a dead mirror, so both have to hold for a tick.
-                                    local status = (success and res.success)
-                                        and string.format("\u{2714} %dms", res.elapsed or 0)
-                                        or ("\u{2718} " .. tostring(res.error or ""))
-                                    real = Config.getCacheRealUrl()
-                                    local final_info = string.format(" %s \n %s", status, real and (T("Mirror site redirected to: ") .. real) or "")
-                                    if dlg then
-                                        pcall(function()
-                                            local txt = dlg:getInputText()
-                                            UIManager:close(dlg)
-                                            dlg = build_dialog(txt, final_info)
-                                        end)
-                                    end
-                                end, { args = {base}, insert_at_head = true })
-                            end)
-                        end
-                        check_status()
-                    end
-                end
-            }, {
-                text = T("Auto-discover base URL"), 
-                mandatory = "\u{25B7}",
-                callback = function()
-                    if not NetworkMgr:isConnected() then return Ui.showErrorMessage(T("Network unavailable.")) end
-                    if is_discovering then return Ui.showInfoMessage(T("Discovery is already running...")) end
-                    -- back to first page
-                    max_idx = 1
-                    UIManager:nextTick(start_discover_task)
-                end
-            }, { text = "---" }
-        }
-
-        offset = #menu_items
-        local last_check = check_cache:get("result", 600)
-        local has_last_check = (type(last_check) == "table")
-        for _, seed in ipairs(valid_seeds) do
-            local item = {
-                text = string.format("[%s] %s", seed.src, getCleanUrl(seed.url)),
-                show_indicator = false
-            }
-            initOrResetItem(item, seed)
-            -- has cache
-            if has_last_check and type(last_check[seed.url]) == "table" then
-                local url_last_check = last_check[seed.url]
-                if url_last_check.success then
-                    item.mandatory = string.format("\u{2714} %dms", url_last_check.elapsed or 0)
-                    item.callback = function()
-                        local ok, err = Config.setAndValidateBaseUrl(seed.url)
-                        if ok then
-                            Ui.showInfoMessage(string.format("%s : %s", T("Set base URL"), seed.url))
-                            if updateBaseUrlItem then updateBaseUrlItem(seed.url) end
-                        else
-                            Ui.showErrorMessage(T("Invalid Base URL.") .. " " .. tostring(err))
-                        end
-                    end
-                else
-                     item.mandatory = "\u{2718} " .. T("Failed")
-                     item.mandatory_dim = true
-                    item.callback = function() Ui.showInfoMessage(url_last_check.error or T("Unknown error")) end
-                end
-            end
-            table.insert(menu_items, item)
-        end
-        
-        table.insert(menu_items, { text = "---" })
-        table.insert(menu_items, {
-            text = T("Refresh Dynamic Domains"), mandatory = "\u{25B7}", callback = function()
-                if is_discovering then return Ui.showInfoMessage(T("Discovery is already running...")) end
-                if not NetworkMgr:isConnected() then return Ui.showErrorMessage(T("Network unavailable.")) end
-                if connection_menu then UIManager:close(connection_menu) end
-                refreshDomainsCache(function() self:autoDiscoverAndSetBaseUrl(true) end)
-        end})
-        table.insert(menu_items, { text = T("Back"), mandatory = "\u{21A9}", callback = function()
-            if connection_menu and connection_menu.onFirstPage then connection_menu:onFirstPage() end
-        end})
-
-        connection_menu = Ui.showUrlCheckProgress(self, menu_items, function()
-            -- Clear the state BEFORE clearTasks: it runs the session abort hooks synchronously, and
-            -- the batch hook calls on_batch_end -> finishDiscovery, which would otherwise still see
-            -- first_working_url and set the base URL the user just walked away from.
-            first_working_url = nil
-            is_discovering = false
-            self.discover_channel:clearTasks()
-        end)
-    end
-
-    if domains_cache:get("domains", 172800, true) or not NetworkMgr:isConnected() then
-        executeDiscovery()
-    else
-        refreshDomainsCache(executeDiscovery)
-    end
+    return Discovery.run(self, is_interactive, retry_callback)
 end
 
 function Zlibrary:addToMainMenu(menu_items)
@@ -438,24 +110,25 @@ function Zlibrary:addToMainMenu(menu_items)
                             text = T("Set credentials"),
                             keep_menu_open = true,
                             callback = function()
-                                Ui.showCredentialsDialog(nil, function()
+                                -- Through the broker, so there is one credentials dialog in the
+                                -- plugin. The old inline call passed a test_callback taking no
+                                -- parameters, which discarded the typed values and verified
+                                -- whatever was already stored.
+                                self:_promptForCredentials(function(did_save, did_verify)
+                                    -- did_verify means the dialog already checked them and said
+                                    -- so; a second sign-in and a second toast would be pure
+                                    -- repetition.
+                                    if not did_save or did_verify then return end
                                     self:login(function(success)
                                         if success then Ui.showInfoMessage(T("Login successful!")) end
-                                    end)
-                                 end)
-                            end 
-                    }, {
-                            text = T("Verify credentials"),
-                            keep_menu_open = true,
-                            callback = function()
-                                self:login(function(success)
-                                    if success then
-                                        Ui.showInfoMessage(T("Login successful!"))
-                                    end
+                                    end, { no_prompt = true })
                                 end)
                             end,
+                            -- Inherited from the "Verify credentials" entry that used to sit
+                            -- here: it divides the account settings from the download ones.
+                            -- Verification now lives in the dialog this opens.
                             separator = true,
-                        }, {
+                    }, {
                             text = T("Set download directory"),
                             keep_menu_open = true,
                             callback = function()
@@ -552,12 +225,32 @@ function Zlibrary:addToMainMenu(menu_items)
                             end,
                         },
                         {
-                            text = T("Developer options"),
+                            text = T("Advanced"),
                             keep_menu_open = true,
                             separator = true,
                             sub_item_table_func = function()
                                 return {
                                     {
+                                        text = T("Clear credentials"),
+                                        keep_menu_open = true,
+                                        callback = function()
+                                            Ui.confirmClearCredentials(function()
+                                                Config.clearCredentials()
+                                                -- zlibrary_credentials.lua is re-read on every
+                                                -- init, which happens per UI, so anything it
+                                                -- sets is back before the user notices. Say so
+                                                -- rather than report a clearing that will not
+                                                -- survive.
+                                                if Config.credentialsComeFromFile() then
+                                                    Ui.showInfoMessage(string.format(
+                                                        T("Credentials cleared, but %s still sets them. Edit that file to stop it."),
+                                                        Config.CREDENTIALS_FILENAME))
+                                                else
+                                                    Ui.showInfoMessage(T("Credentials cleared."))
+                                                end
+                                            end)
+                                        end,
+                                    }, {
                                         text = T("Clear user session"),
                                         keep_menu_open = true,
                                         callback = function()
@@ -623,6 +316,24 @@ function Zlibrary:_requestDispatcher(options, ...)
     end
 
     local api_extra_params = {...}
+
+    -- Before the network gate: an operation that needs an account, on a device that has none,
+    -- cannot succeed. Asking here rather than waiting for the server to answer "Please login"
+    -- saves a doomed round trip, works with the radio off, and does not depend on the server
+    -- phrasing its rejection the way Api.isAuthenticationError expects.
+    --
+    -- Only when there is no account at all. A stored account whose session has gone stale is
+    -- still handled reactively below, where the server is the authority on whether it is valid.
+    if options.requires_auth and not Config.hasCredentials() then
+        self:login(function(login_ok)
+            if login_ok then
+                self:_requestDispatcher(options, table.unpack(api_extra_params))
+            elseif on_finally then
+                on_finally(false)
+            end
+        end)
+        return
+    end
 
     if NetworkMgr:willRerunWhenOnline(function()
         self:_requestDispatcher(options, table.unpack(api_extra_params))
@@ -1159,19 +870,197 @@ function Zlibrary:onSelectSearchBook(book_data)
     attemptBookDetails()
 end
 
-function Zlibrary:login(callback)
-    if NetworkMgr:willRerunWhenOnline(function()
-        self:login(callback)
-    end) then
+-- Check one pair of credentials against the server. Calls on_result(status, message, session)
+-- exactly once, with status one of:
+--   "ok"        the server accepted them; session carries the user_id/user_key it minted
+--   "rejected"  the server read them and said no
+--   "transport" no usable answer -- radio off, dead mirror, bot challenge, timeout, rate limit
+--
+-- Deliberately not routed through Zlibrary:login. On a classified error login reports back only
+-- via Ui.showRetryErrorDialog's cancel_callback, and dialog_manager:closeAllDialogs() -- which
+-- download.lua fires on Wi-Fi loss -- closes that ConfirmBox straight through UIManager:close
+-- without ever running it. A callback dropped there would leave the dialog's button dead for
+-- good. AsyncHelper.run, by contrast, always reaches exactly one of its two callbacks.
+--
+-- It also raises no UI of its own: this runs with the credentials dialog on screen, and a retry
+-- ConfirmBox or a Wi-Fi prompt stacked over that dialog is exactly what we are avoiding.
+function Zlibrary:_verifyCredentials(email, password, on_result)
+    AsyncHelper.run(
+        function() return Api.login(email, password) end,
+        function(result)
+            on_result("ok", nil, { user_id = result.user_id, user_key = result.user_key })
+        end,
+        function(err_msg)
+            if Api.isCredentialRejection(err_msg) then
+                on_result("rejected", tostring(err_msg))
+            else
+                on_result("transport", tostring(err_msg))
+            end
+        end)
+end
+
+-- Ask for credentials, then hand every queued caller the answer.
+--
+-- on_done(saved) reports whether the config now holds non-empty credentials -- not whether the
+-- user pressed Set. That way a Verify-then-Cancel still resumes whatever the user was doing.
+function Zlibrary:_promptForCredentials(on_done)
+    if credential_prompt.waiters then
+        if credential_prompt.dialog and UIManager:isWidgetShown(credential_prompt.dialog) then
+            table.insert(credential_prompt.waiters, on_done)
+            return
+        end
+        -- The dialog went away without our close hook running. Rather than wedge the prompt for
+        -- the rest of the session, release the stale waiters and start again.
+        logger.warn("Zlibrary:_promptForCredentials - stale prompt state; recovering")
+        local stale = credential_prompt.waiters
+        credential_prompt.waiters, credential_prompt.dialog = nil, nil
+        for _, fn in ipairs(stale) do fn(false) end
+    end
+    credential_prompt.waiters = { on_done }
+
+    local saved, verified, settled = false, false, false
+    -- Set synchronously in the close hook, not in settle: a verdict landing between the close and
+    -- the tick that runs settle must already know the dialog is gone.
+    local closed = false
+    local checking = false
+    local dialog
+
+    local function settle()
+        if settled then return end
+        settled = true
+        local waiters = credential_prompt.waiters or {}
+        -- Release the slot before dispatching, so a waiter that wants a fresh prompt gets one
+        -- instead of queueing behind the prompt that just closed.
+        credential_prompt.waiters, credential_prompt.dialog = nil, nil
+        for _, fn in ipairs(waiters) do fn(saved, verified) end
+    end
+
+    local function store(email, password)
+        Config.saveSetting(Config.SETTINGS_USERNAME_KEY, email)
+        Config.saveSetting(Config.SETTINGS_PASSWORD_KEY, password)
+        saved = true
+    end
+
+    -- Keep credentials we could not check, rather than making storage hostage to a server being
+    -- reachable. A reader whose only mirror is walled must still be able to type their password
+    -- in. The session goes, because it may belong to whoever was signed in before.
+    local function storeUnchecked(email, password, notice)
+        store(email, password)
+        Config.clearUserSession()
+        if not closed then
+            Ui.closeDialog(dialog)
+            if notice then Ui.showInfoMessage(notice) end
+        end
+    end
+
+    local function submit(email, password)
+        -- Ui.showCredentialsDialog has already trimmed these and rejected empty fields.
+        if checking then return false end
+
+        -- No connectivity special case on purpose. An earlier version skipped the check when the
+        -- radio was off, to avoid a Wi-Fi prompt over the dialog -- but that prompt is the best
+        -- thing that can happen here: turning Wi-Fi on is exactly what lets the credentials be
+        -- checked, and declining it falls through to the transport branch below, which saves them
+        -- unchecked. Both outcomes are already right, so there is nothing to special-case.
+        checking = true
+        local checking_msg = Ui.showLoadingMessage(T("Logging in..."))
+
+        self:_verifyCredentials(email, password, function(status, message, session)
+            checking = false
+            Ui.closeMessage(checking_msg)
+
+            if status == "ok" then
+                store(email, password)
+                -- Keep the session just minted for exactly these credentials; clearing it here
+                -- would throw away the sign-in the user has already paid a round trip for.
+                Config.saveUserSession(session.user_id, session.user_key)
+                verified = true
+                -- A verdict can arrive after Cancel, the back key, or closeAllDialogs. The
+                -- credentials are proven, so keep them -- a live session with nothing stored
+                -- behind it is exactly the state that makes every hasCredentials() gate prompt
+                -- again -- but say nothing, because the user has moved on.
+                if not closed then
+                    Ui.closeDialog(dialog)
+                    Ui.showInfoMessage(T("Login successful!"))
+                end
+                return
+            end
+
+            if status == "rejected" then
+                -- Store nothing: a password the server refused must not replace one that works.
+                -- The dialog stays exactly as it is, with the typo a character from fixed.
+                if not closed then Ui.showErrorMessage(message) end
+                return
+            end
+
+            storeUnchecked(email, password, T("Credentials saved, but they could not be checked right now."))
+        end)
+
+        -- Never close from here. Either the dialog stays up for a correction, or the callback
+        -- above closes it once there is a verdict.
+        return false
+    end
+
+    dialog = Ui.showCredentialsDialog(submit, nil, { quiet_save = true })
+
+    if not dialog then settle() return end
+    credential_prompt.dialog = dialog
+
+    -- Resolve on teardown rather than on a button: Cancel, a successful check, the hardware back
+    -- key and dialog_manager:closeAllDialogs() all reach UIManager:close, and only this hook sees
+    -- all four. Wrap the inherited method, never replace it -- InputDialog:onCloseWidget frees
+    -- the input widgets and the virtual keyboard.
+    local inherited = dialog.onCloseWidget
+    function dialog:onCloseWidget()
+        closed = true
+        -- Next tick, so a resumed action paints its loading widget after UIManager has finished
+        -- tearing this dialog down rather than during it.
+        UIManager:nextTick(settle)
+        if inherited then return inherited(self) end
+    end
+end
+
+function Zlibrary:login(callback, opts)
+    opts = opts or {}
+
+    -- opts.credentials lets a caller test values the user has typed but not yet stored, so a
+    -- failed check cannot overwrite credentials that work.
+    local email = opts.credentials and opts.credentials.email
+            or Config.getSetting(Config.SETTINGS_USERNAME_KEY)
+    local password = opts.credentials and opts.credentials.password
+            or Config.getSetting(Config.SETTINGS_PASSWORD_KEY)
+
+    -- Checked before the network gate deliberately. Asking for credentials needs no radio, so a
+    -- fresh install is asked for them first rather than being nagged for wifi only to be told it
+    -- has no credentials. It also guarantees the willRerunWhenOnline re-entry below always finds
+    -- credentials present, so it can never raise a dialog from a detached network event.
+    if not email or email == "" or not password or password == "" then
+        -- prompted: we have already been round once and they are still missing, so stop rather
+        -- than loop. no_prompt: the caller is itself the credentials dialog.
+        if opts.no_prompt or opts.prompted then
+            Ui.showErrorMessage(T("Please set both username and password first."))
+            if callback then callback(false) end
+            return
+        end
+        self:_promptForCredentials(function(did_save, did_verify)
+            if not did_save then
+                if callback then callback(false) end
+                return
+            end
+            -- Already signed in during the prompt, with a live session for these very
+            -- credentials. Repeating the round trip would only cost the user another wait.
+            if did_verify then
+                if callback then callback(true) end
+                return
+            end
+            self:login(callback, { prompted = true })
+        end)
         return
     end
 
-    local email = Config.getSetting(Config.SETTINGS_USERNAME_KEY)
-    local password = Config.getSetting(Config.SETTINGS_PASSWORD_KEY)
-
-    if not email or email == "" or not password or password == "" then
-        Ui.showErrorMessage(T("Please set both username and password first."))
-        if callback then callback(false) end
+    if NetworkMgr:willRerunWhenOnline(function()
+        self:login(callback, opts)
+    end) then
         return
     end
 
@@ -1196,7 +1085,7 @@ function Zlibrary:login(callback)
 
     local on_error_handler = function(err_msg)
         Ui.showRetryErrorDialog(err_msg, T("Sign-in"), function()
-            self:login(callback)
+            self:login(callback, opts)
         end, function(final_err_msg)
             if callback then callback(false) end
         end, loading_msg, "login")
@@ -1409,312 +1298,14 @@ end
 -- so the `or "unknown"` fallback never fired -- and the slash inside it turned
 -- "<title> - <author>.N/A.downloading" into a directory that does not exist. The download died
 -- at the open with "No such file or directory", naming a path no one had asked for.
-local function _usableFormat(format)
-    if type(format) ~= "string" then
-        return nil
-    end
-    local trimmed = util.trim(format)
-    if trimmed == "" or trimmed == "N/A" then
-        return nil
-    end
-    -- Accept only what looks like an extension rather than stripping what does not. Stripping
-    -- turns "a/b" into "ab" -- safe to write, but an invented type that opens in nothing --
-    -- whereas refusing it sends the caller to fetch the real one. Letters and digits only, and
-    -- short: every format this plugin handles is epub, pdf, mobi, azw3, djvu or fb2.
-    if not trimmed:match("^%w+$") or #trimmed > 8 then
-        return nil
-    end
-    return trimmed
-end
-
--- Fetch a stub's full details, then download it. Only reached when the extension is unknown,
--- which is the case for every row in the browse lists: they are summaries, and the file type
--- arrives with the details. Tapping a row has always fetched them; this does the same for a
--- download started from the list.
+-- Delegate to zlibrary/download.lua. Kept as methods: bookdetails_dialog calls downloadBook
+-- on the plugin instance, and the retry and detail-fetch paths recurse through both.
 function Zlibrary:_fetchDetailsThenDownload(book_stub)
-    local function attempt()
-        local user_session = Config.getUserSession()
-        local loading_msg = Ui.showLoadingMessage(T("Fetching book details..."))
-
-        local task = function()
-            return Api.getBookDetails(user_session and user_session.user_id,
-                user_session and user_session.user_key, book_stub.id, book_stub.hash)
-        end
-
-        local on_success = function(api_result)
-            Ui.closeMessage(loading_msg)
-            if api_result.error then
-                Ui.showErrorMessage(Ui.colonConcat(T("Failed to fetch book details"),
-                    tostring(api_result.error)))
-                return
-            end
-            if not api_result.book then
-                Ui.showErrorMessage(T("Could not retrieve book details."))
-                return
-            end
-            if not _usableFormat(api_result.book.format) then
-                -- Say so rather than inventing an extension: a file saved under the wrong one
-                -- opens in nothing.
-                Ui.showErrorMessage(T("This book's file type is unknown, so it cannot be downloaded."))
-                return
-            end
-            self:downloadBook(api_result.book)
-        end
-
-        local on_error_handler = function(err_msg)
-            Ui.showRetryErrorDialog(err_msg, T("Book details"), function()
-                attempt()
-            end, function() end, loading_msg, "book_details")
-        end
-
-        AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
-    end
-
-    attempt()
+    return Download.fetchDetailsThenDownload(self, book_stub)
 end
 
 function Zlibrary:downloadBook(book)
-    if NetworkMgr:willRerunWhenOnline(function()
-        self:downloadBook(book)
-    end) then
-        return
-    end
-
-    if not book.id or not book.hash then
-        Ui.showErrorMessage(T("Book identifiers missing. Cannot download."))
-        return
-    end
-
-    -- Downloading straight from a browse list means the extension has not been fetched yet.
-    -- Get the details first and come back, which is what opening the book would have done.
-    local book_format = _usableFormat(book.format)
-    if not book_format then
-        self:_fetchDetailsThenDownload(book)
-        return
-    end
-
-    local safe_title = util.trim(book.title or "Unknown Title"):gsub("[/\\?%*:|\"<>%c]", "_")
-    local safe_author = util.trim(book.author or "Unknown Author"):gsub("[/\\?%*:|\"<>%c]", "_")
-    local filename = string.format("%s - %s.%s", safe_title, safe_author, book_format)
-    logger.info(string.format("Zlibrary:downloadBook - Proposed filename: %s", filename))
-
-    local target_dir = Config.getDownloadDir()
-
-    if not target_dir then
-        target_dir = Config.DEFAULT_DOWNLOAD_DIR_FALLBACK
-        logger.warn(string.format("Zlibrary:downloadBook - Download directory setting not found, using fallback: %s", target_dir))
-    else
-        logger.info(string.format("Zlibrary:downloadBook - Using configured download directory: %s", target_dir))
-    end
-
-    if lfs.attributes(target_dir, "mode") ~= "directory" then
-        local ok, err_mkdir = lfs.mkdir(target_dir)
-        if not ok then
-            Ui.showErrorMessage(string.format(T("Cannot create downloads directory: %s"), err_mkdir or "Unknown error"))
-            return
-        end
-        logger.info(string.format("Zlibrary:downloadBook - Created downloads directory: %s", target_dir))
-    end
-
-    local target_filepath = target_dir .. "/" .. filename
-    logger.info(string.format("Zlibrary:downloadBook - Target filepath: %s", target_filepath))
-
-    local attemptDownload
-
-    -- The child owns the socket, so it cannot drive the parent's progress bar. It does not need to:
-    -- it is already writing the bytes to a file we know the name of. Watch that instead. Legal only
-    -- because the dismissable run yields while it waits, so UIManager is live to run this.
-    -- Not via Trapper's pipe: any byte readable there is taken as the child's final result, which
-    -- would both corrupt it and re-block the parent until the child exits.
-    local function startProgressPoll(target_filepath, progress_callback, progress_max)
-        if not progress_callback or not progress_max then return function() end end
-        local temp_filepath = Api.getDownloadTempPath(target_filepath)
-        local stopped = false
-        local poll
-        poll = function()
-            if stopped then return end
-            local size = lfs.attributes(temp_filepath, "size")
-            -- nil while the link is still being resolved, and again once the child has renamed the
-            -- file onto the target: neither is a reset to zero. Clamp because the reported size is
-            -- catalogue metadata and the body can overrun it; setPercentage does not clamp itself.
-            if size then progress_callback(math.min(size, progress_max)) end
-            UIManager:scheduleIn(1, poll)
-        end
-        UIManager:scheduleIn(1, poll)
-        return function()
-            stopped = true
-            UIManager:unschedule(poll)
-        end
-    end
-
-    -- Resolving the link and fetching the body both block for as long as the network takes. Run them in
-    -- a forked child so the UI loop keeps running and the user can tap to cancel: the child cannot yield
-    -- out of socket.http (it sits behind socket.protect's C frame), but it does not need to -- blocking
-    -- is fine over there, and Trapper yields in the parent while it waits.
-    local function runDownloadInSubprocess(user_session, referer_url)
-        return Trapper:dismissableRunInSubprocess(function()
-            -- This process exists only to return a result table, and it shares the cache file with the
-            -- parent. Nothing it writes there can help, and some of it would destroy the parent's copy.
-            Config.disableRuntimeCacheWrites()
-
-            logger.info(string.format("Zlibrary:downloadBook - Fetching download link from endpoint for book ID: %s", book.id))
-            local link_result = Api.getDownloadLink(user_session and user_session.user_id,
-                user_session and user_session.user_key, book.id, book.hash)
-
-            if link_result.error then
-                return { success = false, error = link_result.error }
-            end
-
-            logger.info(string.format("Zlibrary:downloadBook - Got download link from endpoint: %s", link_result.download_link))
-
-            -- No progress callback: it would run in this process and could not reach the parent's
-            -- dialog. The parent watches the temp file instead.
-            return Api.downloadBook(link_result.download_link, target_filepath,
-                user_session and user_session.user_id, user_session and user_session.user_key,
-                referer_url, nil)
-        end, false) -- false: an invisible trap widget that swallows the dismissing tap
-    end
-
-    attemptDownload = function(retry_on_auth_error, progress_title)
-        retry_on_auth_error = retry_on_auth_error == nil and true or retry_on_auth_error
-
-        local user_session = Config.getUserSession()
-        local referer_url = book.href and Config.getBookUrl(book.href) or nil
-        local loading_msg
-
-        -- The wrap below routes any result carrying .error to on_error_download, so api_result never
-        -- has one here; on_error_download owns every failure, including the auth retry.
-        local function on_success_download(api_result)
-            Ui.closeMessage(loading_msg)
-            if api_result and api_result.success then
-
-                -- reset download quota cache
-                self:resetDownloadQuotaCache()
-
-                local has_wifi_toggle = Device:hasWifiToggle()
-                local default_turn_off_wifi = Config.getTurnOffWifiAfterDownload()
-
-                Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, function(should_turn_off_wifi)
-                    if should_turn_off_wifi then
-                        NetworkMgr:disableWifi(function()
-                            logger.info("Zlibrary:downloadBook - Wi-Fi disabled after download as requested by user")
-                        end)
-                    end
-
-                    if ReaderUI then
-                        logger.info("Zlibrary:downloadBook - Cleaning up dialogs before opening reader")
-                        self.dialog_manager:closeAllDialogs()
-                        ReaderUI:showReader(target_filepath)
-                    else
-                        Ui.showErrorMessage(T("Could not open reader UI."))
-                        logger.warn("Zlibrary:downloadBook - ReaderUI not available.")
-                    end
-                end,
-                function(should_turn_off_wifi)
-                    if should_turn_off_wifi then
-                        NetworkMgr:disableWifi(function()
-                            logger.info("Zlibrary:downloadBook - Wi-Fi disabled after download as requested by user")
-                        end)
-                        logger.info("Zlibrary:downloadBook - Cleaning up dialogs cause wifi is turned off")
-                        self.dialog_manager:closeAllDialogs()
-                    end
-                end
-            )
-            else
-                -- Only reachable when the task returned no result at all; a result carrying .error
-                -- went to on_error_download instead.
-                Ui.showErrorMessage((api_result and api_result.message) or T("Download failed: Unknown error"))
-            end
-        end
-
-        local function on_error_download(err_msg)
-            if retry_on_auth_error and Api.isAuthenticationError(err_msg) then
-                Ui.closeMessage(loading_msg)
-                self:login(function(login_ok)
-                    if login_ok then
-                        attemptDownload(false)
-                    end
-                end)
-                return
-            end
-            
-            local error_string = tostring(err_msg)
-            if string.find(error_string, "Download limit reached or file is an HTML page", 1, true) then
-                Ui.closeMessage(loading_msg)
-                Ui.showErrorMessage(T("Download limit reached. Please try again later or check your account."))
-                return
-            end
-            
-            -- Use retry dialog for timeout and network errors
-            Ui.showRetryErrorDialog(err_msg, T("Book download"), function()
-                -- Retry callback. Re-enter attemptDownload so the retry gets its own wrap: this runs
-                -- from a fresh event, outside any coroutine, and an unwrapped dismissable run silently
-                -- falls back to blocking in-process.
-                attemptDownload(retry_on_auth_error, T("Retrying download… (tap to cancel)"))
-            end, function(final_err_msg)
-                -- Cancel callback - user already knows about the error. Nothing to clean up:
-                -- Api.downloadBook discards its own temp file, and this path is also reached when
-                -- Api.getDownloadLink failed and no file was ever created.
-            end, loading_msg, "download")
-        end
-
-        Trapper:wrap(function()
-            -- A previous download that was killed never got to clean up after itself.
-            Api.discardDownloadTempFile(target_filepath)
-
-            local progress_callback
-            loading_msg, progress_callback = Ui.showBookDownloadProgress(book, progress_title)
-
-            -- Trapper polls the child at up to one second, so a cancel can land after the child has
-            -- already renamed the finished book into place. Remember what was there first, so that
-            -- case is reported as the success it is instead of stranding a complete book.
-            local target_before = lfs.attributes(target_filepath, "modification")
-
-            -- Trapper returns false both for "user dismissed" and for "fork failed". A dismiss cannot
-            -- happen without at least one yield, and a fork failure never reaches the poll loop, so
-            -- this tells the two apart.
-            local yielded = false
-            UIManager:nextTick(function() yielded = true end)
-
-            local stop_poll = startProgressPoll(target_filepath, progress_callback, book.filesize)
-            local ok, completed, api_result = pcall(runDownloadInSubprocess, user_session, referer_url)
-            -- After the pcall, so a throw cannot leave the poll rescheduling against a closed dialog.
-            stop_poll()
-
-            if not ok then
-                logger.err("Zlibrary:downloadBook - Download failed: " .. tostring(completed))
-                Ui.closeMessage(loading_msg)
-                Ui.showErrorMessage(T("Download failed: Unknown error"))
-                return
-            end
-
-            if not completed then
-                if lfs.attributes(target_filepath, "modification") ~= target_before then
-                    -- The rename beat the kill; the book is whole.
-                    return on_success_download({ success = true })
-                end
-                Api.discardDownloadTempFile(target_filepath)
-                Ui.closeMessage(loading_msg)
-                Ui.showInfoMessage(yielded and T("Download cancelled.")
-                    or T("Download failed: Unknown error"))
-                return
-            end
-
-            if not api_result then
-                Ui.closeMessage(loading_msg)
-                Ui.showErrorMessage(T("Download failed: Unknown error"))
-                return
-            end
-            if api_result.error then
-                return on_error_download(api_result.error)
-            end
-            on_success_download(api_result)
-        end)
-    end
-
-    Ui.confirmDownload(filename, function()
-        attemptDownload()
-    end)
+    return Download.run(self, book)
 end
 
 function Zlibrary:downloadAndShowCover(book)

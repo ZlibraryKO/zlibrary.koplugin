@@ -998,14 +998,13 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
             on_success_load_more = function(api_result_more)
                 Ui.closeMessage(loading_msg_more)
                 if api_result_more.error then
-                    if Api.isAuthenticationError(api_result_more.error) then
-                        self:login(function(login_ok)
-                            if login_ok then
-                                on_goto_page_handler(menu_instance, new_page_number)
-                            end
-                        end)
-                        return
-                    end
+                    -- No auth-retry here. Search is an unauthenticated endpoint: it answers
+                    -- without a session and never returns "Please login", so isAuthenticationError
+                    -- could not match. The retry pattern was copied from the authenticated fetch
+                    -- handlers -- where it belongs, guarded and one-shot (see _requestDispatcher) --
+                    -- but here it was dead code, and its self-recursion had no one-shot guard, so
+                    -- had the endpoint ever started rejecting a session it would have looped. Any
+                    -- real error just surfaces.
                     Ui.showErrorMessage(Ui.colonConcat(T("Failed to load more results"), tostring(api_result_more.error)))
                     return
                 end
@@ -1031,15 +1030,7 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
 
             on_error_load_more = function(err_msg_more)
                 Ui.closeMessage(loading_msg_more)
-                if Api.isAuthenticationError(err_msg_more) then
-                    self:login(function(login_ok)
-                        if login_ok then
-                            on_goto_page_handler(menu_instance, new_page_number)
-                        end
-                    end)
-                    return
-                end
-                
+                -- No auth-retry: see on_success_load_more. Search is unauthenticated.
                 Ui.showErrorMessage(Ui.colonConcat(T("Failed to load more results"), tostring(err_msg_more)))
             end
 

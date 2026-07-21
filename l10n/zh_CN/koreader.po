@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 22:20+0200\n"
+"POT-Creation-Date: 2026-07-21 18:59+0200\n"
 "PO-Revision-Date: 2026-04-03 00:00+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
@@ -715,6 +715,12 @@ msgstr "%d个%s选择的項目。"
 #, lua-format
 msgid "Filter cleared for %s."
 msgstr "已清除%s的筛选条件。"
+
+msgid "Filter"
+msgstr "筛选"
+
+msgid "Show all"
+msgstr "显示全部"
 
 msgid "Set"
 msgstr "设置"

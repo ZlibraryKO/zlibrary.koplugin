@@ -196,12 +196,25 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
         current_selection_state[option_info.value] = selected_values_set[option_info.value] or false
     end
 
-    local menu_items = {}
     local selection_menu
+    -- nil while unfiltered; a lowercased query string while the user is filtering the list.
+    local filter_query
+    -- A long list (the ~190 languages) earns a title-bar search that filters by substring; the
+    -- short ones (formats, order) do not, so their title bar stays uncluttered.
+    local searchable = #options_list > 30
 
-    for i, option_info in ipairs(options_list) do
+    local function _matches(option_info)
+        if not filter_query then return true end
+        -- Match the API value as well as the display name, so a native-script name (日本語) is
+        -- found by typing its English key ("japanese"), and any substring ("ish" -> Irish) hits --
+        -- KOReader's own type-jump only matches a prefix of the shown text and stops at the first.
+        return option_info.name:lower():find(filter_query, 1, true) ~= nil
+            or option_info.value:lower():find(filter_query, 1, true) ~= nil
+    end
+
+    local function _buildItem(option_info)
         local option_value = option_info.value
-        menu_items[i] = {
+        return {
             text = option_info.name,
             mandatory_func = function()
                 return current_selection_state[option_value] and "[X]" or "[ ]"
@@ -218,13 +231,35 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
         }
     end
 
+    -- The rows to show for the current filter. For a multi-select the selected entries are hoisted
+    -- to the top, so a handful of choices are not lost among ~190 rows; a radio list keeps its
+    -- given order so the options can be compared in place. This runs on open and on a filter
+    -- change, never on a toggle, so an entry never jumps out from under the finger that tapped it.
+    local function _buildItems()
+        local items = {}
+        if not is_single then
+            for _, option_info in ipairs(options_list) do
+                if current_selection_state[option_info.value] and _matches(option_info) then
+                    items[#items + 1] = _buildItem(option_info)
+                end
+            end
+        end
+        for _, option_info in ipairs(options_list) do
+            if (is_single or not current_selection_state[option_info.value]) and _matches(option_info) then
+                items[#items + 1] = _buildItem(option_info)
+            end
+        end
+        return items
+    end
+
     selection_menu = Menu:new{
         title = title,
-        item_table = menu_items,
+        item_table = _buildItems(),
         parent = parent_ui,
         show_captions = true,
         is_popout = false,
         title_bar_fm_style = true,
+        title_bar_left_icon = searchable and "appbar.search" or nil,
         onClose = function()
             local ok, err = pcall(function()
                 local new_selected_values = {}
@@ -276,6 +311,50 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
             end
         end,
     }
+
+    if searchable then
+        -- Menu invokes this as a method, so the menu arrives as the first argument (unused).
+        selection_menu.onLeftButtonTap = function()
+            local input
+            input = InputDialog:new{
+                title = T("Filter"),
+                input = filter_query or "",
+                buttons = { {
+                    {
+                        text = T("Cancel"),
+                        id = "close",
+                        callback = function() _closeAndUntrackDialog(input) end,
+                    },
+                    {
+                        -- Reset to the full list. Selections survive: they live in
+                        -- current_selection_state, not in which rows are shown.
+                        text = T("Show all"),
+                        callback = function()
+                            filter_query = nil
+                            _closeAndUntrackDialog(input)
+                            selection_menu:switchItemTable(title, _buildItems())
+                        end,
+                    },
+                    {
+                        text = T("Filter"),
+                        is_enter_default = true,
+                        callback = function()
+                            local typed = util.trim(input:getInputText() or "")
+                            filter_query = typed ~= "" and typed:lower() or nil
+                            _closeAndUntrackDialog(input)
+                            -- Show the active filter in the title, so a short filtered list does
+                            -- not look like the whole set.
+                            selection_menu:switchItemTable(
+                                filter_query and (title .. " (" .. typed .. ")") or title,
+                                _buildItems())
+                        end,
+                    },
+                } },
+            }
+            _showAndTrackDialog(input)
+            input:onShowKeyboard()
+        end
+    end
     _showAndTrackDialog(selection_menu)
 end
 

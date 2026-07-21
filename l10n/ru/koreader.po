@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 22:20+0200\n"
+"POT-Creation-Date: 2026-07-21 18:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -715,6 +715,12 @@ msgstr "Выбрано %d элементов для %s."
 #, lua-format
 msgid "Filter cleared for %s."
 msgstr "Фильтр сброшен для %s."
+
+msgid "Filter"
+msgstr "Фильтр"
+
+msgid "Show all"
+msgstr "Показать все"
 
 msgid "Set"
 msgstr "Установить"

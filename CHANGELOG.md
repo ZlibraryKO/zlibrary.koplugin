@@ -6,7 +6,7 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
-## 1.0.41
+## 1.0.42
 
 ### Fixed
 
@@ -49,6 +49,19 @@ button it duplicated have been removed.
 The new sign-in strings are translated into all 14 locales. Test harnesses covering the sign-in
 flow, the credential-rejection classifier and the dialog teardown it relies on were added under
 `test/`.
+
+## 1.0.41
+
+### Added
+
+**Every Z-Library search language.** The language filter offered around 30; it now offers all the
+server lists — roughly 190. The languages that were already shown in their own script keep it; the
+rest use their English name.
+
+**A search box for the language list.** Choosing from ~190 rows meant a lot of scrolling. A
+magnifying glass in the picker's title bar now filters the list as you type, matching both the
+language's name and its code — so "ish" finds Irish, and "japanese" finds 日本語. Languages you have
+already selected are lifted to the top, so a handful of choices are not lost among the rest.
 
 ## 1.0.40
 

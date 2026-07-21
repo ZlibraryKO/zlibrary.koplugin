@@ -31,6 +31,16 @@ local Zlibrary = WidgetContainer:extend{
     dialog_manager = nil,
 }
 
+-- The first-run credentials prompt, shared by every caller that needs a sign-in.
+--
+-- File-local rather than an instance field on purpose: main.lua is required once, but KOReader
+-- instantiates the plugin per UI (FileManager and ReaderUI). An instance-scoped guard would let
+-- the two instances stack two dialogs on top of each other.
+--
+-- waiters is non-nil exactly while a prompt is on screen; callers arriving during that window
+-- queue behind it instead of opening a second one.
+local credential_prompt = { waiters = nil, dialog = nil }
+
 function Zlibrary:onDispatcherRegisterActions()
     Dispatcher:registerAction("zlibrary_search", { category="none", event="ZlibrarySearch", title=T("Z-library search"), general=true,})
     Dispatcher:registerAction("zlibrary_mybook", { category="none", event="ZlibrarySearch", title=string.format("%s %s", T("Z-library"), T("My books")), arg="mybooks",general=true,})
@@ -100,24 +110,25 @@ function Zlibrary:addToMainMenu(menu_items)
                             text = T("Set credentials"),
                             keep_menu_open = true,
                             callback = function()
-                                Ui.showCredentialsDialog(nil, function()
+                                -- Through the broker, so there is one credentials dialog in the
+                                -- plugin. The old inline call passed a test_callback taking no
+                                -- parameters, which discarded the typed values and verified
+                                -- whatever was already stored.
+                                self:_promptForCredentials(function(did_save, did_verify)
+                                    -- did_verify means the dialog already checked them and said
+                                    -- so; a second sign-in and a second toast would be pure
+                                    -- repetition.
+                                    if not did_save or did_verify then return end
                                     self:login(function(success)
                                         if success then Ui.showInfoMessage(T("Login successful!")) end
-                                    end)
-                                 end)
-                            end 
-                    }, {
-                            text = T("Verify credentials"),
-                            keep_menu_open = true,
-                            callback = function()
-                                self:login(function(success)
-                                    if success then
-                                        Ui.showInfoMessage(T("Login successful!"))
-                                    end
+                                    end, { no_prompt = true })
                                 end)
                             end,
+                            -- Inherited from the "Verify credentials" entry that used to sit
+                            -- here: it divides the account settings from the download ones.
+                            -- Verification now lives in the dialog this opens.
                             separator = true,
-                        }, {
+                    }, {
                             text = T("Set download directory"),
                             keep_menu_open = true,
                             callback = function()
@@ -214,12 +225,32 @@ function Zlibrary:addToMainMenu(menu_items)
                             end,
                         },
                         {
-                            text = T("Developer options"),
+                            text = T("Advanced"),
                             keep_menu_open = true,
                             separator = true,
                             sub_item_table_func = function()
                                 return {
                                     {
+                                        text = T("Clear credentials"),
+                                        keep_menu_open = true,
+                                        callback = function()
+                                            Ui.confirmClearCredentials(function()
+                                                Config.clearCredentials()
+                                                -- zlibrary_credentials.lua is re-read on every
+                                                -- init, which happens per UI, so anything it
+                                                -- sets is back before the user notices. Say so
+                                                -- rather than report a clearing that will not
+                                                -- survive.
+                                                if Config.credentialsComeFromFile() then
+                                                    Ui.showInfoMessage(string.format(
+                                                        T("Credentials cleared, but %s still sets them. Edit that file to stop it."),
+                                                        Config.CREDENTIALS_FILENAME))
+                                                else
+                                                    Ui.showInfoMessage(T("Credentials cleared."))
+                                                end
+                                            end)
+                                        end,
+                                    }, {
                                         text = T("Clear user session"),
                                         keep_menu_open = true,
                                         callback = function()
@@ -285,6 +316,24 @@ function Zlibrary:_requestDispatcher(options, ...)
     end
 
     local api_extra_params = {...}
+
+    -- Before the network gate: an operation that needs an account, on a device that has none,
+    -- cannot succeed. Asking here rather than waiting for the server to answer "Please login"
+    -- saves a doomed round trip, works with the radio off, and does not depend on the server
+    -- phrasing its rejection the way Api.isAuthenticationError expects.
+    --
+    -- Only when there is no account at all. A stored account whose session has gone stale is
+    -- still handled reactively below, where the server is the authority on whether it is valid.
+    if options.requires_auth and not Config.hasCredentials() then
+        self:login(function(login_ok)
+            if login_ok then
+                self:_requestDispatcher(options, table.unpack(api_extra_params))
+            elseif on_finally then
+                on_finally(false)
+            end
+        end)
+        return
+    end
 
     if NetworkMgr:willRerunWhenOnline(function()
         self:_requestDispatcher(options, table.unpack(api_extra_params))
@@ -821,19 +870,197 @@ function Zlibrary:onSelectSearchBook(book_data)
     attemptBookDetails()
 end
 
-function Zlibrary:login(callback)
-    if NetworkMgr:willRerunWhenOnline(function()
-        self:login(callback)
-    end) then
+-- Check one pair of credentials against the server. Calls on_result(status, message, session)
+-- exactly once, with status one of:
+--   "ok"        the server accepted them; session carries the user_id/user_key it minted
+--   "rejected"  the server read them and said no
+--   "transport" no usable answer -- radio off, dead mirror, bot challenge, timeout, rate limit
+--
+-- Deliberately not routed through Zlibrary:login. On a classified error login reports back only
+-- via Ui.showRetryErrorDialog's cancel_callback, and dialog_manager:closeAllDialogs() -- which
+-- download.lua fires on Wi-Fi loss -- closes that ConfirmBox straight through UIManager:close
+-- without ever running it. A callback dropped there would leave the dialog's button dead for
+-- good. AsyncHelper.run, by contrast, always reaches exactly one of its two callbacks.
+--
+-- It also raises no UI of its own: this runs with the credentials dialog on screen, and a retry
+-- ConfirmBox or a Wi-Fi prompt stacked over that dialog is exactly what we are avoiding.
+function Zlibrary:_verifyCredentials(email, password, on_result)
+    AsyncHelper.run(
+        function() return Api.login(email, password) end,
+        function(result)
+            on_result("ok", nil, { user_id = result.user_id, user_key = result.user_key })
+        end,
+        function(err_msg)
+            if Api.isCredentialRejection(err_msg) then
+                on_result("rejected", tostring(err_msg))
+            else
+                on_result("transport", tostring(err_msg))
+            end
+        end)
+end
+
+-- Ask for credentials, then hand every queued caller the answer.
+--
+-- on_done(saved) reports whether the config now holds non-empty credentials -- not whether the
+-- user pressed Set. That way a Verify-then-Cancel still resumes whatever the user was doing.
+function Zlibrary:_promptForCredentials(on_done)
+    if credential_prompt.waiters then
+        if credential_prompt.dialog and UIManager:isWidgetShown(credential_prompt.dialog) then
+            table.insert(credential_prompt.waiters, on_done)
+            return
+        end
+        -- The dialog went away without our close hook running. Rather than wedge the prompt for
+        -- the rest of the session, release the stale waiters and start again.
+        logger.warn("Zlibrary:_promptForCredentials - stale prompt state; recovering")
+        local stale = credential_prompt.waiters
+        credential_prompt.waiters, credential_prompt.dialog = nil, nil
+        for _, fn in ipairs(stale) do fn(false) end
+    end
+    credential_prompt.waiters = { on_done }
+
+    local saved, verified, settled = false, false, false
+    -- Set synchronously in the close hook, not in settle: a verdict landing between the close and
+    -- the tick that runs settle must already know the dialog is gone.
+    local closed = false
+    local checking = false
+    local dialog
+
+    local function settle()
+        if settled then return end
+        settled = true
+        local waiters = credential_prompt.waiters or {}
+        -- Release the slot before dispatching, so a waiter that wants a fresh prompt gets one
+        -- instead of queueing behind the prompt that just closed.
+        credential_prompt.waiters, credential_prompt.dialog = nil, nil
+        for _, fn in ipairs(waiters) do fn(saved, verified) end
+    end
+
+    local function store(email, password)
+        Config.saveSetting(Config.SETTINGS_USERNAME_KEY, email)
+        Config.saveSetting(Config.SETTINGS_PASSWORD_KEY, password)
+        saved = true
+    end
+
+    -- Keep credentials we could not check, rather than making storage hostage to a server being
+    -- reachable. A reader whose only mirror is walled must still be able to type their password
+    -- in. The session goes, because it may belong to whoever was signed in before.
+    local function storeUnchecked(email, password, notice)
+        store(email, password)
+        Config.clearUserSession()
+        if not closed then
+            Ui.closeDialog(dialog)
+            if notice then Ui.showInfoMessage(notice) end
+        end
+    end
+
+    local function submit(email, password)
+        -- Ui.showCredentialsDialog has already trimmed these and rejected empty fields.
+        if checking then return false end
+
+        -- No connectivity special case on purpose. An earlier version skipped the check when the
+        -- radio was off, to avoid a Wi-Fi prompt over the dialog -- but that prompt is the best
+        -- thing that can happen here: turning Wi-Fi on is exactly what lets the credentials be
+        -- checked, and declining it falls through to the transport branch below, which saves them
+        -- unchecked. Both outcomes are already right, so there is nothing to special-case.
+        checking = true
+        local checking_msg = Ui.showLoadingMessage(T("Logging in..."))
+
+        self:_verifyCredentials(email, password, function(status, message, session)
+            checking = false
+            Ui.closeMessage(checking_msg)
+
+            if status == "ok" then
+                store(email, password)
+                -- Keep the session just minted for exactly these credentials; clearing it here
+                -- would throw away the sign-in the user has already paid a round trip for.
+                Config.saveUserSession(session.user_id, session.user_key)
+                verified = true
+                -- A verdict can arrive after Cancel, the back key, or closeAllDialogs. The
+                -- credentials are proven, so keep them -- a live session with nothing stored
+                -- behind it is exactly the state that makes every hasCredentials() gate prompt
+                -- again -- but say nothing, because the user has moved on.
+                if not closed then
+                    Ui.closeDialog(dialog)
+                    Ui.showInfoMessage(T("Login successful!"))
+                end
+                return
+            end
+
+            if status == "rejected" then
+                -- Store nothing: a password the server refused must not replace one that works.
+                -- The dialog stays exactly as it is, with the typo a character from fixed.
+                if not closed then Ui.showErrorMessage(message) end
+                return
+            end
+
+            storeUnchecked(email, password, T("Credentials saved, but they could not be checked right now."))
+        end)
+
+        -- Never close from here. Either the dialog stays up for a correction, or the callback
+        -- above closes it once there is a verdict.
+        return false
+    end
+
+    dialog = Ui.showCredentialsDialog(submit, nil, { quiet_save = true })
+
+    if not dialog then settle() return end
+    credential_prompt.dialog = dialog
+
+    -- Resolve on teardown rather than on a button: Cancel, a successful check, the hardware back
+    -- key and dialog_manager:closeAllDialogs() all reach UIManager:close, and only this hook sees
+    -- all four. Wrap the inherited method, never replace it -- InputDialog:onCloseWidget frees
+    -- the input widgets and the virtual keyboard.
+    local inherited = dialog.onCloseWidget
+    function dialog:onCloseWidget()
+        closed = true
+        -- Next tick, so a resumed action paints its loading widget after UIManager has finished
+        -- tearing this dialog down rather than during it.
+        UIManager:nextTick(settle)
+        if inherited then return inherited(self) end
+    end
+end
+
+function Zlibrary:login(callback, opts)
+    opts = opts or {}
+
+    -- opts.credentials lets a caller test values the user has typed but not yet stored, so a
+    -- failed check cannot overwrite credentials that work.
+    local email = opts.credentials and opts.credentials.email
+            or Config.getSetting(Config.SETTINGS_USERNAME_KEY)
+    local password = opts.credentials and opts.credentials.password
+            or Config.getSetting(Config.SETTINGS_PASSWORD_KEY)
+
+    -- Checked before the network gate deliberately. Asking for credentials needs no radio, so a
+    -- fresh install is asked for them first rather than being nagged for wifi only to be told it
+    -- has no credentials. It also guarantees the willRerunWhenOnline re-entry below always finds
+    -- credentials present, so it can never raise a dialog from a detached network event.
+    if not email or email == "" or not password or password == "" then
+        -- prompted: we have already been round once and they are still missing, so stop rather
+        -- than loop. no_prompt: the caller is itself the credentials dialog.
+        if opts.no_prompt or opts.prompted then
+            Ui.showErrorMessage(T("Please set both username and password first."))
+            if callback then callback(false) end
+            return
+        end
+        self:_promptForCredentials(function(did_save, did_verify)
+            if not did_save then
+                if callback then callback(false) end
+                return
+            end
+            -- Already signed in during the prompt, with a live session for these very
+            -- credentials. Repeating the round trip would only cost the user another wait.
+            if did_verify then
+                if callback then callback(true) end
+                return
+            end
+            self:login(callback, { prompted = true })
+        end)
         return
     end
 
-    local email = Config.getSetting(Config.SETTINGS_USERNAME_KEY)
-    local password = Config.getSetting(Config.SETTINGS_PASSWORD_KEY)
-
-    if not email or email == "" or not password or password == "" then
-        Ui.showErrorMessage(T("Please set both username and password first."))
-        if callback then callback(false) end
+    if NetworkMgr:willRerunWhenOnline(function()
+        self:login(callback, opts)
+    end) then
         return
     end
 
@@ -858,7 +1085,7 @@ function Zlibrary:login(callback)
 
     local on_error_handler = function(err_msg)
         Ui.showRetryErrorDialog(err_msg, T("Sign-in"), function()
-            self:login(callback)
+            self:login(callback, opts)
         end, function(final_err_msg)
             if callback then callback(false) end
         end, loading_msg, "login")

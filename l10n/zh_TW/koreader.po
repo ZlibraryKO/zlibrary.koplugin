@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 09:56+0000\n"
+"POT-Creation-Date: 2026-07-20 22:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese <zh@li.org>\n"
@@ -24,74 +24,17 @@ msgstr "Z-圖書館搜索"
 msgid "My books"
 msgstr "我的書籍"
 
-msgid "Operation failed, please retry."
-msgstr "操作失敗，請重試。"
-
-msgid "Fetching domains..."
-msgstr "正在獲取域名..."
-
-msgid "Successfully set base URL to: "
-msgstr "已成功將基礎網址設置為:"
-
-msgid "Failed to find a working base URL."
-msgstr "無法找到可用的基礎 URL。"
-
-msgid "Queued"
-msgstr "已排隊"
-
-msgid "Selection copied to clipboard."
-msgstr "已複製所選內容到剪貼板。"
-
-msgid "Checking"
-msgstr "檢查中"
+msgid "Settings"
+msgstr "設置"
 
 msgid "Set base URL"
 msgstr "設置基礎網址"
-
-msgid "Invalid Base URL."
-msgstr "無效的基礎網址。"
-
-msgid "Failed"
-msgstr "失敗"
-
-msgid "Unknown error"
-msgstr "未知錯誤"
-
-msgid "Searching for working Z-library server..."
-msgstr "正在尋找可用的 Z-library 伺服器..."
-
-msgid "Current Base URL:"
-msgstr "當前基礎網址:"
-
-msgid "Mirror site redirected to: "
-msgstr "鏡像站點重定向至:"
-
-msgid "Auto-discover base URL"
-msgstr "自動發現基礎 URL"
-
-msgid "Network unavailable."
-msgstr "網絡不可用。"
-
-msgid "Discovery is already running..."
-msgstr "探測已在進行中..."
-
-msgid "Refresh Dynamic Domains"
-msgstr "刷新動態域名"
-
-msgid "Back"
-msgstr "返回"
-
-msgid "Settings"
-msgstr "設置"
 
 msgid "Set credentials"
 msgstr "設置憑證"
 
 msgid "Login successful!"
 msgstr "登入成功！"
-
-msgid "Verify credentials"
-msgstr "驗證憑證"
 
 msgid "Set download directory"
 msgstr "設置下載目錄"
@@ -135,8 +78,18 @@ msgstr "檢查更新"
 msgid "Error: Plugin path not found. Cannot check for updates."
 msgstr "錯誤：未找到插件路徑。無法檢查更新。"
 
-msgid "Developer options"
-msgstr "開發者選項"
+msgid "Advanced"
+msgstr "進階選項"
+
+msgid "Clear credentials"
+msgstr "清除憑證"
+
+#, lua-format
+msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
+msgstr "憑證已清除，但 %s 仍會重新設置憑證。請編輯該文件以停止此行為。"
+
+msgid "Credentials cleared."
+msgstr "憑證已清除。"
 
 msgid "Clear user session"
 msgstr "清除用戶會話"
@@ -270,11 +223,14 @@ msgstr "書籍詳情"
 msgid "Could not retrieve book details."
 msgstr "無法獲取書籍詳情。"
 
-msgid "Please set both username and password first."
-msgstr "請先設置用戶名和密碼。"
-
 msgid "Logging in..."
 msgstr "正在登入..."
+
+msgid "Credentials saved, but they could not be checked right now."
+msgstr "憑證已保存，但目前無法驗證。"
+
+msgid "Please set both username and password first."
+msgstr "請先設置用戶名和密碼。"
 
 msgid "Sign-in"
 msgstr "登入"
@@ -297,34 +253,6 @@ msgstr "加載更多結果失敗"
 msgid "No more results found."
 msgstr "沒有更多結果。"
 
-msgid "This book's file type is unknown, so it cannot be downloaded."
-msgstr "此書籍的文件格式未知，無法下載。"
-
-msgid "Book identifiers missing. Cannot download."
-msgstr "缺少書籍標識，無法下載。"
-
-#, lua-format
-msgid "Cannot create downloads directory: %s"
-msgstr "無法創建下載目錄: %s"
-
-msgid "Could not open reader UI."
-msgstr "無法打開閱讀器界面。"
-
-msgid "Download failed: Unknown error"
-msgstr "下載失敗：未知錯誤"
-
-msgid "Download limit reached. Please try again later or check your account."
-msgstr "達到下載限制。請稍後重試或檢查您的帳戶。"
-
-msgid "Book download"
-msgstr "書籍下載"
-
-msgid "Retrying download… (tap to cancel)"
-msgstr "正在重試下載… (點擊取消)"
-
-msgid "Download cancelled."
-msgstr "下載已取消。"
-
 msgid "Book ID is required."
 msgstr "需要書籍ID。"
 
@@ -345,6 +273,9 @@ msgstr "找不到伺服器位址"
 
 msgid "This Z-library server is refusing automated access"
 msgstr "此 Z-library 伺服器拒絕自動存取"
+
+msgid "Credentials rejected or invalid response"
+msgstr "憑證被拒絕或響應無效"
 
 msgid "Request timed out - please check your connection and try again"
 msgstr "請求逾時 - 請檢查網絡連接後重試"
@@ -385,9 +316,6 @@ msgstr "登錄失敗"
 msgid "Login failed: Invalid session data"
 msgstr "登錄失敗：會話數據無效"
 
-msgid "Credentials rejected or invalid response"
-msgstr "憑證被拒絕或響應無效"
-
 msgid "No response received from server - please try again"
 msgstr "未收到伺服器響應 - 請重試"
 
@@ -399,6 +327,9 @@ msgstr "搜索 API 錯誤"
 
 msgid "Failed to open target file"
 msgstr "打開目標文件失敗"
+
+msgid "Unknown error"
+msgstr "未知錯誤"
 
 msgid "Download limit reached or file is an HTML page"
 msgstr "已達下載上限或文件為 HTML 頁面"
@@ -453,6 +384,9 @@ msgstr "解析下載鏈接響應失敗。"
 
 msgid "API returned an error for download link."
 msgstr "API返回下載鏈接錯誤。"
+
+msgid "Download limit reached. Please try again later or check your account."
+msgstr "達到下載限制。請稍後重試或檢查您的帳戶。"
 
 msgid "No download link provided in API response."
 msgstr "API響應中未提供下載鏈接。"
@@ -550,6 +484,9 @@ msgstr "頁"
 msgid "Cover"
 msgstr "封面"
 
+msgid "Back"
+msgstr "返回"
+
 msgid "More Similar Books"
 msgstr "更多相似書籍"
 
@@ -602,6 +539,79 @@ msgstr "無限"
 #, lua-format
 msgid "Block: %ds, Total: %s"
 msgstr "區塊：%d秒，總計：%s"
+
+msgid "Operation failed, please retry."
+msgstr "操作失敗，請重試。"
+
+msgid "Fetching domains..."
+msgstr "正在獲取域名..."
+
+msgid "Successfully set base URL to: "
+msgstr "已成功將基礎網址設置為:"
+
+msgid "Failed to find a working base URL."
+msgstr "無法找到可用的基礎 URL。"
+
+msgid "Queued"
+msgstr "已排隊"
+
+msgid "Selection copied to clipboard."
+msgstr "已複製所選內容到剪貼板。"
+
+msgid "Checking"
+msgstr "檢查中"
+
+msgid "Invalid Base URL."
+msgstr "無效的基礎網址。"
+
+msgid "Failed"
+msgstr "失敗"
+
+msgid "Searching for working Z-library server..."
+msgstr "正在尋找可用的 Z-library 伺服器..."
+
+msgid "Current Base URL:"
+msgstr "當前基礎網址:"
+
+msgid "Mirror site redirected to: "
+msgstr "鏡像站點重定向至:"
+
+msgid "Auto-discover base URL"
+msgstr "自動發現基礎 URL"
+
+msgid "Network unavailable."
+msgstr "網絡不可用。"
+
+msgid "Discovery is already running..."
+msgstr "探測已在進行中..."
+
+msgid "Refresh Dynamic Domains"
+msgstr "刷新動態域名"
+
+msgid "This book's file type is unknown, so it cannot be downloaded."
+msgstr "此書籍的文件格式未知，無法下載。"
+
+msgid "Book identifiers missing. Cannot download."
+msgstr "缺少書籍標識，無法下載。"
+
+#, lua-format
+msgid "Cannot create downloads directory: %s"
+msgstr "無法創建下載目錄: %s"
+
+msgid "Could not open reader UI."
+msgstr "無法打開閱讀器界面。"
+
+msgid "Download failed: Unknown error"
+msgstr "下載失敗：未知錯誤"
+
+msgid "Book download"
+msgstr "書籍下載"
+
+msgid "Retrying download… (tap to cancel)"
+msgstr "正在重試下載… (點擊取消)"
+
+msgid "Download cancelled."
+msgstr "下載已取消。"
 
 msgid "Untitled"
 msgstr "無標題"
@@ -762,6 +772,12 @@ msgstr "從您的已下載書籍中移除\"%s\"？"
 msgid "Remove"
 msgstr "移除"
 
+msgid "Clear your stored username and password?"
+msgstr "要清除已保存的用戶名和密碼嗎？"
+
+msgid "Clear"
+msgstr "清除"
+
 #, lua-format
 msgid "Download \"%s\"?"
 msgstr "下載\"%s\"？"
@@ -911,11 +927,20 @@ msgstr "密碼"
 msgid "Enter password"
 msgstr "輸入密碼"
 
+msgid "Set and verify"
+msgstr "設置並驗證"
+
 msgid "Please fill in all fields"
 msgstr "請填寫所有欄位"
 
-msgid "Feature not implemented"
-msgstr "功能尚未實現"
+#~ msgid "Verify credentials"
+#~ msgstr "驗證憑證"
+
+#~ msgid "Developer options"
+#~ msgstr "開發者選項"
+
+#~ msgid "Feature not implemented"
+#~ msgstr "功能尚未實現"
 
 #~ msgid "Download this book?"
 #~ msgstr "下載此書？"

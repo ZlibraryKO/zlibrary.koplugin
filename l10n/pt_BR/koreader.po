@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 09:56+0000\n"
+"POT-Creation-Date: 2026-07-20 22:20+0200\n"
 "PO-Revision-Date: 2025-05-28 15:14-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -25,74 +25,17 @@ msgstr "Busca na Z-library"
 msgid "My books"
 msgstr "Meus livros"
 
-msgid "Operation failed, please retry."
-msgstr "Falha na operação, tente novamente."
-
-msgid "Fetching domains..."
-msgstr "Obtendo domínios..."
-
-msgid "Successfully set base URL to: "
-msgstr "URL base definida com sucesso para:"
-
-msgid "Failed to find a working base URL."
-msgstr "Falha ao encontrar uma URL base funcionando."
-
-msgid "Queued"
-msgstr "Na fila"
-
-msgid "Selection copied to clipboard."
-msgstr "Seleção copiada para a área de transferência."
-
-msgid "Checking"
-msgstr "Verificando"
+msgid "Settings"
+msgstr "Configurações"
 
 msgid "Set base URL"
 msgstr "Definir URL base"
-
-msgid "Invalid Base URL."
-msgstr "URL base inválida."
-
-msgid "Failed"
-msgstr "Falhou"
-
-msgid "Unknown error"
-msgstr "Erro desconhecido"
-
-msgid "Searching for working Z-library server..."
-msgstr "Procurando servidor Z-library funcionando..."
-
-msgid "Current Base URL:"
-msgstr "URL base atual:"
-
-msgid "Mirror site redirected to: "
-msgstr "Site espelho redirecionado para:"
-
-msgid "Auto-discover base URL"
-msgstr "Descobrir URL base automaticamente"
-
-msgid "Network unavailable."
-msgstr "Rede indisponível."
-
-msgid "Discovery is already running..."
-msgstr "A descoberta já está em execução..."
-
-msgid "Refresh Dynamic Domains"
-msgstr "Atualizar domínios dinâmicos"
-
-msgid "Back"
-msgstr "Voltar"
-
-msgid "Settings"
-msgstr "Configurações"
 
 msgid "Set credentials"
 msgstr "Definir credenciais"
 
 msgid "Login successful!"
 msgstr "Login bem-sucedido!"
-
-msgid "Verify credentials"
-msgstr "Verificar credenciais"
 
 msgid "Set download directory"
 msgstr "Definir diretório de download"
@@ -136,8 +79,18 @@ msgstr "Verificar atualizações"
 msgid "Error: Plugin path not found. Cannot check for updates."
 msgstr "Erro: Caminho do plugin não encontrado. Não é possível verificar atualizações."
 
-msgid "Developer options"
-msgstr "Opções de desenvolvedor"
+msgid "Advanced"
+msgstr "Avançado"
+
+msgid "Clear credentials"
+msgstr "Limpar credenciais"
+
+#, lua-format
+msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
+msgstr "Credenciais limpas, mas %s ainda as define. Edite esse arquivo para impedir isso."
+
+msgid "Credentials cleared."
+msgstr "Credenciais limpas."
 
 msgid "Clear user session"
 msgstr "Limpar sessão do usuário"
@@ -271,11 +224,14 @@ msgstr "Detalhes do livro"
 msgid "Could not retrieve book details."
 msgstr "Não foi possível recuperar os detalhes do livro."
 
-msgid "Please set both username and password first."
-msgstr "Por favor, defina primeiro o nome de usuário e a senha."
-
 msgid "Logging in..."
 msgstr "Entrando..."
+
+msgid "Credentials saved, but they could not be checked right now."
+msgstr "Credenciais salvas, mas não foi possível verificá-las agora."
+
+msgid "Please set both username and password first."
+msgstr "Por favor, defina primeiro o nome de usuário e a senha."
 
 msgid "Sign-in"
 msgstr "Autenticação"
@@ -298,34 +254,6 @@ msgstr "Falha ao carregar mais resultados"
 msgid "No more results found."
 msgstr "Nenhum outro resultado encontrado."
 
-msgid "This book's file type is unknown, so it cannot be downloaded."
-msgstr "O formato deste livro é desconhecido, portanto não é possível baixá-lo."
-
-msgid "Book identifiers missing. Cannot download."
-msgstr "Identificadores do livro ausentes. Não é possível baixar."
-
-#, lua-format
-msgid "Cannot create downloads directory: %s"
-msgstr "Não é possível criar o diretório de downloads: %s"
-
-msgid "Could not open reader UI."
-msgstr "Não foi possível abrir a interface do leitor."
-
-msgid "Download failed: Unknown error"
-msgstr "Falha no download: Erro desconhecido"
-
-msgid "Download limit reached. Please try again later or check your account."
-msgstr "Limite de download atingido. Por favor, tente novamente mais tarde ou verifique sua conta."
-
-msgid "Book download"
-msgstr "Download de livro"
-
-msgid "Retrying download… (tap to cancel)"
-msgstr "Repetindo download… (toque para cancelar)"
-
-msgid "Download cancelled."
-msgstr "Download cancelado."
-
 msgid "Book ID is required."
 msgstr "O ID do livro é obrigatório."
 
@@ -346,6 +274,9 @@ msgstr "Não foi possível encontrar o endereço do servidor"
 
 msgid "This Z-library server is refusing automated access"
 msgstr "Este servidor Z-library recusa acesso automatizado"
+
+msgid "Credentials rejected or invalid response"
+msgstr "Credenciais rejeitadas ou resposta inválida"
 
 msgid "Request timed out - please check your connection and try again"
 msgstr "Tempo esgotado - verifique sua conexão e tente novamente"
@@ -386,9 +317,6 @@ msgstr "Falha no login"
 msgid "Login failed: Invalid session data"
 msgstr "Falha no login: Dados de sessão inválidos"
 
-msgid "Credentials rejected or invalid response"
-msgstr "Credenciais rejeitadas ou resposta inválida"
-
 msgid "No response received from server - please try again"
 msgstr "Nenhuma resposta recebida do servidor - tente novamente"
 
@@ -400,6 +328,9 @@ msgstr "Erro na API de busca"
 
 msgid "Failed to open target file"
 msgstr "Falha ao abrir o arquivo de destino"
+
+msgid "Unknown error"
+msgstr "Erro desconhecido"
 
 msgid "Download limit reached or file is an HTML page"
 msgstr "Limite de downloads atingido ou o arquivo é uma página HTML"
@@ -454,6 +385,9 @@ msgstr "Falha ao processar a resposta do link de download."
 
 msgid "API returned an error for download link."
 msgstr "A API retornou um erro para o link de download."
+
+msgid "Download limit reached. Please try again later or check your account."
+msgstr "Limite de download atingido. Por favor, tente novamente mais tarde ou verifique sua conta."
 
 msgid "No download link provided in API response."
 msgstr "Nenhum link de download fornecido na resposta da API."
@@ -551,6 +485,9 @@ msgstr "páginas"
 msgid "Cover"
 msgstr "Capa"
 
+msgid "Back"
+msgstr "Voltar"
+
 msgid "More Similar Books"
 msgstr "Mais livros similares"
 
@@ -603,6 +540,79 @@ msgstr "infinito"
 #, lua-format
 msgid "Block: %ds, Total: %s"
 msgstr "Bloco: %ds, Total: %s"
+
+msgid "Operation failed, please retry."
+msgstr "Falha na operação, tente novamente."
+
+msgid "Fetching domains..."
+msgstr "Obtendo domínios..."
+
+msgid "Successfully set base URL to: "
+msgstr "URL base definida com sucesso para:"
+
+msgid "Failed to find a working base URL."
+msgstr "Falha ao encontrar uma URL base funcionando."
+
+msgid "Queued"
+msgstr "Na fila"
+
+msgid "Selection copied to clipboard."
+msgstr "Seleção copiada para a área de transferência."
+
+msgid "Checking"
+msgstr "Verificando"
+
+msgid "Invalid Base URL."
+msgstr "URL base inválida."
+
+msgid "Failed"
+msgstr "Falhou"
+
+msgid "Searching for working Z-library server..."
+msgstr "Procurando servidor Z-library funcionando..."
+
+msgid "Current Base URL:"
+msgstr "URL base atual:"
+
+msgid "Mirror site redirected to: "
+msgstr "Site espelho redirecionado para:"
+
+msgid "Auto-discover base URL"
+msgstr "Descobrir URL base automaticamente"
+
+msgid "Network unavailable."
+msgstr "Rede indisponível."
+
+msgid "Discovery is already running..."
+msgstr "A descoberta já está em execução..."
+
+msgid "Refresh Dynamic Domains"
+msgstr "Atualizar domínios dinâmicos"
+
+msgid "This book's file type is unknown, so it cannot be downloaded."
+msgstr "O formato deste livro é desconhecido, portanto não é possível baixá-lo."
+
+msgid "Book identifiers missing. Cannot download."
+msgstr "Identificadores do livro ausentes. Não é possível baixar."
+
+#, lua-format
+msgid "Cannot create downloads directory: %s"
+msgstr "Não é possível criar o diretório de downloads: %s"
+
+msgid "Could not open reader UI."
+msgstr "Não foi possível abrir a interface do leitor."
+
+msgid "Download failed: Unknown error"
+msgstr "Falha no download: Erro desconhecido"
+
+msgid "Book download"
+msgstr "Download de livro"
+
+msgid "Retrying download… (tap to cancel)"
+msgstr "Repetindo download… (toque para cancelar)"
+
+msgid "Download cancelled."
+msgstr "Download cancelado."
 
 msgid "Untitled"
 msgstr "Sem título"
@@ -763,6 +773,12 @@ msgstr "Remover \"%s\" dos seus livros baixados?"
 msgid "Remove"
 msgstr "Remover"
 
+msgid "Clear your stored username and password?"
+msgstr "Limpar o nome de usuário e a senha armazenados?"
+
+msgid "Clear"
+msgstr "Limpar"
+
 #, lua-format
 msgid "Download \"%s\"?"
 msgstr "Baixar \"%s\"?"
@@ -912,11 +928,20 @@ msgstr "Senha"
 msgid "Enter password"
 msgstr "Insira a senha"
 
+msgid "Set and verify"
+msgstr "Definir e verificar"
+
 msgid "Please fill in all fields"
 msgstr "Por favor, preencha todos os campos"
 
-msgid "Feature not implemented"
-msgstr "Recurso não implementado"
+#~ msgid "Verify credentials"
+#~ msgstr "Verificar credenciais"
+
+#~ msgid "Developer options"
+#~ msgstr "Opções de desenvolvedor"
+
+#~ msgid "Feature not implemented"
+#~ msgstr "Recurso não implementado"
 
 #~ msgid "Download this book?"
 #~ msgstr "Baixar este livro?"

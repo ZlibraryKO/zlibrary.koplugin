@@ -8,6 +8,10 @@ local Cache = require("zlibrary.cache")
 local AsyncHelper = require("zlibrary.async_helper")
 
 local ApiHelper = {}
+-- Signs in with Api.login directly, and returns the original response when no credentials are
+-- stored. Both are deliberate and load-bearing: this runs as background cache warming, and
+-- Zlibrary:login opens a credentials dialog when nothing is stored. Routing this through the
+-- plugin's login "to share the retry logic" would throw a modal at a reader who is reading.
 function ApiHelper.fetchWithAuth(api_method, ...)
     local session = Config.getUserSession() or {}
     local res = api_method(session.user_id, session.user_key, ...)

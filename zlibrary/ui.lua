@@ -40,6 +40,15 @@ local function _closeAndUntrackDialog(dialog)
     end
 end
 
+-- Close a dialog this module opened, from outside it. The credentials dialog needs this: it stays
+-- on screen while its contents are checked against the server, so whoever is doing the checking
+-- has to close it once a verdict arrives. Goes through the same untracking path as every other
+-- close, or the widget stays in DialogManager._open_dialogs and closeAllDialogs re-closes a dead
+-- one.
+function Ui.closeDialog(dialog)
+    _closeAndUntrackDialog(dialog)
+end
+
 local function _colon_concat(a, b)
     return a .. ": " .. b
 end
@@ -538,6 +547,25 @@ function Ui.confirmRemoveDownloaded(title, ok_callback)
         UIManager:show(ConfirmBox:new{
             text = text,
             ok_text = T("Remove"),
+            ok_callback = ok_callback,
+            cancel_text = T("Cancel")
+        })
+    end
+end
+
+function Ui.confirmClearCredentials(ok_callback)
+    local text = T("Clear your stored username and password?")
+    if _plugin_instance and _plugin_instance.dialog_manager then
+        _plugin_instance.dialog_manager:showConfirmDialog({
+            text = text,
+            ok_text = T("Clear"),
+            ok_callback = ok_callback,
+            cancel_text = T("Cancel")
+        })
+    else
+        UIManager:show(ConfirmBox:new{
+            text = text,
+            ok_text = T("Clear"),
             ok_callback = ok_callback,
             cancel_text = T("Cancel")
         })
@@ -1096,7 +1124,26 @@ function Ui.createPerPageSettingCallback(title_text, setting_key)
     end
 end
 
-function Ui.showCredentialsDialog(validate_and_save_callback, test_callback)
+-- The credentials dialog. One action button: it checks what was typed against the server before
+-- keeping it.
+--
+-- CONTRACT for validate_and_save_callback(email, password):
+--   truthy -> done, close the dialog now
+--   falsy  -> NOT done, leave the dialog exactly as it is
+-- Falsy covers two cases, and the caller knows which: the server refused these credentials and
+-- the user should correct them in place, or a check is still in flight and its owner will call
+-- Ui.closeDialog when a verdict arrives. Closing on falsy is the bug this contract exists to
+-- prevent -- it strands the user with no dialog and no way back except the menu.
+--
+-- test_callback is unused and kept only so the argument positions do not shift; the separate
+-- "Verify credentials" button was removed once the action button started verifying. It differed
+-- only in not closing on success, truncated badly as a third button on an Oasis, and committed
+-- the credentials on success anyway -- so Cancel after it did not mean "change nothing".
+--
+-- opts.quiet_save suppresses the "Setting saved successfully!" toast, for callers that paint
+-- their own message over the same region straight after.
+function Ui.showCredentialsDialog(validate_and_save_callback, test_callback, opts)
+    opts = opts or {}
     local current_email = Config.getSetting(Config.SETTINGS_USERNAME_KEY) or ""
     local current_password = Config.getSetting(Config.SETTINGS_PASSWORD_KEY) or ""
     local dialog
@@ -1119,23 +1166,7 @@ function Ui.showCredentialsDialog(validate_and_save_callback, test_callback)
                         _closeAndUntrackDialog(dialog) 
                     end,
                 }, {
-                    text = T("Verify credentials"),
-                    callback = function()
-                        local fields = dialog:getFields()
-                        local trimmed_email = util.trim(fields[1] or "")
-                        local trimmed_password = util.trim(fields[2] or "")
-                        if trimmed_email == "" or trimmed_password == "" then
-                            Ui.showInfoMessage(T("Please fill in all fields"))
-                            return
-                        end
-                        if test_callback then
-                            test_callback(trimmed_email, trimmed_password)
-                        else
-                            Ui.showInfoMessage(T("Feature not implemented"))
-                        end
-                    end,
-                }, {
-                    text =  T("Set"),
+                    text =  T("Set and verify"),
                     callback = function()
                         local fields = dialog:getFields()
                         local trimmed_email = util.trim(fields[1] or "")
@@ -1147,13 +1178,17 @@ function Ui.showCredentialsDialog(validate_and_save_callback, test_callback)
                         local close_dialog_after_action = false
                         if validate_and_save_callback then
                             if validate_and_save_callback(trimmed_email, trimmed_password) then
-                                Ui.showInfoMessage(T("Setting saved successfully!"))
+                                if not opts.quiet_save then
+                                    Ui.showInfoMessage(T("Setting saved successfully!"))
+                                end
                                 close_dialog_after_action = true
                             end
                         else
                             Config.saveSetting(Config.SETTINGS_USERNAME_KEY, trimmed_email)
                             Config.saveSetting(Config.SETTINGS_PASSWORD_KEY, trimmed_password)
-                            Ui.showInfoMessage(T("Setting saved successfully!"))
+                            if not opts.quiet_save then
+                                Ui.showInfoMessage(T("Setting saved successfully!"))
+                            end
                             close_dialog_after_action = true
                         end
                         if close_dialog_after_action then

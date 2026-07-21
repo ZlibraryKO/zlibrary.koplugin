@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 09:56+0000\n"
+"POT-Creation-Date: 2026-07-21 18:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -705,6 +705,12 @@ msgstr "%d개 항목이 %s에 선택되었습니다."
 #, lua-format
 msgid "Filter cleared for %s."
 msgstr "%s에 대한 필터가 제거되었습니다."
+
+msgid "Filter"
+msgstr "필터"
+
+msgid "Show all"
+msgstr "전체 보기"
 
 msgid "Set"
 msgstr "설정"

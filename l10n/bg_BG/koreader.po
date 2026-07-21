@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-20 09:56+0000\n"
+"POT-Creation-Date: 2026-07-21 18:43+0200\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -711,6 +711,12 @@ msgstr "Избрани са %d елемента за %s."
 #, lua-format
 msgid "Filter cleared for %s."
 msgstr "Филтърът за %s е изчистен."
+
+msgid "Filter"
+msgstr "Филтър"
+
+msgid "Show all"
+msgstr "Показване на всички"
 
 msgid "Set"
 msgstr "Задаване"

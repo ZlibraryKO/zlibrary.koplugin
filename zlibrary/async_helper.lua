@@ -118,9 +118,9 @@ function Channel:_processNext()
             if not completed then
                 success = false
                 final_error = tostring(ret1)
-            elseif ret1 == false then
+            elseif ret1 == false or ret1 == nil then
                 success = false
-                final_error = ret2 or "Task soft-failed without error message"
+                final_error = ret2 or "Task failed or returned nil"
             else
                 success = true
                 final_result = ret1
@@ -238,19 +238,22 @@ function Channel:_processNext()
         end
 
         local subprocess_done = ffiUtil.isSubProcessDone(pid)
-        local stuff_to_read = parent_read_fd and ffiUtil.getNonBlockingReadSize(parent_read_fd) ~= 0
 
-        if subprocess_done or stuff_to_read then
-            -- Subprocess is gone or nearly gone
+        -- Only read once the subprocess has finished: readAllFromFD blocks
+        -- until EOF (child closes its end), so reading while the child is
+        -- still running would freeze the UI inside this non-blocking poll.
+        if subprocess_done then
+            -- Subprocess is gone
             local ok, r1, r2 = false, nil, nil
-            
+            local stuff_to_read = parent_read_fd and ffiUtil.getNonBlockingReadSize(parent_read_fd) ~= 0
+
             if stuff_to_read then
                 local ret_str = ffiUtil.readAllFromFD(parent_read_fd) or ""
                 parent_read_fd = nil
-                
-                if ret_str ~= "" or (ret_str == "" and task_returns_simple_string and subprocess_done) then
+
+                if ret_str ~= "" or (ret_str == "" and task_returns_simple_string) then
                     if task_returns_simple_string then
-                        ok, r1, r2= true, ret_str, nil 
+                        ok, r1, r2= true, ret_str, nil
                     else
                         local dec_ok, ret_tbl = pcall(buffer.decode, ret_str)
                         if dec_ok and type(ret_tbl) == "table" then
@@ -263,10 +266,6 @@ function Channel:_processNext()
                 else
                     ok, r1, r2 = false, "empty_pipe_error", nil
                 end
-                -- data fully read, but process hasn't exited yet
-                if not subprocess_done then
-                    safe_collect_and_clean(pid, parent_read_fd, 3, 1, "pre-read subprocess")
-                end
             else -- subprocess_done: process exited with no output
                    if parent_read_fd then ffiUtil.readAllFromFD(parent_read_fd) end
                     -- no ret_values
@@ -274,7 +273,7 @@ function Channel:_processNext()
             logger.dbg("Channel:_processNext - background task completed")
             deliver_result(ok, r1, r2)
         else
-            -- backoff polling
+            -- child still running, backoff polling
             if check_interval_sec < 1 and poll_count % 10 == 0 then
                 check_interval_sec = math.min(check_interval_sec * 2, 1)
             end

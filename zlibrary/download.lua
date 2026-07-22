@@ -21,9 +21,25 @@ local Ui = require("zlibrary.ui")
 local T = require("zlibrary.gettext")
 local lfs = require("libs/libkoreader-lfs")
 local logger = require("logger")
+local socket_url = require("socket.url")
 local util = require("util")
 
 local Download = {}
+
+-- scheme://host[:port]/path of a url, without the query: a resolved download link carries its
+-- signature in the query, which is credential-equivalent and must not land in crash.log.
+local function _loggableUrl(url)
+    local parsed = socket_url.parse(url or "")
+    if not (parsed and parsed.scheme and parsed.host) then
+        return "<unparsable>"
+    end
+    return socket_url.build({
+        scheme = parsed.scheme,
+        host = parsed.host,
+        port = parsed.port,
+        path = parsed.path,
+    })
+end
 
 local function _usableFormat(format)
     if type(format) ~= "string" then
@@ -55,11 +71,6 @@ function Download.fetchDetailsThenDownload(self, book_stub)
 
         local on_success = function(api_result)
             Ui.closeMessage(loading_msg)
-            if api_result.error then
-                Ui.showErrorMessage(Ui.colonConcat(T("Failed to fetch book details"),
-                    tostring(api_result.error)))
-                return
-            end
             if not api_result.book then
                 Ui.showErrorMessage(T("Could not retrieve book details."))
                 return
@@ -187,7 +198,7 @@ function Download.run(self, book)
                 return { success = false, error = link_result.error }
             end
 
-            logger.info(string.format("Zlibrary:downloadBook - Got download link from endpoint: %s", link_result.download_link))
+            logger.info(string.format("Zlibrary:downloadBook - Got download link from endpoint: %s", _loggableUrl(link_result.download_link)))
 
             -- No progress callback: it would run in this process and could not reach the parent's
             -- dialog. The parent watches the temp file instead.
@@ -298,7 +309,9 @@ function Download.run(self, book)
             local yielded = false
             UIManager:nextTick(function() yielded = true end)
 
-            local stop_poll = startProgressPoll(target_filepath, progress_callback, book.filesize)
+            -- book.filesize is raw server JSON; a non-numeric value would make math.min throw
+            -- inside the scheduled poll, so only poll against a real number.
+            local stop_poll = startProgressPoll(target_filepath, progress_callback, tonumber(book.filesize))
             local ok, completed, api_result = pcall(runDownloadInSubprocess, user_session, referer_url)
             -- After the pcall, so a throw cannot leave the poll rescheduling against a closed dialog.
             stop_poll()

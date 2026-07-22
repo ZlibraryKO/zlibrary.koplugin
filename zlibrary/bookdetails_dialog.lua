@@ -70,6 +70,12 @@ local function applyRoundedCorners(frame_widget, border_size)
     end
 end
 
+-- Escape plain-text values before interpolating them into the HTML handed to ScrollHtmlWidget,
+-- so user/server-supplied comment content cannot break the layout or inject markup.
+local function htmlEscape(s)
+    return (tostring(s):gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;"):gsub('"', "&quot;"):gsub("'", "&#39;"))
+end
+
 local function makeClickable(content_widget, callback)
     local container = InputContainer:new{
         ges_events = {TapCustom = { GestureRange:new{ ges = "tap" } }}, 
@@ -579,6 +585,7 @@ function BookDetailsDialog:_buildButtons()
         callback = function()
             if type(self.parent_zlibrary.fetchAndDisplayComments) == "function" then
                 self.parent_zlibrary:fetchAndDisplayComments(self.book, false, function(book_comments)
+                    if self._is_closed == true or not UIManager:isWidgetShown(self) then return end
                     local comments_html, css = self:_renderComments(book_comments)
                     self.book.comments_html = comments_html
                     self.book.comments_css= css
@@ -757,7 +764,7 @@ function BookDetailsDialog:_renderComments(book_comments)
                     <div class="comment-meta">%s</div>
                 </div>
             </div>
-            ]], reply_class, inline_style, user_name, is_premium, text, date_str)
+            ]], reply_class, inline_style, htmlEscape(user_name), is_premium, htmlEscape(text), htmlEscape(date_str))
 
             table.insert(html_parts, comment_html)
 

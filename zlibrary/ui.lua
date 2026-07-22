@@ -708,7 +708,7 @@ function Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, ok
                     callback = function()
                         turn_off_wifi = not turn_off_wifi
                         Config.setTurnOffWifiAfterDownload(turn_off_wifi)
-                        UIManager:close(dialog)
+                        _closeAndUntrackDialog(dialog)
                         showDialog()
                     end,
                 },

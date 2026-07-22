@@ -27,9 +27,9 @@ function DialogManager:_isDialogValid(dialog)
         return false
     end
 
-    if dialog.is_destroyed or dialog.is_closed then
-        return false
-    end
+    -- No closed/destroyed flag is checked here because no KOReader widget ever sets one:
+    -- is_closed and is_destroyed appear nowhere in the frontend. The property probe below
+    -- is the only honest signal, and auto-closing widgets are untracked when they close.
 
     local success, has_common_properties = pcall(function()
         return dialog.dimen ~= nil or dialog.show_parent ~= nil or dialog.modal ~= nil
@@ -134,6 +134,7 @@ function DialogManager:showInfoMessage(text, timeout)
         text = text,
         timeout = timeout or 3
     }
+    self:untrackOnClose(dialog)
 
     return self:showAndTrackDialog(dialog)
 end
@@ -146,12 +147,29 @@ function DialogManager:showErrorMessage(text, timeout)
         text = text,
         timeout = timeout or 5
     }
+    self:untrackOnClose(dialog)
 
     return self:showAndTrackDialog(dialog)
 end
 
 
+-- An InfoMessage closes itself -- on timeout, on a tap, on the back key -- and none of those
+-- paths goes through closeAndUntrackDialog, so the dead widget would stay in _open_dialogs
+-- forever. InfoMessage.onCloseWidget fires its dismiss_callback on every one of them (it is
+-- UIManager:close each time), so untrack from there.
+function DialogManager:untrackOnClose(dialog)
+    dialog.dismiss_callback = function()
+        self:untrackDialog(dialog)
+    end
+end
+
+
 function DialogManager:trackDialog(dialog)
+    for _, tracked_dialog in ipairs(self._open_dialogs) do
+        if tracked_dialog == dialog then
+            return dialog
+        end
+    end
     table.insert(self._open_dialogs, dialog)
     return dialog
 end

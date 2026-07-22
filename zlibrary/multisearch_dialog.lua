@@ -358,8 +358,11 @@ function SearchDialog:onMenuSelect(item)
 end
 
 function SearchDialog:onMenuHold(item)
+    if not (item and item.book_index) then
+        return
+    end
     local book = self.books[item.book_index]
-    if type(book) ~= "table" and not book.author and not book.title then
+    if type(book) ~= "table" or (not book.author and not book.title) then
         return
     end
 

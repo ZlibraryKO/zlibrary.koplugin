@@ -1,13 +1,15 @@
 -- Getting a book onto the device.
 --
--- Lifted out of main.lua unchanged: 308 lines across three functions, of which downloadBook
--- alone was 244 -- the largest thing left in that file after discovery moved out.
+-- Extracted from main.lua in 7e5f3c3: 308 lines across three functions, of which downloadBook
+-- alone was 244 -- the largest thing left in that file after discovery moved out. At that
+-- commit the move was byte-for-byte: the parameters really are named `self`, and the plugin
+-- methods they call -- login, resetDownloadQuotaCache, and each other -- resolve on the
+-- instance exactly as before, so a move that changes no line changes no behaviour. It no
+-- longer is: 1b3bd89 added the Config.hasCredentials gate and the login resume to
+-- Download.run, and later edits have landed since. Diff against history, not this header.
 --
--- The parameters really are named `self`, which is why the bodies below are byte-for-byte what
--- they were. The plugin methods they call -- login, resetDownloadQuotaCache, and each other --
--- resolve on the instance exactly as before, so a move that changes no line changes no
--- behaviour. main.lua keeps two one-line methods delegating here, because bookdetails_dialog
--- calls downloadBook on the plugin instance and the retry paths recurse through it.
+-- main.lua keeps two one-line methods delegating here, because bookdetails_dialog calls
+-- downloadBook on the plugin instance and the retry paths recurse through it.
 
 local Api = require("zlibrary.api")
 local AsyncHelper = require("zlibrary.async_helper")

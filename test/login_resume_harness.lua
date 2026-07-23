@@ -166,6 +166,12 @@ do
                     table.insert(rig.fetches, extra)
                     return { books = { "book" } }
                 end,
+                -- Every real call site sets hasValidApiResult (all 8 were traced when the old
+                -- on_finally fallback was removed as dead), so the rig does too.
+                hasValidApiResult = function(api_result)
+                    local ok = type(api_result) == "table" and type(api_result.books) == "table"
+                    return ok, not ok and "No books found"
+                end,
                 resolve_result = function(ui, result)
                     table.insert(rig.resolved, result)
                 end,
@@ -212,10 +218,10 @@ do
             "fetched anyway -- an inverted gate resumes the action when login fails")
     r.check("and does not ask for credentials a second time", fail_rig.logins == 1,
             "asked " .. fail_rig.logins .. " times")
-    r.check("the caller is released as failed, not left parked",
-            #fail_rig.resolved == 1 and fail_rig.resolved[1] == false,
-            "resolved " .. #fail_rig.resolved .. " time(s), first "
-                .. tostring(fail_rig.resolved[1]))
+    r.check("and the caller is left parked, not released with a synthetic failure",
+            #fail_rig.resolved == 0,
+            "resolved " .. #fail_rig.resolved .. " time(s) -- a resolve_result(false) here "
+                .. "crashes callers like _fetchBookList at api_result.books")
 end
 
 -- ---------------------------------------------------------------- the download resumes

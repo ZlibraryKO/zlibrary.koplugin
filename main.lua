@@ -307,13 +307,9 @@ function Zlibrary:_requestDispatcher(options, ...)
         return
     end
 
-    -- If hasValidApiResult is undefined, resolve_result will be called globally
+    -- hasValidApiResult is optional; when set, a result it rejects shows its error message
+    -- and resolve_result is not called.
     local has_valid_api_result = type(options.hasValidApiResult) == "function"
-    local on_finally = not has_valid_api_result and function(error_false)
-        UIManager:nextTick(function()
-            options.resolve_result(self.ui, error_false, self)
-        end)
-    end
 
     local api_extra_params = {...}
 
@@ -328,8 +324,6 @@ function Zlibrary:_requestDispatcher(options, ...)
         self:login(function(login_ok)
             if login_ok then
                 self:_requestDispatcher(options, table.unpack(api_extra_params))
-            elseif on_finally then
-                on_finally(false)
             end
         end)
         return
@@ -338,7 +332,7 @@ function Zlibrary:_requestDispatcher(options, ...)
     if NetworkMgr:willRerunWhenOnline(function()
         self:_requestDispatcher(options, table.unpack(api_extra_params))
     end) then
-        return on_finally and on_finally(false)
+        return
     end
 
     local function attemptFetch(retry_on_auth_error)
@@ -376,7 +370,7 @@ function Zlibrary:_requestDispatcher(options, ...)
                 
                 Ui.closeMessage(loading_msg)
                 Ui.showErrorMessage(Ui.colonConcat(options.error_prefix_key, tostring(api_result.error)))
-                return on_finally and on_finally(false)
+                return
             end
 
             Ui.closeMessage(loading_msg)
@@ -403,7 +397,6 @@ function Zlibrary:_requestDispatcher(options, ...)
                 attemptFetch(false)
             end, function(final_err_msg)
                 -- Cancel callback - user already knows about the error
-                return on_finally and on_finally(false)
             end, loading_msg, options.operation_key)
         end
 
@@ -509,7 +502,7 @@ end
 -- Reset when a book is favorited/unfavorited or when refreshing the menu
 function Zlibrary:resetFavoritesCache(is_all)
     Config.getConfigRuntimeCache():remove("favorite_book_ids")
-    if is_all then Cache:new({ name = "multi_search" }):remove("favorites") end
+    if is_all then Config.getMultiSearchCache():remove("favorites") end
 end
 
 function Zlibrary:showMyBooksDialog(def_position, def_search_input)
@@ -518,9 +511,13 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
         
         local get_quota_status = function()
             local quota_status = self:getDownloadQuotaCache()
-            if type(quota_status) == "table" and quota_status.today ~= nil then
-                quota_status.limit = quota_status.limit or 10
-                 return string.format(" [%d/%d]", quota_status.today, quota_status.limit)
+            if type(quota_status) == "table" then
+                -- Coerce: this is raw server JSON, and %d throws on a string value.
+                local today = tonumber(quota_status.today)
+                local limit = tonumber(quota_status.limit) or 10
+                if today then
+                     return string.format(" [%d/%d]", today, limit)
+                end
             end
         end
         
@@ -793,7 +790,7 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
     end
 
     local on_success = function(ui_self, api_result, plugin_self)
-        logger.info(string.format("Zlibrary:onSelectRecommendedBook - Fetch successful for book ID: %s", api_result.book.id))
+        logger.info(string.format("Zlibrary:onSelectRecommendedBook - Fetch successful for book ID: %s", tostring(api_result.book.id)))
         Ui.showBookDetails(self, api_result.book)
         book_cache:insert(book_stub.hash, api_result.book)
     end
@@ -849,7 +846,7 @@ function Zlibrary:onSelectSearchBook(book_data)
             end
 
             Ui.closeMessage(loading_msg)
-            logger.info(string.format("Zlibrary:onSelectSearchBook - Fetch successful for book ID: %s", api_result.book.id))
+            logger.info(string.format("Zlibrary:onSelectSearchBook - Fetch successful for book ID: %s", tostring(api_result.book.id)))
 
             Ui.showBookDetails(self, api_result.book)
         end
@@ -1254,6 +1251,9 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
                         return
                     end
                     Ui.showErrorMessage(Ui.colonConcat(T("Failed to load more results"), tostring(api_result_more.error)))
+                    -- The fetch failed with the page counter already advanced; redraw what is
+                    -- actually loaded so the display and the counter agree again.
+                    menu_instance:updateItems(1, true)
                     return
                 end
 
@@ -1288,6 +1288,8 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
                 end
                 
                 Ui.showErrorMessage(Ui.colonConcat(T("Failed to load more results"), tostring(err_msg_more)))
+                -- Same as the error path above: redraw so the page counter matches the display.
+                menu_instance:updateItems(1, true)
             end
 
             AsyncHelper.run(task_load_more, on_success_load_more, on_error_load_more, loading_msg_more)

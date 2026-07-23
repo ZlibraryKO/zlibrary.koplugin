@@ -114,7 +114,6 @@ function M:_updateCoverItems(select_number, no_recalculate_dimen)
     if not is_summary_changed then return false end
 
     logger.info("[menucovers] Page change detected, restarting task...")
-    self._last_page_summary = new_last_page_summary
     self._cover_channel = self._cover_channel or AsyncHelper:createChannel("Menu_Covers", 4)
     self:_clearTasks()
     -- debounce
@@ -123,7 +122,10 @@ function M:_updateCoverItems(select_number, no_recalculate_dimen)
         logger.dbg("[menucovers] Previous publish schedule cancelled")
     end
 
+    -- Offline: leave _last_page_summary untouched, so the first updateItems after
+    -- reconnecting still sees the change and schedules the covers for this page.
     if not NetworkMgr:isConnected() then return false end
+    self._last_page_summary = new_last_page_summary
 
     self._debounce_timer_cancel = AsyncHelper.delay(1, function()
         self._debounce_timer_cancel = nil
@@ -199,8 +201,10 @@ function M:updateItems(select_number, no_recalculate_dimen)
 end
 
 function M:_clearTasks()
+    -- Only the menu's own channel. PreLoader.channel is shared with the rest of the plugin
+    -- (init queues the favorites prefetch on it), and clearing it here silently drops those
+    -- tasks -- which is exactly why favorite badges never showed in cover view.
     if self._cover_channel then self._cover_channel:clearTasks() end
-    if PreLoader and PreLoader.channel then PreLoader.channel:clearTasks() end
 end
 
 function M:onCloseWidget()

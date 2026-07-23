@@ -7,7 +7,19 @@ if full_source_path:sub(1, 1) == "@" then
     full_source_path = full_source_path:sub(2)
 end
 local lib_path, _ = util.splitFilePathName(full_source_path)
-local plugin_path = lib_path:gsub("/+", "/"):gsub("[\\/]zlibrary[\\/]", "")
+-- Strip this file's own zlibrary/ directory to get the plugin root. Anchor to the
+-- END of the path: a checkout nested under another directory named zlibrary (e.g.
+-- ~/zlibrary/zlibrary.koplugin/zlibrary/) must only lose its last segment, or
+-- translations silently fail to load. splitFilePathName keeps the trailing slash
+-- (frontend/util.lua:1032), so lib_path ends in /zlibrary/ as long as this file lives
+-- in the plugin's zlibrary/ directory.
+local normalized_lib_path = lib_path:gsub("/+", "/")
+local plugin_path, substitutions = normalized_lib_path:gsub("[\\/]zlibrary[\\/]$", "")
+if substitutions == 0 then
+    -- Unexpected layout (this file not directly inside a zlibrary/ directory): fall
+    -- back to stripping every occurrence, which is what an unanchored gsub did here.
+    plugin_path = normalized_lib_path:gsub("[\\/]zlibrary[\\/]", "")
+end
 
 local NewGetText = {
     dirname = string.format("%s/l10n", plugin_path)
@@ -159,6 +171,10 @@ local function createGetTextProxy(new_gettext, gettext)
     }, mt)
 end
 
+-- Loaded once, at require time. A mid-session UI language change is not picked up
+-- until restart, but that matches KOReader's own behaviour: changing the UI language
+-- asks for a restart (frontend/ui/language.lua changeLanguage calls
+-- UIManager:askForRestart) and broadcasts no event a plugin could hook into.
 local current_lang = GetText.current_lang or G_reader_settings:readSetting("language")
 if current_lang then
     changeLang(current_lang)

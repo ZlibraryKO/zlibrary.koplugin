@@ -596,7 +596,20 @@ function BookDetailsDialog:_buildButtons()
     }})
 
     if self.has_favorite_ids_cache then
-        table.insert(dialog_buttons, {self:_generateFavoriteButtonDef(self.parent_zlibrary:isBookInFavorites(self.book) == true)})
+        -- A successful favorite/unfavorite from this dialog clears the shared favorites-id cache
+        -- (resetFavoritesCache), so a rebuild after a view switch would read a false negative from
+        -- the empty cache and show "Add To Favorites" for a just-favorited book. The toggle's
+        -- success callback records the new state in _favorite_state_override; trust it while the
+        -- cache is empty. Once fresh cache data exists it is authoritative again -- it reflects
+        -- any favorite change made elsewhere too -- so drop the override then.
+        local in_favorites
+        if self.parent_zlibrary:isBookInFavorites() then
+            self._favorite_state_override = nil
+            in_favorites = self.parent_zlibrary:isBookInFavorites(self.book) == true
+        else
+            in_favorites = self._favorite_state_override == true
+        end
+        table.insert(dialog_buttons, {self:_generateFavoriteButtonDef(in_favorites)})
     end
 
     if self.is_cache then
@@ -617,19 +630,7 @@ function BookDetailsDialog:_buildButtons()
     return dialog_buttons
 end
 
-function BookDetailsDialog:switchState(new_state, is_new)
-    if is_new then
-        UIManager:close(self)
-        local new_dialog = BookDetailsDialog:new{
-            Ui_module = self.Ui_module,
-            parent_zlibrary = self.parent_zlibrary,
-            book = self.book,
-            clear_cache_callback = self.clear_cache_callback,
-            view_state = new_state
-        }
-        UIManager:show(new_dialog)
-        return
-    end
+function BookDetailsDialog:switchState(new_state)
     local orig_dimen = self.inner_dialog.dimen and self.inner_dialog.dimen:copy()
     self.view_state = new_state
     if self.inner_dialog then
@@ -665,6 +666,11 @@ function BookDetailsDialog:_generateFavoriteButtonDef(in_favorites)
         callback = function()
             local reload_ui = function()
                 local new_in_favorites = not in_favorites
+                -- The toggle succeeded and resetFavoritesCache just emptied the shared cache, so
+                -- it cannot confirm this state right now. Remember it on the dialog so a rebuild
+                -- after a view switch keeps the button honest; _buildButtons drops the override
+                -- as soon as fresh cache data makes the state authoritative again.
+                self._favorite_state_override = new_in_favorites
                 local updated_config = self:_generateFavoriteButtonDef(new_in_favorites)
                 local button = self.inner_dialog:getButtonById("favorite_btn")
                 
@@ -744,7 +750,8 @@ function BookDetailsDialog:_renderComments(book_comments)
         end
 
         -- Flatten if parent_id exists but root node not found
-        if #roots == 0 and #comments > 0 then roots = comments end
+        local flattened = #roots == 0 and #comments > 0
+        if flattened then roots = comments end
 
         local function renderComment(comment, depth)
             local user = comment.user or {}
@@ -778,6 +785,25 @@ function BookDetailsDialog:_renderComments(book_comments)
 
         for _, root_comment in ipairs(roots) do
             renderComment(root_comment, 0)
+        end
+
+        -- Replies whose parent_id points at a comment missing from this page never render: they
+        -- wait in `children` for a parent that is not there. Append them at the end as top-level
+        -- comments rather than dropping them silently. (Not needed after the flatten fallback
+        -- above, which already renders every comment.)
+        if not flattened then
+            local known_ids = {}
+            for _, comment in ipairs(comments) do
+                if comment.id ~= nil then known_ids[comment.id] = true end
+            end
+            -- Newest first, the same order the roots were collected in.
+            for i = #comments, 1, -1 do
+                local comment = comments[i]
+                local pid = comment.parent_id
+                if pid and pid ~= "" and pid ~= 0 and not known_ids[pid] then
+                    renderComment(comment, 0)
+                end
+            end
         end
         return table.concat(html_parts, "\n")
     end

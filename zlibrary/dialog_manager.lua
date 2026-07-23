@@ -124,6 +124,18 @@ function DialogManager:showConfirmDialog(options)
         no_ok_button = options.no_ok_button,
     }
 
+    -- A ConfirmBox closes ITSELF from its own button callbacks -- OK, Cancel and the other
+    -- buttons all end in UIManager:close(self) (confirmbox.lua) -- and none of those paths goes
+    -- through closeAndUntrackDialog. Unlike InfoMessage it has no dismiss_callback hook, so
+    -- untrack from the teardown hook instead. Wrap the inherited method, never replace it:
+    -- ConfirmBox:onCloseWidget repaints the area the dialog covered.
+    local manager = self
+    local inherited = dialog.onCloseWidget
+    function dialog:onCloseWidget()
+        manager:untrackDialog(dialog)
+        if inherited then return inherited(self) end
+    end
+
     return self:showAndTrackDialog(dialog)
 end
 

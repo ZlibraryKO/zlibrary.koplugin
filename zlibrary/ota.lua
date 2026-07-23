@@ -95,10 +95,13 @@ end
 local function isVersionOlder(version1, version2)
     if not version1 or not version2 then return false end
 
+    -- `or 0` matters: table.insert(t, nil) is a silent no-op in Lua 5.1, so a non-numeric
+    -- component (a hand-built "1.0.41-dev") would leave a hole that reads back as 0 at the
+    -- wrong index, shifting every later component and misjudging the comparison.
     local v1_parts = {}
-    for part in string.gmatch(version1, "([^%.]+)") do table.insert(v1_parts, tonumber(part)) end
+    for part in string.gmatch(version1, "([^%.]+)") do table.insert(v1_parts, tonumber(part) or 0) end
     local v2_parts = {}
-    for part in string.gmatch(version2, "([^%.]+)") do table.insert(v2_parts, tonumber(part)) end
+    for part in string.gmatch(version2, "([^%.]+)") do table.insert(v2_parts, tonumber(part) or 0) end
 
     for i = 1, math.max(#v1_parts, #v2_parts) do
         local p1 = v1_parts[i] or 0
@@ -185,6 +188,10 @@ function Ota.downloadUpdate(url, destination_path)
 
     if http_result.error then
         result.error = "Download network request failed: " .. http_result.error
+        -- The sink only closes the handle when it receives its terminating chunk; a request
+        -- that failed at connect time never called the sink at all, so close the handle
+        -- ourselves before removing the file out from under it.
+        pcall(function() file:close() end)
         pcall(os.remove, destination_path)
         logger.err("Zlibrary:Ota.downloadUpdate - END (HTTP error from Api.makeHttpRequest) - Error: " .. result.error .. ", Status: " .. tostring(http_result.status_code))
         return result
@@ -192,6 +199,7 @@ function Ota.downloadUpdate(url, destination_path)
 
     if http_result.status_code ~= 200 then
         result.error = string.format("Download HTTP Error: %s", http_result.status_code)
+        pcall(function() file:close() end)
         pcall(os.remove, destination_path)
         logger.err("Zlibrary:Ota.downloadUpdate - END (HTTP status error) - Error: " .. result.error)
         return result
@@ -230,6 +238,17 @@ function Ota.installUpdate(zip_filepath, plugin_base_path)
         logger.err("Zlibrary:Ota.installUpdate - Failed to extract ZIP: " .. error_detail .. " Command: " .. unzip_command)
         _show_ota_final_message(T("Update installation failed."), true)
         return { error = "Failed to extract update package: " .. error_detail }
+    end
+
+    -- unzip's exit status only says the archive was readable. An archive missing the plugin
+    -- tree (or one that died mid-extract) can still exit 0 after overwriting whatever it did
+    -- contain, leaving the live plugin directory partially replaced. Refuse to call that a
+    -- success: the plugin's own entry point must be there afterwards.
+    local installed_meta_path = target_unzip_dir .. "/plugins/zlibrary.koplugin/_meta.lua"
+    if not util.fileExists(installed_meta_path) then
+        logger.err("Zlibrary:Ota.installUpdate - Extracted archive has no plugin tree: missing " .. installed_meta_path)
+        _show_ota_final_message(T("Update installation failed."), true)
+        return { error = "Extracted update package is missing the plugin tree." }
     end
 
     logger.info("Zlibrary:Ota.installUpdate - ZIP extracted successfully.")
@@ -315,7 +334,11 @@ function Ota.startUpdateProcess(plugin_path_from_main)
     end
 
     local download_url = asset.browser_download_url
-    local asset_name = asset.name
+    -- The asset name is server-controlled and becomes the temp ZIP's filename, which
+    -- installUpdate interpolates into a single-quoted os.execute command: a quote would break
+    -- out of the quoting, a slash would walk the path out of the cache dir. Keep only
+    -- characters that are safe in both a filename and a single-quoted shell word.
+    local asset_name = asset.name:gsub("[^%w._%-]", "")
     logger.info("Zlibrary:Ota.startUpdateProcess - Selected release asset: " .. asset_name)
 
     local current_version = getCurrentPluginVersion(plugin_path_from_main)

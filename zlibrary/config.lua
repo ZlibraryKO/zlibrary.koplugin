@@ -64,7 +64,6 @@ Config.TIMEOUT_COVER = { 5, 15 }        -- Cover image operations
 Config.TIMEOUT_BOOK_COMMENTS = { 10, 15 } -- Comments operations
 
 function Config.loadCredentialsFromFile(plugin_path)
-    Config._plugin_path = plugin_path
     -- This flag lives on the module table, which survives plugin re-instantiation, so each load
     -- attempt has to start clean: a file that no longer sets credentials must not keep reporting
     -- that it does because some earlier load in this session set them.
@@ -359,15 +358,24 @@ local function _getLuaSettings()
         local settings_file = DataStorage:getSettingsDir() .. "/zlibrary.lua"
         Config._lua_settings = LuaSettings:open(settings_file)
 
-        -- Check if data migration from old settings is needed
-        if not Config._lua_settings:readSetting(Config.SETTINGS_BASE_URL_KEY) and (G_reader_settings and G_reader_settings:readSetting(Config.SETTINGS_BASE_URL_KEY)) then
-             for key, value in pairs(G_reader_settings.data) do
+        -- Migrate legacy settings that predate the plugin's own zlibrary.lua and were kept in
+        -- KOReader's global settings. Any leftover legacy key triggers this, not just the base
+        -- URL: a user who never had one set would otherwise keep every other zlib_*/zlibrary_*
+        -- key orphaned in the global file. G_reader_settings is flushed afterwards so the
+        -- deletions survive the session and the migration does not replay on every launch.
+        if not Config._lua_settings:readSetting(Config.SETTINGS_BASE_URL_KEY) and G_reader_settings and G_reader_settings.data then
+            local migrated = false
+            for key, value in pairs(G_reader_settings.data) do
                 if type(key) == "string" and (key:match("^zlib_") or key:match("^zlibrary_")) then
                     Config._lua_settings:saveSetting(key, value)
                     G_reader_settings:delSetting(key)
+                    migrated = true
                 end
             end
-            Config._lua_settings:flush()
+            if migrated then
+                Config._lua_settings:flush()
+                G_reader_settings:flush()
+            end
         end
     end
     return Config._lua_settings
@@ -477,8 +485,13 @@ end
 function Config.getBaseUrl(is_original)
     local configured_url = (not is_original and Config.getCacheRealUrl()) or Config.getSetting(Config.SETTINGS_BASE_URL_KEY)
     if configured_url == nil or configured_url == "" then
-        -- default
+        -- default; the seeds carry a trailing slash, and the URL builders below append
+        -- "/eapi/..." verbatim, so it has to come off here like the setting (setAndValidateBaseUrl)
+        -- and the redirect cache (setCacheRealUrl) already strip theirs
         configured_url = (Config.SEED_URLS and #Config.SEED_URLS > 0) and Config.SEED_URLS[1] or nil
+        if configured_url then
+            configured_url = configured_url:gsub("/$", "")
+        end
     end
     return configured_url
 end
@@ -539,12 +552,20 @@ function Config.setAndValidateBaseUrl(url_string)
         url_string = "https://" .. url_string
     end
 
-    if not string.find(url_string, "%.") then
-        return false, "Error: URL must include a valid domain name (e.g., example.com)."
-    end
-
     if string.sub(url_string, -1) == "/" then
         url_string = string.sub(url_string, 1, -2)
+    end
+
+    -- A base URL is an origin and nothing more: a scheme, and a host that looks like a domain.
+    -- The bare string.find("%.") this replaces waved through "https://host/path" or credentials
+    -- in the URL, and they were saved verbatim and broke every request built on them.
+    if string.find(url_string, "%s") then
+        return false, "Error: URL must include a valid domain name (e.g., example.com)."
+    end
+    local parsed = socket_url.parse(url_string)
+    if not (parsed and parsed.scheme and parsed.host and string.find(parsed.host, "%."))
+            or parsed.path or parsed.params or parsed.query or parsed.fragment or parsed.userinfo then
+        return false, "Error: URL must include a valid domain name (e.g., example.com)."
     end
 
     Config.saveSetting(Config.SETTINGS_BASE_URL_KEY, url_string)
@@ -558,7 +579,7 @@ function Config.getLoginUrl()
     return base .. "/eapi/user/login"
 end
 
-function Config.getSearchUrl(query)
+function Config.getSearchUrl()
     local base = Config.getBaseUrl()
     if not base then return nil end
     return base .. "/eapi/book/search"
@@ -613,7 +634,7 @@ function Config.getDownloadedBooksUrl(page, order)
 
     local limit = Config.SEARCH_RESULTS_LIMIT
     local order_str = ""
-    if order and #order > 0 then
+    if #order > 0 then
         order_str = "&order=" .. util.urlEncode(order[1])
     end
 
@@ -629,7 +650,7 @@ function Config.getFavoriteBooksUrl(page, order)
     
     local limit = Config.SEARCH_RESULTS_LIMIT
     local order_str = ""
-    if order and #order > 0 then
+    if #order > 0 then
         order_str = "&order=" .. util.urlEncode(order[1])
     end
 
@@ -683,7 +704,10 @@ function Config.getSetting(key, default)
 end
 
 function Config.saveSetting(key, value)
-    if type(value) == "string" then
+    -- The password is exempt from the trim: leading or trailing whitespace can be a real part
+    -- of it, and zlibrary_credentials.lua is written by hand, so its values must be stored
+    -- verbatim. The UI input sites already trim deliberately before calling this.
+    if type(value) == "string" and key ~= Config.SETTINGS_PASSWORD_KEY then
         _getLuaSettings():saveSetting(key, util.trim(value)):flush()
     else
         _getLuaSettings():saveSetting(key, value):flush()

@@ -1,0 +1,1320 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-21 16:53+0000\n"
+"PO-Revision-Date: 2026-07-22 00:39+0100\n"
+"Last-Translator: CookieCaptainD\n"
+"Language-Team: pt_PT\n"
+"Language: pt_PT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.9\n"
+
+#: _meta.lua:4 main.lua:28 main.lua:46 main.lua:95
+msgid "Z-library"
+msgstr "Z-library"
+
+#: _meta.lua:5
+msgid "[[A plugin to search and download books from Z-library.]]"
+msgstr "[[Um plugin para pesquisar e descarregar livros da Z-library.]]"
+
+#: main.lua:45 main.lua:433 zlibrary/multisearch_dialog.lua:21
+msgid "Z-library search"
+msgstr "Pesquisa da Z-library"
+
+#: main.lua:46 main.lua:294
+msgid "My books"
+msgstr "Os meus livros"
+
+#: main.lua:98
+msgid "Settings"
+msgstr "Definições"
+
+#: main.lua:103 zlibrary/discovery.lua:185 zlibrary/discovery.lua:261
+#: zlibrary/discovery.lua:327 zlibrary/ui.lua:1168
+msgid "Set base URL"
+msgstr "Definir URL base"
+
+#: main.lua:110 zlibrary/ui.lua:1230
+msgid "Set credentials"
+msgstr "Definir credenciais"
+
+#: main.lua:123 main.lua:984
+msgid "Login successful!"
+msgstr "Sessão iniciada com sucesso!"
+
+#: main.lua:132
+msgid "Set download directory"
+msgstr "Definir diretório de transferências"
+
+#: main.lua:140
+msgid "Ask to open after download"
+msgstr "Perguntar se deseja abrir após a transferência"
+
+#: main.lua:149
+msgid "View Settings"
+msgstr "Definições de visualização"
+
+#: main.lua:152
+msgid "Search Covers"
+msgstr "Capas na pesquisa"
+
+#: main.lua:163 main.lua:166
+msgid "Search Items/Page"
+msgstr "Itens/Página na pesquisa"
+
+#: main.lua:168
+msgid "Browse Covers"
+msgstr "Capas na navegação"
+
+#: main.lua:179 main.lua:181
+msgid "Browse Items/Page"
+msgstr "Itens/Página na navegação"
+
+#: main.lua:184
+msgid "Search options"
+msgstr "Opções de pesquisa"
+
+#: main.lua:188 zlibrary/ui.lua:366 zlibrary/ui.lua:498
+msgid "Select search languages"
+msgstr "Selecionar idiomas de pesquisa"
+
+#: main.lua:194 zlibrary/ui.lua:370 zlibrary/ui.lua:506
+msgid "Select search formats"
+msgstr "Selecionar formatos de pesquisa"
+
+#: main.lua:200 zlibrary/ui.lua:374
+msgid "Select search order"
+msgstr "Selecionar ordem de pesquisa"
+
+#: main.lua:207
+msgid "Timeout settings"
+msgstr "Definições de limite de tempo"
+
+#: main.lua:215
+msgid "Check for updates"
+msgstr "Procurar atualizações"
+
+#: main.lua:223
+msgid "Error: Plugin path not found. Cannot check for updates."
+msgstr ""
+"Erro: Caminho do plugin não encontrado. Não é possível procurar "
+"atualizações."
+
+#: main.lua:228
+msgid "Advanced"
+msgstr "Avançado"
+
+#: main.lua:234
+msgid "Clear credentials"
+msgstr "Limpar credenciais"
+
+#: main.lua:246
+msgid ""
+"Credentials cleared, but %s still sets them. Edit that file to stop it."
+msgstr ""
+"Credenciais limpas, mas %s continua a defini-las. Edite esse ficheiro para o"
+" impedir."
+
+#: main.lua:249
+msgid "Credentials cleared."
+msgstr "Credenciais limpas."
+
+#: main.lua:254
+msgid "Clear user session"
+msgstr "Limpar sessão do utilizador"
+
+#: main.lua:258
+msgid "Session cleared. You will need to login again."
+msgstr "Sessão limpa. Terá de iniciar sessão novamente."
+
+#: main.lua:261
+msgid "Clear runtime cache"
+msgstr "Limpar cache de execução"
+
+#: main.lua:266
+msgid "Runtime cache cleared."
+msgstr "Cache de execução limpa."
+
+#: main.lua:275 zlibrary/multisearch_dialog.lua:427 zlibrary/ui.lua:471
+msgid "Search"
+msgstr "Pesquisar"
+
+#: main.lua:281 main.lua:469
+msgid "Recommended"
+msgstr "Recomendados"
+
+#: main.lua:288 main.lua:451 zlibrary/config.lua:321
+msgid "Most popular"
+msgstr "Mais populares"
+
+#: main.lua:401
+msgid "Operation"
+msgstr "Operação"
+
+#: main.lua:419
+msgid "No books found, please try again"
+msgstr "Nenhum livro encontrado, por favor tente novamente"
+
+#: main.lua:457
+msgid "Fetching most popular books..."
+msgstr "A obter os livros mais populares..."
+
+#: main.lua:458
+msgid "Failed to fetch most popular books"
+msgstr "Falha ao obter os livros mais populares"
+
+#: main.lua:459
+msgid "Most popular books"
+msgstr "Livros mais populares"
+
+#: main.lua:475
+msgid "Fetching recommended books..."
+msgstr "A obter os livros recomendados..."
+
+#: main.lua:476
+msgid "Failed to fetch recommended books"
+msgstr "Falha ao obter os livros recomendados"
+
+#: main.lua:477 zlibrary/ui.lua:1080
+msgid "Recommended books"
+msgstr "Livros recomendados"
+
+#: main.lua:531 main.lua:707 main.lua:738 main.lua:768
+msgid "API returned an error, please try again"
+msgstr "A API devolveu um erro, por favor tente novamente"
+
+#: main.lua:547
+msgid "Z-library My Books"
+msgstr "Os meus livros Z-library"
+
+#: main.lua:571 main.lua:609
+msgid "Downloaded"
+msgstr "Transferidos"
+
+#: main.lua:577
+msgid "Favorites"
+msgstr "Favoritos"
+
+#: main.lua:587
+msgid "Getting your favorites..."
+msgstr "A obter os seus favoritos..."
+
+#: main.lua:588
+msgid "Failed to fetch favorite books"
+msgstr "Falha ao obter os livros favoritos"
+
+#: main.lua:589
+msgid "Favorite books"
+msgstr "Livros favoritos"
+
+#: main.lua:619 main.lua:691
+msgid "Remove from downloaded"
+msgstr "Remover dos transferidos"
+
+#: main.lua:631
+msgid "Getting your downloaded..."
+msgstr "A obter os seus transferidos..."
+
+#: main.lua:632
+msgid "Failed to fetch downloaded books"
+msgstr "Falha ao obter os livros transferidos"
+
+#: main.lua:633
+msgid "Downloaded books"
+msgstr "Livros transferidos"
+
+#: main.lua:667
+msgid "Finding similar books..."
+msgstr "A procurar livros semelhantes..."
+
+#: main.lua:668
+msgid "No similar books found"
+msgstr "Nenhum livro semelhante encontrado"
+
+#: main.lua:669
+msgid "Similar books"
+msgstr "Livros semelhantes"
+
+#: main.lua:687
+msgid "Removing book from downloaded…"
+msgstr "A remover o livro dos transferidos…"
+
+#: main.lua:688
+msgid "Failed to remove book from downloaded"
+msgstr "Falha ao remover o livro dos transferidos"
+
+#: main.lua:701
+msgid "Book removed from downloaded, please refresh"
+msgstr "Livro removido dos transferidos, por favor atualize"
+
+#: main.lua:720
+msgid "Removing book from favorites…"
+msgstr "A remover o livro dos favoritos…"
+
+#: main.lua:721
+msgid "Failed to remove book from favorites"
+msgstr "Falha ao remover o livro dos favoritos"
+
+#: main.lua:722
+msgid "Unfavorite book"
+msgstr "Remover dos favoritos"
+
+#: main.lua:732
+msgid "Book removed from favorites, please refresh"
+msgstr "Livro removido dos favoritos, por favor atualize"
+
+#: main.lua:752
+msgid "Adding book to favorites…"
+msgstr "A adicionar o livro aos favoritos…"
+
+#: main.lua:753
+msgid "Failed to add book to favorites"
+msgstr "Falha ao adicionar o livro aos favoritos"
+
+#: main.lua:754
+msgid "Favorite book"
+msgstr "Adicionar aos favoritos"
+
+#: main.lua:762
+msgid "Book added to favorites, please refresh"
+msgstr "Livro adicionado aos favoritos, por favor atualize"
+
+#: main.lua:803 main.lua:832 zlibrary/download.lua:49
+msgid "Fetching book details..."
+msgstr "A obter os detalhes do livro..."
+
+#: main.lua:804 main.lua:841 zlibrary/download.lua:59
+msgid "Failed to fetch book details"
+msgstr "Falha ao obter os detalhes do livro"
+
+#: main.lua:805 main.lua:859 zlibrary/download.lua:77 zlibrary/ui.lua:1070
+msgid "Book details"
+msgstr "Detalhes do livro"
+
+#: main.lua:812 main.lua:847 zlibrary/download.lua:64
+msgid "Could not retrieve book details."
+msgstr "Não foi possível obter os detalhes do livro."
+
+#: main.lua:966 main.lua:1067
+msgid "Logging in..."
+msgstr "A iniciar sessão..."
+
+#: main.lua:996
+msgid "Credentials saved, but they could not be checked right now."
+msgstr ""
+"Credenciais guardadas, mas não foi possível verificá-las neste momento."
+
+#: main.lua:1041
+msgid "Please set both username and password first."
+msgstr "Por favor, defina primeiro o nome de utilizador e a palavra-passe."
+
+#: main.lua:1087 zlibrary/ui.lua:1050
+msgid "Sign-in"
+msgstr "Iniciar sessão"
+
+#: main.lua:1108
+#, lua-format
+msgid "Searching for \"%s\"..."
+msgstr "A pesquisar por \"%s\"..."
+
+#: main.lua:1141
+#, lua-format
+msgid "No results found for \"%s\"."
+msgstr "Nenhum resultado encontrado para \"%s\"."
+
+#: main.lua:1211
+#, lua-format
+msgid "Loading more results (Page %s)..."
+msgstr "A carregar mais resultados (Página %s)..."
+
+#: main.lua:1236 main.lua:1270
+msgid "Failed to load more results"
+msgstr "Falha ao carregar mais resultados"
+
+#: main.lua:1254
+msgid "No more results found."
+msgstr "Não foram encontrados mais resultados."
+
+#: main.lua:1330 zlibrary/api.lua:1640
+msgid "Book ID is required."
+msgstr "O ID do livro é obrigatório."
+
+#: main.lua:1355
+msgid "Loading comments..."
+msgstr "A carregar os comentários..."
+
+#: main.lua:1356
+msgid "Failed to load comments"
+msgstr "Falha ao carregar os comentários"
+
+#: main.lua:1357 zlibrary/bookdetails_dialog.lua:329
+#: zlibrary/bookdetails_dialog.lua:578 zlibrary/ui.lua:1115
+#: zlibrary/ui.lua:1120
+msgid "Comments"
+msgstr "Comentários"
+
+#: main.lua:1364
+msgid "No comments to display"
+msgstr "Sem comentários para apresentar"
+
+#: zlibrary/api.lua:17
+msgid "Could not find the server address"
+msgstr "Não foi possível encontrar o endereço do servidor"
+
+#: zlibrary/api.lua:22
+msgid "This Z-library server is refusing automated access"
+msgstr "Este servidor Z-library está a recusar o acesso automático"
+
+#: zlibrary/api.lua:28
+msgid "Credentials rejected or invalid response"
+msgstr "Credenciais rejeitadas ou resposta inválida"
+
+#: zlibrary/api.lua:481 zlibrary/api.lua:542
+msgid "Request timed out - please check your connection and try again"
+msgstr ""
+"O limite de tempo do pedido foi excedido - por favor, verifique a sua "
+"ligação e tente novamente"
+
+#: zlibrary/api.lua:483 zlibrary/ui.lua:833
+msgid "Network request failed"
+msgstr "O pedido de rede falhou"
+
+#: zlibrary/api.lua:553
+msgid "The Z-library address may be wrong or no longer exist."
+msgstr "O endereço da Z-library pode estar incorreto ou já não existir."
+
+#: zlibrary/api.lua:555
+msgid ""
+"Network connection error - please check your internet connection and try "
+"again"
+msgstr ""
+"Erro de ligação de rede - por favor, verifique a sua ligação à Internet e "
+"tente novamente"
+
+#: zlibrary/api.lua:609 zlibrary/api.lua:619
+msgid "Too many redirects"
+msgstr "Demasiados redirecionamentos"
+
+#: zlibrary/api.lua:648
+msgid "Try a different Z-library server."
+msgstr "Tente um servidor Z-library diferente."
+
+#: zlibrary/api.lua:655 zlibrary/api.lua:950
+msgid "HTTP Error"
+msgstr "Erro HTTP"
+
+#: zlibrary/api.lua:655
+msgid "Unknown Status"
+msgstr "Estado desconhecido"
+
+#: zlibrary/api.lua:671 zlibrary/api.lua:764
+msgid ""
+"The Z-library server address (URL) is not set. Please configure it in the "
+"Z-library plugin settings."
+msgstr ""
+"O endereço do servidor Z-library (URL) não está definido. Por favor, "
+"configure-o nas definições do plugin Z-library."
+
+#: zlibrary/api.lua:708
+msgid "Login failed: Empty response from server"
+msgstr "Falha ao iniciar sessão: Resposta ausente do servidor"
+
+#: zlibrary/api.lua:720
+msgid "Login failed: Invalid response format"
+msgstr "Falha ao iniciar sessão: Formato de resposta inválido"
+
+#: zlibrary/api.lua:732 zlibrary/api.lua:747
+msgid "Login failed"
+msgstr "Falha ao iniciar sessão"
+
+#: zlibrary/api.lua:738
+msgid "Login failed: Invalid session data"
+msgstr "Falha ao iniciar sessão: Dados de sessão inválidos"
+
+#: zlibrary/api.lua:828
+msgid "No response received from server - please try again"
+msgstr "Nenhuma resposta recebida do servidor - por favor, tente novamente"
+
+#: zlibrary/api.lua:838
+msgid "Invalid response format from server"
+msgstr "Formato de resposta inválido do servidor"
+
+#: zlibrary/api.lua:846
+msgid "Search API error"
+msgstr "Erro da API de pesquisa"
+
+#: zlibrary/api.lua:900 zlibrary/api.lua:979
+msgid "Failed to open target file"
+msgstr "Falha ao abrir o ficheiro de destino"
+
+#: zlibrary/api.lua:900 zlibrary/api.lua:960 zlibrary/api.lua:979
+#: zlibrary/discovery.lua:194 zlibrary/discovery.lua:336
+msgid "Unknown error"
+msgstr "Erro desconhecido"
+
+#: zlibrary/api.lua:943
+msgid "Download limit reached or file is an HTML page"
+msgstr "Limite de transferências atingido ou o ficheiro é uma página HTML"
+
+#: zlibrary/api.lua:960
+msgid "Failed to save downloaded file"
+msgstr "Falha ao guardar o ficheiro transferido"
+
+#: zlibrary/api.lua:1010
+msgid "Download HTTP Error"
+msgstr "Erro HTTP de transferência"
+
+#: zlibrary/api.lua:1025 zlibrary/api.lua:1068 zlibrary/api.lua:1226
+#: zlibrary/api.lua:1273 zlibrary/api.lua:1326 zlibrary/api.lua:1378
+#: zlibrary/api.lua:1421 zlibrary/api.lua:1464 zlibrary/api.lua:1505
+#: zlibrary/api.lua:1546
+msgid "Z-library server URL not configured."
+msgstr "URL do servidor Z-library não configurado."
+
+#: zlibrary/api.lua:1046
+msgid "Failed to fetch recommended books (no response body)."
+msgstr "Falha ao obter os livros recomendados (sem corpo de resposta)."
+
+#: zlibrary/api.lua:1052
+msgid "Failed to parse recommended books response."
+msgstr "Falha ao analisar a resposta dos livros recomendados."
+
+#: zlibrary/api.lua:1057
+msgid "API returned an error for recommended books."
+msgstr "A API devolveu um erro para os livros recomendados."
+
+#: zlibrary/api.lua:1089
+msgid "Failed to fetch most popular books (no response body)."
+msgstr "Falha ao obter os livros mais populares (sem corpo de resposta)."
+
+#: zlibrary/api.lua:1095
+msgid "Failed to parse most popular books response."
+msgstr "Falha ao analisar a resposta dos livros mais populares."
+
+#: zlibrary/api.lua:1100
+msgid "API returned an error for most popular books."
+msgstr "A API devolveu um erro para os livros mais populares."
+
+#: zlibrary/api.lua:1111 zlibrary/api.lua:1161 zlibrary/api.lua:1648
+msgid "Z-library server URL not configured or book identifiers missing."
+msgstr ""
+"URL do servidor Z-library não configurado ou identificadores do livro em "
+"falta."
+
+#: zlibrary/api.lua:1134
+msgid "Failed to fetch book details (no response body)."
+msgstr "Falha ao obter os detalhes do livro (sem corpo de resposta)."
+
+#: zlibrary/api.lua:1140
+msgid "Failed to parse book details response."
+msgstr "Falha ao analisar a resposta dos detalhes do livro."
+
+#: zlibrary/api.lua:1145
+msgid "API returned an error for book details."
+msgstr "A API devolveu um erro para os detalhes do livro."
+
+#: zlibrary/api.lua:1151
+msgid "Failed to process book details."
+msgstr "Falha ao processar os detalhes do livro."
+
+#: zlibrary/api.lua:1184
+msgid "Failed to fetch download link (no response body)."
+msgstr "Falha ao obter a ligação de transferência (sem corpo de resposta)."
+
+#: zlibrary/api.lua:1190
+msgid "Failed to parse download link response."
+msgstr "Falha ao analisar a resposta da ligação de transferência."
+
+#: zlibrary/api.lua:1195
+msgid "API returned an error for download link."
+msgstr "A API devolveu um erro para a ligação de transferência."
+
+#: zlibrary/api.lua:1208 zlibrary/download.lua:266
+msgid "Download limit reached. Please try again later or check your account."
+msgstr ""
+"Limite de transferências atingido. Por favor, tente mais tarde ou verifique "
+"a sua conta."
+
+#: zlibrary/api.lua:1210
+msgid "No download link provided in API response."
+msgstr "Nenhuma ligação de transferência fornecida na resposta da API."
+
+#: zlibrary/api.lua:1248
+msgid "Failed to fetch similar books (no response body)."
+msgstr "Falha ao obter livros semelhantes (sem corpo de resposta)."
+
+#: zlibrary/api.lua:1254
+msgid "Failed to parse similar books response."
+msgstr "Falha ao analisar a resposta dos livros semelhantes."
+
+#: zlibrary/api.lua:1259
+msgid "API returned an error for similar books."
+msgstr "A API devolveu um erro para os livros semelhantes."
+
+#: zlibrary/api.lua:1295
+msgid "Failed to fetch downloaded books (no response body)."
+msgstr "Falha ao obter os livros transferidos (sem corpo de resposta)."
+
+#: zlibrary/api.lua:1302
+msgid "Failed to parse downloaded books response."
+msgstr "Falha ao analisar a resposta dos livros transferidos."
+
+#: zlibrary/api.lua:1307
+msgid "API returned an error for downloaded books."
+msgstr "A API devolveu um erro para os livros transferidos."
+
+#: zlibrary/api.lua:1348
+msgid "Failed to fetch favorite books (no response body)."
+msgstr "Falha ao obter os livros favoritos (sem corpo de resposta)."
+
+#: zlibrary/api.lua:1354
+msgid "Failed to parse favorite books response."
+msgstr "Falha ao analisar a resposta dos livros favoritos."
+
+#: zlibrary/api.lua:1359
+msgid "API returned an error for favorite books."
+msgstr "A API devolveu um erro para os livros favoritos."
+
+#: zlibrary/api.lua:1400
+msgid "Failed to remove the book from downloaded (no response body)."
+msgstr "Falha ao remover o livro dos transferidos (sem corpo de resposta)."
+
+#: zlibrary/api.lua:1406
+msgid "Failed to parse the remove from downloaded response."
+msgstr "Falha ao analisar a resposta de remoção dos transferidos."
+
+#: zlibrary/api.lua:1411
+msgid "API returned an error for remove from downloaded."
+msgstr "A API devolveu um erro para a remoção dos transferidos."
+
+#: zlibrary/api.lua:1443
+msgid "Failed to fetch unfavorite book (no response body)."
+msgstr ""
+"Falha ao obter o livro removido dos favoritos (sem corpo de resposta)."
+
+#: zlibrary/api.lua:1449
+msgid "Failed to parse unfavorite book response."
+msgstr "Falha ao analisar a resposta de remoção dos favoritos."
+
+#: zlibrary/api.lua:1454
+msgid "API returned an error for unfavorite book."
+msgstr "A API devolveu um erro para a remoção dos favoritos."
+
+#: zlibrary/api.lua:1484
+msgid "Failed to fetch download quota status (no response body)."
+msgstr ""
+"Falha ao obter o estado da quota de transferência (sem corpo de resposta)."
+
+#: zlibrary/api.lua:1490
+msgid "Failed to parse download quota status response."
+msgstr "Falha ao analisar a resposta do estado da quota de transferência."
+
+#: zlibrary/api.lua:1495
+msgid "API returned an error for download quota status."
+msgstr "A API devolveu um erro para o estado da quota de transferência."
+
+#: zlibrary/api.lua:1525
+msgid "Failed to fetch favorite-book IDs (no response body)."
+msgstr "Falha ao obter os IDs dos livros favoritos (sem corpo de resposta)."
+
+#: zlibrary/api.lua:1531
+msgid "Failed to parse favorite-book IDs."
+msgstr "Falha ao analisar os IDs dos livros favoritos."
+
+#: zlibrary/api.lua:1536
+msgid "API returned an error for favorite-book IDs."
+msgstr "A API devolveu um erro para os IDs dos livros favoritos."
+
+#: zlibrary/api.lua:1568
+msgid "Failed to fetch favorite book (no response body)."
+msgstr "Falha ao obter o livro favorito (sem corpo de resposta)."
+
+#: zlibrary/api.lua:1574
+msgid "Failed to parse favorite book response."
+msgstr "Falha ao analisar a resposta do livro favorito."
+
+#: zlibrary/api.lua:1579
+msgid "API returned an error for favorite book."
+msgstr "A API devolveu um erro para o livro favorito."
+
+#: zlibrary/api.lua:1677
+msgid "Failed to fetch book comments (no response body)."
+msgstr "Falha ao obter os comentários do livro (sem corpo de resposta)."
+
+#: zlibrary/api.lua:1685
+msgid "Failed to parse book comments response."
+msgstr "Falha ao analisar a resposta dos comentários do livro."
+
+#: zlibrary/api.lua:1692
+msgid "API returned an error for book comments."
+msgstr "A API devolveu um erro para os comentários do livro."
+
+#: zlibrary/bookdetails_dialog.lua:334 zlibrary/bookdetails_dialog.lua:355
+#: zlibrary/bookdetails_dialog.lua:572
+msgid "Profile"
+msgstr "Perfil"
+
+#: zlibrary/bookdetails_dialog.lua:356
+msgid "No description available"
+msgstr "Nenhuma descrição disponível"
+
+#: zlibrary/bookdetails_dialog.lua:450
+msgid "pages"
+msgstr "páginas"
+
+#: zlibrary/bookdetails_dialog.lua:480
+msgid "Cover"
+msgstr "Capa"
+
+#: zlibrary/bookdetails_dialog.lua:532 zlibrary/bookdetails_dialog.lua:606
+#: zlibrary/discovery.lua:350 zlibrary/ui.lua:778
+msgid "Back"
+msgstr "Voltar"
+
+#: zlibrary/bookdetails_dialog.lua:540 zlibrary/multisearch_dialog.lua:390
+msgid "More Similar Books"
+msgstr "Mais livros semelhantes"
+
+#: zlibrary/bookdetails_dialog.lua:551 zlibrary/ui.lua:658 zlibrary/ui.lua:665
+msgid "Download"
+msgstr "Transferir"
+
+#: zlibrary/bookdetails_dialog.lua:556
+msgid "Format"
+msgstr "Formato"
+
+#: zlibrary/bookdetails_dialog.lua:562 zlibrary/multisearch_dialog.lua:403
+msgid "Download book"
+msgstr "Transferir livro"
+
+#: zlibrary/bookdetails_dialog.lua:597
+msgid "Refresh"
+msgstr "Atualizar"
+
+#: zlibrary/bookdetails_dialog.lua:656
+msgid "Remove From Favorites"
+msgstr "Remover dos favoritos"
+
+#: zlibrary/bookdetails_dialog.lua:656
+msgid "Add To Favorites"
+msgstr "Adicionar aos favoritos"
+
+#: zlibrary/bookdetails_dialog.lua:721
+msgid "No Comments"
+msgstr "Sem comentários"
+
+#: zlibrary/config.lua:322
+msgid "Best match"
+msgstr "Melhor correspondência"
+
+#: zlibrary/config.lua:323
+msgid "Recently added"
+msgstr "Adicionados recentemente"
+
+#: zlibrary/config.lua:324 zlibrary/config.lua:325
+#: zlibrary/multisearch_dialog.lua:369
+msgid "Title"
+msgstr "Título"
+
+#: zlibrary/config.lua:326
+msgid "Year"
+msgstr "Ano"
+
+#: zlibrary/config.lua:327 zlibrary/config.lua:328
+msgid "File size"
+msgstr "Tamanho do ficheiro"
+
+#: zlibrary/config.lua:761
+msgid "Default"
+msgstr "Predefinição"
+
+#: zlibrary/config.lua:845
+#, lua-format
+msgid "%ds"
+msgstr "%ds"
+
+#: zlibrary/config.lua:852 zlibrary/ui.lua:930 zlibrary/ui.lua:963
+msgid "infinite"
+msgstr "infinito"
+
+#: zlibrary/config.lua:853
+#, lua-format
+msgid "Block: %ds, Total: %s"
+msgstr "Bloco: %ds, Total: %s"
+
+#: zlibrary/discovery.lua:71
+msgid "Operation failed, please retry."
+msgstr "A operação falhou, por favor tente novamente."
+
+#: zlibrary/discovery.lua:79
+msgid "Fetching domains..."
+msgstr "A obter os domínios..."
+
+#: zlibrary/discovery.lua:111
+msgid "Successfully set base URL to: "
+msgstr "URL base definido com sucesso para: "
+
+#: zlibrary/discovery.lua:118
+msgid "Failed to find a working base URL."
+msgstr "Falha ao encontrar um URL base funcional."
+
+#: zlibrary/discovery.lua:124
+msgid "Queued"
+msgstr "Em fila de espera"
+
+#: zlibrary/discovery.lua:129
+msgid "Selection copied to clipboard."
+msgstr "Seleção copiada para a área de transferência."
+
+#: zlibrary/discovery.lua:162
+msgid "Checking"
+msgstr "A verificar"
+
+#: zlibrary/discovery.lua:188 zlibrary/discovery.lua:264
+#: zlibrary/discovery.lua:330
+msgid "Invalid Base URL."
+msgstr "URL base inválido."
+
+#: zlibrary/discovery.lua:192 zlibrary/discovery.lua:334
+msgid "Failed"
+msgstr "Falhou"
+
+#: zlibrary/discovery.lua:238
+msgid "Searching for working Z-library server..."
+msgstr "A procurar um servidor Z-library funcional..."
+
+#: zlibrary/discovery.lua:245 zlibrary/discovery.lua:253
+msgid "Current Base URL:"
+msgstr "URL base atual:"
+
+#: zlibrary/discovery.lua:268 zlibrary/discovery.lua:283
+msgid "Mirror site redirected to: "
+msgstr "Site espelho redirecionado para: "
+
+#: zlibrary/discovery.lua:298 zlibrary/ui.lua:891
+msgid "Auto-discover base URL"
+msgstr "Descobrir URL base automaticamente"
+
+#: zlibrary/discovery.lua:301 zlibrary/discovery.lua:346
+msgid "Network unavailable."
+msgstr "Rede indisponível."
+
+#: zlibrary/discovery.lua:302 zlibrary/discovery.lua:345
+msgid "Discovery is already running..."
+msgstr "A descoberta já está em execução..."
+
+#: zlibrary/discovery.lua:344
+msgid "Refresh Dynamic Domains"
+msgstr "Atualizar domínios dinâmicos"
+
+#: zlibrary/download.lua:70
+msgid "This book's file type is unknown, so it cannot be downloaded."
+msgstr ""
+"O tipo de ficheiro deste livro é desconhecido, pelo que não pode ser "
+"transferido."
+
+#: zlibrary/download.lua:106
+msgid "Book identifiers missing. Cannot download."
+msgstr "Faltam os identificadores do livro. Não é possível transferir."
+
+#: zlibrary/download.lua:135
+#, lua-format
+msgid "Cannot create downloads directory: %s"
+msgstr "Não é possível criar o diretório de transferências: %s"
+
+#: zlibrary/download.lua:231
+msgid "Could not open reader UI."
+msgstr "Não foi possível abrir a interface de leitura."
+
+#: zlibrary/download.lua:248 zlibrary/download.lua:309
+#: zlibrary/download.lua:321 zlibrary/download.lua:327
+msgid "Download failed: Unknown error"
+msgstr "A transferência falhou: Erro desconhecido"
+
+#: zlibrary/download.lua:271 zlibrary/ui.lua:1100
+msgid "Book download"
+msgstr "Transferência do livro"
+
+#: zlibrary/download.lua:275
+msgid "Retrying download… (tap to cancel)"
+msgstr "A tentar transferir novamente… (toque para cancelar)"
+
+#: zlibrary/download.lua:320
+msgid "Download cancelled."
+msgstr "Transferência cancelada."
+
+#: zlibrary/multisearch_dialog.lua:252
+msgid "Untitled"
+msgstr "Sem título"
+
+#: zlibrary/multisearch_dialog.lua:253 zlibrary/ui.lua:524
+msgid "Unknown Author"
+msgstr "Autor desconhecido"
+
+#: zlibrary/multisearch_dialog.lua:379
+msgid "Author"
+msgstr "Autor"
+
+#: zlibrary/ota.lua:211
+msgid "Update failed: Could not determine where to install the plugin."
+msgstr ""
+"A atualização falhou: Não foi possível determinar onde instalar o plugin."
+
+#: zlibrary/ota.lua:215
+msgid "Installing update..."
+msgstr "A instalar a atualização..."
+
+#: zlibrary/ota.lua:231
+msgid "Update installation failed."
+msgstr "A instalação da atualização falhou."
+
+#: zlibrary/ota.lua:244
+msgid ""
+"Update installed successfully. Please restart KOReader for changes to take "
+"effect."
+msgstr ""
+"Atualização instalada com sucesso. Por favor, reinicie o KOReader para que "
+"as alterações surtam efeito."
+
+#: zlibrary/ota.lua:259
+msgid "Update check failed: Could not determine plugin location."
+msgstr ""
+"Falha ao procurar atualizações: Não foi possível determinar a localização do"
+" plugin."
+
+#: zlibrary/ota.lua:264
+#, lua-format
+msgid ""
+"Unsupported plugin path for OTA update: %s. Only 'plugins/zlibrary.koplugin'"
+" is supported."
+msgstr ""
+"Caminho do plugin não suportado para atualização OTA: %s. Apenas "
+"'plugins/zlibrary.koplugin' é suportado."
+
+#: zlibrary/ota.lua:270
+msgid "Checking for updates..."
+msgstr "A procurar atualizações..."
+
+#: zlibrary/ota.lua:276
+msgid "Failed to check for updates. Please check your internet connection."
+msgstr ""
+"Falha ao procurar atualizações. Por favor, verifique a sua ligação à "
+"Internet."
+
+#: zlibrary/ota.lua:283
+msgid "Could not find update information (invalid data format)."
+msgstr ""
+"Não foi possível encontrar a informação de atualização (formato de dados "
+"inválido)."
+
+#: zlibrary/ota.lua:292
+msgid "Could not find update version information."
+msgstr "Não foi possível encontrar a informação da versão de atualização."
+
+#: zlibrary/ota.lua:299
+msgid "Could not understand the update version format."
+msgstr "Não foi possível compreender o formato da versão de atualização."
+
+#: zlibrary/ota.lua:306
+msgid "Could not find update files."
+msgstr "Não foi possível encontrar os ficheiros de atualização."
+
+#: zlibrary/ota.lua:313
+msgid "Could not find a download link for the update."
+msgstr ""
+"Não foi possível encontrar uma ligação de transferência para a atualização."
+
+#: zlibrary/ota.lua:331
+#, lua-format
+msgid "You are already on the latest version (%s) or newer."
+msgstr "Já se encontra na versão mais recente (%s) ou superior."
+
+#: zlibrary/ota.lua:333
+#, lua-format
+msgid ""
+"Could not determine your current version, but the latest is %s. If you "
+"recently updated, you might be up-to-date."
+msgstr ""
+"Não foi possível determinar a sua versão atual, mas a mais recente é a %s. "
+"Se atualizou recentemente, poderá estar atualizado."
+
+#: zlibrary/ota.lua:340
+#, lua-format
+msgid "New version available: %s (you have %s). Download and install?"
+msgstr "Nova versão disponível: %s (tem a %s). Transferir e instalar?"
+
+#: zlibrary/ota.lua:342
+msgid "an older version"
+msgstr "uma versão mais antiga"
+
+#: zlibrary/ota.lua:346
+msgid "Update available"
+msgstr "Atualização disponível"
+
+#: zlibrary/ota.lua:348
+msgid "Update"
+msgstr "Atualizar"
+
+#: zlibrary/ota.lua:349 zlibrary/ui.lua:324 zlibrary/ui.lua:387
+#: zlibrary/ui.lua:511 zlibrary/ui.lua:623 zlibrary/ui.lua:630
+#: zlibrary/ui.lua:642 zlibrary/ui.lua:649 zlibrary/ui.lua:660
+#: zlibrary/ui.lua:667 zlibrary/ui.lua:876 zlibrary/ui.lua:999
+#: zlibrary/ui.lua:1135 zlibrary/ui.lua:1242
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: zlibrary/ota.lua:351
+msgid "Downloading update..."
+msgstr "A transferir a atualização..."
+
+#: zlibrary/ota.lua:361
+msgid "Download failed. Please try again later."
+msgstr "A transferência falhou. Por favor, tente mais tarde."
+
+#: zlibrary/ui.lua:88
+msgid "Downloading… (tap to cancel)"
+msgstr "A transferir… (toque para cancelar)"
+
+#: zlibrary/ui.lua:158 zlibrary/ui.lua:165 zlibrary/ui.lua:724
+msgid "Close"
+msgstr "Fechar"
+
+#: zlibrary/ui.lua:175
+msgid "Select Z-library Download Directory"
+msgstr "Selecionar o diretório de transferências da Z-library"
+
+#: zlibrary/ui.lua:179
+#, lua-format
+msgid "Download directory set to: %s"
+msgstr "Diretório de transferências definido para: %s"
+
+#: zlibrary/ui.lua:181
+msgid "No directory selected."
+msgstr "Nenhum diretório selecionado."
+
+#: zlibrary/ui.lua:304
+#, lua-format
+msgid "%d items selected for %s."
+msgstr "%d itens selecionados para %s."
+
+#: zlibrary/ui.lua:306 zlibrary/ui.lua:310
+#, lua-format
+msgid "Filter cleared for %s."
+msgstr "Filtro limpo para %s."
+
+#: zlibrary/ui.lua:320 zlibrary/ui.lua:339
+msgid "Filter"
+msgstr "Filtro"
+
+#: zlibrary/ui.lua:331
+msgid "Show all"
+msgstr "Mostrar tudo"
+
+#: zlibrary/ui.lua:392
+msgid "Set"
+msgstr "Definir"
+
+#: zlibrary/ui.lua:399 zlibrary/ui.lua:406 zlibrary/ui.lua:1199
+#: zlibrary/ui.lua:1261 zlibrary/ui.lua:1269
+msgid "Setting saved successfully!"
+msgstr "Definição guardada com sucesso!"
+
+#: zlibrary/ui.lua:409
+msgid "Setting cleared."
+msgstr "Definição limpa."
+
+#: zlibrary/ui.lua:444
+msgid "Set languages"
+msgstr "Definir idiomas"
+
+#: zlibrary/ui.lua:447
+#, lua-format
+msgid "Language: %s"
+msgstr "Idioma: %s"
+
+#: zlibrary/ui.lua:449
+#, lua-format
+msgid "Languages (%d)"
+msgstr "Idiomas (%d)"
+
+#: zlibrary/ui.lua:453
+msgid "Set formats"
+msgstr "Definir formatos"
+
+#: zlibrary/ui.lua:458
+#, lua-format
+msgid "Format: %s"
+msgstr "Formato: %s"
+
+#: zlibrary/ui.lua:463
+#, lua-format
+msgid "Formats (%d)"
+msgstr "Formatos (%d)"
+
+#: zlibrary/ui.lua:468
+msgid "Search Z-library"
+msgstr "Pesquisar na Z-library"
+
+#: zlibrary/ui.lua:478
+msgid "Please enter a search term."
+msgstr "Por favor, introduza um termo de pesquisa."
+
+#: zlibrary/ui.lua:487 zlibrary/ui.lua:571
+msgid "Sort by"
+msgstr "Ordenar por"
+
+#: zlibrary/ui.lua:522 zlibrary/ui.lua:617
+msgid "Unknown Title"
+msgstr "Título desconhecido"
+
+#: zlibrary/ui.lua:537
+msgid "Rating"
+msgstr "Classificação"
+
+#: zlibrary/ui.lua:570
+msgid "Search Results"
+msgstr "Resultados da pesquisa"
+
+#: zlibrary/ui.lua:617
+#, lua-format
+msgid "Remove \"%s\" from your downloaded books?"
+msgstr "Remover \"%s\" dos seus livros transferidos?"
+
+#: zlibrary/ui.lua:621 zlibrary/ui.lua:628
+msgid "Remove"
+msgstr "Remover"
+
+#: zlibrary/ui.lua:636
+msgid "Clear your stored username and password?"
+msgstr "Limpar o nome de utilizador e a palavra-passe guardados?"
+
+#: zlibrary/ui.lua:640 zlibrary/ui.lua:647
+msgid "Clear"
+msgstr "Limpar"
+
+#: zlibrary/ui.lua:657 zlibrary/ui.lua:664
+#, lua-format
+msgid "Download \"%s\"?"
+msgstr "Transferir \"%s\"?"
+
+#: zlibrary/ui.lua:689
+#, lua-format
+msgid "\"%s\" downloaded."
+msgstr "\"%s\" transferido."
+
+#: zlibrary/ui.lua:699
+msgid "Book downloaded successfully. Open it now?"
+msgstr "Livro transferido com sucesso. Abri-lo agora?"
+
+#: zlibrary/ui.lua:707
+msgid "Turn off Wi-Fi after closing this dialog"
+msgstr "Desligar o Wi-Fi após fechar esta caixa de diálogo"
+
+#: zlibrary/ui.lua:720
+msgid "Open book"
+msgstr "Abrir livro"
+
+#: zlibrary/ui.lua:754
+#, lua-format
+msgid ""
+"No %s found, please try again. Sometimes this requires a couple of retries."
+msgstr ""
+"Nenhum %s encontrado, por favor tente novamente. Por vezes, isto requer "
+"algumas tentativas."
+
+#: zlibrary/ui.lua:759
+msgid "Z-library Similar Books"
+msgstr "Livros semelhantes da Z-library"
+
+#: zlibrary/ui.lua:776
+msgid "Book Details"
+msgstr "Detalhes do livro"
+
+#: zlibrary/ui.lua:790
+#, lua-format
+msgid "Retrying search for \"%s\"..."
+msgstr "A tentar pesquisar novamente por \"%s\"..."
+
+#: zlibrary/ui.lua:806 zlibrary/ui.lua:1060
+msgid "Book search"
+msgstr "Pesquisa de livros"
+
+#: zlibrary/ui.lua:828
+msgid "Request timed out"
+msgstr "O limite de tempo do pedido foi excedido"
+
+#: zlibrary/ui.lua:832
+msgid "Network connection error"
+msgstr "Erro de ligação de rede"
+
+#: zlibrary/ui.lua:856
+#, lua-format
+msgid "Could not complete \"%s\" due to a timeout%s. Would you like to retry?"
+msgstr ""
+"Não foi possível concluir \"%s\" devido a um limite de tempo excedido%s. "
+"Deseja tentar novamente?"
+
+#: zlibrary/ui.lua:858
+#, lua-format
+msgid ""
+"Could not complete \"%s\" because the server address could not be found. "
+"Would you like to retry?"
+msgstr ""
+"Não foi possível concluir \"%s\" porque não foi possível encontrar o "
+"endereço do servidor. Deseja tentar novamente?"
+
+#: zlibrary/ui.lua:860
+#, lua-format
+msgid "Could not complete \"%s\" due to a network error. Would you like to retry?"
+msgstr ""
+"Não foi possível concluir \"%s\" devido a um erro de rede. Deseja tentar "
+"novamente?"
+
+#: zlibrary/ui.lua:869
+#, lua-format
+msgid ""
+"Could not complete \"%s\" due to a temporary issue. Would you like to retry?"
+msgstr ""
+"Não foi possível concluir \"%s\" devido a um problema temporário. Deseja "
+"tentar novamente?"
+
+#: zlibrary/ui.lua:875 zlibrary/ui.lua:891
+msgid "Retry"
+msgstr "Tentar novamente"
+
+#: zlibrary/ui.lua:929 zlibrary/ui.lua:939
+#, lua-format
+msgid "Block timeout: %s"
+msgstr "Tempo limite de bloco: %s"
+
+#: zlibrary/ui.lua:930 zlibrary/ui.lua:963
+#, lua-format
+msgid "Total timeout: %s"
+msgstr "Tempo limite total: %s"
+
+#: zlibrary/ui.lua:943
+#, lua-format
+msgid "Set %s block timeout (seconds)"
+msgstr "Definir limite de tempo de bloco para %s (segundos)"
+
+#: zlibrary/ui.lua:954
+msgid "Please enter a valid number (minimum 1 second)"
+msgstr "Por favor, introduza um número válido (mínimo de 1 segundo)"
+
+#: zlibrary/ui.lua:967
+#, lua-format
+msgid "Set %s total timeout (seconds, -1 for infinite)"
+msgstr "Definir limite de tempo total para %s (segundos, -1 para infinito)"
+
+#: zlibrary/ui.lua:978
+msgid "Please enter a valid number (minimum 1 second or -1 for infinite)"
+msgstr ""
+"Por favor, introduza um número válido (mínimo de 1 segundo ou -1 para "
+"infinito)"
+
+#: zlibrary/ui.lua:991
+msgid "Reset to defaults"
+msgstr "Repor predefinições"
+
+#: zlibrary/ui.lua:997
+#, lua-format
+msgid "Reset %s timeouts to default values?"
+msgstr "Repor os limites de tempo de %s para os valores predefinidos?"
+
+#: zlibrary/ui.lua:998
+msgid "Reset"
+msgstr "Repor"
+
+#: zlibrary/ui.lua:1003
+msgid "Timeout settings reset to defaults"
+msgstr "Definições de limite de tempo repostas para as predefinições"
+
+#: zlibrary/ui.lua:1011
+#, lua-format
+msgid "%s Timeout Settings"
+msgstr "Definições de limite de tempo para %s"
+
+#: zlibrary/ui.lua:1045
+msgid "Login timeouts"
+msgstr "Limites de tempo de início de sessão"
+
+#: zlibrary/ui.lua:1055
+msgid "Search timeouts"
+msgstr "Limites de tempo de pesquisa"
+
+#: zlibrary/ui.lua:1065
+msgid "Book details timeouts"
+msgstr "Limites de tempo de detalhes do livro"
+
+#: zlibrary/ui.lua:1075
+msgid "Recommended books timeouts"
+msgstr "Limites de tempo de livros recomendados"
+
+#: zlibrary/ui.lua:1085
+msgid "Popular books timeouts"
+msgstr "Limites de tempo de livros populares"
+
+#: zlibrary/ui.lua:1090
+msgid "Popular books"
+msgstr "Livros populares"
+
+#: zlibrary/ui.lua:1095
+msgid "Download timeouts"
+msgstr "Limites de tempo de transferência"
+
+#: zlibrary/ui.lua:1105
+msgid "Cover download timeouts"
+msgstr "Limites de tempo de transferência de capa"
+
+#: zlibrary/ui.lua:1110
+msgid "Cover download"
+msgstr "Transferência de capa"
+
+#: zlibrary/ui.lua:1128
+msgid "Reset all timeouts to defaults"
+msgstr "Repor todos os limites de tempo para as predefinições"
+
+#: zlibrary/ui.lua:1133
+msgid "Reset all timeout settings to default values?"
+msgstr ""
+"Repor todas as definições de limite de tempo para os valores predefinidos?"
+
+#: zlibrary/ui.lua:1134
+msgid "Reset All"
+msgstr "Repor tudo"
+
+#: zlibrary/ui.lua:1145
+msgid "All timeout settings reset to defaults"
+msgstr "Todas as definições de limite de tempo repostas para as predefinições"
+
+#: zlibrary/ui.lua:1155
+msgid "Timeout Settings"
+msgstr "Definições de limite de tempo"
+
+#: zlibrary/ui.lua:1232
+msgid "Email Address"
+msgstr "Endereço de e-mail"
+
+#: zlibrary/ui.lua:1236
+msgid "Password"
+msgstr "Palavra-passe"
+
+#: zlibrary/ui.lua:1238
+msgid "Enter password"
+msgstr "Introduzir palavra-passe"
+
+#: zlibrary/ui.lua:1248
+msgid "Set and verify"
+msgstr "Definir e verificar"
+
+#: zlibrary/ui.lua:1254
+msgid "Please fill in all fields"
+msgstr "Por favor, preencha todos os campos"

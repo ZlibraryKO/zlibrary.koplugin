@@ -925,10 +925,16 @@ function Zlibrary:_promptForCredentials(on_done)
     local checking = false
     local dialog
 
-    local function settle()
+    -- my_waiters is captured when the settle is scheduled, not read from the slot at run time:
+    -- in the one-tick window after UIManager:close, a new caller can already have passed through
+    -- the stale-recovery branch above, which drained these waiters and installed a fresh
+    -- prompt's list. A slot that no longer holds our list belongs to that prompt, and draining
+    -- it would resolve its callers with this prompt's answer.
+    local function settle(my_waiters)
         if settled then return end
         settled = true
-        local waiters = credential_prompt.waiters or {}
+        if credential_prompt.waiters ~= my_waiters then return end
+        local waiters = my_waiters or {}
         -- Release the slot before dispatching, so a waiter that wants a fresh prompt gets one
         -- instead of queueing behind the prompt that just closed.
         credential_prompt.waiters, credential_prompt.dialog = nil, nil
@@ -936,6 +942,14 @@ function Zlibrary:_promptForCredentials(on_done)
     end
 
     local function store(email, password)
+        -- Signing in as a different account must drop the previous one's caches: the
+        -- multi_search lists and favourite state are served from cache before any fetch, so
+        -- otherwise the new account keeps seeing the old reader's books until the TTLs lapse.
+        -- Same reasoning as Config.clearCredentials calling Config.clearPersonalCaches.
+        local previous = Config.getSetting(Config.SETTINGS_USERNAME_KEY)
+        if previous and previous ~= "" and previous ~= email then
+            Config.clearPersonalCaches()
+        end
         Config.saveSetting(Config.SETTINGS_USERNAME_KEY, email)
         Config.saveSetting(Config.SETTINGS_PASSWORD_KEY, password)
         saved = true
@@ -993,6 +1007,10 @@ function Zlibrary:_promptForCredentials(on_done)
                 return
             end
 
+            -- transport. Unlike the ok branch, nothing has proven these credentials, so a
+            -- verdict landing after Cancel must change nothing: the stored password and the
+            -- session stay exactly as they are, and Cancel keeps meaning "change nothing".
+            if closed then return end
             storeUnchecked(email, password, T("Credentials saved, but they could not be checked right now."))
         end)
 
@@ -1003,7 +1021,7 @@ function Zlibrary:_promptForCredentials(on_done)
 
     dialog = Ui.showCredentialsDialog(submit, nil, { quiet_save = true })
 
-    if not dialog then settle() return end
+    if not dialog then settle(credential_prompt.waiters) return end
     credential_prompt.dialog = dialog
 
     -- Resolve on teardown rather than on a button: Cancel, a successful check, the hardware back
@@ -1014,8 +1032,10 @@ function Zlibrary:_promptForCredentials(on_done)
     function dialog:onCloseWidget()
         closed = true
         -- Next tick, so a resumed action paints its loading widget after UIManager has finished
-        -- tearing this dialog down rather than during it.
-        UIManager:nextTick(settle)
+        -- tearing this dialog down rather than during it. Capture our waiter list now: by the
+        -- time the tick runs, the slot may already belong to a fresh prompt (see settle).
+        local my_waiters = credential_prompt.waiters
+        UIManager:nextTick(function() settle(my_waiters) end)
         if inherited then return inherited(self) end
     end
 end

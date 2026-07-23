@@ -9,6 +9,7 @@ local Cache = require("zlibrary.cache")
 local Config = {
     _lua_settings = nil,
     _runtime_cache = nil,
+    _multi_search_cache = nil,
 }
 
 Config.SETTINGS_BASE_URL_KEY = "zlibrary_base_url"
@@ -64,6 +65,10 @@ Config.TIMEOUT_BOOK_COMMENTS = { 10, 15 } -- Comments operations
 
 function Config.loadCredentialsFromFile(plugin_path)
     Config._plugin_path = plugin_path
+    -- This flag lives on the module table, which survives plugin re-instantiation, so each load
+    -- attempt has to start clean: a file that no longer sets credentials must not keep reporting
+    -- that it does because some earlier load in this session set them.
+    Config._credentials_from_file = false
     local cred_file_path = plugin_path .. Config.CREDENTIALS_FILENAME
     local creds = LuaSettings:open(cred_file_path)
     if not creds.data or not next(creds.data) then
@@ -374,6 +379,18 @@ function Config.getConfigRuntimeCache()
         Config._runtime_cache = Cache:new{ name = "_runtime_cache" }
     end
     return Config._runtime_cache
+end
+
+-- Shared instance of the "multi_search" cache. Each KVCache holds its own in-memory copy of the
+-- file and flushes the whole thing on every insert/remove, so a second instance for the same
+-- name is not a shortcut to the same data -- it is a stale copy whose next flush resurrects
+-- whatever another writer just removed (clearPersonalCaches hitting a long-deleted dialog's
+-- instance was exactly that). Everyone touching this cache goes through here.
+function Config.getMultiSearchCache()
+    if not Config._multi_search_cache then
+        Config._multi_search_cache = Cache:new{ name = "multi_search" }
+    end
+    return Config._multi_search_cache
 end
 
 -- A forked child inherits a copy of the parent's in-memory settings but SHARES the file behind them.
@@ -725,7 +742,7 @@ function Config.clearPersonalCaches()
     runtime:remove("download_quota_status")
     runtime:remove("favorite_book_ids")
 
-    local multi_search = Cache:new{ name = "multi_search" }
+    local multi_search = Config.getMultiSearchCache()
     for _, key in ipairs({ "recommended", "favorites", "downloaded" }) do
         multi_search:remove(key)
     end

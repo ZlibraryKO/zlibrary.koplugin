@@ -64,7 +64,9 @@ function  Preloader.getDownloadQuotaStatus(callback)
         local task = function() return ApiHelper.fetchWithAuth(Api.getDownloadQuotaStatus) end
         Preloader.channel:pushTask(task, function(success, res)
                 local is_ok = false
-                if success and type(res) == "table" and type(res.quota_status) == "table" then
+                -- The account may have been cleared while the fetch ran; caching its quota now
+                -- would show it to whoever signs in next.
+                if success and Config.hasCredentials() and type(res) == "table" and type(res.quota_status) == "table" then
                         Config.getConfigRuntimeCache():insert("download_quota_status", res.quota_status)
                         is_ok = true
                 end
@@ -79,7 +81,9 @@ function  Preloader.getFavoriteBookIds(callback)
         local task = function() return ApiHelper.fetchWithAuth(Api.getFavoriteBookIds) end
         Preloader.channel:pushTask(task, function(success, res)
                 local is_ok = false
-                if success and type(res) == "table" and type(res.books) == "table" then
+                -- Same guard as the quota warmer above: credentials cleared mid-fetch means
+                -- these ids belong to an account that is gone, not to the next one.
+                if success and Config.hasCredentials() and type(res) == "table" and type(res.books) == "table" then
                         local book_ids = {}
                         for _, book in ipairs(res.books) do
                                 book_ids[tostring(book.id)] = true

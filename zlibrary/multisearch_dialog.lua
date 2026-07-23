@@ -14,7 +14,8 @@ local FrameContainer = require("ui/widget/container/framecontainer")
 local InputContainer = require("ui/widget/container/inputcontainer")
 local Screen = Device.screen
 local T = require("zlibrary.gettext")
-local Cache = require("zlibrary.cache")
+local Config = require("zlibrary.config")
+local PreLoader = require("zlibrary.preloader").Preloader
 local logger = require("logger")
 
 local SearchDialog = InputContainer:extend{
@@ -190,9 +191,16 @@ function SearchDialog:init()
         self.toggle_switch:disableFocusManagement(self[1])
     end
 
-    self._cache = Cache:new{
-        name = "multi_search"
-    }
+    -- The shared instance, not a private one: clearPersonalCaches removes this account's keys
+    -- through the same object, and a private copy would flush them back in afterwards.
+    self._cache = Config.getMultiSearchCache()
+end
+
+function SearchDialog:onCloseWidget()
+    -- Drop whatever the Preloader is still fetching for this screen, the same as the results
+    -- Menu does: a warmer that returns after close would otherwise insert into the caches
+    -- nobody is looking at anymore -- including the account that Clear credentials just removed.
+    if PreLoader and PreLoader.channel then PreLoader.channel:clearTasks() end
 end
 
 function SearchDialog:onKeyPress(key)

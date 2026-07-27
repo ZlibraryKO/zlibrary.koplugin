@@ -3,9 +3,11 @@ local UIManager = require("ui/uimanager")
 local buffer = require("string.buffer")
 local ffiUtil = require("ffi/util")
 local Device = require("device")
-local Trapper = require("ui/trapper")
 local coroutine = require("coroutine")
 local logger = require("logger")
+local Trapper = require("ui/trapper")
+local InfoMessage = require("ui/widget/infomessage")
+local T = require("zlibrary.gettext")
 
 local function safe_call(tag, func, ...)
     if type(func) ~= "function" then return true, nil end
@@ -19,14 +21,13 @@ end
 local Channel = {}
 Channel.__index = Channel
 
-function Channel:new(name, max_workers, shared_cache, on_finish)
+function Channel:new(name, max_workers, on_finish)
     local obj = setmetatable({}, self)
     obj.name = name
     obj.max_workers = max_workers or 1
     obj.active_workers = 0
     obj.session = 0
     obj.queue = {}
-    obj.cache = shared_cache
     obj.session_abort_hooks = {}
     obj.on_finish = on_finish
     return obj
@@ -35,14 +36,6 @@ end
 -- NetworkMgr:isConnected() not Work in task
 function Channel:pushTask(task_func, callback, opts)
     opts = opts or {}
-    local cache_key = opts.cache_key
-    if cache_key and self.cache[cache_key] then
-        UIManager:nextTick(function()
-            safe_call("on_start (cache)", opts.on_start)
-            safe_call("callback (cache)", callback, true, self.cache[cache_key], 0)
-        end)
-        return
-    end
     local task_node = {
         func = task_func,
         args = opts.args,
@@ -50,7 +43,6 @@ function Channel:pushTask(task_func, callback, opts)
         on_start = opts.on_start,
         timeout = opts.timeout,
         callback = callback,
-        cache_key = cache_key,
         returns_string = opts.returns_string or false,
         session = self.session,
         max_retries = opts.max_retries or 0,
@@ -118,9 +110,9 @@ function Channel:_processNext()
             if not completed then
                 success = false
                 final_error = tostring(ret1)
-            elseif ret1 == false then
+            elseif ret1 == false or ret1 == nil then
                 success = false
-                final_error = ret2 or "Task soft-failed without error message"
+                final_error = ret2 or "Task failed or returned nil"
             else
                 success = true
                 final_result = ret1
@@ -145,7 +137,9 @@ function Channel:_processNext()
         if #self.queue == 0 and self.active_workers == 0 then
             -- no tasks, restore CPU core
             pcall(function() Device:enableCPUCores(1) end)
-            if self.on_finish then
+            -- a stale worker draining after clearTasks() must not fire on_finish
+            -- a second time: the abort already fired it with aborted=true
+            if self.on_finish and task.session == self.session then
                 UIManager:nextTick(function()
                     if #self.queue == 0 and self.active_workers == 0 then
                         logger.dbg("Channel: Naturally drained:", self.name)
@@ -164,7 +158,10 @@ function Channel:_processNext()
         local need_pack = not task_returns_simple_string
         if task_returns_simple_string then
             if job_ok and type(r1) == "string" then
-                output_str = r1
+                -- wire format: a 1-byte flag ("1" = raw result string follows,
+                -- "0" = packed error follows) so the parent can tell a crash
+                -- apart from a successful string
+                output_str = "1" .. r1
                 need_pack = false
             else
                 -- error occurred, revert to batch mode
@@ -187,6 +184,9 @@ function Channel:_processNext()
                 logger.warn("Channel:_processNext - serialization failed:", str or "unknown error")
                 ret_tbl = { ok = false, r1 = "serialization_error", r2 = tostring(str) }
                 output_str = buffer.encode(ret_tbl) or ""
+            end
+            if task_returns_simple_string then
+                output_str = "0" .. output_str
             end 
         end
         ffiUtil.writeToFD(child_write_fd, output_str or "", true)
@@ -238,19 +238,38 @@ function Channel:_processNext()
         end
 
         local subprocess_done = ffiUtil.isSubProcessDone(pid)
-        local stuff_to_read = parent_read_fd and ffiUtil.getNonBlockingReadSize(parent_read_fd) ~= 0
 
-        if subprocess_done or stuff_to_read then
-            -- Subprocess is gone or nearly gone
+        -- Only read once the subprocess has finished: readAllFromFD blocks
+        -- until EOF (child closes its end), so reading while the child is
+        -- still running would freeze the UI inside this non-blocking poll.
+        if subprocess_done then
+            -- Subprocess is gone
             local ok, r1, r2 = false, nil, nil
-            
+            local stuff_to_read = parent_read_fd and ffiUtil.getNonBlockingReadSize(parent_read_fd) ~= 0
+
             if stuff_to_read then
                 local ret_str = ffiUtil.readAllFromFD(parent_read_fd) or ""
                 parent_read_fd = nil
-                
-                if ret_str ~= "" or (ret_str == "" and task_returns_simple_string and subprocess_done) then
+
+                if ret_str ~= "" or (ret_str == "" and task_returns_simple_string) then
                     if task_returns_simple_string then
-                        ok, r1, r2= true, ret_str, nil 
+                        -- 1-byte wire flag written by the child: "1" = raw result
+                        -- string follows, "0" = packed error (see _processNext)
+                        local wire_flag = ret_str:sub(1, 1)
+                        if wire_flag == "1" then
+                            ok, r1, r2 = true, ret_str:sub(2), nil
+                        elseif wire_flag == "0" then
+                            local dec_ok, ret_tbl = pcall(buffer.decode, ret_str:sub(2))
+                            if dec_ok and type(ret_tbl) == "table" then
+                                ok, r1, r2 = ret_tbl.ok, ret_tbl.r1, ret_tbl.r2
+                            else
+                                logger.warn("Channel:_processNext - malformed serialized data")
+                                ok, r1, r2 = false, "decode_error", nil
+                            end
+                        else
+                            logger.warn("Channel:_processNext - malformed serialized data")
+                            ok, r1, r2 = false, "decode_error", nil
+                        end
                     else
                         local dec_ok, ret_tbl = pcall(buffer.decode, ret_str)
                         if dec_ok and type(ret_tbl) == "table" then
@@ -263,10 +282,6 @@ function Channel:_processNext()
                 else
                     ok, r1, r2 = false, "empty_pipe_error", nil
                 end
-                -- data fully read, but process hasn't exited yet
-                if not subprocess_done then
-                    safe_collect_and_clean(pid, parent_read_fd, 3, 1, "pre-read subprocess")
-                end
             else -- subprocess_done: process exited with no output
                    if parent_read_fd then ffiUtil.readAllFromFD(parent_read_fd) end
                     -- no ret_values
@@ -274,7 +289,7 @@ function Channel:_processNext()
             logger.dbg("Channel:_processNext - background task completed")
             deliver_result(ok, r1, r2)
         else
-            -- backoff polling
+            -- child still running, backoff polling
             if check_interval_sec < 1 and poll_count % 10 == 0 then
                 check_interval_sec = math.min(check_interval_sec * 2, 1)
             end
@@ -373,13 +388,12 @@ function Channel:executeBatch(params)
 end
 
 local AsyncHelper = {
-    cache = {},
     channels = {}
 }
 
 function AsyncHelper:createChannel(name, max_workers, on_finish)
     if not self.channels[name] then
-        self.channels[name] = Channel:new(name, max_workers, self.cache, on_finish)
+        self.channels[name] = Channel:new(name, max_workers, on_finish)
         logger.dbg(string.format("AsyncHelper: Created channel '%s' (max_workers=%d)", name, max_workers or 1))
     end
     return self.channels[name]
@@ -396,11 +410,6 @@ function AsyncHelper:destroyChannel(name)
         self.channels[name] = nil
         logger.dbg("AsyncHelper: Completely destroyed channel:", name)
     end
-end
-
-function AsyncHelper:clearCache()
-    self.cache = {}
-    logger.dbg("AsyncHelper: Global cache cleared.")
 end
 
 function AsyncHelper.delay(seconds, func)
@@ -475,6 +484,92 @@ function AsyncHelper.run(task_func, on_success, on_error, loading_msg_widget_to_
 
     UIManager:nextTick(resume_handler)
     logger.dbg("AsyncHelper.run - END")
+end
+
+-- Like AsyncHelper.run, but the task runs in a forked child (the same mechanism downloads use)
+-- instead of blocking the UI in-process, so the user can cancel the request with a tap while it
+-- is in flight. Exactly one of on_success / on_error / on_cancel runs. on_cancel is optional:
+-- the loading widget is closed and a "Request cancelled." notice is shown either way.
+--
+-- Result semantics deliberately mirror run(): a crashed task or a result carrying .error goes to
+-- on_error, anything else to on_success. The task's return value must survive buffer.encode
+-- (plain data only -- no functions, no cdata), which every Api result already does.
+function AsyncHelper.runCancellable(task_func, on_success, on_error, loading_msg_widget_to_close, on_cancel)
+    logger.dbg("AsyncHelper.runCancellable - START")
+
+    local function close_loading_message()
+        if loading_msg_widget_to_close then
+            UIManager:close(loading_msg_widget_to_close)
+        end
+    end
+
+    local function deliver(success, data_or_err)
+        close_loading_message()
+        if success then
+            if data_or_err and data_or_err.error then
+                if on_error then on_error(tostring(data_or_err.error)) end
+            else
+                if on_success then on_success(data_or_err) end
+            end
+        else
+            if on_error then on_error(tostring(data_or_err)) end
+        end
+    end
+
+    Trapper:wrap(function()
+        local function child_task()
+            -- This process exists only to return a result, and it shares the runtime cache file
+            -- with the parent. Nothing it writes there can help, and some of it would destroy the
+            -- parent's copy (same reasoning as the download child). Lazy require: fine after
+            -- fork, and keeps async_helper out of a require cycle with zlibrary.config.
+            require("zlibrary.config").disableRuntimeCacheWrites()
+            local ok, result = pcall(task_func)
+            if ok then
+                return { ok = true, data = result }
+            end
+            return { ok = false, err = tostring(result) }
+        end
+
+        -- dismissableRunInSubprocess returns completed=false both for "user dismissed" and for
+        -- "fork failed". A dismiss cannot happen without at least one yield, and a fork failure
+        -- never reaches the poll loop, so this tells the two apart (same trick as download.lua).
+        local yielded = false
+        UIManager:nextTick(function() yielded = true end)
+
+        -- false: an invisible trap widget that swallows the dismissing tap, so the loading
+        -- message stays on screen for as long as the request runs.
+        local completed, envelope = Trapper:dismissableRunInSubprocess(child_task, false)
+
+        if not completed then
+            if yielded then
+                logger.dbg("AsyncHelper.runCancellable - cancelled by user")
+                close_loading_message()
+                UIManager:show(InfoMessage:new{ text = T("Request cancelled."), timeout = 3 })
+                safe_call("on_cancel", on_cancel)
+            else
+                -- Fork failed: keep the request working by running it the way run() always has.
+                logger.warn("AsyncHelper.runCancellable - subprocess failed to start, falling back to in-process run")
+                AsyncHelper.run(task_func, on_success, on_error, loading_msg_widget_to_close)
+            end
+            return
+        end
+
+        if type(envelope) ~= "table" then
+            -- The child finished but its answer did not survive the pipe (a hard crash before
+            -- the write, or a value buffer.encode cannot represent). Re-run in-process rather
+            -- than invent an error the task never produced.
+            logger.warn("AsyncHelper.runCancellable - no usable result from subprocess, falling back to in-process run")
+            AsyncHelper.run(task_func, on_success, on_error, loading_msg_widget_to_close)
+            return
+        end
+
+        if envelope.ok then
+            deliver(true, envelope.data)
+        else
+            deliver(false, envelope.err or "task failed")
+        end
+    end)
+    logger.dbg("AsyncHelper.runCancellable - END")
 end
 
 return AsyncHelper

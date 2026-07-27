@@ -128,8 +128,14 @@ r.check("the hold call site does not confirm on its own",
         call ~= nil and call:find("Ui.confirmDownload", 1, true) == nil,
         "call site confirms as well as downloadBook: " .. tostring(call))
 
+-- The confirmation moved to zlibrary/download.lua with the rest of downloading; the call site
+-- that must NOT add its own is still here in main.lua.
+local download_src = (function()
+    local fh = assert(io.open(PLUGIN .. "/zlibrary/download.lua"))
+    local s = fh:read("*a"); fh:close(); return s
+end)()
 local confirms = 0
-for _ in main_src:gmatch("Ui%.confirmDownload") do confirms = confirms + 1 end
+for _ in (main_src .. download_src):gmatch("Ui%.confirmDownload") do confirms = confirms + 1 end
 r.check("exactly one confirmation exists in the download path", confirms == 1,
         confirms .. " calls to Ui.confirmDownload -- the user would answer that many dialogs")
 

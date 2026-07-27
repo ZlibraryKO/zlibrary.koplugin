@@ -20,7 +20,7 @@ local block = support.extract_block(PLUGIN .. "/zlibrary/multisearch_dialog.lua"
 
 -- Rebuild the method against a captured ButtonDialog so the entries are observable.
 local built
-local function hold(book, callbacks, active_item)
+local function new_hold()
     built = nil
     local env = {
         SearchDialog = {},
@@ -32,13 +32,17 @@ local function hold(book, callbacks, active_item)
     local chunk = assert(loadstring(block, "=onMenuHold"))
     setfenv(chunk, env)
     chunk()
+    return env.SearchDialog.onMenuHold
+end
 
+local function hold(book, callbacks, active_item)
+    local onMenuHold = new_hold()
     local self = {
         books = { book },
         getActiveItem = function() return active_item end,
     }
     for k, v in pairs(callbacks or {}) do self[k] = v end
-    env.SearchDialog.onMenuHold(self, { book_index = 1 })
+    onMenuHold(self, { book_index = 1 })
     return built
 end
 
@@ -116,6 +120,31 @@ spec = hold(BOOK, { on_search_callback = noop, on_download_book_callback = noop 
     { book_action = { text = "Remove", callback = noop } })
 r.check("a tab's own action is still offered", has(spec, "Remove"),
         "entries: " .. table.concat(labels(spec), " | "))
+
+-- ---------------------------------------------------------------- the hold guards
+-- The gesture can arrive after the list has moved on: the item, or the book it points at, may
+-- be gone, and a book with neither author nor title has nothing to search for. None of these
+-- may crash, and none may open a dialog.
+local function guard_hold(books, item)
+    local onMenuHold = new_hold()
+    local self = { books = books, getActiveItem = function() return nil end }
+    local ok, err = pcall(onMenuHold, self, item)
+    return ok, err
+end
+
+local ok, err = guard_hold({}, { book_index = 1 })
+r.check("a hold on a missing book does not crash", ok, tostring(err))
+r.check("a hold on a missing book shows no dialog", ok and built == nil)
+
+ok, err = guard_hold({}, nil)
+r.check("a hold without an item does not crash", ok, tostring(err))
+
+ok, err = guard_hold({}, {})
+r.check("a hold on an item without a book_index does not crash", ok, tostring(err))
+
+ok, err = guard_hold({ {} }, { book_index = 1 })
+r.check("a book with neither author nor title shows no dialog", ok and built == nil,
+        tostring(err))
 
 -- ---------------------------------------------------------------- both screens are wired
 local main_src = (function()

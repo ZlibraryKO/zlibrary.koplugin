@@ -21,6 +21,32 @@ Api.DNS_ERROR_TEXT = T("Could not find the server address")
 -- both sides must share the message id for that to survive translation.
 Api.BLOCKED_TEXT = T("This Z-library server is refusing automated access")
 
+-- Fallback text for a sign-in the server answered but would not accept. Exported for the same
+-- reason as the two above: Zlibrary:_promptForCredentials matches on it to tell "your password is
+-- wrong" apart from "we never got an answer", and a match on the English literal would hold in
+-- one locale out of fourteen.
+Api.CREDENTIALS_REJECTED_TEXT = T("Credentials rejected or invalid response")
+
+-- Did the server read these credentials and refuse them?
+--
+-- Positive matches only. Anything unrecognised -- a timeout, a dead mirror, a bot-challenge page,
+-- an unparseable body, a rate limit -- means no answer arrived, not that the password is wrong.
+-- Getting that default backwards would lock a reader out of storing credentials at all whenever
+-- their mirror is down, which is the common case for this plugin.
+--
+-- Separate from isAuthenticationError on purpose: that one drives session re-login on ordinary
+-- API calls, and widening it would change retry behaviour across the plugin for no benefit here.
+function Api.isCredentialRejection(error_message)
+    if not error_message then return false end
+    local error_str = tostring(error_message)
+    -- Server wording, which arrives untranslated.
+    if string.find(error_str, "Incorrect email or password", 1, true) then return true end
+    if string.find(error_str, "Please login", 1, true) then return true end
+    -- Our own fallback, matched by value so it survives translation.
+    if string.find(error_str, Api.CREDENTIALS_REJECTED_TEXT, 1, true) then return true end
+    return false
+end
+
 function Api.isAuthenticationError(error_message)
     if not error_message then
         return false
@@ -191,7 +217,10 @@ local function _checkAndHandleRedirect(skip_check, status_code, current_url, hea
             tostring(status_code), tostring(current_url_parse.host), real_url_parse.host))
         result.real_url_base = socket_url.build({
                 scheme = real_url_parse.scheme,
-                host = real_url_parse.host
+                host = real_url_parse.host,
+                -- A mirror move to a non-default port is pinned without it otherwise, and the
+                -- cached base then points at a port nothing is listening on.
+                port = real_url_parse.port
         })
     end
     return result
@@ -629,6 +658,18 @@ function Api.makeHttpRequest(options)
                 result.error = string.format("%s: %s (%s)", T("HTTP Error"), result.status_code, r_status_str or T("Unknown Status"))
             end
         end
+    elseif _looksLikeBotChallenge(result.body) then
+        -- A WAF can answer 200 with the interstitial instead of an error status. Recognise it
+        -- here too, before the caller parses the HTML as JSON: a generic "Invalid response
+        -- format" would not trigger auto-discovery, and a different mirror is the only fix.
+        local parsed = socket_url.parse(options.url or "")
+        result.error = string.format("%s (%s). %s",
+            Api.BLOCKED_TEXT,
+            (parsed and parsed.host) or tostring(options.url),
+            T("Try a different Z-library server."))
+        logger.err(string.format(
+            "Zlibrary:Api.makeHttpRequest - %s answered a bot-check page with status %s, not the API",
+            tostring(options.url), tostring(result.status_code)))
     end
 
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - END - Status: %s, Headers found: %s, Error: %s",
@@ -700,7 +741,9 @@ function Api.login(email, password, is_redir_callback)
     local session = data.user or data.response or {}
 
     if success_flag ~= 1 then
-        local api_message = data.error or
+        -- data.error may be a string or an object; guard the index the way Api.search does, or a
+        -- structured error surfaces as "table: 0x..." -- which also defeats isCredentialRejection.
+        local api_message = (type(data.error) == "table" and data.error.message) or data.error or
                            (type(session) == "table" and session.message) or
                            data.message
         result.error = api_message and tostring(api_message) or (http_result.error or T("Login failed"))
@@ -718,7 +761,7 @@ function Api.login(email, password, is_redir_callback)
     local user_key = session.remix_userkey or session.user_key or ""
 
     if user_id == "" or user_key == "" then
-        result.error = T("Login failed") .. ": " .. (session.message or data.message or T("Credentials rejected or invalid response"))
+        result.error = T("Login failed") .. ": " .. (session.message or data.message or Api.CREDENTIALS_REJECTED_TEXT)
         logger.warn(string.format("Zlibrary:Api.login - END (Credentials error) - Error: %s", result.error))
         return result
     end
@@ -955,6 +998,13 @@ function Api.downloadBookCover(download_url, target_filepath)
         return result
     end
 
+    -- As in downloadBook: the sink closes the handle at end of stream, but not when the request
+    -- fails before it is ever called, so close defensively; a double close is harmless here.
+    local function discardPartialFile()
+        pcall(function() file:close() end)
+        pcall(os.remove, target_filepath)
+    end
+
     local headers = { ["User-Agent"] = Config.USER_AGENT }
 
     local http_result = Api.makeHttpRequest{
@@ -968,21 +1018,21 @@ function Api.downloadBookCover(download_url, target_filepath)
 
     if http_result.error and not (http_result.status_code and http_result.headers) then
         result.error = http_result.error
-        pcall(os.remove, target_filepath)
+        discardPartialFile()
         logger.err(string.format("Zlibrary:Api.downloadBookCover - END (Request error) - Error: %s", result.error))
         return result
     end
 
     if http_result.error then
         result.error = http_result.error
-        pcall(os.remove, target_filepath)
+        discardPartialFile()
         logger.err("Zlibrary:Api.downloadBookCover - END (HTTP error from Api.makeHttpRequest) - Error: " .. result.error .. ", Status: " .. tostring(http_result.status_code))
         return result
     end
 
     if http_result.status_code ~= 200 then
         result.error = string.format("%s: %s", T("Download HTTP Error"), http_result.status_code)
-        pcall(os.remove, target_filepath)
+        discardPartialFile()
         logger.err("Zlibrary:Api.downloadBookCover - END (HTTP status error) - Error: " .. result.error)
         return result
     end
@@ -1600,7 +1650,7 @@ function Api.healthCheck(baseUrl, skip_redir_cache, redir_url)
 
     if data.success == 1 then
         logger.info("Api.healthCheck - Success for " .. baseUrl .. " (status: " .. tostring(http_result.status_code) .. ")")
-        return { success = true, url = baseUrl, elapsed = http_result.elapsed, real_url= redir_url}
+        return { success = true, url = baseUrl, elapsed = http_result.elapsed }
     end
 
     logger.dbg("Api.healthCheck - Invalid response data from " .. baseUrl .. ", success=" .. tostring(data.success))
@@ -1672,6 +1722,13 @@ function Api.getBookComments(user_id, user_key, book_id)
     }
 end
 
+-- Which CDN fetchDynamicDomains tries next. Picking at random needed a reseed per call, and the
+-- reseed was os.time(): retries within the same second -- Discovery.refreshDomainsCache fires up
+-- to three back-to-back, and fast failures like NXDOMAIN answer in milliseconds -- re-picked the
+-- CDN that had just failed, so the rest of the list was never tried. Rotating guarantees every
+-- attempt, retry included, gets a CDN the previous one did not.
+local next_cdn_index = 1
+
 function Api.fetchDynamicDomains()
      -- Data reference: https://z-lib.gd/eapi/info/domains
     local cdn_urls = {
@@ -1681,8 +1738,8 @@ function Api.fetchDynamicDomains()
         "https://gh.xxooo.cf/https://raw.githubusercontent.com/ZlibraryKO/zlibrary.koplugin/main/assets/domains.json"
     }
 
-    math.randomseed(os.time())
-    local url = cdn_urls[math.random(#cdn_urls)]
+    local url = cdn_urls[next_cdn_index]
+    next_cdn_index = next_cdn_index % #cdn_urls + 1
 
     logger.info(string.format("Api.fetchDynamicDomains - START - URL: %s", url))
 

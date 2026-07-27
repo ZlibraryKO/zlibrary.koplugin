@@ -24,15 +24,20 @@ function BaseCache:_ensurePath(dir)
     if util.directoryExists(dir) then return dir end
     util.makePath(dir)
     if util.directoryExists(dir) then return dir end
-    ffiUtil.execute(string.format('mkdir -p "%s"', dir))
+    -- ffiUtil.execute execs the arguments directly with no shell on any platform (execl
+    -- off-Android, android.execute's argv table on Android), so they must go in separately;
+    -- one quoted command string would be looked up as a single executable name and never run.
+    ffiUtil.execute("mkdir", "-p", dir)
     return dir
 end
 
 function BaseCache:_safeCopy(from, to)
     local ok = os.rename(from, to)
     if not ok then
-        local copy_ok = pcall(ffiUtil.copyFile, from, to)
-        if copy_ok then
+        -- ffiUtil.copyFile never raises: it returns an error string on failure and nil on
+        -- success, so pcall's own result says nothing about whether the copy happened.
+        local copy_ok, copy_err = pcall(ffiUtil.copyFile, from, to)
+        if copy_ok and copy_err == nil then
             util.removeFile(from)
         else
             logger.warn("Cache:_safeCopy failed to copy file: " .. tostring(from))
@@ -107,13 +112,16 @@ end
 function KVCache:get(key, cache_expiry, skip_rm)
     if not self._cache or type(key) ~= "string" then return nil end
     local entry = self._cache:readSetting(key)
-    if not entry or type(entry) ~= "table" or not entry._at then
+    -- _at comes out of a LuaSettings file that can be hand-edited or corrupted; arithmetic on a
+    -- non-number would raise, so coerce first and treat anything uncoercible as a miss.
+    local at = type(entry) == "table" and tonumber(entry._at) or nil
+    if not at then
         if entry and not skip_rm then self:remove(key) end
         return nil
     end
 
     local expiry = tonumber(cache_expiry) or DEF_TTL_CACHE_EXPIRY
-    local diff = os.time() - entry._at
+    local diff = os.time() - at
     if diff < 0 or (expiry > 0 and diff > expiry) then
         if not skip_rm then self:remove(key) end
         return nil
@@ -175,8 +183,14 @@ function BookInfoCache:get(book_hash, cache_expiry, skip_rm)
         return nil 
     end
 
-    local _at = book_cache:readSetting("_at")
-    if type(cache_expiry) == "number" and _at then
+    -- Same coercion as KVCache:get: a non-numeric _at in a hand-edited file is treated as
+    -- expired rather than raised on.
+    local _at = tonumber(book_cache:readSetting("_at"))
+    if type(cache_expiry) == "number" then
+        if not _at then
+            if not skip_rm then book_cache:purge() end
+            return nil
+        end
         local diff = os.time() - _at
         if diff < 0 or (cache_expiry > 0 and diff > cache_expiry) then
             if not skip_rm then book_cache:purge() end

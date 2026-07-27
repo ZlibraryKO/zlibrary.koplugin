@@ -44,8 +44,12 @@ If none of those find a build, `run.sh` says so and exits 2 rather than failing 
 | `redirect_follow_harness.lua` | What `makeHttpRequest` does with them: multi-hop chains, POST body replay, method conversion per RFC, loop termination, cookie handling, and that `onRedirect` still owns mirror moves. |
 | `bot_challenge_harness.lua` | Recognising a "verifying your browser" interstitial, and — as importantly — not mistaking a JSON API error, an nginx error page, or a book description for one. |
 | `retry_message_harness.lua` | That the dialog classifies a failure from the raw error string, opens for the kinds it should, offers auto-discovery only where switching mirrors would help, and says something true and distinct for each. |
+| `cancellable_run_harness.lua` | That a cancellable request routes its outcome to exactly one callback: a finished child behaves like `AsyncHelper.run` (a result carrying `.error`, or a crash, goes to `on_error`), a dismiss goes to `on_cancel` with no retry dialog, and a fork failure or an unreadable result falls back to the in-process run instead of being reported as a cancellation. |
+| `view_settings_harness.lua` | That view settings live in the persistent settings file: a stored setting wins over the legacy runtime-cache entry, a legacy entry is migrated once (saved, then removed from the cache), a fresh install writes nothing, and `setViewSettings` leaves the settings file as the only source of truth. |
 | `getplural_harness.lua` | That loading the plugin's catalogue leaves KOReader's own gettext globals as it found them. |
+| `rtl_fallback_harness.lua` | That under an RTL UI language — where bidi wraps untranslated strings in LTR isolate marks — a missing plugin translation still falls back to KOReader's own translation, and that `pgettext`/`ngettext`/`npgettext` query the plugin's catalogue rather than only KOReader's. |
 | `timeout_keys_harness.lua` | That every `operation_key` at a call site resolves to a real timeout getter. A typo yields no hint rather than an error, which is invisible at runtime. |
+| `base_url_harness.lua` | The base URL end to end against the real `config.lua`: the default seed has no trailing slash, `setAndValidateBaseUrl` keeps accepting bare/schemed/slashed hosts but refuses paths, queries, fragments and credentials, `saveSetting` trims strings except the password key, and the legacy-settings migration runs on any legacy key and flushes `G_reader_settings`. |
 | `glyph_coverage_check.py` | That every non-ASCII codepoint the plugin can display — `\u{...}` escapes and literal UTF-8 alike — maps to a real glyph in some bundled font. Excludes U+FFF1–FFF3, which are `textboxwidget` control markers rather than glyphs. |
 
 ## Conventions
@@ -84,6 +88,11 @@ Each was written against a real bug, and each fails against the commit before it
   and pointing at another server.
 - Loading the plugin's catalogue left KOReader's own gettext globals altered: its plural
   selector kept running the rule from the plugin's `.mo` for the rest of the session.
+- Under an RTL UI language (the plugin ships `ar/`), any string the plugin had not translated
+  showed as English even when KOReader had a translation: bidi wraps untranslated strings in
+  LTR isolate marks, so the shim's raw-msgid comparison never matched and its fallback never
+  fired. The same shim's `pgettext`/`ngettext`/`npgettext` could never serve a plugin
+  translation at all — the deep-copied functions still pointed at KOReader's global catalogue.
 
 ## Not covered
 

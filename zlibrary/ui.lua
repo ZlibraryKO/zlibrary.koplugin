@@ -40,6 +40,15 @@ local function _closeAndUntrackDialog(dialog)
     end
 end
 
+-- Close a dialog this module opened, from outside it. The credentials dialog needs this: it stays
+-- on screen while its contents are checked against the server, so whoever is doing the checking
+-- has to close it once a verdict arrives. Goes through the same untracking path as every other
+-- close, or the widget stays in DialogManager._open_dialogs and closeAllDialogs re-closes a dead
+-- one.
+function Ui.closeDialog(dialog)
+    _closeAndUntrackDialog(dialog)
+end
+
 local function _colon_concat(a, b)
     return a .. ": " .. b
 end
@@ -65,7 +74,7 @@ function Ui.showErrorMessage(text)
 end
 
 function Ui.showLoadingMessage(text)
-    local message = InfoMessage:new{ 
+    local message = InfoMessage:new{
         text = string.format("\u{23f3}  %s", text),
         dismissable = false,
         show_icon = false,
@@ -73,6 +82,13 @@ function Ui.showLoadingMessage(text)
     }
     UIManager:show(message)
     return message
+end
+
+-- A loading message for a request the user can cancel with a tap (see
+-- AsyncHelper.runCancellable). The widget itself stays non-dismissable: the tap is caught by the
+-- invisible trap widget the cancellable run puts over it.
+function Ui.showCancellableLoadingMessage(text)
+    return Ui.showLoadingMessage(string.format(T("%s (tap to cancel)"), text))
 end
 
 function Ui.showBookDownloadProgress(book, custom_title)
@@ -186,6 +202,9 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
     for _, option_info in ipairs(options_list) do
         current_selection_state[option_info.value] = selected_values_set[option_info.value] or false
     end
+    -- The value the user's last tap switched on; a radio cleanup keeps this one when the stored
+    -- setting carried stale extras.
+    local last_toggled_value
 
     local selection_menu
     -- nil while unfiltered; a lowercased query string while the user is filtering the list.
@@ -212,6 +231,9 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
             end,
             callback = function()
                 current_selection_state[option_value] = not current_selection_state[option_value]
+                if current_selection_state[option_value] then
+                    last_toggled_value = option_value
+                end
                 selection_menu:updateItems(nil, true)
                 -- single select
                 if is_single then
@@ -258,9 +280,13 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
                     if is_selected then table.insert(new_selected_values, value) end
                 end
                 if is_single and #new_selected_values > 1 then
-                    local original_option = selected_values_table[1]
+                    -- A radio setting keeps at most one value: the one just tapped. The old
+                    -- cleanup removed only the first stored value, so a stored setting that
+                    -- already held several values re-saved the rest of them. When nothing was
+                    -- tapped (opened and backed out), fall back to the first stored value.
+                    local value_to_keep = last_toggled_value or selected_values_table[1]
                     for i = #new_selected_values, 1, -1 do
-                        if new_selected_values[i] == original_option then
+                        if new_selected_values[i] ~= value_to_keep then
                             table.remove(new_selected_values, i)
                         end
                     end
@@ -477,25 +503,30 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
         }},{{
             text = string.format("%s: %s \u{25BC}", T("Sort by"), search_order_name),
             callback = function()
+                -- Carry over what the user has typed so far; def_input is the value captured
+                -- when this dialog was built and would silently discard it.
+                local typed_input = dialog:getInputText()
                 _closeAndUntrackDialog(dialog)
                 Ui.showOrdersSelectionDialog(parent_zlibrary, function(count)
-                    Ui.showSearchDialog(parent_zlibrary, def_input)
+                    Ui.showSearchDialog(parent_zlibrary, typed_input)
                 end)
             end
         }},{{
             text = lang_text,
             callback = function()
+                local typed_input = dialog:getInputText()
                 _closeAndUntrackDialog(dialog)
                 _showMultiSelectionDialog(parent_zlibrary, T("Select search languages"), Config.SETTINGS_SEARCH_LANGUAGES_KEY, Config.SUPPORTED_LANGUAGES, function(count)
-                    Ui.showSearchDialog(parent_zlibrary, def_input)
+                    Ui.showSearchDialog(parent_zlibrary, typed_input)
                 end)
             end
         },{
             text = format_text,
             callback = function()
+                local typed_input = dialog:getInputText()
                 _closeAndUntrackDialog(dialog)
                 _showMultiSelectionDialog(parent_zlibrary, T("Select search formats"), Config.SETTINGS_SEARCH_EXTENSIONS_KEY, Config.SUPPORTED_EXTENSIONS, function(count)
-                    Ui.showSearchDialog(parent_zlibrary, def_input)
+                    Ui.showSearchDialog(parent_zlibrary, typed_input)
                 end)
             end
         }},{{
@@ -623,6 +654,25 @@ function Ui.confirmRemoveDownloaded(title, ok_callback)
     end
 end
 
+function Ui.confirmClearCredentials(ok_callback)
+    local text = T("Clear your stored username and password?")
+    if _plugin_instance and _plugin_instance.dialog_manager then
+        _plugin_instance.dialog_manager:showConfirmDialog({
+            text = text,
+            ok_text = T("Clear"),
+            ok_callback = ok_callback,
+            cancel_text = T("Cancel")
+        })
+    else
+        UIManager:show(ConfirmBox:new{
+            text = text,
+            ok_text = T("Clear"),
+            ok_callback = ok_callback,
+            cancel_text = T("Cancel")
+        })
+    end
+end
+
 function Ui.confirmDownload(filename, ok_callback)
     if _plugin_instance and _plugin_instance.dialog_manager then
         _plugin_instance.dialog_manager:showConfirmDialog({
@@ -680,7 +730,7 @@ function Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, ok
                     callback = function()
                         turn_off_wifi = not turn_off_wifi
                         Config.setTurnOffWifiAfterDownload(turn_off_wifi)
-                        UIManager:close(dialog)
+                        _closeAndUntrackDialog(dialog)
                         showDialog()
                     end,
                 },
@@ -759,11 +809,11 @@ end
 
 function Ui.showSearchErrorDialog(err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page, loading_msg_to_close, original_on_success, original_on_error)
     local retry_callback = function()
-        local new_loading_msg = Ui.showLoadingMessage(string.format(T("Retrying search for \"%s\"..."), query))
+        local new_loading_msg = Ui.showCancellableLoadingMessage(string.format(T("Retrying search for \"%s\"..."), query))
         local retry_task = function()
             return Api.search(query, user_session.user_id, user_session.user_key, selected_languages, selected_extensions, selected_order, current_page)
         end
-        AsyncHelper.run(retry_task, original_on_success, function(new_err_msg)
+        AsyncHelper.runCancellable(retry_task, original_on_success, function(new_err_msg)
             Ui.showSearchErrorDialog(new_err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page, new_loading_msg, original_on_success, original_on_error)
         end, new_loading_msg)
     end
@@ -797,12 +847,14 @@ function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel
     
 
     local is_http_400 = string.match(error_string, "HTTP Error: 400")
-    local is_timeout = string.find(error_string, T("Request timed out")) or 
-                      string.find(error_string, "timeout") or 
+    -- The translated needles must be searched as plain text: a locale containing pattern
+    -- magic (%, (, -) would throw "malformed pattern" on this error-handling path.
+    local is_timeout = string.find(error_string, T("Request timed out"), 1, true) or
+                      string.find(error_string, "timeout") or
                       string.find(error_string, "timed out") or
                       string.find(error_string, "sink timeout")
-    local is_network_error = string.find(error_string, T("Network connection error")) or
-                            string.find(error_string, T("Network request failed"))
+    local is_network_error = string.find(error_string, T("Network connection error"), 1, true) or
+                            string.find(error_string, T("Network request failed"), 1, true)
     -- A dead or misspelled base URL never resolves, so retrying alone can only fail again.
     -- Offer auto-discovery alongside Retry, the same way a timeout does.
     local is_dns_error = string.find(error_string, Api.DNS_ERROR_TEXT, 1, true) ~= nil
@@ -964,16 +1016,25 @@ function Ui.showTimeoutConfigDialog(parent_ui, timeout_name, timeout_key, getter
         -- U+1F5D8 is in no font KOReader bundles; F021 is the refresh glyph used elsewhere.
         mandatory = "\u{F021}",
         callback = function()
+            local text = string.format(T("Reset %s timeouts to default values?"), timeout_name)
+            local ok_callback = function()
+                Config.deleteSetting(timeout_key)
+                refreshDialog()
+                Ui.showInfoMessage(T("Timeout settings reset to defaults"))
+            end
             if _plugin_instance and _plugin_instance.dialog_manager then
                 _plugin_instance.dialog_manager:showConfirmDialog({
-                    text = string.format(T("Reset %s timeouts to default values?"), timeout_name),
+                    text = text,
                     ok_text = T("Reset"),
                     cancel_text = T("Cancel"),
-                    ok_callback = function()
-                        Config.deleteSetting(timeout_key)
-                        refreshDialog()
-                        Ui.showInfoMessage(T("Timeout settings reset to defaults"))
-                    end
+                    ok_callback = ok_callback
+                })
+            else
+                UIManager:show(ConfirmBox:new{
+                    text = text,
+                    ok_text = T("Reset"),
+                    cancel_text = T("Cancel"),
+                    ok_callback = ok_callback
                 })
             end
         end
@@ -1100,23 +1161,32 @@ function Ui.showAllTimeoutConfigDialog(parent_ui)
             text = T("Reset all timeouts to defaults"),
             mandatory = "\u{25B7}",
             callback = function()
+                local text = T("Reset all timeout settings to default values?")
+                local ok_callback = function()
+                    Config.deleteSetting(Config.SETTINGS_TIMEOUT_LOGIN_KEY)
+                    Config.deleteSetting(Config.SETTINGS_TIMEOUT_SEARCH_KEY)
+                    Config.deleteSetting(Config.SETTINGS_TIMEOUT_BOOK_DETAILS_KEY)
+                    Config.deleteSetting(Config.SETTINGS_TIMEOUT_RECOMMENDED_KEY)
+                    Config.deleteSetting(Config.SETTINGS_TIMEOUT_POPULAR_KEY)
+                    Config.deleteSetting(Config.SETTINGS_TIMEOUT_DOWNLOAD_KEY)
+                    Config.deleteSetting(Config.SETTINGS_TIMEOUT_COVER_KEY)
+                    Config.deleteSetting(Config.SETTINGS_TIMEOUT_BOOK_COMMENTS_KEY)
+                    Ui.showInfoMessage(T("All timeout settings reset to defaults"))
+                    refreshMainDialog()
+                end
                 if _plugin_instance and _plugin_instance.dialog_manager then
                     _plugin_instance.dialog_manager:showConfirmDialog({
-                        text = T("Reset all timeout settings to default values?"),
+                        text = text,
                         ok_text = T("Reset All"),
                         cancel_text = T("Cancel"),
-                        ok_callback = function()
-                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_LOGIN_KEY)
-                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_SEARCH_KEY)
-                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_BOOK_DETAILS_KEY)
-                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_RECOMMENDED_KEY)
-                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_POPULAR_KEY)
-                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_DOWNLOAD_KEY)
-                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_COVER_KEY)
-                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_BOOK_COMMENTS_KEY)
-                            Ui.showInfoMessage(T("All timeout settings reset to defaults"))
-                            refreshMainDialog()
-                        end
+                        ok_callback = ok_callback
+                    })
+                else
+                    UIManager:show(ConfirmBox:new{
+                        text = text,
+                        ok_text = T("Reset All"),
+                        cancel_text = T("Cancel"),
+                        ok_callback = ok_callback
                     })
                 end
             end
@@ -1175,7 +1245,26 @@ function Ui.createPerPageSettingCallback(title_text, setting_key)
     end
 end
 
-function Ui.showCredentialsDialog(validate_and_save_callback, test_callback)
+-- The credentials dialog. One action button: it checks what was typed against the server before
+-- keeping it.
+--
+-- CONTRACT for validate_and_save_callback(email, password):
+--   truthy -> done, close the dialog now
+--   falsy  -> NOT done, leave the dialog exactly as it is
+-- Falsy covers two cases, and the caller knows which: the server refused these credentials and
+-- the user should correct them in place, or a check is still in flight and its owner will call
+-- Ui.closeDialog when a verdict arrives. Closing on falsy is the bug this contract exists to
+-- prevent -- it strands the user with no dialog and no way back except the menu.
+--
+-- test_callback is unused and kept only so the argument positions do not shift; the separate
+-- "Verify credentials" button was removed once the action button started verifying. It differed
+-- only in not closing on success, truncated badly as a third button on an Oasis, and committed
+-- the credentials on success anyway -- so Cancel after it did not mean "change nothing".
+--
+-- opts.quiet_save suppresses the "Setting saved successfully!" toast, for callers that paint
+-- their own message over the same region straight after.
+function Ui.showCredentialsDialog(validate_and_save_callback, test_callback, opts)
+    opts = opts or {}
     local current_email = Config.getSetting(Config.SETTINGS_USERNAME_KEY) or ""
     local current_password = Config.getSetting(Config.SETTINGS_PASSWORD_KEY) or ""
     local dialog
@@ -1198,23 +1287,7 @@ function Ui.showCredentialsDialog(validate_and_save_callback, test_callback)
                         _closeAndUntrackDialog(dialog) 
                     end,
                 }, {
-                    text = T("Verify credentials"),
-                    callback = function()
-                        local fields = dialog:getFields()
-                        local trimmed_email = util.trim(fields[1] or "")
-                        local trimmed_password = util.trim(fields[2] or "")
-                        if trimmed_email == "" or trimmed_password == "" then
-                            Ui.showInfoMessage(T("Please fill in all fields"))
-                            return
-                        end
-                        if test_callback then
-                            test_callback(trimmed_email, trimmed_password)
-                        else
-                            Ui.showInfoMessage(T("Feature not implemented"))
-                        end
-                    end,
-                }, {
-                    text =  T("Set"),
+                    text =  T("Set and verify"),
                     callback = function()
                         local fields = dialog:getFields()
                         local trimmed_email = util.trim(fields[1] or "")
@@ -1226,13 +1299,17 @@ function Ui.showCredentialsDialog(validate_and_save_callback, test_callback)
                         local close_dialog_after_action = false
                         if validate_and_save_callback then
                             if validate_and_save_callback(trimmed_email, trimmed_password) then
-                                Ui.showInfoMessage(T("Setting saved successfully!"))
+                                if not opts.quiet_save then
+                                    Ui.showInfoMessage(T("Setting saved successfully!"))
+                                end
                                 close_dialog_after_action = true
                             end
                         else
                             Config.saveSetting(Config.SETTINGS_USERNAME_KEY, trimmed_email)
                             Config.saveSetting(Config.SETTINGS_PASSWORD_KEY, trimmed_password)
-                            Ui.showInfoMessage(T("Setting saved successfully!"))
+                            if not opts.quiet_save then
+                                Ui.showInfoMessage(T("Setting saved successfully!"))
+                            end
                             close_dialog_after_action = true
                         end
                         if close_dialog_after_action then

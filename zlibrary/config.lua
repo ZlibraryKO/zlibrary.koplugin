@@ -9,6 +9,7 @@ local Cache = require("zlibrary.cache")
 local Config = {
     _lua_settings = nil,
     _runtime_cache = nil,
+    _multi_search_cache = nil,
 }
 
 Config.SETTINGS_BASE_URL_KEY = "zlibrary_base_url"
@@ -19,6 +20,7 @@ Config.SETTINGS_USER_KEY_KEY = "zlib_user_key"
 Config.SETTINGS_SEARCH_LANGUAGES_KEY = "zlibrary_search_languages"
 Config.SETTINGS_SEARCH_EXTENSIONS_KEY = "zlibrary_search_extensions"
 Config.SETTINGS_SEARCH_ORDERS_KEY = "zlibrary_search_order"
+Config.SETTINGS_VIEW_SETTINGS_KEY = "zlibrary_view_settings"
 Config.SETTINGS_DOWNLOAD_DIR_KEY = "zlibrary_download_dir"
 Config.SETTINGS_TURN_OFF_WIFI_AFTER_DOWNLOAD_KEY = "zlibrary_turn_off_wifi_after_download"
 Config.SETTINGS_SKIP_OPEN_BOOK_PROMPT_KEY = "zlibrary_skip_open_book_prompt"
@@ -63,7 +65,10 @@ Config.TIMEOUT_COVER = { 5, 15 }        -- Cover image operations
 Config.TIMEOUT_BOOK_COMMENTS = { 10, 15 } -- Comments operations
 
 function Config.loadCredentialsFromFile(plugin_path)
-    Config._plugin_path = plugin_path
+    -- This flag lives on the module table, which survives plugin re-instantiation, so each load
+    -- attempt has to start clean: a file that no longer sets credentials must not keep reporting
+    -- that it does because some earlier load in this session set them.
+    Config._credentials_from_file = false
     local cred_file_path = plugin_path .. Config.CREDENTIALS_FILENAME
     local creds = LuaSettings:open(cred_file_path)
     if not creds.data or not next(creds.data) then
@@ -84,13 +89,23 @@ function Config.loadCredentialsFromFile(plugin_path)
     local identity = creds:readSetting("username") or creds:readSetting("email")
     if identity then
         Config.saveSetting(Config.SETTINGS_USERNAME_KEY, identity)
+        Config._credentials_from_file = true
         logger.info("Overriding Identity (Username/Email) from " .. Config.CREDENTIALS_FILENAME)
     end
     local password = creds:readSetting("password")
     if password then
         Config.saveSetting(Config.SETTINGS_PASSWORD_KEY, password)
+        Config._credentials_from_file = true
         logger.info("Overriding Password from " .. Config.CREDENTIALS_FILENAME)
     end
+end
+
+-- Whether the credentials in the settings came from zlibrary_credentials.lua rather than from
+-- the user typing them. It matters when clearing: this file is re-read on every init, which
+-- happens per UI, so anything it sets comes straight back and telling the user their
+-- credentials are gone would be a lie.
+function Config.credentialsComeFromFile()
+    return Config._credentials_from_file == true
 end
 
 -- Search-language filter. Each name is the language's own script where a bundled KOReader font
@@ -344,15 +359,24 @@ local function _getLuaSettings()
         local settings_file = DataStorage:getSettingsDir() .. "/zlibrary.lua"
         Config._lua_settings = LuaSettings:open(settings_file)
 
-        -- Check if data migration from old settings is needed
-        if not Config._lua_settings:readSetting(Config.SETTINGS_BASE_URL_KEY) and (G_reader_settings and G_reader_settings:readSetting(Config.SETTINGS_BASE_URL_KEY)) then
-             for key, value in pairs(G_reader_settings.data) do
+        -- Migrate legacy settings that predate the plugin's own zlibrary.lua and were kept in
+        -- KOReader's global settings. Any leftover legacy key triggers this, not just the base
+        -- URL: a user who never had one set would otherwise keep every other zlib_*/zlibrary_*
+        -- key orphaned in the global file. G_reader_settings is flushed afterwards so the
+        -- deletions survive the session and the migration does not replay on every launch.
+        if not Config._lua_settings:readSetting(Config.SETTINGS_BASE_URL_KEY) and G_reader_settings and G_reader_settings.data then
+            local migrated = false
+            for key, value in pairs(G_reader_settings.data) do
                 if type(key) == "string" and (key:match("^zlib_") or key:match("^zlibrary_")) then
                     Config._lua_settings:saveSetting(key, value)
                     G_reader_settings:delSetting(key)
+                    migrated = true
                 end
             end
-            Config._lua_settings:flush()
+            if migrated then
+                Config._lua_settings:flush()
+                G_reader_settings:flush()
+            end
         end
     end
     return Config._lua_settings
@@ -364,6 +388,18 @@ function Config.getConfigRuntimeCache()
         Config._runtime_cache = Cache:new{ name = "_runtime_cache" }
     end
     return Config._runtime_cache
+end
+
+-- Shared instance of the "multi_search" cache. Each KVCache holds its own in-memory copy of the
+-- file and flushes the whole thing on every insert/remove, so a second instance for the same
+-- name is not a shortcut to the same data -- it is a stale copy whose next flush resurrects
+-- whatever another writer just removed (clearPersonalCaches hitting a long-deleted dialog's
+-- instance was exactly that). Everyone touching this cache goes through here.
+function Config.getMultiSearchCache()
+    if not Config._multi_search_cache then
+        Config._multi_search_cache = Cache:new{ name = "multi_search" }
+    end
+    return Config._multi_search_cache
 end
 
 -- A forked child inherits a copy of the parent's in-memory settings but SHARES the file behind them.
@@ -450,8 +486,13 @@ end
 function Config.getBaseUrl(is_original)
     local configured_url = (not is_original and Config.getCacheRealUrl()) or Config.getSetting(Config.SETTINGS_BASE_URL_KEY)
     if configured_url == nil or configured_url == "" then
-        -- default
+        -- default; the seeds carry a trailing slash, and the URL builders below append
+        -- "/eapi/..." verbatim, so it has to come off here like the setting (setAndValidateBaseUrl)
+        -- and the redirect cache (setCacheRealUrl) already strip theirs
         configured_url = (Config.SEED_URLS and #Config.SEED_URLS > 0) and Config.SEED_URLS[1] or nil
+        if configured_url then
+            configured_url = configured_url:gsub("/$", "")
+        end
     end
     return configured_url
 end
@@ -512,12 +553,20 @@ function Config.setAndValidateBaseUrl(url_string)
         url_string = "https://" .. url_string
     end
 
-    if not string.find(url_string, "%.") then
-        return false, "Error: URL must include a valid domain name (e.g., example.com)."
-    end
-
     if string.sub(url_string, -1) == "/" then
         url_string = string.sub(url_string, 1, -2)
+    end
+
+    -- A base URL is an origin and nothing more: a scheme, and a host that looks like a domain.
+    -- The bare string.find("%.") this replaces waved through "https://host/path" or credentials
+    -- in the URL, and they were saved verbatim and broke every request built on them.
+    if string.find(url_string, "%s") then
+        return false, "Error: URL must include a valid domain name (e.g., example.com)."
+    end
+    local parsed = socket_url.parse(url_string)
+    if not (parsed and parsed.scheme and parsed.host and string.find(parsed.host, "%."))
+            or parsed.path or parsed.params or parsed.query or parsed.fragment or parsed.userinfo then
+        return false, "Error: URL must include a valid domain name (e.g., example.com)."
     end
 
     Config.saveSetting(Config.SETTINGS_BASE_URL_KEY, url_string)
@@ -531,7 +580,7 @@ function Config.getLoginUrl()
     return base .. "/eapi/user/login"
 end
 
-function Config.getSearchUrl(query)
+function Config.getSearchUrl()
     local base = Config.getBaseUrl()
     if not base then return nil end
     return base .. "/eapi/book/search"
@@ -586,7 +635,7 @@ function Config.getDownloadedBooksUrl(page, order)
 
     local limit = Config.SEARCH_RESULTS_LIMIT
     local order_str = ""
-    if order and #order > 0 then
+    if #order > 0 then
         order_str = "&order=" .. util.urlEncode(order[1])
     end
 
@@ -602,7 +651,7 @@ function Config.getFavoriteBooksUrl(page, order)
     
     local limit = Config.SEARCH_RESULTS_LIMIT
     local order_str = ""
-    if order and #order > 0 then
+    if #order > 0 then
         order_str = "&order=" .. util.urlEncode(order[1])
     end
 
@@ -656,7 +705,10 @@ function Config.getSetting(key, default)
 end
 
 function Config.saveSetting(key, value)
-    if type(value) == "string" then
+    -- The password is exempt from the trim: leading or trailing whitespace can be a real part
+    -- of it, and zlibrary_credentials.lua is written by hand, so its values must be stored
+    -- verbatim. The UI input sites already trim deliberately before calling this.
+    if type(value) == "string" and key ~= Config.SETTINGS_PASSWORD_KEY then
         _getLuaSettings():saveSetting(key, util.trim(value)):flush()
     else
         _getLuaSettings():saveSetting(key, value):flush()
@@ -674,6 +726,18 @@ function Config.getCredentials()
     }
 end
 
+-- Whether an account has been set up at all. Operations that need one can ask before making a
+-- request that cannot succeed, rather than waiting for the server to say "Please login" -- which
+-- costs a round trip and depends on the server phrasing it that way.
+--
+-- Deliberately not consulted for search: the search endpoint answers without credentials, and
+-- being able to browse before signing in is worth keeping.
+function Config.hasCredentials()
+    local email = Config.getSetting(Config.SETTINGS_USERNAME_KEY)
+    local password = Config.getSetting(Config.SETTINGS_PASSWORD_KEY)
+    return email ~= nil and email ~= "" and password ~= nil and password ~= ""
+end
+
 function Config.getUserSession()
     return {
         user_id = Config.getSetting(Config.SETTINGS_USER_ID_KEY),
@@ -689,6 +753,35 @@ end
 function Config.clearUserSession()
     Config.deleteSetting(Config.SETTINGS_USER_ID_KEY)
     Config.deleteSetting(Config.SETTINGS_USER_KEY_KEY)
+end
+
+-- Drop everything cached that belongs to one account. Signing out while this survives leaves the
+-- next person looking at the previous reader's books.
+--
+-- What is deliberately kept: "popular" is fetched unauthenticated (requires_auth = false) and is
+-- the same list for everybody; api_real_url and the domain caches describe the server, not the
+-- reader; and the book-info and cover caches hold public metadata. Favourite state is not among
+-- them -- it lives in favorite_book_ids below. View settings need no keeping: they are a device
+-- preference and live in the persistent settings file, not in any of these caches.
+function Config.clearPersonalCaches()
+    local runtime = Config.getConfigRuntimeCache()
+    runtime:remove("download_quota_status")
+    runtime:remove("favorite_book_ids")
+
+    local multi_search = Config.getMultiSearchCache()
+    for _, key in ipairs({ "recommended", "favorites", "downloaded" }) do
+        multi_search:remove(key)
+    end
+end
+
+-- Forget the account entirely: the stored username and password, the session tokens, and
+-- everything cached on their behalf. Clearing the session alone leaves the credentials behind,
+-- and the plugin simply signs back in with them on the next request.
+function Config.clearCredentials()
+    Config.deleteSetting(Config.SETTINGS_USERNAME_KEY)
+    Config.deleteSetting(Config.SETTINGS_PASSWORD_KEY)
+    Config.clearUserSession()
+    Config.clearPersonalCaches()
 end
 
 function Config.getDownloadDir()
@@ -835,13 +928,32 @@ function Config.setBookCommentsTimeout(block_timeout, total_timeout)
     Config.setTimeoutConfig(Config.SETTINGS_TIMEOUT_BOOK_COMMENTS_KEY, block_timeout, total_timeout)
 end
 
+-- View settings (items per page, cover toggles) are a device preference, so they live in the
+-- persistent settings file. They used to be kept in the runtime cache, where they expired with
+-- the cache's default TTL five days after they were last saved and silently reverted to
+-- defaults -- and where "Clear runtime cache" wiped them outright.
 function Config.setViewSettings(opts)
     if type(opts) ~= "table" then opts = {} end
-    return Config.getConfigRuntimeCache():insert("view_settings", opts)
+    Config.saveSetting(Config.SETTINGS_VIEW_SETTINGS_KEY, opts)
+    -- Drop the legacy cache entry so the settings file stays the only source of truth.
+    Config.getConfigRuntimeCache():remove("view_settings")
+    return true
 end
 
 function Config.getViewSettings()
-    return Config.getConfigRuntimeCache():get("view_settings") or {}
+    local opts = Config.getSetting(Config.SETTINGS_VIEW_SETTINGS_KEY)
+    if type(opts) == "table" then
+        return opts
+    end
+    -- One-time migration of a pre-settings-file entry. No expiry on the read: an entry older
+    -- than the cache's default TTL is still the user's last choice, not stale data.
+    local legacy = Config.getConfigRuntimeCache():get("view_settings", 0)
+    if type(legacy) == "table" then
+        Config.saveSetting(Config.SETTINGS_VIEW_SETTINGS_KEY, legacy)
+        Config.getConfigRuntimeCache():remove("view_settings")
+        return legacy
+    end
+    return {}
 end
 
 return Config

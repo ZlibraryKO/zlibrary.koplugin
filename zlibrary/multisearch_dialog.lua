@@ -14,7 +14,8 @@ local FrameContainer = require("ui/widget/container/framecontainer")
 local InputContainer = require("ui/widget/container/inputcontainer")
 local Screen = Device.screen
 local T = require("zlibrary.gettext")
-local Cache = require("zlibrary.cache")
+local Config = require("zlibrary.config")
+local PreLoader = require("zlibrary.preloader").Preloader
 local logger = require("logger")
 
 local SearchDialog = InputContainer:extend{
@@ -35,6 +36,9 @@ local SearchDialog = InputContainer:extend{
     books = nil,
     _position = nil,
     _cache = nil,
+    _fetch_generation = nil,
+    _fetching_page = nil,
+    _applying_page = nil,
 }
 
 function SearchDialog:init()
@@ -190,9 +194,16 @@ function SearchDialog:init()
         self.toggle_switch:disableFocusManagement(self[1])
     end
 
-    self._cache = Cache:new{
-        name = "multi_search"
-    }
+    -- The shared instance, not a private one: clearPersonalCaches removes this account's keys
+    -- through the same object, and a private copy would flush them back in afterwards.
+    self._cache = Config.getMultiSearchCache()
+end
+
+function SearchDialog:onCloseWidget()
+    -- Drop whatever the Preloader is still fetching for this screen, the same as the results
+    -- Menu does: a warmer that returns after close would otherwise insert into the caches
+    -- nobody is looking at anymore -- including the account that Clear credentials just removed.
+    if PreLoader and PreLoader.channel then PreLoader.channel:clearTasks() end
 end
 
 function SearchDialog:onKeyPress(key)
@@ -218,12 +229,25 @@ function SearchDialog:onKeyPress(key)
     return InputContainer.onKeyPress(self, key)
 end
 
+-- A tab switch or a forced refresh starts a new fetch generation: a fetch that is still in
+-- flight belongs to the list that was on screen before, and its response must not be applied
+-- on top of this one. The pagination state goes with it -- a stale has_more_api_results
+-- would let a page turn fire a fetch for a list that is not there yet.
+function SearchDialog:_bumpFetchGeneration()
+    self._fetch_generation = (self._fetch_generation or 0) + 1
+    self._fetching_page = nil
+    self._applying_page = nil
+    self.current_page_loaded = nil
+    self.has_more_api_results = nil
+end
+
 function SearchDialog:ToggleSwitchCallBack(_position)
     if not (type(_position) == 'number' and _position > 0) then
         logger.warn("MultiSearchDialog.ToggleSwitchCallBack invalid parameter")
         return
     end
 
+    self:_bumpFetchGeneration()
     self._position = _position
     self:clearMenuItems()
   
@@ -231,7 +255,7 @@ function SearchDialog:ToggleSwitchCallBack(_position)
     if cache_key then
         local cache_books = self._cache:get(cache_key, cache_expiry)
         if cache_books then
-            self:reloadFromBookData(cache_books, true)
+            self:_reloadFromBookData(cache_books, true)
             return true
         end
     end
@@ -270,13 +294,32 @@ function SearchDialog:_fetchAndProcessData(page, is_refresh)
     local current_toggle = self:getActiveItem()
     local item_callback = current_toggle and current_toggle.callback
     if type(item_callback) == "function" then
+        -- Tag the fetch with the generation it belongs to; the response handlers check the
+        -- tag (or, for callbacks that do not hand it back, the page still in flight) and
+        -- drop whatever comes back for a list the user has since moved away from.
+        local fetch_generation = self._fetch_generation
+        self._fetching_page = page or 1
         UIManager:nextTick(function()
-            item_callback(self, page, is_refresh)
+            item_callback(self, page, is_refresh, fetch_generation)
         end)
     end
 end
 
-function SearchDialog:reloadFromBookData(books, skip_cache, select_number, no_recalculate_dimen)
+-- The response handlers in main.lua call this when a fetch resolves. That can happen after
+-- a tab switch or a forced refresh made the answer stale, so a response the list is no
+-- longer waiting for is dropped here; internal callers (a cache hit, the initial list) go
+-- through _reloadFromBookData instead.
+function SearchDialog:reloadFromBookData(books, skip_cache, select_number, no_recalculate_dimen, fetch_generation)
+    if self:_isStaleResponse(nil, fetch_generation) then
+        logger.dbg("MultiSearchDialog.reloadFromBookData dropping a stale response")
+        return
+    end
+    self._fetching_page = nil
+    self._applying_page = nil
+    self:_reloadFromBookData(books, skip_cache, select_number, no_recalculate_dimen)
+end
+
+function SearchDialog:_reloadFromBookData(books, skip_cache, select_number, no_recalculate_dimen)
     local old_height = self.menu_container.height
     self.menu_container = self:createMenuContainer(books, old_height)
 
@@ -295,7 +338,7 @@ function SearchDialog:fetchAndShow()
     if not (self.books and #self.books > 0) then
         self:ToggleSwitchCallBack(self._position)
     else
-        self:reloadFromBookData(self.books)
+        self:_reloadFromBookData(self.books)
     end
 
     if type(self.on_fetch_and_show) == "function" then 
@@ -344,6 +387,7 @@ function SearchDialog:forceFetchAndReloadMenu()
    if cache_key then
         self._cache:remove(cache_key)
    end
+   self:_bumpFetchGeneration()
    self:clearMenuItems()
    self:_fetchAndProcessData(nil, true)
 end
@@ -358,8 +402,11 @@ function SearchDialog:onMenuSelect(item)
 end
 
 function SearchDialog:onMenuHold(item)
+    if not (item and item.book_index) then
+        return
+    end
     local book = self.books[item.book_index]
-    if type(book) ~= "table" and not book.author and not book.title then
+    if type(book) ~= "table" or (not book.author and not book.title) then
         return
     end
 
@@ -430,7 +477,7 @@ function SearchDialog:onMenuHold(item)
     UIManager:show(dialog)
 end
 
--- Can be appended multiple times, then call reloadFromBookData(nil, nil, 1)
+-- Can be appended multiple times, then call _reloadFromBookData(nil, nil, 1)
 function SearchDialog:extendBatchData(books)
     if not self.current_page_loaded or self.current_page_loaded == 1 then
         self.books = {}
@@ -442,12 +489,44 @@ function SearchDialog:extendBatchData(books)
     return self.books
 end
 
-function SearchDialog:appendBatchDataAndReload(books)
+function SearchDialog:appendBatchDataAndReload(books, fetch_generation)
+    -- setPaginationState runs first and vouches for the response by leaving its page in
+    -- _applying_page; without that the rows belong to a fetch the list already moved on
+    -- from, and appending them would mix tabs or duplicate rows.
+    if fetch_generation ~= nil then
+        if self:_isStaleResponse(nil, fetch_generation) then
+            logger.dbg("MultiSearchDialog.appendBatchDataAndReload dropping a stale response")
+            return
+        end
+    elseif not (self._applying_page and self._applying_page >= 2) then
+        logger.dbg("MultiSearchDialog.appendBatchDataAndReload dropping a stale response")
+        return
+    end
+    self._applying_page = nil
     self:extendBatchData(books)
-    self:reloadFromBookData(nil, nil, 1)
+    self:_reloadFromBookData(nil, nil, 1)
 end
 
-function SearchDialog:setPaginationState(has_more_results, current_page)
+-- A response is stale when the list it would be applied to has moved on from the fetch that
+-- produced it. Callbacks that hand back the generation they were issued with are checked
+-- against the current one; the rest are checked against the fetch still in flight.
+function SearchDialog:_isStaleResponse(current_page, fetch_generation)
+    if fetch_generation ~= nil then
+        return fetch_generation ~= self._fetch_generation
+    end
+    if not (self._fetching_page or self._applying_page) then return true end
+    return current_page ~= nil and self._fetching_page ~= nil and current_page ~= self._fetching_page
+end
+
+function SearchDialog:setPaginationState(has_more_results, current_page, fetch_generation)
+    -- A slow response can land after a tab switch or a refresh started another fetch; its
+    -- pagination state describes pages the list on screen does not have.
+    if self:_isStaleResponse(current_page, fetch_generation) then
+        logger.dbg(string.format("MultiSearchDialog.setPaginationState dropping a stale response for page %s", tostring(current_page)))
+        return
+    end
+    self._fetching_page = nil
+    self._applying_page = current_page
     self.has_more_api_results = has_more_results
     self.current_page_loaded = current_page
 end
@@ -457,6 +536,13 @@ function SearchDialog:onMenuGotoPage(menu_instance, new_page)
 
     local is_last_page = new_page == menu_instance.page_num
     if not (is_last_page and self.has_more_api_results and self:_isEnablePagination()) then
+        return true
+    end
+    -- The previous page turn's fetch is still on its way; firing again would fetch the same
+    -- page twice and append its rows twice. The flag clears in setPaginationState, so after
+    -- an unanswered fetch (e.g. an error the user did not retry) paginating again takes a
+    -- refresh or a tab switch.
+    if self._fetching_page then
         return true
     end
 
@@ -499,9 +585,14 @@ function SearchDialog:setToggleTitle(position, title)
         UIManager:setDirty("all", "ui")
     else
         self.toggle_items[position].text = title or ""
+        -- init re-derives _position from def_position, so keep the tab the user is on
+        -- rather than silently snapping back to the default one.
+        local keep_position = self._position
         self:free()
         self.menu_container = nil 
         self:init()
+        self._position = keep_position
+        self.toggle_switch:setPosition(keep_position)
         UIManager:setDirty("all", "ui")
     end
 end

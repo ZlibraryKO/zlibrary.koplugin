@@ -8,6 +8,10 @@ local Cache = require("zlibrary.cache")
 local AsyncHelper = require("zlibrary.async_helper")
 
 local ApiHelper = {}
+-- Signs in with Api.login directly, and returns the original response when no credentials are
+-- stored. Both are deliberate and load-bearing: this runs as background cache warming, and
+-- Zlibrary:login opens a credentials dialog when nothing is stored. Routing this through the
+-- plugin's login "to share the retry logic" would throw a modal at a reader who is reading.
 function ApiHelper.fetchWithAuth(api_method, ...)
     local session = Config.getUserSession() or {}
     local res = api_method(session.user_id, session.user_key, ...)
@@ -54,13 +58,15 @@ local function getSafeCallback(callback)
 end
 function  Preloader.getDownloadQuotaStatus(callback)
         local wrap_callback = getSafeCallback(callback)
-        local quota_status = Config.getConfigRuntimeCache():get("download_quota_status")
+        local quota_status = Config.getConfigRuntimeCache():get("download_quota_status", 1800)
         if type(quota_status) == "table" and next(quota_status) then return wrap_callback(true) end
         if not NetworkMgr:isConnected() then return wrap_callback(false) end
         local task = function() return ApiHelper.fetchWithAuth(Api.getDownloadQuotaStatus) end
         Preloader.channel:pushTask(task, function(success, res)
                 local is_ok = false
-                if success and type(res) == "table" and type(res.quota_status) == "table" then
+                -- The account may have been cleared while the fetch ran; caching its quota now
+                -- would show it to whoever signs in next.
+                if success and Config.hasCredentials() and type(res) == "table" and type(res.quota_status) == "table" then
                         Config.getConfigRuntimeCache():insert("download_quota_status", res.quota_status)
                         is_ok = true
                 end
@@ -75,7 +81,9 @@ function  Preloader.getFavoriteBookIds(callback)
         local task = function() return ApiHelper.fetchWithAuth(Api.getFavoriteBookIds) end
         Preloader.channel:pushTask(task, function(success, res)
                 local is_ok = false
-                if success and type(res) == "table" and type(res.books) == "table" then
+                -- Same guard as the quota warmer above: credentials cleared mid-fetch means
+                -- these ids belong to an account that is gone, not to the next one.
+                if success and Config.hasCredentials() and type(res) == "table" and type(res.books) == "table" then
                         local book_ids = {}
                         for _, book in ipairs(res.books) do
                                 book_ids[tostring(book.id)] = true
@@ -124,11 +132,14 @@ function  Preloader.getBookComments(book_id, book_hash, callback)
 end
 function  Preloader.getMostPopularBooks(callback)
         local wrap_callback = getSafeCallback(callback)
-        local cache = Cache:new{ name = "multi_search"}
+        local cache = Config.getMultiSearchCache()
         local cache_key = "popular"
         local has_cache = cache:get(cache_key, 1840000)
         if type(has_cache) == "table" then return wrap_callback(true) end
         if not NetworkMgr:isConnected() then return wrap_callback(false) end
+        -- Deliberately not routed through fetchWithAuth: most-popular is the same list for
+        -- every account (main.lua marks it requires_auth = false), so there is no session
+        -- to attach and nothing to re-login for.
         local task = function() return Api.getMostPopularBooks() end
         Preloader.channel:pushTask(task, function(success, res)
                 local is_ok = false
@@ -141,12 +152,14 @@ function  Preloader.getMostPopularBooks(callback)
 end
 function  Preloader.getRecommendedBooks(callback)
         local wrap_callback = getSafeCallback(callback)
-        local cache = Cache:new{ name = "multi_search"}
+        local cache = Config.getMultiSearchCache()
         local cache_key = "recommended"
         local has_cache = cache:get(cache_key, 1840000)
         if type(has_cache) == "table" then return wrap_callback(true) end
         if not NetworkMgr:isConnected() then return wrap_callback(false) end
-        local task = function() return Api.getRecommendedBooks() end
+        -- Unlike most-popular above, recommended is per-account (requires_auth = true in
+        -- main.lua), so it goes through fetchWithAuth for the session cookie and re-login.
+        local task = function() return ApiHelper.fetchWithAuth(Api.getRecommendedBooks) end
         Preloader.channel:pushTask(task, function(success, res)
                 local is_ok = false
                 if success and type(res) == "table" and type(res.books) == "table" then
@@ -163,7 +176,10 @@ function  Preloader.getBookCover(url, book_hash, callback)
         local cache_path = cover_cache:get(book_hash)
         if cache_path then return wrap_callback(true) end
         if not NetworkMgr:isConnected() then return wrap_callback(false) end
-        local task = function() return ApiHelper.downloadCover(url, book_hash) end
+        -- skip_conflicts = true: the Menu_Covers channel downloads the same covers with its
+        -- own workers, and the unconditional temp-file cleanup without it could unlink the
+        -- .downloading path out from under a concurrent subprocess.
+        local task = function() return ApiHelper.downloadCover(url, book_hash, true) end
         Preloader.channel:pushTask(task, function(success, res)
                 wrap_callback(success and res ==true)
         end)

@@ -26,21 +26,38 @@ import sys
 
 
 def onclosewidget_bodies(path):
-    """Yield (function_name, body) for every :onCloseWidget definition in a file."""
+    """Yield (display_name, style, body) for every onCloseWidget definition in a file.
+
+    Two shapes count: the usual `function X:onCloseWidget(...)` method, and the assignment
+    form `widget.onCloseWidget = function(...)` -- which is exactly how the credentials
+    prompt hooks teardown, and how KOReader itself does it in hook_container.lua. The
+    assignment shape used to be invisible here, so a future assignment-style handler that
+    returned true would have broken the prompt's teardown hook without failing this check.
+    """
     with open(path, "r", encoding="utf-8", errors="replace") as fh:
         lines = fh.readlines()
 
-    start = re.compile(r"^function\s+([A-Za-z_][\w.]*):onCloseWidget\s*\(")
+    method = re.compile(r"^function\s+([A-Za-z_][\w.]*):onCloseWidget\s*\(")
+    # Assignment-style handlers usually live inside another function, so allow a leading
+    # indent; the handler's own `end` then lands at that same indent, which is how the
+    # capture knows where to stop (everything nested sits deeper).
+    assignment = re.compile(r"^(\s*)([A-Za-z_][\w.]*)\.onCloseWidget\s*=\s*function\s*\(")
     for i, line in enumerate(lines):
-        m = start.match(line)
-        if not m:
-            continue
+        m = method.match(line)
+        if m:
+            name, style, indent = m.group(1) + ":onCloseWidget", "method", ""
+        else:
+            m = assignment.match(line)
+            if not m:
+                continue
+            name, style, indent = m.group(2) + ".onCloseWidget", "assignment", m.group(1)
+        closer = re.compile(r"^" + re.escape(indent) + r"end\b")
         body = []
         for rest in lines[i + 1:]:
-            if rest.startswith("end"):
+            if closer.match(rest):
                 break
             body.append(re.sub(r"--.*$", "", rest))
-        yield m.group(1), "".join(body)
+        yield name, style, "".join(body)
 
 
 def main():
@@ -56,6 +73,7 @@ def main():
 
     failures = []
     checked = 0
+    checked_by_style = {"method": 0, "assignment": 0}
 
     # 1. No widget may swallow CloseWidget. Any `return true` in the handler stops propagation
     #    from reaching our override.
@@ -71,11 +89,12 @@ def main():
             if not name.endswith(".lua"):
                 continue
             path = os.path.join(dirpath, name)
-            for func, body in onclosewidget_bodies(path):
+            for func, style, body in onclosewidget_bodies(path):
                 checked += 1
+                checked_by_style[style] += 1
                 if returns_true.search(body):
                     failures.append(
-                        "%s:%s:onCloseWidget returns true, which stops CloseWidget propagating "
+                        "%s: %s returns true, which stops CloseWidget propagating "
                         "to the dialog's own handler" % (os.path.relpath(path, koreader_root), func))
 
     if checked == 0:
@@ -109,7 +128,8 @@ def main():
         print("\n  %d failed" % len(failures))
         return 1
 
-    print("  [ok  ] no widget swallows CloseWidget (%d handlers checked)" % checked)
+    print("  [ok  ] no widget swallows CloseWidget (%d handlers checked: %d method, %d assignment)"
+          % (checked, checked_by_style["method"], checked_by_style["assignment"]))
     print("  [ok  ] WidgetContainer still propagates to children before its own handler")
     print("  [ok  ] the credentials prompt still resolves from the teardown hook")
     print("\n  3 passed, 0 failed")

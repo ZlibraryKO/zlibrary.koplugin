@@ -195,6 +195,9 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
     for _, option_info in ipairs(options_list) do
         current_selection_state[option_info.value] = selected_values_set[option_info.value] or false
     end
+    -- The value the user's last tap switched on; a radio cleanup keeps this one when the stored
+    -- setting carried stale extras.
+    local last_toggled_value
 
     local selection_menu
     -- nil while unfiltered; a lowercased query string while the user is filtering the list.
@@ -221,6 +224,9 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
             end,
             callback = function()
                 current_selection_state[option_value] = not current_selection_state[option_value]
+                if current_selection_state[option_value] then
+                    last_toggled_value = option_value
+                end
                 selection_menu:updateItems(nil, true)
                 -- single select
                 if is_single then
@@ -267,9 +273,13 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
                     if is_selected then table.insert(new_selected_values, value) end
                 end
                 if is_single and #new_selected_values > 1 then
-                    local original_option = selected_values_table[1]
+                    -- A radio setting keeps at most one value: the one just tapped. The old
+                    -- cleanup removed only the first stored value, so a stored setting that
+                    -- already held several values re-saved the rest of them. When nothing was
+                    -- tapped (opened and backed out), fall back to the first stored value.
+                    local value_to_keep = last_toggled_value or selected_values_table[1]
                     for i = #new_selected_values, 1, -1 do
-                        if new_selected_values[i] == original_option then
+                        if new_selected_values[i] ~= value_to_keep then
                             table.remove(new_selected_values, i)
                         end
                     end
@@ -486,25 +496,30 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
         }},{{
             text = string.format("%s: %s \u{25BC}", T("Sort by"), search_order_name),
             callback = function()
+                -- Carry over what the user has typed so far; def_input is the value captured
+                -- when this dialog was built and would silently discard it.
+                local typed_input = dialog:getInputText()
                 _closeAndUntrackDialog(dialog)
                 Ui.showOrdersSelectionDialog(parent_zlibrary, function(count)
-                    Ui.showSearchDialog(parent_zlibrary, def_input)
+                    Ui.showSearchDialog(parent_zlibrary, typed_input)
                 end)
             end
         }},{{
             text = lang_text,
             callback = function()
+                local typed_input = dialog:getInputText()
                 _closeAndUntrackDialog(dialog)
                 _showMultiSelectionDialog(parent_zlibrary, T("Select search languages"), Config.SETTINGS_SEARCH_LANGUAGES_KEY, Config.SUPPORTED_LANGUAGES, function(count)
-                    Ui.showSearchDialog(parent_zlibrary, def_input)
+                    Ui.showSearchDialog(parent_zlibrary, typed_input)
                 end)
             end
         },{
             text = format_text,
             callback = function()
+                local typed_input = dialog:getInputText()
                 _closeAndUntrackDialog(dialog)
                 _showMultiSelectionDialog(parent_zlibrary, T("Select search formats"), Config.SETTINGS_SEARCH_EXTENSIONS_KEY, Config.SUPPORTED_EXTENSIONS, function(count)
-                    Ui.showSearchDialog(parent_zlibrary, def_input)
+                    Ui.showSearchDialog(parent_zlibrary, typed_input)
                 end)
             end
         }},{{
@@ -708,7 +723,7 @@ function Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, ok
                     callback = function()
                         turn_off_wifi = not turn_off_wifi
                         Config.setTurnOffWifiAfterDownload(turn_off_wifi)
-                        UIManager:close(dialog)
+                        _closeAndUntrackDialog(dialog)
                         showDialog()
                     end,
                 },
@@ -825,12 +840,14 @@ function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel
     
 
     local is_http_400 = string.match(error_string, "HTTP Error: 400")
-    local is_timeout = string.find(error_string, T("Request timed out")) or 
-                      string.find(error_string, "timeout") or 
+    -- The translated needles must be searched as plain text: a locale containing pattern
+    -- magic (%, (, -) would throw "malformed pattern" on this error-handling path.
+    local is_timeout = string.find(error_string, T("Request timed out"), 1, true) or
+                      string.find(error_string, "timeout") or
                       string.find(error_string, "timed out") or
                       string.find(error_string, "sink timeout")
-    local is_network_error = string.find(error_string, T("Network connection error")) or
-                            string.find(error_string, T("Network request failed"))
+    local is_network_error = string.find(error_string, T("Network connection error"), 1, true) or
+                            string.find(error_string, T("Network request failed"), 1, true)
     -- A dead or misspelled base URL never resolves, so retrying alone can only fail again.
     -- Offer auto-discovery alongside Retry, the same way a timeout does.
     local is_dns_error = string.find(error_string, Api.DNS_ERROR_TEXT, 1, true) ~= nil
@@ -992,16 +1009,25 @@ function Ui.showTimeoutConfigDialog(parent_ui, timeout_name, timeout_key, getter
         -- U+1F5D8 is in no font KOReader bundles; F021 is the refresh glyph used elsewhere.
         mandatory = "\u{F021}",
         callback = function()
+            local text = string.format(T("Reset %s timeouts to default values?"), timeout_name)
+            local ok_callback = function()
+                Config.deleteSetting(timeout_key)
+                refreshDialog()
+                Ui.showInfoMessage(T("Timeout settings reset to defaults"))
+            end
             if _plugin_instance and _plugin_instance.dialog_manager then
                 _plugin_instance.dialog_manager:showConfirmDialog({
-                    text = string.format(T("Reset %s timeouts to default values?"), timeout_name),
+                    text = text,
                     ok_text = T("Reset"),
                     cancel_text = T("Cancel"),
-                    ok_callback = function()
-                        Config.deleteSetting(timeout_key)
-                        refreshDialog()
-                        Ui.showInfoMessage(T("Timeout settings reset to defaults"))
-                    end
+                    ok_callback = ok_callback
+                })
+            else
+                UIManager:show(ConfirmBox:new{
+                    text = text,
+                    ok_text = T("Reset"),
+                    cancel_text = T("Cancel"),
+                    ok_callback = ok_callback
                 })
             end
         end
@@ -1128,23 +1154,32 @@ function Ui.showAllTimeoutConfigDialog(parent_ui)
             text = T("Reset all timeouts to defaults"),
             mandatory = "\u{25B7}",
             callback = function()
+                local text = T("Reset all timeout settings to default values?")
+                local ok_callback = function()
+                    Config.deleteSetting(Config.SETTINGS_TIMEOUT_LOGIN_KEY)
+                    Config.deleteSetting(Config.SETTINGS_TIMEOUT_SEARCH_KEY)
+                    Config.deleteSetting(Config.SETTINGS_TIMEOUT_BOOK_DETAILS_KEY)
+                    Config.deleteSetting(Config.SETTINGS_TIMEOUT_RECOMMENDED_KEY)
+                    Config.deleteSetting(Config.SETTINGS_TIMEOUT_POPULAR_KEY)
+                    Config.deleteSetting(Config.SETTINGS_TIMEOUT_DOWNLOAD_KEY)
+                    Config.deleteSetting(Config.SETTINGS_TIMEOUT_COVER_KEY)
+                    Config.deleteSetting(Config.SETTINGS_TIMEOUT_BOOK_COMMENTS_KEY)
+                    Ui.showInfoMessage(T("All timeout settings reset to defaults"))
+                    refreshMainDialog()
+                end
                 if _plugin_instance and _plugin_instance.dialog_manager then
                     _plugin_instance.dialog_manager:showConfirmDialog({
-                        text = T("Reset all timeout settings to default values?"),
+                        text = text,
                         ok_text = T("Reset All"),
                         cancel_text = T("Cancel"),
-                        ok_callback = function()
-                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_LOGIN_KEY)
-                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_SEARCH_KEY)
-                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_BOOK_DETAILS_KEY)
-                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_RECOMMENDED_KEY)
-                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_POPULAR_KEY)
-                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_DOWNLOAD_KEY)
-                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_COVER_KEY)
-                            Config.deleteSetting(Config.SETTINGS_TIMEOUT_BOOK_COMMENTS_KEY)
-                            Ui.showInfoMessage(T("All timeout settings reset to defaults"))
-                            refreshMainDialog()
-                        end
+                        ok_callback = ok_callback
+                    })
+                else
+                    UIManager:show(ConfirmBox:new{
+                        text = text,
+                        ok_text = T("Reset All"),
+                        cancel_text = T("Cancel"),
+                        ok_callback = ok_callback
                     })
                 end
             end

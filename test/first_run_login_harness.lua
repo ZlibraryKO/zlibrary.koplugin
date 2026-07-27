@@ -40,6 +40,7 @@ local function newRig(opts)
         saved = {},
         session_cleared = 0,
         session_saved = 0,
+        caches_cleared = 0,
         ticks = {},
         checks = {},
         closes = 0,
@@ -61,9 +62,13 @@ local function newRig(opts)
     env.Config = {
         SETTINGS_USERNAME_KEY = "zlibrary_username",
         SETTINGS_PASSWORD_KEY = "zlibrary_password",
+        -- getSetting reads the same table saveSetting writes, so a pre-seeded account and a
+        -- just-stored one are indistinguishable -- as they are on a device.
+        getSetting = function(k) return rig.saved[k] end,
         saveSetting = function(k, v) rig.saved[k] = v end,
         clearUserSession = function() rig.session_cleared = rig.session_cleared + 1 end,
         saveUserSession = function() rig.session_saved = rig.session_saved + 1 end,
+        clearPersonalCaches = function() rig.caches_cleared = rig.caches_cleared + 1 end,
     }
 
     env.NetworkMgr = { isConnected = function() return rig.connected end }
@@ -270,6 +275,8 @@ do
     r.check("and not cleared straight afterwards", rig.session_cleared == 0,
             "cleared the fresh session " .. rig.session_cleared .. " times")
     r.check("the dialog closes exactly once", rig.closes == 1, "closed " .. rig.closes)
+    r.check("a first sign-in has no previous account whose caches need dropping",
+            rig.caches_cleared == 0, "cleared the caches " .. rig.caches_cleared .. " times")
     r.check("closing wraps the inherited teardown rather than replacing it",
             rig.inherited_calls == 1, "inherited teardown ran " .. rig.inherited_calls .. " times")
     r.check("the resume is deferred to the next tick, not run mid-close", #results == 0,
@@ -311,6 +318,57 @@ do
             #results == 1 and results[1][1] == true and results[1][2] == false,
             "got " .. tostring(results[1] and results[1][1]) .. "/"
                    .. tostring(results[1] and results[1][2]))
+end
+
+-- ------------------------------------------------------ switching accounts drops the old one's caches
+--
+-- MultiSearchDialog serves the multi_search lists and favourite state from cache before
+-- fetching, so signing in as account B while account A's caches survive shows A's books and
+-- hearts until the TTLs lapse. The store path is where the account actually changes, verified
+-- or not, so that is where the caches must go.
+do
+    local rig = newRig()
+    rig.saved.zlibrary_username = "first@example.com"
+    rig.saved.zlibrary_password = "hunter2"
+    rig.Z:_promptForCredentials(function() end)
+
+    rig.submit("second@example.com", "hunter2")
+    rig.checks[1].resolve("ok", nil, { user_id = "42", user_key = "abc" })
+
+    r.check("signing in as a different account drops the previous one's caches",
+            rig.caches_cleared == 1, "cleared the caches " .. rig.caches_cleared .. " times")
+    r.check("and stores the new account",
+            rig.saved.zlibrary_username == "second@example.com",
+            "stored " .. tostring(rig.saved.zlibrary_username))
+end
+
+do
+    -- Same check on the unchecked path: a walled mirror must not exempt the switch either.
+    local rig = newRig()
+    rig.saved.zlibrary_username = "first@example.com"
+    rig.saved.zlibrary_password = "hunter2"
+    rig.Z:_promptForCredentials(function() end)
+
+    rig.submit("second@example.com", "hunter2")
+    rig.checks[1].resolve("transport", "Request timed out")
+
+    r.check("an unchecked account switch also drops the previous one's caches",
+            rig.caches_cleared == 1, "cleared the caches " .. rig.caches_cleared .. " times")
+end
+
+do
+    -- Re-entering the SAME account is not a switch: clearing its caches would just cost a
+    -- refetch of that account's own data.
+    local rig = newRig()
+    rig.saved.zlibrary_username = "reader@example.com"
+    rig.saved.zlibrary_password = "hunter2"
+    rig.Z:_promptForCredentials(function() end)
+
+    rig.submit("reader@example.com", "hunter2")
+    rig.checks[1].resolve("ok", nil, { user_id = "42", user_key = "abc" })
+
+    r.check("re-verifying the same account keeps its caches", rig.caches_cleared == 0,
+            "cleared the caches " .. rig.caches_cleared .. " times for the same account")
 end
 
 -- ------------------------------------------------ the radio is off: try anyway, and let KOReader ask
@@ -382,6 +440,41 @@ do
             "closed a dialog that was already gone")
     r.check("the caller is still resolved exactly once", #results == 1,
             "resolved " .. #results .. " times")
+end
+
+-- ---------------------------------- an unchecked verdict that lands after Cancel
+--
+-- The ok branch above keeps proven credentials even after the dialog is gone, because dropping
+-- them would strand a live session. An unchecked verdict has no such excuse: the user
+-- cancelled against a dead mirror, so nothing may change -- not the stored password, not the
+-- session. Otherwise Cancel stops meaning "change nothing", the defect the single Set and
+-- verify button exists to fix.
+do
+    local rig = newRig()
+    local results = {}
+    -- A working account is already stored, as on any configured device.
+    rig.saved.zlibrary_username = "reader@example.com"
+    rig.saved.zlibrary_password = "works"
+    rig.Z:_promptForCredentials(function(...) table.insert(results, { ... }) end)
+
+    rig.submit("reader@example.com", "untested")
+    -- The user gives up while the check is in flight: Cancel, back, or closeAllDialogs.
+    rig.last_dialog:onCloseWidget()
+    rig.drainTicks()
+    local closes_before = rig.closes
+
+    rig.checks[1].resolve("transport", "Request timed out")
+    rig.drainTicks()
+
+    r.check("an unchecked verdict after Cancel stores nothing",
+            rig.saved.zlibrary_password == "works",
+            "the untested password replaced the working one: " .. tostring(rig.saved.zlibrary_password))
+    r.check("and leaves the session alone", rig.session_cleared == 0,
+            "cleared the session " .. rig.session_cleared .. " times")
+    r.check("and says nothing over whatever the user is doing now", rig.info_shown == 0,
+            "showed " .. rig.info_shown .. " notices")
+    r.check("and does not close a dialog that is already gone", rig.closes == closes_before,
+            "closed a dialog that was already gone")
 end
 
 -- ---------------------------------------------------------------- Cancel resolves as unsaved
@@ -460,6 +553,43 @@ do
     r.check("the stranded caller is released as unsaved",
             #first == 1 and first[1] == false,
             "first: " .. #first .. " " .. tostring(first[1]))
+end
+
+-- ---------------------------------- a pending settle must not steal the next prompt's waiters
+--
+-- UIManager:close removes the dialog synchronously, but the settle the close hook schedules
+-- runs a tick later. A caller landing in between sees "waiters set, dialog not shown" -- the
+-- stale-branch condition -- drains the old waiters and opens a fresh prompt. The old settle
+-- must then leave the fresh prompt's list alone: draining it would resolve the new caller with
+-- the old prompt's answer and drop its queued action.
+do
+    local rig = newRig()
+    local first, second = {}, {}
+    rig.Z:_promptForCredentials(function(ok) table.insert(first, ok) end)
+
+    rig.last_dialog:onCloseWidget()     -- schedules settle; the tick has not run yet
+    rig.widget_shown = false            -- UIManager:close removes the dialog synchronously
+    rig.Z:_promptForCredentials(function(ok) table.insert(second, ok) end)
+
+    r.check("a caller in the one-tick window gets a fresh dialog", rig.dialogs_opened == 2,
+            "opened " .. rig.dialogs_opened .. " dialogs")
+    r.check("and the old waiters were already released as unsaved",
+            #first == 1 and first[1] == false,
+            "first: " .. #first .. " " .. tostring(first[1]))
+
+    rig.drainTicks()                    -- the old settle fires now
+    r.check("the pending settle does not resolve the new prompt's caller",
+            #second == 0, "resolved " .. #second .. " time(s) with the old prompt's answer")
+    r.check("and does not release the new prompt's slot",
+            rig.state.waiters ~= nil and rig.state.dialog ~= nil,
+            "the fresh prompt was orphaned -- its caller can never resolve")
+
+    -- The fresh prompt is fully functional: cancelling it resolves its caller exactly once.
+    rig.last_dialog:onCloseWidget()
+    rig.drainTicks()
+    r.check("the fresh prompt still resolves its own caller",
+            #second == 1 and second[1] == false,
+            "second: " .. #second .. " " .. tostring(second[1]))
 end
 
 -- ---------------------------------------------------------------- a dialog that never opened
@@ -792,13 +922,11 @@ do
     env.Config.getConfigRuntimeCache = function()
         return { remove = function(_, k) removed.runtime[k] = true end }
     end
-    env.Cache = {
-        new = function(_, opts)
-            local bucket = removed[opts.name] or {}
-            removed[opts.name] = bucket
-            return { remove = function(_, k) bucket[k] = true end }
-        end,
-    }
+    -- The shared multi_search instance: clearing has to go through the same object the
+    -- dialogs write through, or a stale copy's next flush resurrects what was just removed.
+    env.Config.getMultiSearchCache = function()
+        return { remove = function(_, k) removed.multi_search[k] = true end }
+    end
 
     local body = support.extract_block(PLUGIN .. "/zlibrary/config.lua",
                                        "(\nfunction Config%.clearPersonalCaches%(%).-\n)end\n")
@@ -822,6 +950,40 @@ do
     r.check("but keeps popular, which is the same for everyone",
             removed.multi_search["popular"] == nil,
             "popular was cleared needlessly")
+end
+
+do
+    -- The sharing the block above relies on: every caller gets ONE multi_search cache.
+    -- Two KVCache instances for the same file each hold their own in-memory copy and flush
+    -- the whole file, so a getter that constructed a fresh one per call would leave a dialog's
+    -- long-lived instance free to resurrect keys clearPersonalCaches just removed.
+    local constructions = 0
+    local env = {
+        Config = {},
+        Cache = {
+            new = function(_, opts)
+                constructions = constructions + 1
+                return { name = opts.name }
+            end,
+        },
+    }
+
+    -- Anchored at a line-start end: the getter has a `return` between its `if` block's end and
+    -- its own, so the usual unanchored `end\n` would cut the function off before the return.
+    -- The capture therefore includes the closing end and none is appended below.
+    local body = support.extract_block(PLUGIN .. "/zlibrary/config.lua",
+                                       "(\nfunction Config%.getMultiSearchCache%(%)[%s%S]-\nend\n)")
+    local chunk = assert(loadstring("local Config = ...\n" .. body .. "return Config",
+                                    "=getMultiSearchCache"))
+    setfenv(chunk, env)
+    local config = chunk(env.Config)
+
+    local first = config.getMultiSearchCache()
+    local second = config.getMultiSearchCache()
+    r.check("the multi_search cache is one shared instance",
+            first == second and constructions == 1 and first.name == "multi_search",
+            string.format("identity=%s constructions=%d -- each writer would flush its own copy",
+                          tostring(first == second), constructions))
 end
 
 do

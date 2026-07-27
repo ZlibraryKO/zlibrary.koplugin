@@ -36,6 +36,10 @@ function Discovery.run(self, is_interactive, retry_callback)
         end
     end
     self.discover_channel = self.discover_channel or AsyncHelper:createChannel("findWorkingBaseUrl", 3, safe_close_loading_msg)
+    -- createChannel caches by name, so its on_finish argument only lands on the FIRST run; the
+    -- closure it stored keeps pointing at that first invocation's loading_msg forever. Re-point
+    -- the field at this run's closer so a drain/abort closes the current loading message.
+    self.discover_channel.on_finish = safe_close_loading_msg
 
     local function getCleanUrl(url)
         if type(url) ~= "string" then return "" end
@@ -234,7 +238,9 @@ function Discovery.run(self, is_interactive, retry_callback)
         end
 
         if not is_interactive then
-            -- block until done
+            -- Nothing blocks here: start_discover_task forks the probe subprocesses and returns
+            -- immediately; completion arrives later via on_batch_end -> finishDiscovery, which
+            -- closes the loading message and runs retry_callback.
             loading_msg = Ui.showLoadingMessage(T("Searching for working Z-library server..."))
             return start_discover_task() 
         end

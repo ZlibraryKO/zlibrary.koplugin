@@ -90,6 +90,23 @@ r.check("an ordinary HTML error page is not misread as a challenge",
         res.error and res.error:find("refusing automated access", 1, true) == nil,
         tostring(res.error))
 
+-- ---------------------------------------------------------------- 200 with a challenge body
+-- A WAF can serve the interstitial with a 200 instead of an error status. This used to fall
+-- through to callers as an unparseable body -- a generic "Invalid response format" that triggers
+-- no auto-discovery, when a different mirror is the only thing that helps.
+n = 0
+serve = function(p)
+    n = n + 1
+    if p.sink then p.sink(DIAMWALL_BODY) end
+    return 1, 200, {}, "HTTP/1.1 200"
+end
+res = Api.makeHttpRequest{ url = "https://waf.example/eapi/user/login", method = "GET", headers = {} }
+r.check("a challenge served with status 200 is still recognised",
+        res.error and res.error:find("refusing automated access", 1, true) ~= nil,
+        "error=" .. tostring(res.error))
+r.check("the 200 challenge error also names the host",
+        res.error and res.error:find("waf.example", 1, true) ~= nil, tostring(res.error))
+
 -- A book whose description happens to quote a challenge phrase must not poison a good response.
 n = 0
 serve = function(p)
@@ -98,7 +115,7 @@ serve = function(p)
     return 1, 200, {}, "HTTP/1.1 200"
 end
 res = Api.makeHttpRequest{ url = "https://good.example/eapi/book/1", method = "GET", headers = {} }
-r.check("a successful response is never inspected for challenge markers",
+r.check("a JSON response quoting a challenge phrase is not misread as a challenge",
         res.status_code == 200 and res.error == nil,
         "status=" .. tostring(res.status_code) .. " error=" .. tostring(res.error))
 

@@ -20,6 +20,7 @@ Config.SETTINGS_USER_KEY_KEY = "zlib_user_key"
 Config.SETTINGS_SEARCH_LANGUAGES_KEY = "zlibrary_search_languages"
 Config.SETTINGS_SEARCH_EXTENSIONS_KEY = "zlibrary_search_extensions"
 Config.SETTINGS_SEARCH_ORDERS_KEY = "zlibrary_search_order"
+Config.SETTINGS_VIEW_SETTINGS_KEY = "zlibrary_view_settings"
 Config.SETTINGS_DOWNLOAD_DIR_KEY = "zlibrary_download_dir"
 Config.SETTINGS_TURN_OFF_WIFI_AFTER_DOWNLOAD_KEY = "zlibrary_turn_off_wifi_after_download"
 Config.SETTINGS_SKIP_OPEN_BOOK_PROMPT_KEY = "zlibrary_skip_open_book_prompt"
@@ -759,8 +760,9 @@ end
 --
 -- What is deliberately kept: "popular" is fetched unauthenticated (requires_auth = false) and is
 -- the same list for everybody; api_real_url and the domain caches describe the server, not the
--- reader; view_settings is a device preference; and the book-info and cover caches hold public
--- metadata. Favourite state is not among them -- it lives in favorite_book_ids below.
+-- reader; and the book-info and cover caches hold public metadata. Favourite state is not among
+-- them -- it lives in favorite_book_ids below. View settings need no keeping: they are a device
+-- preference and live in the persistent settings file, not in any of these caches.
 function Config.clearPersonalCaches()
     local runtime = Config.getConfigRuntimeCache()
     runtime:remove("download_quota_status")
@@ -926,13 +928,32 @@ function Config.setBookCommentsTimeout(block_timeout, total_timeout)
     Config.setTimeoutConfig(Config.SETTINGS_TIMEOUT_BOOK_COMMENTS_KEY, block_timeout, total_timeout)
 end
 
+-- View settings (items per page, cover toggles) are a device preference, so they live in the
+-- persistent settings file. They used to be kept in the runtime cache, where they expired with
+-- the cache's default TTL five days after they were last saved and silently reverted to
+-- defaults -- and where "Clear runtime cache" wiped them outright.
 function Config.setViewSettings(opts)
     if type(opts) ~= "table" then opts = {} end
-    return Config.getConfigRuntimeCache():insert("view_settings", opts)
+    Config.saveSetting(Config.SETTINGS_VIEW_SETTINGS_KEY, opts)
+    -- Drop the legacy cache entry so the settings file stays the only source of truth.
+    Config.getConfigRuntimeCache():remove("view_settings")
+    return true
 end
 
 function Config.getViewSettings()
-    return Config.getConfigRuntimeCache():get("view_settings") or {}
+    local opts = Config.getSetting(Config.SETTINGS_VIEW_SETTINGS_KEY)
+    if type(opts) == "table" then
+        return opts
+    end
+    -- One-time migration of a pre-settings-file entry. No expiry on the read: an entry older
+    -- than the cache's default TTL is still the user's last choice, not stale data.
+    local legacy = Config.getConfigRuntimeCache():get("view_settings", 0)
+    if type(legacy) == "table" then
+        Config.saveSetting(Config.SETTINGS_VIEW_SETTINGS_KEY, legacy)
+        Config.getConfigRuntimeCache():remove("view_settings")
+        return legacy
+    end
+    return {}
 end
 
 return Config

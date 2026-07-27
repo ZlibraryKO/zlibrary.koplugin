@@ -25,6 +25,12 @@ can fix the typo. If the server cannot be reached at all — no Wi-Fi, a dead mi
 credentials are saved anyway, with a note that they could not be checked yet, so a mirror being
 down never stops you storing them.
 
+**View settings no longer forget themselves.** *Search Items/Page*, *Browse Items/Page* and the
+cover toggles used to be kept in a cache that expires entries five days after they were last
+saved — so five days after you changed one, everything was quietly back to its default. They are
+now stored with the other persistent settings, existing choices are carried over automatically,
+and *Clear runtime cache* no longer takes them with it.
+
 ### Added
 
 **Clear credentials.** A new entry under **Advanced** that signs you out completely: it forgets

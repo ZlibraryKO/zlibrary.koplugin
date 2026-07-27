@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-21 18:59+0200\n"
+"POT-Creation-Date: 2026-07-27 10:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -472,6 +472,9 @@ msgstr "Échec de l'analyse de la réponse des commentaires du livre."
 msgid "API returned an error for book comments."
 msgstr "L'API a retourné une erreur pour les commentaires du livre."
 
+msgid "Request cancelled."
+msgstr "Requête annulée."
+
 msgid "Profile"
 msgstr "Profil"
 
@@ -692,6 +695,10 @@ msgstr "Téléchargement de la mise à jour..."
 msgid "Download failed. Please try again later."
 msgstr "Échec du téléchargement. Veuillez réessayer plus tard."
 
+#, lua-format
+msgid "%s (tap to cancel)"
+msgstr "%s (appuyez pour annuler)"
+
 msgid "Downloading… (tap to cancel)"
 msgstr "Téléchargement… (appuyez pour annuler)"
 
@@ -872,11 +879,11 @@ msgstr "Rétablir les valeurs par défaut"
 msgid "Reset %s timeouts to default values?"
 msgstr "Rétablir les délais d'expiration %s aux valeurs par défaut ?"
 
-msgid "Reset"
-msgstr "Réinitialiser"
-
 msgid "Timeout settings reset to defaults"
 msgstr "Paramètres de délai d'expiration rétablis aux valeurs par défaut"
+
+msgid "Reset"
+msgstr "Réinitialiser"
 
 #, lua-format
 msgid "%s Timeout Settings"
@@ -915,11 +922,11 @@ msgstr "Rétablir tous les délais d'expiration aux valeurs par défaut"
 msgid "Reset all timeout settings to default values?"
 msgstr "Rétablir tous les paramètres de délai d'expiration aux valeurs par défaut ?"
 
-msgid "Reset All"
-msgstr "Tout réinitialiser"
-
 msgid "All timeout settings reset to defaults"
 msgstr "Tous les paramètres de délai d'expiration rétablis aux valeurs par défaut"
+
+msgid "Reset All"
+msgstr "Tout réinitialiser"
 
 msgid "Timeout Settings"
 msgstr "Paramètres de délai d'expiration"

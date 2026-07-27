@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-21 18:59+0200\n"
+"POT-Creation-Date: 2026-07-27 10:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -472,6 +472,9 @@ msgstr "Error al analizar la respuesta de los comentarios del libro."
 msgid "API returned an error for book comments."
 msgstr "La API devolvió un error para los comentarios del libro."
 
+msgid "Request cancelled."
+msgstr "Solicitud cancelada."
+
 msgid "Profile"
 msgstr "Perfil"
 
@@ -692,6 +695,10 @@ msgstr "Descargando actualización..."
 msgid "Download failed. Please try again later."
 msgstr "Descarga fallida. Por favor, intente de nuevo más tarde."
 
+#, lua-format
+msgid "%s (tap to cancel)"
+msgstr "%s (toque para cancelar)"
+
 msgid "Downloading… (tap to cancel)"
 msgstr "Descargando… (toque para cancelar)"
 
@@ -872,11 +879,11 @@ msgstr "Restablecer valores predeterminados"
 msgid "Reset %s timeouts to default values?"
 msgstr "¿Restablecer tiempos límite de %s a valores predeterminados?"
 
-msgid "Reset"
-msgstr "Restablecer"
-
 msgid "Timeout settings reset to defaults"
 msgstr "Configuración de tiempo límite restablecida a valores predeterminados"
+
+msgid "Reset"
+msgstr "Restablecer"
 
 #, lua-format
 msgid "%s Timeout Settings"
@@ -915,11 +922,11 @@ msgstr "Restablecer todos los tiempos límite a valores predeterminados"
 msgid "Reset all timeout settings to default values?"
 msgstr "¿Restablecer todas las configuraciones de tiempo límite a valores predeterminados?"
 
-msgid "Reset All"
-msgstr "Restablecer todo"
-
 msgid "All timeout settings reset to defaults"
 msgstr "Todas las configuraciones de tiempo límite restablecidas a valores predeterminados"
+
+msgid "Reset All"
+msgstr "Restablecer todo"
 
 msgid "Timeout Settings"
 msgstr "Configuración de tiempos límite"

@@ -34,6 +34,13 @@ switch accounts. If you set your credentials through the `zlibrary_credentials.l
 file restores them on the next start — and the plugin now tells you so instead of reporting a
 clearing that will not stick.
 
+**Requests can be cancelled, not just downloads.** Searching, loading more search results,
+browsing recommended or most popular books, and opening book details or comments used to freeze
+the screen until the server answered. These now run in the background like downloads do: the
+loading message reads *(tap to cancel)*, and a tap aborts the request and hands the screen back
+straight away. Signing in, adding favourites and other account-changing actions are deliberately
+left as they were.
+
 ### Changed
 
 **"Developer options" is now "Advanced".** Clearing a saved password is not a developer action,

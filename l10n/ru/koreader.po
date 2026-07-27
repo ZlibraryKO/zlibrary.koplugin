@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-21 18:59+0200\n"
+"POT-Creation-Date: 2026-07-27 10:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -472,6 +472,9 @@ msgstr "Не удалось разобрать ответ с комментар�
 msgid "API returned an error for book comments."
 msgstr "API вернул ошибку для комментариев к книге."
 
+msgid "Request cancelled."
+msgstr "Запрос отменён."
+
 msgid "Profile"
 msgstr "Профиль"
 
@@ -692,6 +695,10 @@ msgstr "Загрузка обновления..."
 msgid "Download failed. Please try again later."
 msgstr "Ошибка загрузки. Пожалуйста, попробуйте позже."
 
+#, lua-format
+msgid "%s (tap to cancel)"
+msgstr "%s (нажмите для отмены)"
+
 msgid "Downloading… (tap to cancel)"
 msgstr "Загрузка… (нажмите для отмены)"
 
@@ -872,11 +879,11 @@ msgstr "Сбросить к значениям по умолчанию"
 msgid "Reset %s timeouts to default values?"
 msgstr "Сбросить таймауты %s к значениям по умолчанию?"
 
-msgid "Reset"
-msgstr "Сбросить"
-
 msgid "Timeout settings reset to defaults"
 msgstr "Настройки таймаута сброшены к значениям по умолчанию"
+
+msgid "Reset"
+msgstr "Сбросить"
 
 #, lua-format
 msgid "%s Timeout Settings"
@@ -915,11 +922,11 @@ msgstr "Сбросить все таймауты к значениям по ум
 msgid "Reset all timeout settings to default values?"
 msgstr "Сбросить все настройки таймаута к значениям по умолчанию?"
 
-msgid "Reset All"
-msgstr "Сбросить все"
-
 msgid "All timeout settings reset to defaults"
 msgstr "Все настройки таймаута сброшены к значениям по умолчанию"
+
+msgid "Reset All"
+msgstr "Сбросить все"
 
 msgid "Timeout Settings"
 msgstr "Настройки таймаута"

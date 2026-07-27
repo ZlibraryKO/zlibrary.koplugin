@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-21 18:59+0200\n"
+"POT-Creation-Date: 2026-07-27 10:55+0200\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -478,6 +478,9 @@ msgstr "Не успя да се анализира отговорът с ком�
 msgid "API returned an error for book comments."
 msgstr "API върна грешка за коментарите на книгата."
 
+msgid "Request cancelled."
+msgstr "Заявката е отменена."
+
 msgid "Profile"
 msgstr "Профил"
 
@@ -698,6 +701,10 @@ msgstr "Изтегляне на актуализацията..."
 msgid "Download failed. Please try again later."
 msgstr "Изтеглянето неуспешно. Опитайте отново по-късно."
 
+#, lua-format
+msgid "%s (tap to cancel)"
+msgstr "%s (докоснете за отказ)"
+
 msgid "Downloading… (tap to cancel)"
 msgstr "Изтегляне… (докоснете за отказ)"
 
@@ -878,11 +885,11 @@ msgstr "Възстановяване на стойностите по подра
 msgid "Reset %s timeouts to default values?"
 msgstr "Възстановяване на таймаутите за %s до стойностите по подразбиране?"
 
-msgid "Reset"
-msgstr "Възстановяване"
-
 msgid "Timeout settings reset to defaults"
 msgstr "Настройките за таймаут са възстановени до стойностите по подразбиране"
+
+msgid "Reset"
+msgstr "Възстановяване"
 
 #, lua-format
 msgid "%s Timeout Settings"
@@ -921,11 +928,11 @@ msgstr "Възстановяване на всички таймаути до с�
 msgid "Reset all timeout settings to default values?"
 msgstr "Възстановяване на всички настройки за таймаут до стойностите по подразбиране?"
 
-msgid "Reset All"
-msgstr "Възстановяване на всички"
-
 msgid "All timeout settings reset to defaults"
 msgstr "Всички настройки за таймаут са възстановени до стойностите по подразбиране"
+
+msgid "Reset All"
+msgstr "Възстановяване на всички"
 
 msgid "Timeout Settings"
 msgstr "Настройки за таймаут"

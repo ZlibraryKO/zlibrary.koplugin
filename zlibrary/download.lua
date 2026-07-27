@@ -64,7 +64,7 @@ end
 function Download.fetchDetailsThenDownload(self, book_stub)
     local function attempt()
         local user_session = Config.getUserSession()
-        local loading_msg = Ui.showLoadingMessage(T("Fetching book details..."))
+        local loading_msg = Ui.showCancellableLoadingMessage(T("Fetching book details..."))
 
         local task = function()
             return Api.getBookDetails(user_session and user_session.user_id,
@@ -92,7 +92,7 @@ function Download.fetchDetailsThenDownload(self, book_stub)
             end, function() end, loading_msg, "book_details")
         end
 
-        AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
+        AsyncHelper.runCancellable(task, on_success, on_error_handler, loading_msg)
     end
 
     attempt()

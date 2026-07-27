@@ -5,6 +5,9 @@ local ffiUtil = require("ffi/util")
 local Device = require("device")
 local coroutine = require("coroutine")
 local logger = require("logger")
+local Trapper = require("ui/trapper")
+local InfoMessage = require("ui/widget/infomessage")
+local T = require("zlibrary.gettext")
 
 local function safe_call(tag, func, ...)
     if type(func) ~= "function" then return true, nil end
@@ -481,6 +484,92 @@ function AsyncHelper.run(task_func, on_success, on_error, loading_msg_widget_to_
 
     UIManager:nextTick(resume_handler)
     logger.dbg("AsyncHelper.run - END")
+end
+
+-- Like AsyncHelper.run, but the task runs in a forked child (the same mechanism downloads use)
+-- instead of blocking the UI in-process, so the user can cancel the request with a tap while it
+-- is in flight. Exactly one of on_success / on_error / on_cancel runs. on_cancel is optional:
+-- the loading widget is closed and a "Request cancelled." notice is shown either way.
+--
+-- Result semantics deliberately mirror run(): a crashed task or a result carrying .error goes to
+-- on_error, anything else to on_success. The task's return value must survive buffer.encode
+-- (plain data only -- no functions, no cdata), which every Api result already does.
+function AsyncHelper.runCancellable(task_func, on_success, on_error, loading_msg_widget_to_close, on_cancel)
+    logger.dbg("AsyncHelper.runCancellable - START")
+
+    local function close_loading_message()
+        if loading_msg_widget_to_close then
+            UIManager:close(loading_msg_widget_to_close)
+        end
+    end
+
+    local function deliver(success, data_or_err)
+        close_loading_message()
+        if success then
+            if data_or_err and data_or_err.error then
+                if on_error then on_error(tostring(data_or_err.error)) end
+            else
+                if on_success then on_success(data_or_err) end
+            end
+        else
+            if on_error then on_error(tostring(data_or_err)) end
+        end
+    end
+
+    Trapper:wrap(function()
+        local function child_task()
+            -- This process exists only to return a result, and it shares the runtime cache file
+            -- with the parent. Nothing it writes there can help, and some of it would destroy the
+            -- parent's copy (same reasoning as the download child). Lazy require: fine after
+            -- fork, and keeps async_helper out of a require cycle with zlibrary.config.
+            require("zlibrary.config").disableRuntimeCacheWrites()
+            local ok, result = pcall(task_func)
+            if ok then
+                return { ok = true, data = result }
+            end
+            return { ok = false, err = tostring(result) }
+        end
+
+        -- dismissableRunInSubprocess returns completed=false both for "user dismissed" and for
+        -- "fork failed". A dismiss cannot happen without at least one yield, and a fork failure
+        -- never reaches the poll loop, so this tells the two apart (same trick as download.lua).
+        local yielded = false
+        UIManager:nextTick(function() yielded = true end)
+
+        -- false: an invisible trap widget that swallows the dismissing tap, so the loading
+        -- message stays on screen for as long as the request runs.
+        local completed, envelope = Trapper:dismissableRunInSubprocess(child_task, false)
+
+        if not completed then
+            if yielded then
+                logger.dbg("AsyncHelper.runCancellable - cancelled by user")
+                close_loading_message()
+                UIManager:show(InfoMessage:new{ text = T("Request cancelled."), timeout = 3 })
+                safe_call("on_cancel", on_cancel)
+            else
+                -- Fork failed: keep the request working by running it the way run() always has.
+                logger.warn("AsyncHelper.runCancellable - subprocess failed to start, falling back to in-process run")
+                AsyncHelper.run(task_func, on_success, on_error, loading_msg_widget_to_close)
+            end
+            return
+        end
+
+        if type(envelope) ~= "table" then
+            -- The child finished but its answer did not survive the pipe (a hard crash before
+            -- the write, or a value buffer.encode cannot represent). Re-run in-process rather
+            -- than invent an error the task never produced.
+            logger.warn("AsyncHelper.runCancellable - no usable result from subprocess, falling back to in-process run")
+            AsyncHelper.run(task_func, on_success, on_error, loading_msg_widget_to_close)
+            return
+        end
+
+        if envelope.ok then
+            deliver(true, envelope.data)
+        else
+            deliver(false, envelope.err or "task failed")
+        end
+    end)
+    logger.dbg("AsyncHelper.runCancellable - END")
 end
 
 return AsyncHelper

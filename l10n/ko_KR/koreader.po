@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-21 18:59+0200\n"
+"POT-Creation-Date: 2026-07-27 10:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -472,6 +472,9 @@ msgstr "도서 댓글 응답을 해석하지 못했습니다."
 msgid "API returned an error for book comments."
 msgstr "도서 댓글에 대해 API 오류가 반환되었습니다."
 
+msgid "Request cancelled."
+msgstr "요청이 취소되었습니다."
+
 msgid "Profile"
 msgstr "프로필"
 
@@ -692,6 +695,10 @@ msgstr "업데이트 다운로드 중..."
 msgid "Download failed. Please try again later."
 msgstr "다운로드에 실패했습니다. 나중에 다시 시도해 주세요."
 
+#, lua-format
+msgid "%s (tap to cancel)"
+msgstr "%s (탭하여 취소)"
+
 msgid "Downloading… (tap to cancel)"
 msgstr "다운로드 중… (탭하여 취소)"
 
@@ -872,11 +879,11 @@ msgstr "기본값으로 재설정"
 msgid "Reset %s timeouts to default values?"
 msgstr "%s 타임아웃을 기본값으로 재설정하시겠습니까?"
 
-msgid "Reset"
-msgstr "재설정"
-
 msgid "Timeout settings reset to defaults"
 msgstr "타임아웃 설정이 기본값으로 재설정되었습니다"
+
+msgid "Reset"
+msgstr "재설정"
 
 #, lua-format
 msgid "%s Timeout Settings"
@@ -915,11 +922,11 @@ msgstr "모든 타임아웃을 기본값으로 재설정"
 msgid "Reset all timeout settings to default values?"
 msgstr "모든 타임아웃 설정을 기본값으로 재설정하시겠습니까?"
 
-msgid "Reset All"
-msgstr "모두 재설정"
-
 msgid "All timeout settings reset to defaults"
 msgstr "모든 타임아웃 설정이 기본값으로 재설정되었습니다"
+
+msgid "Reset All"
+msgstr "모두 재설정"
 
 msgid "Timeout Settings"
 msgstr "타임아웃 설정"

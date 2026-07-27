@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-21 18:59+0200\n"
+"POT-Creation-Date: 2026-07-27 10:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -472,6 +472,9 @@ msgstr "書籍のコメントの応答の解析に失敗しました。"
 msgid "API returned an error for book comments."
 msgstr "書籍のコメントに対してAPIがエラーを返しました。"
 
+msgid "Request cancelled."
+msgstr "リクエストをキャンセルしました。"
+
 msgid "Profile"
 msgstr "プロフィール"
 
@@ -692,6 +695,10 @@ msgstr "アップデートをダウンロード中..."
 msgid "Download failed. Please try again later."
 msgstr "ダウンロードに失敗しました。後でもう一度お試しください。"
 
+#, lua-format
+msgid "%s (tap to cancel)"
+msgstr "%s（タップしてキャンセル）"
+
 msgid "Downloading… (tap to cancel)"
 msgstr "ダウンロード中…（タップしてキャンセル）"
 
@@ -872,11 +879,11 @@ msgstr "デフォルトにリセット"
 msgid "Reset %s timeouts to default values?"
 msgstr "%sタイムアウトをデフォルト値にリセットしますか？"
 
-msgid "Reset"
-msgstr "リセット"
-
 msgid "Timeout settings reset to defaults"
 msgstr "タイムアウト設定をデフォルトにリセットしました"
+
+msgid "Reset"
+msgstr "リセット"
 
 #, lua-format
 msgid "%s Timeout Settings"
@@ -915,11 +922,11 @@ msgstr "すべてのタイムアウトをデフォルトにリセット"
 msgid "Reset all timeout settings to default values?"
 msgstr "すべてのタイムアウト設定をデフォルト値にリセットしますか？"
 
-msgid "Reset All"
-msgstr "すべてリセット"
-
 msgid "All timeout settings reset to defaults"
 msgstr "すべてのタイムアウト設定をデフォルトにリセットしました"
+
+msgid "Reset All"
+msgstr "すべてリセット"
 
 msgid "Timeout Settings"
 msgstr "タイムアウト設定"

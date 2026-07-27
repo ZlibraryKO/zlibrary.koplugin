@@ -337,9 +337,14 @@ function Zlibrary:_requestDispatcher(options, ...)
 
     local function attemptFetch(retry_on_auth_error)
         retry_on_auth_error = retry_on_auth_error == nil and true or retry_on_auth_error
-        
+
         local user_session = Config.getUserSession()
-        local loading_msg = Ui.showLoadingMessage(options.loading_text_key)
+        -- options.cancellable marks a foreground read the user is staring at (browse lists,
+        -- details, comments): it gets a tap-to-cancel loading message and a cancellable run.
+        -- Mutations and background work keep the plain blocking run.
+        local loading_msg = options.cancellable
+            and Ui.showCancellableLoadingMessage(options.loading_text_key)
+            or Ui.showLoadingMessage(options.loading_text_key)
 
 
         local task = function()
@@ -400,7 +405,11 @@ function Zlibrary:_requestDispatcher(options, ...)
             end, loading_msg, options.operation_key)
         end
 
-        AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
+        if options.cancellable then
+            AsyncHelper.runCancellable(task, on_success, on_error_handler, loading_msg)
+        else
+            AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
+        end
     end
 
     attemptFetch()
@@ -457,6 +466,7 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
                         widget:reloadFromBookData(books)
                     end,
                     requires_auth = false,
+                    cancellable = true,
                 })
             end}, {
                 text = T("Recommended"),
@@ -475,6 +485,7 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
                             widget:reloadFromBookData(books)
                         end,
                         requires_auth = true,
+                        cancellable = true,
                     })
             end},
         }
@@ -804,6 +815,7 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
         log_context = "onSelectRecommendedBook",
         resolve_result = on_success,
         requires_auth = true,
+        cancellable = true,
         hasValidApiResult = function(api_result)
             local ok = type(api_result) == "table" and type(api_result.book) == "table"
             return ok, not ok and T("Could not retrieve book details.")
@@ -826,7 +838,7 @@ function Zlibrary:onSelectSearchBook(book_data)
 
     local function attemptBookDetails()
         local user_session = Config.getUserSession()
-        local loading_msg = Ui.showLoadingMessage(T("Fetching book details..."))
+        local loading_msg = Ui.showCancellableLoadingMessage(T("Fetching book details..."))
 
         local task = function()
             return Api.getBookDetails(user_session and user_session.user_id, user_session and user_session.user_key, book_data.id, book_data.hash)
@@ -861,7 +873,7 @@ function Zlibrary:onSelectSearchBook(book_data)
             end, loading_msg, "book_details")
         end
 
-        AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
+        AsyncHelper.runCancellable(task, on_success, on_error_handler, loading_msg)
     end
 
     attemptBookDetails()
@@ -1122,7 +1134,7 @@ function Zlibrary:performSearch(query)
         retry_on_auth_error = retry_on_auth_error == nil and true or retry_on_auth_error
         
         local user_session = Config.getUserSession()
-        local loading_msg = Ui.showLoadingMessage(string.format(T("Searching for \"%s\"..."), query))
+        local loading_msg = Ui.showCancellableLoadingMessage(string.format(T("Searching for \"%s\"..."), query))
 
         local selected_languages = Config.getSearchLanguages()
         local selected_extensions = Config.getSearchExtensions()
@@ -1188,7 +1200,7 @@ function Zlibrary:performSearch(query)
             end)
         end
 
-        AsyncHelper.run(task, on_success, on_error_handler, loading_msg)
+        AsyncHelper.runCancellable(task, on_success, on_error_handler, loading_msg)
     end
 
     attemptSearch()
@@ -1225,7 +1237,7 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
             logger.info(string.format("Zlibrary: Reached page %d (last page of current items). Attempting to load more from API.", new_page_number))
 
             local next_api_page_to_fetch = self.current_search_api_page_loaded + 1
-            local loading_msg_more = Ui.showLoadingMessage(string.format(T("Loading more results (Page %s)..."), next_api_page_to_fetch))
+            local loading_msg_more = Ui.showCancellableLoadingMessage(string.format(T("Loading more results (Page %s)..."), next_api_page_to_fetch))
 
             local user_session_more = Config.getUserSession()
             local selected_languages_more = Config.getSearchLanguages()
@@ -1292,7 +1304,11 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
                 menu_instance:updateItems(1, true)
             end
 
-            AsyncHelper.run(task_load_more, on_success_load_more, on_error_load_more, loading_msg_more)
+            AsyncHelper.runCancellable(task_load_more, on_success_load_more, on_error_load_more, loading_msg_more, function()
+                -- Same as the error path above: the page counter was already advanced, so
+                -- redraw what is actually loaded to keep display and counter in agreement.
+                menu_instance:updateItems(1, true)
+            end)
         else
             if is_last_page_of_current_items and not self.has_more_api_results then
                 logger.info("Zlibrary: Reached last page, and no more API results to load.")
@@ -1381,6 +1397,7 @@ function Zlibrary:fetchAndDisplayComments(book, skip_cache, callback)
         log_context = "fetchAndDisplayComments",
         resolve_result = on_success,
         requires_auth = false,
+        cancellable = true,
         hasValidApiResult = function(api_result)
             local ok = type(api_result) == "table" and type(api_result.comments) == "table"
             return ok, not ok and T("No comments to display")

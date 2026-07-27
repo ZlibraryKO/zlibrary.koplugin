@@ -74,7 +74,7 @@ function Ui.showErrorMessage(text)
 end
 
 function Ui.showLoadingMessage(text)
-    local message = InfoMessage:new{ 
+    local message = InfoMessage:new{
         text = string.format("\u{23f3}  %s", text),
         dismissable = false,
         show_icon = false,
@@ -82,6 +82,13 @@ function Ui.showLoadingMessage(text)
     }
     UIManager:show(message)
     return message
+end
+
+-- A loading message for a request the user can cancel with a tap (see
+-- AsyncHelper.runCancellable). The widget itself stays non-dismissable: the tap is caught by the
+-- invisible trap widget the cancellable run puts over it.
+function Ui.showCancellableLoadingMessage(text)
+    return Ui.showLoadingMessage(string.format(T("%s (tap to cancel)"), text))
 end
 
 function Ui.showBookDownloadProgress(book, custom_title)
@@ -802,11 +809,11 @@ end
 
 function Ui.showSearchErrorDialog(err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page, loading_msg_to_close, original_on_success, original_on_error)
     local retry_callback = function()
-        local new_loading_msg = Ui.showLoadingMessage(string.format(T("Retrying search for \"%s\"..."), query))
+        local new_loading_msg = Ui.showCancellableLoadingMessage(string.format(T("Retrying search for \"%s\"..."), query))
         local retry_task = function()
             return Api.search(query, user_session.user_id, user_session.user_key, selected_languages, selected_extensions, selected_order, current_page)
         end
-        AsyncHelper.run(retry_task, original_on_success, function(new_err_msg)
+        AsyncHelper.runCancellable(retry_task, original_on_success, function(new_err_msg)
             Ui.showSearchErrorDialog(new_err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page, new_loading_msg, original_on_success, original_on_error)
         end, new_loading_msg)
     end

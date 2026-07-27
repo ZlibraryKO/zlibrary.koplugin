@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-21 18:59+0200\n"
+"POT-Creation-Date: 2026-07-27 10:55+0200\n"
 "PO-Revision-Date: 2026-04-03 00:00+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
@@ -472,6 +472,9 @@ msgstr "获取书籍评论失败。"
 msgid "API returned an error for book comments."
 msgstr "获取书籍评论出错。"
 
+msgid "Request cancelled."
+msgstr "请求已取消。"
+
 msgid "Profile"
 msgstr "个人资料"
 
@@ -692,6 +695,10 @@ msgstr "正在下载更新..."
 msgid "Download failed. Please try again later."
 msgstr "下载失败。请稍后重试。"
 
+#, lua-format
+msgid "%s (tap to cancel)"
+msgstr "%s(点击取消)"
+
 msgid "Downloading… (tap to cancel)"
 msgstr "正在下载…(点击取消)"
 
@@ -872,11 +879,11 @@ msgstr "重置为默认值"
 msgid "Reset %s timeouts to default values?"
 msgstr "将%s超时重置为默认值？"
 
-msgid "Reset"
-msgstr "重置"
-
 msgid "Timeout settings reset to defaults"
 msgstr "超时设置已重置为默认值"
+
+msgid "Reset"
+msgstr "重置"
 
 #, lua-format
 msgid "%s Timeout Settings"
@@ -915,11 +922,11 @@ msgstr "将所有超时重置为默认值"
 msgid "Reset all timeout settings to default values?"
 msgstr "将所有超时设置重置为默认值？"
 
-msgid "Reset All"
-msgstr "全部重置"
-
 msgid "All timeout settings reset to defaults"
 msgstr "所有超时设置已重置为默认值"
+
+msgid "Reset All"
+msgstr "全部重置"
 
 msgid "Timeout Settings"
 msgstr "超时设置"

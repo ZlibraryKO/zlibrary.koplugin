@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-21 18:59+0200\n"
+"POT-Creation-Date: 2026-07-27 10:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -472,6 +472,9 @@ msgstr "فشل تحليل استجابة تعليقات الكتاب."
 msgid "API returned an error for book comments."
 msgstr "أرجع API خطأ لتعليقات الكتاب."
 
+msgid "Request cancelled."
+msgstr "تم إلغاء الطلب."
+
 msgid "Profile"
 msgstr "الملف الشخصي"
 
@@ -692,6 +695,10 @@ msgstr "جارٍ تنزيل التحديث..."
 msgid "Download failed. Please try again later."
 msgstr "فشل التنزيل. يرجى المحاولة مرة أخرى لاحقًا."
 
+#, lua-format
+msgid "%s (tap to cancel)"
+msgstr "%s (اضغط للإلغاء)"
+
 msgid "Downloading… (tap to cancel)"
 msgstr "جارٍ التنزيل… (اضغط للإلغاء)"
 
@@ -872,11 +879,11 @@ msgstr "إعادة تعيين إلى الافتراضي"
 msgid "Reset %s timeouts to default values?"
 msgstr "إعادة تعيين مهل %s إلى القيم الافتراضية؟"
 
-msgid "Reset"
-msgstr "إعادة تعيين"
-
 msgid "Timeout settings reset to defaults"
 msgstr "تم إعادة تعيين إعدادات المهلة الزمنية إلى الافتراضية"
+
+msgid "Reset"
+msgstr "إعادة تعيين"
 
 #, lua-format
 msgid "%s Timeout Settings"
@@ -915,11 +922,11 @@ msgstr "إعادة تعيين جميع المهل إلى الافتراضية"
 msgid "Reset all timeout settings to default values?"
 msgstr "إعادة تعيين جميع إعدادات المهلة الزمنية إلى القيم الافتراضية؟"
 
-msgid "Reset All"
-msgstr "إعادة تعيين الكل"
-
 msgid "All timeout settings reset to defaults"
 msgstr "تم إعادة تعيين جميع إعدادات المهلة الزمنية إلى الافتراضية"
+
+msgid "Reset All"
+msgstr "إعادة تعيين الكل"
 
 msgid "Timeout Settings"
 msgstr "إعدادات المهلة الزمنية"

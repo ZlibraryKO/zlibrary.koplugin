@@ -59,7 +59,17 @@ function Discovery.run(self, is_interactive, retry_callback)
                 if type(domains_data) == "table" then
                     local flat = {}
                     for _, item in ipairs(domains_data) do
-                        if type(item.domain) == "string" then table.insert(flat, item.domain) end
+                        -- Onion hosts are dropped rather than probed. The operator returns two
+                        -- of them, and a reader without Tor cannot resolve either -- each one
+                        -- costs a doomed DNS lookup and logs it at ERROR, which reads like a
+                        -- broken mirror rather than an address that was never usable here.
+                        -- getSeedUrls would prefix them https:// as well, which is wrong for
+                        -- onion. This only started mattering when fetchDynamicDomains gained
+                        -- the operator endpoint as a source: assets/domains.json has them
+                        -- filtered out already, so the CDN path never carried them.
+                        if type(item.domain) == "string" and not item.domain:match("%.onion$") then
+                            table.insert(flat, item.domain)
+                        end
                     end
                     if #flat > 0 then 
                         domains_cache:insert("domains", flat)

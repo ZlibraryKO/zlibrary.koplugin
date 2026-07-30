@@ -1,28 +1,39 @@
 {
-	"success": 1,
-	"domains": [{
-		"domain": "z-library.sk",
-		"contentAvailable": true,
-		"isRedirector": false
-	}, {
-		"domain": "article.sk",
-		"contentAvailable": true,
-		"isRedirector": false
-	}, {
-		"domain": "articles.sk",
-		"contentAvailable": true,
-		"isRedirector": false
-	}, {
-		"domain": "proxy.zlibraryproxies.workers.dev",
-		"contentAvailable": true,
-		"isRedirector": false
-	},{
-        "domain":"1lib.su"
-    },{
-        "domain":"zlib.by"
-    },{
-        "domain":"101ml.su"
-    },{
-        "domain":"zlib.re"
-    }]
+  "success": 1,
+  "domains": [
+    {"domain": "z-library.sk", "contentAvailable": true, "isRedirector": false},
+    {"domain": "1lib.sk", "contentAvailable": true, "isRedirector": false},
+    {"domain": "article.sk", "contentAvailable": true, "isRedirector": false},
+    {"domain": "articles.sk", "contentAvailable": true, "isRedirector": false},
+    {"domain": "proxy.zlibraryproxies.workers.dev", "contentAvailable": true, "isRedirector": false},
+    {"domain": "z-lib.sk"},
+    {"domain": "z-lib.fm"},
+    {"domain": "z-lib.gd"},
+    {"domain": "z-lib.gl"},
+    {"domain": "z-lib.bz"},
+    {"domain": "z-lib.do"},
+    {"domain": "z-library.hn"},
+    {"domain": "z-library.la"},
+    {"domain": "german-books.sk"},
+    {"domain": "spanish-books.sk"},
+    {"domain": "frenchbooks.sk"},
+    {"domain": "portuguese-books.sk"},
+    {"domain": "italian-books.sk"},
+    {"domain": "japanese-books.sk"},
+    {"domain": "z-lib.fo"},
+    {"domain": "thai-books.sk"},
+    {"domain": "z-library.ec"},
+    {"domain": "urdu-books.sk"},
+    {"domain": "czechbooks.sk"},
+    {"domain": "librella.fi"},
+    {"domain": "librella.tw"},
+    {"domain": "lexlib.fi"},
+    {"domain": "lexlib.tw"},
+    {"domain": "bookabooki.fi"},
+    {"domain": "bookabooki.tw"},
+    {"domain": "1lib.su"},
+    {"domain": "zlib.by"},
+    {"domain": "101ml.su"},
+    {"domain": "zlib.re"}
+  ]
 }

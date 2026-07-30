@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-27 10:22+0000\n"
+"POT-Creation-Date: 2026-07-30 17:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: _meta.lua:4 main.lua:28 main.lua:46 main.lua:95
+#: _meta.lua:3 main.lua:28 main.lua:46 main.lua:95
 msgid "Z-library"
 msgstr ""
 
-#: _meta.lua:5
+#: _meta.lua:4
 msgid "[[A plugin to search and download books from Z-library.]]"
 msgstr ""
 
@@ -37,8 +37,8 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: main.lua:103 zlibrary/discovery.lua:189 zlibrary/discovery.lua:267
-#: zlibrary/discovery.lua:333 zlibrary/ui.lua:1210
+#: main.lua:103 zlibrary/discovery.lua:205 zlibrary/discovery.lua:301
+#: zlibrary/discovery.lua:367 zlibrary/ui.lua:1210
 msgid "Set base URL"
 msgstr ""
 
@@ -445,7 +445,7 @@ msgid "Failed to open target file"
 msgstr ""
 
 #: zlibrary/api.lua:917 zlibrary/api.lua:977 zlibrary/api.lua:996
-#: zlibrary/discovery.lua:198 zlibrary/discovery.lua:342
+#: zlibrary/discovery.lua:214 zlibrary/discovery.lua:376
 msgid "Unknown error"
 msgstr ""
 
@@ -662,7 +662,7 @@ msgid "Cover"
 msgstr ""
 
 #: zlibrary/bookdetails_dialog.lua:538 zlibrary/bookdetails_dialog.lua:626
-#: zlibrary/discovery.lua:356 zlibrary/ui.lua:800
+#: zlibrary/discovery.lua:390 zlibrary/ui.lua:800
 msgid "Back"
 msgstr ""
 
@@ -719,86 +719,86 @@ msgstr ""
 msgid "File size"
 msgstr ""
 
-#: zlibrary/config.lua:804
+#: zlibrary/config.lua:824
 msgid "Default"
 msgstr ""
 
-#: zlibrary/config.lua:888
+#: zlibrary/config.lua:908
 #, lua-format
 msgid "%ds"
 msgstr ""
 
-#: zlibrary/config.lua:895 zlibrary/ui.lua:954 zlibrary/ui.lua:987
+#: zlibrary/config.lua:915 zlibrary/ui.lua:954 zlibrary/ui.lua:987
 msgid "infinite"
 msgstr ""
 
-#: zlibrary/config.lua:896
+#: zlibrary/config.lua:916
 #, lua-format
 msgid "Block: %ds, Total: %s"
 msgstr ""
 
-#: zlibrary/discovery.lua:75
+#: zlibrary/discovery.lua:85
 msgid "Operation failed, please retry."
 msgstr ""
 
-#: zlibrary/discovery.lua:83
+#: zlibrary/discovery.lua:93
 msgid "Fetching domains..."
 msgstr ""
 
-#: zlibrary/discovery.lua:115
+#: zlibrary/discovery.lua:130
 msgid "Successfully set base URL to: "
 msgstr ""
 
-#: zlibrary/discovery.lua:122
+#: zlibrary/discovery.lua:137
 msgid "Failed to find a working base URL."
 msgstr ""
 
-#: zlibrary/discovery.lua:128
+#: zlibrary/discovery.lua:143
 msgid "Queued"
 msgstr ""
 
-#: zlibrary/discovery.lua:133
+#: zlibrary/discovery.lua:148
 msgid "Selection copied to clipboard."
 msgstr ""
 
-#: zlibrary/discovery.lua:166
+#: zlibrary/discovery.lua:182
 msgid "Checking"
 msgstr ""
 
-#: zlibrary/discovery.lua:192 zlibrary/discovery.lua:270
-#: zlibrary/discovery.lua:336
+#: zlibrary/discovery.lua:208 zlibrary/discovery.lua:304
+#: zlibrary/discovery.lua:370
 msgid "Invalid Base URL."
 msgstr ""
 
-#: zlibrary/discovery.lua:196 zlibrary/discovery.lua:340
+#: zlibrary/discovery.lua:212 zlibrary/discovery.lua:374
 msgid "Failed"
 msgstr ""
 
-#: zlibrary/discovery.lua:244
+#: zlibrary/discovery.lua:278
 msgid "Searching for working Z-library server..."
 msgstr ""
 
-#: zlibrary/discovery.lua:251 zlibrary/discovery.lua:259
+#: zlibrary/discovery.lua:285 zlibrary/discovery.lua:293
 msgid "Current Base URL:"
 msgstr ""
 
-#: zlibrary/discovery.lua:274 zlibrary/discovery.lua:289
+#: zlibrary/discovery.lua:308 zlibrary/discovery.lua:323
 msgid "Mirror site redirected to: "
 msgstr ""
 
-#: zlibrary/discovery.lua:304 zlibrary/ui.lua:915
+#: zlibrary/discovery.lua:338 zlibrary/ui.lua:915
 msgid "Auto-discover base URL"
 msgstr ""
 
-#: zlibrary/discovery.lua:307 zlibrary/discovery.lua:352
+#: zlibrary/discovery.lua:341 zlibrary/discovery.lua:386
 msgid "Network unavailable."
 msgstr ""
 
-#: zlibrary/discovery.lua:308 zlibrary/discovery.lua:351
+#: zlibrary/discovery.lua:342 zlibrary/discovery.lua:385
 msgid "Discovery is already running..."
 msgstr ""
 
-#: zlibrary/discovery.lua:350
+#: zlibrary/discovery.lua:384
 msgid "Refresh Dynamic Domains"
 msgstr ""
 

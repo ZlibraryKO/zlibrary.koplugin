@@ -1738,6 +1738,21 @@ function Api.fetchDynamicDomains()
         "https://gh.xxooo.cf/https://raw.githubusercontent.com/ZlibraryKO/zlibrary.koplugin/main/assets/domains.json"
     }
 
+    -- Last resort, appended so the CDNs are always tried first. They serve the curated
+    -- assets/domains.json, which carries hosts the endpoint has never returned and stays
+    -- reachable when Z-Library itself is not -- the common failure this plugin sees. The
+    -- endpoint covers the opposite case: GitHub blocked, or the committed file trailing
+    -- the operator's list. It needs a working mirror to answer, which is exactly what
+    -- discovery is still looking for, so it cannot lead.
+    local dynamic_domains_url = Config.getDynamicDomainsUrl()
+    if dynamic_domains_url then
+        table.insert(cdn_urls, dynamic_domains_url)
+    end
+
+    -- The list is one shorter on a call where no base URL is resolvable, so an index left
+    -- pointing at the endpoint entry by the previous call would index past the end and hand
+    -- makeHttpRequest a nil url. Wrap first, then rotate.
+    if next_cdn_index > #cdn_urls then next_cdn_index = 1 end
     local url = cdn_urls[next_cdn_index]
     next_cdn_index = next_cdn_index % #cdn_urls + 1
 

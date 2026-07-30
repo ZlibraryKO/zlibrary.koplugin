@@ -586,6 +586,19 @@ function Config.getSearchUrl()
     return base .. "/eapi/book/search"
 end
 
+-- The operator's own domain list, used as the last source in fetchDynamicDomains.
+--
+-- The singlelogin path, not the sibling /eapi/info/domains: that one answers with five
+-- entries to this one's twenty-nine, and refreshDomainsCache replaces the cached list
+-- rather than merging into it, so the short list would shrink the cache instead of filling
+-- it. Both return the same {success, domains = {{domain = ...}}} shape assets/domains.json
+-- has, so callers cannot tell which source answered -- and do not need to.
+function Config.getDynamicDomainsUrl()
+    local base = Config.getBaseUrl()
+    if not base then return nil end
+    return base .. "/eapi/info/domains/singlelogin"
+end
+
 function Config.getBookUrl(href)
     if not href then return nil end
     local base = Config.getBaseUrl()

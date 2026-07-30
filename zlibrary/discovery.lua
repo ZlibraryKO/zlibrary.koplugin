@@ -108,6 +108,11 @@ function Discovery.run(self, is_interactive, retry_callback)
 
         local connection_menu, updateBaseUrlItem
         local first_working_url = nil
+        -- Lowest elapsed seen from a working mirror this run, and only meaningful on the
+        -- interactive path -- see on_item_end. Resets wherever first_working_url does, or a
+        -- stale threshold from the previous run would sit below everything the next one
+        -- measures and no mirror would ever displace it.
+        local best_elapsed = nil
         -- task status lock
         local is_discovering = false
         local max_idx = 1
@@ -157,6 +162,7 @@ function Discovery.run(self, is_interactive, retry_callback)
         local function start_discover_task()
             is_discovering = true
             first_working_url = nil
+            best_elapsed = nil
             
             resetAllItems()
             self.discover_channel:executeBatch({
@@ -225,10 +231,28 @@ function Discovery.run(self, is_interactive, retry_callback)
                     -- so the health check's own verdict has to be read too -- exactly as the item display
                     -- above does. Without it the first probe to come back wins, and a mirror that fails
                     -- instantly (NXDOMAIN answers in ~30ms) beats every mirror that actually works.
-                    if success and result.success and not first_working_url then
-                        first_working_url = seed.url
-                        -- return true to break all subsequent tasks
-                        if not is_interactive then return true end
+                    if success and result.success then
+                        if not is_interactive then
+                            -- Someone is blocked on a search, so stop at the first mirror that
+                            -- answers: returning true breaks all subsequent tasks. Which one that
+                            -- is stays arbitrary, and deliberately so -- waiting out the rest of
+                            -- the sweep to find a quicker mirror costs seconds that the reader
+                            -- spends staring at a loading message.
+                            if not first_working_url then
+                                first_working_url = seed.url
+                                return true
+                            end
+                        elseif not first_working_url
+                                or (result.elapsed and (not best_elapsed or result.elapsed < best_elapsed)) then
+                            -- Nothing is aborted here: the menu shows a verdict per row, so the
+                            -- interactive sweep probes every seed either way and has already paid
+                            -- for the timings. Spend them -- getSeedUrls shuffles, so the first
+                            -- responder is an arbitrary mirror, while the quickest is a defensible
+                            -- one. A working mirror with no elapsed still beats having no URL,
+                            -- which is why the first clause stands on its own.
+                            first_working_url = seed.url
+                            best_elapsed = result.elapsed or best_elapsed
+                        end
                     end
                     return false
                 end,
@@ -372,6 +396,7 @@ function Discovery.run(self, is_interactive, retry_callback)
             -- the batch hook calls on_batch_end -> finishDiscovery, which would otherwise still see
             -- first_working_url and set the base URL the user just walked away from.
             first_working_url = nil
+            best_elapsed = nil
             is_discovering = false
             self.discover_channel:clearTasks()
         end)

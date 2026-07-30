@@ -348,6 +348,13 @@ Config.SEED_URLS = { -- List of known Z-library base URLs extracted from the And
                         -- setting of the day, not a property of the domain: discovery health-checks
                         -- it, fails it in two requests and moves on, and it starts working again by
                         -- itself if the check is ever lifted.
+                        --
+                        -- z-library.sk answers the same way as of July 2026 -- a 307 to itself,
+                        -- then 513 instead of the API. It reaches discovery through the dynamic
+                        -- list rather than this table, so there is no line to annotate, but it
+                        -- confirms the reading above: the check is applied per domain and moves
+                        -- around, so treat any host failing this way as temporarily fenced off
+                        -- rather than gone.
     "https://z-lib.gl/",
     "https://z-library.rs/", -- these last 3 don't seem to work currently (May 2026), but may be worth trying in the future
     "https://z-lib.do/",

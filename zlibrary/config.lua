@@ -650,6 +650,10 @@ function Config.getDownloadedBooksUrl(page, order)
     local base = Config.getBaseUrl()
     if not base then return nil end
     
+    -- Note: the downloaded endpoint ignores order (verified against the live API -- every value
+    -- returns the same sequence), unlike saved, which honours saved_date. So this value is inert.
+    -- Sorting downloads by recency would have to be done client-side on each book's date_download,
+    -- and was judged not worth the pagination complexity. Left as-is to avoid re-investigating.
     order = order or {"date"}
     page = page or 1
 
@@ -666,7 +670,12 @@ function Config.getFavoriteBooksUrl(page, order)
     local base = Config.getBaseUrl()
     if not base then return nil end
 
-    order = order or {"date"}
+    -- Default to save date, newest first: a favourites list is most useful showing what you saved
+    -- most recently. order=date sorts by the book's own date, which is unrelated to save order and
+    -- is what made the list look wrongly sorted. The API's "A" suffix marks ascending (titleA,
+    -- filesizeA), so bare "saved_date" is descending = most recent first, as getFavoriteBookIdsUrl
+    -- already uses.
+    order = order or {"saved_date"}
     page = page or 1
     
     local limit = Config.SEARCH_RESULTS_LIMIT

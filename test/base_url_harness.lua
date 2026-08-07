@@ -164,4 +164,13 @@ r.check("downloaded-books URL defaults to order=date",
         string.find(Config.getDownloadedBooksUrl(), "&order=date", 1, true) ~= nil,
         "got " .. tostring(Config.getDownloadedBooksUrl()))
 
+-- Favourites default to save date (newest first), not the book's own date -- the list is about
+-- what you saved, so it should read most-recently-saved first.
+r.check("favorite-books URL defaults to order=saved_date",
+        string.find(Config.getFavoriteBooksUrl(), "&order=saved_date", 1, true) ~= nil,
+        "got " .. tostring(Config.getFavoriteBooksUrl()))
+r.check("and no longer sorts favourites by the book's own date",
+        string.find(Config.getFavoriteBooksUrl(), "&order=date", 1, true) == nil,
+        "got " .. tostring(Config.getFavoriteBooksUrl()))
+
 r.finish()

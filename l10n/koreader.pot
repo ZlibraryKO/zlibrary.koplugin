@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 17:59+0000\n"
+"POT-Creation-Date: 2026-08-07 11:58+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -719,20 +719,20 @@ msgstr ""
 msgid "File size"
 msgstr ""
 
-#: zlibrary/config.lua:824
+#: zlibrary/config.lua:833
 msgid "Default"
 msgstr ""
 
-#: zlibrary/config.lua:908
+#: zlibrary/config.lua:917
 #, lua-format
 msgid "%ds"
 msgstr ""
 
-#: zlibrary/config.lua:915 zlibrary/ui.lua:954 zlibrary/ui.lua:987
+#: zlibrary/config.lua:924 zlibrary/ui.lua:954 zlibrary/ui.lua:987
 msgid "infinite"
 msgstr ""
 
-#: zlibrary/config.lua:916
+#: zlibrary/config.lua:925
 #, lua-format
 msgid "Block: %ds, Total: %s"
 msgstr ""

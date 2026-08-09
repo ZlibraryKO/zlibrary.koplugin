@@ -146,6 +146,15 @@ function Zlibrary:addToMainMenu(menu_items)
                                 Config.setSkipOpenBookPrompt(not Config.getSkipOpenBookPrompt())
                             end,
                         }, {
+                            -- Named folders under the download directory; the post-download dialog
+                            -- offers to file the book into one. Rebuilt on each open so it always
+                            -- shows the current set.
+                            text = T("Download categories"),
+                            keep_menu_open = true,
+                            sub_item_table_func = function()
+                                return Ui.buildCategoriesMenuItems()
+                            end,
+                        }, {
                                 text = T("View Settings"),
                                 keep_menu_open = true,
                                 sub_item_table = { {

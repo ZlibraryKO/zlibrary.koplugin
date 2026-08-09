@@ -6,6 +6,34 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.45
+
+### Added
+
+**Sort downloaded books into folders of your own.** Set up named *download categories* under
+**Menu → Z-library → Settings → Download categories**, each of which becomes a folder inside your
+download directory. A category can have one level of sub-categories — `Fiction` with `Romance`,
+`Sci-Fi` — which nest as folders the same way (`…/Fiction/Romance`). The folders are created for you
+the first time a book is filed into them; renaming or removing a category only changes where future
+downloads go and never touches books already on the device.
+
+**Choose where a book goes right after downloading.** The "open book" dialog now has a **Move to**
+button. It opens a list — *Keep in download folder* (the default, always shown so you know where the
+book lands if you do nothing), your categories in alphabetical order, and **New category…** to make
+one on the spot (with an optional sub-category) and file the book into it in one go. *Close* files
+the book just as *Open book* does, so the destination is independent of whether you read it now. With
+no categories set up, the dialog is exactly as it was.
+
+If a book with the same name is already in the target folder, both are kept — the new one gains a
+` (2)` suffix rather than overwriting. If a folder can't be created or the move fails, the book is
+left in the download folder with a note, so a filing attempt can never lose it.
+
+### Internal
+
+The new strings are translated into all 15 locales. Test harnesses were added under `test/` covering
+category storage, the folder move (cross-filesystem fallback and name-collision handling), the
+in-flow category creation and alphabetical sorting, and the post-download chooser wiring.
+
 ## 1.0.42
 
 ### Fixed

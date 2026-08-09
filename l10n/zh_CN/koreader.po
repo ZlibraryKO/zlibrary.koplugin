@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-07 11:58+0000\n"
+"POT-Creation-Date: 2026-08-09 20:30+0200\n"
 "PO-Revision-Date: 2026-04-03 00:00+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
@@ -41,6 +41,9 @@ msgstr "设置下载目录"
 
 msgid "Ask to open after download"
 msgstr "下载后询问是否打开"
+
+msgid "Download categories"
+msgstr "下载分类"
 
 msgid "View Settings"
 msgstr "视图设置"
@@ -601,6 +604,18 @@ msgstr "缺少书籍标识符，无法下载。"
 msgid "Cannot create downloads directory: %s"
 msgstr "无法创建下载目录：%s"
 
+#, lua-format
+msgid "Couldn't create the folder for \"%s\". The book is in the download folder."
+msgstr "无法为“%s”创建文件夹。书籍保留在下载文件夹中。"
+
+#, lua-format
+msgid "Moved to \"%s\"."
+msgstr "已移动到“%s”。"
+
+#, lua-format
+msgid "Couldn't move the book into \"%s\". It's in the download folder."
+msgstr "无法将书籍移动到“%s”。书籍保留在下载文件夹中。"
+
 msgid "Could not open reader UI."
 msgstr "无法打开阅读器界面。"
 
@@ -738,6 +753,56 @@ msgstr "设置保存成功！"
 msgid "Setting cleared."
 msgstr "设置已清除。"
 
+msgid "Please enter a name."
+msgstr "请输入名称。"
+
+msgid "A category with that name already exists."
+msgstr "已存在同名分类。"
+
+msgid "That category no longer exists."
+msgstr "该分类已不存在。"
+
+msgid "Save"
+msgstr "保存"
+
+msgid "Rename"
+msgstr "重命名"
+
+msgid "Rename sub-category"
+msgstr "重命名子分类"
+
+msgid "Remove"
+msgstr "移除"
+
+#, lua-format
+msgid "Remove the sub-category \"%s\"? Books already filed there stay where they are."
+msgstr "删除子分类“%s”？已归入其中的书籍将保留原处。"
+
+msgid "Add sub-category…"
+msgstr "添加子分类…"
+
+msgid "New sub-category"
+msgstr "新建子分类"
+
+msgid "Rename category…"
+msgstr "重命名分类…"
+
+msgid "Rename category"
+msgstr "重命名分类"
+
+msgid "Remove category"
+msgstr "删除分类"
+
+#, lua-format
+msgid "Remove the category \"%s\" and its sub-categories? Books already filed there stay where they are."
+msgstr "删除分类“%s”及其子分类？已归入其中的书籍将保留原处。"
+
+msgid "Add category…"
+msgstr "添加分类…"
+
+msgid "New category"
+msgstr "新建分类"
+
 msgid "Set languages"
 msgstr "设置语言"
 
@@ -782,9 +847,6 @@ msgstr "搜索结果"
 msgid "Remove \"%s\" from your downloaded books?"
 msgstr "从您的已下载书籍中移除\"%s\"？"
 
-msgid "Remove"
-msgstr "移除"
-
 msgid "Clear your stored username and password?"
 msgstr "清除已保存的用户名和密码？"
 
@@ -795,15 +857,49 @@ msgstr "清除"
 msgid "Download \"%s\"?"
 msgstr "下载\"%s\"？"
 
+msgid "Please enter a category name."
+msgstr "请输入分类名称。"
+
+msgid "Category"
+msgstr "分类"
+
+msgid "Category name"
+msgstr "分类名称"
+
+msgid "Sub-category (optional)"
+msgstr "子分类（可选）"
+
+msgid "Sub-category name"
+msgstr "子分类名称"
+
+msgid "Create"
+msgstr "创建"
+
+msgid "Keep in download folder"
+msgstr "保留在下载文件夹"
+
+msgid "New category…"
+msgstr "新建分类…"
+
+msgid "Move to"
+msgstr "移动到"
+
 #, lua-format
 msgid "\"%s\" downloaded."
 msgstr "“%s”下载完成。"
+
+msgid "Download folder"
+msgstr "下载文件夹"
 
 msgid "Book downloaded successfully. Open it now?"
 msgstr "书籍下载成功。现在打开吗？"
 
 msgid "Turn off Wi-Fi after closing this dialog"
 msgstr "关闭此对话框后关闭Wi-Fi"
+
+#, lua-format
+msgid "Move to: %s"
+msgstr "移动到：%s"
 
 msgid "Open book"
 msgstr "打开书籍"

@@ -21,11 +21,15 @@ local block = support.extract_block(PLUGIN .. "/zlibrary/ui.lua",
 
 -- Rebuild against stubs that record what the function reached for.
 local shown, dialog_spec, skip_setting
+local last_Ui
 local function build()
     local Ui = {}
     local env = {
         Ui = Ui,
         string = string,
+        table = table,
+        type = type,
+        ipairs = ipairs,
         T = function(s) return s end,
         Config = {
             getSkipOpenBookPrompt = function() return skip_setting end,
@@ -35,11 +39,13 @@ local function build()
         UIManager = { show = function() end, close = function() end },
         _plugin_instance = nil,
         _showAndTrackDialog = function(d) dialog_spec = d end,
+        _closeAndUntrackDialog = function() end,
     }
     env.Ui.showInfoMessage = function(text) shown = text end
     local chunk = assert(loadstring(block, "=confirmOpenBook"))
     setfenv(chunk, env)
     chunk()
+    last_Ui = Ui
     return Ui.confirmOpenBook
 end
 
@@ -139,5 +145,81 @@ r.check("the setting is reachable from the menu",
         main_src:find("getSkipOpenBookPrompt", 1, true) ~= nil
             and main_src:find("setSkipOpenBookPrompt", 1, true) ~= nil,
         "no menu entry reads or writes it")
+
+-- ---------------------------------------------------------------- filing into a category
+local function find_button(spec, needle)
+    if not spec or not spec.other_buttons then return nil end
+    for _, row in ipairs(spec.other_buttons) do
+        for _, btn in ipairs(row) do
+            if type(btn.text) == "string" and btn.text:find(needle, 1, true) then
+                return btn
+            end
+        end
+    end
+    return nil
+end
+
+-- With no categories configured the dialog is unchanged: there is no "Move to" row, whether the
+-- argument is omitted (nil) or an empty list.
+shown, dialog_spec, skip_setting = nil, nil, false
+confirmOpenBook("Dune.epub", true, false, function() end, function() end, nil)
+r.check("no categories (nil): no Move to row",
+        find_button(dialog_spec, "Move to") == nil, "a Move to button appeared")
+
+shown, dialog_spec, skip_setting = nil, nil, false
+confirmOpenBook("Dune.epub", true, false, function() end, function() end, {})
+r.check("no categories (empty): no Move to row",
+        find_button(dialog_spec, "Move to") == nil, "a Move to button appeared")
+
+-- With categories the row appears, and choosing a target surfaces it to BOTH callbacks -- the point
+-- being that "Close" (don't open) files the book just as "Open book" does.
+local categories = { { name = "Fiction", children = { "Romance" } } }
+local picked = { name = "Fiction", sub = "Romance" }
+
+shown, dialog_spec, skip_setting = nil, nil, false
+local ok_target, cancel_target
+confirmOpenBook("Dune.epub", true, false,
+    function(_, t) ok_target = t end,
+    function(_, t) cancel_target = t end,
+    categories)
+
+local file_btn = find_button(dialog_spec, "Move to")
+r.check("categories: a Move to row appears", file_btn ~= nil, "no Move to button")
+
+-- Stub the chooser so tapping the row selects a target and the dialog re-renders.
+local chooser_categories
+last_Ui._showCategoryChooser = function(cats, _current, on_pick)
+    chooser_categories = cats
+    on_pick(picked)
+end
+if file_btn then file_btn.callback() end
+r.check("categories: the chooser is handed the category list",
+        chooser_categories == categories, "wrong list passed to the chooser")
+r.check("categories: the Move to row updates to the chosen target",
+        find_button(dialog_spec, "Fiction › Romance") ~= nil,
+        "row did not reflect the choice")
+
+if dialog_spec then dialog_spec.ok_callback() end
+r.check("categories: Open passes the chosen target",
+        ok_target ~= nil and ok_target.name == "Fiction" and ok_target.sub == "Romance",
+        "ok target = " .. tostring(ok_target))
+if dialog_spec then dialog_spec.cancel_callback() end
+r.check("categories: Close also passes the chosen target",
+        cancel_target ~= nil and cancel_target.name == "Fiction" and cancel_target.sub == "Romance",
+        "cancel target = " .. tostring(cancel_target))
+
+-- The skip-prompt path never files: with categories present the finish path still runs, but its
+-- second argument stays nil so download.lua leaves the book in the download folder.
+shown, dialog_spec, skip_setting = nil, nil, true
+local skip_cancel_called, skip_cancel_target
+confirmOpenBook("Dune.epub", true, false,
+    function() end,
+    function(_, t) skip_cancel_called = true; skip_cancel_target = t end,
+    { { name = "Fiction", children = {} } })
+r.check("skip-prompt with categories: no dialog is built", dialog_spec == nil, "a dialog was built")
+r.check("skip-prompt with categories: the finish path still runs", skip_cancel_called,
+        "cancel_callback never fired")
+r.check("skip-prompt with categories: nothing is filed", skip_cancel_target == nil,
+        "a target leaked through the skip path: " .. tostring(skip_cancel_target))
 
 r.finish()

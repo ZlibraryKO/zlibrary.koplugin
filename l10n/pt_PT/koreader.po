@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-07 11:58+0000\n"
+"POT-Creation-Date: 2026-08-09 20:30+0200\n"
 "PO-Revision-Date: 2026-07-22 00:39+0100\n"
 "Last-Translator: CookieCaptainD\n"
 "Language-Team: pt_PT\n"
@@ -47,6 +47,9 @@ msgstr "Definir diretório de transferências"
 
 msgid "Ask to open after download"
 msgstr "Perguntar se deseja abrir após a transferência"
+
+msgid "Download categories"
+msgstr "Categorias de transferências"
 
 msgid "View Settings"
 msgstr "Definições de visualização"
@@ -607,6 +610,18 @@ msgstr "Faltam os identificadores do livro. Não é possível transferir."
 msgid "Cannot create downloads directory: %s"
 msgstr "Não é possível criar o diretório de transferências: %s"
 
+#, lua-format
+msgid "Couldn't create the folder for \"%s\". The book is in the download folder."
+msgstr "Não foi possível criar a pasta para \"%s\". O livro está na pasta de transferências."
+
+#, lua-format
+msgid "Moved to \"%s\"."
+msgstr "Movido para \"%s\"."
+
+#, lua-format
+msgid "Couldn't move the book into \"%s\". It's in the download folder."
+msgstr "Não foi possível mover o livro para \"%s\". Está na pasta de transferências."
+
 msgid "Could not open reader UI."
 msgstr "Não foi possível abrir a interface de leitura."
 
@@ -744,6 +759,56 @@ msgstr "Definição guardada com sucesso!"
 msgid "Setting cleared."
 msgstr "Definição limpa."
 
+msgid "Please enter a name."
+msgstr "Introduza um nome."
+
+msgid "A category with that name already exists."
+msgstr "Já existe uma categoria com esse nome."
+
+msgid "That category no longer exists."
+msgstr "Essa categoria já não existe."
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid "Rename"
+msgstr "Renomear"
+
+msgid "Rename sub-category"
+msgstr "Renomear subcategoria"
+
+msgid "Remove"
+msgstr "Remover"
+
+#, lua-format
+msgid "Remove the sub-category \"%s\"? Books already filed there stay where they are."
+msgstr "Remover a subcategoria \"%s\"? Os livros já organizados nela permanecem onde estão."
+
+msgid "Add sub-category…"
+msgstr "Adicionar subcategoria…"
+
+msgid "New sub-category"
+msgstr "Nova subcategoria"
+
+msgid "Rename category…"
+msgstr "Renomear categoria…"
+
+msgid "Rename category"
+msgstr "Renomear categoria"
+
+msgid "Remove category"
+msgstr "Remover categoria"
+
+#, lua-format
+msgid "Remove the category \"%s\" and its sub-categories? Books already filed there stay where they are."
+msgstr "Remover a categoria \"%s\" e as suas subcategorias? Os livros já organizados nela permanecem onde estão."
+
+msgid "Add category…"
+msgstr "Adicionar categoria…"
+
+msgid "New category"
+msgstr "Nova categoria"
+
 msgid "Set languages"
 msgstr "Definir idiomas"
 
@@ -788,9 +853,6 @@ msgstr "Resultados da pesquisa"
 msgid "Remove \"%s\" from your downloaded books?"
 msgstr "Remover \"%s\" dos seus livros transferidos?"
 
-msgid "Remove"
-msgstr "Remover"
-
 msgid "Clear your stored username and password?"
 msgstr "Limpar o nome de utilizador e a palavra-passe guardados?"
 
@@ -801,15 +863,49 @@ msgstr "Limpar"
 msgid "Download \"%s\"?"
 msgstr "Transferir \"%s\"?"
 
+msgid "Please enter a category name."
+msgstr "Introduza um nome de categoria."
+
+msgid "Category"
+msgstr "Categoria"
+
+msgid "Category name"
+msgstr "Nome da categoria"
+
+msgid "Sub-category (optional)"
+msgstr "Subcategoria (opcional)"
+
+msgid "Sub-category name"
+msgstr "Nome da subcategoria"
+
+msgid "Create"
+msgstr "Criar"
+
+msgid "Keep in download folder"
+msgstr "Manter na pasta de transferências"
+
+msgid "New category…"
+msgstr "Nova categoria…"
+
+msgid "Move to"
+msgstr "Mover para"
+
 #, lua-format
 msgid "\"%s\" downloaded."
 msgstr "\"%s\" transferido."
+
+msgid "Download folder"
+msgstr "Pasta de transferências"
 
 msgid "Book downloaded successfully. Open it now?"
 msgstr "Livro transferido com sucesso. Abri-lo agora?"
 
 msgid "Turn off Wi-Fi after closing this dialog"
 msgstr "Desligar o Wi-Fi após fechar esta caixa de diálogo"
+
+#, lua-format
+msgid "Move to: %s"
+msgstr "Mover para: %s"
 
 msgid "Open book"
 msgstr "Abrir livro"

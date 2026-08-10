@@ -15,6 +15,7 @@ local Api = require("zlibrary.api")
 local AsyncHelper = require("zlibrary.async_helper")
 local Config = require("zlibrary.config")
 local Device = require("device")
+local ffiUtil = require("ffi/util")
 local NetworkMgr = require("ui/network/manager")
 local ReaderUI = require("apps/reader/readerui")
 local Trapper = require("ui/trapper")
@@ -59,6 +60,62 @@ local function _usableFormat(format)
         return nil
     end
     return trimmed
+end
+
+-- Filing a finished download into a category folder --------------------------------------------
+-- A category is only a name; its folder is <download dir>/<name>, and a sub-category nests one
+-- level deeper. Names double as folder segments, so they are sanitised again here (they already
+-- were at storage) as defence against a hand-edited settings file. Everything below is written so
+-- that any failure -- an uncreatable folder, a move that does not go through -- leaves the book in
+-- the download folder: the book is never lost to a filing attempt.
+
+-- The folder a chosen target maps to, relative to the download directory. nil when there is no
+-- target (the book stays in download_dir) or the name sanitises away to nothing.
+local function _categoryDestDir(download_dir, target)
+    if not target then return nil end
+    local name = Config.sanitizeCategoryName(target.name)
+    if name == "" then return nil end
+    local dir = download_dir .. "/" .. name
+    if target.sub then
+        local sub = Config.sanitizeCategoryName(target.sub)
+        if sub ~= "" then
+            dir = dir .. "/" .. sub
+        end
+    end
+    return dir
+end
+
+-- A path in dir for filename that does not clash: "Book.epub", then "Book (2).epub",
+-- "Book (3).epub"... Filing keeps both copies rather than overwriting an existing book.
+local function _uniqueDestPath(dir, filename)
+    local candidate = dir .. "/" .. filename
+    if not util.fileExists(candidate) then return candidate end
+    local base, ext = util.splitFileNameSuffix(filename)
+    local n = 2
+    while true do
+        local name = ext ~= "" and string.format("%s (%d).%s", base, n, ext)
+                               or string.format("%s (%d)", base, n)
+        candidate = dir .. "/" .. name
+        if not util.fileExists(candidate) then return candidate end
+        n = n + 1
+    end
+end
+
+-- Move a downloaded file, tolerating a category folder that turns out to be on another mount:
+-- os.rename cannot cross filesystems, so fall back to copy-then-remove -- the shape
+-- BaseCache:_safeCopy uses. Returns true only when the file ends up at `to`.
+local function _safeMove(from, to)
+    if os.rename(from, to) then return true end
+    -- ffiUtil.copyFile returns an error string on failure and nil on success, and never raises;
+    -- wrap it in pcall anyway so an unexpected error still counts as a failed move rather than
+    -- propagating out and skipping the "book kept in the download folder" fallback.
+    local copy_ok, copy_err = pcall(ffiUtil.copyFile, from, to)
+    if copy_ok and copy_err == nil then
+        util.removeFile(from)
+        return true
+    end
+    logger.warn("Zlibrary:downloadBook - failed to move " .. tostring(from) .. " -> " .. tostring(to))
+    return false
 end
 
 function Download.fetchDetailsThenDownload(self, book_stub)
@@ -229,23 +286,53 @@ function Download.run(self, book)
                 local has_wifi_toggle = Device:hasWifiToggle()
                 local default_turn_off_wifi = Config.getTurnOffWifiAfterDownload()
 
-                Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, function(should_turn_off_wifi)
+                -- Move the finished book into the category the user picked in the dialog, returning
+                -- the path it ends up at. On no choice, or any failure, this is target_filepath --
+                -- so whatever we hand to the reader below is always a file that exists.
+                local function fileInto(target)
+                    if not target then return target_filepath end
+                    local label = target.sub and (target.name .. " › " .. target.sub) or target.name
+                    local dest_dir = _categoryDestDir(target_dir, target)
+                    if not dest_dir then return target_filepath end
+                    if not util.directoryExists(dest_dir) then
+                        util.makePath(dest_dir)
+                    end
+                    if not util.directoryExists(dest_dir) then
+                        Ui.showInfoMessage(string.format(
+                            T("Couldn't create the folder for \"%s\". The book is in the download folder."), label))
+                        return target_filepath
+                    end
+                    local dest = _uniqueDestPath(dest_dir, filename)
+                    if _safeMove(target_filepath, dest) then
+                        Ui.showInfoMessage(string.format(T("Moved to \"%s\"."), label))
+                        return dest
+                    end
+                    Ui.showInfoMessage(string.format(
+                        T("Couldn't move the book into \"%s\". It's in the download folder."), label))
+                    return target_filepath
+                end
+
+                Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, function(should_turn_off_wifi, chosen_target)
                     if should_turn_off_wifi then
                         NetworkMgr:disableWifi(function()
                             logger.info("Zlibrary:downloadBook - Wi-Fi disabled after download as requested by user")
                         end)
                     end
 
+                    local final_filepath = fileInto(chosen_target)
+
                     if ReaderUI then
                         logger.info("Zlibrary:downloadBook - Cleaning up dialogs before opening reader")
                         self.dialog_manager:closeAllDialogs()
-                        ReaderUI:showReader(target_filepath)
+                        ReaderUI:showReader(final_filepath)
                     else
                         Ui.showErrorMessage(T("Could not open reader UI."))
                         logger.warn("Zlibrary:downloadBook - ReaderUI not available.")
                     end
                 end,
-                function(should_turn_off_wifi)
+                function(should_turn_off_wifi, chosen_target)
+                    -- "Close" still files the book: where it goes is independent of opening it now.
+                    fileInto(chosen_target)
                     if should_turn_off_wifi then
                         NetworkMgr:disableWifi(function()
                             logger.info("Zlibrary:downloadBook - Wi-Fi disabled after download as requested by user")
@@ -253,7 +340,8 @@ function Download.run(self, book)
                         logger.info("Zlibrary:downloadBook - Cleaning up dialogs cause wifi is turned off")
                         self.dialog_manager:closeAllDialogs()
                     end
-                end
+                end,
+                Config.getCategories()
             )
             else
                 -- Only reachable when the task returned no result at all; a result carrying .error

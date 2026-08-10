@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-07 11:58+0000\n"
+"POT-Creation-Date: 2026-08-09 20:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,6 +41,9 @@ msgstr "Download-Verzeichnis festlegen"
 
 msgid "Ask to open after download"
 msgstr "Nach dem Download zum Öffnen fragen"
+
+msgid "Download categories"
+msgstr "Download-Kategorien"
 
 msgid "View Settings"
 msgstr "Anzeigeeinstellungen"
@@ -601,6 +604,18 @@ msgstr "Buchkennungen fehlen. Download nicht möglich."
 msgid "Cannot create downloads directory: %s"
 msgstr "Download-Verzeichnis kann nicht erstellt werden: %s"
 
+#, lua-format
+msgid "Couldn't create the folder for \"%s\". The book is in the download folder."
+msgstr "Der Ordner für „%s“ konnte nicht erstellt werden. Das Buch befindet sich im Download-Ordner."
+
+#, lua-format
+msgid "Moved to \"%s\"."
+msgstr "Nach „%s“ verschoben."
+
+#, lua-format
+msgid "Couldn't move the book into \"%s\". It's in the download folder."
+msgstr "Das Buch konnte nicht nach „%s“ verschoben werden. Es befindet sich im Download-Ordner."
+
 msgid "Could not open reader UI."
 msgstr "Lese-Benutzeroberfläche konnte nicht geöffnet werden."
 
@@ -738,6 +753,56 @@ msgstr "Einstellung erfolgreich gespeichert!"
 msgid "Setting cleared."
 msgstr "Einstellung gelöscht."
 
+msgid "Please enter a name."
+msgstr "Bitte einen Namen eingeben."
+
+msgid "A category with that name already exists."
+msgstr "Eine Kategorie mit diesem Namen existiert bereits."
+
+msgid "That category no longer exists."
+msgstr "Diese Kategorie existiert nicht mehr."
+
+msgid "Save"
+msgstr "Speichern"
+
+msgid "Rename"
+msgstr "Umbenennen"
+
+msgid "Rename sub-category"
+msgstr "Unterkategorie umbenennen"
+
+msgid "Remove"
+msgstr "Entfernen"
+
+#, lua-format
+msgid "Remove the sub-category \"%s\"? Books already filed there stay where they are."
+msgstr "Die Unterkategorie „%s“ entfernen? Bereits dort einsortierte Bücher bleiben, wo sie sind."
+
+msgid "Add sub-category…"
+msgstr "Unterkategorie hinzufügen…"
+
+msgid "New sub-category"
+msgstr "Neue Unterkategorie"
+
+msgid "Rename category…"
+msgstr "Kategorie umbenennen…"
+
+msgid "Rename category"
+msgstr "Kategorie umbenennen"
+
+msgid "Remove category"
+msgstr "Kategorie entfernen"
+
+#, lua-format
+msgid "Remove the category \"%s\" and its sub-categories? Books already filed there stay where they are."
+msgstr "Die Kategorie „%s“ und ihre Unterkategorien entfernen? Bereits dort einsortierte Bücher bleiben, wo sie sind."
+
+msgid "Add category…"
+msgstr "Kategorie hinzufügen…"
+
+msgid "New category"
+msgstr "Neue Kategorie"
+
 msgid "Set languages"
 msgstr "Sprachen festlegen"
 
@@ -782,9 +847,6 @@ msgstr "Suchergebnisse"
 msgid "Remove \"%s\" from your downloaded books?"
 msgstr "\"%s\" aus Ihren Downloads entfernen?"
 
-msgid "Remove"
-msgstr "Entfernen"
-
 msgid "Clear your stored username and password?"
 msgstr "Gespeicherten Benutzernamen und Passwort löschen?"
 
@@ -795,15 +857,49 @@ msgstr "Löschen"
 msgid "Download \"%s\"?"
 msgstr "\"%s\" herunterladen?"
 
+msgid "Please enter a category name."
+msgstr "Bitte einen Kategorienamen eingeben."
+
+msgid "Category"
+msgstr "Kategorie"
+
+msgid "Category name"
+msgstr "Kategoriename"
+
+msgid "Sub-category (optional)"
+msgstr "Unterkategorie (optional)"
+
+msgid "Sub-category name"
+msgstr "Name der Unterkategorie"
+
+msgid "Create"
+msgstr "Erstellen"
+
+msgid "Keep in download folder"
+msgstr "Im Download-Ordner belassen"
+
+msgid "New category…"
+msgstr "Neue Kategorie…"
+
+msgid "Move to"
+msgstr "Verschieben nach"
+
 #, lua-format
 msgid "\"%s\" downloaded."
 msgstr "„%s“ heruntergeladen."
+
+msgid "Download folder"
+msgstr "Download-Ordner"
 
 msgid "Book downloaded successfully. Open it now?"
 msgstr "Buch erfolgreich heruntergeladen. Jetzt öffnen?"
 
 msgid "Turn off Wi-Fi after closing this dialog"
 msgstr "WLAN nach Schließen dieses Dialogs ausschalten"
+
+#, lua-format
+msgid "Move to: %s"
+msgstr "Verschieben nach: %s"
 
 msgid "Open book"
 msgstr "Buch öffnen"

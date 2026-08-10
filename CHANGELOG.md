@@ -34,6 +34,47 @@ The new strings are translated into all 15 locales. Test harnesses were added un
 category storage, the folder move (cross-filesystem fallback and name-collision handling), the
 in-flow category creation and alphabetical sorting, and the post-download chooser wiring.
 
+## 1.0.44
+
+### Fixed
+
+**Favourites now lead with what you saved most recently.** *My Books → Favourites* asked the server
+for the list by each book's own publication date, so a book you had just favourited did not appear at
+the top. It is now ordered by save date, newest first. (*Downloaded* is deliberately left as it is:
+its endpoint ignores the sort order entirely, so recency there would have to be reconstructed on the
+device — judged not worth the added paging.)
+
+## 1.0.43
+
+### Added
+
+**A working mirror can be found even when the usual source is blocked.** The list of mirrors to try
+is served from a curated file on the jsDelivr and GitHub CDNs. When neither can be reached — GitHub is
+blocked on some networks — the plugin now falls back to Z-Library's own domain endpoint as a last
+resort, so discovery still has somewhere to get a list. The CDNs are still tried first: they carry the
+fuller, curated list and stay reachable even when Z-Library itself is down.
+
+### Changed
+
+**Auto-discovery keeps the quickest mirror, not the first to answer.** The interactive *Auto-discover
+base URL* sweep probes every mirror; it used to keep whichever replied first, which — because the
+candidates are shuffled — was essentially random. It now keeps the fastest of the mirrors that
+answered, from timings it was already measuring. (The automatic path is left as it was: it stops at
+the first working mirror rather than making you wait out the whole sweep.)
+
+### Fixed
+
+**No more doomed lookups for `.onion` mirrors.** The operator's domain list includes two Tor
+`.onion` addresses. Without Tor these cannot be reached, so each caused a failed DNS lookup logged as
+an error, indistinguishable from a genuinely broken mirror. They are now filtered out of the fetched
+list.
+
+### Internal
+
+The deprecated `name` field was removed from `_meta.lua` (KOReader ignores it and warns when it is
+present). The bundled `domains.json` was refreshed from the operator's endpoints, and a note records
+that `z-library.sk` sits behind the same browser check as `1lib.sk`.
+
 ## 1.0.42
 
 ### Fixed

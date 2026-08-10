@@ -148,9 +148,14 @@ function Zlibrary:addToMainMenu(menu_items)
                         }, {
                             -- Named folders under the download directory; the post-download dialog
                             -- offers to file the book into one. Rebuilt on each open so it always
-                            -- shows the current set.
+                            -- shows the current set. Greyed out when "Ask to open after download" is
+                            -- off: categories are only chosen from that dialog, so with no dialog
+                            -- there is nothing they could do.
                             text = T("Download categories"),
                             keep_menu_open = true,
+                            enabled_func = function()
+                                return not Config.getSkipOpenBookPrompt()
+                            end,
                             sub_item_table_func = function()
                                 return Ui.buildCategoriesMenuItems()
                             end,

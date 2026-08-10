@@ -261,6 +261,13 @@ r.check("the Settings menu reaches the category management builder",
         main_src:find("Ui.buildCategoriesMenuItems", 1, true) ~= nil,
         "the Download categories menu entry is not wired to the builder")
 
+-- Categories can only be chosen from the post-download dialog, so the management entry is greyed out
+-- when that dialog is switched off ("Ask to open after download" unticked).
+r.check("the categories entry is disabled when the open-book prompt is off",
+        main_src:find("enabled_func", 1, true) ~= nil
+            and main_src:find("not Config.getSkipOpenBookPrompt()", 1, true) ~= nil,
+        "the Download categories entry is not gated on the open-book prompt")
+
 r.check("confirmOpenBook grows the post-download chooser",
         ui_src:find("function Ui.confirmOpenBook", 1, true) ~= nil
             and ui_src:find("_showCategoryChooser", 1, true) ~= nil,

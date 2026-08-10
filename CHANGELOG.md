@@ -6,6 +6,75 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.45
+
+### Added
+
+**Sort downloaded books into folders of your own.** Set up named *download categories* under
+**Menu → Z-library → Settings → Download categories**, each of which becomes a folder inside your
+download directory. A category can have one level of sub-categories — `Fiction` with `Romance`,
+`Sci-Fi` — which nest as folders the same way (`…/Fiction/Romance`). The folders are created for you
+the first time a book is filed into them; renaming or removing a category only changes where future
+downloads go and never touches books already on the device.
+
+**Choose where a book goes right after downloading.** The "open book" dialog now has a **Move to**
+button. It opens a list — *Keep in download folder* (the default, always shown so you know where the
+book lands if you do nothing), your categories in alphabetical order, and **New category…** to make
+one on the spot (with an optional sub-category) and file the book into it in one go. *Close* files
+the book just as *Open book* does, so the destination is independent of whether you read it now. With
+no categories set up, the dialog is exactly as it was.
+
+If a book with the same name is already in the target folder, both are kept — the new one gains a
+` (2)` suffix rather than overwriting. If a folder can't be created or the move fails, the book is
+left in the download folder with a note, so a filing attempt can never lose it.
+
+### Internal
+
+The new strings are translated into all 15 locales. Test harnesses were added under `test/` covering
+category storage, the folder move (cross-filesystem fallback and name-collision handling), the
+in-flow category creation and alphabetical sorting, and the post-download chooser wiring.
+
+## 1.0.44
+
+### Fixed
+
+**Favourites now lead with what you saved most recently.** *My Books → Favourites* asked the server
+for the list by each book's own publication date, so a book you had just favourited did not appear at
+the top. It is now ordered by save date, newest first. (*Downloaded* is deliberately left as it is:
+its endpoint ignores the sort order entirely, so recency there would have to be reconstructed on the
+device — judged not worth the added paging.)
+
+## 1.0.43
+
+### Added
+
+**A working mirror can be found even when the usual source is blocked.** The list of mirrors to try
+is served from a curated file on the jsDelivr and GitHub CDNs. When neither can be reached — GitHub is
+blocked on some networks — the plugin now falls back to Z-Library's own domain endpoint as a last
+resort, so discovery still has somewhere to get a list. The CDNs are still tried first: they carry the
+fuller, curated list and stay reachable even when Z-Library itself is down.
+
+### Changed
+
+**Auto-discovery keeps the quickest mirror, not the first to answer.** The interactive *Auto-discover
+base URL* sweep probes every mirror; it used to keep whichever replied first, which — because the
+candidates are shuffled — was essentially random. It now keeps the fastest of the mirrors that
+answered, from timings it was already measuring. (The automatic path is left as it was: it stops at
+the first working mirror rather than making you wait out the whole sweep.)
+
+### Fixed
+
+**No more doomed lookups for `.onion` mirrors.** The operator's domain list includes two Tor
+`.onion` addresses. Without Tor these cannot be reached, so each caused a failed DNS lookup logged as
+an error, indistinguishable from a genuinely broken mirror. They are now filtered out of the fetched
+list.
+
+### Internal
+
+The deprecated `name` field was removed from `_meta.lua` (KOReader ignores it and warns when it is
+present). The bundled `domains.json` was refreshed from the operator's endpoints, and a note records
+that `z-library.sk` sits behind the same browser check as `1lib.sk`.
+
 ## 1.0.42
 
 ### Fixed

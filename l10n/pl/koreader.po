@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-07 11:58+0000\n"
+"POT-Creation-Date: 2026-08-09 20:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,6 +41,9 @@ msgstr "Ustaw katalog pobierania"
 
 msgid "Ask to open after download"
 msgstr "Pytanie o otwarcie po pobraniu"
+
+msgid "Download categories"
+msgstr "Kategorie pobierania"
 
 msgid "View Settings"
 msgstr "Ustawienia widoku"
@@ -601,6 +604,18 @@ msgstr "Brak identyfikatorów książki. Nie można pobrać."
 msgid "Cannot create downloads directory: %s"
 msgstr "Nie można utworzyć katalogu pobierania: %s"
 
+#, lua-format
+msgid "Couldn't create the folder for \"%s\". The book is in the download folder."
+msgstr "Nie można utworzyć folderu dla „%s”. Książka znajduje się w folderze pobierania."
+
+#, lua-format
+msgid "Moved to \"%s\"."
+msgstr "Przeniesiono do „%s”."
+
+#, lua-format
+msgid "Couldn't move the book into \"%s\". It's in the download folder."
+msgstr "Nie można przenieść książki do „%s”. Znajduje się w folderze pobierania."
+
 msgid "Could not open reader UI."
 msgstr "Nie można otworzyć interfejsu czytnika."
 
@@ -738,6 +753,56 @@ msgstr "Ustawienie zapisane pomyślnie!"
 msgid "Setting cleared."
 msgstr "Ustawienie zostało usunięte."
 
+msgid "Please enter a name."
+msgstr "Wprowadź nazwę."
+
+msgid "A category with that name already exists."
+msgstr "Kategoria o tej nazwie już istnieje."
+
+msgid "That category no longer exists."
+msgstr "Ta kategoria już nie istnieje."
+
+msgid "Save"
+msgstr "Zapisz"
+
+msgid "Rename"
+msgstr "Zmień nazwę"
+
+msgid "Rename sub-category"
+msgstr "Zmień nazwę podkategorii"
+
+msgid "Remove"
+msgstr "Usuń"
+
+#, lua-format
+msgid "Remove the sub-category \"%s\"? Books already filed there stay where they are."
+msgstr "Usunąć podkategorię „%s”? Książki już w niej umieszczone pozostaną na miejscu."
+
+msgid "Add sub-category…"
+msgstr "Dodaj podkategorię…"
+
+msgid "New sub-category"
+msgstr "Nowa podkategoria"
+
+msgid "Rename category…"
+msgstr "Zmień nazwę kategorii…"
+
+msgid "Rename category"
+msgstr "Zmień nazwę kategorii"
+
+msgid "Remove category"
+msgstr "Usuń kategorię"
+
+#, lua-format
+msgid "Remove the category \"%s\" and its sub-categories? Books already filed there stay where they are."
+msgstr "Usunąć kategorię „%s” i jej podkategorie? Książki już w nich umieszczone pozostaną na miejscu."
+
+msgid "Add category…"
+msgstr "Dodaj kategorię…"
+
+msgid "New category"
+msgstr "Nowa kategoria"
+
 msgid "Set languages"
 msgstr "Ustaw języki"
 
@@ -782,9 +847,6 @@ msgstr "Wyniki wyszukiwania"
 msgid "Remove \"%s\" from your downloaded books?"
 msgstr "Usunąć \"%s\" z pobranych książek?"
 
-msgid "Remove"
-msgstr "Usuń"
-
 msgid "Clear your stored username and password?"
 msgstr "Wyczyścić zapisaną nazwę użytkownika i hasło?"
 
@@ -795,15 +857,49 @@ msgstr "Wyczyść"
 msgid "Download \"%s\"?"
 msgstr "Pobrać \"%s\"?"
 
+msgid "Please enter a category name."
+msgstr "Wprowadź nazwę kategorii."
+
+msgid "Category"
+msgstr "Kategoria"
+
+msgid "Category name"
+msgstr "Nazwa kategorii"
+
+msgid "Sub-category (optional)"
+msgstr "Podkategoria (opcjonalnie)"
+
+msgid "Sub-category name"
+msgstr "Nazwa podkategorii"
+
+msgid "Create"
+msgstr "Utwórz"
+
+msgid "Keep in download folder"
+msgstr "Zachowaj w folderze pobierania"
+
+msgid "New category…"
+msgstr "Nowa kategoria…"
+
+msgid "Move to"
+msgstr "Przenieś do"
+
 #, lua-format
 msgid "\"%s\" downloaded."
 msgstr "Pobrano „%s”."
+
+msgid "Download folder"
+msgstr "Folder pobierania"
 
 msgid "Book downloaded successfully. Open it now?"
 msgstr "Książka pomyślnie pobrana. Otworzyć teraz?"
 
 msgid "Turn off Wi-Fi after closing this dialog"
 msgstr "Wyłącz Wi-Fi po zamknięciu tego okna"
+
+#, lua-format
+msgid "Move to: %s"
+msgstr "Przenieś do: %s"
 
 msgid "Open book"
 msgstr "Otwórz książkę"

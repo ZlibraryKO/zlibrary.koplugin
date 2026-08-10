@@ -22,6 +22,7 @@ Config.SETTINGS_SEARCH_EXTENSIONS_KEY = "zlibrary_search_extensions"
 Config.SETTINGS_SEARCH_ORDERS_KEY = "zlibrary_search_order"
 Config.SETTINGS_VIEW_SETTINGS_KEY = "zlibrary_view_settings"
 Config.SETTINGS_DOWNLOAD_DIR_KEY = "zlibrary_download_dir"
+Config.SETTINGS_CATEGORIES_KEY = "zlibrary_categories"
 Config.SETTINGS_TURN_OFF_WIFI_AFTER_DOWNLOAD_KEY = "zlibrary_turn_off_wifi_after_download"
 Config.SETTINGS_SKIP_OPEN_BOOK_PROMPT_KEY = "zlibrary_skip_open_book_prompt"
 Config.SETTINGS_TIMEOUT_LOGIN_KEY = "zlibrary_timeout_login"
@@ -983,6 +984,122 @@ function Config.getViewSettings()
         return legacy
     end
     return {}
+end
+
+-- Download categories. A category is only a name; its folder is <download dir>/<name>, and a
+-- sub-category nests one level deeper (<download dir>/<parent>/<child>). The name doubles as the
+-- folder segment, so it is sanitised with the same rule the download filename uses
+-- (download.lua) and an empty result is rejected. Nesting is capped at one level: children are
+-- plain name strings and never have children of their own.
+--
+-- Stored shape (persisted verbatim, like the view settings above):
+--   { { name = "Fiction", children = { "Romance", "Sci-Fi" } }, { name = "Comics", children = {} } }
+--
+-- The mutation helpers return true on success, or false plus a short machine reason
+-- ("empty" / "exists" / "not_found" / "no_parent") the UI turns into a message.
+function Config.sanitizeCategoryName(name)
+    if type(name) ~= "string" then return "" end
+    return (util.trim(name):gsub("[/\\?%*:|\"<>%c]", "_"))
+end
+
+local function findCategoryIndex(list, name)
+    for i, entry in ipairs(list) do
+        if type(entry) == "table" and entry.name == name then return i end
+    end
+    return nil
+end
+
+function Config.setCategories(list)
+    if type(list) ~= "table" then list = {} end
+    Config.saveSetting(Config.SETTINGS_CATEGORIES_KEY, list)
+    return true
+end
+
+function Config.getCategories()
+    local list = Config.getSetting(Config.SETTINGS_CATEGORIES_KEY)
+    if type(list) == "table" then return list end
+    return {}
+end
+
+function Config.addCategory(name)
+    local clean = Config.sanitizeCategoryName(name)
+    if clean == "" then return false, "empty" end
+    local list = Config.getCategories()
+    if findCategoryIndex(list, clean) then return false, "exists" end
+    table.insert(list, { name = clean, children = {} })
+    Config.setCategories(list)
+    return true
+end
+
+function Config.addSubcategory(parent, name)
+    local clean = Config.sanitizeCategoryName(name)
+    if clean == "" then return false, "empty" end
+    local list = Config.getCategories()
+    local idx = findCategoryIndex(list, parent)
+    if not idx then return false, "no_parent" end
+    local children = list[idx].children or {}
+    for _, child in ipairs(children) do
+        if child == clean then return false, "exists" end
+    end
+    table.insert(children, clean)
+    list[idx].children = children
+    Config.setCategories(list)
+    return true
+end
+
+function Config.renameCategory(old_name, new_name)
+    local clean = Config.sanitizeCategoryName(new_name)
+    if clean == "" then return false, "empty" end
+    local list = Config.getCategories()
+    local idx = findCategoryIndex(list, old_name)
+    if not idx then return false, "not_found" end
+    if clean ~= old_name and findCategoryIndex(list, clean) then return false, "exists" end
+    list[idx].name = clean
+    Config.setCategories(list)
+    return true
+end
+
+function Config.renameSubcategory(parent, old_name, new_name)
+    local clean = Config.sanitizeCategoryName(new_name)
+    if clean == "" then return false, "empty" end
+    local list = Config.getCategories()
+    local idx = findCategoryIndex(list, parent)
+    if not idx then return false, "no_parent" end
+    local children = list[idx].children or {}
+    local child_idx, clash
+    for i, child in ipairs(children) do
+        if child == old_name then child_idx = i end
+        if child == clean then clash = true end
+    end
+    if not child_idx then return false, "not_found" end
+    if clean ~= old_name and clash then return false, "exists" end
+    children[child_idx] = clean
+    Config.setCategories(list)
+    return true
+end
+
+function Config.removeCategory(name)
+    local list = Config.getCategories()
+    local idx = findCategoryIndex(list, name)
+    if not idx then return false, "not_found" end
+    table.remove(list, idx)
+    Config.setCategories(list)
+    return true
+end
+
+function Config.removeSubcategory(parent, name)
+    local list = Config.getCategories()
+    local idx = findCategoryIndex(list, parent)
+    if not idx then return false, "no_parent" end
+    local children = list[idx].children or {}
+    for i, child in ipairs(children) do
+        if child == name then
+            table.remove(children, i)
+            Config.setCategories(list)
+            return true
+        end
+    end
+    return false, "not_found"
 end
 
 return Config

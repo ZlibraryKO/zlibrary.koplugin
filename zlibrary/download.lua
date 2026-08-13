@@ -118,6 +118,22 @@ local function _safeMove(from, to)
     return false
 end
 
+-- After a download the FileManager, if the reader is sitting in it, does not notice the new (or
+-- moved) file on its own -- so a book saved into the folder on screen only appears after a manual
+-- refresh, which reads as a failed download. Refresh the current folder for them. Deferred to the
+-- next tick so it runs once the download dialog has closed and the FileManager is the view on
+-- screen; guarded because FileManager.instance is nil whenever a book is open, in which case there
+-- is nothing to refresh and KOReader re-reads the folder on its own when the reader is closed. The
+-- require is lazy: FileManager pulls in much of the app and is only needed at this instant.
+local function _refreshFileManagerListing()
+    UIManager:nextTick(function()
+        local FileManager = require("apps/filemanager/filemanager")
+        if FileManager.instance then
+            FileManager.instance:onRefresh()
+        end
+    end)
+end
+
 function Download.fetchDetailsThenDownload(self, book_stub)
     local function attempt()
         local user_session = Config.getUserSession()
@@ -340,6 +356,12 @@ function Download.run(self, book)
                         logger.info("Zlibrary:downloadBook - Cleaning up dialogs cause wifi is turned off")
                         self.dialog_manager:closeAllDialogs()
                     end
+                    -- The reader stays where it was (typically the FileManager); show the new book
+                    -- without making them leave and re-enter the folder. This runs on both "Close"
+                    -- and the skip-the-prompt path (which calls this with no filing choice). The
+                    -- open path does not need it: opening the book replaces the FileManager, and
+                    -- KOReader re-reads the folder when the reader is closed.
+                    _refreshFileManagerListing()
                 end,
                 Config.getCategories()
             )

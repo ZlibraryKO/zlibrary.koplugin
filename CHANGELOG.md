@@ -6,6 +6,15 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.47
+
+### Fixed
+
+**Browsing book lists with covers no longer crashes on fast page turns.** In cover (grid) view,
+turning the page while covers were still loading could crash KOReader with an *"attempt to index
+field '_bb'"* error. Each cover slot is now cleared properly between refreshes, so a cover image that
+was already freed can no longer be painted again.
+
 ## 1.0.46
 
 ### Fixed

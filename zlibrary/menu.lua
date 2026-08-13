@@ -92,7 +92,24 @@ end
 
 function M:_updateCoverItems(select_number, no_recalculate_dimen)
     if not self.show_cover then return end
-    if not self.item_table or self.items_max_lines then return end
+    if not self.item_table then return end
+
+    -- Every Menu:updateItems frees the widgets embedded in the item rows
+    -- (VerticalGroup:clear -> free, recursively), and MenuItem embeds
+    -- item.state directly. Since item.state lives on the item_table, which
+    -- outlives the rows, anything left there afterwards is a *freed* widget --
+    -- and painting one crashes with "attempt to index field '_bb' (a nil
+    -- value)". Rebuilding only the current page therefore is not enough: any
+    -- item skipped, on another page, or missed because of an early return
+    -- below keeps a dangling widget that KOReader will happily re-embed.
+    --
+    -- So drop every reference first, then rebuild just what this page needs.
+    -- A nil state is safe: MenuItem falls back to a HorizontalSpan.
+    for _, item in ipairs(self.item_table) do
+        item.state = nil
+    end
+
+    if self.items_max_lines then return end
     local perpage = self.perpage
     local current_page = self.page
     local idx_offset = (current_page - 1) * perpage

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-10 08:01+0000\n"
+"POT-Creation-Date: 2026-08-13 05:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -287,7 +287,7 @@ msgstr ""
 msgid "Book added to favorites, please refresh"
 msgstr ""
 
-#: main.lua:825 main.lua:855 zlibrary/download.lua:124
+#: main.lua:825 main.lua:855 zlibrary/download.lua:140
 msgid "Fetching book details..."
 msgstr ""
 
@@ -295,11 +295,11 @@ msgstr ""
 msgid "Failed to fetch book details"
 msgstr ""
 
-#: main.lua:827 main.lua:882 zlibrary/download.lua:147 zlibrary/ui.lua:1510
+#: main.lua:827 main.lua:882 zlibrary/download.lua:163 zlibrary/ui.lua:1510
 msgid "Book details"
 msgstr ""
 
-#: main.lua:835 main.lua:870 zlibrary/download.lua:134
+#: main.lua:835 main.lua:870 zlibrary/download.lua:150
 msgid "Could not retrieve book details."
 msgstr ""
 
@@ -528,7 +528,7 @@ msgstr ""
 msgid "API returned an error for download link."
 msgstr ""
 
-#: zlibrary/api.lua:1232 zlibrary/download.lua:367
+#: zlibrary/api.lua:1232 zlibrary/download.lua:389
 msgid "Download limit reached. Please try again later or check your account."
 msgstr ""
 
@@ -806,53 +806,53 @@ msgstr ""
 msgid "Refresh Dynamic Domains"
 msgstr ""
 
-#: zlibrary/download.lua:140
+#: zlibrary/download.lua:156
 msgid "This book's file type is unknown, so it cannot be downloaded."
 msgstr ""
 
-#: zlibrary/download.lua:176
+#: zlibrary/download.lua:192
 msgid "Book identifiers missing. Cannot download."
 msgstr ""
 
-#: zlibrary/download.lua:205
+#: zlibrary/download.lua:221
 #, lua-format
 msgid "Cannot create downloads directory: %s"
 msgstr ""
 
-#: zlibrary/download.lua:302
+#: zlibrary/download.lua:318
 #, lua-format
 msgid ""
 "Couldn't create the folder for \"%s\". The book is in the download folder."
 msgstr ""
 
-#: zlibrary/download.lua:307
+#: zlibrary/download.lua:323
 #, lua-format
 msgid "Moved to \"%s\"."
 msgstr ""
 
-#: zlibrary/download.lua:311
+#: zlibrary/download.lua:327
 #, lua-format
 msgid "Couldn't move the book into \"%s\". It's in the download folder."
 msgstr ""
 
-#: zlibrary/download.lua:329
+#: zlibrary/download.lua:345
 msgid "Could not open reader UI."
 msgstr ""
 
-#: zlibrary/download.lua:349 zlibrary/download.lua:412
-#: zlibrary/download.lua:424 zlibrary/download.lua:430
+#: zlibrary/download.lua:371 zlibrary/download.lua:434
+#: zlibrary/download.lua:446 zlibrary/download.lua:452
 msgid "Download failed: Unknown error"
 msgstr ""
 
-#: zlibrary/download.lua:372 zlibrary/ui.lua:1540
+#: zlibrary/download.lua:394 zlibrary/ui.lua:1540
 msgid "Book download"
 msgstr ""
 
-#: zlibrary/download.lua:376
+#: zlibrary/download.lua:398
 msgid "Retrying download… (tap to cancel)"
 msgstr ""
 
-#: zlibrary/download.lua:423
+#: zlibrary/download.lua:445
 msgid "Download cancelled."
 msgstr ""
 

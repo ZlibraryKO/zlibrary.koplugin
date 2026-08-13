@@ -6,6 +6,16 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.46
+
+### Fixed
+
+**A finished download shows up in the file browser straight away.** If you stayed in the folder a
+book was downloading into, the new file did not appear until you left the folder and came back —
+which looked like the download had failed. The file list now refreshes itself once the download
+finishes (whether you tap *Close* or have the open-book prompt switched off), so the book is there
+immediately.
+
 ## 1.0.45
 
 ### Added

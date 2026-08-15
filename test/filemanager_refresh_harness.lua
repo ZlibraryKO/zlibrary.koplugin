@@ -27,7 +27,10 @@ local function build(instance)
         instance.onRefresh = function() rec.refreshes = rec.refreshes + 1 end
     end
     local env = {
-        UIManager = { nextTick = function(_, fn) rec.ticks = rec.ticks + 1; fn() end },
+        UIManager = {
+            nextTick = function(_, fn) rec.ticks = rec.ticks + 1; fn() end,
+            setDirty = function() rec.dirtied = (rec.dirtied or 0) + 1 end,
+        },
         require = function(name) rec.required = name; return fm end,
     }
     rec.fn = support.extract_function(DOWNLOAD, "_refreshFileManagerListing", env)
@@ -44,6 +47,8 @@ do
             "required " .. tostring(rec.required))
     r.check("the current folder is refreshed exactly once", rec.refreshes == 1,
             "onRefresh called " .. rec.refreshes .. " times")
+    r.check("the FileManager is marked dirty so the new file actually repaints",
+            rec.dirtied == 1, "setDirty called " .. tostring(rec.dirtied) .. " times")
 end
 
 -- ---------------------------------------------------------------- FileManager not open (reading)
@@ -54,6 +59,8 @@ do
             "raised: " .. tostring(err))
     r.check("and it refreshes nothing", rec.refreshes == 0,
             "onRefresh ran " .. rec.refreshes .. " times")
+    r.check("and it marks nothing dirty", (rec.dirtied or 0) == 0,
+            "setDirty ran " .. tostring(rec.dirtied) .. " times")
 end
 
 -- ---------------------------------------------------------------- wiring

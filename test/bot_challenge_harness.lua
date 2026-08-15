@@ -19,11 +19,15 @@ support.preload_socket(LUASOCKET)
 support.preload_koreader_stubs()
 local r = support.reporter()
 
+-- Recorded so the tests can assert a challenge marks the mirror blocked (and nothing else does).
+-- Reassigned per case; the stub reads the variable, so a fresh table takes effect.
+local blocked_calls = {}
 package.preload["zlibrary.config"] = function()
     return {
         setCacheRealUrl = function() end,
         getCacheRealUrl = function() return nil end,
         clearCacheRealUrlIfPinned = function() return false end,
+        markMirrorBlocked = function(url) table.insert(blocked_calls, url) end,
     }
 end
 
@@ -57,6 +61,7 @@ serve = function(p)
     if p.sink then p.sink(DIAMWALL_BODY) end
     return 1, 513, {}, "HTTP/1.1 513 "
 end
+blocked_calls = {}
 local res = Api.makeHttpRequest{ url = "https://1lib.sk/eapi/user/login", method = "GET", headers = {} }
 r.check("challenge recognised, not reported as a bare status",
         res.error and res.error:find("refusing automated access", 1, true) ~= nil,
@@ -66,6 +71,9 @@ r.check("error names the host so the user can act",
 r.check("error says what to do about it",
         res.error and res.error:find("different Z%-library server") ~= nil, tostring(res.error))
 r.check("bounded: 2 requests, no hammering", n == 2, "made " .. n)
+r.check("the challenged mirror is recorded as blocked so discovery skips it",
+        #blocked_calls == 1 and blocked_calls[1] == "https://1lib.sk/eapi/user/login",
+        "blocked: " .. table.concat(blocked_calls, ", "))
 
 -- ---------------------------------------------------------------- must not misfire
 n = 0
@@ -74,12 +82,16 @@ serve = function(p)
     if p.sink then p.sink('{"success":0,"error":"Incorrect email or password"}') end
     return 1, 401, {}, "HTTP/1.1 401"
 end
+blocked_calls = {}
 res = Api.makeHttpRequest{ url = "https://good.example/eapi/user/login", method = "GET", headers = {} }
 r.check("a JSON API error is not misread as a challenge",
         res.error and res.error:find("refusing automated access", 1, true) == nil,
         tostring(res.error))
+r.check("a JSON API error does not block the mirror", #blocked_calls == 0,
+        "wrongly blocked: " .. table.concat(blocked_calls, ", "))
 
 n = 0
+blocked_calls = {}
 serve = function(p)
     n = n + 1
     if p.sink then p.sink("<html><head><title>502 Bad Gateway</title></head><body>nginx</body></html>") end
@@ -89,6 +101,8 @@ res = Api.makeHttpRequest{ url = "https://good.example/eapi/user/login", method 
 r.check("an ordinary HTML error page is not misread as a challenge",
         res.error and res.error:find("refusing automated access", 1, true) == nil,
         tostring(res.error))
+r.check("an ordinary HTML error page does not block the mirror", #blocked_calls == 0,
+        "wrongly blocked: " .. table.concat(blocked_calls, ", "))
 
 -- ---------------------------------------------------------------- 200 with a challenge body
 -- A WAF can serve the interstitial with a 200 instead of an error status. This used to fall
@@ -100,15 +114,20 @@ serve = function(p)
     if p.sink then p.sink(DIAMWALL_BODY) end
     return 1, 200, {}, "HTTP/1.1 200"
 end
+blocked_calls = {}
 res = Api.makeHttpRequest{ url = "https://waf.example/eapi/user/login", method = "GET", headers = {} }
 r.check("a challenge served with status 200 is still recognised",
         res.error and res.error:find("refusing automated access", 1, true) ~= nil,
         "error=" .. tostring(res.error))
 r.check("the 200 challenge error also names the host",
         res.error and res.error:find("waf.example", 1, true) ~= nil, tostring(res.error))
+r.check("the 200 challenge also blocks the mirror",
+        #blocked_calls == 1 and blocked_calls[1] == "https://waf.example/eapi/user/login",
+        "blocked: " .. table.concat(blocked_calls, ", "))
 
 -- A book whose description happens to quote a challenge phrase must not poison a good response.
 n = 0
+blocked_calls = {}
 serve = function(p)
     n = n + 1
     if p.sink then p.sink('{"success":1,"book":{"title":"Verifying your browser: a history"}}') end
@@ -118,5 +137,7 @@ res = Api.makeHttpRequest{ url = "https://good.example/eapi/book/1", method = "G
 r.check("a JSON response quoting a challenge phrase is not misread as a challenge",
         res.status_code == 200 and res.error == nil,
         "status=" .. tostring(res.status_code) .. " error=" .. tostring(res.error))
+r.check("a JSON response quoting a challenge phrase does not block the mirror",
+        #blocked_calls == 0, "wrongly blocked: " .. table.concat(blocked_calls, ", "))
 
 r.finish()

@@ -20,6 +20,21 @@ local Ui = require("zlibrary.ui")
 local T = require("zlibrary.gettext")
 local logger = require("logger")
 
+-- Pick a URL at random from the k fastest working mirrors. Selecting the single quickest every time
+-- lands the reader on the same mirror on every sweep; spreading the choice over the top few keeps it
+-- varied (and spreads load) while still avoiding the slow ones. Sorts a copy, so the caller's list is
+-- left alone; a mirror that reported no timing sorts last.
+local function _pickFastestRandom(candidates, k)
+    if type(candidates) ~= "table" or #candidates == 0 then return nil end
+    local sorted = {}
+    for _, c in ipairs(candidates) do sorted[#sorted + 1] = c end
+    table.sort(sorted, function(a, b)
+        return (a.elapsed or math.huge) < (b.elapsed or math.huge)
+    end)
+    local n = math.min(k or 5, #sorted)
+    return sorted[math.random(n)].url
+end
+
 local Discovery = {}
 
 function Discovery.run(self, is_interactive, retry_callback)
@@ -113,6 +128,10 @@ function Discovery.run(self, is_interactive, retry_callback)
         -- stale threshold from the previous run would sit below everything the next one
         -- measures and no mirror would ever displace it.
         local best_elapsed = nil
+        -- Every working mirror this run, with its timing. On the interactive path the final choice is
+        -- made from the fastest few of these (see on_batch_end), so discovery does not settle on the
+        -- same single quickest mirror every sweep.
+        local working = {}
         -- task status lock
         local is_discovering = false
         local max_idx = 1
@@ -163,7 +182,8 @@ function Discovery.run(self, is_interactive, retry_callback)
             is_discovering = true
             first_working_url = nil
             best_elapsed = nil
-            
+            working = {}
+
             resetAllItems()
             self.discover_channel:executeBatch({
                 items = valid_seeds,
@@ -242,16 +262,19 @@ function Discovery.run(self, is_interactive, retry_callback)
                                 first_working_url = seed.url
                                 return true
                             end
-                        elseif not first_working_url
-                                or (result.elapsed and (not best_elapsed or result.elapsed < best_elapsed)) then
+                        else
                             -- Nothing is aborted here: the menu shows a verdict per row, so the
-                            -- interactive sweep probes every seed either way and has already paid
-                            -- for the timings. Spend them -- getSeedUrls shuffles, so the first
-                            -- responder is an arbitrary mirror, while the quickest is a defensible
-                            -- one. A working mirror with no elapsed still beats having no URL,
-                            -- which is why the first clause stands on its own.
-                            first_working_url = seed.url
-                            best_elapsed = result.elapsed or best_elapsed
+                            -- interactive sweep probes every seed either way and has already paid for
+                            -- the timings. Collect every working mirror; on_batch_end makes the final
+                            -- choice from the fastest few, so discovery is not pinned to one mirror
+                            -- every sweep. Keep tracking the quickest too, as a fallback for the case
+                            -- where the batch ends before the override can run.
+                            working[#working + 1] = { url = seed.url, elapsed = result.elapsed }
+                            if not first_working_url
+                                    or (result.elapsed and (not best_elapsed or result.elapsed < best_elapsed)) then
+                                first_working_url = seed.url
+                                best_elapsed = result.elapsed or best_elapsed
+                            end
                         end
                     end
                     return false
@@ -265,6 +288,12 @@ function Discovery.run(self, is_interactive, retry_callback)
                             end
                         end
                         if next(filtered_results) then check_cache:insert("result", filtered_results) end
+                    end
+                    -- Choose from the fastest few rather than always the single quickest, so repeated
+                    -- sweeps do not keep landing on the same mirror. The current base is already out of
+                    -- the running (getSeedUrls drops it), so this never re-picks the one in use.
+                    if is_interactive and #working > 0 then
+                        first_working_url = _pickFastestRandom(working, 5) or first_working_url
                     end
                     finishDiscovery()
                 end,

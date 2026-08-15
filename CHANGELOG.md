@@ -22,6 +22,11 @@ answers any request with such a page it is now remembered and skipped by discove
 sweep moves on to a working mirror. The block lasts a good while but is not permanent, so a mirror
 that later drops its anti-bot wall is eventually tried again.
 
+**Auto-discovery no longer settles on the same server every time.** *Auto-discover base URL* used to
+pick the single fastest mirror, so repeated runs kept landing on the same one; it now chooses at
+random among the fastest few, spreading the load. (The server you are currently on is already left
+out of the running, so discovery never just re-picks it.)
+
 ## 1.0.46
 
 ### Fixed

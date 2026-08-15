@@ -15,6 +15,13 @@ turning the page while covers were still loading could crash KOReader with an *"
 field '_bb'"* error. Each cover slot is now cleared properly between refreshes, so a cover image that
 was already freed can no longer be painted again.
 
+**Auto-discovery stops re-picking a server that can't actually search.** Some mirrors answer the
+health check but block the real search behind an anti-bot page (*"This Z-library server is refusing
+automated access"*) — and auto-discovery kept choosing the same one every sweep. When a server
+answers any request with such a page it is now remembered and skipped by discovery, so the next
+sweep moves on to a working mirror. The block lasts a good while but is not permanent, so a mirror
+that later drops its anti-bot wall is eventually tried again.
+
 ## 1.0.46
 
 ### Fixed

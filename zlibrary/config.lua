@@ -33,7 +33,16 @@ Config.SETTINGS_TIMEOUT_POPULAR_KEY = "zlibrary_timeout_popular"
 Config.SETTINGS_TIMEOUT_DOWNLOAD_KEY = "zlibrary_timeout_download"
 Config.SETTINGS_TIMEOUT_COVER_KEY = "zlibrary_timeout_cover"
 Config.SETTINGS_TIMEOUT_BOOK_COMMENTS_KEY = "zlibrary_timeout_book_comments"
+Config.SETTINGS_BLOCKED_MIRRORS_KEY = "zlibrary_blocked_mirrors"
 Config.CREDENTIALS_FILENAME = "zlibrary_credentials.lua"
+
+-- How long a mirror that answered a request with a bot-check page stays skipped by discovery.
+-- Deliberately long: a mirror put behind a WAF tends to stay there, and re-selecting it sooner just
+-- reproduces the failed request the user already saw. The cost of over-skipping a mirror that has
+-- since recovered is small -- there are dozens of other seeds plus the dynamic domain list, and
+-- getSeedUrls falls back to the blocked ones if every candidate is blocked -- so err towards a long
+-- block rather than a short one. Not permanent, so a recovered mirror is eventually retried.
+Config.BLOCKED_MIRROR_TTL = 180 * 24 * 3600 -- ~6 months
 
 Config.DEFAULT_DOWNLOAD_DIR_FALLBACK = G_reader_settings:readSetting("home_dir")
              or require("apps/filemanager/filemanagerutil").getDefaultDir()
@@ -505,38 +514,92 @@ function Config.getBaseUrl(is_original)
     return configured_url
 end
 
+-- Mirrors that answered a request with a bot-check page instead of the API. Discovery skips them so
+-- a server that passes /eapi/info/ok but blocks /eapi/book/search (observed on tw.101d.by) is not
+-- selected again on every sweep. Keyed by scheme://host[:port], so the path of the challenged
+-- request does not matter and a match with a bare seed URL is stable; entries expire after
+-- BLOCKED_MIRROR_TTL.
+local function _normalizeMirrorKey(url)
+    if type(url) ~= "string" or url == "" then return nil end
+    local parsed = socket_url.parse(url)
+    if parsed and parsed.host and parsed.host ~= "" then
+        local key = (parsed.scheme or "https") .. "://" .. parsed.host:lower()
+        if parsed.port then key = key .. ":" .. parsed.port end
+        return key
+    end
+    -- Fall back to a crude strip so even a malformed URL yields a stable key.
+    return (url:gsub("[/?#].*$", ""))
+end
+
+function Config.markMirrorBlocked(url, now)
+    local key = _normalizeMirrorKey(url)
+    if not key then return end
+    now = now or os.time()
+    local map = Config.getSetting(Config.SETTINGS_BLOCKED_MIRRORS_KEY)
+    if type(map) ~= "table" then map = {} end
+    -- Drop aged-out entries while we are here so the map cannot grow without bound.
+    for k, ts in pairs(map) do
+        if type(ts) ~= "number" or (now - ts) >= Config.BLOCKED_MIRROR_TTL then
+            map[k] = nil
+        end
+    end
+    map[key] = now
+    Config.saveSetting(Config.SETTINGS_BLOCKED_MIRRORS_KEY, map)
+end
+
+function Config.isMirrorBlocked(url, now)
+    local key = _normalizeMirrorKey(url)
+    if not key then return false end
+    local map = Config.getSetting(Config.SETTINGS_BLOCKED_MIRRORS_KEY)
+    if type(map) ~= "table" then return false end
+    local ts = map[key]
+    if type(ts) ~= "number" then return false end
+    now = now or os.time()
+    return (now - ts) < Config.BLOCKED_MIRROR_TTL
+end
+
 function Config.getSeedUrls()
     local new_seed_urls, seen = {}, {}
+    -- Seeds that would have been included but are currently bot-blocked. Kept only for the fallback
+    -- below: if every candidate is blocked, trying them beats leaving discovery with nothing.
+    local blocked_bucket = {}
 
     local base = Config.getBaseUrl()
     local clean_base = (type(base) == "string" and base ~= "") and base:gsub("/$", "") or nil
     if clean_base then seen[clean_base] = true end
 
+    local function shuffle(t)
+        for i = #t, 2, -1 do
+            local j = math.random(i)
+            t[i], t[j] = t[j], t[i]
+        end
+    end
+
     local function processAndMerge(source_urls , src_name)
         if type(source_urls) ~= "table" or #source_urls == 0 then return end
-        local temp_urls = {}
-        
+        local temp_urls, blocked_temp = {}, {}
+
         -- clean & deduplicate
         for _, url in ipairs(source_urls) do
             if type(url) == "string" and url ~= "" then
                 local clean_url = url:gsub("/$", "")
                 if not clean_url:match("^https?://") then
-                    clean_url  = "https://" .. clean_url 
+                    clean_url  = "https://" .. clean_url
                 end
                 if not seen[clean_url] then
                     seen[clean_url] = true
-                    table.insert(temp_urls, {url = clean_url, src = src_name})
+                    if Config.isMirrorBlocked(clean_url) then
+                        table.insert(blocked_temp, {url = clean_url, src = src_name})
+                    else
+                        table.insert(temp_urls, {url = clean_url, src = src_name})
+                    end
                 end
             end
         end
-        -- Shuffle
-        for i = #temp_urls, 2, -1 do
-            local j = math.random(i)
-            temp_urls[i], temp_urls[j] = temp_urls[j], temp_urls[i]
-        end
-        for _, item in ipairs(temp_urls) do
-            table.insert(new_seed_urls, item)
-        end
+        shuffle(temp_urls)
+        shuffle(blocked_temp)
+        for _, item in ipairs(temp_urls) do table.insert(new_seed_urls, item) end
+        for _, item in ipairs(blocked_temp) do table.insert(blocked_bucket, item) end
     end
 
     -- User-defined  > Hardcoded > Dynamic
@@ -546,7 +609,12 @@ function Config.getSeedUrls()
     local domains_cache = Cache:new{ name = "_domains_cache" }
     -- domains are updated passively, no expiration set here
     processAndMerge(domains_cache:get("domains"), "D")
-    
+
+    -- Never hand discovery an empty list purely because everything is blocked right now.
+    if #new_seed_urls == 0 then
+        for _, item in ipairs(blocked_bucket) do table.insert(new_seed_urls, item) end
+    end
+
     return new_seed_urls
 end
 

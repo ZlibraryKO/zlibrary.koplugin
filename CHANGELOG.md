@@ -6,6 +6,27 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.47
+
+### Fixed
+
+**Browsing book lists with covers no longer crashes on fast page turns.** In cover (grid) view,
+turning the page while covers were still loading could crash KOReader with an *"attempt to index
+field '_bb'"* error. Each cover slot is now cleared properly between refreshes, so a cover image that
+was already freed can no longer be painted again.
+
+**Auto-discovery stops re-picking a server that can't actually search.** Some mirrors answer the
+health check but block the real search behind an anti-bot page (*"This Z-library server is refusing
+automated access"*) — and auto-discovery kept choosing the same one every sweep. When a server
+answers any request with such a page it is now remembered and skipped by discovery, so the next
+sweep moves on to a working mirror. The block lasts a good while but is not permanent, so a mirror
+that later drops its anti-bot wall is eventually tried again.
+
+**Auto-discovery no longer settles on the same server every time.** *Auto-discover base URL* used to
+pick the single fastest mirror, so repeated runs kept landing on the same one; it now chooses at
+random among the fastest few, spreading the load. (The server you are currently on is already left
+out of the running, so discovery never just re-picks it.)
+
 ## 1.0.46
 
 ### Fixed

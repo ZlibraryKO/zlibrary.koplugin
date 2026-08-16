@@ -130,6 +130,7 @@ local function _refreshFileManagerListing()
         local FileManager = require("apps/filemanager/filemanager")
         if FileManager.instance then
             FileManager.instance:onRefresh()
+            UIManager:setDirty(FileManager.instance, "ui")
         end
     end)
 end

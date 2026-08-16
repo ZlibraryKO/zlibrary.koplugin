@@ -649,6 +649,8 @@ function Api.makeHttpRequest(options)
                     Api.BLOCKED_TEXT,
                     (parsed and parsed.host) or tostring(options.url),
                     T("Try a different Z-library server."))
+                -- Remember this mirror so discovery skips it and stops re-selecting it every sweep.
+                Config.markMirrorBlocked(options.url)
                 logger.err(string.format(
                     "Zlibrary:Api.makeHttpRequest - %s answered a bot-check page (status %s), not the API",
                     tostring(options.url), tostring(result.status_code)))
@@ -667,6 +669,8 @@ function Api.makeHttpRequest(options)
             Api.BLOCKED_TEXT,
             (parsed and parsed.host) or tostring(options.url),
             T("Try a different Z-library server."))
+        -- Remember this mirror so discovery skips it and stops re-selecting it every sweep.
+        Config.markMirrorBlocked(options.url)
         logger.err(string.format(
             "Zlibrary:Api.makeHttpRequest - %s answered a bot-check page with status %s, not the API",
             tostring(options.url), tostring(result.status_code)))

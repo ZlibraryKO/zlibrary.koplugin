@@ -62,6 +62,27 @@ local function _usableFormat(format)
     return trimmed
 end
 
+-- The download's filename: "<Title> - <Author> <id>.<ext>". The Z-Library book id is included
+-- because title+author is not unique -- two different books, or two editions of one, routinely
+-- share it, and without the id they collapse onto the same path and silently overwrite each other.
+-- The id makes each download identity-unique (and, later, discoverable). Title, author and id are
+-- each sanitised to a safe path segment with the same rule the rest of the plugin uses; the format
+-- is already validated by _usableFormat. (book.id is guaranteed here -- Download.run refuses a book
+-- without id/hash -- but fall back to the id-less name if it is ever empty, rather than emit a
+-- trailing space before the dot.)
+local function _buildDownloadFilename(book, book_format)
+    local function safe(value, fallback)
+        return (util.trim(tostring(value or fallback)):gsub("[/\\?%*:|\"<>%c]", "_"))
+    end
+    local safe_title = safe(book.title, "Unknown Title")
+    local safe_author = safe(book.author, "Unknown Author")
+    local safe_id = safe(book.id, "")
+    if safe_id ~= "" then
+        return string.format("%s - %s %s.%s", safe_title, safe_author, safe_id, book_format)
+    end
+    return string.format("%s - %s.%s", safe_title, safe_author, book_format)
+end
+
 -- Filing a finished download into a category folder --------------------------------------------
 -- A category is only a name; its folder is <download dir>/<name>, and a sub-category nests one
 -- level deeper. Names double as folder segments, so they are sanitised again here (they already
@@ -202,9 +223,7 @@ function Download.run(self, book)
         return
     end
 
-    local safe_title = util.trim(book.title or "Unknown Title"):gsub("[/\\?%*:|\"<>%c]", "_")
-    local safe_author = util.trim(book.author or "Unknown Author"):gsub("[/\\?%*:|\"<>%c]", "_")
-    local filename = string.format("%s - %s.%s", safe_title, safe_author, book_format)
+    local filename = _buildDownloadFilename(book, book_format)
     logger.info(string.format("Zlibrary:downloadBook - Proposed filename: %s", filename))
 
     local target_dir = Config.getDownloadDir()

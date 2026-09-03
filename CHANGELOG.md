@@ -6,6 +6,16 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.49
+
+### Fixed
+
+**Different books and editions no longer overwrite each other.** Downloads were named
+`<Title> - <Author>.<ext>`, so any two books that share a title and author — including two editions
+of the same book — landed on the same filename and silently replaced whatever was already there. The
+filename now includes Z-Library's book id (`<Title> - <Author> <id>.<ext>`), so every download is a
+distinct file. Re-downloading the exact same book still overwrites its own copy, as you'd expect.
+
 ## 1.0.48
 
 ### Fixed

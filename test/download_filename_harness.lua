@@ -72,13 +72,36 @@ local main_src = (function()
     local s = fh:read("*a"); fh:close(); return s
 end)()
 
--- The filename must be built from the checked value, not the raw field.
-r.check("the filename uses the checked extension",
-        main_src:find('string.format("%s - %s.%s", safe_title, safe_author, book_format)', 1, true) ~= nil,
-        "the filename is still built from book.format directly")
-r.check("the raw format is no longer pasted into a filename",
-        main_src:find('safe_author, book.format', 1, true) == nil,
-        "book.format still reaches the filename unchecked")
+-- The filename is assembled by _buildDownloadFilename from the CHECKED extension (book_format),
+-- never the raw book.format.
+r.check("Download.run builds the filename via _buildDownloadFilename",
+        main_src:find("_buildDownloadFilename(book, book_format)", 1, true) ~= nil,
+        "the filename is no longer built from the checked extension")
+
+-- _buildDownloadFilename includes the Z-Library id so two books/editions that share a title and
+-- author no longer collapse onto one path and overwrite each other.
+local buildFilename = support.extract_function(PLUGIN .. "/zlibrary/download.lua", "_buildDownloadFilename", {
+    util = { trim = function(s) return (s:gsub("^%s+", ""):gsub("%s+$", "")) end },
+    string = string,
+    tostring = tostring,
+})
+r.check("the filename is <Title> - <Author> <id>.<ext>",
+        buildFilename({ title = "Foundation", author = "Isaac Asimov", id = 21699629 }, "epub")
+            == "Foundation - Isaac Asimov 21699629.epub",
+        "got " .. tostring(buildFilename({ title = "Foundation", author = "Isaac Asimov", id = 21699629 }, "epub")))
+r.check("two editions sharing title+author get distinct filenames (the overwrite bug)",
+        buildFilename({ title = "Dune", author = "Frank Herbert", id = 1 }, "epub")
+            ~= buildFilename({ title = "Dune", author = "Frank Herbert", id = 2 }, "epub"),
+        "same filename for different ids")
+r.check("a string id is handled the same as a numeric one",
+        buildFilename({ title = "X", author = "Y", id = "99" }, "pdf") == "X - Y 99.pdf",
+        "got " .. tostring(buildFilename({ title = "X", author = "Y", id = "99" }, "pdf")))
+r.check("path-unsafe characters are stripped from title, author and id",
+        buildFilename({ title = "A/B", author = "C:D", id = "1/2" }, "epub") == "A_B - C_D 1_2.epub",
+        "got " .. tostring(buildFilename({ title = "A/B", author = "C:D", id = "1/2" }, "epub")))
+r.check("missing title and author fall back to Unknown, with the id still present",
+        buildFilename({ id = 7 }, "epub") == "Unknown Title - Unknown Author 7.epub",
+        "got " .. tostring(buildFilename({ id = 7 }, "epub")))
 
 -- An unusable extension must send the caller to fetch details rather than guess one: a file
 -- saved under the wrong extension opens in nothing.

@@ -750,8 +750,20 @@ function Api.login(email, password, is_redir_callback)
         local api_message = (type(data.error) == "table" and data.error.message) or data.error or
                            (type(session) == "table" and session.message) or
                            data.message
-        result.error = api_message and tostring(api_message) or (http_result.error or T("Login failed"))
-        logger.warn(string.format("Zlibrary:Api.login - END (API error) - Error: %s", result.error))
+        api_message = api_message and tostring(api_message) or nil
+        -- "Authorization failed" is the server's wording for refusing a sign-in whose credentials
+        -- are otherwise valid -- distinct from "Incorrect email or password", which it returns for a
+        -- genuinely wrong password (both confirmed on device). It has been seen to hit many accounts
+        -- at once and clear on its own, so show something reassuring rather than the bare string.
+        -- Deliberately NOT matched by isCredentialRejection: the credentials are fine and must still
+        -- be saved, not blamed. The raw server wording stays in the log for diagnosis.
+        if api_message and api_message:lower():find("authorization failed", 1, true) then
+            result.error = T("Z-library refused the sign-in. Your account details look correct, so this is most likely a temporary problem on Z-library's side. Please try again later.")
+        else
+            result.error = api_message or (http_result.error or T("Login failed"))
+        end
+        logger.warn(string.format("Zlibrary:Api.login - END (API error) - Error: %s (server: %s)",
+            result.error, tostring(api_message)))
         return result
     end
 

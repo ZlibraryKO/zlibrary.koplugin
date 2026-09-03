@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-16 20:40+0000\n"
+"POT-Creation-Date: 2026-09-03 04:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -315,9 +315,6 @@ msgstr "ログインに失敗しました：応答の形式が不正です"
 
 msgid "Login failed"
 msgstr "ログインに失敗しました"
-
-msgid "Login failed: Invalid session data"
-msgstr "ログインに失敗しました：セッションデータが不正です"
 
 msgid "No response received from server - please try again"
 msgstr "サーバーから応答がありません - 再試行してください"
@@ -1041,6 +1038,9 @@ msgstr "設定して確認"
 
 msgid "Please fill in all fields"
 msgstr "すべての項目を入力してください"
+
+#~ msgid "Login failed: Invalid session data"
+#~ msgstr "ログインに失敗しました：セッションデータが不正です"
 
 #~ msgid "Verify credentials"
 #~ msgstr "認証情報を確認"

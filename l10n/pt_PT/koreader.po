@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-16 20:40+0000\n"
+"POT-Creation-Date: 2026-09-03 04:17+0000\n"
 "PO-Revision-Date: 2026-07-22 00:39+0100\n"
 "Last-Translator: CookieCaptainD\n"
 "Language-Team: pt_PT\n"
@@ -321,9 +321,6 @@ msgstr "Falha ao iniciar sessão: Formato de resposta inválido"
 
 msgid "Login failed"
 msgstr "Falha ao iniciar sessão"
-
-msgid "Login failed: Invalid session data"
-msgstr "Falha ao iniciar sessão: Dados de sessão inválidos"
 
 msgid "No response received from server - please try again"
 msgstr "Nenhuma resposta recebida do servidor - por favor, tente novamente"
@@ -1047,3 +1044,6 @@ msgstr "Definir e verificar"
 
 msgid "Please fill in all fields"
 msgstr "Por favor, preencha todos os campos"
+
+#~ msgid "Login failed: Invalid session data"
+#~ msgstr "Falha ao iniciar sessão: Dados de sessão inválidos"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-16 20:40+0000\n"
+"POT-Creation-Date: 2026-09-03 04:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -315,9 +315,6 @@ msgstr "Logowanie nie powiodło się: Nieprawidłowy format odpowiedzi"
 
 msgid "Login failed"
 msgstr "Logowanie nie powiodło się"
-
-msgid "Login failed: Invalid session data"
-msgstr "Logowanie nie powiodło się: Nieprawidłowe dane sesji"
 
 msgid "No response received from server - please try again"
 msgstr "Brak odpowiedzi serwera – spróbuj ponownie"
@@ -1041,6 +1038,9 @@ msgstr "Ustaw i sprawdź"
 
 msgid "Please fill in all fields"
 msgstr "Wypełnij wszystkie pola"
+
+#~ msgid "Login failed: Invalid session data"
+#~ msgstr "Logowanie nie powiodło się: Nieprawidłowe dane sesji"
 
 #~ msgid "Verify credentials"
 #~ msgstr "Zweryfikuj dane logowania"

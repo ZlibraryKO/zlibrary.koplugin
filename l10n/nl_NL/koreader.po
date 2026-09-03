@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-16 20:40+0000\n"
+"POT-Creation-Date: 2026-09-03 04:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -315,9 +315,6 @@ msgstr "Inloggen mislukt: ongeldige antwoordindeling"
 
 msgid "Login failed"
 msgstr "Inloggen mislukt"
-
-msgid "Login failed: Invalid session data"
-msgstr "Inloggen mislukt: ongeldige sessiegegevens"
 
 msgid "No response received from server - please try again"
 msgstr "Geen antwoord van server ontvangen - probeer het opnieuw"
@@ -1041,6 +1038,9 @@ msgstr "Instellen en verifiëren"
 
 msgid "Please fill in all fields"
 msgstr "Vul alle velden in"
+
+#~ msgid "Login failed: Invalid session data"
+#~ msgstr "Inloggen mislukt: ongeldige sessiegegevens"
 
 #~ msgid "Verify credentials"
 #~ msgstr "Inloggegevens verifiëren"

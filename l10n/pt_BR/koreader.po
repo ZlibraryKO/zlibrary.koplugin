@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-16 20:40+0000\n"
+"POT-Creation-Date: 2026-09-03 04:17+0000\n"
 "PO-Revision-Date: 2025-05-28 15:14-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -316,9 +316,6 @@ msgstr "Falha no login: Formato de resposta inválido"
 
 msgid "Login failed"
 msgstr "Falha no login"
-
-msgid "Login failed: Invalid session data"
-msgstr "Falha no login: Dados de sessão inválidos"
 
 msgid "No response received from server - please try again"
 msgstr "Nenhuma resposta recebida do servidor - tente novamente"
@@ -1042,6 +1039,9 @@ msgstr "Definir e verificar"
 
 msgid "Please fill in all fields"
 msgstr "Por favor, preencha todos os campos"
+
+#~ msgid "Login failed: Invalid session data"
+#~ msgstr "Falha no login: Dados de sessão inválidos"
 
 #~ msgid "Verify credentials"
 #~ msgstr "Verificar credenciais"

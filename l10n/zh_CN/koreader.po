@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-16 20:40+0000\n"
+"POT-Creation-Date: 2026-09-03 04:17+0000\n"
 "PO-Revision-Date: 2026-04-03 00:00+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
@@ -315,9 +315,6 @@ msgstr "登录失败：响应格式无效"
 
 msgid "Login failed"
 msgstr "登录失败"
-
-msgid "Login failed: Invalid session data"
-msgstr "登录失败：会话数据无效"
 
 msgid "No response received from server - please try again"
 msgstr "未收到服务器响应 - 请重试"
@@ -1041,6 +1038,9 @@ msgstr "设置并验证"
 
 msgid "Please fill in all fields"
 msgstr "请填写所有字段"
+
+#~ msgid "Login failed: Invalid session data"
+#~ msgstr "登录失败：会话数据无效"
 
 #~ msgid "Verify credentials"
 #~ msgstr "验证凭证"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-16 20:40+0000\n"
+"POT-Creation-Date: 2026-09-03 04:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -315,9 +315,6 @@ msgstr "فشل تسجيل الدخول: صيغة استجابة غير صالح�
 
 msgid "Login failed"
 msgstr "فشل تسجيل الدخول"
-
-msgid "Login failed: Invalid session data"
-msgstr "فشل تسجيل الدخول: بيانات جلسة غير صالحة"
 
 msgid "No response received from server - please try again"
 msgstr "لم يتم تلقي استجابة من الخادم - يرجى إعادة المحاولة"
@@ -1041,6 +1038,9 @@ msgstr "تعيين وتحقّق"
 
 msgid "Please fill in all fields"
 msgstr "يرجى ملء جميع الحقول"
+
+#~ msgid "Login failed: Invalid session data"
+#~ msgstr "فشل تسجيل الدخول: بيانات جلسة غير صالحة"
 
 #~ msgid "Verify credentials"
 #~ msgstr "التحقق من بيانات الاعتماد"

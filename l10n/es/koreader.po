@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-16 20:40+0000\n"
+"POT-Creation-Date: 2026-09-03 04:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -315,9 +315,6 @@ msgstr "Error de inicio de sesión: Formato de respuesta no válido"
 
 msgid "Login failed"
 msgstr "Error de inicio de sesión"
-
-msgid "Login failed: Invalid session data"
-msgstr "Error de inicio de sesión: Datos de sesión no válidos"
 
 msgid "No response received from server - please try again"
 msgstr "No se recibió respuesta del servidor: inténtelo de nuevo"
@@ -1041,6 +1038,9 @@ msgstr "Guardar y verificar"
 
 msgid "Please fill in all fields"
 msgstr "Por favor, rellene todos los campos"
+
+#~ msgid "Login failed: Invalid session data"
+#~ msgstr "Error de inicio de sesión: Datos de sesión no válidos"
 
 #~ msgid "Verify credentials"
 #~ msgstr "Verificar credenciales"

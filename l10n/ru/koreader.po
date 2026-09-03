@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-16 20:40+0000\n"
+"POT-Creation-Date: 2026-09-03 04:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -315,9 +315,6 @@ msgstr "Ошибка входа: неверный формат ответа"
 
 msgid "Login failed"
 msgstr "Ошибка входа"
-
-msgid "Login failed: Invalid session data"
-msgstr "Ошибка входа: неверные данные сессии"
 
 msgid "No response received from server - please try again"
 msgstr "Нет ответа от сервера — повторите попытку"
@@ -1041,6 +1038,9 @@ msgstr "Указать и проверить"
 
 msgid "Please fill in all fields"
 msgstr "Пожалуйста, заполните все поля"
+
+#~ msgid "Login failed: Invalid session data"
+#~ msgstr "Ошибка входа: неверные данные сессии"
 
 #~ msgid "Verify credentials"
 #~ msgstr "Проверить учетные данные"

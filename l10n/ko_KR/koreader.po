@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-16 20:40+0000\n"
+"POT-Creation-Date: 2026-09-03 04:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -315,9 +315,6 @@ msgstr "로그인 실패: 잘못된 응답 형식"
 
 msgid "Login failed"
 msgstr "로그인 실패"
-
-msgid "Login failed: Invalid session data"
-msgstr "로그인 실패: 잘못된 세션 데이터"
 
 msgid "No response received from server - please try again"
 msgstr "서버에서 응답이 없습니다 - 다시 시도하세요"
@@ -1041,6 +1038,9 @@ msgstr "설정 후 확인"
 
 msgid "Please fill in all fields"
 msgstr "모든 항목을 입력하세요"
+
+#~ msgid "Login failed: Invalid session data"
+#~ msgstr "로그인 실패: 잘못된 세션 데이터"
 
 #~ msgid "Verify credentials"
 #~ msgstr "자격 증명 확인"

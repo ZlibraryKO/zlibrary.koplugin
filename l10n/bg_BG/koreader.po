@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-16 20:40+0000\n"
+"POT-Creation-Date: 2026-09-03 04:17+0000\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -321,9 +321,6 @@ msgstr "Неуспешно влизане: Невалиден формат на 
 
 msgid "Login failed"
 msgstr "Неуспешно влизане"
-
-msgid "Login failed: Invalid session data"
-msgstr "Неуспешно влизане: Невалидни данни за сесията"
 
 msgid "No response received from server - please try again"
 msgstr "Не е получен отговор от сървъра — опитайте отново"
@@ -1047,6 +1044,9 @@ msgstr "Задаване и проверка"
 
 msgid "Please fill in all fields"
 msgstr "Попълнете всички полета"
+
+#~ msgid "Login failed: Invalid session data"
+#~ msgstr "Неуспешно влизане: Невалидни данни за сесията"
 
 #~ msgid "Verify credentials"
 #~ msgstr "Проверка на данните"

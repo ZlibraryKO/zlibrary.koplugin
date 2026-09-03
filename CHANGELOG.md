@@ -6,6 +6,17 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.48
+
+### Fixed
+
+**Signing in works again.** Z-library's `/eapi/user/login` API began rejecting valid credentials with
+*"Authorization failed"*, which broke sign-in — and with it downloads, My Books and anything else
+that needs an account — for everyone using the plugin. The plugin now signs in the same way the
+website and the official desktop app do: a form POST to `/rpc.php`, which accepts your normal email
+and password (no browser or extra steps needed). A genuinely wrong password still reports *"Incorrect
+email or password"* and can be corrected in place, exactly as before.
+
 ## 1.0.47
 
 ### Fixed

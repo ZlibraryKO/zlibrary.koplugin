@@ -685,6 +685,7 @@ function Api.login(email, password, is_redir_callback)
     logger.info(string.format("Zlibrary:Api.login - START"))
     local result = { user_id = nil, user_key = nil, error = nil }
 
+    local base = Config.getBaseUrl()
     local login_url = Config.getLoginUrl()
     if not login_url then
         result.error = T("The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings.")
@@ -692,15 +693,18 @@ function Api.login(email, password, is_redir_callback)
         return result
     end
 
-    local body_data = {
-        email = email or "",
-        password = password or "",
-    }
-    local body_parts = {}
-    for k, v in pairs(body_data) do
-        table.insert(body_parts, util.urlEncode(k) .. "=" .. util.urlEncode(v))
-    end
-    local body = table.concat(body_parts, "&")
+    -- rpc.php's login action, exactly as the website sends it: the extra fields (action, site_mode,
+    -- gg_json_mode, isModal, redirectUrl) are what make it return the session as JSON rather than an
+    -- HTML redirect, and no CSRF token or prior cookie is needed (verified against the live server).
+    local body = table.concat({
+        "isModal=true",
+        "email=" .. util.urlEncode(email or ""),
+        "password=" .. util.urlEncode(password or ""),
+        "site_mode=books",
+        "action=login",
+        "gg_json_mode=1",
+        "redirectUrl=" .. util.urlEncode((base or "") .. "/"),
+    }, "&")
 
     local http_result = Api.makeHttpRequest{
         url = login_url,
@@ -710,6 +714,8 @@ function Api.login(email, password, is_redir_callback)
             ["Accept"] = "application/json, text/javascript, */*; q=0.01",
             ["User-Agent"] = Config.USER_AGENT,
             ["X-Requested-With"] = "XMLHttpRequest",
+            ["Origin"] = base,
+            ["Referer"] = base and (base .. "/") or nil,
             ["Content-Length"] = tostring(#body),
         },
         body = body,
@@ -741,38 +747,38 @@ function Api.login(email, password, is_redir_callback)
         return result
     end
 
-    local success_flag = tonumber(data.success) or 0
-    local session = data.user or data.response or {}
-
-    if success_flag ~= 1 then
-        -- data.error may be a string or an object; guard the index the way Api.search does, or a
-        -- structured error surfaces as "table: 0x..." -- which also defeats isCredentialRejection.
-        local api_message = (type(data.error) == "table" and data.error.message) or data.error or
-                           (type(session) == "table" and session.message) or
-                           data.message
-        result.error = api_message and tostring(api_message) or (http_result.error or T("Login failed"))
-        logger.warn(string.format("Zlibrary:Api.login - END (API error) - Error: %s", result.error))
-        return result
-    end
-
-    if type(session) ~= "table" then
-        result.error = T("Login failed: Invalid session data")
-        logger.warn(string.format("Zlibrary:Api.login - END (Session error) - Error: %s", result.error))
-        return result
-    end
-
+    -- rpc.php returns the session under `response` on success --
+    --   {"errors":[],"response":{"user_id":21699629,"user_key":"..."}}
+    -- and a validation error there on bad credentials --
+    --   {"errors":[],"response":{"validationError":true,"message":"Incorrect email or password"}}
+    -- so read the session first and only treat the reply as a failure when no session is present.
+    -- data.user is kept as a fallback for the older /eapi shape ({user:{id,remix_userkey}}).
+    local session = (type(data.response) == "table" and data.response)
+                 or (type(data.user) == "table" and data.user) or {}
     local user_id = tostring(session.id or session.user_id or "")
     local user_key = session.remix_userkey or session.user_key or ""
 
-    if user_id == "" or user_key == "" then
-        result.error = T("Login failed") .. ": " .. (session.message or data.message or Api.CREDENTIALS_REJECTED_TEXT)
-        logger.warn(string.format("Zlibrary:Api.login - END (Credentials error) - Error: %s", result.error))
+    if user_id ~= "" and user_key ~= "" then
+        result.user_id = user_id
+        result.user_key = user_key
+        logger.info(string.format("Zlibrary:Api.login - END (Success) - UserID: %s", result.user_id))
         return result
     end
 
-    result.user_id = user_id
-    result.user_key = user_key
-    logger.info(string.format("Zlibrary:Api.login - END (Success) - UserID: %s", result.user_id))
+    -- No session: surface the server's message. session.message carries rpc.php's wording
+    -- ("Incorrect email or password"), which Api.isCredentialRejection matches so a wrong password is
+    -- corrected in place. Guard every error index the way Api.search does, or a structured error
+    -- surfaces as "table: 0x..." and defeats that classifier.
+    local errors = data.errors
+    local api_message = session.message
+        or (type(data.error) == "table" and data.error.message) or data.error
+        or (type(errors) == "table" and type(errors[1]) == "table" and errors[1].message)
+        or (type(errors) == "table" and type(errors[1]) == "string" and errors[1])
+        or data.message
+    result.error = (api_message and tostring(api_message))
+        or http_result.error
+        or (T("Login failed") .. ": " .. Api.CREDENTIALS_REJECTED_TEXT)
+    logger.warn(string.format("Zlibrary:Api.login - END (API error) - Error: %s", result.error))
     return result
 end
 

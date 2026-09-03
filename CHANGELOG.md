@@ -6,6 +6,17 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.48
+
+### Fixed
+
+**A clearer message when Z-library refuses a valid sign-in.** Z-library sometimes rejects a login
+whose email and password are actually correct, answering *"Authorization failed"* — a temporary,
+server-side condition that has been seen affecting many accounts at once. Instead of surfacing that
+bare, alarming string, the plugin now explains that your details look correct and it's most likely a
+temporary problem on Z-library's side, to try again later. A genuinely wrong password still says
+*"Incorrect email or password"*, and your saved credentials are left untouched either way.
+
 ## 1.0.47
 
 ### Fixed
@@ -14,13 +25,6 @@ to `main` — so the top section is the one about to ship.
 turning the page while covers were still loading could crash KOReader with an *"attempt to index
 field '_bb'"* error. Each cover slot is now cleared properly between refreshes, so a cover image that
 was already freed can no longer be painted again.
-
-**A clearer message when Z-library refuses a valid sign-in.** Z-library sometimes rejects a login
-whose email and password are actually correct, answering *"Authorization failed"* — a temporary,
-server-side condition that has been seen affecting many accounts at once. Instead of surfacing that
-bare, alarming string, the plugin now explains that your details look correct and it's most likely a
-temporary problem on Z-library's side, to try again later. A genuinely wrong password still says
-*"Incorrect email or password"*, and your saved credentials are left untouched either way.
 
 **Auto-discovery stops re-picking a server that can't actually search.** Some mirrors answer the
 health check but block the real search behind an anti-bot page (*"This Z-library server is refusing

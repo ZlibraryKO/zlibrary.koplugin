@@ -653,7 +653,10 @@ end
 function Config.getLoginUrl()
     local base = Config.getBaseUrl()
     if not base then return nil end
-    return base .. "/eapi/user/login"
+    -- The website signs in through rpc.php (action=login), not /eapi/user/login: the latter now
+    -- answers valid credentials with "Authorization failed" (confirmed on device and against the
+    -- live API), while rpc.php works with a plain form POST.
+    return base .. "/rpc.php"
 end
 
 function Config.getSearchUrl()

@@ -106,7 +106,7 @@ r.check("default base URL has no trailing slash",
         Config.getBaseUrl() == "https://z-lib.fo",
         "got " .. tostring(Config.getBaseUrl()))
 r.check("login URL is built without a double slash",
-        Config.getLoginUrl() == "https://z-lib.fo/eapi/user/login",
+        Config.getLoginUrl() == "https://z-lib.fo/rpc.php",
         "got " .. tostring(Config.getLoginUrl()))
 
 -- ---------------------------------------------------------------- setAndValidateBaseUrl

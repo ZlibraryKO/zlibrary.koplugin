@@ -1,0 +1,1244 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: v1.0.15\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-16 20:40+0000\n"
+"PO-Revision-Date: 2026-09-05 13:23+0700\n"
+"Last-Translator: \n"
+"Language-Team: vi <vi@li.org>\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.9\n"
+
+msgid "Z-library"
+msgstr "Thư viện Z-library"
+
+msgid "[[A plugin to search and download books from Z-library.]]"
+msgstr "[[Plugin để tìm kiếm và tải sách từ Z-library.]]"
+
+msgid "Z-library search"
+msgstr "Tìm kiếm Z-library"
+
+msgid "My books"
+msgstr "Tủ sách của tôi"
+
+msgid "Settings"
+msgstr "Cài đặt"
+
+msgid "Set base URL"
+msgstr "Đặt địa chỉ máy chủ (Base URL)"
+
+msgid "Set credentials"
+msgstr "Thông tin đăng nhập"
+
+msgid "Login successful!"
+msgstr "Đăng nhập thành công!"
+
+msgid "Set download directory"
+msgstr "Đặt thư mục tải về"
+
+msgid "Ask to open after download"
+msgstr "Yêu cầu mở sau khi tải xuống"
+
+msgid "Download categories"
+msgstr "Danh mục tải về"
+
+msgid "View Settings"
+msgstr "Cài đặt hiển thị"
+
+msgid "Search Covers"
+msgstr "Bìa khi tìm kiếm"
+
+msgid "Search Items/Page"
+msgstr "Số mục tìm kiếm/Trang"
+
+msgid "Browse Covers"
+msgstr "Bìa khi duyệt"
+
+msgid "Browse Items/Page"
+msgstr "Số mục duyệt/Trang"
+
+msgid "Search options"
+msgstr "Tùy chọn tìm kiếm"
+
+msgid "Select search languages"
+msgstr "Chọn ngôn ngữ tìm kiếm"
+
+msgid "Select search formats"
+msgstr "Chọn định dạng tìm kiếm"
+
+msgid "Select search order"
+msgstr "Chọn thứ tự sắp xếp tìm kiếm"
+
+msgid "Timeout settings"
+msgstr "Cài đặt thời gian chờ"
+
+msgid "Check for updates"
+msgstr "Kiểm tra cập nhật"
+
+msgid "Error: Plugin path not found. Cannot check for updates."
+msgstr "Lỗi: Không tìm thấy đường dẫn plugin. Không thể kiểm tra cập nhật."
+
+msgid "Advanced"
+msgstr "Nâng cao"
+
+msgid "Clear credentials"
+msgstr "Xóa thông tin đăng nhập"
+
+#, lua-format
+msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
+msgstr "Đã xóa thông tin đăng nhập, nhưng %s vẫn thiết lập chúng. Hãy chỉnh sửa tệp đó để dừng lại."
+
+msgid "Credentials cleared."
+msgstr "Đã xóa thông tin đăng nhập."
+
+msgid "Clear user session"
+msgstr "Xóa phiên người dùng"
+
+msgid "Session cleared. You will need to login again."
+msgstr "Đã xóa phiên làm việc. Bạn sẽ cần đăng nhập lại."
+
+msgid "Clear runtime cache"
+msgstr "Xóa bộ nhớ đệm runtime"
+
+msgid "Runtime cache cleared."
+msgstr "Đã xóa bộ nhớ đệm runtime."
+
+msgid "Search"
+msgstr "Tìm kiếm"
+
+msgid "Recommended"
+msgstr "Được đề xuất"
+
+msgid "Most popular"
+msgstr "Phổ biến nhất"
+
+msgid "Operation"
+msgstr "Thao tác"
+
+msgid "No books found, please try again"
+msgstr "Không tìm thấy sách, vui lòng thử lại"
+
+msgid "Fetching most popular books..."
+msgstr "Đang lấy sách phổ biến nhất..."
+
+msgid "Failed to fetch most popular books"
+msgstr "Lấy sách phổ biến nhất thất bại"
+
+msgid "Most popular books"
+msgstr "Sách phổ biến nhất"
+
+msgid "Fetching recommended books..."
+msgstr "Đang lấy sách được đề xuất..."
+
+msgid "Failed to fetch recommended books"
+msgstr "Lấy sách đề xuất thất bại"
+
+msgid "Recommended books"
+msgstr "Sách được đề xuất"
+
+msgid "API returned an error, please try again"
+msgstr "API trả về lỗi, vui lòng thử lại"
+
+msgid "Z-library My Books"
+msgstr "Tủ sách Z-library của tôi"
+
+msgid "Downloaded"
+msgstr "Đã tải về"
+
+msgid "Favorites"
+msgstr "Yêu thích"
+
+msgid "Getting your favorites..."
+msgstr "Đang lấy danh sách yêu thích..."
+
+msgid "Failed to fetch favorite books"
+msgstr "Lấy sách yêu thích thất bại"
+
+msgid "Favorite books"
+msgstr "Sách yêu thích"
+
+msgid "Remove from downloaded"
+msgstr "Xóa khỏi danh sách đã tải"
+
+msgid "Getting your downloaded..."
+msgstr "Đang lấy danh sách sách đã tải..."
+
+msgid "Failed to fetch downloaded books"
+msgstr "Lấy danh sách sách đã tải thất bại"
+
+msgid "Downloaded books"
+msgstr "Sách đã tải về"
+
+msgid "Finding similar books..."
+msgstr "Đang tìm sách tương tự..."
+
+msgid "No similar books found"
+msgstr "Không tìm thấy sách tương tự"
+
+msgid "Similar books"
+msgstr "Sách tương tự"
+
+msgid "Removing book from downloaded…"
+msgstr "Đang xóa sách khỏi danh sách đã tải…"
+
+msgid "Failed to remove book from downloaded"
+msgstr "Không thể xóa sách khỏi danh sách đã tải"
+
+msgid "Book removed from downloaded, please refresh"
+msgstr "Đã xóa sách khỏi danh sách đã tải, vui lòng làm mới"
+
+msgid "Removing book from favorites…"
+msgstr "Đang xóa sách khỏi danh mục yêu thích…"
+
+msgid "Failed to remove book from favorites"
+msgstr "Không thể xóa sách khỏi danh mục yêu thích"
+
+msgid "Unfavorite book"
+msgstr "Bỏ thích sách"
+
+msgid "Book removed from favorites, please refresh"
+msgstr "Đã xóa sách khỏi mục yêu thích, vui lòng làm mới"
+
+msgid "Adding book to favorites…"
+msgstr "Đang thêm sách vào mục yêu thích…"
+
+msgid "Failed to add book to favorites"
+msgstr "Thêm sách vào mục yêu thích thất bại"
+
+msgid "Favorite book"
+msgstr "Thích sách"
+
+msgid "Book added to favorites, please refresh"
+msgstr "Đã thêm sách vào mục yêu thích, vui lòng làm mới"
+
+msgid "Fetching book details..."
+msgstr "Đang lấy thông tin chi tiết sách..."
+
+msgid "Failed to fetch book details"
+msgstr "Lấy thông tin chi tiết sách thất bại"
+
+msgid "Book details"
+msgstr "Chi tiết sách"
+
+msgid "Could not retrieve book details."
+msgstr "Không thể lấy thông tin chi tiết sách."
+
+msgid "Logging in..."
+msgstr "Đang đăng nhập..."
+
+msgid "Credentials saved, but they could not be checked right now."
+msgstr "Đã lưu thông tin đăng nhập, nhưng hiện chưa thể kiểm tra."
+
+msgid "Please set both username and password first."
+msgstr "Vui lòng thiết lập cả tên đăng nhập và mật khẩu trước."
+
+msgid "Sign-in"
+msgstr "Đăng nhập"
+
+#, lua-format
+msgid "Searching for \"%s\"..."
+msgstr "Đang tìm kiếm \"%s\"..."
+
+#, lua-format
+msgid "No results found for \"%s\"."
+msgstr "Không tìm thấy kết quả cho \"%s\"."
+
+#, lua-format
+msgid "Loading more results (Page %s)..."
+msgstr "Đang tải thêm kết quả (Trang %s)..."
+
+msgid "Failed to load more results"
+msgstr "Không thể tải thêm kết quả"
+
+msgid "No more results found."
+msgstr "Không có thêm kết quả."
+
+msgid "Book ID is required."
+msgstr "Yêu cầu phải có ID sách."
+
+msgid "Loading comments..."
+msgstr "Đang tải bình luận..."
+
+msgid "Failed to load comments"
+msgstr "Không thể tải bình luận"
+
+msgid "Comments"
+msgstr "Bình luận"
+
+msgid "No comments to display"
+msgstr "Không có bình luận nào để hiển thị"
+
+msgid "Could not find the server address"
+msgstr "Không tìm thấy địa chỉ máy chủ"
+
+msgid "This Z-library server is refusing automated access"
+msgstr "Máy chủ Z-library này từ chối truy cập tự động"
+
+msgid "Credentials rejected or invalid response"
+msgstr "Thông tin xác thực bị từ chối hoặc phản hồi không hợp lệ"
+
+msgid "Request timed out - please check your connection and try again"
+msgstr "Hết thời gian yêu cầu - vui lòng kiểm tra kết nối và thử lại"
+
+msgid "Network request failed"
+msgstr "Yêu cầu mạng thất bại"
+
+msgid "The Z-library address may be wrong or no longer exist."
+msgstr "Địa chỉ Z-library có thể bị sai hoặc không còn tồn tại."
+
+msgid "Network connection error - please check your internet connection and try again"
+msgstr "Lỗi kết nối mạng - vui lòng kiểm tra kết nối internet và thử lại"
+
+msgid "Too many redirects"
+msgstr "Quá nhiều lần chuyển hướng"
+
+msgid "Try a different Z-library server."
+msgstr "Hãy thử một máy chủ Z-library khác."
+
+msgid "HTTP Error"
+msgstr "Lỗi HTTP"
+
+msgid "Unknown Status"
+msgstr "Trạng thái không xác định"
+
+msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
+msgstr "Chưa thiết lập địa chỉ máy chủ (URL) Z-library. Vui lòng cấu hình trong cài đặt plugin Z-library."
+
+msgid "Login failed: Empty response from server"
+msgstr "Đăng nhập thất bại: Phản hồi trống từ máy chủ"
+
+msgid "Login failed: Invalid response format"
+msgstr "Đăng nhập thất bại: Định dạng phản hồi không hợp lệ"
+
+msgid "Login failed"
+msgstr "Đăng nhập thất bại"
+
+msgid "Login failed: Invalid session data"
+msgstr "Đăng nhập thất bại: Dữ liệu phiên không hợp lệ"
+
+msgid "No response received from server - please try again"
+msgstr "Không nhận được phản hồi từ máy chủ - vui lòng thử lại"
+
+msgid "Invalid response format from server"
+msgstr "Định dạng phản hồi từ máy chủ không hợp lệ"
+
+msgid "Search API error"
+msgstr "Lỗi API tìm kiếm"
+
+msgid "Failed to open target file"
+msgstr "Không thể mở tệp đích"
+
+msgid "Unknown error"
+msgstr "Lỗi không xác định"
+
+msgid "Download limit reached or file is an HTML page"
+msgstr "Đã đạt giới hạn tải về hoặc tệp là trang HTML"
+
+msgid "Failed to save downloaded file"
+msgstr "Lưu tệp tải về thất bại"
+
+msgid "Download HTTP Error"
+msgstr "Lỗi HTTP khi tải về"
+
+msgid "Z-library server URL not configured."
+msgstr "Chưa cấu hình URL máy chủ Z-library."
+
+msgid "Failed to fetch recommended books (no response body)."
+msgstr "Lấy sách đề xuất thất bại (không có nội dung phản hồi)."
+
+msgid "Failed to parse recommended books response."
+msgstr "Không thể phân tích phản hồi sách đề xuất."
+
+msgid "API returned an error for recommended books."
+msgstr "API trả về lỗi đối với sách đề xuất."
+
+msgid "Failed to fetch most popular books (no response body)."
+msgstr "Lấy sách phổ biến nhất thất bại (không có nội dung phản hồi)."
+
+msgid "Failed to parse most popular books response."
+msgstr "Không thể phân tích phản hồi sách phổ biến nhất."
+
+msgid "API returned an error for most popular books."
+msgstr "API trả về lỗi đối với sách phổ biến nhất."
+
+msgid "Z-library server URL not configured or book identifiers missing."
+msgstr "Chưa cấu hình URL máy chủ Z-library hoặc thiếu mã định danh sách."
+
+msgid "Failed to fetch book details (no response body)."
+msgstr "Lấy chi tiết sách thất bại (không có nội dung phản hồi)."
+
+msgid "Failed to parse book details response."
+msgstr "Không thể phân tích phản hồi chi tiết sách."
+
+msgid "API returned an error for book details."
+msgstr "API trả về lỗi đối với chi tiết sách."
+
+msgid "Failed to process book details."
+msgstr "Xử lý chi tiết sách thất bại."
+
+msgid "Failed to fetch download link (no response body)."
+msgstr "Lấy liên kết tải về thất bại (không có nội dung phản hồi)."
+
+msgid "Failed to parse download link response."
+msgstr "Không thể phân tích phản hồi liên kết tải về."
+
+msgid "API returned an error for download link."
+msgstr "API trả về lỗi đối với liên kết tải về."
+
+msgid "Download limit reached. Please try again later or check your account."
+msgstr "Đã đạt giới hạn tải về. Vui lòng thử lại sau hoặc kiểm tra tài khoản của bạn."
+
+msgid "No download link provided in API response."
+msgstr "Không có liên kết tải về trong phản hồi API."
+
+msgid "Failed to fetch similar books (no response body)."
+msgstr "Lấy sách tương tự thất bại (không có nội dung phản hồi)."
+
+msgid "Failed to parse similar books response."
+msgstr "Không thể phân tích phản hồi sách tương tự."
+
+msgid "API returned an error for similar books."
+msgstr "API trả về lỗi đối với sách tương tự."
+
+msgid "Failed to fetch downloaded books (no response body)."
+msgstr "Lấy danh sách sách đã tải thất bại (không có nội dung phản hồi)."
+
+msgid "Failed to parse downloaded books response."
+msgstr "Không thể phân tích phản hồi danh sách sách đã tải."
+
+msgid "API returned an error for downloaded books."
+msgstr "API trả về lỗi đối với danh sách sách đã tải."
+
+msgid "Failed to fetch favorite books (no response body)."
+msgstr "Lấy sách yêu thích thất bại (không có nội dung phản hồi)."
+
+msgid "Failed to parse favorite books response."
+msgstr "Không thể phân tích phản hồi sách yêu thích."
+
+msgid "API returned an error for favorite books."
+msgstr "API trả về lỗi đối với sách yêu thích."
+
+msgid "Failed to remove the book from downloaded (no response body)."
+msgstr "Xóa sách khỏi danh sách đã tải thất bại (không có nội dung phản hồi)."
+
+msgid "Failed to parse the remove from downloaded response."
+msgstr "Không thể phân tích phản hồi xóa sách khỏi danh sách đã tải."
+
+msgid "API returned an error for remove from downloaded."
+msgstr "API trả về lỗi khi xóa khỏi danh sách đã tải."
+
+msgid "Failed to fetch unfavorite book (no response body)."
+msgstr "Bỏ thích sách thất bại (không có nội dung phản hồi)."
+
+msgid "Failed to parse unfavorite book response."
+msgstr "Không thể phân tích phản hồi bỏ thích sách."
+
+msgid "API returned an error for unfavorite book."
+msgstr "API trả về lỗi khi bỏ thích sách."
+
+msgid "Failed to fetch download quota status (no response body)."
+msgstr "Lấy trạng thái hạn mức tải về thất bại (không có nội dung phản hồi)."
+
+msgid "Failed to parse download quota status response."
+msgstr "Không thể phân tích phản hồi trạng thái hạn mức tải về."
+
+msgid "API returned an error for download quota status."
+msgstr "API trả về lỗi đối với trạng thái hạn mức tải về."
+
+msgid "Failed to fetch favorite-book IDs (no response body)."
+msgstr "Lấy ID sách yêu thích thất bại (không có nội dung phản hồi)."
+
+msgid "Failed to parse favorite-book IDs."
+msgstr "Không thể phân tích ID sách yêu thích."
+
+msgid "API returned an error for favorite-book IDs."
+msgstr "API trả về lỗi đối với ID sách yêu thích."
+
+msgid "Failed to fetch favorite book (no response body)."
+msgstr "Lấy sách yêu thích thất bại (không có nội dung phản hồi)."
+
+msgid "Failed to parse favorite book response."
+msgstr "Không thể phân tích phản hồi sách yêu thích."
+
+msgid "API returned an error for favorite book."
+msgstr "API trả về lỗi đối với sách yêu thích."
+
+msgid "Failed to fetch book comments (no response body)."
+msgstr "Lấy bình luận sách thất bại (không có nội dung phản hồi)."
+
+msgid "Failed to parse book comments response."
+msgstr "Không thể phân tích phản hồi bình luận sách."
+
+msgid "API returned an error for book comments."
+msgstr "API trả về lỗi đối với bình luận sách."
+
+msgid "Request cancelled."
+msgstr "Yêu cầu đã bị hủy."
+
+msgid "Profile"
+msgstr "Hồ sơ"
+
+msgid "No description available"
+msgstr "Không có mô tả"
+
+msgid "pages"
+msgstr "trang"
+
+msgid "Cover"
+msgstr "Bìa"
+
+msgid "Back"
+msgstr "Quay lại"
+
+msgid "More Similar Books"
+msgstr "Xem thêm sách tương tự"
+
+msgid "Download"
+msgstr "Tải về"
+
+msgid "Format"
+msgstr "Định dạng"
+
+msgid "Download book"
+msgstr "Tải sách về"
+
+msgid "Refresh"
+msgstr "Làm mới"
+
+msgid "Remove From Favorites"
+msgstr "Xóa khỏi mục yêu thích"
+
+msgid "Add To Favorites"
+msgstr "Thêm vào mục yêu thích"
+
+msgid "No Comments"
+msgstr "Không có bình luận"
+
+msgid "Best match"
+msgstr "Phù hợp nhất"
+
+msgid "Recently added"
+msgstr "Mới thêm gần đây"
+
+msgid "Title"
+msgstr "Tiêu đề"
+
+msgid "Year"
+msgstr "Năm"
+
+msgid "File size"
+msgstr "Kích thước tệp"
+
+msgid "Default"
+msgstr "Mặc định"
+
+#, lua-format
+msgid "%ds"
+msgstr "%d giây"
+
+msgid "infinite"
+msgstr "vô hạn"
+
+#, lua-format
+msgid "Block: %ds, Total: %s"
+msgstr "Khối: %d giây, Tổng cộng: %s"
+
+msgid "Operation failed, please retry."
+msgstr "Thao tác thất bại, vui lòng thử lại."
+
+msgid "Fetching domains..."
+msgstr "Đang lấy danh sách tên miền..."
+
+msgid "Successfully set base URL to: "
+msgstr "Đã đặt URL cơ sở thành: "
+
+msgid "Failed to find a working base URL."
+msgstr "Không tìm thấy URL cơ sở hoạt động được."
+
+msgid "Queued"
+msgstr "Đang chờ"
+
+msgid "Selection copied to clipboard."
+msgstr "Đã sao chép lựa chọn vào khay nhớ tạm."
+
+msgid "Checking"
+msgstr "Đang kiểm tra"
+
+msgid "Invalid Base URL."
+msgstr "URL cơ sở không hợp lệ."
+
+msgid "Failed"
+msgstr "Thất bại"
+
+msgid "Searching for working Z-library server..."
+msgstr "Đang tìm kiếm máy chủ Z-library hoạt động..."
+
+msgid "Current Base URL:"
+msgstr "URL cơ sở hiện tại:"
+
+msgid "Mirror site redirected to: "
+msgstr "Trang nhân bản đã chuyển hướng đến: "
+
+msgid "Auto-discover base URL"
+msgstr "Tự động phát hiện URL cơ sở"
+
+msgid "Network unavailable."
+msgstr "Mạng không khả dụng."
+
+msgid "Discovery is already running..."
+msgstr "Đang tiến hành dò tìm..."
+
+msgid "Refresh Dynamic Domains"
+msgstr "Làm mới tên miền động"
+
+msgid "This book's file type is unknown, so it cannot be downloaded."
+msgstr "Loại tệp sách này không xác định, không thể tải về."
+
+msgid "Book identifiers missing. Cannot download."
+msgstr "Thiếu mã định danh sách. Không thể tải về."
+
+#, lua-format
+msgid "Cannot create downloads directory: %s"
+msgstr "Không thể tạo thư mục tải về: %s"
+
+#, lua-format
+msgid "Couldn't create the folder for \"%s\". The book is in the download folder."
+msgstr "Không thể tạo thư mục cho \"%s\". Sách được lưu tại thư mục tải về."
+
+#, lua-format
+msgid "Moved to \"%s\"."
+msgstr "Đã di chuyển tới \"%s\"."
+
+#, lua-format
+msgid "Couldn't move the book into \"%s\". It's in the download folder."
+msgstr "Không thể di chuyển sách vào \"%s\". Sách được lưu tại thư mục tải về."
+
+msgid "Could not open reader UI."
+msgstr "Không thể mở giao diện đọc sách."
+
+msgid "Download failed: Unknown error"
+msgstr "Tải về thất bại: Lỗi không xác định"
+
+msgid "Book download"
+msgstr "Tải sách về"
+
+msgid "Retrying download… (tap to cancel)"
+msgstr "Đang thử tải lại… (nhấn để hủy)"
+
+msgid "Download cancelled."
+msgstr "Đã hủy tải về."
+
+msgid "Untitled"
+msgstr "Không có tiêu đề"
+
+msgid "Unknown Author"
+msgstr "Tác giả không xác định"
+
+msgid "Author"
+msgstr "Tác giả"
+
+msgid "Update failed: Could not determine where to install the plugin."
+msgstr "Cập nhật thất bại: Không thể xác định vị trí cài đặt plugin."
+
+msgid "Installing update..."
+msgstr "Đang cài đặt bản cập nhật..."
+
+msgid "Update installation failed."
+msgstr "Cài đặt cập nhật thất bại."
+
+msgid "Update installed successfully. Please restart KOReader for changes to take effect."
+msgstr "Cập nhật thành công. Vui lòng khởi động lại KOReader để thay đổi có hiệu lực."
+
+msgid "Update check failed: Could not determine plugin location."
+msgstr "Kiểm tra cập nhật thất bại: Không thể xác định vị trí plugin."
+
+#, lua-format
+msgid "Unsupported plugin path for OTA update: %s. Only 'plugins/zlibrary.koplugin' is supported."
+msgstr "Đường dẫn plugin không được hỗ trợ cập nhật OTA: %s. Chỉ hỗ trợ 'plugins/zlibrary.koplugin'."
+
+msgid "Checking for updates..."
+msgstr "Đang kiểm tra bản cập nhật..."
+
+msgid "Failed to check for updates. Please check your internet connection."
+msgstr "Kiểm tra bản cập nhật thất bại. Vui lòng kiểm tra kết nối internet."
+
+msgid "Could not find update information (invalid data format)."
+msgstr "Không tìm thấy thông tin cập nhật (định dạng dữ liệu không hợp lệ)."
+
+msgid "Could not find update version information."
+msgstr "Không tìm thấy thông tin phiên bản cập nhật."
+
+msgid "Could not understand the update version format."
+msgstr "Không nhận dạng được định dạng phiên bản cập nhật."
+
+msgid "Could not find update files."
+msgstr "Không tìm thấy các tệp cập nhật."
+
+msgid "Could not find a download link for the update."
+msgstr "Không tìm thấy liên kết tải về cho bản cập nhật."
+
+#, lua-format
+msgid "You are already on the latest version (%s) or newer."
+msgstr "Bạn đang ở phiên bản mới nhất (%s) hoặc mới hơn."
+
+#, lua-format
+msgid "Could not determine your current version, but the latest is %s. If you recently updated, you might be up-to-date."
+msgstr "Không thể xác định phiên bản hiện tại, nhưng bản mới nhất là %s. Nếu gần đây bạn đã cập nhật, có thể bạn đã ở bản mới nhất."
+
+#, lua-format
+msgid "New version available: %s (you have %s). Download and install?"
+msgstr "Có phiên bản mới: %s (bạn đang dùng %s). Tải về và cài đặt ngay?"
+
+msgid "an older version"
+msgstr "phiên bản cũ hơn"
+
+msgid "Update available"
+msgstr "Có bản cập nhật mới"
+
+msgid "Update"
+msgstr "Cập nhật"
+
+msgid "Cancel"
+msgstr "Hủy"
+
+msgid "Downloading update..."
+msgstr "Đang tải bản cập nhật..."
+
+msgid "Download failed. Please try again later."
+msgstr "Tải về thất bại. Vui lòng thử lại sau."
+
+#, lua-format
+msgid "%s (tap to cancel)"
+msgstr "%s (nhấn để hủy)"
+
+msgid "Downloading… (tap to cancel)"
+msgstr "Đang tải về… (nhấn để hủy)"
+
+msgid "Close"
+msgstr "Đóng"
+
+msgid "Select Z-library Download Directory"
+msgstr "Chọn thư mục tải về của Z-library"
+
+#, lua-format
+msgid "Download directory set to: %s"
+msgstr "Thư mục tải về được đặt thành: %s"
+
+msgid "No directory selected."
+msgstr "Chưa chọn thư mục nào."
+
+#, lua-format
+msgid "%d items selected for %s."
+msgstr "Đã chọn %d mục cho %s."
+
+#, lua-format
+msgid "Filter cleared for %s."
+msgstr "Đã xóa bộ lọc cho %s."
+
+msgid "Filter"
+msgstr "Bộ lọc"
+
+msgid "Show all"
+msgstr "Hiển thị tất cả"
+
+msgid "Set"
+msgstr "Đặt"
+
+msgid "Setting saved successfully!"
+msgstr "Đã lưu cài đặt thành công!"
+
+msgid "Setting cleared."
+msgstr "Đã xóa cài đặt."
+
+msgid "Please enter a name."
+msgstr "Vui lòng nhập tên."
+
+msgid "A category with that name already exists."
+msgstr "Đã tồn tại danh mục có tên này."
+
+msgid "That category no longer exists."
+msgstr "Danh mục đó không còn tồn tại."
+
+msgid "Save"
+msgstr "Lưu"
+
+msgid "Rename"
+msgstr "Đổi tên"
+
+msgid "Rename sub-category"
+msgstr "Đổi tên danh mục con"
+
+msgid "Remove"
+msgstr "Xóa"
+
+#, lua-format
+msgid "Remove the sub-category \"%s\"? Books already filed there stay where they are."
+msgstr "Xóa danh mục con \"%s\"? Sách đã lưu tại đây vẫn sẽ được giữ nguyên."
+
+msgid "Add sub-category…"
+msgstr "Thêm danh mục con…"
+
+msgid "New sub-category"
+msgstr "Danh mục con mới"
+
+msgid "Rename category…"
+msgstr "Đổi tên danh mục…"
+
+msgid "Rename category"
+msgstr "Đổi tên danh mục"
+
+msgid "Remove category"
+msgstr "Xóa danh mục"
+
+#, lua-format
+msgid "Remove the category \"%s\" and its sub-categories? Books already filed there stay where they are."
+msgstr "Xóa danh mục \"%s\" cùng các danh mục con? Sách đã lưu tại đây vẫn sẽ được giữ nguyên."
+
+msgid "Add category…"
+msgstr "Thêm danh mục…"
+
+msgid "New category"
+msgstr "Danh mục mới"
+
+msgid "Set languages"
+msgstr "Đặt ngôn ngữ"
+
+#, lua-format
+msgid "Language: %s"
+msgstr "Ngôn ngữ: %s"
+
+#, lua-format
+msgid "Languages (%d)"
+msgstr "Ngôn ngữ (%d)"
+
+msgid "Set formats"
+msgstr "Đặt định dạng"
+
+#, lua-format
+msgid "Format: %s"
+msgstr "Định dạng: %s"
+
+#, lua-format
+msgid "Formats (%d)"
+msgstr "Định dạng (%d)"
+
+msgid "Search Z-library"
+msgstr "Tìm kiếm Z-library"
+
+msgid "Please enter a search term."
+msgstr "Vui lòng nhập từ khóa tìm kiếm."
+
+msgid "Sort by"
+msgstr "Sắp xếp theo"
+
+msgid "Unknown Title"
+msgstr "Tiêu đề không xác định"
+
+msgid "Rating"
+msgstr "Đánh giá"
+
+msgid "Search Results"
+msgstr "Kết quả tìm kiếm"
+
+#, lua-format
+msgid "Remove \"%s\" from your downloaded books?"
+msgstr "Xóa \"%s\" khỏi danh sách sách đã tải của bạn?"
+
+msgid "Clear your stored username and password?"
+msgstr "Xóa tên người dùng và mật khẩu đã lưu?"
+
+msgid "Clear"
+msgstr "Xóa"
+
+#, lua-format
+msgid "Download \"%s\"?"
+msgstr "Tải về \"%s\"?"
+
+msgid "Please enter a category name."
+msgstr "Vui lòng nhập tên danh mục."
+
+msgid "Category"
+msgstr "Danh mục"
+
+msgid "Category name"
+msgstr "Tên danh mục"
+
+msgid "Sub-category (optional)"
+msgstr "Danh mục con (tùy chọn)"
+
+msgid "Sub-category name"
+msgstr "Tên danh mục con"
+
+msgid "Create"
+msgstr "Tạo"
+
+msgid "Keep in download folder"
+msgstr "Giữ trong thư mục tải về"
+
+msgid "New category…"
+msgstr "Danh mục mới…"
+
+msgid "Move to"
+msgstr "Di chuyển tới"
+
+#, lua-format
+msgid "\"%s\" downloaded."
+msgstr "Đã tải về \"%s\"."
+
+msgid "Download folder"
+msgstr "Thư mục tải về"
+
+msgid "Book downloaded successfully. Open it now?"
+msgstr "Tải sách thành công. Mở sách ngay?"
+
+msgid "Turn off Wi-Fi after closing this dialog"
+msgstr "Tắt Wi-Fi sau khi đóng hộp thoại này"
+
+#, lua-format
+msgid "Move to: %s"
+msgstr "Di chuyển tới: %s"
+
+msgid "Open book"
+msgstr "Mở sách"
+
+#, lua-format
+msgid "No %s found, please try again. Sometimes this requires a couple of retries."
+msgstr "Không tìm thấy %s, vui lòng thử lại. Đôi khi bạn cần thử lại vài lần."
+
+msgid "Z-library Similar Books"
+msgstr "Z-library Sách tương tự"
+
+msgid "Book Details"
+msgstr "Chi tiết sách"
+
+#, lua-format
+msgid "Retrying search for \"%s\"..."
+msgstr "Đang thử tìm kiếm lại \"%s\"..."
+
+msgid "Book search"
+msgstr "Tìm kiếm sách"
+
+msgid "Request timed out"
+msgstr "Hết thời gian yêu cầu"
+
+msgid "Network connection error"
+msgstr "Lỗi kết nối mạng"
+
+#, lua-format
+msgid "Could not complete \"%s\" due to a timeout%s. Would you like to retry?"
+msgstr "Không thể hoàn thành \"%s\" do hết thời gian yêu cầu%s. Bạn có muốn thử lại không?"
+
+#, lua-format
+msgid "Could not complete \"%s\" because the server address could not be found. Would you like to retry?"
+msgstr "Không thể hoàn thành \"%s\" vì không tìm thấy địa chỉ máy chủ. Bạn có muốn thử lại không?"
+
+#, lua-format
+msgid "Could not complete \"%s\" due to a network error. Would you like to retry?"
+msgstr "Không thể hoàn thành \"%s\" do lỗi mạng. Bạn có muốn thử lại không?"
+
+#, lua-format
+msgid "Could not complete \"%s\" due to a temporary issue. Would you like to retry?"
+msgstr "Không thể hoàn thành \"%s\" do sự cố tạm thời. Bạn có muốn thử lại không?"
+
+msgid "Retry"
+msgstr "Thử lại"
+
+#, lua-format
+msgid "Block timeout: %s"
+msgstr "Thời gian chờ khối: %s"
+
+#, lua-format
+msgid "Total timeout: %s"
+msgstr "Tổng thời gian chờ: %s"
+
+#, lua-format
+msgid "Set %s block timeout (seconds)"
+msgstr "Đặt thời gian chờ khối cho %s (giây)"
+
+msgid "Please enter a valid number (minimum 1 second)"
+msgstr "Vui lòng nhập một số hợp lệ (tối thiểu 1 giây)"
+
+#, lua-format
+msgid "Set %s total timeout (seconds, -1 for infinite)"
+msgstr "Đặt tổng thời gian chờ cho %s (giây, -1 là vô hạn)"
+
+msgid "Please enter a valid number (minimum 1 second or -1 for infinite)"
+msgstr "Vui lòng nhập một số hợp lệ (tối thiểu 1 giây hoặc -1 là vô hạn)"
+
+msgid "Reset to defaults"
+msgstr "Đặt lại về mặc định"
+
+#, lua-format
+msgid "Reset %s timeouts to default values?"
+msgstr "Đặt lại thời gian chờ của %s về giá trị mặc định?"
+
+msgid "Timeout settings reset to defaults"
+msgstr "Cài đặt thời gian chờ đã được đặt lại về mặc định"
+
+msgid "Reset"
+msgstr "Đặt lại"
+
+#, lua-format
+msgid "%s Timeout Settings"
+msgstr "Cài đặt thời gian chờ %s"
+
+msgid "Login timeouts"
+msgstr "Thời gian chờ đăng nhập"
+
+msgid "Search timeouts"
+msgstr "Thời gian chờ tìm kiếm"
+
+msgid "Book details timeouts"
+msgstr "Thời gian chờ chi tiết sách"
+
+msgid "Recommended books timeouts"
+msgstr "Thời gian chờ sách đề xuất"
+
+msgid "Popular books timeouts"
+msgstr "Thời gian chờ sách phổ biến"
+
+msgid "Popular books"
+msgstr "Sách phổ biến"
+
+msgid "Download timeouts"
+msgstr "Thời gian chờ tải về"
+
+msgid "Cover download timeouts"
+msgstr "Thời gian chờ tải bìa"
+
+msgid "Cover download"
+msgstr "Tải ảnh bìa"
+
+msgid "Reset all timeouts to defaults"
+msgstr "Đặt lại tất cả thời gian chờ về mặc định"
+
+msgid "Reset all timeout settings to default values?"
+msgstr "Đặt lại toàn bộ cài đặt thời gian chờ về giá trị mặc định?"
+
+msgid "All timeout settings reset to defaults"
+msgstr "Toàn bộ cài đặt thời gian chờ đã được đặt lại về mặc định"
+
+msgid "Reset All"
+msgstr "Đặt lại tất cả"
+
+msgid "Timeout Settings"
+msgstr "Cài đặt thời gian chờ"
+
+msgid "Email Address"
+msgstr "Địa chỉ email"
+
+msgid "Password"
+msgstr "Mật khẩu"
+
+msgid "Enter password"
+msgstr "Nhập mật khẩu"
+
+msgid "Set and verify"
+msgstr "Thiết lập và xác minh"
+
+msgid "Please fill in all fields"
+msgstr "Vui lòng điền đầy đủ các trường"
+
+#~ msgid "Verify credentials"
+#~ msgstr "Xác minh thông tin đăng nhập"
+
+#~ msgid "Developer options"
+#~ msgstr "Tùy chọn nhà phát triển"
+
+#~ msgid "Feature not implemented"
+#~ msgstr "Tính năng chưa được triển khai"
+
+#~ msgid "Download this book?"
+#~ msgstr "Tải sách này về?"
+
+#, lua-format
+#~ msgid "\"%s\" downloaded successfully. Open it now?"
+#~ msgstr "\"%s\" đã được tải về thành công. Mở sách ngay?"
+
+#, lua-format
+#~ msgid "Block timeout: %s seconds"
+#~ msgstr "Thời gian chờ khối: %s giây"
+
+#~ msgid "seconds"
+#~ msgstr "giây"
+
+#, lua-format
+#~ msgid "%s failed due to a timeout%s. Would you like to retry?"
+#~ msgstr "%s thất bại do hết thời gian yêu cầu%s. Bạn có muốn thử lại không?"
+
+#, lua-format
+#~ msgid "%s failed because the server address could not be found. Would you like to retry?"
+#~ msgstr "%s thất bại do không tìm thấy địa chỉ máy chủ. Bạn có muốn thử lại không?"
+
+#, lua-format
+#~ msgid "%s failed due to a network error. Would you like to retry?"
+#~ msgstr "%s thất bại do lỗi mạng. Bạn có muốn thử lại không?"
+
+#, lua-format
+#~ msgid "%s failed due to a temporary issue. Would you like to retry?"
+#~ msgstr "%s thất bại do sự cố tạm thời. Bạn có muốn thử lại không?"
+
+#~ msgid "Login"
+#~ msgstr "Đăng nhập"
+
+#~ msgid "Retrying search for \""
+#~ msgstr "Đang thử tìm kiếm lại \""
+
+#~ msgid "Searching for \""
+#~ msgstr "Đang tìm kiếm \""
+
+#~ msgid "No results found for \""
+#~ msgstr "Không tìm thấy kết quả cho \""
+
+#~ msgid "Test mode"
+#~ msgstr "Chế độ thử nghiệm"
+
+#~ msgid "Test mode disabled. Normal download behavior restored."
+#~ msgstr "Đã tắt chế độ thử nghiệm. Hành vi tải thông thường đã được khôi phục."
+
+#~ msgid "Test mode enabled. Downloads will always succeed."
+#~ msgstr "Đã bật chế độ thử nghiệm. Các lượt tải về sẽ luôn thành công."
+
+#~ msgid "unfavorite book"
+#~ msgstr "bỏ thích sách"
+
+#~ msgid "Retrying download..."
+#~ msgstr "Đang thử tải lại..."
+
+#~ msgid "Downloading…"
+#~ msgstr "Đang tải về…"
+
+#~ msgid "Syncing your download limit..."
+#~ msgstr "Đang đồng bộ giới hạn tải về..."
+
+#~ msgid "failed to load download quota status"
+#~ msgstr "tải trạng thái hạn mức tải về thất bại"
+
+#~ msgid "Sync download quota"
+#~ msgstr "Đồng bộ hạn mức tải về"
+
+#~ msgid "Syncing favorites summary…"
+#~ msgstr "Đang đồng bộ tóm tắt yêu thích…"
+
+#~ msgid "failed to load favorite book id list"
+#~ msgstr "tải danh sách ID sách yêu thích thất bại"
+
+#~ msgid "Sync favorites summary"
+#~ msgstr "Đồng bộ tóm tắt mục yêu thích"
+
+#~ msgid "Description"
+#~ msgstr "Mô tả"
+
+#~ msgid "Full Title"
+#~ msgstr "Tiêu đề đầy đủ"
+
+#~ msgid "(tap to view)"
+#~ msgstr "(nhấn để xem)"
+
+#~ msgid "Language"
+#~ msgstr "Ngôn ngữ"
+
+#, lua-format
+#~ msgid "Format: %s (tap to download)"
+#~ msgstr "Định dạng: %s (nhấn để tải)"
+
+#, lua-format
+#~ msgid "Format: %s (Download not available)"
+#~ msgstr "Định dạng: %s (Không thể tải về)"
+
+#~ msgid "Download Book (Unknown Format)"
+#~ msgstr "Tải sách (Định dạng không xác định)"
+
+#~ msgid "Size"
+#~ msgstr "Kích thước"
+
+#~ msgid "Pages"
+#~ msgstr "Số trang"
+
+#~ msgid "Publisher"
+#~ msgstr "Nhà xuất bản"
+
+#~ msgid "Series"
+#~ msgstr "Bộ sách"
+
+#~ msgid "Set email"
+#~ msgstr "Đặt email"
+
+#~ msgid "Set password"
+#~ msgstr "Đặt mật khẩu"
+
+#~ msgid "Z-library Recommended Books"
+#~ msgstr "Z-library Sách đề xuất"
+
+#~ msgid "Z-library Most Popular Books"
+#~ msgstr "Z-library Sách phổ biến nhất"
+
+#~ msgid "Fetch most recommended book from Z-library?"
+#~ msgstr "Lấy sách được đề xuất nhiều nhất từ Z-library?"
+
+#~ msgid "OK"
+#~ msgstr "OK"
+
+#~ msgid "Fetch most popular books from Z-library?"
+#~ msgstr "Lấy sách phổ biến nhất từ Z-library?"
+
+#~ msgid "Network not available. Please connect and try again."
+#~ msgstr "Mạng không khả dụng. Vui lòng kết nối mạng và thử lại."
+
+#~ msgid "Failed to discover a working base URL"
+#~ msgstr "Không thể tự động tìm kiếm URL cơ sở hoạt động"
+
+#~ msgid "Successfully found and set base URL to: "
+#~ msgstr "Đã tìm thấy thành công và đặt URL cơ sở thành: "
+
+#~ msgid "Error during auto-discovery: "
+#~ msgstr "Lỗi trong quá trình tự động tìm kiếm: "
+
+#~ msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
+#~ msgstr "Không tìm thấy máy chủ Z-library hoạt động. Vui lòng kiểm tra kết nối internet hoặc đặt URL cơ sở thủ công."
+
+#~ msgid "No internet connection detected."
+#~ msgstr "Không phát hiện kết nối internet."
+
+#~ msgid "No internet connection detected. Please connect to the internet and try again."
+#~ msgstr "Không phát hiện kết nối internet. Vui lòng kết nối internet và thử lại."
+
+#~ msgid "No download link available for this book."
+#~ msgstr "Không có liên kết tải về cho cuốn sách này."
+
+#~ msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
+#~ msgstr "Không tìm thấy sách đề xuất, vui lòng thử lại. Đôi khi cần thử lại vài lần."
+
+#~ msgid "No most popular books found. The list was empty, please try again."
+#~ msgstr "Không tìm thấy sách phổ biến nhất. Danh sách trống, vui lòng thử lại."
+
+#~ msgid "Search failed"
+#~ msgstr "Tìm kiếm thất bại"
+
+#~ msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+#~ msgstr "Tìm kiếm thất bại do sự cố tạm thời (HTTP 400). Bạn có muốn thử lại không?"
+
+#~ msgid "Z-library most popular"
+#~ msgstr "Z-library phổ biến nhất"
+
+#~ msgid "Z-library recommended"
+#~ msgstr "Z-library được đề xuất"
+
+#~ msgid "Failed to retrieve user session after login."
+#~ msgstr "Không thể lấy lại phiên người dùng sau khi đăng nhập."
+
+#~ msgid "Full Author"
+#~ msgstr "Tác giả đầy đủ"
+
+#~ msgid "Description (tap to view)"
+#~ msgstr "Mô tả (nhấn để xem)"
+
+#~ msgid "Set username"
+#~ msgstr "Đặt tên người dùng"
+
+#~ msgid "Downloading..."
+#~ msgstr "Đang tải về..."

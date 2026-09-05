@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-16 20:40+0000\n"
+"POT-Creation-Date: 2026-09-05 08:20+0000\n"
 "PO-Revision-Date: 2026-09-05 13:23+0700\n"
 "Last-Translator: \n"
 "Language-Team: vi <vi@li.org>\n"
@@ -316,9 +316,6 @@ msgstr "Đăng nhập thất bại: Định dạng phản hồi không hợp l�
 
 msgid "Login failed"
 msgstr "Đăng nhập thất bại"
-
-msgid "Login failed: Invalid session data"
-msgstr "Đăng nhập thất bại: Dữ liệu phiên không hợp lệ"
 
 msgid "No response received from server - please try again"
 msgstr "Không nhận được phản hồi từ máy chủ - vui lòng thử lại"
@@ -1042,6 +1039,9 @@ msgstr "Thiết lập và xác minh"
 
 msgid "Please fill in all fields"
 msgstr "Vui lòng điền đầy đủ các trường"
+
+#~ msgid "Login failed: Invalid session data"
+#~ msgstr "Đăng nhập thất bại: Dữ liệu phiên không hợp lệ"
 
 #~ msgid "Verify credentials"
 #~ msgstr "Xác minh thông tin đăng nhập"

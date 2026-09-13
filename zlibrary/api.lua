@@ -729,9 +729,18 @@ function Api.login(email, password, is_redir_callback)
     }
 
     if is_redir_callback then return http_result end
+
+    -- Credential-safe diagnostics for the "signs in for me, not for them" reports. Which mirror the
+    -- request reached and the HTTP status are what separate a genuinely wrong password (rpc.php's
+    -- JSON validationError, status 200) from a mirror whose rpc.php does not serve login at all (a
+    -- browser check or HTML page: a non-JSON body, or an odd status). login_url is <base>/rpc.php and
+    -- carries no secret; the request body is deliberately never logged, since it holds the password.
+    local diag = string.format(" [server=%s status=%s]",
+        tostring(login_url), tostring(http_result and http_result.status_code))
+
     if not http_result.body or http_result.body == "" then
         result.error = http_result.error or T("Login failed: Empty response from server")
-        logger.err(string.format("Zlibrary:Api.login - END (Empty body) - Error: %s", result.error))
+        logger.err(string.format("Zlibrary:Api.login - END (Empty body) - Error: %s%s", result.error, diag))
         return result
     end
 
@@ -743,7 +752,10 @@ function Api.login(email, password, is_redir_callback)
 
     if not success or type(data) ~= "table" then
         result.error = http_result.error or T("Login failed: Invalid response format")
-        logger.err(string.format("Zlibrary:Api.login - END (JSON error) - Error: %s, Body: %s", result.error, tostring(http_result.body)))
+        -- Truncated: a mirror serving a browser-check or HTML error page instead of JSON can return
+        -- a large document, and the first part is enough to recognise what it is.
+        logger.err(string.format("Zlibrary:Api.login - END (JSON error) - Error: %s%s, Body: %s",
+            result.error, diag, tostring(http_result.body):sub(1, 300)))
         return result
     end
 
@@ -778,7 +790,7 @@ function Api.login(email, password, is_redir_callback)
     result.error = (api_message and tostring(api_message))
         or http_result.error
         or (T("Login failed") .. ": " .. Api.CREDENTIALS_REJECTED_TEXT)
-    logger.warn(string.format("Zlibrary:Api.login - END (API error) - Error: %s", result.error))
+    logger.warn(string.format("Zlibrary:Api.login - END (API error) - Error: %s%s", result.error, diag))
     return result
 end
 

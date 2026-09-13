@@ -58,6 +58,22 @@ package.preload["socket.http"] = function()
         return 1, 200, {}, "HTTP/1.1 200"
     end }
 end
+-- Capture logger output so the login diagnostics can be asserted -- and, above all, that they never
+-- leak the password. preload_koreader_stubs made logger a no-op; override it before api.lua loads.
+local logs = {}
+package.preload["logger"] = function()
+    local function cap(...)
+        local parts = {}
+        for i = 1, select("#", ...) do parts[i] = tostring((select(i, ...))) end
+        logs[#logs + 1] = table.concat(parts, " ")
+    end
+    return { dbg = cap, info = cap, warn = cap, err = cap }
+end
+local function logged(needle)
+    for _, line in ipairs(logs) do if line:find(needle, 1, true) then return true end end
+    return false
+end
+
 local Api = require("zlibrary.api")
 
 local function login_returning(key)
@@ -97,6 +113,29 @@ r.check("an errors[] entry with no session is surfaced as the error",
         "error = " .. tostring(res.error))
 r.check("and an unrelated error is not a credential rejection",
         Api.isCredentialRejection(res.error) == false, "wrongly a rejection")
+
+-- ---------------------------------------------------------------- diagnostics are credential-safe
+-- The "signs in for me, not for them" reports need logs that say WHICH mirror rejected the login and
+-- with what HTTP status -- to tell a wrong password (JSON validationError, 200) apart from a mirror
+-- whose rpc.php does not serve login -- but never the password.
+login_returning("wrong_pw")
+r.check("a rejected login logs the mirror and the HTTP status",
+        logged("server=https://z-lib.example/rpc.php") and logged("status=200"),
+        "logs: " .. table.concat(logs, " | "))
+
+-- A mirror answering with a non-JSON body (an HTML error or browser-check page) logs a truncated
+-- slice -- enough to recognise it, without dumping a whole page into crash.log.
+local NONJSON = string.rep("A", 350) .. "TAILMARKER"
+login_returning(NONJSON)
+r.check("a non-JSON response logs the mirror and a truncated body",
+        logged("server=https://z-lib.example/rpc.php") and logged("AAAAAAAAAA")
+            and not logged("TAILMARKER"),
+        "logs: " .. table.concat(logs, " | "))
+
+-- The whole point of building the diagnostics by hand rather than dumping the request: the password
+-- is in the request body, which is never logged. Checked across every login run above.
+r.check("no log line ever contains the password (credential-safe)",
+        not logged("correct horse"), "the password leaked into a log line")
 
 -- ---------------------------------------------------------------- wiring
 local function slurp(p) local fh = assert(io.open(p)); local s = fh:read("*a"); fh:close(); return s end

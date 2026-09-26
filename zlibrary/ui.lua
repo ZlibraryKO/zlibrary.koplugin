@@ -181,7 +181,7 @@ function Ui.showAboutDialog(version)
     local text = table.concat({
         string.format("%s %s", T("Z-library plugin"), version or T("(version unknown)")),
         "",
-        T("Two people maintain this plugin in their spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."),
+        T("This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."),
         "",
         T("If you like the plugin and want it to keep working, the price of a coffee helps:"),
         DONATION_URL,

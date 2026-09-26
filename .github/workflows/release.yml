@@ -270,8 +270,8 @@ jobs:
 
             ---
 
-            Two people maintain this plugin in their spare time, and Z-library changes often
-            enough to keep it that way. If you like it and want it to keep working:
+            This plugin is maintained in my spare time, and Z-library changes often enough to
+            keep it that way. If you like it and want it to keep working:
             [buy me a coffee](https://buymeacoffee.com/zlibraryko) ☕
 
       - name: Commit and Push l10n _meta.lua changes

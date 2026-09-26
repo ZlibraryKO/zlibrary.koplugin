@@ -126,7 +126,7 @@ for harness in "$PLUGIN_DIR"/test/*_harness.lua; do
     esac
     ran=$((ran + 1))
     printf '== %s ==\n' "$name"
-    if "$LUAJIT" "$harness" "$PLUGIN_DIR" "$LUASOCKET"; then
+    if "$LUAJIT" "$harness" "$PLUGIN_DIR" "$LUASOCKET" "$KOREADER_DIR"; then
         :
     else
         failed=$((failed + 1))

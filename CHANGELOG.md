@@ -6,6 +6,40 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.50
+
+### Added
+
+**Sign in with a session key, when signing in does not work at all.** `zlibrary_credentials.lua`
+takes two new fields, `userId` and `userKey`: sign in to Z-library in a browser, copy its
+`remix_userid` and `remix_userkey` cookies into them, and the plugin uses that session directly
+without ever reaching a login endpoint. No email or password is needed alongside them. This is the
+way back in when Z-library's sign-in refuses credentials that are perfectly good — which it has
+done twice this year — and the sessions do not appear to expire.
+
+### Fixed
+
+**A sign-in the server refuses is now tried against Z-library's other login endpoint.** Several
+readers whose email and password work on the website were told *"Incorrect email or password"* by
+the plugin ([#239](https://github.com/ZlibraryKO/zlibrary.koplugin/issues/239)). Z-library has two
+sign-in endpoints and has changed which of them works before — 1.0.48 had to move to one of them
+when the other started rejecting valid credentials, and that older endpoint serves sign-ins again.
+Credentials one endpoint refuses are now offered to the other before you are told anything, so it
+no longer matters which of the two your account works with. A sign-in that works first time still
+takes a single request; a server that is blocking the plugin outright still says so instead of
+looking like a wrong password; and a server that has temporarily locked sign-ins out after a run of
+attempts (*"Too many logins"*) is left alone rather than asked twice, which would only extend the
+lockout.
+
+**Loading messages no longer crash KOReader when the Appearance plugin is installed.** With
+[appearance.koplugin](https://github.com/Euphoriyy/appearance.koplugin) installed, opening *Most
+popular* or *Recommended* — and most other actions that show a *"… (tap to cancel)"* message —
+crashed KOReader with a *"stack overflow"*. The plugin asked KOReader to fit each loading message on
+one line, which KOReader does by rebuilding the message at smaller and smaller font sizes; the
+Appearance plugin put its own font back on every rebuild, so the rebuilding never stopped. Loading
+messages now wrap onto a second line when they need one, at the normal font size, instead of
+shrinking to fit.
+
 ## 1.0.48
 
 ### Fixed

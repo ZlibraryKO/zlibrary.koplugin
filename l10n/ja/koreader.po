@@ -91,6 +91,9 @@ msgstr "認証情報をクリア"
 msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
 msgstr "認証情報はクリアされましたが、%sによって再び設定されます。これを防ぐにはそのファイルを編集してください。"
 
+msgid "Session cleared, but %s still sets one. Edit that file to stop it."
+msgstr "セッションはクリアされましたが、%sによって再び設定されます。これを防ぐにはそのファイルを編集してください。"
+
 msgid "Credentials cleared."
 msgstr "認証情報がクリアされました。"
 

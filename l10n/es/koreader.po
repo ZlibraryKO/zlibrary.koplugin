@@ -91,6 +91,9 @@ msgstr "Borrar credenciales"
 msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
 msgstr "Credenciales borradas, pero %s todavía las establece. Edite ese archivo para evitarlo."
 
+msgid "Session cleared, but %s still sets one. Edit that file to stop it."
+msgstr "Sesión borrada, pero %s todavía la establece. Edite ese archivo para evitarlo."
+
 msgid "Credentials cleared."
 msgstr "Credenciales borradas."
 

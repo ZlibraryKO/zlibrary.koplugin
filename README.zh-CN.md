@@ -65,9 +65,13 @@ return {
     -- baseUrl = "https://your.zlibrary.domain",
     -- email = "your_email",
     -- password = "your_password",
+    -- userId = "your_remix_userid",
+    -- userKey = "your_remix_userkey",
 }
 ```
 **注意：** 如果存在 `zlibrary_credentials.lua` 文件，其中设置的凭据将始终优先于通过 UI 设置的凭据。插件在启动时加载这些设置。
+
+**使用会话登录（无需密码）：** `userId` 与 `userKey` 是一组现成的会话凭据。两者需同时填写（或都不填写），插件会直接使用它们，因此无需访问登录接口——当 Z-library 的登录接口拒绝本来正确的账号密码时（这种情况已发生过不止一次），这种方式仍可登录。请在浏览器中登录 Z-library，将 `remix_userid` 和 `remix_userkey` 两个 Cookie 的值填入这两个字段。无需同时填写邮箱和密码，且此类会话不会过期。
 
 ## 设置手势（可选）
 

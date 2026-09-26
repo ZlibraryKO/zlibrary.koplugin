@@ -269,7 +269,16 @@ function Zlibrary:addToMainMenu(menu_items)
                                         keep_menu_open = true,
                                         callback = function()
                                             Config.clearUserSession()
-                                            Ui.showInfoMessage(T("Session cleared. You will need to login again."))
+                                            -- Same lie to avoid as the credentials above: a
+                                            -- session set by zlibrary_credentials.lua is back on
+                                            -- the next init, so do not report it as gone.
+                                            if Config.sessionComesFromFile() then
+                                                Ui.showInfoMessage(string.format(
+                                                    T("Session cleared, but %s still sets one. Edit that file to stop it."),
+                                                    Config.CREDENTIALS_FILENAME))
+                                            else
+                                                Ui.showInfoMessage(T("Session cleared. You will need to login again."))
+                                            end
                                         end,
                                     }, {
                                         text = T("Clear runtime cache"),

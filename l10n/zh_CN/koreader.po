@@ -91,6 +91,9 @@ msgstr "清除账号信息"
 msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
 msgstr "账号信息已清除，但%s仍会重新设置。请编辑该文件以阻止此行为。"
 
+msgid "Session cleared, but %s still sets one. Edit that file to stop it."
+msgstr "会话已清除，但%s仍会重新设置。请编辑该文件以阻止此行为。"
+
 msgid "Credentials cleared."
 msgstr "账号信息已清除。"
 

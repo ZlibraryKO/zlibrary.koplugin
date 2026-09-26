@@ -92,6 +92,9 @@ msgstr "Limpar credenciais"
 msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
 msgstr "Credenciais limpas, mas %s ainda as define. Edite esse arquivo para impedir isso."
 
+msgid "Session cleared, but %s still sets one. Edit that file to stop it."
+msgstr "Sessão limpa, mas %s ainda a define. Edite esse arquivo para impedir isso."
+
 msgid "Credentials cleared."
 msgstr "Credenciais limpas."
 

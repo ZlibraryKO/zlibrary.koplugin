@@ -91,6 +91,9 @@ msgstr "Wyczyść dane logowania"
 msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
 msgstr "Dane logowania wyczyszczone, ale %s nadal je ustawia. Edytuj ten plik, aby temu zapobiec."
 
+msgid "Session cleared, but %s still sets one. Edit that file to stop it."
+msgstr "Sesja wyczyszczona, ale %s nadal ją ustawia. Edytuj ten plik, aby temu zapobiec."
+
 msgid "Credentials cleared."
 msgstr "Dane logowania wyczyszczone."
 

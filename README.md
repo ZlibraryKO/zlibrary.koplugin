@@ -67,10 +67,14 @@ return {
     -- baseUrl = "https://your.zlibrary.domain",
     -- email = "your_email",
     -- password = "your_password",
+    -- userId = "your_remix_userid",
+    -- userKey = "your_remix_userkey",
 }
 ```
 
 **Note:** Credentials set in the `zlibrary_credentials.lua` file will always take precedence over those set via the UI. The plugin loads these settings at startup.
+
+**Signing in with a session instead of a password:** `userId` and `userKey` are a ready-made session. Set both (or neither) and the plugin uses them as-is, so it never has to reach a login endpoint — useful when Z-library's sign-in is refusing valid credentials, as it has done more than once. Sign in to Z-library in a browser and copy the `remix_userid` and `remix_userkey` cookies into these two fields. No email or password is needed alongside them, and these sessions do not expire.
 
 ## Setup gesture (optional)
 

@@ -123,6 +123,9 @@ msgstr ""
 msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
 msgstr ""
 
+msgid "Session cleared, but %s still sets one. Edit that file to stop it."
+msgstr ""
+
 #: main.lua:263
 msgid "Credentials cleared."
 msgstr ""

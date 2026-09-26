@@ -79,6 +79,7 @@ function Config.loadCredentialsFromFile(plugin_path)
     -- attempt has to start clean: a file that no longer sets credentials must not keep reporting
     -- that it does because some earlier load in this session set them.
     Config._credentials_from_file = false
+    Config._session_from_file = false
     local cred_file_path = plugin_path .. Config.CREDENTIALS_FILENAME
     local creds = LuaSettings:open(cred_file_path)
     if not creds.data or not next(creds.data) then
@@ -108,6 +109,26 @@ function Config.loadCredentialsFromFile(plugin_path)
         Config._credentials_from_file = true
         logger.info("Overriding Password from " .. Config.CREDENTIALS_FILENAME)
     end
+
+    -- A session, for when signing in is not possible at all. Both of Z-library's login endpoints
+    -- have spent weeks refusing valid credentials (1.0.48, #239), and there is nothing the plugin
+    -- can do about that from here -- but a reader who can still sign in through a browser can copy
+    -- the session out of it (the remix_userid and remix_userkey cookies) and keep reading. The
+    -- sessions have not been seen to expire, so one pasted here goes on working.
+    --
+    -- Both halves or neither: the API sends them as a pair, and a key without an id authenticates
+    -- nothing while looking like it should. Stored as strings, the way a sign-in stores them, since
+    -- a hand-written file is as likely to give the id as a number.
+    local user_id = creds:readSetting("userId") or creds:readSetting("remixUserid")
+    local user_key = creds:readSetting("userKey") or creds:readSetting("remixUserkey")
+    if user_id and user_key then
+        Config.saveUserSession(tostring(user_id), tostring(user_key))
+        Config._session_from_file = true
+        logger.info("Overriding User Session from " .. Config.CREDENTIALS_FILENAME)
+    elseif user_id or user_key then
+        logger.warn(string.format("%s sets only %s -- a session needs both userId and userKey, ignoring it",
+            Config.CREDENTIALS_FILENAME, user_id and "userId" or "userKey"))
+    end
 end
 
 -- Whether the credentials in the settings came from zlibrary_credentials.lua rather than from
@@ -116,6 +137,12 @@ end
 -- credentials are gone would be a lie.
 function Config.credentialsComeFromFile()
     return Config._credentials_from_file == true
+end
+
+-- The same, for a session the file sets directly. Separate from the flag above because the two are
+-- set independently: a file can carry a session and no password, which is the whole point of it.
+function Config.sessionComesFromFile()
+    return Config._session_from_file == true
 end
 
 -- Search-language filter. Each name is the language's own script where a bundled KOReader font
@@ -659,6 +686,15 @@ function Config.getLoginUrl()
     return base .. "/rpc.php"
 end
 
+-- The endpoint the plugin signed in through before 1.0.48, kept as the fallback Api.login tries
+-- when rpc.php refuses the credentials. It serves login again, and which of the two accepts an
+-- account has changed under us more than once.
+function Config.getLegacyLoginUrl()
+    local base = Config.getBaseUrl()
+    if not base then return nil end
+    return base .. "/eapi/user/login"
+end
+
 function Config.getSearchUrl()
     local base = Config.getBaseUrl()
     if not base then return nil end
@@ -836,7 +872,22 @@ end
 function Config.hasCredentials()
     local email = Config.getSetting(Config.SETTINGS_USERNAME_KEY)
     local password = Config.getSetting(Config.SETTINGS_PASSWORD_KEY)
-    return email ~= nil and email ~= "" and password ~= nil and password ~= ""
+    if email ~= nil and email ~= "" and password ~= nil and password ~= "" then
+        return true
+    end
+    -- A session on its own is an account too. zlibrary_credentials.lua can set one directly, for
+    -- readers the login endpoints refuse, and it authenticates every request that needs an account
+    -- without an email or password stored anywhere. Without this the gates that call this would
+    -- send those readers to a sign-in they have no way to complete.
+    return Config.hasUserSession()
+end
+
+-- Whether a usable session is stored, whoever put it there: a sign-in, or zlibrary_credentials.lua.
+-- Both halves are required, since the API sends them as a pair.
+function Config.hasUserSession()
+    local session = Config.getUserSession()
+    return session.user_id ~= nil and session.user_id ~= ""
+        and session.user_key ~= nil and session.user_key ~= ""
 end
 
 function Config.getUserSession()

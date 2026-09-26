@@ -148,9 +148,13 @@ function Ui.showFullTextDialog(title, full_text)
     _showAndTrackDialog(dialog)
 end
 
--- Where the plugin's one and only donation ask points. Kept next to the dialog that shows it so
--- the printed address and the QR code below can never drift apart.
-local DONATION_URL = "https://buymeacoffee.com/zlibraryko"
+-- Where the plugin's donation asks point. Kept next to the dialogs that show it so the printed
+-- address and the QR code can never drift apart -- the harness pins both to this one constant.
+--
+-- Ko-fi rather than Buy Me a Coffee: a QR encodes exactly one address, and of the two Ko-fi is
+-- the one that takes no cut of a one-off tip. Both are listed in .github/FUNDING.yml and in the
+-- README, where there is room for more than one.
+local DONATION_URL = "https://ko-fi.com/zlibraryko"
 
 -- A URL is unfollowable on an e-reader: there is no browser to open it in, and copying it off the
 -- screen by hand is the sort of thing nobody does. The QR code is the actual path from the device

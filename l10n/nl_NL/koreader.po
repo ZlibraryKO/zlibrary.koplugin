@@ -91,6 +91,9 @@ msgstr "Inloggegevens wissen"
 msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
 msgstr "Inloggegevens gewist, maar %s stelt ze nog steeds in. Bewerk dat bestand om dat te voorkomen."
 
+msgid "Session cleared, but %s still sets one. Edit that file to stop it."
+msgstr "Sessie gewist, maar %s stelt die nog steeds in. Bewerk dat bestand om dat te voorkomen."
+
 msgid "Credentials cleared."
 msgstr "Inloggegevens gewist."
 

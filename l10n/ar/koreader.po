@@ -91,6 +91,9 @@ msgstr "مسح بيانات الاعتماد"
 msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
 msgstr "تم مسح بيانات الاعتماد، لكن %s لا يزال يعيّنها. عدّل ذلك الملف لإيقاف ذلك."
 
+msgid "Session cleared, but %s still sets one. Edit that file to stop it."
+msgstr "تم مسح الجلسة، لكن %s لا يزال يعيّنها. عدّل ذلك الملف لإيقاف ذلك."
+
 msgid "Credentials cleared."
 msgstr "تم مسح بيانات الاعتماد."
 

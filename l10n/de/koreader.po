@@ -91,6 +91,9 @@ msgstr "Zugangsdaten löschen"
 msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
 msgstr "Zugangsdaten gelöscht, aber %s legt sie weiterhin fest. Bearbeiten Sie diese Datei, um das zu verhindern."
 
+msgid "Session cleared, but %s still sets one. Edit that file to stop it."
+msgstr "Sitzung gelöscht, aber %s legt sie weiterhin fest. Bearbeiten Sie diese Datei, um das zu verhindern."
+
 msgid "Credentials cleared."
 msgstr "Zugangsdaten gelöscht."
 

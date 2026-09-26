@@ -91,6 +91,9 @@ msgstr "Cancella credenziali"
 msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
 msgstr "Credenziali cancellate, ma %s le imposta ancora. Modifica quel file per evitarlo."
 
+msgid "Session cleared, but %s still sets one. Edit that file to stop it."
+msgstr "Sessione cancellata, ma %s la imposta ancora. Modifica quel file per evitarlo."
+
 msgid "Credentials cleared."
 msgstr "Credenziali cancellate."
 

@@ -92,6 +92,9 @@ msgstr "Xóa thông tin đăng nhập"
 msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
 msgstr "Đã xóa thông tin đăng nhập, nhưng %s vẫn thiết lập chúng. Hãy chỉnh sửa tệp đó để dừng lại."
 
+msgid "Session cleared, but %s still sets one. Edit that file to stop it."
+msgstr "Đã xóa phiên làm việc, nhưng %s vẫn thiết lập nó. Hãy chỉnh sửa tệp đó để dừng lại."
+
 msgid "Credentials cleared."
 msgstr "Đã xóa thông tin đăng nhập."
 

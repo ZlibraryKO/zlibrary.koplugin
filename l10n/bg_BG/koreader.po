@@ -97,6 +97,9 @@ msgstr "Изчистване на данните за вход"
 msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
 msgstr "Данните за вход са изчистени, но %s все още ги задава. Редактирайте този файл, за да спрете това."
 
+msgid "Session cleared, but %s still sets one. Edit that file to stop it."
+msgstr "Сесията е изчистена, но %s все още я задава. Редактирайте този файл, за да спрете това."
+
 msgid "Credentials cleared."
 msgstr "Данните за вход са изчистени."
 

@@ -91,6 +91,9 @@ msgstr "清除憑證"
 msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
 msgstr "憑證已清除，但 %s 仍會重新設置憑證。請編輯該文件以停止此行為。"
 
+msgid "Session cleared, but %s still sets one. Edit that file to stop it."
+msgstr "會話已清除，但 %s 仍會重新設置會話。請編輯該文件以停止此行為。"
+
 msgid "Credentials cleared."
 msgstr "憑證已清除。"
 

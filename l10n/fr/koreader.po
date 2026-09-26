@@ -91,6 +91,9 @@ msgstr "Effacer les identifiants"
 msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
 msgstr "Identifiants effacés, mais %s les définit toujours. Modifiez ce fichier pour éviter cela."
 
+msgid "Session cleared, but %s still sets one. Edit that file to stop it."
+msgstr "Session effacée, mais %s la définit toujours. Modifiez ce fichier pour éviter cela."
+
 msgid "Credentials cleared."
 msgstr "Identifiants effacés."
 

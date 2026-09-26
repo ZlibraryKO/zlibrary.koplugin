@@ -91,6 +91,9 @@ msgstr "Очистить учётные данные"
 msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
 msgstr "Учётные данные очищены, но %s задаёт их снова. Отредактируйте этот файл, чтобы это прекратить."
 
+msgid "Session cleared, but %s still sets one. Edit that file to stop it."
+msgstr "Сессия очищена, но %s задаёт её снова. Отредактируйте этот файл, чтобы это прекратить."
+
 msgid "Credentials cleared."
 msgstr "Учётные данные очищены."
 

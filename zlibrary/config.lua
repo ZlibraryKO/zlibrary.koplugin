@@ -659,6 +659,15 @@ function Config.getLoginUrl()
     return base .. "/rpc.php"
 end
 
+-- The endpoint the plugin signed in through before 1.0.48, kept as the fallback Api.login tries
+-- when rpc.php refuses the credentials. It serves login again, and which of the two accepts an
+-- account has changed under us more than once.
+function Config.getLegacyLoginUrl()
+    local base = Config.getBaseUrl()
+    if not base then return nil end
+    return base .. "/eapi/user/login"
+end
+
 function Config.getSearchUrl()
     local base = Config.getBaseUrl()
     if not base then return nil end

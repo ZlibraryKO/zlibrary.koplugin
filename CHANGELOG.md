@@ -10,6 +10,18 @@ to `main` — so the top section is the one about to ship.
 
 ### Fixed
 
+**A sign-in the server refuses is now tried against Z-library's other login endpoint.** Several
+readers whose email and password work on the website were told *"Incorrect email or password"* by
+the plugin ([#239](https://github.com/ZlibraryKO/zlibrary.koplugin/issues/239)). Z-library has two
+sign-in endpoints and has changed which of them works before — 1.0.48 had to move to one of them
+when the other started rejecting valid credentials, and that older endpoint serves sign-ins again.
+Credentials one endpoint refuses are now offered to the other before you are told anything, so it
+no longer matters which of the two your account works with. A sign-in that works first time still
+takes a single request; a server that is blocking the plugin outright still says so instead of
+looking like a wrong password; and a server that has temporarily locked sign-ins out after a run of
+attempts (*"Too many logins"*) is left alone rather than asked twice, which would only extend the
+lockout.
+
 **Loading messages no longer crash KOReader when the Appearance plugin is installed.** With
 [appearance.koplugin](https://github.com/Euphoriyy/appearance.koplugin) installed, opening *Most
 popular* or *Recommended* — and most other actions that show a *"… (tap to cancel)"* message —

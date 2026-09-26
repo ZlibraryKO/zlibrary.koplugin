@@ -19,6 +19,9 @@ overwrote each other, which is why servers that block the plugin kept being trie
 sends anything worth keeping back to be saved properly — including a sign-in it had to renew, which
 used to be thrown away, making every background task sign in again.
 
+**Tapping a cover no longer crashes KOReader.** If the cover had been dropped from the cache since
+it was fetched, the tap ended in a *"bad argument"* crash instead of doing nothing.
+
 ## 1.0.50
 
 ### Added

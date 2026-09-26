@@ -149,6 +149,14 @@ function Ui.showFullTextDialog(title, full_text)
 end
 
 function Ui.showCoverDialog(title, img_path)
+    -- The emptiness check comes first because util.fileExists cannot do it: it calls io.open,
+    -- which raises on a nil path rather than answering false. The path really can be nil by the
+    -- time this runs -- the cover the caller was told about may have been evicted from the cache
+    -- since, or never landed in it -- and a tap on a cover must not take the UI down.
+    if type(img_path) ~= "string" or img_path == "" then
+        logger.warn("Ui.showCoverDialog - no cover file to show")
+        return
+    end
     if not util.fileExists(img_path) then return end
     local ImageViewer = require("ui/widget/imageviewer")
     local dialog = ImageViewer:new{

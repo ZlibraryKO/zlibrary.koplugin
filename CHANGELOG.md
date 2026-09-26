@@ -6,6 +6,19 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.51
+
+### Fixed
+
+**Background work can no longer undo your settings.** Everything the plugin does in the background
+— warming caches, fetching covers, probing mirrors, downloading — runs in a separate process, and
+those processes were writing the settings file from a copy made when they started. A setting you
+changed while one was running could be silently reverted, and three mirror probes running at once
+overwrote each other, which is why servers that block the plugin kept being tried again after
+1.0.47 was supposed to remember them. Background work now keeps its hands off the shared files and
+sends anything worth keeping back to be saved properly — including a sign-in it had to renew, which
+used to be thrown away, making every background task sign in again.
+
 ## 1.0.50
 
 ### Added

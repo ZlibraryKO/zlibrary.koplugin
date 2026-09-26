@@ -52,7 +52,7 @@ local function runScenario(scenario, task_func, with_on_cancel)
         InfoMessage = { new = function(_, opts) return { text = opts.text, timeout = opts.timeout } end },
         require = function(mod)
             assert(mod == "zlibrary.config", "unexpected require: " .. tostring(mod))
-            return { disableRuntimeCacheWrites = function() rig.cache_disabled = true end }
+            return { disableSubprocessWrites = function() rig.cache_disabled = true end }
         end,
     }
 
@@ -124,7 +124,7 @@ do
             #rig.errors == 0 and rig.cancels == 0 and #rig.fallbacks == 0,
             string.format("errors=%d cancels=%d fallbacks=%d", #rig.errors, rig.cancels, #rig.fallbacks))
     r.check("the loading widget is closed on success", closed_loading(rig))
-    r.check("the child disabled runtime cache writes before running the task", rig.cache_disabled)
+    r.check("the child disabled every shared write before running the task", rig.cache_disabled)
     r.check("no cancelled notice is shown on success", #rig.shown == 0,
             "shown: " .. #rig.shown)
 end

@@ -459,6 +459,27 @@ function Config.disableRuntimeCacheWrites()
     cache.clear = function() return true end
 end
 
+-- Everything a forked child must not write. Called first thing in every child this plugin forks.
+--
+-- A child gets a copy-on-write snapshot of the parent's memory and shares its files, so anything
+-- it flushes to the settings file is written from that snapshot -- reverting whatever the parent
+-- has saved since the fork -- while the parent, holding its own copy in memory, never sees what
+-- the child wrote. Children racing each other do the same to one another: discovery probes three
+-- mirrors at once, and each of those probes can mark a mirror blocked.
+--
+-- The in-memory effect of a write is kept, because code in the child may read back what it just
+-- set; only the flush goes. Anything a child genuinely needs to persist has to come back in its
+-- result and be written by the parent -- see ApiHelper.fetchWithAuth for a session, and
+-- discovery's on_item_end for a blocked mirror.
+--
+-- Per-book cache files are deliberately left writable: a child writing <hash>_info.lua or a cover
+-- is how the preloader warms those caches, and each of those files belongs to one book.
+function Config.disableSubprocessWrites()
+    Config.disableRuntimeCacheWrites()
+    local settings = _getLuaSettings()
+    settings.flush = function(s) return s end
+end
+
 function Config.getCacheRealUrl()
     return Config.getConfigRuntimeCache():get("api_real_url", 600)
 end

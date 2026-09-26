@@ -262,9 +262,9 @@ function Download.run(self, book)
     -- is fine over there, and Trapper yields in the parent while it waits.
     local function runDownloadInSubprocess(user_session, referer_url)
         return Trapper:dismissableRunInSubprocess(function()
-            -- This process exists only to return a result table, and it shares the cache file with the
-            -- parent. Nothing it writes there can help, and some of it would destroy the parent's copy.
-            Config.disableRuntimeCacheWrites()
+            -- This process exists only to return a result table, and it shares the parent's files.
+            -- Nothing it writes there can help, and some of it would destroy the parent's copy.
+            Config.disableSubprocessWrites()
 
             logger.info(string.format("Zlibrary:downloadBook - Fetching download link from endpoint for book ID: %s", book.id))
             local link_result = Api.getDownloadLink(user_session and user_session.user_id,

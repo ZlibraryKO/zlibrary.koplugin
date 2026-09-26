@@ -152,6 +152,12 @@ function Channel:_processNext()
         end
     end
     pid, parent_read_fd = ffiUtil.runInSubProcess(function(_pid, child_write_fd)
+        -- This process shares the parent's files but not its memory, so anything it flushes to
+        -- the settings file or the runtime cache is written from a fork-time snapshot and undoes
+        -- what the parent has saved since -- with three discovery probes running at once, they
+        -- also undo each other. Lazy require: fine after the fork, and it keeps async_helper out
+        -- of a require cycle with zlibrary.config.
+        require("zlibrary.config").disableSubprocessWrites()
         local job_ok, r1, r2 = pcall(execute_func)
         local output_str = nil
         
@@ -522,7 +528,7 @@ function AsyncHelper.runCancellable(task_func, on_success, on_error, loading_msg
             -- with the parent. Nothing it writes there can help, and some of it would destroy the
             -- parent's copy (same reasoning as the download child). Lazy require: fine after
             -- fork, and keeps async_helper out of a require cycle with zlibrary.config.
-            require("zlibrary.config").disableRuntimeCacheWrites()
+            require("zlibrary.config").disableSubprocessWrites()
             local ok, result = pcall(task_func)
             if ok then
                 return { ok = true, data = result }

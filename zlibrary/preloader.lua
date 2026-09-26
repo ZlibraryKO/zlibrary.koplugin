@@ -21,8 +21,17 @@ function ApiHelper.fetchWithAuth(api_method, ...)
     if not email or email == "" or not password or password == "" then return res end
     local login_res = Api.login(email, password)
     if type(login_res) ~= "table" or login_res.error then return res end
-    Config.saveUserSession(login_res.user_id, login_res.user_key)
-    return api_method(login_res.user_id, login_res.user_key, ...)
+    local retried = api_method(login_res.user_id, login_res.user_key, ...)
+    -- Every caller of this runs it in a forked child, where saving the session would write the
+    -- settings file from a fork-time snapshot and never reach the parent regardless
+    -- (Config.disableSubprocessWrites drops that write). Hand the session back with the result
+    -- instead and let the parent keep it -- _adoptRenewedSession below. Without that, the parent
+    -- goes on using the session the server just rejected, and every background task that meets it
+    -- signs in again for nothing.
+    if type(retried) == "table" then
+        retried.renewed_session = { user_id = login_res.user_id, user_key = login_res.user_key }
+    end
+    return retried
 end
 function ApiHelper.downloadCover(url, book_hash, skip_conflicts)
     if type(url) ~= "string" or type(book_hash) ~= "string" then return false end
@@ -56,13 +65,36 @@ local Preloader ={
 local function getSafeCallback(callback)
     return type(callback) == "function" and callback or function() end
 end
+
+-- Keep a session a task had to mint for us. It was minted in a forked child, which cannot persist
+-- anything (see Config.disableSubprocessWrites), so fetchWithAuth sends it back with the result
+-- and this is the parent side that stores it.
+local function _adoptRenewedSession(res)
+    if type(res) ~= "table" then return res end
+    local session = res.renewed_session
+    if type(session) == "table" and session.user_id and session.user_key then
+        logger.info("Preloader: adopting the session a background task renewed")
+        Config.saveUserSession(session.user_id, session.user_key)
+    end
+    res.renewed_session = nil
+    return res
+end
+
+-- Every task here goes through this rather than pushTask directly, so no call site can be added
+-- that forgets the adoption above.
+local function _pushTask(task, callback)
+    Preloader.channel:pushTask(task, function(success, res)
+        callback(success, _adoptRenewedSession(res))
+    end)
+end
+
 function  Preloader.getDownloadQuotaStatus(callback)
         local wrap_callback = getSafeCallback(callback)
         local quota_status = Config.getConfigRuntimeCache():get("download_quota_status", 1800)
         if type(quota_status) == "table" and next(quota_status) then return wrap_callback(true) end
         if not NetworkMgr:isConnected() then return wrap_callback(false) end
         local task = function() return ApiHelper.fetchWithAuth(Api.getDownloadQuotaStatus) end
-        Preloader.channel:pushTask(task, function(success, res)
+        _pushTask(task, function(success, res)
                 local is_ok = false
                 -- The account may have been cleared while the fetch ran; caching its quota now
                 -- would show it to whoever signs in next.
@@ -79,7 +111,7 @@ function  Preloader.getFavoriteBookIds(callback)
         if type(cached_ids) == "table" and next(cached_ids) then return wrap_callback(true) end
         if not NetworkMgr:isConnected() then return wrap_callback(false) end
         local task = function() return ApiHelper.fetchWithAuth(Api.getFavoriteBookIds) end
-        Preloader.channel:pushTask(task, function(success, res)
+        _pushTask(task, function(success, res)
                 local is_ok = false
                 -- Same guard as the quota warmer above: credentials cleared mid-fetch means
                 -- these ids belong to an account that is gone, not to the next one.
@@ -102,7 +134,7 @@ function  Preloader.getBookDetails(book_id, book_hash, callback)
         if type(book_details_cache) == "table" and book_details_cache.title then return wrap_callback(true) end
         if not NetworkMgr:isConnected() then return wrap_callback(false) end
         local task = function() return ApiHelper.fetchWithAuth(Api.getBookDetails, book_id, book_hash) end
-        Preloader.channel:pushTask(task, function(success, res)
+        _pushTask(task, function(success, res)
                 if success and type(res) == "table" and type(res.book) == "table" then
                         book_cache:insert(book_hash, res.book)
                          wrap_callback(true)
@@ -120,7 +152,7 @@ function  Preloader.getBookComments(book_id, book_hash, callback)
         if type(book_comments_cache) == "table" then return wrap_callback(true) end
         if not NetworkMgr:isConnected() then return wrap_callback(false) end
         local task = function() return ApiHelper.fetchWithAuth(Api.getBookComments, book_id) end
-        Preloader.channel:pushTask(task, function(success, res)
+        _pushTask(task, function(success, res)
                 local is_ok = false
                 -- not have res.comments[1]  there are zero comments.
                 if success and type(res) == "table" and type(res.comments) == "table"  then
@@ -141,7 +173,7 @@ function  Preloader.getMostPopularBooks(callback)
         -- every account (main.lua marks it requires_auth = false), so there is no session
         -- to attach and nothing to re-login for.
         local task = function() return Api.getMostPopularBooks() end
-        Preloader.channel:pushTask(task, function(success, res)
+        _pushTask(task, function(success, res)
                 local is_ok = false
                 if success and type(res) == "table" and type(res.books) == "table" then
                         cache:insert(cache_key, res.books)
@@ -160,7 +192,7 @@ function  Preloader.getRecommendedBooks(callback)
         -- Unlike most-popular above, recommended is per-account (requires_auth = true in
         -- main.lua), so it goes through fetchWithAuth for the session cookie and re-login.
         local task = function() return ApiHelper.fetchWithAuth(Api.getRecommendedBooks) end
-        Preloader.channel:pushTask(task, function(success, res)
+        _pushTask(task, function(success, res)
                 local is_ok = false
                 if success and type(res) == "table" and type(res.books) == "table" then
                         cache:insert(cache_key, res.books)
@@ -180,7 +212,7 @@ function  Preloader.getBookCover(url, book_hash, callback)
         -- own workers, and the unconditional temp-file cleanup without it could unlink the
         -- .downloading path out from under a concurrent subprocess.
         local task = function() return ApiHelper.downloadCover(url, book_hash, true) end
-        Preloader.channel:pushTask(task, function(success, res)
+        _pushTask(task, function(success, res)
                 wrap_callback(success and res ==true)
         end)
 end

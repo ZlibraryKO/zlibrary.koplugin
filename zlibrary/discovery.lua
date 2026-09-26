@@ -210,6 +210,15 @@ function Discovery.run(self, is_interactive, retry_callback)
                 on_item_end = function(idx, seed, success, result)
                     if type(result) ~= "table" then result = {} end
 
+                    -- The probe ran in a forked child, which cannot persist anything, so a mirror
+                    -- that answered with a browser check is remembered here in the parent. This is
+                    -- what stops the next sweep from picking it again; before the write guard the
+                    -- child's own mark raced two sibling probes for the settings file and usually
+                    -- lost.
+                    if Api.isBlockedError(result.error) then
+                        Config.markMirrorBlocked(seed.url)
+                    end
+
                     -- UI update logic
                     if is_interactive and connection_menu and UIManager:isWidgetShown(connection_menu) then
                         local pos = idx + offset

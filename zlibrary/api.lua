@@ -58,6 +58,18 @@ function Api.isRateLimited(error_message)
     return string.find(tostring(error_message), "Too many logins", 1, true) ~= nil
 end
 
+-- Did this mirror answer with a browser check instead of the API?
+--
+-- Matched by value like the classifiers above, so it survives translation. makeHttpRequest marks
+-- the mirror itself, but it usually runs in a forked child, where nothing it writes to the
+-- settings file survives (Config.disableSubprocessWrites) -- so a caller that receives such a
+-- result in the parent marks it there instead. discovery.lua is the one that matters: its sweep
+-- is what reads those marks back.
+function Api.isBlockedError(error_message)
+    if not error_message then return false end
+    return string.find(tostring(error_message), Api.BLOCKED_TEXT, 1, true) ~= nil
+end
+
 function Api.isAuthenticationError(error_message)
     if not error_message then
         return false

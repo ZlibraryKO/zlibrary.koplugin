@@ -50,11 +50,11 @@ function Discovery.run(self, is_interactive, retry_callback)
             loading_msg = false
         end
     end
-    self.discover_channel = self.discover_channel or AsyncHelper:createChannel("findWorkingBaseUrl", 3, safe_close_loading_msg)
-    -- createChannel caches by name, so its on_finish argument only lands on the FIRST run; the
-    -- closure it stored keeps pointing at that first invocation's loading_msg forever. Re-point
-    -- the field at this run's closer so a drain/abort closes the current loading message.
-    self.discover_channel.on_finish = safe_close_loading_msg
+    -- Asked for on every run, with a closer that belongs to THIS run: each run has its own
+    -- loading_msg, and a drain or abort has to close the one currently on screen. createChannel
+    -- applies the on_finish to the channel it already has, so this is enough -- it used to keep
+    -- the first run's closure and needed re-pointing by hand here.
+    self.discover_channel = AsyncHelper:createChannel("findWorkingBaseUrl", 3, safe_close_loading_msg)
 
     local function getCleanUrl(url)
         if type(url) ~= "string" then return "" end

@@ -157,6 +157,11 @@ function DialogManager:showErrorMessage(text, timeout)
 
     local dialog = InfoMessage:new{
         text = text,
+        -- The same icon Ui.showErrorMessage uses when it has no manager to hand this to. This
+        -- branch is the one actually taken -- Ui.setPluginInstance runs in init, so a manager is
+        -- always there -- and without the icon every error the plugin has ever shown rendered as
+        -- an ordinary notice, while the code in ui.lua said otherwise.
+        icon = "notice-warning",
         timeout = timeout or 5
     }
     self:untrackOnClose(dialog)

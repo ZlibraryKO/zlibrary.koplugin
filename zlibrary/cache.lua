@@ -283,15 +283,22 @@ function M:new(o)
     o = o or {}
     local ctype = o.type or "kv"
 
+    -- Keyed by name for kv, because that is what decides which file it opens: two callers asking
+    -- for "_domains_cache" want the same cache, and building one each meant two LuaSettings copies
+    -- of one file, each unaware of the other's writes -- so the later flush quietly undid the
+    -- earlier one, and the menu's "clear domains cache" could be written straight back by a
+    -- discovery run still holding the old table. Re-reading and re-parsing the file on every call
+    -- was the cheaper half of the problem: getSeedUrls builds one on each call, inside a sweep.
+    local instance_key = ctype == "kv" and ("kv:" .. tostring(o.name or "default_kv")) or ctype
+    if _instances[instance_key] then
+        return _instances[instance_key]
+    end
+
     if ctype == "kv" then
         local obj = setmetatable(o, KVCache)
         if obj.init then obj:init() end
+        _instances[instance_key] = obj
         return obj
-    end
-
-    local instance_key = ctype
-    if _instances[instance_key] then
-        return _instances[instance_key]
     end
 
     local obj

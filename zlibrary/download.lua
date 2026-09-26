@@ -202,9 +202,21 @@ function Download.run(self, book)
         return
     end
 
-    local safe_title = util.trim(book.title or "Unknown Title"):gsub("[/\\?%*:|\"<>%c]", "_")
-    local safe_author = util.trim(book.author or "Unknown Author"):gsub("[/\\?%*:|\"<>%c]", "_")
-    local filename = string.format("%s - %s.%s", safe_title, safe_author, book_format)
+    -- util.getSafeFilename replaces the characters a filesystem cannot take and, the part that
+    -- was missing here, caps the length -- repairing the UTF-8 sequence the cut lands inside,
+    -- which a plain sub() would leave broken. Nothing limited this before: a long title and a
+    -- long author list built a name past the 255 bytes most filesystems allow per component, and
+    -- the download died at the open with "File name too long", identically on every retry.
+    --
+    -- The budget leaves room for ".downloading", since the temp file is what gets opened first,
+    -- and no path is passed: without one getSafeFilename assumes the strictest filesystem, which
+    -- is the right guess for the FAT32 partition a Kindle downloads into anyway.
+    local TEMP_SUFFIX_ROOM = #".downloading"
+    local proposed = string.format("%s - %s.%s",
+        util.trim(book.title or "Unknown Title"),
+        util.trim(book.author or "Unknown Author"),
+        book_format)
+    local filename = util.getSafeFilename(proposed, nil, 240 - TEMP_SUFFIX_ROOM)
     logger.info(string.format("Zlibrary:downloadBook - Proposed filename: %s", filename))
 
     local target_dir = Config.getDownloadDir()

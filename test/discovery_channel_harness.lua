@@ -5,8 +5,13 @@
 -- caches channels by name, so the argument only lands on the first invocation. Every later run
 -- reused a channel whose on_finish still pointed at the first run's (long-dead) loading
 -- message, and the current run's "Searching for working Z-library server..." survived the
--- drain/abort hook that was meant to close it. The fix re-points channel.on_finish on each
--- run; this harness drives the real Discovery.run twice and drains the channel.
+-- drain/abort hook that was meant to close it. This harness drives the real Discovery.run twice
+-- and drains the channel.
+--
+-- The fix used to live here -- discovery re-pointed channel.on_finish by hand after every
+-- createChannel call -- and now lives in createChannel, which applies a later caller's arguments
+-- to the channel it already has. The double below mirrors that, and channel_config_harness pins
+-- the real thing, so this harness cannot pass against a createChannel that has regressed.
 --
 -- The whole of run() is extracted, so the KOReader modules it touches are stubbed just far
 -- enough to walk the non-interactive path: cached domains -> executeDiscovery ->
@@ -32,18 +37,24 @@ local env = setmetatable({
         isConnected = function() return true end,
     },
     AsyncHelper = {
+        -- Same semantics as the real AsyncHelper:createChannel: cached by name, and a later
+        -- caller's arguments are applied to the channel already there.
         createChannel = function(_, name, max_workers, on_finish)
-            if not rig.channels[name] then
-                rig.created = rig.created + 1
-                rig.channels[name] = {
-                    name = name,
-                    max_workers = max_workers,
-                    on_finish = on_finish,
-                    executeBatch = function() rig.batches = rig.batches + 1 end,
-                    pushTask = function() end,
-                    clearTasks = function() end,
-                }
+            local channel = rig.channels[name]
+            if channel then
+                if max_workers then channel.max_workers = max_workers end
+                if on_finish ~= nil then channel.on_finish = on_finish end
+                return channel
             end
+            rig.created = rig.created + 1
+            rig.channels[name] = {
+                name = name,
+                max_workers = max_workers,
+                on_finish = on_finish,
+                executeBatch = function() rig.batches = rig.batches + 1 end,
+                pushTask = function() end,
+                clearTasks = function() end,
+            }
             return rig.channels[name]
         end,
     },

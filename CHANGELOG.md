@@ -27,6 +27,20 @@ downloaded but could not be moved into the cache — a full or unwritable cache 
 recorded it as done, so the grid kept an empty slot that nothing ever retried. Such a cover is now
 treated as failed, which means it is retried like any other.
 
+**An empty answer from the server is no longer saved as a book.** A mirror that replied with
+nothing at all produced a 0-byte file presented as a finished download — and if you already owned
+that book, it replaced your copy. Downloads that arrive empty are now reported as failures.
+
+**Books with very long titles download again.** The file name was built from the full title and
+author with nothing limiting its length, so a long one exceeded what the filesystem accepts and the
+download failed with *"File name too long"* every time. Names are now shortened to fit.
+
+**Error messages look like errors.** They were being shown with the ordinary notice icon instead of
+the warning one.
+
+**Searching for a working server no longer leaves its message on screen.** On the second and later
+searches for a server, the *"Fetching domains…"* message could stay up after the sweep finished.
+
 ## 1.0.50
 
 ### Added

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-05 08:20+0000\n"
+"POT-Creation-Date: 2026-09-26 17:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -91,14 +91,15 @@ msgstr "인증 정보 초기화"
 msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
 msgstr "인증 정보가 초기화되었지만 %s에서 여전히 인증 정보를 설정합니다. 이를 중지하려면 해당 파일을 편집하세요."
 
-msgid "Session cleared, but %s still sets one. Edit that file to stop it."
-msgstr "세션이 초기화되었지만 %s에서 여전히 세션을 설정합니다. 이를 중지하려면 해당 파일을 편집하세요."
-
 msgid "Credentials cleared."
 msgstr "인증 정보가 초기화되었습니다."
 
 msgid "Clear user session"
 msgstr "사용자 세션 초기화"
+
+#, lua-format
+msgid "Session cleared, but %s still sets one. Edit that file to stop it."
+msgstr "세션이 초기화되었지만 %s에서 여전히 세션을 설정합니다. 이를 중지하려면 해당 파일을 편집하세요."
 
 msgid "Session cleared. You will need to login again."
 msgstr "세션이 초기화되었습니다. 다시 로그인해야 합니다."

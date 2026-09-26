@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-05 08:20+0000\n"
+"POT-Creation-Date: 2026-09-26 17:36+0000\n"
 "PO-Revision-Date: 2026-07-22 00:39+0100\n"
 "Last-Translator: CookieCaptainD\n"
 "Language-Team: pt_PT\n"
@@ -97,14 +97,15 @@ msgstr "Limpar credenciais"
 msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
 msgstr "Credenciais limpas, mas %s continua a defini-las. Edite esse ficheiro para o impedir."
 
-msgid "Session cleared, but %s still sets one. Edit that file to stop it."
-msgstr "Sessão limpa, mas %s continua a defini-la. Edite esse ficheiro para o impedir."
-
 msgid "Credentials cleared."
 msgstr "Credenciais limpas."
 
 msgid "Clear user session"
 msgstr "Limpar sessão do utilizador"
+
+#, lua-format
+msgid "Session cleared, but %s still sets one. Edit that file to stop it."
+msgstr "Sessão limpa, mas %s continua a defini-la. Edite esse ficheiro para o impedir."
 
 msgid "Session cleared. You will need to login again."
 msgstr "Sessão limpa. Terá de iniciar sessão novamente."

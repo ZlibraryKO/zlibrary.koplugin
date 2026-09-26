@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-05 08:20+0000\n"
+"POT-Creation-Date: 2026-09-26 17:36+0000\n"
 "PO-Revision-Date: 2026-09-05 13:23+0700\n"
 "Last-Translator: \n"
 "Language-Team: vi <vi@li.org>\n"
@@ -92,14 +92,15 @@ msgstr "Xóa thông tin đăng nhập"
 msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
 msgstr "Đã xóa thông tin đăng nhập, nhưng %s vẫn thiết lập chúng. Hãy chỉnh sửa tệp đó để dừng lại."
 
-msgid "Session cleared, but %s still sets one. Edit that file to stop it."
-msgstr "Đã xóa phiên làm việc, nhưng %s vẫn thiết lập nó. Hãy chỉnh sửa tệp đó để dừng lại."
-
 msgid "Credentials cleared."
 msgstr "Đã xóa thông tin đăng nhập."
 
 msgid "Clear user session"
 msgstr "Xóa phiên người dùng"
+
+#, lua-format
+msgid "Session cleared, but %s still sets one. Edit that file to stop it."
+msgstr "Đã xóa phiên làm việc, nhưng %s vẫn thiết lập nó. Hãy chỉnh sửa tệp đó để dừng lại."
 
 msgid "Session cleared. You will need to login again."
 msgstr "Đã xóa phiên làm việc. Bạn sẽ cần đăng nhập lại."

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-05 08:20+0000\n"
+"POT-Creation-Date: 2026-09-26 17:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese <zh@li.org>\n"
@@ -91,14 +91,15 @@ msgstr "清除憑證"
 msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
 msgstr "憑證已清除，但 %s 仍會重新設置憑證。請編輯該文件以停止此行為。"
 
-msgid "Session cleared, but %s still sets one. Edit that file to stop it."
-msgstr "會話已清除，但 %s 仍會重新設置會話。請編輯該文件以停止此行為。"
-
 msgid "Credentials cleared."
 msgstr "憑證已清除。"
 
 msgid "Clear user session"
 msgstr "清除用戶會話"
+
+#, lua-format
+msgid "Session cleared, but %s still sets one. Edit that file to stop it."
+msgstr "會話已清除，但 %s 仍會重新設置會話。請編輯該文件以停止此行為。"
 
 msgid "Session cleared. You will need to login again."
 msgstr "會話已清除。您需要重新登錄。"

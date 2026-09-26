@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-05 08:20+0000\n"
+"POT-Creation-Date: 2026-09-26 17:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -91,14 +91,15 @@ msgstr "認証情報をクリア"
 msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
 msgstr "認証情報はクリアされましたが、%sによって再び設定されます。これを防ぐにはそのファイルを編集してください。"
 
-msgid "Session cleared, but %s still sets one. Edit that file to stop it."
-msgstr "セッションはクリアされましたが、%sによって再び設定されます。これを防ぐにはそのファイルを編集してください。"
-
 msgid "Credentials cleared."
 msgstr "認証情報がクリアされました。"
 
 msgid "Clear user session"
 msgstr "ユーザーセッションをクリア"
+
+#, lua-format
+msgid "Session cleared, but %s still sets one. Edit that file to stop it."
+msgstr "セッションはクリアされましたが、%sによって再び設定されます。これを防ぐにはそのファイルを編集してください。"
 
 msgid "Session cleared. You will need to login again."
 msgstr "セッションがクリアされました。再度ログインが必要です。"

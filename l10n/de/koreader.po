@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-05 08:20+0000\n"
+"POT-Creation-Date: 2026-09-26 17:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -91,14 +91,15 @@ msgstr "Zugangsdaten löschen"
 msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
 msgstr "Zugangsdaten gelöscht, aber %s legt sie weiterhin fest. Bearbeiten Sie diese Datei, um das zu verhindern."
 
-msgid "Session cleared, but %s still sets one. Edit that file to stop it."
-msgstr "Sitzung gelöscht, aber %s legt sie weiterhin fest. Bearbeiten Sie diese Datei, um das zu verhindern."
-
 msgid "Credentials cleared."
 msgstr "Zugangsdaten gelöscht."
 
 msgid "Clear user session"
 msgstr "Benutzersitzung löschen"
+
+#, lua-format
+msgid "Session cleared, but %s still sets one. Edit that file to stop it."
+msgstr "Sitzung gelöscht, aber %s legt sie weiterhin fest. Bearbeiten Sie diese Datei, um das zu verhindern."
 
 msgid "Session cleared. You will need to login again."
 msgstr "Sitzung gelöscht. Sie müssen sich erneut anmelden."

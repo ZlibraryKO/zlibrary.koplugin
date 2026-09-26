@@ -1206,3 +1206,18 @@ msgstr "모든 항목을 입력하세요"
 
 #~ msgid "Downloading..."
 #~ msgstr "다운로드 중..."
+
+msgid "Z-library plugin"
+msgstr "Z-library 플러그인"
+
+msgid "Update installed"
+msgstr "업데이트 설치됨"
+
+msgid "(version unknown)"
+msgstr "(버전 알 수 없음)"
+
+msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
+msgstr "이 플러그인이 마음에 들고 계속 작동하기를 바라신다면, 커피 한 잔 값이 도움이 됩니다:"
+
+msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
+msgstr "이 플러그인은 여가 시간에 유지·관리하고 있습니다. Z-library는 예고 없이 바뀌며, 올해만 로그인 방식을 두 번 교체해야 했습니다. 검색과 로그인, 다운로드가 계속 작동하게 하려면 지속적인 작업이 필요합니다."

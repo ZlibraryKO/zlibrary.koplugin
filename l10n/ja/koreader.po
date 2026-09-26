@@ -1206,3 +1206,18 @@ msgstr "すべての項目を入力してください"
 
 #~ msgid "Downloading..."
 #~ msgstr "ダウンロード中..."
+
+msgid "Z-library plugin"
+msgstr "Z-library プラグイン"
+
+msgid "Update installed"
+msgstr "更新をインストールしました"
+
+msgid "(version unknown)"
+msgstr "(バージョン不明)"
+
+msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
+msgstr "このプラグインを気に入り、これからも使い続けたいと思われましたら、コーヒー一杯分のご支援が助けになります:"
+
+msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
+msgstr "このプラグインは空き時間に保守しています。Z-library は予告なく変更され、今年はログイン方式を二度も差し替える必要がありました。検索・ログイン・ダウンロードを動き続けさせるには、継続的な作業が必要です。"

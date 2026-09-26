@@ -1206,3 +1206,18 @@ msgstr "Wypełnij wszystkie pola"
 
 #~ msgid "Downloading..."
 #~ msgstr "Pobieranie..."
+
+msgid "Z-library plugin"
+msgstr "Wtyczka Z-library"
+
+msgid "Update installed"
+msgstr "Aktualizacja zainstalowana"
+
+msgid "(version unknown)"
+msgstr "(nieznana wersja)"
+
+msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
+msgstr "Jeśli lubisz tę wtyczkę i chcesz, aby nadal działała, pomoże cena jednej kawy:"
+
+msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
+msgstr "Utrzymuję tę wtyczkę w wolnym czasie. Z-library zmienia się bez ostrzeżenia: logowanie trzeba było w tym roku wymieniać już dwa razy. Utrzymanie działania wyszukiwania, logowania i pobierania to ciągła praca."

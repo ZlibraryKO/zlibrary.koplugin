@@ -1206,3 +1206,18 @@ msgstr "Пожалуйста, заполните все поля"
 
 #~ msgid "Downloading..."
 #~ msgstr "Загрузка..."
+
+msgid "Z-library plugin"
+msgstr "Плагин Z-library"
+
+msgid "Update installed"
+msgstr "Обновление установлено"
+
+msgid "(version unknown)"
+msgstr "(версия неизвестна)"
+
+msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
+msgstr "Если вам нравится плагин и вы хотите, чтобы он продолжал работать, поможет цена чашки кофе:"
+
+msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
+msgstr "Я поддерживаю этот плагин в свободное время. Z-library меняется без предупреждения: вход в аккаунт в этом году уже дважды приходилось переделывать. Чтобы поиск, вход и загрузки продолжали работать, нужна постоянная работа."

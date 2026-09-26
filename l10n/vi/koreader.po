@@ -1246,3 +1246,18 @@ msgstr "Vui lòng điền đầy đủ các trường"
 
 #~ msgid "Downloading..."
 #~ msgstr "Đang tải về..."
+
+msgid "Z-library plugin"
+msgstr "Tiện ích Z-library"
+
+msgid "Update installed"
+msgstr "Đã cài đặt bản cập nhật"
+
+msgid "(version unknown)"
+msgstr "(không rõ phiên bản)"
+
+msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
+msgstr "Nếu bạn thích tiện ích này và muốn nó tiếp tục hoạt động, giá một ly cà phê sẽ giúp ích:"
+
+msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
+msgstr "Tôi duy trì tiện ích này trong thời gian rảnh. Z-library thay đổi mà không báo trước: riêng năm nay đã phải thay cách đăng nhập hai lần. Giữ cho tìm kiếm, đăng nhập và tải xuống hoạt động là công việc liên tục."

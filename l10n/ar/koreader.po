@@ -1206,3 +1206,18 @@ msgstr "يرجى ملء جميع الحقول"
 
 #~ msgid "Downloading..."
 #~ msgstr "جارٍ التنزيل..."
+
+msgid "Z-library plugin"
+msgstr "إضافة Z-library"
+
+msgid "Update installed"
+msgstr "تم تثبيت التحديث"
+
+msgid "(version unknown)"
+msgstr "(إصدار غير معروف)"
+
+msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
+msgstr "إذا أعجبتك الإضافة وأردت أن تستمر في العمل، فثمن فنجان قهوة يساعد:"
+
+msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
+msgstr "أتولى صيانة هذه الإضافة في وقت فراغي. تتغير Z-library دون سابق إنذار: فقد اضطررت هذا العام إلى تغيير طريقة تسجيل الدخول مرتين. إبقاء البحث وتسجيل الدخول والتنزيلات تعمل هو عمل مستمر."

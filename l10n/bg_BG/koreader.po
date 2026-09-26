@@ -1200,3 +1200,18 @@ msgstr "Попълнете всички полета"
 
 #~ msgid "Fetch most popular books from Z-library?"
 #~ msgstr "Зареждане на най-популярни книги от Z-library?"
+
+msgid "Z-library plugin"
+msgstr "Приставка Z-library"
+
+msgid "Update installed"
+msgstr "Обновлението е инсталирано"
+
+msgid "(version unknown)"
+msgstr "(неизвестна версия)"
+
+msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
+msgstr "Ако харесвате приставката и искате да продължи да работи, цената на едно кафе помага:"
+
+msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
+msgstr "Поддържам тази приставка в свободното си време. Z-library се променя без предупреждение: тази година входът вече беше подменян два пъти. Поддържането на търсенето, входа и изтеглянията работещи е постоянна работа."

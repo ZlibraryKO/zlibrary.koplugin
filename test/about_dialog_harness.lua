@@ -44,7 +44,7 @@ env._plugin_instance = {
 }
 env.Ui = {}
 
-for _, name in ipairs{ "showDonationQrCode", "showAboutDialog" } do
+for _, name in ipairs{ "showDonationQrCode", "showAboutDialog", "showUpdateInstalledDialog" } do
     local block = support.extract_block(PLUGIN .. "/zlibrary/ui.lua",
         "(\nfunction Ui%." .. name .. "%(.-\nend\n)")
     local chunk = assert(loadstring(block, "=Ui." .. name))
@@ -85,5 +85,33 @@ local ok = pcall(env.Ui.showAboutDialog, nil)
 r.check("a version that could not be read still opens the dialog",
         ok and rig.confirm ~= nil and rig.confirm.text:find(DONATION_URL, 1, true) ~= nil,
         "no version meant no dialog at all")
+
+-- ---------------------------------------------------------------- after an update installs
+-- The plugin's second and last mention of support, and the only one that interrupts anybody. It
+-- has to keep saying the thing the reader actually needs first.
+rig.confirm, rig.shown = nil, nil
+env.Ui.showUpdateInstalledDialog()
+r.check("the update dialog still leads with the restart instruction",
+        rig.confirm ~= nil and rig.confirm.text:find("restart KOReader", 1, true) ~= nil
+            and rig.confirm.text:find("restart KOReader", 1, true)
+                < rig.confirm.text:find(DONATION_URL, 1, true),
+        "the ask was put in front of what the reader has to do")
+r.check("and points at the same address as the About screen",
+        rig.confirm.text:find(DONATION_URL, 1, true) ~= nil, "a second address crept in")
+r.check("it waits to be dismissed rather than timing out",
+        rig.confirm.cancel_text ~= nil and rig.confirm.no_ok_button == true,
+        "a restart instruction that vanishes on a timer")
+
+local qr_button = rig.confirm.other_buttons and rig.confirm.other_buttons[1]
+        and rig.confirm.other_buttons[1][1]
+r.check("with the QR on its own row above the dismiss button",
+        type(qr_button) == "table" and type(qr_button.callback) == "function"
+            and rig.confirm.other_buttons_first == true,
+        "no QR button, or it was placed below the way out")
+
+qr_button.callback()
+r.check("and that QR encodes the same address too",
+        type(rig.shown) == "table" and rig.shown.text == DONATION_URL,
+        "QR points at " .. tostring(rig.shown and rig.shown.text))
 
 r.finish()

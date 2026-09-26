@@ -206,6 +206,48 @@ function Ui.showAboutDialog(version)
     end
 end
 
+-- Shown once an update has installed. This is the one moment the plugin has earned a word: the
+-- reader chose to update, it worked, and they are already being told to restart -- so the ask
+-- costs them nothing extra and needs no "shown once" bookkeeping, since a given version installs
+-- once. The restart instruction stays first and Close stays the obvious way out; the QR sits on a
+-- row above it for anyone who wants it.
+--
+-- The restart sentence is the exact string the plain message used, so its sixteen translations
+-- carry over untouched.
+function Ui.showUpdateInstalledDialog()
+    local text = table.concat({
+        T([[Update installed successfully. Please restart KOReader for changes to take effect.]]),
+        "",
+        T("If you like the plugin and want it to keep working, the price of a coffee helps:"),
+        DONATION_URL,
+    }, "\n")
+
+    local qr_row = { { {
+        text = T("Show QR code"),
+        callback = function() Ui.showDonationQrCode() end,
+    } } }
+
+    if _plugin_instance and _plugin_instance.dialog_manager then
+        _plugin_instance.dialog_manager:showConfirmDialog({
+            title = T("Update installed"),
+            text = text,
+            no_ok_button = true,
+            cancel_text = T("Close"),
+            other_buttons = qr_row,
+            other_buttons_first = true,
+        })
+    else
+        UIManager:show(ConfirmBox:new{
+            title = T("Update installed"),
+            text = text,
+            no_ok_button = true,
+            cancel_text = T("Close"),
+            other_buttons = qr_row,
+            other_buttons_first = true,
+        })
+    end
+end
+
 function Ui.showCoverDialog(title, img_path)
     -- The emptiness check comes first because util.fileExists cannot do it: it calls io.open,
     -- which raises on a nil path rather than answering false. The path really can be nil by the

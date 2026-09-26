@@ -8,6 +8,8 @@
 
 如果你觉得这个插件有用，请考虑支持其开发。你的捐赠将有助于项目的持续运作，并推动新功能和改进的实现。
 
+<a href="https://ko-fi.com/zlibraryko" target="_blank"><img src="https://storage.ko-fi.com/cdn/kofi3.png?v=6" alt="Support me on Ko-fi" height="41"></a>
+&nbsp;
 <a href="https://buymeacoffee.com/zlibraryko" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
 ## 演示

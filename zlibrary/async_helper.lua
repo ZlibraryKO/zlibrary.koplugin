@@ -18,6 +18,39 @@ local function safe_call(tag, func, ...)
     return ok, res
 end
 
+-- Reap a subprocess and drain its pipe, retrying while it is still on its way out and killing it
+-- if it will not go. Module scope rather than inside the poll loop that uses it: it captures
+-- nothing from a tick, and defining it there rebuilt the closure -- and its inner cleaner_step --
+-- on every poll of every task, which for a page of covers on four workers is hundreds of
+-- throwaway closures during a single download.
+local function safe_collect_and_clean(target_pid, fd_to_close, max_retries, retry_interval, debug_tag)
+    local retry_count = 0
+    local function cleaner_step()
+        retry_count = retry_count + 1
+        if ffiUtil.isSubProcessDone(target_pid) then
+            if fd_to_close then ffiUtil.readAllFromFD(fd_to_close) end
+            logger.dbg(string.format("Channel:_processNext - %s collected successfully.", debug_tag))
+        elseif retry_count >= max_retries then
+            -- max retries reached, abort to avoid infinite recursion
+            logger.warn(string.format("Channel:_processNext - %s failed to collect PID %d after %d retries. Forcibly terminating!", debug_tag, target_pid, max_retries))
+            ffiUtil.terminateSubProcess(target_pid)
+            UIManager:scheduleIn(1, function()
+                if ffiUtil.isSubProcessDone(target_pid) then
+                    logger.warn("Channel:_processNext - cleaner_step max_retries, force killed and exited", target_pid)
+                    if fd_to_close then ffiUtil.readAllFromFD(fd_to_close) end
+                end
+            end)
+        else
+            if fd_to_close and ffiUtil.getNonBlockingReadSize(fd_to_close) ~= 0 then
+                ffiUtil.readAllFromFD(fd_to_close)
+                fd_to_close = nil
+            end
+            UIManager:scheduleIn(retry_interval, cleaner_step)
+        end
+    end
+    cleaner_step()
+end
+
 local Channel = {}
 Channel.__index = Channel
 
@@ -152,6 +185,12 @@ function Channel:_processNext()
         end
     end
     pid, parent_read_fd = ffiUtil.runInSubProcess(function(_pid, child_write_fd)
+        -- This process shares the parent's files but not its memory, so anything it flushes to
+        -- the settings file or the runtime cache is written from a fork-time snapshot and undoes
+        -- what the parent has saved since -- with three discovery probes running at once, they
+        -- also undo each other. Lazy require: fine after the fork, and it keeps async_helper out
+        -- of a require cycle with zlibrary.config.
+        require("zlibrary.config").disableSubprocessWrites()
         local job_ok, r1, r2 = pcall(execute_func)
         local output_str = nil
         
@@ -196,37 +235,9 @@ function Channel:_processNext()
             deliver_result(false, "start_failed")
             return
         end
-    local check_interval_sec = 0.125 
+    local check_interval_sec = 0.125
     local function poll()
         poll_count = poll_count + 1
-        local function safe_collect_and_clean(target_pid, fd_to_close, max_retries, retry_interval, debug_tag)
-            local retry_count = 0
-            local function cleaner_step()
-                retry_count = retry_count + 1
-                if ffiUtil.isSubProcessDone(target_pid) then
-                   if fd_to_close then ffiUtil.readAllFromFD(fd_to_close) end
-                    logger.dbg(string.format("Channel:_processNext - %s collected successfully.", debug_tag))
-                elseif retry_count >= max_retries then
-                    -- max retries reached, abort to avoid infinite recursion
-                    logger.warn(string.format("Channel:_processNext - %s failed to collect PID %d after %d retries. Forcibly terminating!", debug_tag, target_pid, max_retries))
-                    ffiUtil.terminateSubProcess(target_pid)
-                    UIManager:scheduleIn(1, function()
-                        if ffiUtil.isSubProcessDone(target_pid) then
-                            logger.warn("Channel:_processNext - cleaner_step max_retries, force killed and exited", target_pid)
-                            if fd_to_close then ffiUtil.readAllFromFD(fd_to_close) end
-                        end
-                    end)
-                else
-                    if fd_to_close and ffiUtil.getNonBlockingReadSize(fd_to_close) ~= 0 then
-                        ffiUtil.readAllFromFD(fd_to_close)
-                        fd_to_close = nil 
-                    end
-                    UIManager:scheduleIn(retry_interval, cleaner_step)
-                end
-            end
-            cleaner_step()
-        end
-
         local duration_seconds = tonumber(time.to_s(time.since(start_time))) or 0
         if timeout and duration_seconds >= timeout then
             logger.warn("Channel:_processNext - timeout reached, killing subprocess", pid, duration_seconds)
@@ -392,11 +403,21 @@ local AsyncHelper = {
 }
 
 function AsyncHelper:createChannel(name, max_workers, on_finish)
-    if not self.channels[name] then
-        self.channels[name] = Channel:new(name, max_workers, on_finish)
-        logger.dbg(string.format("AsyncHelper: Created channel '%s' (max_workers=%d)", name, max_workers or 1))
+    local channel = self.channels[name]
+    if channel then
+        -- A later caller's arguments used to be dropped in silence. That bites whoever asks for a
+        -- channel more than once with a closure that belongs to this run: discovery does exactly
+        -- that, and its cached channel kept the FIRST run's on_finish -- closing a loading message
+        -- that was already gone and leaving the current one on screen -- until discovery.lua
+        -- started reassigning the field by hand. Apply what the caller asked for instead.
+        if max_workers then channel.max_workers = max_workers end
+        if on_finish ~= nil then channel.on_finish = on_finish end
+        return channel
     end
-    return self.channels[name]
+    channel = Channel:new(name, max_workers, on_finish)
+    self.channels[name] = channel
+    logger.dbg(string.format("AsyncHelper: Created channel '%s' (max_workers=%d)", name, max_workers or 1))
+    return channel
 end
 
 function AsyncHelper:getChannel(name)
@@ -522,7 +543,7 @@ function AsyncHelper.runCancellable(task_func, on_success, on_error, loading_msg
             -- with the parent. Nothing it writes there can help, and some of it would destroy the
             -- parent's copy (same reasoning as the download child). Lazy require: fine after
             -- fork, and keeps async_helper out of a require cycle with zlibrary.config.
-            require("zlibrary.config").disableRuntimeCacheWrites()
+            require("zlibrary.config").disableSubprocessWrites()
             local ok, result = pcall(task_func)
             if ok then
                 return { ok = true, data = result }

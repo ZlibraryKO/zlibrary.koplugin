@@ -132,7 +132,8 @@ end
 
 -- ---------------------------------------------------------------- installUpdate
 local function newInstallRig(opts)
-    local rig = { removed = {}, finals = {}, checked_paths = {} }
+    local rig = { removed = {}, finals = {}, checked_paths = {},
+                  status_closed = 0, installed_dialogs = 0 }
     local env = setmetatable({
         logger = { info = function() end, err = function() end, warn = function() end },
         T = function(s) return s end,
@@ -155,6 +156,16 @@ local function newInstallRig(opts)
         _show_ota_final_message = function(text, is_error)
             table.insert(rig.finals, { text = text, is_error = is_error })
         end,
+        -- A successful install no longer uses the timed-out notice: it closes the status widget
+        -- itself and raises a dialog that waits to be dismissed, because it asks the reader to
+        -- restart. Failures still go through _show_ota_final_message above.
+        _close_current_ota_status_widget = function() rig.status_closed = rig.status_closed + 1 end,
+        Ui = {
+            showUpdateInstalledDialog = function()
+                table.insert(rig.finals, { text = "update installed dialog", is_error = false })
+                rig.installed_dialogs = rig.installed_dialogs + 1
+            end,
+        },
     }, { __index = _G })
 
     local body = support.extract_block(OTA, "(\nfunction Ota%.installUpdate%(.-\n)end\n")
@@ -208,6 +219,13 @@ do
             #rig.removed == 1 and rig.removed[1] == ZIP, table.concat(rig.removed, ", "))
     r.check("a good archive shows a success message",
             #rig.finals == 1 and rig.finals[1].is_error == false)
+    -- The success message is a dialog now, not the three-second notice: it asks the reader to
+    -- restart, which is not something to flash past them, and it carries the plugin's one
+    -- interrupting mention of support.
+    r.check("a good archive raises the update-installed dialog",
+            rig.installed_dialogs == 1, rig.installed_dialogs .. " dialogs")
+    r.check("and closes the status widget first, so nothing sits behind it",
+            rig.status_closed == 1, rig.status_closed .. " closes")
 end
 
 r.finish()

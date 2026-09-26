@@ -74,8 +74,18 @@ end)()
 
 -- The filename must be built from the checked value, not the raw field.
 r.check("the filename uses the checked extension",
-        main_src:find('string.format("%s - %s.%s", safe_title, safe_author, book_format)', 1, true) ~= nil,
-        "the filename is still built from book.format directly")
+        main_src:find("book_format)", 1, true) ~= nil,
+        "the filename is no longer built from the checked extension")
+-- And it must be capped. Nothing limited the length before: a long title with a long author list
+-- produced a path component past the 255 bytes most filesystems allow, and the download died at
+-- the open with "File name too long" -- the same way on every retry. getSafeFilename also repairs
+-- the UTF-8 sequence a cut can land inside, which a plain sub() would leave broken.
+r.check("and the result is capped to something a filesystem will open",
+        main_src:find("util.getSafeFilename(", 1, true) ~= nil,
+        "the filename length is unbounded again")
+r.check("with room left for the .downloading suffix the temp file carries",
+        main_src:find("TEMP_SUFFIX_ROOM", 1, true) ~= nil,
+        "the cap no longer accounts for the temp file's suffix, which is the name opened first")
 r.check("the raw format is no longer pasted into a filename",
         main_src:find('safe_author, book.format', 1, true) == nil,
         "book.format still reaches the filename unchecked")

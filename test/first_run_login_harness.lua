@@ -871,9 +871,15 @@ do
 
     local api_src = read(PLUGIN .. "/zlibrary/api.lua")
     local search_fn = ("\n" .. api_src):match("(\nfunction Api%.search%(.-\n)end\n")
+    -- The cookie is built by _sessionCookie now, in one place shared with every other
+    -- authenticated call, and that helper is what makes it optional: no session, no header.
     r.check("and sends credentials only when there are some",
-            search_fn ~= nil and search_fn:find("if user_id and user_key then", 1, true) ~= nil,
-            "Api.search no longer treats the cookie as optional")
+            search_fn ~= nil and search_fn:find("_sessionCookie(user_id, user_key)", 1, true) ~= nil,
+            "Api.search no longer routes its cookie through _sessionCookie")
+    local cookie_fn = ("\n" .. api_src):match("(\nlocal function _sessionCookie%(.-\n)end\n")
+    r.check("and the cookie helper answers nothing when there is no session",
+            cookie_fn ~= nil and cookie_fn:find("if not (user_id and user_key) then", 1, true) ~= nil,
+            "_sessionCookie would build a Cookie header out of nils")
 end
 
 -- ---------------------------------------------------------------- clearing the account

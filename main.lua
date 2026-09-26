@@ -318,6 +318,18 @@ function Zlibrary:addToMainMenu(menu_items)
                     callback = function()
                         self:onZlibrarySearch("mybooks")
                     end,
+                    separator = true,
+                },
+                {
+                    -- Last, and never in anyone's way. It is also the only place in the plugin
+                    -- that mentions donations: until now the ask lived in the README, which is on
+                    -- GitHub, which is not where a reader is when the plugin has just fetched them
+                    -- a book. Shows the running version too, so a bug report can start with it.
+                    text = T("About"),
+                    keep_menu_open = true,
+                    callback = function()
+                        Ui.showAboutDialog(Ota.getCurrentPluginVersion(self.plugin_path))
+                    end,
                 },
             }
         }
@@ -1402,10 +1414,6 @@ function Zlibrary:fetchAndDisplayComments(book, skip_cache, callback)
         end
     end
     
-    local task = function()
-        return Api.getBookComments(book.id)
-    end
-
     local on_success = function(ui_self, api_result, plugin_self)
         book_cache:insert(comments_key, api_result.comments)
         if callback then callback(api_result.comments) end
@@ -1428,20 +1436,23 @@ function Zlibrary:fetchAndDisplayComments(book, skip_cache, callback)
     }, book.id)
 end
 
-function Zlibrary:onExit()
+-- Both teardown hooks do the same two things, and used to say so in two identical copies six
+-- lines apart -- where a fix applied to one of them would have looked complete. The caller's name
+-- is passed only so the log still says which hook ran.
+function Zlibrary:_teardown(hook)
     if self.dialog_manager and self.dialog_manager:getDialogCount() > 0 then
-        logger.info("Zlibrary:onExit - Cleaning up " .. self.dialog_manager:getDialogCount() .. " remaining dialogs")
+        logger.info(hook .. " - Cleaning up " .. self.dialog_manager:getDialogCount() .. " remaining dialogs")
         self.dialog_manager:closeAllDialogs()
     end
     Cache.autoCacheCleanup(Config.getConfigRuntimeCache())
 end
 
+function Zlibrary:onExit()
+    return self:_teardown("Zlibrary:onExit")
+end
+
 function Zlibrary:onCloseWidget()
-    if self.dialog_manager and self.dialog_manager:getDialogCount() > 0 then
-        logger.info("Zlibrary:onCloseWidget - Cleaning up " .. self.dialog_manager:getDialogCount() .. " remaining dialogs")
-        self.dialog_manager:closeAllDialogs()
-    end
-    Cache.autoCacheCleanup(Config.getConfigRuntimeCache())
+    return self:_teardown("Zlibrary:onCloseWidget")
 end
 
 return Zlibrary

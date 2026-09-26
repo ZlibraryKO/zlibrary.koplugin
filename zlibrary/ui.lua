@@ -148,7 +148,119 @@ function Ui.showFullTextDialog(title, full_text)
     _showAndTrackDialog(dialog)
 end
 
+-- Where the plugin's donation asks point. Kept next to the dialogs that show it so the printed
+-- address and the QR code can never drift apart -- the harness pins both to this one constant.
+--
+-- Ko-fi rather than Buy Me a Coffee: a QR encodes exactly one address, and of the two Ko-fi is
+-- the one that takes no cut of a one-off tip. Both are listed in .github/FUNDING.yml and in the
+-- README, where there is room for more than one.
+local DONATION_URL = "https://ko-fi.com/zlibraryko"
+
+-- A URL is unfollowable on an e-reader: there is no browser to open it in, and copying it off the
+-- screen by hand is the sort of thing nobody does. The QR code is the actual path from the device
+-- to the page -- scan it with a phone -- and KOReader ships QRMessage for exactly this (its own
+-- reader shows web links the same way).
+function Ui.showDonationQrCode()
+    local QRMessage = require("ui/widget/qrmessage")
+    local screen = Device.screen
+    local side = math.floor(math.min(screen:getWidth(), screen:getHeight()) * 0.8)
+    local dialog = QRMessage:new{
+        text = DONATION_URL,
+        width = side,
+        height = side,
+    }
+    -- QRMessage closes itself on a tap or a key, and fires dismiss_callback when it does, so it
+    -- untracks the same way an InfoMessage does rather than staying in the open-dialog list.
+    if _plugin_instance and _plugin_instance.dialog_manager then
+        _plugin_instance.dialog_manager:untrackOnClose(dialog)
+    end
+    _showAndTrackDialog(dialog)
+end
+
+-- The only place in the plugin that mentions donations, and deliberately the quietest one: a menu
+-- entry nobody has to dismiss, rather than a prompt after a download. Anyone who wants to give
+-- currently has to find the README on GitHub, which is not where they are when the plugin has just
+-- been useful to them.
+function Ui.showAboutDialog(version)
+    local text = table.concat({
+        string.format("%s %s", T("Z-library plugin"), version or T("(version unknown)")),
+        "",
+        T("This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."),
+        "",
+        T("If you like the plugin and want it to keep working, the price of a coffee helps:"),
+        DONATION_URL,
+    }, "\n")
+
+    if _plugin_instance and _plugin_instance.dialog_manager then
+        _plugin_instance.dialog_manager:showConfirmDialog({
+            title = T("About"),
+            text = text,
+            ok_text = T("Show QR code"),
+            ok_callback = function() Ui.showDonationQrCode() end,
+            cancel_text = T("Close"),
+        })
+    else
+        UIManager:show(ConfirmBox:new{
+            title = T("About"),
+            text = text,
+            ok_text = T("Show QR code"),
+            ok_callback = function() Ui.showDonationQrCode() end,
+            cancel_text = T("Close"),
+        })
+    end
+end
+
+-- Shown once an update has installed. This is the one moment the plugin has earned a word: the
+-- reader chose to update, it worked, and they are already being told to restart -- so the ask
+-- costs them nothing extra and needs no "shown once" bookkeeping, since a given version installs
+-- once. The restart instruction stays first and Close stays the obvious way out; the QR sits on a
+-- row above it for anyone who wants it.
+--
+-- The restart sentence is the exact string the plain message used, so its sixteen translations
+-- carry over untouched.
+function Ui.showUpdateInstalledDialog()
+    local text = table.concat({
+        T([[Update installed successfully. Please restart KOReader for changes to take effect.]]),
+        "",
+        T("If you like the plugin and want it to keep working, the price of a coffee helps:"),
+        DONATION_URL,
+    }, "\n")
+
+    local qr_row = { { {
+        text = T("Show QR code"),
+        callback = function() Ui.showDonationQrCode() end,
+    } } }
+
+    if _plugin_instance and _plugin_instance.dialog_manager then
+        _plugin_instance.dialog_manager:showConfirmDialog({
+            title = T("Update installed"),
+            text = text,
+            no_ok_button = true,
+            cancel_text = T("Close"),
+            other_buttons = qr_row,
+            other_buttons_first = true,
+        })
+    else
+        UIManager:show(ConfirmBox:new{
+            title = T("Update installed"),
+            text = text,
+            no_ok_button = true,
+            cancel_text = T("Close"),
+            other_buttons = qr_row,
+            other_buttons_first = true,
+        })
+    end
+end
+
 function Ui.showCoverDialog(title, img_path)
+    -- The emptiness check comes first because util.fileExists cannot do it: it calls io.open,
+    -- which raises on a nil path rather than answering false. The path really can be nil by the
+    -- time this runs -- the cover the caller was told about may have been evicted from the cache
+    -- since, or never landed in it -- and a tap on a cover must not take the UI down.
+    if type(img_path) ~= "string" or img_path == "" then
+        logger.warn("Ui.showCoverDialog - no cover file to show")
+        return
+    end
     if not util.fileExists(img_path) then return end
     local ImageViewer = require("ui/widget/imageviewer")
     local dialog = ImageViewer:new{

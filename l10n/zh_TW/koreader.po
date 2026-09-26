@@ -1206,3 +1206,18 @@ msgstr "請填寫所有欄位"
 
 #~ msgid "Downloading..."
 #~ msgstr "正在下載..."
+
+msgid "Z-library plugin"
+msgstr "Z-library 外掛"
+
+msgid "Update installed"
+msgstr "更新已安裝"
+
+msgid "(version unknown)"
+msgstr "(版本不明)"
+
+msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
+msgstr "如果您喜歡這個外掛並希望它繼續可用，一杯咖啡的支持就很有幫助："
+
+msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
+msgstr "這個外掛是我在業餘時間維護的。Z-library 經常毫無預告地變動：光是今年就有兩次不得不更換登入方式。要讓搜尋、登入和下載持續可用，需要不斷維護。"

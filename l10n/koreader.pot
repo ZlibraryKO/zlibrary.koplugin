@@ -1416,3 +1416,18 @@ msgstr ""
 #: zlibrary/ui.lua:1706
 msgid "Please fill in all fields"
 msgstr ""
+
+msgid "Z-library plugin"
+msgstr ""
+
+msgid "Update installed"
+msgstr ""
+
+msgid "(version unknown)"
+msgstr ""
+
+msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
+msgstr ""
+
+msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
+msgstr ""

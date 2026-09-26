@@ -256,6 +256,23 @@ jobs:
           draft: false
           prerelease: false
           files: ./${{ steps.plugin_vars.outputs.zip_name }}
+          # Releases went out with an empty body. What changed is in CHANGELOG.md, how to install
+          # is the first question every new reader asks, and the support line goes last -- after
+          # the release has been useful to someone, not in front of it.
+          body: |
+            **Update from inside KOReader:** Z-library → Settings → Check for updates.
+
+            **Or install by hand:** download the zip below and unpack it into your KOReader
+            directory, so the plugin lands in `koreader/plugins/zlibrary.koplugin/`.
+
+            What changed in this version is listed in
+            [CHANGELOG.md](https://github.com/ZlibraryKO/zlibrary.koplugin/blob/main/CHANGELOG.md).
+
+            ---
+
+            This plugin is maintained in my spare time, and Z-library changes often enough to
+            keep it that way. If you like it and want it to keep working:
+            [buy me a coffee](https://ko-fi.com/zlibraryko) ☕
 
       - name: Commit and Push l10n _meta.lua changes
         run: |

@@ -58,6 +58,18 @@ function Api.isRateLimited(error_message)
     return string.find(tostring(error_message), "Too many logins", 1, true) ~= nil
 end
 
+-- Did this mirror answer with a browser check instead of the API?
+--
+-- Matched by value like the classifiers above, so it survives translation. makeHttpRequest marks
+-- the mirror itself, but it usually runs in a forked child, where nothing it writes to the
+-- settings file survives (Config.disableSubprocessWrites) -- so a caller that receives such a
+-- result in the parent marks it there instead. discovery.lua is the one that matters: its sweep
+-- is what reads those marks back.
+function Api.isBlockedError(error_message)
+    if not error_message then return false end
+    return string.find(tostring(error_message), Api.BLOCKED_TEXT, 1, true) ~= nil
+end
+
 function Api.isAuthenticationError(error_message)
     if not error_message then
         return false
@@ -114,14 +126,22 @@ end
 --
 -- Calls that genuinely differ keep their own headers: login sends a Content-Length, downloadBook
 -- a Referer, and the cover fetch sends no cookie at all.
+-- The session as the server expects to receive it. One definition, because it has to agree with
+-- what Api.login stored and with what zlibrary_credentials.lua lets a reader paste in by hand.
+-- Returns nil when there is no session, which is also what an absent Cookie header looks like.
+local function _sessionCookie(user_id, user_key)
+    if not (user_id and user_key) then
+        return nil
+    end
+    return string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
+end
+
 local function _authedHeaders(user_id, user_key)
     local headers = {
         ["Content-Type"] = "application/x-www-form-urlencoded",
         ["User-Agent"] = Config.USER_AGENT,
     }
-    if user_id and user_key then
-        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
-    end
+    headers["Cookie"] = _sessionCookie(user_id, user_key)
     return headers
 end
 
@@ -429,11 +449,18 @@ function Api.makeHttpRequest(options)
     -- here: a stall is. Which of the two we are looking at is exactly what this measures.
     local start_time            -- assigned just before the request; the closure below reads it then
     local first_byte_ms = nil
+    -- Counted here rather than stat'ed afterwards: this is the one place every response passes
+    -- through whatever sink the caller supplied, so it works for a download writing to a file as
+    -- well as for a body collected in memory, and it costs no syscall and no new dependency.
+    local bytes_received = 0
     do
         local inner_sink = sink_to_use
         sink_to_use = function(chunk, err)
-            if not first_byte_ms and chunk and chunk ~= "" and start_time then
-                first_byte_ms = time.to_ms(time.since(start_time))
+            if chunk and chunk ~= "" then
+                if not first_byte_ms and start_time then
+                    first_byte_ms = time.to_ms(time.since(start_time))
+                end
+                bytes_received = bytes_received + #chunk
             end
             return inner_sink(chunk, err)
         end
@@ -476,6 +503,7 @@ function Api.makeHttpRequest(options)
     local req_ok, r_val, r_code, r_headers_tbl, r_status_str = pcall(http.request, request_params)
     result.elapsed = time.to_ms(time.since(start_time))
     result.first_byte_ms = first_byte_ms
+    result.bytes_received = bytes_received
 
     if options.timeout then
         socketutil:reset_timeout()
@@ -945,9 +973,7 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
         ["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8",
         ["Content-Length"] = tostring(#body),
     }
-    if user_id and user_key then
-        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
-    end
+    headers["Cookie"] = _sessionCookie(user_id, user_key)
 
     logger.dbg(string.format("Zlibrary:Api.search - Request URL: %s, Body: %s", search_url, body))
 
@@ -1059,9 +1085,7 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
     end
 
     local headers = { ["User-Agent"] = Config.USER_AGENT }
-    if user_id and user_key then
-        headers["Cookie"] = string.format("remix_userid=%s; remix_userkey=%s", user_id, user_key)
-    end
+    headers["Cookie"] = _sessionCookie(user_id, user_key)
     if referer_url then
         headers["Referer"] = referer_url
     end
@@ -1102,6 +1126,20 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
         return result
     else
         pcall(function() file:close() end)
+
+        -- A 200 with nothing in it is not a book. These mirrors answer with empty bodies often
+        -- enough (the same servers hand out 502s and challenge interstitials), and renaming that
+        -- into place would report a successful download, hand the reader a file that opens in
+        -- nothing, and -- worst of it -- replace a complete copy of a book they already had.
+        if (http_result.bytes_received or 0) == 0 then
+            result.error = T("Download failed: the server sent an empty file")
+            discardTempFile()
+            logger.err(string.format(
+                "Zlibrary:Api.downloadBook - END (Empty body) - Status: %s, Content-Type: %s",
+                tostring(http_result.status_code), tostring(content_type)))
+            return result
+        end
+
         -- Same directory, so this is an atomic replace; the user's copy is only ever replaced by a
         -- complete download.
         local renamed, err_rename = os.rename(temp_filepath, target_filepath)

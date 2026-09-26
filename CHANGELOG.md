@@ -6,6 +6,48 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.51
+
+### Added
+
+**An About screen.** **Menu → Z-library → About** shows the version you are running, which is the
+first thing worth knowing when something goes wrong and the first thing to put in a bug report. It
+also carries a QR code you can scan with a phone, for anyone who would like to support the plugin —
+the only place it is mentioned, and it interrupts nothing.
+
+### Fixed
+
+**Background work can no longer undo your settings.** Everything the plugin does in the background
+— warming caches, fetching covers, probing mirrors, downloading — runs in a separate process, and
+those processes were writing the settings file from a copy made when they started. A setting you
+changed while one was running could be silently reverted, and three mirror probes running at once
+overwrote each other, which is why servers that block the plugin kept being tried again after
+1.0.47 was supposed to remember them. Background work now keeps its hands off the shared files and
+sends anything worth keeping back to be saved properly — including a sign-in it had to renew, which
+used to be thrown away, making every background task sign in again.
+
+**Tapping a cover no longer crashes KOReader.** If the cover had been dropped from the cache since
+it was fetched, the tap ended in a *"bad argument"* crash instead of doing nothing.
+
+**A cover that cannot be saved is fetched again instead of leaving a blank.** When a cover was
+downloaded but could not be moved into the cache — a full or unwritable cache folder — the plugin
+recorded it as done, so the grid kept an empty slot that nothing ever retried. Such a cover is now
+treated as failed, which means it is retried like any other.
+
+**An empty answer from the server is no longer saved as a book.** A mirror that replied with
+nothing at all produced a 0-byte file presented as a finished download — and if you already owned
+that book, it replaced your copy. Downloads that arrive empty are now reported as failures.
+
+**Books with very long titles download again.** The file name was built from the full title and
+author with nothing limiting its length, so a long one exceeded what the filesystem accepts and the
+download failed with *"File name too long"* every time. Names are now shortened to fit.
+
+**Error messages look like errors.** They were being shown with the ordinary notice icon instead of
+the warning one.
+
+**Searching for a working server no longer leaves its message on screen.** On the second and later
+searches for a server, the *"Fetching domains…"* message could stay up after the sweep finished.
+
 ## 1.0.50
 
 ### Added

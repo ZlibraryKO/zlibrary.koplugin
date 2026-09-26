@@ -67,6 +67,10 @@ local function getCurrentPluginVersion(plugin_base_path)
     end
 end
 
+-- Exported so the About dialog shows the same version the updater compares against, instead of
+-- reading _meta.lua a second way and being able to disagree with it.
+Ota.getCurrentPluginVersion = getCurrentPluginVersion
+
 -- The release workflow publishes zlibrary_plugin_v<version>.zip. Pick the update archive out of the
 -- release by name: a release can carry more than one asset -- a second archive, a checksum, a
 -- signature -- and the API does not promise any particular order, so taking the first one means a
@@ -260,7 +264,12 @@ function Ota.installUpdate(zip_filepath, plugin_base_path)
         logger.info("Zlibrary:Ota.installUpdate - Cleaned up ZIP file: " .. zip_filepath)
     end
 
-    _show_ota_final_message(T([[Update installed successfully. Please restart KOReader for changes to take effect.]]), false)
+    -- Not _show_ota_final_message: that shows a notice that times out in three seconds, which is
+    -- short for an instruction to restart, and it has no room for anything else. The dialog waits
+    -- to be dismissed and carries the plugin's one other mention of support -- see
+    -- Ui.showUpdateInstalledDialog for why this moment and no other.
+    _close_current_ota_status_widget()
+    Ui.showUpdateInstalledDialog()
     return { success = true, message = "Update installed successfully." }
 end
 

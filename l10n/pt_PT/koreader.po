@@ -1051,3 +1051,18 @@ msgstr "Por favor, preencha todos os campos"
 
 #~ msgid "Login failed: Invalid session data"
 #~ msgstr "Falha ao iniciar sessão: Dados de sessão inválidos"
+
+msgid "Z-library plugin"
+msgstr "Plugin Z-library"
+
+msgid "Update installed"
+msgstr "Atualização instalada"
+
+msgid "(version unknown)"
+msgstr "(versão desconhecida)"
+
+msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
+msgstr "Se gosta do plugin e quer que continue a funcionar, o preço de um café ajuda:"
+
+msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
+msgstr "Mantenho este plugin no meu tempo livre. A Z-library muda sem aviso: o início de sessão já teve de ser substituído duas vezes este ano. Manter a pesquisa, o início de sessão e as transferências a funcionar é um trabalho contínuo."

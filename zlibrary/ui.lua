@@ -75,11 +75,14 @@ function Ui.showErrorMessage(text)
 end
 
 function Ui.showLoadingMessage(text)
+    -- No force_one_line. To fit one line, InfoMessage shrinks its font and re-runs init(); a
+    -- plugin that patches InfoMessage.init to impose its own font (appearance.koplugin does)
+    -- resets that font on every re-run, so the loop never ends and KOReader dies with a stack
+    -- overflow. Wrapping onto a second line needs no re-run.
     local message = InfoMessage:new{
         text = string.format("\u{23f3}  %s", text),
         dismissable = false,
         show_icon = false,
-        force_one_line = true,
     }
     UIManager:show(message)
     return message

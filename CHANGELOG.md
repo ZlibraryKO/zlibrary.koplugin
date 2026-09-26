@@ -6,6 +6,19 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.50
+
+### Fixed
+
+**Loading messages no longer crash KOReader when the Appearance plugin is installed.** With
+[appearance.koplugin](https://github.com/Euphoriyy/appearance.koplugin) installed, opening *Most
+popular* or *Recommended* — and most other actions that show a *"… (tap to cancel)"* message —
+crashed KOReader with a *"stack overflow"*. The plugin asked KOReader to fit each loading message on
+one line, which KOReader does by rebuilding the message at smaller and smaller font sizes; the
+Appearance plugin put its own font back on every rebuild, so the rebuilding never stopped. Loading
+messages now wrap onto a second line when they need one, at the normal font size, instead of
+shrinking to fit.
+
 ## 1.0.48
 
 ### Fixed

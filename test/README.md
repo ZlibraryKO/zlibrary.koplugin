@@ -50,13 +50,14 @@ If none of those find a build, `run.sh` says so and exits 2 rather than failing 
 | `rtl_fallback_harness.lua` | That under an RTL UI language — where bidi wraps untranslated strings in LTR isolate marks — a missing plugin translation still falls back to KOReader's own translation, and that `pgettext`/`ngettext`/`npgettext` query the plugin's catalogue rather than only KOReader's. |
 | `timeout_keys_harness.lua` | That every `operation_key` at a call site resolves to a real timeout getter. A typo yields no hint rather than an error, which is invisible at runtime. |
 | `base_url_harness.lua` | The base URL end to end against the real `config.lua`: the default seed has no trailing slash, `setAndValidateBaseUrl` keeps accepting bare/schemed/slashed hosts but refuses paths, queries, fragments and credentials, `saveSetting` trims strings except the password key, and the legacy-settings migration runs on any legacy key and flushes `G_reader_settings`. |
+| `loading_message_harness.lua` | That a loading message builds with one `InfoMessage:init` call, under KOReader's real `InfoMessage`, even when another plugin overrides `InfoMessage.init` to impose its own font the way appearance.koplugin does. |
 | `glyph_coverage_check.py` | That every non-ASCII codepoint the plugin can display — `\u{...}` escapes and literal UTF-8 alike — maps to a real glyph in some bundled font. Excludes U+FFF1–FFF3, which are `textboxwidget` control markers rather than glyphs. |
 
 ## Conventions
 
-Each `*_harness.lua` is invoked as `luajit <harness> <plugin-root> <luasocket-src>` and each
-`*_check.py` as `python3 <check> <plugin-root> <koreader-root>`. Drop a new file matching either
-pattern into this directory and `run.sh` picks it up.
+Each `*_harness.lua` is invoked as `luajit <harness> <plugin-root> <luasocket-src> <koreader-root>`
+and each `*_check.py` as `python3 <check> <plugin-root> <koreader-root>`. Drop a new file matching
+either pattern into this directory and `run.sh` picks it up.
 
 `support.lua` holds the shared pieces: the pass/fail reporter, the KOReader module stubs, and
 `extract_function` / `extract_block`.
@@ -93,6 +94,10 @@ Each was written against a real bug, and each fails against the commit before it
   LTR isolate marks, so the shim's raw-msgid comparison never matched and its fallback never
   fired. The same shim's `pgettext`/`ngettext`/`npgettext` could never serve a plugin
   translation at all — the deep-copied functions still pointed at KOReader's global catalogue.
+- With appearance.koplugin installed, opening Most popular crashed KOReader with a stack
+  overflow. The loading message asked for `force_one_line`, which InfoMessage meets by shrinking
+  its font and re-running `init`; appearance.koplugin reapplies its font on every `init`, so the
+  shrinking never took and `init` recursed until the stack ran out.
 
 ## Not covered
 

@@ -55,7 +55,17 @@ function ApiHelper.downloadCover(url, book_hash, skip_conflicts)
         return false
     end
     if cover_bb.free then cover_bb:free() end
-    cover_cache:insert(book_hash, temp_path)
+    -- insert moves the file into the cache and answers false when it could not -- an unwritable or
+    -- full cache directory, or a rename and a copy that both failed. Returning true regardless
+    -- told every caller the cover was cached when nothing was: the menu re-checked the cache,
+    -- found nothing and skipped its refresh, leaving a blank slot that nothing retries, and
+    -- downloadAndShowCover read that same nil back and tried to open a dialog on it. Report the
+    -- failure instead, so the caller's retry budget applies and the temp file does not linger.
+    if not cover_cache:insert(book_hash, temp_path) then
+        logger.err("[downloadCover] could not move the cover into the cache:", book_hash)
+        util.removeFile(temp_path)
+        return false
+    end
     return true
 end
 

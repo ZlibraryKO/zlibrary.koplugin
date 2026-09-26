@@ -22,6 +22,11 @@ used to be thrown away, making every background task sign in again.
 **Tapping a cover no longer crashes KOReader.** If the cover had been dropped from the cache since
 it was fetched, the tap ended in a *"bad argument"* crash instead of doing nothing.
 
+**A cover that cannot be saved is fetched again instead of leaving a blank.** When a cover was
+downloaded but could not be moved into the cache — a full or unwritable cache folder — the plugin
+recorded it as done, so the grid kept an empty slot that nothing ever retried. Such a cover is now
+treated as failed, which means it is retried like any other.
+
 ## 1.0.50
 
 ### Added

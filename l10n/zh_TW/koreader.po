@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 17:36+0000\n"
+"POT-Creation-Date: 2026-09-26 19:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese <zh@li.org>\n"
@@ -118,6 +118,9 @@ msgstr "推薦"
 
 msgid "Most popular"
 msgstr "最熱門"
+
+msgid "About"
+msgstr ""
 
 msgid "Operation"
 msgstr "操作"
@@ -337,6 +340,9 @@ msgstr "未知錯誤"
 
 msgid "Download limit reached or file is an HTML page"
 msgstr "已達下載上限或文件為 HTML 頁面"
+
+msgid "Download failed: the server sent an empty file"
+msgstr ""
 
 msgid "Failed to save downloaded file"
 msgstr "保存下載文件失敗"
@@ -650,9 +656,6 @@ msgstr "正在安裝更新..."
 msgid "Update installation failed."
 msgstr "更新安裝失敗。"
 
-msgid "Update installed successfully. Please restart KOReader for changes to take effect."
-msgstr "更新安裝成功。請重啟KOReader使更改生效。"
-
 msgid "Update check failed: Could not determine plugin location."
 msgstr "更新檢查失敗：無法確定插件位置。"
 
@@ -718,8 +721,29 @@ msgstr "%s (點擊取消)"
 msgid "Downloading… (tap to cancel)"
 msgstr "正在下載… (點擊取消)"
 
+msgid "Z-library plugin"
+msgstr "Z-library 外掛"
+
+msgid "(version unknown)"
+msgstr "(版本不明)"
+
+msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
+msgstr "這個外掛是我在業餘時間維護的。Z-library 經常毫無預告地變動：光是今年就有兩次不得不更換登入方式。要讓搜尋、登入和下載持續可用，需要不斷維護。"
+
+msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
+msgstr "如果您喜歡這個外掛並希望它繼續可用，一杯咖啡的支持就很有幫助："
+
+msgid "Show QR code"
+msgstr ""
+
 msgid "Close"
 msgstr "關閉"
+
+msgid "Update installed successfully. Please restart KOReader for changes to take effect."
+msgstr "更新安裝成功。請重啟KOReader使更改生效。"
+
+msgid "Update installed"
+msgstr "更新已安裝"
 
 msgid "Select Z-library Download Directory"
 msgstr "選擇Z-圖書館下載目錄"
@@ -1206,18 +1230,3 @@ msgstr "請填寫所有欄位"
 
 #~ msgid "Downloading..."
 #~ msgstr "正在下載..."
-
-msgid "Z-library plugin"
-msgstr "Z-library 外掛"
-
-msgid "Update installed"
-msgstr "更新已安裝"
-
-msgid "(version unknown)"
-msgstr "(版本不明)"
-
-msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
-msgstr "如果您喜歡這個外掛並希望它繼續可用，一杯咖啡的支持就很有幫助："
-
-msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
-msgstr "這個外掛是我在業餘時間維護的。Z-library 經常毫無預告地變動：光是今年就有兩次不得不更換登入方式。要讓搜尋、登入和下載持續可用，需要不斷維護。"

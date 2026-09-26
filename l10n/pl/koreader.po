@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 17:36+0000\n"
+"POT-Creation-Date: 2026-09-26 19:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -118,6 +118,9 @@ msgstr "Polecane"
 
 msgid "Most popular"
 msgstr "Najpopularniejsze"
+
+msgid "About"
+msgstr ""
 
 msgid "Operation"
 msgstr "Operacja"
@@ -337,6 +340,9 @@ msgstr "Nieznany błąd"
 
 msgid "Download limit reached or file is an HTML page"
 msgstr "Osiągnięto limit pobrań lub plik jest stroną HTML"
+
+msgid "Download failed: the server sent an empty file"
+msgstr ""
 
 msgid "Failed to save downloaded file"
 msgstr "Nie udało się zapisać pobranego pliku"
@@ -650,9 +656,6 @@ msgstr "Instalowanie aktualizacji..."
 msgid "Update installation failed."
 msgstr "Instalacja aktualizacji nie powiodła się."
 
-msgid "Update installed successfully. Please restart KOReader for changes to take effect."
-msgstr "Aktualizacja została pomyślnie zainstalowana. Uruchom ponownie KOReader, aby zmiany zaczęły obowiązywać."
-
 msgid "Update check failed: Could not determine plugin location."
 msgstr "Sprawdzenie aktualizacji nie powiodło się: Nie można określić lokalizacji wtyczki."
 
@@ -718,8 +721,29 @@ msgstr "%s (dotknij, aby anulować)"
 msgid "Downloading… (tap to cancel)"
 msgstr "Pobieranie… (dotknij, aby anulować)"
 
+msgid "Z-library plugin"
+msgstr "Wtyczka Z-library"
+
+msgid "(version unknown)"
+msgstr "(nieznana wersja)"
+
+msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
+msgstr "Utrzymuję tę wtyczkę w wolnym czasie. Z-library zmienia się bez ostrzeżenia: logowanie trzeba było w tym roku wymieniać już dwa razy. Utrzymanie działania wyszukiwania, logowania i pobierania to ciągła praca."
+
+msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
+msgstr "Jeśli lubisz tę wtyczkę i chcesz, aby nadal działała, pomoże cena jednej kawy:"
+
+msgid "Show QR code"
+msgstr ""
+
 msgid "Close"
 msgstr "Zamknij"
+
+msgid "Update installed successfully. Please restart KOReader for changes to take effect."
+msgstr "Aktualizacja została pomyślnie zainstalowana. Uruchom ponownie KOReader, aby zmiany zaczęły obowiązywać."
+
+msgid "Update installed"
+msgstr "Aktualizacja zainstalowana"
 
 msgid "Select Z-library Download Directory"
 msgstr "Wybierz katalog pobierania Z-library"
@@ -1206,18 +1230,3 @@ msgstr "Wypełnij wszystkie pola"
 
 #~ msgid "Downloading..."
 #~ msgstr "Pobieranie..."
-
-msgid "Z-library plugin"
-msgstr "Wtyczka Z-library"
-
-msgid "Update installed"
-msgstr "Aktualizacja zainstalowana"
-
-msgid "(version unknown)"
-msgstr "(nieznana wersja)"
-
-msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
-msgstr "Jeśli lubisz tę wtyczkę i chcesz, aby nadal działała, pomoże cena jednej kawy:"
-
-msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
-msgstr "Utrzymuję tę wtyczkę w wolnym czasie. Z-library zmienia się bez ostrzeżenia: logowanie trzeba było w tym roku wymieniać już dwa razy. Utrzymanie działania wyszukiwania, logowania i pobierania to ciągła praca."

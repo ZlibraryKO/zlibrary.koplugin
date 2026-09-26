@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 17:36+0000\n"
+"POT-Creation-Date: 2026-09-26 19:10+0000\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -124,6 +124,9 @@ msgstr "Препоръчани"
 
 msgid "Most popular"
 msgstr "Най-популярни"
+
+msgid "About"
+msgstr ""
 
 msgid "Operation"
 msgstr "Операция"
@@ -343,6 +346,9 @@ msgstr "Непозната грешка"
 
 msgid "Download limit reached or file is an HTML page"
 msgstr "Достигнат лимит за изтегляне или файлът е HTML страница"
+
+msgid "Download failed: the server sent an empty file"
+msgstr ""
 
 msgid "Failed to save downloaded file"
 msgstr "Неуспешно запазване на изтегления файл"
@@ -656,9 +662,6 @@ msgstr "Инсталиране на актуализацията..."
 msgid "Update installation failed."
 msgstr "Инсталирането на актуализацията неуспешно."
 
-msgid "Update installed successfully. Please restart KOReader for changes to take effect."
-msgstr "Актуализацията е инсталирана успешно. Рестартирайте KOReader за да влязат в сила промените."
-
 msgid "Update check failed: Could not determine plugin location."
 msgstr "Проверката за актуализации неуспешна: Не може да се определи местоположението на приставката."
 
@@ -724,8 +727,29 @@ msgstr "%s (докоснете за отказ)"
 msgid "Downloading… (tap to cancel)"
 msgstr "Изтегляне… (докоснете за отказ)"
 
+msgid "Z-library plugin"
+msgstr "Приставка Z-library"
+
+msgid "(version unknown)"
+msgstr "(неизвестна версия)"
+
+msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
+msgstr "Поддържам тази приставка в свободното си време. Z-library се променя без предупреждение: тази година входът вече беше подменян два пъти. Поддържането на търсенето, входа и изтеглянията работещи е постоянна работа."
+
+msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
+msgstr "Ако харесвате приставката и искате да продължи да работи, цената на едно кафе помага:"
+
+msgid "Show QR code"
+msgstr ""
+
 msgid "Close"
 msgstr "Затваряне"
+
+msgid "Update installed successfully. Please restart KOReader for changes to take effect."
+msgstr "Актуализацията е инсталирана успешно. Рестартирайте KOReader за да влязат в сила промените."
+
+msgid "Update installed"
+msgstr "Обновлението е инсталирано"
 
 msgid "Select Z-library Download Directory"
 msgstr "Изберете папка за изтегляне от Z-library"
@@ -1200,18 +1224,3 @@ msgstr "Попълнете всички полета"
 
 #~ msgid "Fetch most popular books from Z-library?"
 #~ msgstr "Зареждане на най-популярни книги от Z-library?"
-
-msgid "Z-library plugin"
-msgstr "Приставка Z-library"
-
-msgid "Update installed"
-msgstr "Обновлението е инсталирано"
-
-msgid "(version unknown)"
-msgstr "(неизвестна версия)"
-
-msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
-msgstr "Ако харесвате приставката и искате да продължи да работи, цената на едно кафе помага:"
-
-msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
-msgstr "Поддържам тази приставка в свободното си време. Z-library се променя без предупреждение: тази година входът вече беше подменян два пъти. Поддържането на търсенето, входа и изтеглянията работещи е постоянна работа."

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 17:36+0000\n"
+"POT-Creation-Date: 2026-09-26 19:10+0000\n"
 "PO-Revision-Date: 2026-09-05 13:23+0700\n"
 "Last-Translator: \n"
 "Language-Team: vi <vi@li.org>\n"
@@ -119,6 +119,9 @@ msgstr "Được đề xuất"
 
 msgid "Most popular"
 msgstr "Phổ biến nhất"
+
+msgid "About"
+msgstr ""
 
 msgid "Operation"
 msgstr "Thao tác"
@@ -338,6 +341,9 @@ msgstr "Lỗi không xác định"
 
 msgid "Download limit reached or file is an HTML page"
 msgstr "Đã đạt giới hạn tải về hoặc tệp là trang HTML"
+
+msgid "Download failed: the server sent an empty file"
+msgstr ""
 
 msgid "Failed to save downloaded file"
 msgstr "Lưu tệp tải về thất bại"
@@ -651,9 +657,6 @@ msgstr "Đang cài đặt bản cập nhật..."
 msgid "Update installation failed."
 msgstr "Cài đặt cập nhật thất bại."
 
-msgid "Update installed successfully. Please restart KOReader for changes to take effect."
-msgstr "Cập nhật thành công. Vui lòng khởi động lại KOReader để thay đổi có hiệu lực."
-
 msgid "Update check failed: Could not determine plugin location."
 msgstr "Kiểm tra cập nhật thất bại: Không thể xác định vị trí plugin."
 
@@ -719,8 +722,29 @@ msgstr "%s (nhấn để hủy)"
 msgid "Downloading… (tap to cancel)"
 msgstr "Đang tải về… (nhấn để hủy)"
 
+msgid "Z-library plugin"
+msgstr "Tiện ích Z-library"
+
+msgid "(version unknown)"
+msgstr "(không rõ phiên bản)"
+
+msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
+msgstr "Tôi duy trì tiện ích này trong thời gian rảnh. Z-library thay đổi mà không báo trước: riêng năm nay đã phải thay cách đăng nhập hai lần. Giữ cho tìm kiếm, đăng nhập và tải xuống hoạt động là công việc liên tục."
+
+msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
+msgstr "Nếu bạn thích tiện ích này và muốn nó tiếp tục hoạt động, giá một ly cà phê sẽ giúp ích:"
+
+msgid "Show QR code"
+msgstr ""
+
 msgid "Close"
 msgstr "Đóng"
+
+msgid "Update installed successfully. Please restart KOReader for changes to take effect."
+msgstr "Cập nhật thành công. Vui lòng khởi động lại KOReader để thay đổi có hiệu lực."
+
+msgid "Update installed"
+msgstr "Đã cài đặt bản cập nhật"
 
 msgid "Select Z-library Download Directory"
 msgstr "Chọn thư mục tải về của Z-library"
@@ -1246,18 +1270,3 @@ msgstr "Vui lòng điền đầy đủ các trường"
 
 #~ msgid "Downloading..."
 #~ msgstr "Đang tải về..."
-
-msgid "Z-library plugin"
-msgstr "Tiện ích Z-library"
-
-msgid "Update installed"
-msgstr "Đã cài đặt bản cập nhật"
-
-msgid "(version unknown)"
-msgstr "(không rõ phiên bản)"
-
-msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
-msgstr "Nếu bạn thích tiện ích này và muốn nó tiếp tục hoạt động, giá một ly cà phê sẽ giúp ích:"
-
-msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
-msgstr "Tôi duy trì tiện ích này trong thời gian rảnh. Z-library thay đổi mà không báo trước: riêng năm nay đã phải thay cách đăng nhập hai lần. Giữ cho tìm kiếm, đăng nhập và tải xuống hoạt động là công việc liên tục."

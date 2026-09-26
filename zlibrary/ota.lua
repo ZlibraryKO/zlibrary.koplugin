@@ -67,6 +67,10 @@ local function getCurrentPluginVersion(plugin_base_path)
     end
 end
 
+-- Exported so the About dialog shows the same version the updater compares against, instead of
+-- reading _meta.lua a second way and being able to disagree with it.
+Ota.getCurrentPluginVersion = getCurrentPluginVersion
+
 -- The release workflow publishes zlibrary_plugin_v<version>.zip. Pick the update archive out of the
 -- release by name: a release can carry more than one asset -- a second archive, a checksum, a
 -- signature -- and the API does not promise any particular order, so taking the first one means a

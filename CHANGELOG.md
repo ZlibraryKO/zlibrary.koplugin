@@ -8,6 +8,13 @@ to `main` — so the top section is the one about to ship.
 
 ## 1.0.51
 
+### Added
+
+**An About screen.** **Menu → Z-library → About** shows the version you are running, which is the
+first thing worth knowing when something goes wrong and the first thing to put in a bug report. It
+also carries a QR code you can scan with a phone, for anyone who would like to support the plugin —
+the only place it is mentioned, and it interrupts nothing.
+
 ### Fixed
 
 **Background work can no longer undo your settings.** Everything the plugin does in the background

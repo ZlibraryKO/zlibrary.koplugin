@@ -318,6 +318,18 @@ function Zlibrary:addToMainMenu(menu_items)
                     callback = function()
                         self:onZlibrarySearch("mybooks")
                     end,
+                    separator = true,
+                },
+                {
+                    -- Last, and never in anyone's way. It is also the only place in the plugin
+                    -- that mentions donations: until now the ask lived in the README, which is on
+                    -- GitHub, which is not where a reader is when the plugin has just fetched them
+                    -- a book. Shows the running version too, so a bug report can start with it.
+                    text = T("About"),
+                    keep_menu_open = true,
+                    callback = function()
+                        Ui.showAboutDialog(Ota.getCurrentPluginVersion(self.plugin_path))
+                    end,
                 },
             }
         }

@@ -8,6 +8,15 @@ to `main` — so the top section is the one about to ship.
 
 ## 1.0.50
 
+### Added
+
+**Sign in with a session key, when signing in does not work at all.** `zlibrary_credentials.lua`
+takes two new fields, `userId` and `userKey`: sign in to Z-library in a browser, copy its
+`remix_userid` and `remix_userkey` cookies into them, and the plugin uses that session directly
+without ever reaching a login endpoint. No email or password is needed alongside them. This is the
+way back in when Z-library's sign-in refuses credentials that are perfectly good — which it has
+done twice this year — and the sessions do not appear to expire.
+
 ### Fixed
 
 **A sign-in the server refuses is now tried against Z-library's other login endpoint.** Several

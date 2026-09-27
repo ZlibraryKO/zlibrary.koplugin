@@ -57,7 +57,16 @@ function support.preload_koreader_stubs()
     end
     package.preload["util"] = function()
         return {
-            urlEncode = function(s) return s end,
+            -- KOReader's own util.urlEncode, not a pass-through. It used to be one, which quietly
+            -- excused every caller from encoding: a body field holding "&" or "=" looked correct
+            -- in a harness and would have split the form on a device.
+            urlEncode = function(url, preserve_chars)
+                if url == nil then return end
+                local pattern = string.format("([^%%w%%-%%._~%s])", preserve_chars or "")
+                return (url:gsub("\n", "\r\n"):gsub(pattern, function(c)
+                    return string.format("%%%02X", string.byte(c))
+                end))
+            end,
             trim = function(s) return s end,
             splitFilePathName = function(p) return p:match("^(.*/)([^/]*)$") end,
             tableDeepCopy = function(t)

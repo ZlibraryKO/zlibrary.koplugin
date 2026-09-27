@@ -698,24 +698,6 @@ function Config.setAndValidateBaseUrl(url_string)
     return true, nil
 end
 
-function Config.getLoginUrl()
-    local base = Config.getBaseUrl()
-    if not base then return nil end
-    -- The website signs in through rpc.php (action=login), not /eapi/user/login: the latter now
-    -- answers valid credentials with "Authorization failed" (confirmed on device and against the
-    -- live API), while rpc.php works with a plain form POST.
-    return base .. "/rpc.php"
-end
-
--- The endpoint the plugin signed in through before 1.0.48, kept as the fallback Api.login tries
--- when rpc.php refuses the credentials. It serves login again, and which of the two accepts an
--- account has changed under us more than once.
-function Config.getLegacyLoginUrl()
-    local base = Config.getBaseUrl()
-    if not base then return nil end
-    return base .. "/eapi/user/login"
-end
-
 function Config.getSearchUrl()
     local base = Config.getBaseUrl()
     if not base then return nil end

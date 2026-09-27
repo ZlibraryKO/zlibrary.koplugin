@@ -29,8 +29,6 @@ package.preload["zlibrary.config"] = function()
     return {
         USER_AGENT = "UA",
         getBaseUrl = function() return "https://z-lib.example" end,
-        getLoginUrl = function() return "https://z-lib.example/rpc.php" end,
-        getLegacyLoginUrl = function() return "https://z-lib.example/eapi/user/login" end,
         getLoginTimeout = function() return { 10, 15 } end,
         -- makeHttpRequest collaborators (redirect cache + bot-block memory); no-ops here.
         setCacheRealUrl = function() end,
@@ -130,6 +128,27 @@ r.check("the body carries the extra rpc fields",
             and last.body:find("isModal=true", 1, true), last.body)
 r.check("the body carries the credentials",
         last.body:find("email=", 1, true) and last.body:find("password=", 1, true), last.body)
+
+-- Credentials go through a placeholder now rather than straight into a concatenation, so the two
+-- ways that can go wrong are worth pinning down. Both are silent if they break: the request still
+-- sends, and the server answers "Incorrect email or password" to a body that was mangled rather
+-- than to a password that was wrong.
+serve, requests = "ok", {}
+Api.login("a+b@example.com", "p&q=r s%t")
+r.check("a password's form characters are encoded, not left to split the body",
+        last.body:find("password=p%26q%3Dr%20s%25t", 1, true) ~= nil
+            or last.body:find("password=p%26q%3Dr+s%25t", 1, true) ~= nil,
+        last.body:gsub("password=[^&]*", "password=<...>"))
+r.check("and so are the address's",
+        last.body:find("email=a%2Bb%40example.com", 1, true) ~= nil,
+        last.body:gsub("password=[^&]*", "password=<...>"))
+
+serve, requests = "ok", {}
+Api.login("reader@example.com", "{base}")
+r.check("a password that looks like a placeholder is sent as itself, not expanded",
+        last.body:find("password=%7Bbase%7D", 1, true) ~= nil
+            and last.body:find("password=https", 1, true) == nil,
+        last.body:gsub("password=[^&]*", "password=<...>"))
 
 -- ---------------------------------------------------------------- success (session under `response`)
 local res = login_returning("ok")
@@ -246,13 +265,39 @@ r.check("and it keeps the \"try a different server\" message",
         res.error and res.error:find(Api.BLOCKED_TEXT, 1, true) ~= nil,
         "error = " .. tostring(res.error))
 
--- ---------------------------------------------------------------- wiring
-local function slurp(p) local fh = assert(io.open(p)); local s = fh:read("*a"); fh:close(); return s end
-r.check("getLoginUrl points at rpc.php",
-        slurp(PLUGIN .. "/zlibrary/config.lua"):find("/rpc.php", 1, true) ~= nil,
-        "config.lua no longer builds the rpc.php login URL")
-r.check("getLegacyLoginUrl points at /eapi/user/login",
-        slurp(PLUGIN .. "/zlibrary/config.lua"):find("/eapi/user/login", 1, true) ~= nil,
-        "config.lua no longer builds the legacy login URL")
+-- ---------------------------------------------------------------- the table is data
+-- The entries exist to be editable without touching code, which holds only while nothing in them
+-- has to be compiled. A function put back into one of them would still work here -- the tests
+-- above drive the real Api.login and would pass -- and would silently close the door this shape
+-- was opened for, so it is asserted directly rather than left to review.
+local function isData(value)
+    local kind = type(value)
+    if kind == "string" or kind == "number" or kind == "boolean" then return true end
+    if kind ~= "table" then return false end
+    for k, v in pairs(value) do
+        if not isData(k) or not isData(v) then return false end
+    end
+    return true
+end
+r.check("every login endpoint is expressible as JSON", isData(Api.LOGIN_ENDPOINTS),
+        "an entry holds a function or userdata")
+r.check("the endpoints carry their own paths",
+        Api.LOGIN_ENDPOINTS[1].path == "/rpc.php"
+            and Api.LOGIN_ENDPOINTS[2].path == "/eapi/user/login",
+        "paths = " .. tostring(Api.LOGIN_ENDPOINTS[1].path) .. ", " .. tostring(Api.LOGIN_ENDPOINTS[2].path))
+
+-- A placeholder that does not resolve must stop the request, not empty it. Posting
+-- "password=" earns "Incorrect email or password" from the server, which is the one answer the
+-- plugin acts on by telling the reader to retype a password that was never sent.
+local broken = { label = "broken", path = "/rpc.php",
+                 body = { { "email", "{email}" }, { "password", "{passwd}" } } }
+local saved = Api.LOGIN_ENDPOINTS[1]
+Api.LOGIN_ENDPOINTS[1] = broken
+res = login_returning{ [EAPI] = "eapi_ok" }
+r.check("an endpoint with an unknown placeholder is never sent",
+        requested(RPC) == 0, requested(RPC) .. " requests to " .. RPC)
+r.check("and the other endpoint still gets its chance",
+        res.user_id == "21699629", "error = " .. tostring(res.error))
+Api.LOGIN_ENDPOINTS[1] = saved
 
 r.finish()

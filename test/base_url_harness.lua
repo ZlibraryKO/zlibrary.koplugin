@@ -105,9 +105,9 @@ r.check("G_reader_settings is flushed so the deletions persist",
 r.check("default base URL has no trailing slash",
         Config.getBaseUrl() == "https://z-lib.fo",
         "got " .. tostring(Config.getBaseUrl()))
-r.check("login URL is built without a double slash",
-        Config.getLoginUrl() == "https://z-lib.fo/rpc.php",
-        "got " .. tostring(Config.getLoginUrl()))
+r.check("a path appended to the base URL gains no double slash",
+        Config.getBaseUrl() .. "/rpc.php" == "https://z-lib.fo/rpc.php",
+        "got " .. tostring(Config.getBaseUrl()) .. "/rpc.php")
 
 -- ---------------------------------------------------------------- setAndValidateBaseUrl
 -- Every shape that was accepted before must still be accepted, with the same saved value.

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 19:10+0000\n"
+"POT-Creation-Date: 2026-09-27 13:21+0200\n"
 "PO-Revision-Date: 2026-09-05 13:23+0700\n"
 "Last-Translator: \n"
 "Language-Team: vi <vi@li.org>\n"
@@ -110,6 +110,12 @@ msgstr "Xóa bộ nhớ đệm runtime"
 
 msgid "Runtime cache cleared."
 msgstr "Đã xóa bộ nhớ đệm runtime."
+
+msgid "Identify as a web browser"
+msgstr "Nhận dạng như một trình duyệt web"
+
+msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+msgstr "Gửi User-Agent của trình duyệt thay vì của chính tiện ích. Chỉ đáng thử nếu máy chủ từ chối chính tiện ích này."
 
 msgid "Search"
 msgstr "Tìm kiếm"
@@ -315,14 +321,14 @@ msgstr "Trạng thái không xác định"
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "Chưa thiết lập địa chỉ máy chủ (URL) Z-library. Vui lòng cấu hình trong cài đặt plugin Z-library."
 
+msgid "Login failed"
+msgstr "Đăng nhập thất bại"
+
 msgid "Login failed: Empty response from server"
 msgstr "Đăng nhập thất bại: Phản hồi trống từ máy chủ"
 
 msgid "Login failed: Invalid response format"
 msgstr "Đăng nhập thất bại: Định dạng phản hồi không hợp lệ"
-
-msgid "Login failed"
-msgstr "Đăng nhập thất bại"
 
 msgid "No response received from server - please try again"
 msgstr "Không nhận được phản hồi từ máy chủ - vui lòng thử lại"
@@ -492,6 +498,9 @@ msgstr "Hồ sơ"
 msgid "No description available"
 msgstr "Không có mô tả"
 
+msgid "Selection copied to clipboard."
+msgstr "Đã sao chép lựa chọn vào khay nhớ tạm."
+
 msgid "pages"
 msgstr "trang"
 
@@ -568,9 +577,6 @@ msgstr "Không tìm thấy URL cơ sở hoạt động được."
 
 msgid "Queued"
 msgstr "Đang chờ"
-
-msgid "Selection copied to clipboard."
-msgstr "Đã sao chép lựa chọn vào khay nhớ tạm."
 
 msgid "Checking"
 msgstr "Đang kiểm tra"

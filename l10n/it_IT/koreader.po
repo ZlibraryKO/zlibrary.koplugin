@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 19:10+0000\n"
+"POT-Creation-Date: 2026-09-27 13:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,6 +109,12 @@ msgstr "Cancella cache runtime"
 
 msgid "Runtime cache cleared."
 msgstr "Cache runtime cancellata."
+
+msgid "Identify as a web browser"
+msgstr "Identificarsi come browser web"
+
+msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+msgstr "Invia lo User-Agent di un browser al posto di quello del plugin. Vale la pena provarlo solo se un server rifiuta il plugin stesso."
 
 msgid "Search"
 msgstr "Cerca"
@@ -314,14 +320,14 @@ msgstr "Stato sconosciuto"
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "L'indirizzo del server Z-library (URL) non è impostato. Configuralo nelle impostazioni del plugin Z-library."
 
+msgid "Login failed"
+msgstr "Accesso fallito"
+
 msgid "Login failed: Empty response from server"
 msgstr "Accesso fallito: risposta vuota dal server"
 
 msgid "Login failed: Invalid response format"
 msgstr "Accesso fallito: formato della risposta non valido"
-
-msgid "Login failed"
-msgstr "Accesso fallito"
 
 msgid "No response received from server - please try again"
 msgstr "Nessuna risposta ricevuta dal server - riprova"
@@ -491,6 +497,9 @@ msgstr "Profilo"
 msgid "No description available"
 msgstr "Nessuna descrizione disponibile"
 
+msgid "Selection copied to clipboard."
+msgstr "Selezione copiata negli appunti."
+
 msgid "pages"
 msgstr "pagine"
 
@@ -567,9 +576,6 @@ msgstr "Impossibile trovare un URL base funzionante."
 
 msgid "Queued"
 msgstr "In coda"
-
-msgid "Selection copied to clipboard."
-msgstr "Selezione copiata negli appunti."
 
 msgid "Checking"
 msgstr "Verifica in corso"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 19:10+0000\n"
+"POT-Creation-Date: 2026-09-27 13:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,6 +109,12 @@ msgstr "Vider le cache d'exécution"
 
 msgid "Runtime cache cleared."
 msgstr "Cache d'exécution vidé."
+
+msgid "Identify as a web browser"
+msgstr "S'identifier comme un navigateur web"
+
+msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+msgstr "Envoie l'User-Agent d'un navigateur à la place de celui du plugin. À essayer uniquement si un serveur refuse le plugin lui-même."
 
 msgid "Search"
 msgstr "Rechercher"
@@ -314,14 +320,14 @@ msgstr "Statut inconnu"
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "L'adresse (URL) du serveur Z-library n'est pas définie. Veuillez la configurer dans les paramètres du plugin Z-library."
 
+msgid "Login failed"
+msgstr "Échec de la connexion"
+
 msgid "Login failed: Empty response from server"
 msgstr "Échec de la connexion : Réponse vide du serveur"
 
 msgid "Login failed: Invalid response format"
 msgstr "Échec de la connexion : Format de réponse invalide"
-
-msgid "Login failed"
-msgstr "Échec de la connexion"
 
 msgid "No response received from server - please try again"
 msgstr "Aucune réponse reçue du serveur - veuillez réessayer"
@@ -491,6 +497,9 @@ msgstr "Profil"
 msgid "No description available"
 msgstr "Aucune description disponible"
 
+msgid "Selection copied to clipboard."
+msgstr "Sélection copiée dans le presse-papiers."
+
 msgid "pages"
 msgstr "pages"
 
@@ -567,9 +576,6 @@ msgstr "Impossible de trouver une URL de base fonctionnelle."
 
 msgid "Queued"
 msgstr "En attente"
-
-msgid "Selection copied to clipboard."
-msgstr "Sélection copiée dans le presse-papiers."
 
 msgid "Checking"
 msgstr "Vérification"

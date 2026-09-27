@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 19:10+0000\n"
+"POT-Creation-Date: 2026-09-27 13:21+0200\n"
 "PO-Revision-Date: 2026-04-03 00:00+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
@@ -109,6 +109,12 @@ msgstr "清除运行时缓存"
 
 msgid "Runtime cache cleared."
 msgstr "运行时缓存已清除。"
+
+msgid "Identify as a web browser"
+msgstr "标识为网页浏览器"
+
+msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+msgstr "发送浏览器的 User-Agent，而不是插件自己的。仅当服务器拒绝插件本身时才值得一试。"
 
 msgid "Search"
 msgstr "搜索"
@@ -314,14 +320,14 @@ msgstr "未知状态"
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "未设置 Z-library 服务器地址(URL)。请在 Z-library 插件设置中进行配置。"
 
+msgid "Login failed"
+msgstr "登录失败"
+
 msgid "Login failed: Empty response from server"
 msgstr "登录失败：服务器返回空响应"
 
 msgid "Login failed: Invalid response format"
 msgstr "登录失败：响应格式无效"
-
-msgid "Login failed"
-msgstr "登录失败"
 
 msgid "No response received from server - please try again"
 msgstr "未收到服务器响应 - 请重试"
@@ -491,6 +497,9 @@ msgstr "个人资料"
 msgid "No description available"
 msgstr "暂无简介"
 
+msgid "Selection copied to clipboard."
+msgstr "已复制所选内容到剪贴板。"
+
 msgid "pages"
 msgstr "页"
 
@@ -567,9 +576,6 @@ msgstr "未能找到可用的入口网址。"
 
 msgid "Queued"
 msgstr "排队中"
-
-msgid "Selection copied to clipboard."
-msgstr "已复制所选内容到剪贴板。"
 
 msgid "Checking"
 msgstr "检查中"

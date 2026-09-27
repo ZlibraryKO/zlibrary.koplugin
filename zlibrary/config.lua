@@ -25,6 +25,7 @@ Config.SETTINGS_DOWNLOAD_DIR_KEY = "zlibrary_download_dir"
 Config.SETTINGS_CATEGORIES_KEY = "zlibrary_categories"
 Config.SETTINGS_TURN_OFF_WIFI_AFTER_DOWNLOAD_KEY = "zlibrary_turn_off_wifi_after_download"
 Config.SETTINGS_SKIP_OPEN_BOOK_PROMPT_KEY = "zlibrary_skip_open_book_prompt"
+Config.SETTINGS_BROWSER_USER_AGENT_KEY = "zlibrary_browser_user_agent"
 Config.SETTINGS_TIMEOUT_LOGIN_KEY = "zlibrary_timeout_login"
 Config.SETTINGS_TIMEOUT_SEARCH_KEY = "zlibrary_timeout_search"
 Config.SETTINGS_TIMEOUT_BOOK_DETAILS_KEY = "zlibrary_timeout_book_details"
@@ -46,7 +47,41 @@ Config.BLOCKED_MIRROR_TTL = 180 * 24 * 3600 -- ~6 months
 
 Config.DEFAULT_DOWNLOAD_DIR_FALLBACK = G_reader_settings:readSetting("home_dir")
              or require("apps/filemanager/filemanagerutil").getDefaultDir()
-Config.USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
+-- What the plugin calls itself.
+--
+-- It used to always send the browser string below, and that string had claimed to be Chrome 96 --
+-- released November 2021 -- ever since #94. It was never worth much: probing the public domains
+-- endpoint across four mirrors with this string, a current Chrome, an honest one and no
+-- User-Agent at all returns the same status and the same bytes every time, and the mirrors that
+-- refuse do it with a 307 loop back to themselves, which is a cookie challenge rather than
+-- anything read off this header. The servers say so themselves -- they answer "Vary: Origin", not
+-- "Vary: User-Agent".
+--
+-- A stale browser claim is also the worse lie of the two if that ever changes: nothing else about
+-- the connection is Chrome -- no Accept-Language, no Sec-CH-UA, no Sec-Fetch-*, and a LuaSocket
+-- TLS handshake -- so the mismatch is a louder signal than saying plainly what this is.
+--
+-- The browser string stays as something the reader can switch back on, because the day a mirror
+-- does start refusing unfamiliar clients, that switch is the difference between a setting and a
+-- release.
+Config.BROWSER_USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
+
+-- Set once at startup from the version Ota reads out of _meta.lua, because config cannot ask Ota
+-- itself: ota requires config, and reading _meta.lua a second way here is how the two come to
+-- disagree. nil until then, and the agent says so rather than inventing a number.
+local plugin_version = nil
+
+function Config.setPluginVersion(version)
+    plugin_version = type(version) == "string" and version ~= "" and version or nil
+end
+
+function Config.getUserAgent()
+    if Config.getUseBrowserUserAgent() then
+        return Config.BROWSER_USER_AGENT
+    end
+    return string.format("zlibrary.koplugin/%s (KOReader; +https://github.com/ZlibraryKO/zlibrary.koplugin)",
+        plugin_version or "unknown")
+end
 Config.SEARCH_RESULTS_LIMIT = 30
 
 -- Timeout configuration for different operations: { block_timeout, total_timeout }.
@@ -969,6 +1004,16 @@ function Config.getSearchOrderName()
         end
     end
     return search_order_name
+end
+
+-- Off by default: the plugin says what it is. On, it sends BROWSER_USER_AGENT instead -- the
+-- escape hatch for a mirror that turns out to care, which no mirror measurably does today.
+function Config.getUseBrowserUserAgent()
+    return Config.getSetting(Config.SETTINGS_BROWSER_USER_AGENT_KEY, false)
+end
+
+function Config.setUseBrowserUserAgent(use_browser)
+    Config.saveSetting(Config.SETTINGS_BROWSER_USER_AGENT_KEY, use_browser)
 end
 
 function Config.getTurnOffWifiAfterDownload()

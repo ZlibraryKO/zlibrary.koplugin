@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 19:10+0000\n"
+"POT-Creation-Date: 2026-09-27 13:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,6 +109,12 @@ msgstr "Borrar caché de ejecución"
 
 msgid "Runtime cache cleared."
 msgstr "Caché de ejecución borrada."
+
+msgid "Identify as a web browser"
+msgstr "Identificarse como un navegador web"
+
+msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+msgstr "Envía el User-Agent de un navegador en lugar del propio del plugin. Solo vale la pena probarlo si un servidor rechaza el plugin en sí."
 
 msgid "Search"
 msgstr "Buscar"
@@ -314,14 +320,14 @@ msgstr "Estado desconocido"
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "La dirección (URL) del servidor de Z-library no está configurada. Por favor, configúrela en los ajustes del plugin de Z-library."
 
+msgid "Login failed"
+msgstr "Error de inicio de sesión"
+
 msgid "Login failed: Empty response from server"
 msgstr "Error de inicio de sesión: Respuesta vacía del servidor"
 
 msgid "Login failed: Invalid response format"
 msgstr "Error de inicio de sesión: Formato de respuesta no válido"
-
-msgid "Login failed"
-msgstr "Error de inicio de sesión"
 
 msgid "No response received from server - please try again"
 msgstr "No se recibió respuesta del servidor: inténtelo de nuevo"
@@ -491,6 +497,9 @@ msgstr "Perfil"
 msgid "No description available"
 msgstr "No hay descripción disponible"
 
+msgid "Selection copied to clipboard."
+msgstr "Selección copiada al portapapeles."
+
 msgid "pages"
 msgstr "páginas"
 
@@ -567,9 +576,6 @@ msgstr "No se pudo encontrar una URL base funcional."
 
 msgid "Queued"
 msgstr "En cola"
-
-msgid "Selection copied to clipboard."
-msgstr "Selección copiada al portapapeles."
 
 msgid "Checking"
 msgstr "Comprobando"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 19:10+0000\n"
+"POT-Creation-Date: 2026-09-27 13:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,6 +109,12 @@ msgstr "Wyczyść pamięć podręczną"
 
 msgid "Runtime cache cleared."
 msgstr "Pamięć podręczna wyczyszczona."
+
+msgid "Identify as a web browser"
+msgstr "Przedstawiaj się jako przeglądarka"
+
+msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+msgstr "Wysyła User-Agent przeglądarki zamiast własnego. Warto spróbować tylko wtedy, gdy serwer odrzuca samą wtyczkę."
 
 msgid "Search"
 msgstr "Szukaj"
@@ -314,14 +320,14 @@ msgstr "Nieznany status"
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "Adres serwera Z-library (URL) nie jest ustawiony. Skonfiguruj go w ustawieniach wtyczki Z-library."
 
+msgid "Login failed"
+msgstr "Logowanie nie powiodło się"
+
 msgid "Login failed: Empty response from server"
 msgstr "Logowanie nie powiodło się: Pusta odpowiedź serwera"
 
 msgid "Login failed: Invalid response format"
 msgstr "Logowanie nie powiodło się: Nieprawidłowy format odpowiedzi"
-
-msgid "Login failed"
-msgstr "Logowanie nie powiodło się"
 
 msgid "No response received from server - please try again"
 msgstr "Brak odpowiedzi serwera – spróbuj ponownie"
@@ -491,6 +497,9 @@ msgstr "Profil"
 msgid "No description available"
 msgstr "Brak opisu"
 
+msgid "Selection copied to clipboard."
+msgstr "Skopiowano zaznaczenie do schowka."
+
 msgid "pages"
 msgstr "stron"
 
@@ -567,9 +576,6 @@ msgstr "Nie udało się znaleźć działającego podstawowego URL."
 
 msgid "Queued"
 msgstr "W kolejce"
-
-msgid "Selection copied to clipboard."
-msgstr "Skopiowano zaznaczenie do schowka."
 
 msgid "Checking"
 msgstr "Sprawdzanie"

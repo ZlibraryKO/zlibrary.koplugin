@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 19:10+0000\n"
+"POT-Creation-Date: 2026-09-27 13:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,6 +109,12 @@ msgstr "مسح ذاكرة التخزين المؤقت"
 
 msgid "Runtime cache cleared."
 msgstr "تم مسح ذاكرة التخزين المؤقت."
+
+msgid "Identify as a web browser"
+msgstr "التعريف كمتصفح ويب"
+
+msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+msgstr "يرسل User-Agent الخاص بمتصفح بدلاً من الخاص بالإضافة. لا يستحق المحاولة إلا إذا كان الخادم يرفض الإضافة نفسها."
 
 msgid "Search"
 msgstr "بحث"
@@ -314,14 +320,14 @@ msgstr "حالة غير معروفة"
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "لم يتم تعيين عنوان خادم Z-library (URL). يرجى ضبطه في إعدادات مكون Z-library الإضافي."
 
+msgid "Login failed"
+msgstr "فشل تسجيل الدخول"
+
 msgid "Login failed: Empty response from server"
 msgstr "فشل تسجيل الدخول: استجابة فارغة من الخادم"
 
 msgid "Login failed: Invalid response format"
 msgstr "فشل تسجيل الدخول: صيغة استجابة غير صالحة"
-
-msgid "Login failed"
-msgstr "فشل تسجيل الدخول"
 
 msgid "No response received from server - please try again"
 msgstr "لم يتم تلقي استجابة من الخادم - يرجى إعادة المحاولة"
@@ -491,6 +497,9 @@ msgstr "الملف الشخصي"
 msgid "No description available"
 msgstr "لا يوجد وصف"
 
+msgid "Selection copied to clipboard."
+msgstr "تم نسخ التحديد إلى الحافظة."
+
 msgid "pages"
 msgstr "صفحات"
 
@@ -567,9 +576,6 @@ msgstr "فشل العثور على عنوان URL أساسي متاح."
 
 msgid "Queued"
 msgstr "في قائمة الانتظار"
-
-msgid "Selection copied to clipboard."
-msgstr "تم نسخ التحديد إلى الحافظة."
 
 msgid "Checking"
 msgstr "جارٍ التحقق"

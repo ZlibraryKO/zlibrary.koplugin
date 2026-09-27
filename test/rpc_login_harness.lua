@@ -27,7 +27,7 @@ local r = support.reporter()
 
 package.preload["zlibrary.config"] = function()
     return {
-        USER_AGENT = "UA",
+        getUserAgent = function() return "UA" end,
         getBaseUrl = function() return "https://z-lib.example" end,
         getLoginTimeout = function() return { 10, 15 } end,
         -- makeHttpRequest collaborators (redirect cache + bot-block memory); no-ops here.

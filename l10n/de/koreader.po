@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 19:10+0000\n"
+"POT-Creation-Date: 2026-09-27 13:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,6 +109,12 @@ msgstr "Laufzeit-Cache leeren"
 
 msgid "Runtime cache cleared."
 msgstr "Laufzeit-Cache geleert."
+
+msgid "Identify as a web browser"
+msgstr "Als Webbrowser ausgeben"
+
+msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+msgstr "Sendet den User-Agent eines Browsers statt des plugin-eigenen. Nur einen Versuch wert, wenn ein Server das Plugin selbst ablehnt."
 
 msgid "Search"
 msgstr "Suchen"
@@ -314,14 +320,14 @@ msgstr "Unbekannter Status"
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "Die Z-library-Serveradresse (URL) ist nicht festgelegt. Bitte konfigurieren Sie sie in den Einstellungen des Z-library-Plugins."
 
+msgid "Login failed"
+msgstr "Anmeldung fehlgeschlagen"
+
 msgid "Login failed: Empty response from server"
 msgstr "Anmeldung fehlgeschlagen: Leere Antwort vom Server"
 
 msgid "Login failed: Invalid response format"
 msgstr "Anmeldung fehlgeschlagen: Ungültiges Antwortformat"
-
-msgid "Login failed"
-msgstr "Anmeldung fehlgeschlagen"
 
 msgid "No response received from server - please try again"
 msgstr "Keine Antwort vom Server erhalten - bitte erneut versuchen"
@@ -491,6 +497,9 @@ msgstr "Profil"
 msgid "No description available"
 msgstr "Keine Beschreibung verfügbar"
 
+msgid "Selection copied to clipboard."
+msgstr "Auswahl in die Zwischenablage kopiert."
+
 msgid "pages"
 msgstr "Seiten"
 
@@ -567,9 +576,6 @@ msgstr "Keine funktionierende Basis-URL gefunden."
 
 msgid "Queued"
 msgstr "In Warteschlange"
-
-msgid "Selection copied to clipboard."
-msgstr "Auswahl in die Zwischenablage kopiert."
 
 msgid "Checking"
 msgstr "Wird geprüft"

@@ -139,7 +139,7 @@ end
 local function _authedHeaders(user_id, user_key)
     local headers = {
         ["Content-Type"] = "application/x-www-form-urlencoded",
-        ["User-Agent"] = Config.USER_AGENT,
+        ["User-Agent"] = Config.getUserAgent(),
     }
     headers["Cookie"] = _sessionCookie(user_id, user_key)
     return headers
@@ -827,7 +827,7 @@ local function _postCredentials(endpoint, email, password, is_redirect_retry)
         headers = {
             ["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8",
             ["Accept"] = "application/json, text/javascript, */*; q=0.01",
-            ["User-Agent"] = Config.USER_AGENT,
+            ["User-Agent"] = Config.getUserAgent(),
             ["X-Requested-With"] = "XMLHttpRequest",
             ["Origin"] = base,
             ["Referer"] = base and (base .. "/") or nil,
@@ -1033,7 +1033,7 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
     local body = table.concat(body_data_parts, "&")
 
     local headers = {
-        ["User-Agent"] = Config.USER_AGENT,
+        ["User-Agent"] = Config.getUserAgent(),
         ["Accept"] = "application/json, text/javascript, */*; q=0.01",
         ["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8",
         ["Content-Length"] = tostring(#body),
@@ -1149,7 +1149,7 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
         pcall(os.remove, temp_filepath)
     end
 
-    local headers = { ["User-Agent"] = Config.USER_AGENT }
+    local headers = { ["User-Agent"] = Config.getUserAgent() }
     headers["Cookie"] = _sessionCookie(user_id, user_key)
     if referer_url then
         headers["Referer"] = referer_url
@@ -1240,7 +1240,7 @@ function Api.downloadBookCover(download_url, target_filepath)
         pcall(os.remove, target_filepath)
     end
 
-    local headers = { ["User-Agent"] = Config.USER_AGENT }
+    local headers = { ["User-Agent"] = Config.getUserAgent() }
 
     local http_result = Api.makeHttpRequest{
         url = download_url,
@@ -1849,7 +1849,7 @@ function Api.healthCheck(baseUrl, skip_redir_cache, redir_url)
         url = url,
         method = "GET",
         headers = {
-            ["User-Agent"] = Config.USER_AGENT,
+            ["User-Agent"] = Config.getUserAgent(),
         },
         timeout = {5, 10},
         skipRedirectCache = skip_redir_cache or false,
@@ -1909,7 +1909,7 @@ function Api.getBookComments(user_id, user_key, book_id)
     end
 
     local headers = {
-        ["User-Agent"] = Config.USER_AGENT
+        ["User-Agent"] = Config.getUserAgent()
     }
 
     local http_result = Api.makeHttpRequest {
@@ -1997,7 +1997,7 @@ function Api.fetchDynamicDomains()
         url = url,
         method = "GET",
         headers = {
-            ["User-Agent"] = Config.USER_AGENT,
+            ["User-Agent"] = Config.getUserAgent(),
             ["Accept"] = "application/json"
         },
         timeout = {5, 10},

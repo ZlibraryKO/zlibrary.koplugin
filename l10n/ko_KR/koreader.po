@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 19:10+0000\n"
+"POT-Creation-Date: 2026-09-27 13:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,6 +109,12 @@ msgstr "런타임 캐시 지우기"
 
 msgid "Runtime cache cleared."
 msgstr "런타임 캐시가 삭제되었습니다."
+
+msgid "Identify as a web browser"
+msgstr "웹 브라우저로 식별"
+
+msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+msgstr "플러그인 자체의 User-Agent 대신 브라우저의 User-Agent를 보냅니다. 서버가 플러그인 자체를 거부할 때만 시도할 가치가 있습니다."
 
 msgid "Search"
 msgstr "검색"
@@ -314,14 +320,14 @@ msgstr "알 수 없는 상태"
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "Z-library 서버 주소(URL)가 설정되지 않았습니다. Z-library 플러그인 설정에서 지정하세요."
 
+msgid "Login failed"
+msgstr "로그인 실패"
+
 msgid "Login failed: Empty response from server"
 msgstr "로그인 실패: 서버 응답이 비어 있습니다"
 
 msgid "Login failed: Invalid response format"
 msgstr "로그인 실패: 잘못된 응답 형식"
-
-msgid "Login failed"
-msgstr "로그인 실패"
 
 msgid "No response received from server - please try again"
 msgstr "서버에서 응답이 없습니다 - 다시 시도하세요"
@@ -491,6 +497,9 @@ msgstr "프로필"
 msgid "No description available"
 msgstr "설명 없음"
 
+msgid "Selection copied to clipboard."
+msgstr "선택 항목이 클립보드에 복사되었습니다."
+
 msgid "pages"
 msgstr "페이지"
 
@@ -567,9 +576,6 @@ msgstr "작동하는 기본 URL을 찾지 못했습니다."
 
 msgid "Queued"
 msgstr "대기 중"
-
-msgid "Selection copied to clipboard."
-msgstr "선택 항목이 클립보드에 복사되었습니다."
 
 msgid "Checking"
 msgstr "확인 중"

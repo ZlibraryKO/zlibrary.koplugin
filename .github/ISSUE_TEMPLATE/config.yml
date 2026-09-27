@@ -1,0 +1,10 @@
+# The forms only help if they cannot be walked past: with blank issues enabled, "it crashes" in a
+# free-text box stays one click away and that is what most people click.
+blank_issues_enabled: false
+contact_links:
+  - name: Question, or not sure it is a bug
+    url: https://github.com/ZlibraryKO/zlibrary.koplugin/discussions
+    about: Setup help and anything that starts with "how do I" — ask here rather than opening an issue.
+  - name: Sign-in is refused, or a server will not answer
+    url: https://github.com/ZlibraryKO/zlibrary.koplugin/blob/main/README.md
+    about: Try a different server first (Settings → base URL, or Auto-discover). Mirrors block clients differently by country, and switching fixes most of these.

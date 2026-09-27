@@ -112,6 +112,27 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: tried-without-others
+    attributes:
+      label: Did you try it with the other plugins disabled?
+      description: >
+        **Tools (gear) → More tools → Plugin management** turns them off one at a time, then
+        restart KOReader. Leave Z-library itself on — do *not* use "Disable external plugins and
+        user-patches" in the Help menu, which switches off Z-library along with everything else.
+
+
+        This single answer decides where the bug lives, and it is the question that has cost the
+        most time so far: a crash reported here turned out to be another plugin's, several days
+        in. "I have not tried" is a fine answer — it just means we start there.
+      options:
+        - "Yes — it still happens with the others disabled"
+        - "Yes — it stops happening, so something else is involved"
+        - "No other plugins are installed"
+        - "No, I have not tried"
+    validations:
+      required: true
+
   - type: textarea
     id: log
     attributes:

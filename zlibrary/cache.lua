@@ -7,7 +7,84 @@ local LuaSettings = require("luasettings")
 local logger = require("logger")
 
 local DEF_TTL_CACHE_EXPIRY = 432000 -- 5 days
-local BASE_CACHE_DIR = DataStorage:getDataDir() .. "/cache/zlibrary"
+-- Hidden, and that is the whole point of the dot.
+--
+-- These directories used to be <data>/cache/zlibrary, which on Android is inside SHARED storage --
+-- DataStorage:getDataDir() is android.getExternalStoragePath() .. "/koreader" -- so Android's
+-- media scanner indexed every cover and they surfaced as a wall of book covers in the phone's
+-- file manager and gallery. Whatever the reader was searching for, it was on display to anyone
+-- who picked up their phone.
+--
+-- A directory whose name begins with a dot is skipped by MediaStore and hidden by default in
+-- essentially every Android file manager, which is why it is the fix rather than .nomedia alone:
+-- it does not depend on the particular file manager honouring a convention file. The .nomedia
+-- goes in as well, because it costs an empty file.
+local BASE_CACHE_DIR = DataStorage:getDataDir() .. "/cache/.zlibrary"
+local LEGACY_CACHE_DIR = DataStorage:getDataDir() .. "/cache/zlibrary"
+
+-- An empty .nomedia asks Android's media scanner to skip the directory. Belt to the hidden
+-- directory's braces; on every other platform it is an inert empty file.
+local _nomedia_checked = {}
+local function _ensureNoMedia(dir)
+    if _nomedia_checked[dir] then return end
+    _nomedia_checked[dir] = true
+    local marker = dir .. "/.nomedia"
+    if util.fileExists(marker) then return end
+    local fh = io.open(marker, "w")
+    if fh then fh:close() end
+end
+
+-- Remove a cache directory and its contents.
+--
+-- Two levels is the whole shape of this tree -- <base>/covers/<hash>.jpg,
+-- <base>/bookinfos/<hash>_info.lua, and the kv .lua files beside them -- and the depth limit is
+-- the rail on a function that deletes. symlinkattributes rather than attributes for the same
+-- reason: a cache directory that has become a link to somewhere else is not followed there, it is
+-- unlinked like any other entry.
+local function _removeCacheTree(dir, depth)
+    depth = depth or 0
+    if depth > 2 then return false end
+    if lfs.symlinkattributes(dir, "mode") ~= "directory" then return false end
+    local listed, iter, dir_obj = pcall(lfs.dir, dir)
+    if not listed then return false end
+    local ok = true
+    for entry in iter, dir_obj do
+        if entry ~= "." and entry ~= ".." then
+            local path = dir .. "/" .. entry
+            if lfs.symlinkattributes(path, "mode") == "directory" then
+                ok = _removeCacheTree(path, depth + 1) and ok
+            else
+                ok = (os.remove(path) and true or false) and ok
+            end
+        end
+    end
+    return (lfs.rmdir(dir) and true or false) and ok
+end
+
+-- Move an existing cache out of the visible directory, once.
+--
+-- Pointing new writes at the hidden path would fix nothing for anyone who already has the old
+-- one, and the files already sitting there are the entire complaint. So the old directory is
+-- emptied either way: by the rename when that works, and by deletion when it does not. Deleting
+-- costs re-downloading covers once -- they are a cache, capped at 20MB and replaceable -- and
+-- leaving them costs exactly what was reported.
+local function _migrateLegacyCacheDir()
+    if lfs.attributes(LEGACY_CACHE_DIR, "mode") ~= "directory" then return "none" end
+
+    if lfs.attributes(BASE_CACHE_DIR, "mode") == nil
+        and os.rename(LEGACY_CACHE_DIR, BASE_CACHE_DIR) then
+        logger.info("Zlibrary:Cache - moved the cache out of shared storage into " .. BASE_CACHE_DIR)
+        return "moved"
+    end
+
+    logger.warn("Zlibrary:Cache - could not move " .. LEGACY_CACHE_DIR
+        .. " to " .. BASE_CACHE_DIR .. "; removing it instead, it is a replaceable cache")
+    _removeCacheTree(LEGACY_CACHE_DIR, 0)
+    return "removed"
+end
+
+-- At load, before any cache instance can write to either path.
+_migrateLegacyCacheDir()
 
 -- book_hash arrives verbatim from the server's JSON and is pasted straight into a filesystem path,
 -- so it has to be treated as untrusted: a hash containing a slash or ".." would steer the cache's
@@ -21,13 +98,19 @@ local BaseCache = {}
 BaseCache.__index = BaseCache
 
 function BaseCache:_ensurePath(dir)
-    if util.directoryExists(dir) then return dir end
-    util.makePath(dir)
-    if util.directoryExists(dir) then return dir end
-    -- ffiUtil.execute execs the arguments directly with no shell on any platform (execl
-    -- off-Android, android.execute's argv table on Android), so they must go in separately;
-    -- one quoted command string would be looked up as a single executable name and never run.
-    ffiUtil.execute("mkdir", "-p", dir)
+    if not util.directoryExists(dir) then
+        util.makePath(dir)
+        if not util.directoryExists(dir) then
+            -- ffiUtil.execute execs the arguments directly with no shell on any platform (execl
+            -- off-Android, android.execute's argv table on Android), so they must go in separately;
+            -- one quoted command string would be looked up as a single executable name and never run.
+            ffiUtil.execute("mkdir", "-p", dir)
+        end
+        _ensureNoMedia(BASE_CACHE_DIR)
+    end
+    -- Checked on every ensure rather than only after creating the directory: an install that
+    -- predates this already has its directories, and would otherwise never get the marker.
+    _ensureNoMedia(dir)
     return dir
 end
 

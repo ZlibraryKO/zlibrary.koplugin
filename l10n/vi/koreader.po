@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-27 13:21+0200\n"
+"POT-Creation-Date: 2026-09-29 17:31+0200\n"
 "PO-Revision-Date: 2026-09-05 13:23+0700\n"
 "Last-Translator: \n"
 "Language-Team: vi <vi@li.org>\n"
@@ -110,6 +110,16 @@ msgstr "Xóa bộ nhớ đệm runtime"
 
 msgid "Runtime cache cleared."
 msgstr "Đã xóa bộ nhớ đệm runtime."
+
+msgid "Clear cover cache"
+msgstr "Xoá bộ nhớ đệm bìa sách"
+
+#, lua-format
+msgid "Cleared %s of cached covers."
+msgstr "Đã xoá %s bìa sách trong bộ nhớ đệm."
+
+msgid "No cached covers to remove."
+msgstr "Không có bìa sách nào trong bộ nhớ đệm."
 
 msgid "Identify as a web browser"
 msgstr "Nhận dạng như một trình duyệt web"

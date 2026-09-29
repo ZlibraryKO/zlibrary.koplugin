@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-27 13:21+0200\n"
+"POT-Creation-Date: 2026-09-29 17:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,6 +109,16 @@ msgstr "런타임 캐시 지우기"
 
 msgid "Runtime cache cleared."
 msgstr "런타임 캐시가 삭제되었습니다."
+
+msgid "Clear cover cache"
+msgstr "표지 캐시 지우기"
+
+#, lua-format
+msgid "Cleared %s of cached covers."
+msgstr "캐시된 표지 %s을(를) 삭제했습니다."
+
+msgid "No cached covers to remove."
+msgstr "삭제할 표지 캐시가 없습니다."
 
 msgid "Identify as a web browser"
 msgstr "웹 브라우저로 식별"

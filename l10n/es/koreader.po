@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-27 13:21+0200\n"
+"POT-Creation-Date: 2026-09-29 17:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,6 +109,16 @@ msgstr "Borrar caché de ejecución"
 
 msgid "Runtime cache cleared."
 msgstr "Caché de ejecución borrada."
+
+msgid "Clear cover cache"
+msgstr "Vaciar la caché de portadas"
+
+#, lua-format
+msgid "Cleared %s of cached covers."
+msgstr "Se han borrado %s de portadas en caché."
+
+msgid "No cached covers to remove."
+msgstr "No hay portadas en caché que borrar."
 
 msgid "Identify as a web browser"
 msgstr "Identificarse como un navegador web"

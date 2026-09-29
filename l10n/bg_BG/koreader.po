@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-27 13:21+0200\n"
+"POT-Creation-Date: 2026-09-29 17:31+0200\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -115,6 +115,16 @@ msgstr "Изчистване на кеша"
 
 msgid "Runtime cache cleared."
 msgstr "Кешът е изчистен."
+
+msgid "Clear cover cache"
+msgstr "Изчистване на кеша с корици"
+
+#, lua-format
+msgid "Cleared %s of cached covers."
+msgstr "Изчистени са %s кеширани корици."
+
+msgid "No cached covers to remove."
+msgstr "Няма кеширани корици за изчистване."
 
 msgid "Identify as a web browser"
 msgstr "Представяне като уеб браузър"

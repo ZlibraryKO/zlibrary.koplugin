@@ -34,6 +34,16 @@ local function _ensureNoMedia(dir)
     if fh then fh:close() end
 end
 
+-- Which entries in a cache directory are cache.
+--
+-- .nomedia is not: it is what keeps the directory out of Android's media scanner. Both the LRU
+-- sweep and the manual clear walk the whole directory and delete what they find, and either would
+-- have quietly removed the marker and undone the hiding -- the LRU first, since the marker is
+-- written once and then never touched, so it ages to the front of the queue.
+local function _isDisposableEntry(name)
+    return name ~= "." and name ~= ".." and name ~= ".nomedia"
+end
+
 -- Remove a cache directory and its contents.
 --
 -- Two levels is the whole shape of this tree -- <base>/covers/<hash>.jpg,
@@ -141,7 +151,7 @@ function BaseCache:gc_clean()
     local ok, err = pcall(function()
         if not util.directoryExists(dir) then return end
         for file in lfs.dir(dir) do
-            if file ~= "." and file ~= ".." then
+            if _isDisposableEntry(file) then
                 local filepath = dir .. "/" .. file
                 local attr = lfs.attributes(filepath)
                 if attr and attr.mode == "file" then
@@ -358,6 +368,39 @@ end
 
 function CoverCache:clear(book_hash) 
     return self:remove(book_hash)
+end
+
+-- Every cached cover, which CoverCache:clear cannot do: it takes a book hash, and a nil one is
+-- rejected by _isValidBookHash rather than treated as "all". So until now there was no way to get
+-- rid of these from inside the plugin at all -- which is what the reader who found their whole
+-- search history laid out in their phone's file manager was really asking for.
+--
+-- Returns how many files went and how many bytes they were, so the confirmation can say something
+-- true rather than just "done".
+function CoverCache:clearAll()
+    local dir = self._target_dir
+    local removed, bytes = 0, 0
+    if not dir or not util.directoryExists(dir) then return removed, bytes end
+
+    local ok, err = pcall(function()
+        for file in lfs.dir(dir) do
+            if _isDisposableEntry(file) then
+                local filepath = dir .. "/" .. file
+                local attr = lfs.attributes(filepath)
+                if attr and attr.mode == "file" then
+                    local size = attr.size or 0
+                    if os.remove(filepath) then
+                        removed = removed + 1
+                        bytes = bytes + size
+                    end
+                end
+            end
+        end
+    end)
+    if not ok then logger.warn("Zlibrary:CoverCache.clearAll - " .. tostring(err)) end
+
+    logger.info(string.format("Zlibrary:CoverCache.clearAll - removed %d file(s), %d byte(s)", removed, bytes))
+    return removed, bytes
 end
 
 local M = {}

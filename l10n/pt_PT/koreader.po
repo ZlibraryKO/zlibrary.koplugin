@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-27 13:21+0200\n"
+"POT-Creation-Date: 2026-09-29 17:31+0200\n"
 "PO-Revision-Date: 2026-07-22 00:39+0100\n"
 "Last-Translator: CookieCaptainD\n"
 "Language-Team: pt_PT\n"
@@ -115,6 +115,16 @@ msgstr "Limpar cache de execução"
 
 msgid "Runtime cache cleared."
 msgstr "Cache de execução limpa."
+
+msgid "Clear cover cache"
+msgstr "Limpar cache de capas"
+
+#, lua-format
+msgid "Cleared %s of cached covers."
+msgstr "%s de capas em cache removidos."
+
+msgid "No cached covers to remove."
+msgstr "Nenhuma capa em cache para remover."
 
 msgid "Identify as a web browser"
 msgstr "Identificar-se como um navegador web"

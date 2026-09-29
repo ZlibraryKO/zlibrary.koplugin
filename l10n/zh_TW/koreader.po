@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-27 13:21+0200\n"
+"POT-Creation-Date: 2026-09-29 17:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese <zh@li.org>\n"
@@ -109,6 +109,16 @@ msgstr "清除運行時緩存"
 
 msgid "Runtime cache cleared."
 msgstr "運行時緩存已清除。"
+
+msgid "Clear cover cache"
+msgstr "清除封面快取"
+
+#, lua-format
+msgid "Cleared %s of cached covers."
+msgstr "已清除 %s 的封面快取。"
+
+msgid "No cached covers to remove."
+msgstr "沒有可清除的封面快取。"
 
 msgid "Identify as a web browser"
 msgstr "識別為網頁瀏覽器"

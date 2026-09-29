@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-27 13:21+0200\n"
+"POT-Creation-Date: 2026-09-29 17:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,6 +109,16 @@ msgstr "ランタイムキャッシュをクリア"
 
 msgid "Runtime cache cleared."
 msgstr "ランタイムキャッシュがクリアされました。"
+
+msgid "Clear cover cache"
+msgstr "表紙キャッシュを消去"
+
+#, lua-format
+msgid "Cleared %s of cached covers."
+msgstr "キャッシュされた表紙 %s 分を削除しました。"
+
+msgid "No cached covers to remove."
+msgstr "削除する表紙キャッシュはありません。"
 
 msgid "Identify as a web browser"
 msgstr "ウェブブラウザとして名乗る"

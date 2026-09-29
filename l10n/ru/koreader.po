@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-27 13:21+0200\n"
+"POT-Creation-Date: 2026-09-29 17:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -109,6 +109,16 @@ msgstr "Очистить кэш"
 
 msgid "Runtime cache cleared."
 msgstr "Кэш очищен."
+
+msgid "Clear cover cache"
+msgstr "Очистить кэш обложек"
+
+#, lua-format
+msgid "Cleared %s of cached covers."
+msgstr "Удалено %s кэшированных обложек."
+
+msgid "No cached covers to remove."
+msgstr "Кэшированных обложек нет."
 
 msgid "Identify as a web browser"
 msgstr "Представляться веб-браузером"

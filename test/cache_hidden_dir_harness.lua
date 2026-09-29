@@ -23,7 +23,8 @@ local HIDDEN = "/data/cache/.zlibrary"
 -- directory object, and the iterator here REFUSES a nil state, so a caller that drops the second
 -- return value fails loudly instead of silently listing nothing.
 local function newFs(nodes)
-    local fs = { nodes = {}, links = {}, removed = {}, rmdirs = {}, written = {}, rename = nil }
+    local fs = { nodes = {}, links = {}, sizes = {}, times = {},
+                 removed = {}, rmdirs = {}, written = {}, rename = nil }
     for path, kind in pairs(nodes or {}) do fs.nodes[path] = kind end
 
     local function children(dir)
@@ -40,8 +41,11 @@ local function newFs(nodes)
 
     fs.lfs = {
         attributes = function(path, what)
-            assert(what == "mode", "harness only models the mode attribute")
-            return fs.nodes[path]
+            if fs.nodes[path] == nil then return nil end
+            if what == "mode" then return fs.nodes[path] end
+            assert(what == nil, "harness models the mode attribute and the whole table")
+            return { mode = fs.nodes[path], size = fs.sizes[path] or 0,
+                     access = fs.times[path] or 0, modification = fs.times[path] or 0 }
         end,
         symlinkattributes = function(path, what)
             assert(what == "mode", "harness only models the mode attribute")
@@ -124,6 +128,7 @@ end
 -- ---------------------------------------------------------------- the path itself
 local function slurp(p) local fh = assert(io.open(p)); local s = fh:read("*a"); fh:close(); return s end
 local src = slurp(SRC)
+local src_of_gc_clean = support.extract_block(SRC, "(\nfunction BaseCache:gc_clean%(%).-\n)end\n")
 r.check("the cache directory is hidden",
         src:find('BASE_CACHE_DIR = DataStorage:getDataDir%(%) %.%. "/cache/%.zlibrary"') ~= nil,
         "BASE_CACHE_DIR is not the dot directory")
@@ -217,5 +222,65 @@ setfenv(ensurePath, {
 ensurePath()({}, "/data/cache/.zlibrary/covers")
 r.check("an already-created directory still gets its marker checked",
         ensured[1] == "/data/cache/.zlibrary/covers", table.concat(ensured, ", "))
+
+-- ---------------------------------------------------------------- clearing every cover
+-- CoverCache:clear takes a book hash and rejects a nil one, so until clearAll there was no way to
+-- get rid of these from inside the plugin -- which is what the report was actually asking for.
+local COVERS = "/data/cache/.zlibrary/covers"
+local function coversFs()
+    local f = newFs({
+        [COVERS] = "directory",
+        [COVERS .. "/242ff1.jpg"] = "file",
+        [COVERS .. "/4ab742.jpg"] = "file",
+        [COVERS .. "/acc3f5.jpg.downloading"] = "file",
+        [COVERS .. "/.nomedia"] = "file",
+    })
+    f.sizes[COVERS .. "/242ff1.jpg"] = 35750
+    f.sizes[COVERS .. "/4ab742.jpg"] = 27120
+    f.sizes[COVERS .. "/acc3f5.jpg.downloading"] = 130
+    return f
+end
+
+local function clearAllOn(fs)
+    local isDisposable = support.extract_function(SRC, "_isDisposableEntry", {})
+    local body = support.extract_block(SRC, "(\nfunction CoverCache:clearAll%(%).-\n)end\n")
+    local chunk = assert(loadstring(body .. "end\nreturn CoverCache.clearAll"))
+    setfenv(chunk, {
+        CoverCache = {}, util = { directoryExists = function(d) return fs.nodes[d] == "directory" end },
+        lfs = fs.lfs, os = fs.os, pcall = pcall, string = string, tostring = tostring,
+        logger = { info = function() end, warn = function() end },
+        _isDisposableEntry = isDisposable,
+    })
+    return chunk()
+end
+
+fs = coversFs()
+local removed, bytes = clearAllOn(fs)({ _target_dir = COVERS })
+r.check("every cached cover is removed", removed == 3, removed .. " removed")
+r.check("and the bytes freed are reported", bytes == 35750 + 27120 + 130, bytes .. " bytes")
+r.check("half-finished downloads go too",
+        fs.nodes[COVERS .. "/acc3f5.jpg.downloading"] == nil, "a .downloading file survived")
+
+-- The one that matters: emptying the folder must not take the marker with it, or clearing the
+-- cache would silently undo the hiding that the whole change is for.
+r.check("the .nomedia marker survives a clear",
+        fs.nodes[COVERS .. "/.nomedia"] == "file", "the marker was deleted")
+
+fs = newFs({})
+removed, bytes = clearAllOn(fs)({ _target_dir = COVERS })
+r.check("clearing a cache that was never created is not an error",
+        removed == 0 and bytes == 0, removed .. "/" .. bytes)
+
+-- ---------------------------------------------------------------- the LRU must skip it too
+-- gc_clean walks the same directory and deletes by age. The marker is written once and never
+-- touched again, so it ages to the front of the queue and would be the first thing trimmed.
+local isDisposable = support.extract_function(SRC, "_isDisposableEntry", {})
+r.check(".nomedia is not a cache entry", isDisposable(".nomedia") == false, "it is treated as one")
+r.check("but covers are", isDisposable("242ff1.jpg") == true, "a cover was skipped")
+r.check("and the directory entries are not", isDisposable(".") == false and isDisposable("..") == false,
+        ". or .. treated as a file")
+r.check("the LRU sweep uses the same rule, so it cannot trim the marker",
+        src_of_gc_clean:find("_isDisposableEntry", 1, true) ~= nil,
+        "gc_clean still walks every entry itself")
 
 r.finish()

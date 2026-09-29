@@ -293,6 +293,26 @@ function Zlibrary:addToMainMenu(menu_items)
                                         end,
                                     },
                                     {
+                                        -- What the "delete the covers" report actually wanted.
+                                        -- Deliberately a button and not the requested delete-on-
+                                        -- exit: the covers are a cache, re-fetching them costs
+                                        -- requests at a server that rate-limits, and on Android
+                                        -- "on exit" is not a thing that reliably happens -- the
+                                        -- OS can kill the app outright.
+                                        text = T("Clear cover cache"),
+                                        keep_menu_open = true,
+                                        callback = function()
+                                            local _, bytes = Cache:new{ type = "cover" }:clearAll()
+                                            if bytes > 0 then
+                                                Ui.showInfoMessage(string.format(
+                                                    T("Cleared %s of cached covers."),
+                                                    util.getFriendlySize(bytes)))
+                                            else
+                                                Ui.showInfoMessage(T("No cached covers to remove."))
+                                            end
+                                        end,
+                                    },
+                                    {
                                         -- The plugin names itself to the server by default. No
                                         -- mirror measurably cares -- they answer the same to an
                                         -- honest agent, a browser one and none at all -- but if

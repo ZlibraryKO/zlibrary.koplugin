@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 19:10+0000\n"
+"POT-Creation-Date: 2026-09-29 17:31+0200\n"
 "PO-Revision-Date: 2026-07-22 00:39+0100\n"
 "Last-Translator: CookieCaptainD\n"
 "Language-Team: pt_PT\n"
@@ -115,6 +115,22 @@ msgstr "Limpar cache de execução"
 
 msgid "Runtime cache cleared."
 msgstr "Cache de execução limpa."
+
+msgid "Clear cover cache"
+msgstr "Limpar cache de capas"
+
+#, lua-format
+msgid "Cleared %s of cached covers."
+msgstr "%s de capas em cache removidos."
+
+msgid "No cached covers to remove."
+msgstr "Nenhuma capa em cache para remover."
+
+msgid "Identify as a web browser"
+msgstr "Identificar-se como um navegador web"
+
+msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+msgstr "Envia o User-Agent de um navegador em vez do próprio do plugin. Só vale a pena tentar se um servidor recusar o plugin em si."
 
 msgid "Search"
 msgstr "Pesquisar"
@@ -320,14 +336,14 @@ msgstr "Estado desconhecido"
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "O endereço do servidor Z-library (URL) não está definido. Por favor, configure-o nas definições do plugin Z-library."
 
+msgid "Login failed"
+msgstr "Falha ao iniciar sessão"
+
 msgid "Login failed: Empty response from server"
 msgstr "Falha ao iniciar sessão: Resposta ausente do servidor"
 
 msgid "Login failed: Invalid response format"
 msgstr "Falha ao iniciar sessão: Formato de resposta inválido"
-
-msgid "Login failed"
-msgstr "Falha ao iniciar sessão"
 
 msgid "No response received from server - please try again"
 msgstr "Nenhuma resposta recebida do servidor - por favor, tente novamente"
@@ -497,6 +513,9 @@ msgstr "Perfil"
 msgid "No description available"
 msgstr "Nenhuma descrição disponível"
 
+msgid "Selection copied to clipboard."
+msgstr "Seleção copiada para a área de transferência."
+
 msgid "pages"
 msgstr "páginas"
 
@@ -573,9 +592,6 @@ msgstr "Falha ao encontrar um URL base funcional."
 
 msgid "Queued"
 msgstr "Em fila de espera"
-
-msgid "Selection copied to clipboard."
-msgstr "Seleção copiada para a área de transferência."
 
 msgid "Checking"
 msgstr "A verificar"

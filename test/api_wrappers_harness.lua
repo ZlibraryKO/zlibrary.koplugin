@@ -55,7 +55,7 @@ end
 -- recognisable pair, so a wrapper reaching for the wrong one is visible rather than merely wrong.
 local asked
 package.preload["zlibrary.config"] = function()
-    return setmetatable({ USER_AGENT = "test-agent" }, {
+    return setmetatable({ getUserAgent = function() return "test-agent" end }, {
         __index = function(_, key)
             return function()
                 asked[#asked + 1] = key

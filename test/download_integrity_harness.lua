@@ -30,7 +30,7 @@ local env = {
     T = function(s) return s end,
     logger = { info = function() end, warn = function() end, err = function() end, dbg = function() end },
     Config = {
-        USER_AGENT = "UA",
+        getUserAgent = function() return "UA" end,
         getDownloadTimeout = function() return { 15, -1 } end,
     },
     socketutil = { file_sink = function(f) return f end },

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 19:10+0000\n"
+"POT-Creation-Date: 2026-09-29 17:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,6 +109,22 @@ msgstr "ランタイムキャッシュをクリア"
 
 msgid "Runtime cache cleared."
 msgstr "ランタイムキャッシュがクリアされました。"
+
+msgid "Clear cover cache"
+msgstr "表紙キャッシュを消去"
+
+#, lua-format
+msgid "Cleared %s of cached covers."
+msgstr "キャッシュされた表紙 %s 分を削除しました。"
+
+msgid "No cached covers to remove."
+msgstr "削除する表紙キャッシュはありません。"
+
+msgid "Identify as a web browser"
+msgstr "ウェブブラウザとして名乗る"
+
+msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+msgstr "プラグイン自身のものではなく、ブラウザの User-Agent を送信します。サーバーがプラグイン自体を拒否する場合にのみ試す価値があります。"
 
 msgid "Search"
 msgstr "検索"
@@ -314,14 +330,14 @@ msgstr "不明なステータス"
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "Z-libraryサーバーのアドレス（URL）が設定されていません。Z-libraryプラグインの設定で指定してください。"
 
+msgid "Login failed"
+msgstr "ログインに失敗しました"
+
 msgid "Login failed: Empty response from server"
 msgstr "ログインに失敗しました：サーバーからの応答が空です"
 
 msgid "Login failed: Invalid response format"
 msgstr "ログインに失敗しました：応答の形式が不正です"
-
-msgid "Login failed"
-msgstr "ログインに失敗しました"
 
 msgid "No response received from server - please try again"
 msgstr "サーバーから応答がありません - 再試行してください"
@@ -491,6 +507,9 @@ msgstr "プロフィール"
 msgid "No description available"
 msgstr "説明はありません"
 
+msgid "Selection copied to clipboard."
+msgstr "選択範囲をクリップボードにコピーしました。"
+
 msgid "pages"
 msgstr "ページ"
 
@@ -567,9 +586,6 @@ msgstr "動作するベースURLが見つかりませんでした。"
 
 msgid "Queued"
 msgstr "待機中"
-
-msgid "Selection copied to clipboard."
-msgstr "選択範囲をクリップボードにコピーしました。"
 
 msgid "Checking"
 msgstr "確認中"

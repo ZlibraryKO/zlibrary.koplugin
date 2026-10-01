@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 19:10+0000\n"
+"POT-Creation-Date: 2026-09-29 17:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,6 +109,22 @@ msgstr "Runtime-cache wissen"
 
 msgid "Runtime cache cleared."
 msgstr "Runtime-cache gewist."
+
+msgid "Clear cover cache"
+msgstr "Omslagcache wissen"
+
+#, lua-format
+msgid "Cleared %s of cached covers."
+msgstr "%s aan opgeslagen omslagen gewist."
+
+msgid "No cached covers to remove."
+msgstr "Geen opgeslagen omslagen om te wissen."
+
+msgid "Identify as a web browser"
+msgstr "Voordoen als webbrowser"
+
+msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+msgstr "Stuurt de User-Agent van een browser in plaats van die van de plug-in. Alleen het proberen waard als een server de plug-in zelf weigert."
 
 msgid "Search"
 msgstr "Zoeken"
@@ -314,14 +330,14 @@ msgstr "Onbekende status"
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "Het Z-library serveradres (URL) is niet ingesteld. Stel dit in bij de Z-library plugin-instellingen."
 
+msgid "Login failed"
+msgstr "Inloggen mislukt"
+
 msgid "Login failed: Empty response from server"
 msgstr "Inloggen mislukt: leeg antwoord van server"
 
 msgid "Login failed: Invalid response format"
 msgstr "Inloggen mislukt: ongeldige antwoordindeling"
-
-msgid "Login failed"
-msgstr "Inloggen mislukt"
 
 msgid "No response received from server - please try again"
 msgstr "Geen antwoord van server ontvangen - probeer het opnieuw"
@@ -491,6 +507,9 @@ msgstr "Profiel"
 msgid "No description available"
 msgstr "Geen beschrijving beschikbaar"
 
+msgid "Selection copied to clipboard."
+msgstr "Selectie gekopieerd naar klembord."
+
 msgid "pages"
 msgstr "pagina's"
 
@@ -567,9 +586,6 @@ msgstr "Kan geen werkende basis-URL vinden."
 
 msgid "Queued"
 msgstr "In wachtrij"
-
-msgid "Selection copied to clipboard."
-msgstr "Selectie gekopieerd naar klembord."
 
 msgid "Checking"
 msgstr "Controleren"

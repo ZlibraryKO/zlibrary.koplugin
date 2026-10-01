@@ -1,0 +1,154 @@
+name: Bug report
+description: Something in the plugin is broken, crashes, or does not do what it says
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Two things answer most reports on their own: **which version you are on** and **the lines
+        from crash.log**. Without them almost every report turns into several days of questions
+        before anyone can even guess, so the fields below ask for them up front.
+
+        Everything marked with a red star is needed. If you genuinely cannot get one of them, put
+        the reason in the box instead of leaving it empty.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Before reporting
+      options:
+        - label: I am on the latest version of the plugin (Menu → Z-library → Settings → Check for updates)
+          required: true
+        - label: I searched the existing issues, including closed ones
+          required: true
+
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Plugin version
+      description: "**Menu → Z-library → About** shows it."
+      placeholder: "1.0.51"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: device-type
+    attributes:
+      label: Device
+      options:
+        - Kindle
+        - Kobo
+        - PocketBook
+        - Android
+        - Desktop / emulator
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: device-model
+    attributes:
+      label: Which model
+      placeholder: "Kobo Libra 2, Kindle Paperwhite 5, ..."
+    validations:
+      required: true
+
+  - type: input
+    id: koreader-version
+    attributes:
+      label: KOReader version
+      description: "KOReader's own menu: **Help → Version**."
+      placeholder: "v2026.07"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what the plugin did instead.
+      placeholder: |
+        1. Opened Z-library → Most popular
+        2. Tapped a book
+        3. Expected the details to open; instead KOReader closed itself
+    validations:
+      required: true
+
+  - type: input
+    id: message
+    attributes:
+      label: The exact message on screen
+      description: >
+        Copy the wording exactly, or write "no message". The precise text is often the whole
+        diagnosis — "Incorrect email or password" and "This server is refusing automated access"
+        mean completely different things and need opposite fixes.
+      placeholder: "Incorrect email or password"
+    validations:
+      required: true
+
+  - type: input
+    id: server
+    attributes:
+      label: Which Z-library server
+      description: >
+        The base URL under **Menu → Z-library → Settings**. Mirrors differ: some are blocked to
+        everything but a web browser, and which ones varies by country, so a report without this
+        cannot be reproduced.
+      placeholder: "https://z-lib.gd"
+    validations:
+      required: true
+
+  - type: textarea
+    id: other-plugins
+    attributes:
+      label: Other KOReader plugins you have installed
+      description: >
+        Please list them, or write "none". This is not busywork: plugins that change how KOReader
+        looks replace parts of KOReader that this plugin also uses, and at least one crash blamed
+        on Z-library turned out to be appearance.koplugin. Knowing what else is installed is
+        often faster than reading the log.
+      placeholder: "appearance.koplugin, coverbrowser, none of the others"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: tried-without-others
+    attributes:
+      label: Did you try it with the other plugins disabled?
+      description: >
+        **Tools (gear) → More tools → Plugin management** turns them off one at a time, then
+        restart KOReader. Leave Z-library itself on — do *not* use "Disable external plugins and
+        user-patches" in the Help menu, which switches off Z-library along with everything else.
+
+
+        This single answer decides where the bug lives, and it is the question that has cost the
+        most time so far: a crash reported here turned out to be another plugin's, several days
+        in. "I have not tried" is a fine answer — it just means we start there.
+      options:
+        - "Yes — it still happens with the others disabled"
+        - "Yes — it stops happening, so something else is involved"
+        - "No other plugins are installed"
+        - "No, I have not tried"
+    validations:
+      required: true
+
+  - type: textarea
+    id: log
+    attributes:
+      label: crash.log
+      description: |
+        The log is at `koreader/crash.log` on your device (on Kindle: `/mnt/us/koreader/crash.log`).
+
+        1. Turn on **Tools (gear) → More tools → Developer options → Enable debug logging**
+        2. Do the thing that goes wrong again
+        3. Paste the lines around it — everything mentioning `Zlibrary:` is the useful part
+
+        **It contains no password.** Please do not paste your email, your password or the
+        `userKey` from `zlibrary_credentials.lua`: none of them help, and an issue is public.
+      render: text
+      placeholder: |
+        09/26/26-17:55:45 INFO  Zlibrary:Api.login - START
+        09/26/26-17:55:45 INFO  Zlibrary:Api.login - END (Success) - UserID: 12345678 [server=https://z-lib.gd/rpc.php status=200]
+    validations:
+      required: true

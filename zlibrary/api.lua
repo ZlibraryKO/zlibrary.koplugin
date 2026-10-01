@@ -139,7 +139,7 @@ end
 local function _authedHeaders(user_id, user_key)
     local headers = {
         ["Content-Type"] = "application/x-www-form-urlencoded",
-        ["User-Agent"] = Config.USER_AGENT,
+        ["User-Agent"] = Config.getUserAgent(),
     }
     headers["Cookie"] = _sessionCookie(user_id, user_key)
     return headers
@@ -728,56 +728,106 @@ end
 -- switched which of them works at least twice -- and readers whose credentials work in a browser
 -- keep being told their password is wrong, so a sign-in one endpoint refuses is put to the other
 -- before the reader is told anything.
-local LOGIN_ENDPOINTS = {
+--
+-- Data, not code. Every entry here is a string, a number or a list of them: no functions, nothing
+-- that has to be compiled. That is the point of the shape. Twice this year a Z-Library sign-in
+-- change has cost a release -- and a release only reaches the readers who take it -- while the
+-- mirror list, which changes far more often, is fixed by committing assets/domains.json and
+-- reaches everyone within the hour. This table is the next thing that should be fixable that way,
+-- and it cannot be until it is expressible as JSON. Nothing fetches it yet; this is only the shape.
+--
+-- Placeholders in a body value are substituted and then URL-encoded, so a value may hold a URL:
+--   {email}     the address as typed          {password}  the password as typed
+--   {base}      the current base URL, no trailing slash
+-- The fields are a list of pairs rather than a table because the order is part of the request --
+-- it matches what the website sends -- and JSON objects have no order to rely on.
+Api.LOGIN_ENDPOINTS = {
     {
         label = "rpc.php",
-        get_url = function() return Config.getLoginUrl() end,
+        path = "/rpc.php",
         -- rpc.php's login action, exactly as the website sends it: the extra fields (action,
         -- site_mode, gg_json_mode, isModal, redirectUrl) are what make it return the session as
         -- JSON rather than an HTML redirect, and no CSRF token or prior cookie is needed
         -- (verified against the live server).
-        build_body = function(email, password)
-            local base = Config.getBaseUrl()
-            return table.concat({
-                "isModal=true",
-                "email=" .. util.urlEncode(email or ""),
-                "password=" .. util.urlEncode(password or ""),
-                "site_mode=books",
-                "action=login",
-                "gg_json_mode=1",
-                "redirectUrl=" .. util.urlEncode((base or "") .. "/"),
-            }, "&")
-        end,
+        body = {
+            { "isModal", "true" },
+            { "email", "{email}" },
+            { "password", "{password}" },
+            { "site_mode", "books" },
+            { "action", "login" },
+            { "gg_json_mode", "1" },
+            { "redirectUrl", "{base}/" },
+        },
     },
     {
         label = "/eapi/user/login",
-        get_url = function() return Config.getLegacyLoginUrl() end,
+        path = "/eapi/user/login",
         -- The bare pair the old endpoint has always taken. It answers the same JSON envelope as
         -- the rest of /eapi ({success, user:{id, remix_userkey}}), which the reader below already
         -- understands.
-        build_body = function(email, password)
-            return table.concat({
-                "email=" .. util.urlEncode(email or ""),
-                "password=" .. util.urlEncode(password or ""),
-            }, "&")
-        end,
+        body = {
+            { "email", "{email}" },
+            { "password", "{password}" },
+        },
     },
 }
 
+-- nil when there is no base URL to resolve against, or when the entry names no path.
+local function _loginEndpointUrl(endpoint)
+    local base = Config.getBaseUrl()
+    if not base then return nil end
+    if type(endpoint.path) ~= "string" or endpoint.path == "" then return nil end
+    return base .. endpoint.path
+end
+
+-- One endpoint's body, expanded and form-encoded. nil when the entry cannot be rendered.
+--
+-- An unknown placeholder is a refusal, not an empty string. The failure it prevents is the quiet
+-- one: a body template saying {passwd} would otherwise post an empty password, the server would
+-- answer "Incorrect email or password", and the reader would be told their credentials are wrong
+-- about a request that never carried them.
+local function _renderLoginBody(endpoint, email, password)
+    if type(endpoint.body) ~= "table" or #endpoint.body == 0 then return nil end
+    local values = {
+        email = email or "",
+        password = password or "",
+        base = Config.getBaseUrl() or "",
+    }
+    local parts = {}
+    for _, field in ipairs(endpoint.body) do
+        local name, template = field[1], field[2]
+        if type(name) ~= "string" or name == "" or type(template) ~= "string" then return nil end
+        local unknown = false
+        -- Substituted first and encoded after: redirectUrl is "{base}/", and what has to be
+        -- encoded is the finished URL, not the placeholder. Encoding the literals too is a no-op
+        -- ("books", "login", "1" survive unchanged), so one rule covers every field.
+        local value = template:gsub("{(%w+)}", function(key)
+            if values[key] == nil then unknown = true return "" end
+            return values[key]
+        end)
+        if unknown then return nil end
+        parts[#parts + 1] = name .. "=" .. util.urlEncode(value)
+    end
+    return table.concat(parts, "&")
+end
+
 -- One sign-in request. Returns makeHttpRequest's raw result; a redirect that moves the mirror
--- re-enters here, and what that returns is handed back to the first caller. get_url is read again
--- on the retry rather than captured, so the retry follows the move.
+-- re-enters here, and what that returns is handed back to the first caller. The URL and the body
+-- are both rebuilt on the retry rather than captured, so the retry follows the move.
 local function _postCredentials(endpoint, email, password, is_redirect_retry)
     local base = Config.getBaseUrl()
-    local body = endpoint.build_body(email, password)
+    -- Rendered here rather than passed in, so a redirect that moves the mirror rebuilds the body
+    -- against the new base: redirectUrl is "{base}/", and a body carrying the old host would ask
+    -- the new mirror to redirect back to the one we just left.
+    local body = _renderLoginBody(endpoint, email, password)
 
     return Api.makeHttpRequest{
-        url = endpoint.get_url(),
+        url = _loginEndpointUrl(endpoint),
         method = "POST",
         headers = {
             ["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8",
             ["Accept"] = "application/json, text/javascript, */*; q=0.01",
-            ["User-Agent"] = Config.USER_AGENT,
+            ["User-Agent"] = Config.getUserAgent(),
             ["X-Requested-With"] = "XMLHttpRequest",
             ["Origin"] = base,
             ["Referer"] = base and (base .. "/") or nil,
@@ -806,11 +856,24 @@ end
 local function _attemptLogin(endpoint, email, password)
     local result = { user_id = nil, user_key = nil, error = nil }
 
-    local login_url = endpoint.get_url()
+    local login_url = _loginEndpointUrl(endpoint)
     if not login_url then
         result.error = T("The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings.")
         logger.err(string.format("Zlibrary:Api.login - END (Configuration error) - Error: %s", result.error))
         return result, "no_answer"
+    end
+
+    -- The entry is broken rather than the server: a field naming a placeholder that does not
+    -- exist, or no fields at all. Refuse it before it reaches the network, because the request it
+    -- would send is one with an empty password in it, and the server's answer to that is
+    -- indistinguishable from the reader having typed the wrong one.
+    -- Rendered once here to check it can be, and again in _postCredentials to send -- which is
+    -- also where a redirect re-renders it against the mirror it moved to.
+    if not _renderLoginBody(endpoint, email, password) then
+        result.error = T("Login failed")
+        logger.err(string.format("Zlibrary:Api.login - END (Unusable endpoint) - %s has no usable request body",
+            tostring(endpoint.label)))
+        return result, "unusable"
     end
 
     local http_result = _postCredentials(endpoint, email, password) or {}
@@ -895,9 +958,11 @@ end
 function Api.login(email, password)
     logger.info(string.format("Zlibrary:Api.login - START"))
 
-    local primary, secondary = LOGIN_ENDPOINTS[1], LOGIN_ENDPOINTS[2]
+    local primary, secondary = Api.LOGIN_ENDPOINTS[1], Api.LOGIN_ENDPOINTS[2]
     local result, outcome = _attemptLogin(primary, email, password)
-    if outcome ~= "declined" then return result end
+    -- "unusable" joins "declined" here: a first entry that could not be built into a request says
+    -- nothing about the second, so the second is still worth asking.
+    if outcome ~= "declined" and outcome ~= "unusable" then return result end
 
     -- A lockout is not a verdict on the credentials, and a second sign-in is exactly what the
     -- server just asked us to stop doing: it would spend another attempt for nothing and push the
@@ -968,7 +1033,7 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
     local body = table.concat(body_data_parts, "&")
 
     local headers = {
-        ["User-Agent"] = Config.USER_AGENT,
+        ["User-Agent"] = Config.getUserAgent(),
         ["Accept"] = "application/json, text/javascript, */*; q=0.01",
         ["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8",
         ["Content-Length"] = tostring(#body),
@@ -1084,7 +1149,7 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
         pcall(os.remove, temp_filepath)
     end
 
-    local headers = { ["User-Agent"] = Config.USER_AGENT }
+    local headers = { ["User-Agent"] = Config.getUserAgent() }
     headers["Cookie"] = _sessionCookie(user_id, user_key)
     if referer_url then
         headers["Referer"] = referer_url
@@ -1175,7 +1240,7 @@ function Api.downloadBookCover(download_url, target_filepath)
         pcall(os.remove, target_filepath)
     end
 
-    local headers = { ["User-Agent"] = Config.USER_AGENT }
+    local headers = { ["User-Agent"] = Config.getUserAgent() }
 
     local http_result = Api.makeHttpRequest{
         url = download_url,
@@ -1784,7 +1849,7 @@ function Api.healthCheck(baseUrl, skip_redir_cache, redir_url)
         url = url,
         method = "GET",
         headers = {
-            ["User-Agent"] = Config.USER_AGENT,
+            ["User-Agent"] = Config.getUserAgent(),
         },
         timeout = {5, 10},
         skipRedirectCache = skip_redir_cache or false,
@@ -1844,7 +1909,7 @@ function Api.getBookComments(user_id, user_key, book_id)
     end
 
     local headers = {
-        ["User-Agent"] = Config.USER_AGENT
+        ["User-Agent"] = Config.getUserAgent()
     }
 
     local http_result = Api.makeHttpRequest {
@@ -1932,7 +1997,7 @@ function Api.fetchDynamicDomains()
         url = url,
         method = "GET",
         headers = {
-            ["User-Agent"] = Config.USER_AGENT,
+            ["User-Agent"] = Config.getUserAgent(),
             ["Accept"] = "application/json"
         },
         timeout = {5, 10},

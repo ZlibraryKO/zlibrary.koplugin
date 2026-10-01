@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 19:10+0000\n"
+"POT-Creation-Date: 2026-09-29 17:31+0200\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -115,6 +115,22 @@ msgstr "Изчистване на кеша"
 
 msgid "Runtime cache cleared."
 msgstr "Кешът е изчистен."
+
+msgid "Clear cover cache"
+msgstr "Изчистване на кеша с корици"
+
+#, lua-format
+msgid "Cleared %s of cached covers."
+msgstr "Изчистени са %s кеширани корици."
+
+msgid "No cached covers to remove."
+msgstr "Няма кеширани корици за изчистване."
+
+msgid "Identify as a web browser"
+msgstr "Представяне като уеб браузър"
+
+msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+msgstr "Изпраща User-Agent на браузър вместо собствения на приставката. Струва си да се опита само ако сървърът отказва самата приставка."
 
 msgid "Search"
 msgstr "Търсене"
@@ -320,14 +336,14 @@ msgstr "Непознат статус"
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "Адресът (URL) на сървъра на Z-library не е зададен. Конфигурирайте го в настройките на приставката."
 
+msgid "Login failed"
+msgstr "Неуспешно влизане"
+
 msgid "Login failed: Empty response from server"
 msgstr "Неуспешно влизане: Празен отговор от сървъра"
 
 msgid "Login failed: Invalid response format"
 msgstr "Неуспешно влизане: Невалиден формат на отговора"
-
-msgid "Login failed"
-msgstr "Неуспешно влизане"
 
 msgid "No response received from server - please try again"
 msgstr "Не е получен отговор от сървъра — опитайте отново"
@@ -497,6 +513,9 @@ msgstr "Профил"
 msgid "No description available"
 msgstr "Няма налично описание"
 
+msgid "Selection copied to clipboard."
+msgstr "Селекцията е копирана в клипборда."
+
 msgid "pages"
 msgstr "страници"
 
@@ -573,9 +592,6 @@ msgstr "Неуспешно намиране на работещ основен U
 
 msgid "Queued"
 msgstr "В опашката"
-
-msgid "Selection copied to clipboard."
-msgstr "Селекцията е копирана в клипборда."
 
 msgid "Checking"
 msgstr "Проверка"

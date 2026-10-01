@@ -76,6 +76,35 @@ local function htmlEscape(s)
     return (tostring(s):gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;"):gsub('"', "&quot;"):gsub("'", "&#39;"))
 end
 
+-- The one ISBN out of a record's `identifier` field that is worth handing to the user.
+--
+-- Z-Library sends that field loosely: one ISBN, or several separated by commas or semicolons,
+-- hyphenated or not, occasionally with something in the list that is not an ISBN at all. What it
+-- is for is the desktop -- Calibre matches an edition on an ISBN instantly and on a title badly --
+-- so it is worth picking the best candidate rather than showing the raw field. ISBN-13 wins when
+-- there is one, because that is what metadata sources key on.
+--
+-- Deliberately no check-digit validation. A wrong ISBN fails visibly in Calibre a second later,
+-- whereas silently rejecting a valid one -- or one whose check digit the server got wrong --
+-- hides the only field this whole feature exists to surface, and hides it invisibly.
+local function normalizeIsbn(raw)
+    if type(raw) ~= "string" then return nil end
+    local best_10
+    -- The trailing separator makes the last (or only) entry match the same pattern as the rest,
+    -- so a field holding a bare ISBN with no separator in it is not skipped.
+    for candidate in (raw .. ";"):gmatch("([^,;]*)[,;]") do
+        -- Strip only what an ISBN is legitimately printed with. Stripping every non-digit instead
+        -- would reduce "ASIN B00X57B4KE" to digits that were never an ISBN and accept it.
+        local compact = candidate:gsub("[%s%-]", ""):upper()
+        if #compact == 13 and compact:match("^97[89]%d+$") then
+            return compact
+        elseif not best_10 and #compact == 10 and compact:match("^%d%d%d%d%d%d%d%d%d[%dX]$") then
+            best_10 = compact
+        end
+    end
+    return best_10
+end
+
 local function makeClickable(content_widget, callback)
     local container = InputContainer:new{
         ges_events = {TapCustom = { GestureRange:new{ ges = "tap" } }}, 
@@ -276,6 +305,16 @@ function BookDetailsDialog:_buildContent()
         end
     end
 
+    -- The ISBN sits apart from the other metadata lines because it is the only one here nobody
+    -- reads on the device: it exists to be carried to a desktop, where it identifies an edition
+    -- exactly and a title does not. Its own line, and tappable, so it can be copied without
+    -- transcribing thirteen digits by eye.
+    local isbn_line = self:_buildIsbnLine()
+    if isbn_line then
+        table.insert(vstack, VerticalSpan:new{ width = math.floor(Screen:scaleBySize(#meta_lines > 0 and 4 or 10)) })
+        table.insert(vstack, isbn_line)
+    end
+
     self.cover_frame = self:_buildCoverComponent()
     self:_applyCoverPaintShadow(self.cover_frame)
     local clickable_cover = makeClickable(self.cover_frame, function()
@@ -430,6 +469,29 @@ function BookDetailsDialog:_buildHtmlSection(divider_text, raw_html, css)
     table.insert(section_group, FrameContainer:new{ padding = 0, bordersize = 0, self.scrollable_html })
 
     return section_group
+end
+
+-- nil when the record carried no usable ISBN, which is common enough that an "ISBN: N/A" row
+-- would be noise on a screen this crowded.
+function BookDetailsDialog:_buildIsbnLine()
+    if not self.book.isbn then return nil end
+    local self_ref = self
+    local can_copy = Device:hasClipboard()
+    -- U+25B8 is this dialog's own mark for "tapping this does something"; the author line uses it
+    -- too. Omitted without a clipboard, where the tap would do nothing and the mark would lie.
+    local widget = TextWidget:new{
+        text = can_copy and ("ISBN " .. self.book.isbn .. " \u{25B8}") or ("ISBN " .. self.book.isbn),
+        face = self.fonts.meta,
+        fgcolor = Blitbuffer.COLOR_GRAY_3,
+        max_width = self.text_col_w,
+    }
+    if not can_copy then return widget end
+    return makeClickable(widget, function()
+        -- The bare number, not the displayed line: it is going into a Calibre search box.
+        Device.input.setClipboardText(self_ref.book.isbn)
+        self_ref.Ui_module.showInfoMessage(T("Selection copied to clipboard."))
+        return true
+    end)
 end
 
 function BookDetailsDialog:_generateMetaLines()
@@ -821,6 +883,11 @@ function BookDetailsDialog:_sanitizeBookData(raw)
     book.author = type(raw.author) == "string" and raw.author or ""
     book.publisher = type(raw.publisher) == "string" and raw.publisher or ""
     book.series = type(raw.series) == "string" and raw.series or ""
+    -- This rebuild is what decides which server fields survive into the dialog, and `identifier`
+    -- did not: the API has always returned the ISBN and the plugin has always dropped it here,
+    -- leaving people to open the downloaded file on a desktop and read the number off its
+    -- copyright page.
+    book.isbn = normalizeIsbn(raw.identifier)
     -- Record an absent description as "", the way title/author/publisher/series above do. It used to
     -- substitute a "No Description" string, which made a missing description indistinguishable from
     -- a book whose description is literally those words -- and left callers no way to detect the

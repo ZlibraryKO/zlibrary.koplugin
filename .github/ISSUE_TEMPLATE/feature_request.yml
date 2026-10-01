@@ -1,0 +1,33 @@
+name: Feature request
+description: Suggest something the plugin should do
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do
+      description: >
+        The situation, not the solution. "I download a lot of series and lose track of which book
+        I am on" tells us more than "add a series column", and often has a simpler answer.
+    validations:
+      required: true
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: What you have in mind
+      description: How you imagine it working, if you have a shape in mind.
+    validations:
+      required: false
+
+  - type: input
+    id: device
+    attributes:
+      label: Device
+      description: >
+        Worth knowing, because screen size and whether there is a touchscreen decide what is
+        possible.
+      placeholder: "Kobo Libra 2"
+    validations:
+      required: false

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 19:10+0000\n"
+"POT-Creation-Date: 2026-09-29 17:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -109,6 +109,22 @@ msgstr "Очистить кэш"
 
 msgid "Runtime cache cleared."
 msgstr "Кэш очищен."
+
+msgid "Clear cover cache"
+msgstr "Очистить кэш обложек"
+
+#, lua-format
+msgid "Cleared %s of cached covers."
+msgstr "Удалено %s кэшированных обложек."
+
+msgid "No cached covers to remove."
+msgstr "Кэшированных обложек нет."
+
+msgid "Identify as a web browser"
+msgstr "Представляться веб-браузером"
+
+msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+msgstr "Отправляет User-Agent браузера вместо собственного. Имеет смысл пробовать, только если сервер отклоняет сам плагин."
 
 msgid "Search"
 msgstr "Поиск"
@@ -314,14 +330,14 @@ msgstr "Неизвестный статус"
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "Адрес сервера Z-library (URL) не задан. Пожалуйста, укажите его в настройках плагина Z-library."
 
+msgid "Login failed"
+msgstr "Ошибка входа"
+
 msgid "Login failed: Empty response from server"
 msgstr "Ошибка входа: пустой ответ от сервера"
 
 msgid "Login failed: Invalid response format"
 msgstr "Ошибка входа: неверный формат ответа"
-
-msgid "Login failed"
-msgstr "Ошибка входа"
 
 msgid "No response received from server - please try again"
 msgstr "Нет ответа от сервера — повторите попытку"
@@ -491,6 +507,9 @@ msgstr "Профиль"
 msgid "No description available"
 msgstr "Описание отсутствует"
 
+msgid "Selection copied to clipboard."
+msgstr "Выделенное скопировано в буфер обмена."
+
 msgid "pages"
 msgstr "страниц"
 
@@ -567,9 +586,6 @@ msgstr "Не удалось найти рабочий базовый URL."
 
 msgid "Queued"
 msgstr "В очереди"
-
-msgid "Selection copied to clipboard."
-msgstr "Выделенное скопировано в буфер обмена."
 
 msgid "Checking"
 msgstr "Проверка"

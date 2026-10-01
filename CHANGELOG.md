@@ -6,6 +6,58 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.52
+
+### Added
+
+**The ISBN, on the book details screen.** Z-library sends an ISBN with almost every book and the
+plugin threw it away. It now sits under the publisher and year, and tapping it copies it. That
+number is what Calibre and other desktop tools match an edition on — a title alone often finds the
+wrong edition, or none — so it saves opening the downloaded file and reading the number off its
+copyright page by hand. Books the server has no ISBN for simply do not show the line.
+
+**A way to clear the cover cache.** **Settings → Advanced → Clear cover cache** removes every cover
+the plugin has stored, and says how much space it freed. There was no way to do this before:
+*Clear runtime cache* never touched covers, and they could only be dropped one book at a time by
+refreshing that book.
+
+**A setting to send a browser's identification.** **Settings → Advanced → Identify as a web
+browser**, off by default. Worth trying only if a server refuses the plugin itself — it does not
+help with sign-in trouble, or with a server that insists on a browser check.
+
+### Changed
+
+**The plugin says what it is when it talks to a server.** It used to claim to be Chrome 96, a
+browser released in 2021. No mirror turns out to care either way: they answer identically to that,
+to a current Chrome, to an honest name, and to no name at all. So it now identifies itself
+honestly, which gives a server operator someone to contact instead of a disguise to see through.
+The setting above switches back, should one ever object.
+
+### Fixed
+
+**Your book covers no longer appear in Android's gallery and file manager.** On Android the
+plugin's cache sits in shared storage, so every cover it had stored was indexed as media, like a
+photo — one reader found their entire search history laid out in their phone's file manager. The
+cache has moved to a hidden folder that Android's media scanner skips, and the old, visible folder
+is moved out of the way the first time you run this version, so the covers already stored go with
+it. Nothing is lost: it is the same cache in a new place. Covers may linger in a *Recent files*
+list until the device next rescans or restarts.
+
+### Internal
+
+The two sign-in endpoints are now described as data — a path, and a list of form fields whose
+values carry placeholders — rather than as code that builds each request. The requests themselves
+are unchanged, verified byte for byte against the previous version. The point of the shape is that
+the part of this plugin that keeps breaking when Z-library changes something could eventually be
+fixed by publishing a file, the way the mirror list already is, instead of by cutting a release
+that only reaches the people who take it.
+
+New strings are translated into all 16 locales. Test harnesses were added for the ISBN parsing, the
+sign-in endpoint descriptions and the encoding of credentials into them, the User-Agent and its
+setting, and the cache move — including that clearing the cover cache does not take with it the
+marker that keeps the folder hidden. A pass-through `urlEncode` stub was replaced with KOReader's
+real one, which no harness had been exercising.
+
 ## 1.0.51
 
 ### Added

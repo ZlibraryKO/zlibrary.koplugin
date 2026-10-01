@@ -206,6 +206,36 @@ ensureNoMedia, made = nomediaRig({ ["/data/cache/.zlibrary/covers/.nomedia"] = "
 ensureNoMedia("/data/cache/.zlibrary/covers")
 r.check("an existing marker is left alone", #made == 0, table.concat(made, ", "))
 
+-- Every cache is built lazily, so the marker is also written once at load, when the directory may
+-- not exist yet. A memo that recorded the ATTEMPT rather than the result would mark that failure
+-- as done and skip the directory forever -- including at _ensurePath, the one moment it could
+-- have been written. The rig's io.open refuses a directory it has not been told about.
+local openable = {}
+local tries = {}
+local memoRig = support.extract_function(SRC, "_ensureNoMedia", {
+    _nomedia_checked = {},
+    util = { fileExists = function() return false end },
+    io = { open = function(p)
+        tries[#tries + 1] = p
+        if not openable[p] then return nil end
+        return { close = function() end }
+    end },
+})
+memoRig("/data/cache/.zlibrary/covers")
+r.check("a marker that could not be written is retried, not remembered",
+        #tries == 1, #tries .. " attempts")
+openable["/data/cache/.zlibrary/covers/.nomedia"] = true
+memoRig("/data/cache/.zlibrary/covers")
+r.check("and is written once the directory exists", #tries == 2, #tries .. " attempts")
+memoRig("/data/cache/.zlibrary/covers")
+r.check("then it stops asking", #tries == 2, #tries .. " attempts")
+
+-- The startup pass itself: without it a device that migrated an existing cache keeps 500 covers
+-- with no marker until its next download, because nothing has called _ensurePath yet.
+r.check("the marker is written at load, not only when a cache is first used",
+        src:find("_migrateLegacyCacheDir%(%)%s*\n\n?.-_ensureNoMedia%(BASE_CACHE_DIR%)") ~= nil,
+        "no startup _ensureNoMedia after the migration")
+
 -- The upgrade case: the directories are already there, so a marker written only at creation time
 -- would never reach the installs that need it.
 local ensured = {}

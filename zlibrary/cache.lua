@@ -27,11 +27,19 @@ local LEGACY_CACHE_DIR = DataStorage:getDataDir() .. "/cache/zlibrary"
 local _nomedia_checked = {}
 local function _ensureNoMedia(dir)
     if _nomedia_checked[dir] then return end
-    _nomedia_checked[dir] = true
     local marker = dir .. "/.nomedia"
-    if util.fileExists(marker) then return end
+    if util.fileExists(marker) then
+        _nomedia_checked[dir] = true
+        return
+    end
     local fh = io.open(marker, "w")
-    if fh then fh:close() end
+    -- Only remembered once the marker is known to exist. Remembering the attempt instead would
+    -- mean a call made before the directory exists -- which the startup pass below does on a
+    -- fresh install -- marks it done forever, and _ensurePath then skips the one moment the
+    -- marker could have been written.
+    if not fh then return end
+    fh:close()
+    _nomedia_checked[dir] = true
 end
 
 -- Which entries in a cache directory are cache.
@@ -95,6 +103,13 @@ end
 
 -- At load, before any cache instance can write to either path.
 _migrateLegacyCacheDir()
+
+-- Every cache is constructed lazily, so _ensurePath -- and with it the marker -- does not run
+-- until something is first cached. A device that has just migrated an existing cache would
+-- otherwise sit with 500 covers and no marker until its next download. Writing it here is a
+-- no-op when the directory does not exist yet; _ensurePath gets it at creation instead.
+_ensureNoMedia(BASE_CACHE_DIR)
+_ensureNoMedia(BASE_CACHE_DIR .. "/covers")
 
 -- book_hash arrives verbatim from the server's JSON and is pasted straight into a filesystem path,
 -- so it has to be treated as untrusted: a hash containing a slash or ".." would steer the cache's

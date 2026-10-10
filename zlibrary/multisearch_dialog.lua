@@ -565,7 +565,11 @@ end
 function SearchDialog:getActiveItemCacheKey()
     local current_toggle = self:getActiveItem()
     if current_toggle then
-        return current_toggle["cache_key"], current_toggle["cache_expiry"]
+        -- A function key is resolved on every lookup, for a list whose cache entry depends on a
+        -- setting that can change while the dialog is open (most popular, by search language).
+        local cache_key = current_toggle["cache_key"]
+        if type(cache_key) == "function" then cache_key = cache_key() end
+        return cache_key, current_toggle["cache_expiry"]
     end
 end
 

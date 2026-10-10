@@ -150,6 +150,9 @@ msgstr "Operação"
 msgid "No books found, please try again"
 msgstr "Nenhum livro encontrado, por favor tente novamente"
 
+msgid "No books found in the selected search languages"
+msgstr "Nenhum livro encontrado nos idiomas de pesquisa selecionados"
+
 msgid "Fetching most popular books..."
 msgstr "A obter os livros mais populares..."
 

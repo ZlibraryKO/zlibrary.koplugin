@@ -195,6 +195,10 @@ msgstr ""
 msgid "No books found, please try again"
 msgstr ""
 
+#: main.lua:496
+msgid "No books found in the selected search languages"
+msgstr ""
+
 #: main.lua:533
 msgid "Fetching most popular books..."
 msgstr ""

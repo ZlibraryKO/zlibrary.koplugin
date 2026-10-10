@@ -948,9 +948,9 @@ end
 -- Drop everything cached that belongs to one account. Signing out while this survives leaves the
 -- next person looking at the previous reader's books.
 --
--- What is deliberately kept: "popular" is fetched unauthenticated (requires_auth = false) and is
--- the same list for everybody; api_real_url and the domain caches describe the server, not the
--- reader; and the book-info and cover caches hold public metadata. Favourite state is not among
+-- What is deliberately kept: "popular" and its per-language variants are fetched unauthenticated
+-- (requires_auth = false) and are the same list for everybody; api_real_url and the domain caches
+-- describe the server, not the reader; and the book-info and cover caches hold public metadata. Favourite state is not among
 -- them -- it lives in favorite_book_ids below. View settings need no keeping: they are a device
 -- preference and live in the persistent settings file, not in any of these caches.
 function Config.clearPersonalCaches()
@@ -980,6 +980,18 @@ end
 
 function Config.getSearchLanguages()
     return Config.getSetting(Config.SETTINGS_SEARCH_LANGUAGES_KEY, {})
+end
+
+-- The multi-search cache key for the most-popular list. That list is narrowed to the search
+-- languages, so each selection gets its own entry: changing the languages must not serve the
+-- list cached under the old ones. No selection keeps the plain "popular" key.
+function Config.getMostPopularCacheKey()
+    local languages = Config.getSearchLanguages()
+    if type(languages) ~= "table" or #languages == 0 then return "popular" end
+    local sorted = {}
+    for i, lang in ipairs(languages) do sorted[i] = tostring(lang) end
+    table.sort(sorted)
+    return "popular_" .. table.concat(sorted, "_")
 end
 
 function Config.getSearchExtensions()

@@ -144,6 +144,9 @@ msgstr "操作"
 msgid "No books found, please try again"
 msgstr "未找到書籍，請重試"
 
+msgid "No books found in the selected search languages"
+msgstr "未找到所選搜尋語言的書籍"
+
 msgid "Fetching most popular books..."
 msgstr "正在獲取熱門書籍..."
 

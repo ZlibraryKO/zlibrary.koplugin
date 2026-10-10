@@ -175,14 +175,15 @@ end
 function  Preloader.getMostPopularBooks(callback)
         local wrap_callback = getSafeCallback(callback)
         local cache = Config.getMultiSearchCache()
-        local cache_key = "popular"
+        local cache_key = Config.getMostPopularCacheKey()
         local has_cache = cache:get(cache_key, 1840000)
         if type(has_cache) == "table" then return wrap_callback(true) end
         if not NetworkMgr:isConnected() then return wrap_callback(false) end
         -- Deliberately not routed through fetchWithAuth: most-popular is the same list for
         -- every account (main.lua marks it requires_auth = false), so there is no session
         -- to attach and nothing to re-login for.
-        local task = function() return Api.getMostPopularBooks() end
+        local languages = Config.getSearchLanguages()
+        local task = function() return Api.getMostPopularBooks(nil, nil, languages) end
         _pushTask(task, function(success, res)
                 local is_ok = false
                 if success and type(res) == "table" and type(res.books) == "table" then

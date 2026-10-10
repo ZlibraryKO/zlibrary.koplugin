@@ -144,6 +144,9 @@ msgstr "Vorgang"
 msgid "No books found, please try again"
 msgstr "Keine Bücher gefunden, bitte versuchen Sie es erneut"
 
+msgid "No books found in the selected search languages"
+msgstr "Keine Bücher in den ausgewählten Suchsprachen gefunden"
+
 msgid "Fetching most popular books..."
 msgstr "Beliebteste Bücher werden abgerufen..."
 

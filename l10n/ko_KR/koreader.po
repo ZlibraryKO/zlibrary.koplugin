@@ -144,6 +144,9 @@ msgstr "작업"
 msgid "No books found, please try again"
 msgstr "책을 찾을 수 없습니다. 다시 시도해 주세요."
 
+msgid "No books found in the selected search languages"
+msgstr "선택한 검색 언어로 된 책을 찾을 수 없습니다"
+
 msgid "Fetching most popular books..."
 msgstr "인기 도서 가져오는 중..."
 

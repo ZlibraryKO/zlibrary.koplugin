@@ -1320,11 +1320,23 @@ function Api.getRecommendedBooks(user_id, user_key)
     return { books = transformed_books }
 end
 
-function Api.getMostPopularBooks(user_id, user_key)
+-- `languages` is the reader's search-language selection. The most-popular endpoint ignores it --
+-- the list is the same mostly-English one whatever is asked for, switch-language included -- so
+-- narrowing that list here leaves nothing for most languages. The search endpoint does filter by
+-- language on the server, and with an empty query and the "popular" order it answers with the
+-- most popular books in those languages, which is what this tab should show. language_filtered
+-- tells the caller that an empty result means "nothing in those languages".
+function Api.getMostPopularBooks(user_id, user_key, languages)
     local url = Config.getMostPopularBooksUrl()
     if not url then
         logger.warn("Api.getMostPopularBooks - Base URL not configured")
         return { error = T("Z-library server URL not configured.") }
+    end
+
+    if type(languages) == "table" and #languages > 0 then
+        local res = Api.search("", user_id, user_key, languages, nil, { "popular" }, 1)
+        if res.error then return { error = res.error } end
+        return { books = res.results or {}, language_filtered = true }
     end
 
     local headers = _authedHeaders(user_id, user_key)

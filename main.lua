@@ -492,6 +492,9 @@ end
 function Zlibrary:_fetchBookList(options, ...)
     options.hasValidApiResult = function(api_result)
         local ok = type(api_result) == "table" and type(api_result.books) == "table" and #api_result.books > 0
+        if not ok and type(api_result) == "table" and api_result.language_filtered then
+            return false, T("No books found in the selected search languages")
+        end
         return ok, not ok and T("No books found, please try again")
     end
     options.resolve_result = function(ui_self, api_result, plugin_self)
@@ -525,7 +528,7 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
         end,
         toggle_items = {{
             text = T("Most popular"),
-            cache_key = "popular",
+            cache_key = Config.getMostPopularCacheKey,
             cache_expiry = 180000,
             callback = function(widget, page, is_refresh)
                 self:_fetchBookList({
@@ -541,7 +544,7 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
                     end,
                     requires_auth = false,
                     cancellable = true,
-                })
+                }, Config.getSearchLanguages())
             end}, {
                 text = T("Recommended"),
                 cache_key = "recommended",

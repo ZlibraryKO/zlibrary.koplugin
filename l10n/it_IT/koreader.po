@@ -144,6 +144,9 @@ msgstr "Operazione"
 msgid "No books found, please try again"
 msgstr "Nessun libro trovato, riprova"
 
+msgid "No books found in the selected search languages"
+msgstr "Nessun libro trovato nelle lingue di ricerca selezionate"
+
 msgid "Fetching most popular books..."
 msgstr "Recupero libri più popolari..."
 

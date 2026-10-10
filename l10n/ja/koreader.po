@@ -144,6 +144,9 @@ msgstr "操作"
 msgid "No books found, please try again"
 msgstr "書籍が見つかりませんでした。もう一度お試しください。"
 
+msgid "No books found in the selected search languages"
+msgstr "選択した検索言語の書籍が見つかりませんでした"
+
 msgid "Fetching most popular books..."
 msgstr "人気の書籍を取得中..."
 

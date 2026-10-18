@@ -948,7 +948,7 @@ end
 -- Drop everything cached that belongs to one account. Signing out while this survives leaves the
 -- next person looking at the previous reader's books.
 --
--- What is deliberately kept: "popular" and its per-language variants are fetched unauthenticated
+-- What is deliberately kept: "popular" and its per-language/format variants are fetched unauthenticated
 -- (requires_auth = false) and are the same list for everybody; api_real_url and the domain caches
 -- describe the server, not the reader; and the book-info and cover caches hold public metadata. Favourite state is not among
 -- them -- it lives in favorite_book_ids below. View settings need no keeping: they are a device
@@ -983,15 +983,21 @@ function Config.getSearchLanguages()
 end
 
 -- The multi-search cache key for the most-popular list. That list is narrowed to the search
--- languages, so each selection gets its own entry: changing the languages must not serve the
--- list cached under the old ones. No selection keeps the plain "popular" key.
+-- languages and formats, so each selection gets its own entry: changing either must not serve
+-- the list cached under the old one. No selection keeps the plain "popular" key.
 function Config.getMostPopularCacheKey()
-    local languages = Config.getSearchLanguages()
-    if type(languages) ~= "table" or #languages == 0 then return "popular" end
-    local sorted = {}
-    for i, lang in ipairs(languages) do sorted[i] = tostring(lang) end
-    table.sort(sorted)
-    return "popular_" .. table.concat(sorted, "_")
+    local function sorted_part(values)
+        if type(values) ~= "table" or #values == 0 then return nil end
+        local sorted = {}
+        for i, value in ipairs(values) do sorted[i] = tostring(value) end
+        table.sort(sorted)
+        return table.concat(sorted, "_")
+    end
+    local languages = sorted_part(Config.getSearchLanguages())
+    local extensions = sorted_part(Config.getSearchExtensions())
+    if not languages and not extensions then return "popular" end
+    -- Labelled parts, so a language and a format with the same name can never collide.
+    return "popular_l:" .. (languages or "") .. "_f:" .. (extensions or "")
 end
 
 function Config.getSearchExtensions()

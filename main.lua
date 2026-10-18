@@ -492,8 +492,8 @@ end
 function Zlibrary:_fetchBookList(options, ...)
     options.hasValidApiResult = function(api_result)
         local ok = type(api_result) == "table" and type(api_result.books) == "table" and #api_result.books > 0
-        if not ok and type(api_result) == "table" and api_result.language_filtered then
-            return false, T("No books found in the selected search languages")
+        if not ok and type(api_result) == "table" and api_result.filtered then
+            return false, T("No books match the selected search languages and formats")
         end
         return ok, not ok and T("No books found, please try again")
     end
@@ -544,7 +544,7 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
                     end,
                     requires_auth = false,
                     cancellable = true,
-                }, Config.getSearchLanguages())
+                }, Config.getSearchLanguages(), Config.getSearchExtensions())
             end}, {
                 text = T("Recommended"),
                 cache_key = "recommended",

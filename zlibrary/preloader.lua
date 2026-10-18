@@ -183,7 +183,8 @@ function  Preloader.getMostPopularBooks(callback)
         -- every account (main.lua marks it requires_auth = false), so there is no session
         -- to attach and nothing to re-login for.
         local languages = Config.getSearchLanguages()
-        local task = function() return Api.getMostPopularBooks(nil, nil, languages) end
+        local extensions = Config.getSearchExtensions()
+        local task = function() return Api.getMostPopularBooks(nil, nil, languages, extensions) end
         _pushTask(task, function(success, res)
                 local is_ok = false
                 if success and type(res) == "table" and type(res.books) == "table" then

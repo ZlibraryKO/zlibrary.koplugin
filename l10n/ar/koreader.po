@@ -144,8 +144,8 @@ msgstr "العملية"
 msgid "No books found, please try again"
 msgstr "لم يتم العثور على كتب، يرجى المحاولة مرة أخرى"
 
-msgid "No books found in the selected search languages"
-msgstr "لم يتم العثور على كتب باللغات المحددة للبحث"
+msgid "No books match the selected search languages and formats"
+msgstr "لا توجد كتب تطابق لغات وتنسيقات البحث المحددة"
 
 msgid "Fetching most popular books..."
 msgstr "جلب الكتب الأكثر شعبية..."

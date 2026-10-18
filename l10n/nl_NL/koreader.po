@@ -144,8 +144,8 @@ msgstr "Bewerking"
 msgid "No books found, please try again"
 msgstr "Geen boeken gevonden, probeer het opnieuw"
 
-msgid "No books found in the selected search languages"
-msgstr "Geen boeken gevonden in de geselecteerde zoektalen"
+msgid "No books match the selected search languages and formats"
+msgstr "Geen boeken die overeenkomen met de geselecteerde zoektalen en -formaten"
 
 msgid "Fetching most popular books..."
 msgstr "Meest populaire boeken ophalen..."

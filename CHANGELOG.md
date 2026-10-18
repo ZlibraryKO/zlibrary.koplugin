@@ -10,13 +10,14 @@ to `main` — so the top section is the one about to ship.
 
 ### Changed
 
-**Most popular follows your search languages.** If you have picked search languages
-(**Search options → Select search languages**, or the language button in the search box), the
-Most popular tab now lists the most popular books in those languages, as the server ranks them.
-Z-library's own most-popular list is the same mostly-English one whatever language is asked for,
-so with languages selected the tab asks the search instead, for everything in those languages
-ordered by popularity. With no languages selected it is unchanged. Each selection is cached
-separately, so changing the languages never serves the list fetched under the old ones.
+**Most popular follows your search languages and formats.** If you have picked search
+languages or formats (**Search options → Select search languages / Select search formats**, or
+the language button in the search box), the Most popular tab now lists the most popular books in
+those languages and formats, as the server ranks them — an EPUB-only reader no longer sees PDFs
+there. Z-library's own most-popular list is the same mostly-English one whatever is asked for, so
+with either selected the tab asks the search instead, for everything matching them ordered by
+popularity. With neither selected it is unchanged. Each selection is cached separately, so
+changing the languages or formats never serves the list fetched under the old ones.
 
 ## 1.0.52
 

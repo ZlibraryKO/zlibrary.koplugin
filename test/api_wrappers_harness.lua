@@ -38,6 +38,15 @@ local BODIES = {
     books_paged_loose = { success = 1, books = { { id = 1, title = "T", author = "A" } },
                           pagination = "3" },
     book       = { success = 1, book = { id = 1, title = "T", author = "A" } },
+    -- Cover URLs as the downloaded-books list sends them: a good one, one with the empty
+    -- collection folder that list uses for every book, and the coverless placeholder.
+    books_covers = { success = 1, pagination = { total_pages = 1, current = 1 }, books = {
+        { id = 1, title = "T", author = "A",
+          cover = "https://covers.example/covers299/collections/userbooks/a.jpg" },
+        { id = 2, title = "T", author = "A",
+          cover = "https://covers.example/covers299/collections//b.jpg" },
+        { id = 3, title = "T", author = "A", cover = "/img/cover-not-exists.png" },
+    } },
     -- A filtered (language/format) search answer with nothing in it.
     books_none = { success = 1, books = {} },
     ok         = { success = 1 },
@@ -218,6 +227,18 @@ r.check("getFavoriteBooks: accepts a non-table pagination value", loose.error ==
 local strict = call("getDownloadedBooks", { UID, UKEY, 1, "date" }, { body = "books_paged_loose" })
 r.check("getDownloadedBooks: requires pagination to be a table", strict.error ~= nil,
         "accepted a string")
+
+-- A cover URL is only kept when it can be fetched. The downloaded-books list sends every cover with
+-- an empty collection folder, which is always a 404; the menu falls back to cached details instead.
+local covers = call("getDownloadedBooks", { UID, UKEY, 1, "date" }, { body = "books_covers" })
+local cb = covers.books or {}
+r.check("covers: a complete cover URL is kept",
+        cb[1] and cb[1].cover == "https://covers.example/covers299/collections/userbooks/a.jpg",
+        "got " .. tostring(cb[1] and cb[1].cover))
+r.check("covers: one with an empty collection folder is dropped", cb[2] and cb[2].cover == nil,
+        "got " .. tostring(cb[2] and cb[2].cover))
+r.check("covers: the coverless placeholder is dropped", cb[3] and cb[3].cover == nil,
+        "got " .. tostring(cb[3] and cb[3].cover))
 
 -- Most popular follows the search-language setting. The most-popular endpoint ignores any
 -- language it is given, so with languages selected the wrapper asks the search endpoint instead:

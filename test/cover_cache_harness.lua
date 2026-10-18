@@ -112,6 +112,20 @@ ok = downloadCover("https://cdn.example/c.jpg", "abc")
 r.check("a failed download is a failure, and nothing is inserted",
         ok == false and rig.inserts == 0, "inserts = " .. rig.inserts)
 
+-- A cover the server does not have will not appear on a second or third attempt. Device logs
+-- showed every missing cover on a page fetched three times; the 404 now tells the channel not to.
+for _, status in ipairs{ 404, 410 } do
+    reset{ download = { success = false, error = "HTTP Error: " .. status, status_code = status } }
+    local res_ok, detail = downloadCover("https://cdn.example/c.jpg", "abc")
+    r.check("a " .. status .. " asks the channel not to retry",
+            res_ok == false and type(detail) == "table" and detail.no_retry == true,
+            "answered " .. tostring(res_ok) .. ", " .. tostring(detail))
+end
+reset{ download = { success = false, error = "HTTP Error: 500", status_code = 500 } }
+local _, server_error = downloadCover("https://cdn.example/c.jpg", "abc")
+r.check("a server error is still left to the retries", server_error == nil,
+        "a 500 was marked as not worth retrying")
+
 reset{ render_ok = false }
 ok = downloadCover("https://cdn.example/c.jpg", "abc")
 r.check("a body that is not a real image is a failure, and is deleted",

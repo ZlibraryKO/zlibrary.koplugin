@@ -41,6 +41,15 @@ function M:init()
     end
 end
 
+-- A list item can arrive without a usable cover URL -- every one in the downloaded-books list does
+-- (see _usableCoverUrl in api.lua) -- while the book's details, cached for a week once the reader
+-- has opened it, carry the right one. Use that instead of asking the API: fetching details for every
+-- visible book is the burst it tarpits (see the note where covers are collected below).
+local function _cachedDetailsCover(book_hash)
+    local details = Cache:new{ type = "bookinfo" }:get(book_hash, 604800, true)
+    return type(details) == "table" and details.cover or nil
+end
+
 local function _updateItemsBuildUI(item, cover_w, cover_h)
     if not (item and item.hash) then return nil end
     local cover_cache_path = item._is_cover_loaded or Cache:new{ type="cover" }:get(item.hash)
@@ -153,6 +162,9 @@ function M:_updateCoverItems(select_number, no_recalculate_dimen)
         local added_hashes = {}
         for idx = 1, perpage do
             local item = self.item_table[idx_offset + idx]
+            if item and item.hash then
+                item.cover = Api.usableCoverUrl(item.cover) or _cachedDetailsCover(item.hash)
+            end
             if item and item.cover and item.hash then
                 if not (item._is_cover_loaded or added_hashes[item.hash]) then
                     table.insert(missing_covers, { item = item })
@@ -215,6 +227,25 @@ end
 function M:updateItems(select_number, no_recalculate_dimen)
     if self.show_cover then self:_updateCoverItems(select_number, no_recalculate_dimen) end
     return Menu.updateItems(self, select_number, no_recalculate_dimen)
+end
+
+-- A book's details dialog fetches its cover into the cache. When it closes -- or the fetch lands
+-- after it did -- redraw this page if a cover it is missing is there now; otherwise the reader
+-- comes back to a blank slot that stays blank until the page changes. Returns nothing, so the
+-- event still reaches every other list on the window stack.
+function M:onZlibraryCoverCached()
+    if self._is_closed or not (self.show_cover and self.item_table and self.perpage and self.page) then
+        return
+    end
+    local idx_offset = (self.page - 1) * self.perpage
+    local cover_cache = Cache:new{ type = "cover" }
+    for idx = 1, self.perpage do
+        local item = self.item_table[idx_offset + idx]
+        if item and item.hash and not item._is_cover_loaded and cover_cache:get(item.hash) then
+            self:updateItems(nil, true)
+            return
+        end
+    end
 end
 
 function M:_clearTasks()

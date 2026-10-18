@@ -38,6 +38,8 @@ local BODIES = {
     books_paged_loose = { success = 1, books = { { id = 1, title = "T", author = "A" } },
                           pagination = "3" },
     book       = { success = 1, book = { id = 1, title = "T", author = "A" } },
+    -- A filtered (language/format) search answer with nothing in it.
+    books_none = { success = 1, books = {} },
     ok         = { success = 1 },
     api_failed = { success = 0, message = "nope" },
 }
@@ -216,6 +218,105 @@ r.check("getFavoriteBooks: accepts a non-table pagination value", loose.error ==
 local strict = call("getDownloadedBooks", { UID, UKEY, 1, "date" }, { body = "books_paged_loose" })
 r.check("getDownloadedBooks: requires pagination to be a table", strict.error ~= nil,
         "accepted a string")
+
+-- Most popular follows the search-language setting. The most-popular endpoint ignores any
+-- language it is given, so with languages selected the wrapper asks the search endpoint instead:
+-- an empty query in those languages, ordered by popularity. ("*" is refused by the server with
+-- "Search query is incorrect!"; an empty message is what it accepts.)
+local pop, preq, pused = call("getMostPopularBooks", { UID, UKEY }, { body = "books" })
+r.check("getMostPopularBooks: no languages still uses the most-popular endpoint",
+        preq and preq.method == "GET" and asked_for(pused, "getMostPopularBooksUrl")
+            and not asked_for(pused, "getSearchUrl") and not pop.filtered,
+        "method=" .. tostring(preq and preq.method) .. " asked for: " .. table.concat(pused, ", "))
+pop, preq, pused = call("getMostPopularBooks", { UID, UKEY, {} }, { body = "books" })
+r.check("getMostPopularBooks: an empty selection does too",
+        preq and preq.method == "GET" and not asked_for(pused, "getSearchUrl"),
+        "asked for: " .. table.concat(pused, ", "))
+
+pop, preq, pused = call("getMostPopularBooks", { UID, UKEY, { "portuguese", "brazilian" } }, { body = "books" })
+local pbody = preq and preq.body or ""
+r.check("getMostPopularBooks: with languages it searches instead",
+        preq and preq.method == "POST" and asked_for(pused, "getSearchUrl"),
+        "method=" .. tostring(preq and preq.method) .. " asked for: " .. table.concat(pused, ", "))
+r.check("getMostPopularBooks: with an empty query",
+        ("&" .. pbody .. "&"):find("&message=&", 1, true) ~= nil, "body: " .. pbody)
+r.check("getMostPopularBooks: in every selected language",
+        pbody:find("languages[0]=portuguese", 1, true) and pbody:find("languages[1]=brazilian", 1, true),
+        "body: " .. pbody)
+r.check("getMostPopularBooks: ordered by popularity",
+        pbody:find("order=popular", 1, true) ~= nil, "body: " .. pbody)
+r.check("getMostPopularBooks: on the reader's session",
+        preq and preq.headers and preq.headers["Cookie"] == COOKIE,
+        "Cookie: " .. tostring(preq and preq.headers and preq.headers["Cookie"]))
+r.check("getMostPopularBooks: returns the search's books, flagged as filtered",
+        pop.error == nil and type(pop.books) == "table" and #pop.books == 1
+            and pop.filtered == true,
+        "error=" .. tostring(pop.error) .. " books=" .. tostring(pop.books and #pop.books))
+
+pop = call("getMostPopularBooks", { UID, UKEY, { "japanese" } }, { body = "books_none" })
+r.check("getMostPopularBooks: nothing in the selected languages is an empty, flagged list",
+        pop.error == nil and type(pop.books) == "table" and #pop.books == 0
+            and pop.filtered == true,
+        "error=" .. tostring(pop.error))
+pop = call("getMostPopularBooks", { UID, UKEY, { "portuguese" } }, { error = "boom" })
+r.check("getMostPopularBooks: a failed language search passes its error through",
+        pop.error ~= nil and pop.books == nil, "no error returned")
+
+-- The reader's format filter applies too: a reader who only wants EPUBs must not be shown PDFs
+-- in Most popular. Formats alone are enough to switch to the search, since the most-popular
+-- endpoint ignores them just as it ignores languages.
+pop, preq, pused = call("getMostPopularBooks", { UID, UKEY, { "portuguese" }, { "epub", "mobi" } },
+                        { body = "books" })
+pbody = preq and preq.body or ""
+r.check("getMostPopularBooks: with languages and formats, sends every selected format",
+        pbody:find("extensions[0]=epub", 1, true) and pbody:find("extensions[1]=mobi", 1, true)
+            and pbody:find("languages[0]=portuguese", 1, true),
+        "body: " .. pbody)
+pop, preq, pused = call("getMostPopularBooks", { UID, UKEY, {}, { "epub" } }, { body = "books" })
+pbody = preq and preq.body or ""
+r.check("getMostPopularBooks: formats alone also search instead",
+        preq and preq.method == "POST" and asked_for(pused, "getSearchUrl"),
+        "method=" .. tostring(preq and preq.method) .. " asked for: " .. table.concat(pused, ", "))
+r.check("getMostPopularBooks: formats alone send the format, no language, by popularity",
+        pbody:find("extensions[0]=epub", 1, true) and not pbody:find("languages[", 1, true)
+            and pbody:find("order=popular", 1, true) and pop.filtered == true,
+        "body: " .. pbody)
+pop, preq, pused = call("getMostPopularBooks", { UID, UKEY, nil, {} }, { body = "books" })
+r.check("getMostPopularBooks: empty languages and formats keep the most-popular endpoint",
+        preq and preq.method == "GET" and not asked_for(pused, "getSearchUrl") and not pop.filtered,
+        "asked for: " .. table.concat(pused, ", "))
+
+-- The tab's cache entry is keyed by both selections, so changing either never serves a list
+-- cached under the old one. Run against the real definition, pulled out of config.lua.
+do
+    local settings = {}
+    local ConfigStub = {
+        getSearchLanguages = function() return settings.languages or {} end,
+        getSearchExtensions = function() return settings.extensions or {} end,
+    }
+    local block = support.extract_block(PLUGIN .. "/zlibrary/config.lua",
+        "\nfunction Config%.getMostPopularCacheKey%(%).-\nend\n")
+    local chunk = assert(loadstring(block, "=getMostPopularCacheKey"))
+    setfenv(chunk, { Config = ConfigStub, type = type, ipairs = ipairs, tostring = tostring,
+                     table = table })
+    chunk()
+    local key = ConfigStub.getMostPopularCacheKey
+    local function with(langs, exts) settings.languages, settings.extensions = langs, exts; return key() end
+
+    r.check("getMostPopularCacheKey: no selection keeps the plain key", with({}, {}) == "popular",
+            with({}, {}))
+    r.check("getMostPopularCacheKey: formats change the key",
+            with({}, { "epub" }) ~= "popular" and with({}, { "epub" }) ~= with({}, { "pdf" }),
+            with({}, { "epub" }) .. " / " .. with({}, { "pdf" }))
+    r.check("getMostPopularCacheKey: the same languages with different formats differ",
+            with({ "portuguese" }, { "epub" }) ~= with({ "portuguese" }, {}),
+            with({ "portuguese" }, { "epub" }))
+    r.check("getMostPopularCacheKey: a language and a format of the same name do not collide",
+            with({ "x" }, {}) ~= with({}, { "x" }), with({ "x" }, {}))
+    r.check("getMostPopularCacheKey: selection order does not matter",
+            with({ "b", "a" }, { "pdf", "epub" }) == with({ "a", "b" }, { "epub", "pdf" }),
+            with({ "b", "a" }, { "pdf", "epub" }))
+end
 
 -- The outliers are asserted only where they differ, since their whole point is differing.
 local _, req = call("getBookDetails", { UID, UKEY, "1", "h" }, { body = "book" })

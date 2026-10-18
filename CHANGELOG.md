@@ -6,6 +6,19 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.53
+
+### Changed
+
+**Most popular follows your search languages and formats.** If you have picked search
+languages or formats (**Search options → Select search languages / Select search formats**, or
+the language button in the search box), the Most popular tab now lists the most popular books in
+those languages and formats, as the server ranks them — an EPUB-only reader no longer sees PDFs
+there. Z-library's own most-popular list is the same mostly-English one whatever is asked for, so
+with either selected the tab asks the search instead, for everything matching them ordered by
+popularity. With neither selected it is unchanged. Each selection is cached separately, so
+changing the languages or formats never serves the list fetched under the old ones.
+
 ## 1.0.52
 
 ### Added

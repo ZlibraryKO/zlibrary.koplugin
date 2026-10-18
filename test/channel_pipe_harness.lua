@@ -1,4 +1,5 @@
--- Does a background task whose result is bigger than the pipe buffer come back?
+-- Does a background task whose result is bigger than the pipe buffer come back? And does a task
+-- that says a retry cannot help get to skip its retries?
 --
 -- It used to hang until the channel's timeout killed it. The child writes its whole result to a
 -- pipe and exits; the parent only read once the child had exited. A pipe holds 64 KB, so a bigger
@@ -163,5 +164,25 @@ end, { timeout = 30 })
 r.check("a child that never finishes is still timed out",
         hung.success == false and hung.at ~= nil and hung.at >= 30 and procs[hung_pid].killed,
         "success=" .. tostring(hung.success) .. " after " .. tostring(hung.at) .. "s")
+
+-- Retries. A task that knows another attempt cannot help (a cover the server answers 404 for)
+-- fails with { no_retry = true }; anything else still gets the retries it was given.
+local attempts = 0
+local flagged = run_task(function()
+    attempts = attempts + 1
+    return false, { no_retry = true, error = "HTTP Error: 404" }
+end, { max_retries = 2 })
+r.check("a failure marked no_retry is not retried", flagged.success == false and attempts == 1,
+        attempts .. " attempt(s)")
+r.check("and its callback gets the task's error", flagged.res == "HTTP Error: 404",
+        "callback got " .. tostring(flagged.res))
+
+attempts = 0
+local plain = run_task(function()
+    attempts = attempts + 1
+    return false, "temporary"
+end, { max_retries = 2 })
+r.check("an ordinary failure still uses its retries", plain.success == false and attempts == 3,
+        attempts .. " attempt(s)")
 
 r.finish()

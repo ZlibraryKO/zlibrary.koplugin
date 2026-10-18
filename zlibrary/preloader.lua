@@ -46,6 +46,12 @@ function ApiHelper.downloadCover(url, book_hash, skip_conflicts)
     local res = Api.downloadBookCover(url, temp_path)
     if not res or res.error or not res.success then
         util.removeFile(temp_path)
+        -- The server has no cover for this book, and asking again will not change that: tell the
+        -- channel not to spend its retries on it (see deliver_result in async_helper).
+        local status = res and res.status_code
+        if status == 404 or status == 410 then
+            return false, { no_retry = true, error = res.error }
+        end
         return false
     end
     local ok, cover_bb = pcall(RenderImage.renderImageFile, RenderImage, temp_path, false, nil, nil)

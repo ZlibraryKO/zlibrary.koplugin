@@ -140,12 +140,20 @@ function Channel:_processNext()
             local success = false
             local final_result = nil
             local final_error = nil
+            local no_retry = false
             if not completed then
                 success = false
                 final_error = tostring(ret1)
             elseif ret1 == false or ret1 == nil then
                 success = false
-                final_error = ret2 or "Task failed or returned nil"
+                -- A task that knows another attempt cannot help -- a cover the server answers 404
+                -- for -- fails with { no_retry = true, error = ... } and is not queued again.
+                if type(ret2) == "table" and ret2.no_retry then
+                    no_retry = true
+                    final_error = ret2.error or "Task failed and asked not to be retried"
+                else
+                    final_error = ret2 or "Task failed or returned nil"
+                end
             else
                 success = true
                 final_result = ret1
@@ -153,7 +161,7 @@ function Channel:_processNext()
             if success then
                 safe_call("callback", task.callback, true, final_result, task.current_retry)
             else
-                if task.current_retry < task.max_retries then
+                if not no_retry and task.current_retry < task.max_retries then
                     task.current_retry = task.current_retry + 1
                     table.insert(self.queue, 1, task)
                     logger.warn(string.format("Channel '%s': Task failed, retrying... (%d/%d)", self.name, task.current_retry, task.max_retries))

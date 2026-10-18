@@ -1260,6 +1260,7 @@ function Api.downloadBookCover(download_url, target_filepath)
 
     if http_result.error then
         result.error = http_result.error
+        result.status_code = http_result.status_code
         discardPartialFile()
         logger.err("Zlibrary:Api.downloadBookCover - END (HTTP error from Api.makeHttpRequest) - Error: " .. result.error .. ", Status: " .. tostring(http_result.status_code))
         return result
@@ -1267,6 +1268,7 @@ function Api.downloadBookCover(download_url, target_filepath)
 
     if http_result.status_code ~= 200 then
         result.error = string.format("%s: %s", T("Download HTTP Error"), http_result.status_code)
+        result.status_code = http_result.status_code
         discardPartialFile()
         logger.err("Zlibrary:Api.downloadBookCover - END (HTTP status error) - Error: " .. result.error)
         return result

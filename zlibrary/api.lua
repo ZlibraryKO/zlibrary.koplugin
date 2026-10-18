@@ -114,8 +114,18 @@ local function _usableCoverUrl(cover)
     if not (parsed and parsed.host) then
         return nil
     end
+    -- The downloaded-books list names every cover with an empty collection folder
+    -- (".../collections//<hash>.jpg"). The real folder differs per book -- userbooks, genesis,
+    -- foreignfiction... -- and only the book's details carry it, so that URL is always a 404. Treat
+    -- it as absent too; the menu falls back to the cover in the book's cached details.
+    if parsed.path and parsed.path:find("//", 1, true) then
+        return nil
+    end
     return cover
 end
+-- Also checked by the menu at fetch time: a list saved to the multi-search cache before a rule here
+-- existed still carries the URLs it rejects.
+Api.usableCoverUrl = _usableCoverUrl
 
 -- The header block every authenticated JSON call sends.
 --

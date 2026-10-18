@@ -249,14 +249,15 @@ function Channel:_processNext()
         end
 
         local subprocess_done = ffiUtil.isSubProcessDone(pid)
+        -- Read as soon as the child starts writing, not only once it has exited. The child writes
+        -- its whole result in one go at the very end, so readAllFromFD -- which blocks until EOF --
+        -- only waits for the rest of that write. Waiting for the exit instead deadlocked on any
+        -- result bigger than the pipe buffer (64 KB): the child sat in write() until somebody
+        -- read, and the timeout killed it. Trapper:dismissableRunInSubprocess reads the same way.
+        local stuff_to_read = parent_read_fd and ffiUtil.getNonBlockingReadSize(parent_read_fd) ~= 0
 
-        -- Only read once the subprocess has finished: readAllFromFD blocks
-        -- until EOF (child closes its end), so reading while the child is
-        -- still running would freeze the UI inside this non-blocking poll.
-        if subprocess_done then
-            -- Subprocess is gone
+        if subprocess_done or stuff_to_read then
             local ok, r1, r2 = false, nil, nil
-            local stuff_to_read = parent_read_fd and ffiUtil.getNonBlockingReadSize(parent_read_fd) ~= 0
 
             if stuff_to_read then
                 local ret_str = ffiUtil.readAllFromFD(parent_read_fd) or ""
@@ -296,6 +297,10 @@ function Channel:_processNext()
             else -- subprocess_done: process exited with no output
                    if parent_read_fd then ffiUtil.readAllFromFD(parent_read_fd) end
                     -- no ret_values
+            end
+            if not subprocess_done then
+                -- Read while it was still exiting: collect it once it has.
+                safe_collect_and_clean(pid, nil, 5, 1, "finished subprocess")
             end
             logger.dbg("Channel:_processNext - background task completed")
             deliver_result(ok, r1, r2)

@@ -229,6 +229,25 @@ function M:updateItems(select_number, no_recalculate_dimen)
     return Menu.updateItems(self, select_number, no_recalculate_dimen)
 end
 
+-- A book's details dialog fetches its cover into the cache. When it closes -- or the fetch lands
+-- after it did -- redraw this page if a cover it is missing is there now; otherwise the reader
+-- comes back to a blank slot that stays blank until the page changes. Returns nothing, so the
+-- event still reaches every other list on the window stack.
+function M:onZlibraryCoverCached()
+    if self._is_closed or not (self.show_cover and self.item_table and self.perpage and self.page) then
+        return
+    end
+    local idx_offset = (self.page - 1) * self.perpage
+    local cover_cache = Cache:new{ type = "cover" }
+    for idx = 1, self.perpage do
+        local item = self.item_table[idx_offset + idx]
+        if item and item.hash and not item._is_cover_loaded and cover_cache:get(item.hash) then
+            self:updateItems(nil, true)
+            return
+        end
+    end
+end
+
 function M:_clearTasks()
     -- Only the menu's own channel. PreLoader.channel is shared with the rest of the plugin
     -- (init queues the favorites prefetch on it), and clearing it here silently drops those

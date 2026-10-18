@@ -5,6 +5,7 @@ local Font = require("ui/font")
 local Geom = require("ui/geometry")
 local Size = require("ui/size")
 local UIManager = require("ui/uimanager")
+local Event = require("ui/event")
 local ButtonDialog = require("ui/widget/buttondialog")
 local ButtonTable = require("ui/widget/buttontable")
 local InputContainer = require("ui/widget/container/inputcontainer")
@@ -551,8 +552,12 @@ function BookDetailsDialog:_buildCoverComponent()
         local preLoader = self.parent_zlibrary and self.parent_zlibrary.preLoader
         if preLoader and preLoader.getBookCover and cover_url and cover_url ~= "" and book_hash then
              preLoader.getBookCover(cover_url, book_hash, function(is_cached)
-                    if is_cached == true and self._is_closed ~= true then
+                    if is_cached ~= true then return end
+                    if self._is_closed ~= true then
                         self:refreshCoverImage(cover_cache:get(book_hash))
+                    else
+                        -- Landed after the dialog closed: the list it was opened from can still show it.
+                        UIManager:broadcastEvent(Event:new("ZlibraryCoverCached"))
                     end
             end)
         end
@@ -916,6 +921,11 @@ function BookDetailsDialog:onCloseWidget()
     UIManager:setDirty(self.inner_dialog, function()
         return "flashui", self:getRefreshRegion()
    end)
+    -- The list this was opened from may be showing a blank slot for a cover fetched while the
+    -- dialog was open. Next tick, so the dialog is off the window stack before the list redraws.
+    UIManager:nextTick(function()
+        UIManager:broadcastEvent(Event:new("ZlibraryCoverCached"))
+    end)
 end
 
 local function showBookDetails(Ui_module, parent_zlibrary, book, clear_cache_callback)

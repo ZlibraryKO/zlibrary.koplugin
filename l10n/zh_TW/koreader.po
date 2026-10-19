@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-01 18:13+0000\n"
+"POT-Creation-Date: 2026-10-19 06:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese <zh@li.org>\n"
@@ -141,11 +141,11 @@ msgstr ""
 msgid "Operation"
 msgstr "操作"
 
-msgid "No books found, please try again"
-msgstr "未找到書籍，請重試"
-
 msgid "No books match the selected search languages and formats"
 msgstr "沒有符合所選搜尋語言和格式的書籍"
+
+msgid "No books found, please try again"
+msgstr "未找到書籍，請重試"
 
 msgid "Fetching most popular books..."
 msgstr "正在獲取熱門書籍..."

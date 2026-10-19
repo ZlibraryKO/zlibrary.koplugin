@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-01 18:13+0000\n"
+"POT-Creation-Date: 2026-10-19 06:34+0000\n"
 "PO-Revision-Date: 2026-07-22 00:39+0100\n"
 "Last-Translator: CookieCaptainD\n"
 "Language-Team: pt_PT\n"
@@ -147,11 +147,11 @@ msgstr ""
 msgid "Operation"
 msgstr "Operação"
 
-msgid "No books found, please try again"
-msgstr "Nenhum livro encontrado, por favor tente novamente"
-
 msgid "No books match the selected search languages and formats"
 msgstr "Nenhum livro corresponde aos idiomas e formatos de pesquisa selecionados"
+
+msgid "No books found, please try again"
+msgstr "Nenhum livro encontrado, por favor tente novamente"
 
 msgid "Fetching most popular books..."
 msgstr "A obter os livros mais populares..."

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-01 18:13+0000\n"
+"POT-Creation-Date: 2026-10-19 06:34+0000\n"
 "PO-Revision-Date: 2026-09-05 13:23+0700\n"
 "Last-Translator: \n"
 "Language-Team: vi <vi@li.org>\n"
@@ -142,11 +142,11 @@ msgstr ""
 msgid "Operation"
 msgstr "Thao tác"
 
-msgid "No books found, please try again"
-msgstr "Không tìm thấy sách, vui lòng thử lại"
-
 msgid "No books match the selected search languages and formats"
 msgstr "Không có sách nào khớp với ngôn ngữ và định dạng tìm kiếm đã chọn"
+
+msgid "No books found, please try again"
+msgstr "Không tìm thấy sách, vui lòng thử lại"
 
 msgid "Fetching most popular books..."
 msgstr "Đang lấy sách phổ biến nhất..."

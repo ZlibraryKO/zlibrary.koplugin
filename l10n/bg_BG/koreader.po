@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-01 18:13+0000\n"
+"POT-Creation-Date: 2026-10-19 06:34+0000\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -147,11 +147,11 @@ msgstr ""
 msgid "Operation"
 msgstr "Операция"
 
-msgid "No books found, please try again"
-msgstr "Не са намерени книги, моля опитайте отново"
-
 msgid "No books match the selected search languages and formats"
 msgstr "Няма книги, отговарящи на избраните езици и формати за търсене"
+
+msgid "No books found, please try again"
+msgstr "Не са намерени книги, моля опитайте отново"
 
 msgid "Fetching most popular books..."
 msgstr "Зареждане на най-популярни книги..."

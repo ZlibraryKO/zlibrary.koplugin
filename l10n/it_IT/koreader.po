@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-01 18:13+0000\n"
+"POT-Creation-Date: 2026-10-19 06:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -141,11 +141,11 @@ msgstr ""
 msgid "Operation"
 msgstr "Operazione"
 
-msgid "No books found, please try again"
-msgstr "Nessun libro trovato, riprova"
-
 msgid "No books match the selected search languages and formats"
 msgstr "Nessun libro corrisponde alle lingue e ai formati di ricerca selezionati"
+
+msgid "No books found, please try again"
+msgstr "Nessun libro trovato, riprova"
 
 msgid "Fetching most popular books..."
 msgstr "Recupero libri più popolari..."

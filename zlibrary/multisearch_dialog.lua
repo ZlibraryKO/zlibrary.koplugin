@@ -191,6 +191,9 @@ function SearchDialog:init()
         self.menu_container.key_events.Close = nil
         self.menu_container.key_events.FocusRight = nil
         self.menu_container.key_events.Right = nil
+        -- Left steps back through the tabs (onKeyPress). The list would take it first, to move
+        -- focus sideways in a one-column list, where it does nothing.
+        self.menu_container.key_events.FocusLeft = nil
         self.toggle_switch:disableFocusManagement(self[1])
     end
 
@@ -208,9 +211,10 @@ end
 
 function SearchDialog:onKeyPress(key)
     if type(key) ~= "table" then return false end
-    if key["Tab"] or (self.build_focus_layout and key["Right"]) then
-        local position = self._position + 1
-        if position > #self.toggle_items then position = 1 end
+    local step = (key["Tab"] or (self.build_focus_layout and key["Right"])) and 1
+        or (self.build_focus_layout and key["Left"]) and -1
+    if step then
+        local position = (self._position - 1 + step) % #self.toggle_items + 1
         self.toggle_switch:togglePosition(position, true)
         UIManager:nextTick(function()
             self:ToggleSwitchCallBack(position)
@@ -323,7 +327,9 @@ function SearchDialog:_reloadFromBookData(books, skip_cache, select_number, no_r
     local old_height = self.menu_container.height
     self.menu_container = self:createMenuContainer(books, old_height)
 
-    self.menu_container:updateItems(select_number, no_recalculate_dimen)
+    -- Every caller here puts up a different list (a tab, a refresh, a fetched page), so it starts
+    -- on its first book. A nil would now keep the focused row of the list it replaced.
+    self.menu_container:updateItems(select_number or 1, no_recalculate_dimen)
 
     if not skip_cache then
         local cache_key = self:getActiveItemCacheKey()

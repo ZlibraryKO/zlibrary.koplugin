@@ -13,7 +13,8 @@ Exits non-zero if anything fails, so it works as a pre-push check.
 
 ## Requirements
 
-A **built KOReader checkout**. The plugin targets KOReader's LuaJIT, which is Lua 5.1, and the
+A **built KOReader checkout**, or an **installed KOReader** — the directory holding `reader.lua`,
+with `luajit` beside it. Installing is the quicker route: nothing to compile. The plugin targets KOReader's LuaJIT, which is Lua 5.1, and the
 harnesses themselves use `loadstring` and `setfenv` to compile file-local functions out of the
 source — neither exists in a system Lua 5.4, so running there produces failures that say nothing
 about the plugin. The harnesses also borrow KOReader's LuaSocket for real URL parsing and its
@@ -35,6 +36,17 @@ Point `run.sh` at yours in whichever way suits. It takes the first that applies:
    repository.
 
 If none of those find a build, `run.sh` says so and exits 2 rather than failing obscurely.
+
+An install has to be a desktop one: a device package's LuaJIT does not run on your machine. On
+NixOS, or anywhere with Nix, nixpkgs has one prebuilt:
+
+```sh
+echo 'KOREADER_DIR=$(nix build --no-link --print-out-paths nixpkgs#koreader)/lib/koreader' > scripts/test-env.sh
+```
+
+Elsewhere, the release's AppImage or `.deb` for your machine's architecture works: point
+`KOREADER_DIR` at `squashfs-root/usr/lib/koreader` once the AppImage is extracted
+(`--appimage-extract`), or at `/usr/lib/koreader` once the `.deb` is installed.
 
 ## What each one covers
 

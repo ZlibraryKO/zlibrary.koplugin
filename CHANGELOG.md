@@ -21,6 +21,12 @@ to `main` — so the top section is the one about to ship.
   Profile or Comments returns to that button instead of the first one.
 - **Left goes to the previous tab in My Books**, as Right goes to the next.
 
+### Internal
+
+Loading more search results no longer tries to sign in again when it fails. Search works without
+an account, so the "please sign in" error that would trigger it never happens, and if it ever had,
+signing in and searching again could have repeated endlessly. A test keeps it from coming back.
+
 ## 1.0.54
 
 ### Fixed

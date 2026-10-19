@@ -8,6 +8,7 @@ local UIManager = require("ui/uimanager")
 local Event = require("ui/event")
 local ButtonDialog = require("ui/widget/buttondialog")
 local ButtonTable = require("ui/widget/buttontable")
+local FocusManager = require("ui/widget/focusmanager")
 local InputContainer = require("ui/widget/container/inputcontainer")
 local FrameContainer = require("ui/widget/container/framecontainer")
 local LeftContainer = require("ui/widget/container/leftcontainer")
@@ -106,7 +107,21 @@ local function normalizeIsbn(raw)
     return best_10
 end
 
+-- Without a touchscreen these lines are reached by moving focus onto them (_addKeyFocusRows), so
+-- they need a focus mark. The border is there all along, white until focused, so taking focus
+-- never shifts the text.
+local KEY_FOCUS_BORDER = Device:hasDPad() and Size.border.thick or 0
+
 local function makeClickable(content_widget, callback)
+    if KEY_FOCUS_BORDER > 0 then
+        content_widget = FrameContainer:new{
+            focusable = true,
+            padding = 0, margin = 0,
+            bordersize = KEY_FOCUS_BORDER, focus_border_size = KEY_FOCUS_BORDER,
+            color = Blitbuffer.COLOR_WHITE, focus_border_color = Blitbuffer.COLOR_BLACK,
+            content_widget,
+        }
+    end
     local container = InputContainer:new{
         ges_events = {TapCustom = { GestureRange:new{ ges = "tap" } }}, 
         content_widget 
@@ -184,6 +199,9 @@ function BookDetailsDialog:_buildInnerDialog()
         self.inner_dialog.movable.unmovable = true
         self.inner_dialog.movable.ges_events = {}
     end
+    if Device:hasDPad() then
+        self:_addKeyFocusRows()
+    end
 
     local wrapper = self
     self.inner_dialog.onClose = function()
@@ -258,6 +276,7 @@ function BookDetailsDialog:_calculateDimensions()
 end
 
 function BookDetailsDialog:_buildContent()
+    self._key_focus_rows = {}
     local vstack = VerticalGroup:new{ align = "left", not_focusable = true}
     local title_face = self.fonts.title
     local face_height = title_face.ftsize:getHeightAndAscender()
@@ -284,7 +303,7 @@ function BookDetailsDialog:_buildContent()
                 -- carry -- it has nothing at all in U+F0000-F1FFF -- so it drew as a box.
                 text = "\u{F002} " .. self.full_author,
                 face = self.fonts.author,
-                max_width = math.floor(self.text_col_w - Screen:scaleBySize(25)),
+                max_width = math.floor(self.text_col_w - Screen:scaleBySize(25)) - 2 * KEY_FOCUS_BORDER,
                 truncation = "end"
             },
             TextWidget:new{ text = " \u{25B8}", face = self.fonts.author }
@@ -295,6 +314,7 @@ function BookDetailsDialog:_buildContent()
             return true
         end)
         table.insert(vstack, clickable_author)
+        table.insert(self._key_focus_rows, clickable_author)
     end
 
     local meta_lines = self:_generateMetaLines()
@@ -484,15 +504,17 @@ function BookDetailsDialog:_buildIsbnLine()
         text = can_copy and ("ISBN " .. self.book.isbn .. " \u{25B8}") or ("ISBN " .. self.book.isbn),
         face = self.fonts.meta,
         fgcolor = Blitbuffer.COLOR_GRAY_3,
-        max_width = self.text_col_w,
+        max_width = can_copy and (self.text_col_w - 2 * KEY_FOCUS_BORDER) or self.text_col_w,
     }
     if not can_copy then return widget end
-    return makeClickable(widget, function()
+    local clickable = makeClickable(widget, function()
         -- The bare number, not the displayed line: it is going into a Calibre search box.
         Device.input.setClipboardText(self_ref.book.isbn)
         self_ref.Ui_module.showInfoMessage(T("Selection copied to clipboard."))
         return true
     end)
+    table.insert(self._key_focus_rows, clickable)
+    return clickable
 end
 
 function BookDetailsDialog:_generateMetaLines()
@@ -699,6 +721,12 @@ end
 
 function BookDetailsDialog:switchState(new_state)
     local orig_dimen = self.inner_dialog.dimen and self.inner_dialog.dimen:copy()
+    -- Leaving the button list (for Profile or Comments, or rebuilding it in place): note which
+    -- button had focus, so coming back lands on it rather than on the first one.
+    if self.view_state == "menu" and self.inner_dialog and self.inner_dialog.selected then
+        local focused = self.inner_dialog:getFocusItem()
+        self._menu_focus = { text = focused and focused.text, y = self.inner_dialog.selected.y }
+    end
     self.view_state = new_state
     if self.inner_dialog then
         if type(self.inner_dialog.onCloseWidget) == "function" then
@@ -722,7 +750,40 @@ function BookDetailsDialog:switchState(new_state)
         end
         return "ui", refresh_dimen
     end)
-    -- self.inner_dialog:moveFocusTo(1, 1)
+end
+
+-- Focus for a reader without a touchscreen, who moves it with keys.
+--
+-- The author and ISBN lines act on a tap, and a tap is all they listened for: with keys, focus
+-- went from button to button and never reached them. Put them above the buttons in the focus
+-- order, so Up from the first button lands on them; Press sends them a tap like any button.
+--
+-- Then focus a button explicitly. ButtonDialog merges the buttons into its own focus order when it
+-- carries extra widgets, as this one does, and that merge unfocuses the preselected button and
+-- leaves it so: focus was on it, but nothing showed which. In the button list it goes back to the
+-- button that was used last (switchState), otherwise to the preselected one.
+function BookDetailsDialog:_addKeyFocusRows()
+    local dialog = self.inner_dialog
+    if not (dialog.layout and dialog.selected) then return end
+    local rows = self._key_focus_rows or {}
+    for i, widget in ipairs(rows) do
+        table.insert(dialog.layout, i, { widget })
+    end
+    local y = #rows + 1
+    local remembered = self.view_state == "menu" and self._menu_focus
+    if remembered then
+        local found
+        for row = #rows + 1, #dialog.layout do
+            local widget = dialog.layout[row][1]
+            if remembered.text and widget and widget.text == remembered.text then
+                found = row
+                break
+            end
+        end
+        -- The text changes for one button (Add To / Remove From Favorites): fall back to its row.
+        y = found or math.max(1, math.min(remembered.y, #dialog.layout))
+    end
+    dialog:moveFocusTo(1, y, FocusManager.FOCUS_ONLY_ON_NT)
 end
 
 function BookDetailsDialog:_generateFavoriteButtonDef(in_favorites)

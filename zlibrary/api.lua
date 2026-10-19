@@ -114,8 +114,18 @@ local function _usableCoverUrl(cover)
     if not (parsed and parsed.host) then
         return nil
     end
+    -- The downloaded-books list names every cover with an empty collection folder
+    -- (".../collections//<hash>.jpg"). The real folder differs per book -- userbooks, genesis,
+    -- foreignfiction... -- and only the book's details carry it, so that URL is always a 404. Treat
+    -- it as absent too; the menu falls back to the cover in the book's cached details.
+    if parsed.path and parsed.path:find("//", 1, true) then
+        return nil
+    end
     return cover
 end
+-- Also checked by the menu at fetch time: a list saved to the multi-search cache before a rule here
+-- existed still carries the URLs it rejects.
+Api.usableCoverUrl = _usableCoverUrl
 
 -- The header block every authenticated JSON call sends.
 --
@@ -1260,6 +1270,7 @@ function Api.downloadBookCover(download_url, target_filepath)
 
     if http_result.error then
         result.error = http_result.error
+        result.status_code = http_result.status_code
         discardPartialFile()
         logger.err("Zlibrary:Api.downloadBookCover - END (HTTP error from Api.makeHttpRequest) - Error: " .. result.error .. ", Status: " .. tostring(http_result.status_code))
         return result
@@ -1267,6 +1278,7 @@ function Api.downloadBookCover(download_url, target_filepath)
 
     if http_result.status_code ~= 200 then
         result.error = string.format("%s: %s", T("Download HTTP Error"), http_result.status_code)
+        result.status_code = http_result.status_code
         discardPartialFile()
         logger.err("Zlibrary:Api.downloadBookCover - END (HTTP status error) - Error: " .. result.error)
         return result
@@ -1320,11 +1332,27 @@ function Api.getRecommendedBooks(user_id, user_key)
     return { books = transformed_books }
 end
 
-function Api.getMostPopularBooks(user_id, user_key)
+-- `languages` and `extensions` are the reader's search-language and search-format selections.
+-- The most-popular endpoint ignores both -- the list is the same mostly-English one whatever is
+-- asked for, switch-language included -- so narrowing that list here leaves nothing for most
+-- languages. The search endpoint does filter by language and format on the server, and with an
+-- empty query and the "popular" order it answers with the most popular books matching them,
+-- which is what this tab should show. `filtered` tells the caller that an empty result means
+-- "nothing matches those languages and formats".
+function Api.getMostPopularBooks(user_id, user_key, languages, extensions)
     local url = Config.getMostPopularBooksUrl()
     if not url then
         logger.warn("Api.getMostPopularBooks - Base URL not configured")
         return { error = T("Z-library server URL not configured.") }
+    end
+
+    local has_languages = type(languages) == "table" and #languages > 0
+    local has_extensions = type(extensions) == "table" and #extensions > 0
+    if has_languages or has_extensions then
+        local res = Api.search("", user_id, user_key, has_languages and languages or nil,
+            has_extensions and extensions or nil, { "popular" }, 1)
+        if res.error then return { error = res.error } end
+        return { books = res.results or {}, filtered = true }
     end
 
     local headers = _authedHeaders(user_id, user_key)

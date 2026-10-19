@@ -46,6 +46,12 @@ function ApiHelper.downloadCover(url, book_hash, skip_conflicts)
     local res = Api.downloadBookCover(url, temp_path)
     if not res or res.error or not res.success then
         util.removeFile(temp_path)
+        -- The server has no cover for this book, and asking again will not change that: tell the
+        -- channel not to spend its retries on it (see deliver_result in async_helper).
+        local status = res and res.status_code
+        if status == 404 or status == 410 then
+            return false, { no_retry = true, error = res.error }
+        end
         return false
     end
     local ok, cover_bb = pcall(RenderImage.renderImageFile, RenderImage, temp_path, false, nil, nil)
@@ -134,81 +140,6 @@ function  Preloader.getFavoriteBookIds(callback)
                         is_ok = true
                 end
                 wrap_callback (is_ok)
-        end)
-end
-function  Preloader.getBookDetails(book_id, book_hash, callback)
-        local wrap_callback = getSafeCallback(callback)
-        if not (book_id and book_hash) then return wrap_callback(false) end
-        local book_cache = Cache:new{ type="bookinfo" }
-        local book_details_cache = book_cache:get(book_hash, 604800)
-        if type(book_details_cache) == "table" and book_details_cache.title then return wrap_callback(true) end
-        if not NetworkMgr:isConnected() then return wrap_callback(false) end
-        local task = function() return ApiHelper.fetchWithAuth(Api.getBookDetails, book_id, book_hash) end
-        _pushTask(task, function(success, res)
-                if success and type(res) == "table" and type(res.book) == "table" then
-                        book_cache:insert(book_hash, res.book)
-                         wrap_callback(true)
-                else
-                        wrap_callback(false)
-                end
-        end)
-end
-function  Preloader.getBookComments(book_id, book_hash, callback)
-        local wrap_callback = getSafeCallback(callback)
-        if not (book_id and book_hash) then return wrap_callback(false) end
-        local book_cache = Cache:new{ type="bookinfo" }
-        local comments_key = string.format("%s_comments", book_hash)
-        local book_comments_cache = book_cache:get(comments_key, 604800)
-        if type(book_comments_cache) == "table" then return wrap_callback(true) end
-        if not NetworkMgr:isConnected() then return wrap_callback(false) end
-        local task = function() return ApiHelper.fetchWithAuth(Api.getBookComments, book_id) end
-        _pushTask(task, function(success, res)
-                local is_ok = false
-                -- not have res.comments[1]  there are zero comments.
-                if success and type(res) == "table" and type(res.comments) == "table"  then
-                        book_cache:insert(comments_key, res.comments)
-                        is_ok = true
-                end
-                wrap_callback(is_ok)
-        end)
-end
-function  Preloader.getMostPopularBooks(callback)
-        local wrap_callback = getSafeCallback(callback)
-        local cache = Config.getMultiSearchCache()
-        local cache_key = "popular"
-        local has_cache = cache:get(cache_key, 1840000)
-        if type(has_cache) == "table" then return wrap_callback(true) end
-        if not NetworkMgr:isConnected() then return wrap_callback(false) end
-        -- Deliberately not routed through fetchWithAuth: most-popular is the same list for
-        -- every account (main.lua marks it requires_auth = false), so there is no session
-        -- to attach and nothing to re-login for.
-        local task = function() return Api.getMostPopularBooks() end
-        _pushTask(task, function(success, res)
-                local is_ok = false
-                if success and type(res) == "table" and type(res.books) == "table" then
-                        cache:insert(cache_key, res.books)
-                        is_ok = true
-                end
-                wrap_callback(is_ok)
-        end)
-end
-function  Preloader.getRecommendedBooks(callback)
-        local wrap_callback = getSafeCallback(callback)
-        local cache = Config.getMultiSearchCache()
-        local cache_key = "recommended"
-        local has_cache = cache:get(cache_key, 1840000)
-        if type(has_cache) == "table" then return wrap_callback(true) end
-        if not NetworkMgr:isConnected() then return wrap_callback(false) end
-        -- Unlike most-popular above, recommended is per-account (requires_auth = true in
-        -- main.lua), so it goes through fetchWithAuth for the session cookie and re-login.
-        local task = function() return ApiHelper.fetchWithAuth(Api.getRecommendedBooks) end
-        _pushTask(task, function(success, res)
-                local is_ok = false
-                if success and type(res) == "table" and type(res.books) == "table" then
-                        cache:insert(cache_key, res.books)
-                        is_ok = true
-                end
-                wrap_callback(is_ok)
         end)
 end
 function  Preloader.getBookCover(url, book_hash, callback)

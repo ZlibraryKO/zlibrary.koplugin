@@ -6,6 +6,36 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.53
+
+### Changed
+
+**Most popular follows your search languages and formats.** If you have picked search
+languages or formats (**Search options → Select search languages / Select search formats**, or
+the language button in the search box), the Most popular tab now lists the most popular books in
+those languages and formats, as the server ranks them — an EPUB-only reader no longer sees PDFs
+there. Z-library's own most-popular list is the same mostly-English one whatever is asked for, so
+with either selected the tab asks the search instead, for everything matching them ordered by
+popularity. With neither selected it is unchanged. Each selection is cached separately, so
+changing the languages or formats never serves the list fetched under the old ones.
+
+### Fixed
+
+**Background loading no longer stalls for minutes once you are signed in.** The plugin loads a few
+things in the background, such as which books are in your favourites. Any of these with a large
+answer — thirty favourites is enough — got stuck until it was killed three minutes later, and the
+next one after it did the same. They now finish in about a second, so favourite markers show up
+in the lists again.
+
+**Covers in the Downloaded list.** Z-library sends this list with broken cover addresses, so every
+cover in it failed. The plugin no longer asks for them, and shows the cover from the book's details
+instead for any book you have opened in the last week. Covers that are missing on the server are
+now tried once rather than three times.
+
+**Covers appear when you come back from a book's details.** Opening a book downloads its cover, but
+the list behind it kept a blank space until you turned the page. It now shows the cover as soon as
+you go back.
+
 ## 1.0.52
 
 ### Added

@@ -145,6 +145,9 @@ msgstr "Thao tác"
 msgid "No books found, please try again"
 msgstr "Không tìm thấy sách, vui lòng thử lại"
 
+msgid "No books match the selected search languages and formats"
+msgstr "Không có sách nào khớp với ngôn ngữ và định dạng tìm kiếm đã chọn"
+
 msgid "Fetching most popular books..."
 msgstr "Đang lấy sách phổ biến nhất..."
 

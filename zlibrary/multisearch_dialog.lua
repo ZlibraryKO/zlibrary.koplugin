@@ -323,7 +323,9 @@ function SearchDialog:_reloadFromBookData(books, skip_cache, select_number, no_r
     local old_height = self.menu_container.height
     self.menu_container = self:createMenuContainer(books, old_height)
 
-    self.menu_container:updateItems(select_number, no_recalculate_dimen)
+    -- Every caller here puts up a different list (a tab, a refresh, a fetched page), so it starts
+    -- on its first book. A nil would now keep the focused row of the list it replaced.
+    self.menu_container:updateItems(select_number or 1, no_recalculate_dimen)
 
     if not skip_cache then
         local cache_key = self:getActiveItemCacheKey()

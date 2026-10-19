@@ -500,7 +500,7 @@ function Zlibrary:_fetchBookList(options, ...)
     options.resolve_result = function(ui_self, api_result, plugin_self)
         
         self[options.results_member_name] = api_result.books
-        options.display_menu_func(ui_self, self[options.results_member_name], plugin_self)
+        options.display_menu_func(ui_self, self[options.results_member_name], plugin_self, api_result)
     end
     self:_requestDispatcher(options, ...)
 end  
@@ -530,6 +530,9 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
             text = T("Most popular"),
             cache_key = Config.getMostPopularCacheKey,
             cache_expiry = 180000,
+            -- Only the language/format search has more pages; Z-library's own list is one fixed
+            -- page of 100, and says so by never reporting more (has_more_results stays nil).
+            enable_pagination = true,
             callback = function(widget, page, is_refresh)
                 self:_fetchBookList({
                     api_method = Api.getMostPopularBooks,
@@ -539,12 +542,18 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
                     operation_key = "popular",
                     log_context = "onShowMostPopularBooks",
                     results_member_name = "current_most_popular_books",
-                    display_menu_func = function(ui_self, books, plugin_self)
-                        widget:reloadFromBookData(books)
+                    display_menu_func = function(ui_self, books, plugin_self, api_result)
+                        local current_page = page or 1
+                        widget:setPaginationState(api_result.has_more_results, current_page)
+                        if current_page == 1 then
+                            widget:reloadFromBookData(books)
+                        else
+                            widget:appendBatchDataAndReload(books)
+                        end
                     end,
                     requires_auth = false,
                     cancellable = true,
-                }, Config.getSearchLanguages(), Config.getSearchExtensions())
+                }, Config.getSearchLanguages(), Config.getSearchExtensions(), page)
             end}, {
                 text = T("Recommended"),
                 cache_key = "recommended",

@@ -1339,7 +1339,7 @@ end
 -- empty query and the "popular" order it answers with the most popular books matching them,
 -- which is what this tab should show. `filtered` tells the caller that an empty result means
 -- "nothing matches those languages and formats".
-function Api.getMostPopularBooks(user_id, user_key, languages, extensions)
+function Api.getMostPopularBooks(user_id, user_key, languages, extensions, page)
     local url = Config.getMostPopularBooksUrl()
     if not url then
         logger.warn("Api.getMostPopularBooks - Base URL not configured")
@@ -1349,10 +1349,21 @@ function Api.getMostPopularBooks(user_id, user_key, languages, extensions)
     local has_languages = type(languages) == "table" and #languages > 0
     local has_extensions = type(extensions) == "table" and #extensions > 0
     if has_languages or has_extensions then
+        local page_num = page or 1
         local res = Api.search("", user_id, user_key, has_languages and languages or nil,
-            has_extensions and extensions or nil, { "popular" }, 1)
+            has_extensions and extensions or nil, { "popular" }, page_num)
         if res.error then return { error = res.error } end
-        return { books = res.results or {}, filtered = true }
+        local books = res.results or {}
+        -- The search pages, 30 books at a time, up to the 500 the server reports as its total;
+        -- fetching only the first page left the tab at 30. Without a total, a full page is the
+        -- best sign there is another.
+        local has_more
+        if res.total_count then
+            has_more = page_num * Config.SEARCH_RESULTS_LIMIT < res.total_count
+        else
+            has_more = #books >= Config.SEARCH_RESULTS_LIMIT
+        end
+        return { books = books, filtered = true, has_more_results = has_more }
     end
 
     local headers = _authedHeaders(user_id, user_key)

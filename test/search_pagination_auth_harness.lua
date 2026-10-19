@@ -40,8 +40,9 @@ end
 
 -- ---------------------------------------------------------------- the search-pagination path
 -- The two load-more handlers plus the async call that drives them, captured as one region.
+-- AsyncHelper.run or .runCancellable: the call became cancellable after this test was written.
 local load_more = support.extract_block(MAIN,
-    "(on_success_load_more = function.-AsyncHelper%.run%(task_load_more)")
+    "(on_success_load_more = function.-AsyncHelper%.run%a*%(task_load_more)")
 local load_more_code = strip_comments(load_more)
 
 r.check("the search load-more path never re-logs-in", count(load_more_code, "self:login(") == 0,

@@ -6,6 +6,14 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.54
+
+### Fixed
+
+**Most popular stopped at 30 books** when you have search languages or formats selected. It now
+loads the next 30 as you reach the end of the list, up to the 500 the server offers. Without a
+selection it is Z-library's own list of 100, as before.
+
 ## 1.0.53
 
 ### Changed

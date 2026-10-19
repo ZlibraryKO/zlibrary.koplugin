@@ -49,6 +49,9 @@ local BODIES = {
     } },
     -- A filtered (language/format) search answer with nothing in it.
     books_none = { success = 1, books = {} },
+    -- A popularity search as the server answers it: 30 a page, and a total it stops at.
+    search_500 = { success = 1, books = { { id = 1, title = "T", author = "A" } },
+                   pagination = { limit = 30, current = 1, total_items = 500, total_pages = 17 } },
     ok         = { success = 1 },
     api_failed = { success = 0, message = "nope" },
 }
@@ -66,7 +69,7 @@ end
 -- recognisable pair, so a wrapper reaching for the wrong one is visible rather than merely wrong.
 local asked
 package.preload["zlibrary.config"] = function()
-    return setmetatable({ getUserAgent = function() return "test-agent" end }, {
+    return setmetatable({ getUserAgent = function() return "test-agent" end, SEARCH_RESULTS_LIMIT = 30 }, {
         __index = function(_, key)
             return function()
                 asked[#asked + 1] = key
@@ -302,6 +305,24 @@ r.check("getMostPopularBooks: formats alone send the format, no language, by pop
         pbody:find("extensions[0]=epub", 1, true) and not pbody:find("languages[", 1, true)
             and pbody:find("order=popular", 1, true) and pop.filtered == true,
         "body: " .. pbody)
+-- The search pages; fetching only its first page left the tab at 30 books. It asks for the page
+-- it is given, and reports more while the server's total is not reached.
+pop, preq = call("getMostPopularBooks", { UID, UKEY, { "english" }, {}, 2 }, { body = "search_500" })
+pbody = preq and preq.body or ""
+r.check("getMostPopularBooks: asks the search for the page it is given",
+        ("&" .. pbody .. "&"):find("&page=2&", 1, true) ~= nil, "body: " .. pbody)
+r.check("getMostPopularBooks: more pages while the total is not reached",
+        pop.has_more_results == true, "has_more_results=" .. tostring(pop.has_more_results))
+pop = call("getMostPopularBooks", { UID, UKEY, { "english" }, {}, 17 }, { body = "search_500" })
+r.check("getMostPopularBooks: no more once the pages cover the total",
+        pop.has_more_results == false, "has_more_results=" .. tostring(pop.has_more_results))
+pop = call("getMostPopularBooks", { UID, UKEY, { "english" } }, { body = "books" })
+r.check("getMostPopularBooks: without a total, a short page is the last",
+        pop.has_more_results == false, "has_more_results=" .. tostring(pop.has_more_results))
+pop = call("getMostPopularBooks", { UID, UKEY }, { body = "books" })
+r.check("getMostPopularBooks: Z-library's own list never offers more pages",
+        not pop.has_more_results, "has_more_results=" .. tostring(pop.has_more_results))
+
 pop, preq, pused = call("getMostPopularBooks", { UID, UKEY, nil, {} }, { body = "books" })
 r.check("getMostPopularBooks: empty languages and formats keep the most-popular endpoint",
         preq and preq.method == "GET" and not asked_for(pused, "getSearchUrl") and not pop.filtered,

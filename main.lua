@@ -675,7 +675,7 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                 mandatory_func = function(book)
                     return mandatory_format(book and book.date_saved)
                 end,
-                callback = function(widget, page, is_refresh)
+                callback = function(widget, page, is_refresh, fetch_generation)
                     self:_requestDispatcher({
                         api_method = Api.getFavoriteBooks,
                         loading_text_key = T("Getting your favorites..."),
@@ -688,12 +688,12 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                             local current_page = page or 1
                             local is_refresh_call = is_refresh
 
-                            widget:setPaginationState(api_result.has_more_results, current_page)
+                            widget:setPaginationState(api_result.has_more_results, current_page, fetch_generation)
 
                             if current_page == 1 then
-                                widget:reloadFromBookData(books)
+                                widget:reloadFromBookData(books, nil, nil, nil, fetch_generation)
                             else
-                                widget:appendBatchDataAndReload(books)
+                                widget:appendBatchDataAndReload(books, fetch_generation)
                             end
                             return is_refresh_call and plugin_self:resetFavoritesCache()
                         end,
@@ -719,7 +719,7 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                             end)
                         end,
                     },
-                    callback = function(widget, page, is_refresh)
+                    callback = function(widget, page, is_refresh, fetch_generation)
                         self:_requestDispatcher({
                             api_method = Api.getDownloadedBooks,
                             loading_text_key = T("Getting your downloaded..."),
@@ -732,13 +732,13 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                                 local current_page = page or 1
                                 local is_refresh_call = is_refresh
 
-                                widget:setPaginationState(api_result.has_more_results, current_page)
+                                widget:setPaginationState(api_result.has_more_results, current_page, fetch_generation)
                         
                                 if current_page == 1 then
-                                    widget:reloadFromBookData(books)
+                                    widget:reloadFromBookData(books, nil, nil, nil, fetch_generation)
                                 else
                                     -- Merge paginated results
-                                    widget:appendBatchDataAndReload(books)
+                                    widget:appendBatchDataAndReload(books, fetch_generation)
                                 end
                                 return is_refresh_call and plugin_self:resetDownloadQuotaCache()
                             end,
@@ -754,15 +754,15 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                         show_cover = false,
                         to_menu_item = function(booklist)
                             return {
-                                text = booklist.name,
+                                text = booklist.name or T("Untitled"),
                                 mandatory = booklist.count and tostring(booklist.count),
                                 callback = function() self:showBooklistDialog(booklist) end,
                             }
                         end,
                     },
-                    -- Passes fetch_generation on: every tab here fetches page 1, so the page check
-                    -- alone would let a slow booklists response land in the tab the user switched to.
-                    callback = function(widget, _, _, fetch_generation)
+                    callback = function(widget, _, is_refresh, fetch_generation)
+                        -- Each list's cached books carry its old count, so they go with the lists.
+                        if is_refresh then Config.getMultiSearchCache():removePrefix("booklist_") end
                         self:_requestDispatcher({
                             api_method = Api.getBooklists,
                             loading_text_key = T("Getting your booklists..."),

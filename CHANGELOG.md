@@ -17,6 +17,9 @@ it onto your reader. Creating lists and adding books to them still happens on th
 
 ### Fixed
 
+**Switching tabs in My Books while a list loads shows the tab you picked.** A slow Favorites
+answer could land in Downloaded after you switched, and the other way round.
+
 **Readers without a touchscreen** — the Kindle 4 and other key-only readers:
 
 - **You keep your place in a list.** The selection jumped back to the first book whenever a cover

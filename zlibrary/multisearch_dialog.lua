@@ -215,7 +215,8 @@ function SearchDialog:onKeyPress(key)
     if type(key) ~= "table" then return false end
     local step = (key["Tab"] or (self.build_focus_layout and key["Right"])) and 1
         or (self.build_focus_layout and key["Left"]) and -1
-    if step then
+    -- With one tab, a switch would only re-run it and drop the pages loaded so far.
+    if step and #self.toggle_items > 1 then
         local position = (self._position - 1 + step) % #self.toggle_items + 1
         self.toggle_switch:togglePosition(position, true)
         UIManager:nextTick(function()

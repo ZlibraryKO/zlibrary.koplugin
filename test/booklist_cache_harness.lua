@@ -49,6 +49,12 @@ local only = kv._cache
 kv:removePrefix("booklist_")
 r.check("removePrefix: purges the file when nothing is left, as remove does", only.purged == true)
 
+kv = new_kv({ booklists = {}, favorites = {} })
+r.check("removePrefix: with nothing to remove still succeeds", kv:removePrefix("booklist_") == true)
+r.check("removePrefix: and leaves the file alone",
+        kv._cache.flushes == 0 and not kv._cache.purged and kv._cache.data.booklists ~= nil,
+        kv._cache.flushes .. " flushes, purged=" .. tostring(kv._cache.purged))
+
 -- ---------------------------------------------------------------- clearPersonalCaches end to end
 local multi_search = new_kv({
     booklists = { { id = 1, name = "Still here" } },

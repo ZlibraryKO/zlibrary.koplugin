@@ -54,22 +54,23 @@ local BODIES = {
                    pagination = { limit = 30, current = 1, total_items = 500, total_pages = 17 } },
     ok         = { success = 1 },
     api_failed = { success = 0, message = "nope" },
-    -- Trimmed from real /papi/booklist responses. The booklist endpoints put their text in error.
+    -- Shaped like /papi/booklist responses, values made up. The booklist endpoints put their text in error.
     api_failed_error = { success = 0, error = "Booklist not found" },
+    booklists_missing = { success = 1 },
     booklists = { success = 1, list = {
-        { id = 4066232, user_id = 1, title = "Test", books_count = 22, description = "", public = true },
-        { id = 4066297, user_id = 1, title = "", books_count = 0, public = true },
+        { id = 1001, user_id = 1, title = "Test", books_count = 22, description = "", public = true },
+        { id = 1002, user_id = 1, title = "", books_count = 0, public = true },
         { id = "not-a-number", title = "Broken", books_count = 1 },
     } },
     booklist_books_p1 = { success = 1, books = {
-        { book = { id = 21638985, hash = "20c590", title = "Amerika", author = "Franc Kafka",
-                   extension = "epub", dl = "/dl/gW5P7ZxPVd", href = "/book/1rMabNDarO/amerika.html",
+        { book = { id = 101, hash = "abc123", title = "Amerika", author = "Franc Kafka",
+                   extension = "epub", dl = "/dl/fakeToken1", href = "/book/fakeHref1/amerika.html",
                    filesizeString = "268 KB", language = "serbian", year = 2016,
-                   cover = "https://covers.example/covers299/collections/userbooks/2e69.jpg" },
-          readlist_books_id = 160405435, _isUserSavedBook = false },
-        { book = { id = 5479594, hash = "2d783a", title = "Proces", author = "Franc Kafka",
-                   extension = "epub", dl = "/dl/0Wd963yBmQ", cover = "/img/cover-not-exists.png" },
-          readlist_books_id = 160405430, _isUserSavedBook = false },
+                   cover = "https://covers.example/1.jpg" },
+          readlist_books_id = 201, _isUserSavedBook = false },
+        { book = { id = 102, hash = "def456", title = "Proces", author = "Franc Kafka",
+                   extension = "epub", dl = "/dl/fakeToken2", cover = "/img/cover-not-exists.png" },
+          readlist_books_id = 202, _isUserSavedBook = false },
         { readlist_books_id = 1, book = "not-a-table" },
     }, pagination = { limit = 20, current = 1, before = false, next = 2, total_items = 22, total_pages = 2 } },
     booklist_books_p2 = { success = 1, books = {
@@ -156,7 +157,7 @@ local WRAPPERS = {
       "books_paged", "books" },
     { "getBooklists", { UID, UKEY }, "getBooklistsUrl", "getPopularTimeout",
       "booklists", "booklists" },
-    { "getBooklistBooks", { UID, UKEY, 4066232, 1 }, "getBooklistBooksUrl", "getPopularTimeout",
+    { "getBooklistBooks", { UID, UKEY, 1001, 1 }, "getBooklistBooksUrl", "getPopularTimeout",
       "booklist_books_p1", "books" },
 }
 
@@ -230,7 +231,7 @@ local AUTHED = {
     { "getFavoriteBookIds", { UID, UKEY } },
     { "favoriteBook", { UID, UKEY, { id = "1", hash = "h" } } },
     { "getBooklists", { UID, UKEY } },
-    { "getBooklistBooks", { UID, UKEY, 4066232, 1 } },
+    { "getBooklistBooks", { UID, UKEY, 1001, 1 } },
 }
 for _, w in ipairs(AUTHED) do
     local name, args = w[1], w[2]
@@ -287,14 +288,14 @@ do
     r.check("getBooklists: is a GET", req and req.method == "GET", "method=" .. tostring(req and req.method))
     r.check("getBooklists: keeps only entries with a numeric id", #lists == 2, "got " .. #lists)
     r.check("getBooklists: maps title to name and books_count to count",
-            lists[1] and lists[1].id == 4066232 and lists[1].name == "Test" and lists[1].count == 22,
+            lists[1] and lists[1].id == 1001 and lists[1].name == "Test" and lists[1].count == 22,
             lists[1] and string.format("id=%s name=%s count=%s", tostring(lists[1].id),
                 tostring(lists[1].name), tostring(lists[1].count)) or "no first list")
     r.check("getBooklists: a blank title falls back to a placeholder",
             lists[2] and lists[2].name == "Untitled" and lists[2].count == 0,
             "name=" .. tostring(lists[2] and lists[2].name))
 
-    res = call("getBooklists", { UID, UKEY }, { body = "booklist_books_empty" })
+    res = call("getBooklists", { UID, UKEY }, { body = "booklists_missing" })
     r.check("getBooklists: a response with no list is an error", res.error ~= nil, "accepted it")
 
     -- A 401 reaches the wrapper as http_result.error, and the re-login matches on its text.
@@ -307,7 +308,7 @@ do
 end
 
 do
-    local res, req = call("getBooklistBooks", { UID, UKEY, 4066232, 1 }, { body = "booklist_books_p1" })
+    local res, req = call("getBooklistBooks", { UID, UKEY, 1001, 1 }, { body = "booklist_books_p1" })
     r.check("getBooklistBooks: is a POST with an empty body",
             req and req.method == "POST" and req.body == nil and req.headers["Content-Length"] == "0",
             req and string.format("method=%s body=%s length=%s", tostring(req.method), tostring(req.body),
@@ -333,8 +334,8 @@ do
     r.check("getBooklistBooks: unwraps each entry's book and skips malformed ones", #books == 2,
             "got " .. #books)
     r.check("getBooklistBooks: books carry what details and download need",
-            books[1] and books[1].id == 21638985 and books[1].hash == "20c590" and books[1].title == "Amerika"
-                and books[1].download == "/dl/gW5P7ZxPVd" and books[1].format == "epub",
+            books[1] and books[1].id == 101 and books[1].hash == "abc123" and books[1].title == "Amerika"
+                and books[1].download == "/dl/fakeToken1" and books[1].format == "epub",
             books[1] and string.format("id=%s hash=%s download=%s", tostring(books[1].id),
                 tostring(books[1].hash), tostring(books[1].download)) or "no first book")
     r.check("getBooklistBooks: the relative placeholder cover is dropped", books[2] and books[2].cover == nil,
@@ -342,11 +343,11 @@ do
     r.check("getBooklistBooks: more pages before the last", res.has_more_results == true,
             "has_more_results=" .. tostring(res.has_more_results))
 
-    res = call("getBooklistBooks", { UID, UKEY, 4066232, 2 }, { body = "booklist_books_p2" })
+    res = call("getBooklistBooks", { UID, UKEY, 1001, 2 }, { body = "booklist_books_p2" })
     r.check("getBooklistBooks: no more on the last page", res.has_more_results == false,
             "has_more_results=" .. tostring(res.has_more_results))
 
-    res = call("getBooklistBooks", { UID, UKEY, 4066297, 1 }, { body = "booklist_books_empty" })
+    res = call("getBooklistBooks", { UID, UKEY, 1002, 1 }, { body = "booklist_books_empty" })
     r.check("getBooklistBooks: an empty list is no books and no more pages",
             res.error == nil and type(res.books) == "table" and #res.books == 0 and res.has_more_results == false,
             "error=" .. tostring(res.error) .. " has_more_results=" .. tostring(res.has_more_results))

@@ -8,7 +8,17 @@ to `main` — so the top section is the one about to ship.
 
 ## 1.0.55
 
+### Added
+
+**Your booklists, in My Books.** A new Booklists tab lists the booklists on your Z-library
+account, with how many books each holds. Open one to see its books, then open or download them
+the same way as in Favorites. You no longer need to favourite a book on the website first to get
+it onto your reader. Creating lists and adding books to them still happens on the website.
+
 ### Fixed
+
+**Switching tabs in My Books while a list loads shows the tab you picked.** A slow Favorites
+answer could land in Downloaded after you switched, and the other way round.
 
 **Readers without a touchscreen** — the Kindle 4 and other key-only readers:
 

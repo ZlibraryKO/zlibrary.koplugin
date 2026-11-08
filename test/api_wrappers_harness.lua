@@ -54,7 +54,38 @@ local BODIES = {
                    pagination = { limit = 30, current = 1, total_items = 500, total_pages = 17 } },
     ok         = { success = 1 },
     api_failed = { success = 0, message = "nope" },
+    -- Shaped like /papi/booklist responses, values made up. The booklist endpoints put their text in error.
+    api_failed_error = { success = 0, error = "Booklist not found" },
+    booklists_missing = { success = 1 },
+    booklists = { success = 1, list = {
+        { id = 1001, user_id = 1, title = "Test", books_count = 22, description = "", public = true },
+        { id = 1002, user_id = 1, title = "", books_count = 0, public = true },
+        { id = "not-a-number", title = "Broken", books_count = 1 },
+    } },
+    booklist_books_p1 = { success = 1, books = {
+        { book = { id = 101, hash = "abc123", title = "Amerika", author = "Franc Kafka",
+                   extension = "epub", dl = "/dl/fakeToken1", href = "/book/fakeHref1/amerika.html",
+                   filesizeString = "268 KB", language = "serbian", year = 2016,
+                   cover = "https://covers.example/1.jpg" },
+          readlist_books_id = 201, _isUserSavedBook = false },
+        { book = { id = 102, hash = "def456", title = "Proces", author = "Franc Kafka",
+                   extension = "epub", dl = "/dl/fakeToken2", cover = "/img/cover-not-exists.png" },
+          readlist_books_id = 202, _isUserSavedBook = false },
+        { readlist_books_id = 1, book = "not-a-table" },
+    }, pagination = { limit = 20, current = 1, before = false, next = 2, total_items = 22, total_pages = 2 } },
+    booklist_books_p2 = { success = 1, books = {
+        { book = { id = 1, hash = "aaa", title = "Last", author = "A", extension = "epub" } },
+    }, pagination = { limit = 20, current = 2, before = 1, next = false, total_items = 22, total_pages = 2 } },
+    booklist_books_empty = { success = 1, books = {},
+        pagination = { limit = 20, current = 1, before = false, next = false, total_items = 0, total_pages = 0 } },
 }
+local function unpaged_booklist_books(n)
+    local books = {}
+    for i = 1, n do books[i] = { book = { id = i, hash = "h" .. i, title = "T", author = "A" } } end
+    return { success = 1, books = books }
+end
+BODIES.booklist_books_full_unpaged = unpaged_booklist_books(20)
+BODIES.booklist_books_short_unpaged = unpaged_booklist_books(3)
 package.preload["json"] = function()
     return {
         decode = setmetatable({ simple = {} }, { __call = function(_, s)
@@ -69,7 +100,8 @@ end
 -- recognisable pair, so a wrapper reaching for the wrong one is visible rather than merely wrong.
 local asked
 package.preload["zlibrary.config"] = function()
-    return setmetatable({ getUserAgent = function() return "test-agent" end, SEARCH_RESULTS_LIMIT = 30 }, {
+    return setmetatable({ getUserAgent = function() return "test-agent" end, SEARCH_RESULTS_LIMIT = 30,
+                          BOOKLIST_PAGE_SIZE = 20 }, {
         __index = function(_, key)
             return function()
                 asked[#asked + 1] = key
@@ -123,6 +155,10 @@ local WRAPPERS = {
       "books_paged", "books" },
     { "getFavoriteBooks", { UID, UKEY, 1, "date" }, "getFavoriteBooksUrl", "getPopularTimeout",
       "books_paged", "books" },
+    { "getBooklists", { UID, UKEY }, "getBooklistsUrl", "getPopularTimeout",
+      "booklists", "booklists" },
+    { "getBooklistBooks", { UID, UKEY, 1001, 1 }, "getBooklistBooksUrl", "getPopularTimeout",
+      "booklist_books_p1", "books" },
 }
 
 for _, w in ipairs(WRAPPERS) do
@@ -194,6 +230,8 @@ local AUTHED = {
     { "getDownloadQuotaStatus", { UID, UKEY } },
     { "getFavoriteBookIds", { UID, UKEY } },
     { "favoriteBook", { UID, UKEY, { id = "1", hash = "h" } } },
+    { "getBooklists", { UID, UKEY } },
+    { "getBooklistBooks", { UID, UKEY, 1001, 1 } },
 }
 for _, w in ipairs(AUTHED) do
     local name, args = w[1], w[2]
@@ -242,6 +280,92 @@ r.check("covers: one with an empty collection folder is dropped", cb[2] and cb[2
         "got " .. tostring(cb[2] and cb[2].cover))
 r.check("covers: the coverless placeholder is dropped", cb[3] and cb[3].cover == nil,
         "got " .. tostring(cb[3] and cb[3].cover))
+
+-- Booklists: the list of lists, then the books in one list.
+do
+    local res, req = call("getBooklists", { UID, UKEY }, { body = "booklists" })
+    local lists = res.booklists or {}
+    r.check("getBooklists: is a GET", req and req.method == "GET", "method=" .. tostring(req and req.method))
+    r.check("getBooklists: keeps only entries with a numeric id", #lists == 2, "got " .. #lists)
+    r.check("getBooklists: maps title to name and books_count to count",
+            lists[1] and lists[1].id == 1001 and lists[1].name == "Test" and lists[1].count == 22,
+            lists[1] and string.format("id=%s name=%s count=%s", tostring(lists[1].id),
+                tostring(lists[1].name), tostring(lists[1].count)) or "no first list")
+    r.check("getBooklists: a blank title falls back to a placeholder",
+            lists[2] and lists[2].name == "Untitled" and lists[2].count == 0,
+            "name=" .. tostring(lists[2] and lists[2].name))
+
+    res = call("getBooklists", { UID, UKEY }, { body = "booklists_missing" })
+    r.check("getBooklists: a response with no list is an error", res.error ~= nil, "accepted it")
+
+    -- A 401 reaches the wrapper as http_result.error, and the re-login matches on its text.
+    res = call("getBooklists", { UID, UKEY }, { status_code = 401, error = "Please login" })
+    r.check("getBooklists: a signed-out error still reads as an authentication error",
+            Api.isAuthenticationError(res.error), "error = " .. tostring(res.error))
+    res = call("getBooklists", { UID, UKEY }, { body = "api_failed_error" })
+    r.check("getBooklists: surfaces the server's own error text", res.error == "Booklist not found",
+            "error = " .. tostring(res.error))
+end
+
+do
+    local res, req = call("getBooklistBooks", { UID, UKEY, 1001, 1 }, { body = "booklist_books_p1" })
+    r.check("getBooklistBooks: is a POST with an empty body",
+            req and req.method == "POST" and req.body == nil and req.headers["Content-Length"] == "0",
+            req and string.format("method=%s body=%s length=%s", tostring(req.method), tostring(req.body),
+                tostring(req.headers["Content-Length"])) or "no request issued")
+
+    -- A URL here would be fetched as a GET once a 301/302/303 rewrote the method.
+    local next_step = req and type(req.onRedirect) == "function" and req.onRedirect()
+    r.check("getBooklistBooks: a mirror move re-issues the call instead of handing back a URL",
+            type(next_step) == "function", "onRedirect() returned " .. type(next_step))
+    if type(next_step) == "function" then
+        local raw = { body = "booklist_books_p2" }
+        reply = raw
+        local outer = sent
+        local again = next_step({})
+        r.check("getBooklistBooks: the re-issued call is the same POST, with no further redirect hook",
+                sent ~= outer and sent.method == "POST" and not sent.onRedirect,
+                "method=" .. tostring(sent.method) .. " onRedirect=" .. type(sent.onRedirect))
+        r.check("getBooklistBooks: the re-issued call hands back the raw response for the outer one to parse",
+                again == raw, "got " .. type(again))
+    end
+
+    local books = res.books or {}
+    r.check("getBooklistBooks: unwraps each entry's book and skips malformed ones", #books == 2,
+            "got " .. #books)
+    r.check("getBooklistBooks: books carry what details and download need",
+            books[1] and books[1].id == 101 and books[1].hash == "abc123" and books[1].title == "Amerika"
+                and books[1].download == "/dl/fakeToken1" and books[1].format == "epub",
+            books[1] and string.format("id=%s hash=%s download=%s", tostring(books[1].id),
+                tostring(books[1].hash), tostring(books[1].download)) or "no first book")
+    r.check("getBooklistBooks: the relative placeholder cover is dropped", books[2] and books[2].cover == nil,
+            "cover=" .. tostring(books[2] and books[2].cover))
+    r.check("getBooklistBooks: more pages before the last", res.has_more_results == true,
+            "has_more_results=" .. tostring(res.has_more_results))
+
+    res = call("getBooklistBooks", { UID, UKEY, 1001, 2 }, { body = "booklist_books_p2" })
+    r.check("getBooklistBooks: no more on the last page", res.has_more_results == false,
+            "has_more_results=" .. tostring(res.has_more_results))
+
+    res = call("getBooklistBooks", { UID, UKEY, 1002, 1 }, { body = "booklist_books_empty" })
+    r.check("getBooklistBooks: an empty list is no books and no more pages",
+            res.error == nil and type(res.books) == "table" and #res.books == 0 and res.has_more_results == false,
+            "error=" .. tostring(res.error) .. " has_more_results=" .. tostring(res.has_more_results))
+
+    res = call("getBooklistBooks", { UID, UKEY, 1, 1 }, { body = "booklist_books_full_unpaged" })
+    r.check("getBooklistBooks: without pagination, a full page means more may follow",
+            res.has_more_results == true, "has_more_results=" .. tostring(res.has_more_results))
+    res = call("getBooklistBooks", { UID, UKEY, 1, 1 }, { body = "booklist_books_short_unpaged" })
+    r.check("getBooklistBooks: without pagination, a short page is the last",
+            res.has_more_results == false, "has_more_results=" .. tostring(res.has_more_results))
+
+    res = call("getBooklistBooks", { UID, UKEY, 1, 1 }, { status_code = 401, error = "Please login" })
+    r.check("getBooklistBooks: a signed-out error still reads as an authentication error",
+            Api.isAuthenticationError(res.error), "error = " .. tostring(res.error))
+    res = call("getBooklistBooks", { UID, UKEY, 1, 1 }, { body = "api_failed_error" })
+    r.check("getBooklistBooks: surfaces the server's own error text", res.error == "Booklist not found",
+            "error = " .. tostring(res.error))
+end
 
 -- Most popular follows the search-language setting. The most-popular endpoint ignores any
 -- language it is given, so with languages selected the wrapper asks the search endpoint instead:

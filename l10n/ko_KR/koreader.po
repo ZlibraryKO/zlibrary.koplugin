@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 07:30+0000\n"
+"POT-Creation-Date: 2026-11-08 18:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -197,6 +197,33 @@ msgstr "다운로드한 도서를 가져오지 못했습니다"
 
 msgid "Downloaded books"
 msgstr "다운로드한 도서"
+
+msgid "Booklists"
+msgstr ""
+
+msgid "Untitled"
+msgstr "제목 없음"
+
+msgid "Getting your booklists..."
+msgstr ""
+
+msgid "Failed to fetch booklists"
+msgstr ""
+
+msgid "You have no booklists yet"
+msgstr ""
+
+msgid "Getting booklist books..."
+msgstr ""
+
+msgid "Failed to fetch booklist books"
+msgstr ""
+
+msgid "Booklist books"
+msgstr ""
+
+msgid "This booklist is empty"
+msgstr ""
 
 msgid "Finding similar books..."
 msgstr "비슷한 책 찾는 중..."
@@ -447,6 +474,24 @@ msgstr "즐겨찾기 도서 응답을 해석하지 못했습니다."
 msgid "API returned an error for favorite books."
 msgstr "즐겨찾기 도서에 대해 API 오류가 반환되었습니다."
 
+msgid "Failed to fetch booklists (no response body)."
+msgstr ""
+
+msgid "Failed to parse booklists response."
+msgstr ""
+
+msgid "API returned an error for booklists."
+msgstr ""
+
+msgid "Failed to fetch booklist books (no response body)."
+msgstr ""
+
+msgid "Failed to parse booklist books response."
+msgstr ""
+
+msgid "API returned an error for booklist books."
+msgstr ""
+
 msgid "Failed to remove the book from downloaded (no response body)."
 msgstr "다운로드 목록에서 도서를 제거하지 못했습니다(응답 본문 없음)."
 
@@ -656,9 +701,6 @@ msgstr "다운로드 다시 시도 중… (탭하여 취소)"
 
 msgid "Download cancelled."
 msgstr "다운로드가 취소되었습니다."
-
-msgid "Untitled"
-msgstr "제목 없음"
 
 msgid "Unknown Author"
 msgstr "저자 미상"

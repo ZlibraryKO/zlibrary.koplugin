@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 07:30+0000\n"
+"POT-Creation-Date: 2026-11-08 18:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -197,6 +197,33 @@ msgstr "Heruntergeladene Bücher konnten nicht abgerufen werden"
 
 msgid "Downloaded books"
 msgstr "Heruntergeladene Bücher"
+
+msgid "Booklists"
+msgstr ""
+
+msgid "Untitled"
+msgstr "Ohne Titel"
+
+msgid "Getting your booklists..."
+msgstr ""
+
+msgid "Failed to fetch booklists"
+msgstr ""
+
+msgid "You have no booklists yet"
+msgstr ""
+
+msgid "Getting booklist books..."
+msgstr ""
+
+msgid "Failed to fetch booklist books"
+msgstr ""
+
+msgid "Booklist books"
+msgstr ""
+
+msgid "This booklist is empty"
+msgstr ""
 
 msgid "Finding similar books..."
 msgstr "Ähnliche Bücher werden gesucht..."
@@ -447,6 +474,24 @@ msgstr "Antwort zu favorisierten Büchern konnte nicht verarbeitet werden."
 msgid "API returned an error for favorite books."
 msgstr "API gab einen Fehler für favorisierte Bücher zurück."
 
+msgid "Failed to fetch booklists (no response body)."
+msgstr ""
+
+msgid "Failed to parse booklists response."
+msgstr ""
+
+msgid "API returned an error for booklists."
+msgstr ""
+
+msgid "Failed to fetch booklist books (no response body)."
+msgstr ""
+
+msgid "Failed to parse booklist books response."
+msgstr ""
+
+msgid "API returned an error for booklist books."
+msgstr ""
+
 msgid "Failed to remove the book from downloaded (no response body)."
 msgstr "Buch konnte nicht aus den Downloads entfernt werden (kein Antworttext)."
 
@@ -656,9 +701,6 @@ msgstr "Download wird erneut versucht… (zum Abbrechen tippen)"
 
 msgid "Download cancelled."
 msgstr "Download abgebrochen."
-
-msgid "Untitled"
-msgstr "Ohne Titel"
 
 msgid "Unknown Author"
 msgstr "Unbekannter Autor"

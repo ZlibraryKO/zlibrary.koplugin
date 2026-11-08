@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 07:30+0000\n"
+"POT-Creation-Date: 2026-11-08 18:25+0000\n"
 "PO-Revision-Date: 2026-09-05 13:23+0700\n"
 "Last-Translator: \n"
 "Language-Team: vi <vi@li.org>\n"
@@ -198,6 +198,33 @@ msgstr "Lấy danh sách sách đã tải thất bại"
 
 msgid "Downloaded books"
 msgstr "Sách đã tải về"
+
+msgid "Booklists"
+msgstr ""
+
+msgid "Untitled"
+msgstr "Không có tiêu đề"
+
+msgid "Getting your booklists..."
+msgstr ""
+
+msgid "Failed to fetch booklists"
+msgstr ""
+
+msgid "You have no booklists yet"
+msgstr ""
+
+msgid "Getting booklist books..."
+msgstr ""
+
+msgid "Failed to fetch booklist books"
+msgstr ""
+
+msgid "Booklist books"
+msgstr ""
+
+msgid "This booklist is empty"
+msgstr ""
 
 msgid "Finding similar books..."
 msgstr "Đang tìm sách tương tự..."
@@ -448,6 +475,24 @@ msgstr "Không thể phân tích phản hồi sách yêu thích."
 msgid "API returned an error for favorite books."
 msgstr "API trả về lỗi đối với sách yêu thích."
 
+msgid "Failed to fetch booklists (no response body)."
+msgstr ""
+
+msgid "Failed to parse booklists response."
+msgstr ""
+
+msgid "API returned an error for booklists."
+msgstr ""
+
+msgid "Failed to fetch booklist books (no response body)."
+msgstr ""
+
+msgid "Failed to parse booklist books response."
+msgstr ""
+
+msgid "API returned an error for booklist books."
+msgstr ""
+
 msgid "Failed to remove the book from downloaded (no response body)."
 msgstr "Xóa sách khỏi danh sách đã tải thất bại (không có nội dung phản hồi)."
 
@@ -657,9 +702,6 @@ msgstr "Đang thử tải lại… (nhấn để hủy)"
 
 msgid "Download cancelled."
 msgstr "Đã hủy tải về."
-
-msgid "Untitled"
-msgstr "Không có tiêu đề"
 
 msgid "Unknown Author"
 msgstr "Tác giả không xác định"

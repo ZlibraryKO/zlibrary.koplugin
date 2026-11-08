@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 07:30+0000\n"
+"POT-Creation-Date: 2026-11-08 18:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -197,6 +197,33 @@ msgstr "ダウンロード済み書籍の取得に失敗しました"
 
 msgid "Downloaded books"
 msgstr "ダウンロード済み書籍"
+
+msgid "Booklists"
+msgstr ""
+
+msgid "Untitled"
+msgstr "無題"
+
+msgid "Getting your booklists..."
+msgstr ""
+
+msgid "Failed to fetch booklists"
+msgstr ""
+
+msgid "You have no booklists yet"
+msgstr ""
+
+msgid "Getting booklist books..."
+msgstr ""
+
+msgid "Failed to fetch booklist books"
+msgstr ""
+
+msgid "Booklist books"
+msgstr ""
+
+msgid "This booklist is empty"
+msgstr ""
 
 msgid "Finding similar books..."
 msgstr "類似書籍を検索中..."
@@ -447,6 +474,24 @@ msgstr "お気に入りの書籍の応答の解析に失敗しました。"
 msgid "API returned an error for favorite books."
 msgstr "お気に入りの書籍に対してAPIがエラーを返しました。"
 
+msgid "Failed to fetch booklists (no response body)."
+msgstr ""
+
+msgid "Failed to parse booklists response."
+msgstr ""
+
+msgid "API returned an error for booklists."
+msgstr ""
+
+msgid "Failed to fetch booklist books (no response body)."
+msgstr ""
+
+msgid "Failed to parse booklist books response."
+msgstr ""
+
+msgid "API returned an error for booklist books."
+msgstr ""
+
 msgid "Failed to remove the book from downloaded (no response body)."
 msgstr "ダウンロード済みからの書籍の削除に失敗しました（応答がありません）。"
 
@@ -656,9 +701,6 @@ msgstr "ダウンロードを再試行中…（タップしてキャンセル）
 
 msgid "Download cancelled."
 msgstr "ダウンロードをキャンセルしました。"
-
-msgid "Untitled"
-msgstr "無題"
 
 msgid "Unknown Author"
 msgstr "不明な著者"

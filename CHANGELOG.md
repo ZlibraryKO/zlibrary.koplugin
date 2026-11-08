@@ -6,6 +6,37 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.55
+
+### Added
+
+**Your booklists, in My Books.** A new Booklists tab lists the booklists on your Z-library
+account, with how many books each holds. Open one to see its books, then open or download them
+the same way as in Favorites. You no longer need to favourite a book on the website first to get
+it onto your reader. Creating lists and adding books to them still happens on the website.
+
+### Fixed
+
+**Switching tabs in My Books while a list loads shows the tab you picked.** A slow Favorites
+answer could land in Downloaded after you switched, and the other way round.
+
+**Readers without a touchscreen** — the Kindle 4 and other key-only readers:
+
+- **You keep your place in a list.** The selection jumped back to the first book whenever a cover
+  finished loading or you came back from a book's details, and in the language list after every
+  tick. It now stays on the book or language you were on.
+- **The author and ISBN in a book's details can be selected.** Searching for the author and
+  copying the ISBN only worked by tapping them. Press Up from the first button to reach them.
+- **Book details show which button is selected** as soon as they open, and coming back from
+  Profile or Comments returns to that button instead of the first one.
+- **Left goes to the previous tab in My Books**, as Right goes to the next.
+
+### Internal
+
+Loading more search results no longer tries to sign in again when it fails. Search works without
+an account, so the "please sign in" error that would trigger it never happens, and if it ever had,
+signing in and searching again could have repeated endlessly. A test keeps it from coming back.
+
 ## 1.0.54
 
 ### Fixed

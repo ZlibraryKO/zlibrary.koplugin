@@ -136,11 +136,13 @@ def plugin_codepoints(plugin_root):
 
 def main(plugin_root, koreader_root):
     fonts = {}
-    for pat in ("resources/fonts/**/*.ttf", "resources/fonts/**/*.ttc", "resources/fonts/**/*.otf"):
+    # resources/fonts in a checkout, fonts/ in an installed KOReader.
+    for pat in ("resources/fonts/**/*.ttf", "resources/fonts/**/*.ttc", "resources/fonts/**/*.otf",
+                "fonts/**/*.ttf", "fonts/**/*.ttc", "fonts/**/*.otf"):
         for p in glob.glob(os.path.join(koreader_root, pat), recursive=True):
             fonts[os.path.basename(p)] = font_codepoints(p)
     if not fonts:
-        print(f"  no fonts under {koreader_root}/resources/fonts")
+        print(f"  no fonts under {koreader_root}/resources/fonts or {koreader_root}/fonts")
         print("  a fresh KOReader clone needs its submodules: git submodule update --init")
         return 2
     covered = set().union(*fonts.values())

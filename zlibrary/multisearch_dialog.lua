@@ -9,6 +9,7 @@ local ButtonDialog = require("ui/widget/buttondialog")
 local TitleBar = require("ui/widget/titlebar")
 local ToggleSwitch = require("ui/widget/toggleswitch")
 local HorizontalGroup = require("ui/widget/horizontalgroup")
+local HorizontalSpan = require("ui/widget/horizontalspan")
 local VerticalGroup = require("ui/widget/verticalgroup")
 local FrameContainer = require("ui/widget/container/framecontainer")
 local InputContainer = require("ui/widget/container/inputcontainer")
@@ -124,12 +125,13 @@ function SearchDialog:init()
     }
     self.toggle_switch:setPosition(self._position)
 
+    -- A lone tab only repeats the title, so a blank span holds the refresh button at the right edge.
     local filter_group = HorizontalGroup:new{
         dimen = Geom:new{
             w = frame_inner_width
         },
         align = "center",
-        self.toggle_switch ,
+        has_multiple_items and self.toggle_switch or HorizontalSpan:new{ width = filter_width },
         force_refresh_button
     }
 
@@ -138,7 +140,7 @@ function SearchDialog:init()
         titlebar,
         filter_group,
         _titlebar = titlebar,
-        _toggle = self.toggle_switch,
+        _toggle = has_multiple_items and self.toggle_switch or nil,
         _refresh = force_refresh_button,
     }
 
@@ -159,7 +161,7 @@ function SearchDialog:init()
             end
         end
         if dialog.build_focus_layout then
-            table.insert(layout, { self._toggle, self._refresh })
+            table.insert(layout, self._toggle and { self._toggle, self._refresh } or { self._refresh })
         end
         return layout
     end
@@ -191,6 +193,9 @@ function SearchDialog:init()
         self.menu_container.key_events.Close = nil
         self.menu_container.key_events.FocusRight = nil
         self.menu_container.key_events.Right = nil
+        -- Left steps back through the tabs (onKeyPress). The list would take it first, to move
+        -- focus sideways in a one-column list, where it does nothing.
+        self.menu_container.key_events.FocusLeft = nil
         self.toggle_switch:disableFocusManagement(self[1])
     end
 
@@ -208,9 +213,11 @@ end
 
 function SearchDialog:onKeyPress(key)
     if type(key) ~= "table" then return false end
-    if key["Tab"] or (self.build_focus_layout and key["Right"]) then
-        local position = self._position + 1
-        if position > #self.toggle_items then position = 1 end
+    local step = (key["Tab"] or (self.build_focus_layout and key["Right"])) and 1
+        or (self.build_focus_layout and key["Left"]) and -1
+    -- With one tab, a switch would only re-run it and drop the pages loaded so far.
+    if step and #self.toggle_items > 1 then
+        local position = (self._position - 1 + step) % #self.toggle_items + 1
         self.toggle_switch:togglePosition(position, true)
         UIManager:nextTick(function()
             self:ToggleSwitchCallBack(position)
@@ -263,9 +270,27 @@ function SearchDialog:ToggleSwitchCallBack(_position)
     self:_fetchAndProcessData()
 end
 
+-- A tab's `rows` describes rows that are not books: rows.to_menu_item(entry, index) builds each one,
+-- and rows.show_cover = false turns covers off while the tab is active.
+function SearchDialog:_activeRows()
+    local item = self:getActiveItem()
+    return item and item.rows
+end
+
+function SearchDialog:_activeShowCover()
+    local rows = self:_activeRows()
+    return self.show_cover and not (rows and rows.show_cover == false)
+end
+
 function SearchDialog:_getMenuItems(books)
     local menu_items = {}
     if type(books) ~= "table" then return menu_items end
+
+    local rows = self:_activeRows()
+    if rows then
+        for i, entry in ipairs(books) do menu_items[i] = rows.to_menu_item(entry, i) end
+        return menu_items
+    end
 
     local current_toggle = self:getActiveItem()
     local mandatory_func = current_toggle and current_toggle.mandatory_func
@@ -323,7 +348,9 @@ function SearchDialog:_reloadFromBookData(books, skip_cache, select_number, no_r
     local old_height = self.menu_container.height
     self.menu_container = self:createMenuContainer(books, old_height)
 
-    self.menu_container:updateItems(select_number, no_recalculate_dimen)
+    -- Every caller here puts up a different list (a tab, a refresh, a fetched page), so it starts
+    -- on its first book. A nil would now keep the focused row of the list it replaced.
+    self.menu_container:updateItems(select_number or 1, no_recalculate_dimen)
 
     if not skip_cache then
         local cache_key = self:getActiveItemCacheKey()
@@ -365,10 +392,17 @@ function SearchDialog:createMenuContainer(books, height)
             is_borderless = true,
             multilines_show_more_text = true,
             show_parent = self,
-            show_cover = self.show_cover,
+            show_cover = self:_activeShowCover(),
             list_per_page = self.list_per_page,
         }
     else
+        local show_cover = self:_activeShowCover()
+        -- All tabs share this Menu; clearing these makes its next layout recompute them for the new mode.
+        if self.menu_container.show_cover ~= show_cover then
+            self.menu_container.show_cover = show_cover
+            self.menu_container.state_w = nil
+            self.menu_container.list_per_page = self.list_per_page
+        end
         self.menu_container.item_table = menu_items
     end
     return self.menu_container
@@ -393,6 +427,10 @@ function SearchDialog:forceFetchAndReloadMenu()
 end
 
 function SearchDialog:onMenuSelect(item)
+    if item and item.callback then
+        item.callback()
+        return true
+    end
     if not (item and item.book_index) then
         return true
     end

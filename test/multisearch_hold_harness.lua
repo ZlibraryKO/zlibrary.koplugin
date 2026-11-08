@@ -153,8 +153,8 @@ local main_src = (function()
 end)()
 local n = 0
 for _ in main_src:gmatch("on_download_book_callback") do n = n + 1 end
-r.check("both browse dialogs offer it", n == 2,
-        n .. " call sites -- the search and My Books dialogs should each pass one")
+r.check("every browse dialog offers it", n == 3,
+        n .. " call sites -- the search, My Books and booklist dialogs should each pass one")
 
 -- Nothing here may confirm: downloadBook does that, and asking twice was a bug once already.
 --

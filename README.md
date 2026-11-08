@@ -24,6 +24,7 @@ If you find this plugin helpful, please consider supporting its development. You
 *   Search Z-library for books.
 *   Filter search results by language and file extension.
 *   Browse most popular and recommended books.
+*   Open your Z-library booklists and download the books in them.
 *   Download content directly to your device.
 
 

@@ -1666,6 +1666,122 @@ function Api.getFavoriteBooks(user_id, user_key, page, order)
     return { has_more_results = has_more_results, books = transformed_books }
 end
 
+function Api.getBooklists(user_id, user_key)
+    local url = Config.getBooklistsUrl()
+    if not url then
+        logger.warn("Api.getBooklists - Base URL not configured")
+        return { error = T("Z-library server URL not configured.") }
+    end
+
+    local http_result = Api.makeHttpRequest{
+        url = url,
+        method = "GET",
+        headers = _authedHeaders(user_id, user_key),
+        timeout = Config.getPopularTimeout(),
+        onRedirect = function()
+            return Config.getBooklistsUrl()
+        end,
+    }
+
+    -- Passed through unchanged: Api.isAuthenticationError matches "Please login" in it to re-login.
+    if http_result.error then
+        logger.warn("Api.getBooklists - HTTP request error: ", http_result.error)
+        return { error = http_result.error }
+    end
+
+    if not http_result.body then
+        logger.warn("Api.getBooklists - No response body")
+        return { error = T("Failed to fetch booklists (no response body).") }
+    end
+
+    local success, data = pcall(json.decode, http_result.body, json.decode.simple)
+    if not success or type(data) ~= "table" then
+        logger.warn("Api.getBooklists - Failed to decode JSON: ", http_result.body)
+        return { error = T("Failed to parse booklists response.") }
+    end
+
+    if data.success ~= 1 or type(data.list) ~= "table" then
+        logger.warn("Api.getBooklists - API error: ", http_result.body)
+        return { error = _extractErrorFromJsonBody(http_result.body) or T("API returned an error for booklists.") }
+    end
+
+    local booklists = {}
+    for _, entry in ipairs(data.list) do
+        local id = type(entry) == "table" and tonumber(entry.id)
+        if id then
+            table.insert(booklists, {
+                id = id,
+                name = _safeTrim(entry.title, T("Untitled")),
+                count = tonumber(entry.books_count),
+            })
+        end
+    end
+    return { booklists = booklists }
+end
+
+function Api.getBooklistBooks(user_id, user_key, booklist_id, page, is_redir_callback)
+    page = page or 1
+
+    local url = Config.getBooklistBooksUrl(booklist_id, page)
+    if not url then
+        logger.warn("Api.getBooklistBooks - Base URL or booklist id missing")
+        return { error = T("Z-library server URL not configured.") }
+    end
+
+    local headers = _authedHeaders(user_id, user_key)
+    headers["Content-Length"] = "0"
+
+    -- A function, not a URL: a 301/302/303 turns the POST into a GET (_applyRedirectMethod).
+    local http_result = Api.makeHttpRequest{
+        url = url,
+        method = "POST",
+        headers = headers,
+        timeout = Config.getPopularTimeout(),
+        onRedirect = (not is_redir_callback) and function()
+            return function() return Api.getBooklistBooks(user_id, user_key, booklist_id, page, true) end
+        end,
+    }
+
+    if is_redir_callback then return http_result end
+    if http_result.error then
+        logger.warn("Api.getBooklistBooks - HTTP request error: ", http_result.error)
+        return { error = http_result.error }
+    end
+
+    if not http_result.body then
+        logger.warn("Api.getBooklistBooks - No response body")
+        return { error = T("Failed to fetch booklist books (no response body).") }
+    end
+
+    local success, data = pcall(json.decode, http_result.body, json.decode.simple)
+    if not success or type(data) ~= "table" then
+        logger.warn("Api.getBooklistBooks - Failed to decode JSON: ", http_result.body)
+        return { error = T("Failed to parse booklist books response.") }
+    end
+
+    if data.success ~= 1 or type(data.books) ~= "table" then
+        logger.warn("Api.getBooklistBooks - API error: ", http_result.body)
+        return { error = _extractErrorFromJsonBody(http_result.body) or T("API returned an error for booklist books.") }
+    end
+
+    local books = {}
+    for _, entry in ipairs(data.books) do
+        if type(entry) == "table" and type(entry.book) == "table" then
+            table.insert(books, entry.book)
+        end
+    end
+
+    local has_more
+    local pagination = data.pagination
+    if type(pagination) == "table" and tonumber(pagination.total_pages) then
+        has_more = (tonumber(pagination.current) or page) < tonumber(pagination.total_pages)
+    else
+        has_more = #data.books >= Config.BOOKLIST_PAGE_SIZE
+    end
+
+    return { books = _transformApiBookData(books), has_more_results = has_more }
+end
+
 -- Removes the book from the account's download history on the server. The list under My Books is that
 -- history, so there is nothing local to delete here -- the entry may well have been downloaded on
 -- another device. Same shape as unfavoriteBook: a GET that answers with success = 1.

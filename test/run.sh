@@ -4,11 +4,13 @@
 # These need KOReader's own LuaJIT. The plugin targets Lua 5.1 semantics, and the harnesses
 # themselves use loadstring and setfenv to compile file-local functions out of the source --
 # neither exists in a system Lua 5.4, so running there produces failures that say nothing
-# about the plugin. Point KOREADER_DIR at a built KOReader checkout, or let this find one.
+# about the plugin. Point KOREADER_DIR at a built KOReader checkout or an installed KOReader
+# (the directory holding reader.lua -- a release package, or nixpkgs' lib/koreader), or let this
+# find one.
 #
 #   ./test/run.sh                    run everything
 #   ./test/run.sh redirect           run harnesses whose name matches
-#   KOREADER_DIR=/path ./test/run.sh use a specific checkout
+#   KOREADER_DIR=/path ./test/run.sh use a specific checkout or install
 #
 # Exits non-zero if any harness fails, so it is usable as a pre-push check.
 
@@ -26,6 +28,12 @@ if [ -z "${KOREADER_DIR:-}" ] && [ -f "$PLUGIN_DIR/scripts/test-env.sh" ]; then
     . "$PLUGIN_DIR/scripts/test-env.sh"
 fi
 
+# Either layout will do. A built checkout keeps LuaJIT and the LuaSocket source under
+# base/build; an install carries LuaJIT at its top level and LuaSocket's url.lua in common/socket.
+is_koreader() {
+    [ -d "$1/base/build" ] || { [ -x "$1/luajit" ] && [ -f "$1/common/socket/url.lua" ]; }
+}
+
 if [ -z "${KOREADER_DIR:-}" ]; then
     for candidate in \
         "${HOME:-}/Documents/Dev/koreader-git" \
@@ -34,19 +42,19 @@ if [ -z "${KOREADER_DIR:-}" ]; then
         "$PLUGIN_DIR/../koreader" \
         "$PLUGIN_DIR/../.."
     do
-        if [ -d "$candidate/base/build" ]; then
+        if is_koreader "$candidate"; then
             KOREADER_DIR=$candidate
             break
         fi
     done
 fi
 
-if [ -z "${KOREADER_DIR:-}" ] || [ ! -d "$KOREADER_DIR/base/build" ]; then
+if [ -z "${KOREADER_DIR:-}" ] || ! is_koreader "$KOREADER_DIR"; then
     cat >&2 <<EOF
-Could not find a built KOReader checkout.
+Could not find a built KOReader checkout or an installed KOReader.
 
 These harnesses run against KOReader's LuaJIT and its bundled LuaSocket and fonts, so they
-need one. Clone and build KOReader, then point this at it in any of these ways:
+need one. Build a checkout or install a release, then point this at it in any of these ways:
 
     echo 'KOREADER_DIR=/path/to/koreader' > scripts/test-env.sh   # local, not committed
     KOREADER_DIR=/path/to/koreader ./test/run.sh                  # one-off
@@ -55,28 +63,38 @@ EOF
     exit 2
 fi
 
-LUAJIT=$(find "$KOREADER_DIR/base/build" -maxdepth 2 -name luajit -type f -perm -u+x 2>/dev/null | head -1)
-LUASOCKET=$(find "$KOREADER_DIR/base/build" -maxdepth 5 -type d -path '*luasocket/source/src' 2>/dev/null | head -1)
+if [ -d "$KOREADER_DIR/base/build" ]; then
+    LUAJIT=$(find "$KOREADER_DIR/base/build" -maxdepth 2 -name luajit -type f -perm -u+x 2>/dev/null | head -1)
+    LUASOCKET=$(find "$KOREADER_DIR/base/build" -maxdepth 5 -type d -path '*luasocket/source/src' 2>/dev/null | head -1)
 
-if [ -z "$LUAJIT" ]; then
-    echo "No luajit under $KOREADER_DIR/base/build -- is the checkout built?" >&2
-    exit 2
-fi
-# base/build may hold several target triples, including cross-compiled device builds that
-# cannot execute here. Take the first that actually runs.
-if ! "$LUAJIT" -e 'os.exit(0)' >/dev/null 2>&1; then
-    LUAJIT=$(find "$KOREADER_DIR/base/build" -maxdepth 2 -name luajit -type f -perm -u+x 2>/dev/null \
-        | while read -r candidate; do
-              if "$candidate" -e 'os.exit(0)' >/dev/null 2>&1; then echo "$candidate"; break; fi
-          done)
     if [ -z "$LUAJIT" ]; then
-        echo "No runnable luajit under $KOREADER_DIR/base/build (device build only?)" >&2
+        echo "No luajit under $KOREADER_DIR/base/build -- is the checkout built?" >&2
         exit 2
     fi
-fi
-if [ -z "$LUASOCKET" ]; then
-    echo "No LuaSocket source under $KOREADER_DIR/base/build -- is the checkout built?" >&2
-    exit 2
+    # base/build may hold several target triples, including cross-compiled device builds that
+    # cannot execute here. Take the first that actually runs.
+    if ! "$LUAJIT" -e 'os.exit(0)' >/dev/null 2>&1; then
+        LUAJIT=$(find "$KOREADER_DIR/base/build" -maxdepth 2 -name luajit -type f -perm -u+x 2>/dev/null \
+            | while read -r candidate; do
+                  if "$candidate" -e 'os.exit(0)' >/dev/null 2>&1; then echo "$candidate"; break; fi
+              done)
+        if [ -z "$LUAJIT" ]; then
+            echo "No runnable luajit under $KOREADER_DIR/base/build (device build only?)" >&2
+            exit 2
+        fi
+    fi
+    if [ -z "$LUASOCKET" ]; then
+        echo "No LuaSocket source under $KOREADER_DIR/base/build -- is the checkout built?" >&2
+        exit 2
+    fi
+else
+    # An install ships one LuaJIT, built for the machine it was installed on.
+    LUAJIT=$KOREADER_DIR/luajit
+    LUASOCKET=$KOREADER_DIR/common/socket
+    if ! "$LUAJIT" -e 'os.exit(0)' >/dev/null 2>&1; then
+        echo "$LUAJIT does not run here -- is this a device package?" >&2
+        exit 2
+    fi
 fi
 
 echo "  koreader:  $KOREADER_DIR"

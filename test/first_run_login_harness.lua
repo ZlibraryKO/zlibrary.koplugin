@@ -923,7 +923,7 @@ end
 
 do
     -- Which caches belong to the reader, and which belong to everybody.
-    local removed = { runtime = {}, multi_search = {} }
+    local removed = { runtime = {}, multi_search = {}, prefixes = {} }
     local env = { ipairs = ipairs, Config = {} }
     env.Config.getConfigRuntimeCache = function()
         return { remove = function(_, k) removed.runtime[k] = true end }
@@ -931,7 +931,10 @@ do
     -- The shared multi_search instance: clearing has to go through the same object the
     -- dialogs write through, or a stale copy's next flush resurrects what was just removed.
     env.Config.getMultiSearchCache = function()
-        return { remove = function(_, k) removed.multi_search[k] = true end }
+        return {
+            remove = function(_, k) removed.multi_search[k] = true end,
+            removePrefix = function(_, p) removed.prefixes[p] = true end,
+        }
     end
 
     local body = support.extract_block(PLUGIN .. "/zlibrary/config.lua",
@@ -945,11 +948,13 @@ do
         r.check("signing out drops the cached " .. key, removed.runtime[key] == true,
                 key .. " survived the sign-out")
     end
-    for _, key in ipairs({ "recommended", "favorites", "downloaded" }) do
+    for _, key in ipairs({ "recommended", "favorites", "downloaded", "booklists" }) do
         r.check("signing out drops the cached " .. key .. " list",
                 removed.multi_search[key] == true,
                 key .. " survived -- the next reader would see the previous one's books")
     end
+    r.check("signing out drops every cached booklist's books", removed.prefixes["booklist_"] == true,
+            "no booklist_ sweep -- the next reader would see the previous one's booklists")
 
     -- Popular is fetched with requires_auth = false, so it is the same list for every reader.
     -- Dropping it would just cost a refetch of public data.

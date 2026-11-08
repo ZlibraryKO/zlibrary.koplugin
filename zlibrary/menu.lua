@@ -224,7 +224,29 @@ function M:_recalculateDimen()
         self.state_w = self._cached_cover_w + 8 * Size.padding.small
     end
 end
+-- The row on this page that has focus, or nil when focus is not on a book (the title bar, or a
+-- menu not drawn yet).
+function M:_focusedRow()
+    if not (self.layout and self.selected and self.page and self.perpage) then return nil end
+    local focused = self:getFocusItem()
+    local index = focused and focused.entry and focused.entry.idx
+    if not index then return nil end
+    if self.items_max_lines then
+        for row, page_index in ipairs(self.page_items and self.page_items[self.page] or {}) do
+            if page_index == index then return row end
+        end
+        return nil
+    end
+    local row = index - (self.page - 1) * self.perpage
+    if row >= 1 and row <= self.perpage then return row end
+end
+
+-- KOReader's own calls always name the row to focus (1, on a page change). A nil comes from this
+-- plugin redrawing the page in place -- a cover arrived, a language was ticked -- and Menu reads
+-- it as "focus the first row", so on a device without a touchscreen every such redraw threw the
+-- reader back to the top of the page. Keep the row they were on instead.
 function M:updateItems(select_number, no_recalculate_dimen)
+    if select_number == nil then select_number = self:_focusedRow() end
     if self.show_cover then self:_updateCoverItems(select_number, no_recalculate_dimen) end
     return Menu.updateItems(self, select_number, no_recalculate_dimen)
 end

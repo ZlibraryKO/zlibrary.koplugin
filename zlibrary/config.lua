@@ -83,6 +83,7 @@ function Config.getUserAgent()
         plugin_version or "unknown")
 end
 Config.SEARCH_RESULTS_LIMIT = 30
+Config.BOOKLIST_PAGE_SIZE = 20
 
 -- Timeout configuration for different operations: { block_timeout, total_timeout }.
 -- block_timeout limits a single socket read; total_timeout limits the whole transfer, but only once
@@ -833,6 +834,19 @@ function Config.getFavoriteBooksUrl(page, order)
     return string.format("%s/eapi/user/book/saved?page=%d&limit=%d%s",base, page, limit, order_str)
 end
 
+function Config.getBooklistsUrl()
+    local base = Config.getBaseUrl()
+    if not base then return nil end
+    return base .. "/papi/booklist/current-user/0"
+end
+
+function Config.getBooklistBooksUrl(booklist_id, page)
+    local base = Config.getBaseUrl()
+    local id = tonumber(booklist_id)
+    if not (base and id) then return nil end
+    return string.format("%s/papi/booklist/%d/get-books/%d", base, id, page or 1)
+end
+
 function Config.getFavoriteBookIdsUrl()
     local base = Config.getBaseUrl()
     local limit = Config.SEARCH_RESULTS_LIMIT
@@ -959,9 +973,10 @@ function Config.clearPersonalCaches()
     runtime:remove("favorite_book_ids")
 
     local multi_search = Config.getMultiSearchCache()
-    for _, key in ipairs({ "recommended", "favorites", "downloaded" }) do
+    for _, key in ipairs({ "recommended", "favorites", "downloaded", "booklists" }) do
         multi_search:remove(key)
     end
+    multi_search:removePrefix("booklist_")
 end
 
 -- Forget the account entirely: the stored username and password, the session tokens, and

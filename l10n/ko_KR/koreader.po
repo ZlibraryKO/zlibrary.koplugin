@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 14:38+0000\n"
+"POT-Creation-Date: 2026-11-09 19:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -171,9 +171,6 @@ msgstr "API 오류가 반환되었습니다. 다시 시도하세요"
 msgid "Z-library My Books"
 msgstr "Z-library 내 도서"
 
-msgid "Downloaded"
-msgstr "다운로드함"
-
 msgid "Favorites"
 msgstr "즐겨찾기"
 
@@ -185,6 +182,9 @@ msgstr "즐겨찾기 도서를 가져오지 못했습니다"
 
 msgid "Favorite books"
 msgstr "즐겨찾기 도서"
+
+msgid "Downloaded"
+msgstr "다운로드함"
 
 msgid "Remove from downloaded"
 msgstr "다운로드 목록에서 제거"
@@ -552,18 +552,6 @@ msgstr "요청이 취소되었습니다."
 msgid "Description"
 msgstr "책 소개"
 
-msgid "Recent searches"
-msgstr "최근 검색"
-
-msgid "Hold a search to remove it"
-msgstr "길게 눌러 검색어 삭제"
-
-msgid "Clear search history"
-msgstr "검색 기록 지우기"
-
-msgid "Clear your search history?"
-msgstr "검색 기록을 지울까요?"
-
 msgid "No description available"
 msgstr "설명 없음"
 
@@ -579,9 +567,6 @@ msgstr "표지"
 msgid "Back"
 msgstr "뒤로"
 
-msgid "More Similar Books"
-msgstr "비슷한 책 더 보기"
-
 msgid "Download"
 msgstr "다운로드"
 
@@ -590,6 +575,9 @@ msgstr "형식"
 
 msgid "Download book"
 msgstr "책 다운로드"
+
+msgid "More Similar Books"
+msgstr "비슷한 책 더 보기"
 
 msgid "Refresh"
 msgstr "새로고침"
@@ -901,6 +889,21 @@ msgstr "카테고리 추가…"
 msgid "New category"
 msgstr "새 카테고리"
 
+msgid "Recent searches"
+msgstr "최근 검색"
+
+msgid "Hold a search to remove it"
+msgstr "길게 눌러 검색어 삭제"
+
+msgid "Clear search history"
+msgstr "검색 기록 지우기"
+
+msgid "Clear your search history?"
+msgstr "검색 기록을 지울까요?"
+
+msgid "Clear"
+msgstr "초기화"
+
 msgid "Set languages"
 msgstr "언어 설정"
 
@@ -923,20 +926,17 @@ msgstr "형식: %s"
 msgid "Formats (%d)"
 msgstr "형식 (%d)"
 
-msgid "Search Z-library"
-msgstr "Z-라이브러리 검색"
-
 msgid "Please enter a search term."
 msgstr "검색어를 입력하세요."
+
+msgid "Search Z-library"
+msgstr "Z-라이브러리 검색"
 
 msgid "Sort by"
 msgstr "정렬 기준"
 
 msgid "Unknown Title"
 msgstr "제목 미상"
-
-msgid "Rating"
-msgstr "평점"
 
 msgid "Search Results"
 msgstr "검색 결과"
@@ -947,9 +947,6 @@ msgstr "\"%s\"을(를) 다운로드 목록에서 제거하시겠습니까?"
 
 msgid "Clear your stored username and password?"
 msgstr "저장된 사용자 이름과 비밀번호를 초기화하시겠습니까?"
-
-msgid "Clear"
-msgstr "초기화"
 
 #, lua-format
 msgid "Download \"%s\"?"
@@ -1140,6 +1137,9 @@ msgstr "설정 후 확인"
 msgid "Please fill in all fields"
 msgstr "모든 항목을 입력하세요"
 
+#~ msgid "Rating"
+#~ msgstr "평점"
+
 #~ msgid "Login failed: Invalid session data"
 #~ msgstr "로그인 실패: 잘못된 세션 데이터"
 
@@ -1196,7 +1196,6 @@ msgstr "모든 항목을 입력하세요"
 
 #~ msgid "Downloading…"
 #~ msgstr "다운로드 중…"
-
 
 #~ msgid "Full Title"
 #~ msgstr "전체 제목"

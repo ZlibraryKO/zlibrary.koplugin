@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 14:38+0000\n"
+"POT-Creation-Date: 2026-11-09 19:19+0000\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -177,9 +177,6 @@ msgstr "API върна грешка, моля опитайте отново"
 msgid "Z-library My Books"
 msgstr "Моите книги в Z-library"
 
-msgid "Downloaded"
-msgstr "Изтеглени"
-
 msgid "Favorites"
 msgstr "Любими"
 
@@ -191,6 +188,9 @@ msgstr "Неуспешно зареждане на любимите книги"
 
 msgid "Favorite books"
 msgstr "Любими книги"
+
+msgid "Downloaded"
+msgstr "Изтеглени"
 
 msgid "Remove from downloaded"
 msgstr "Премахване от изтеглени"
@@ -558,18 +558,6 @@ msgstr "Заявката е отменена."
 msgid "Description"
 msgstr "Описание"
 
-msgid "Recent searches"
-msgstr "Последни търсения"
-
-msgid "Hold a search to remove it"
-msgstr "Задръжте търсене, за да го премахнете"
-
-msgid "Clear search history"
-msgstr "Изчистване на историята на търсенето"
-
-msgid "Clear your search history?"
-msgstr "Да се изчисти ли историята на търсенето?"
-
 msgid "No description available"
 msgstr "Няма налично описание"
 
@@ -585,9 +573,6 @@ msgstr "Корица"
 msgid "Back"
 msgstr "Назад"
 
-msgid "More Similar Books"
-msgstr "Още подобни книги"
-
 msgid "Download"
 msgstr "Изтегляне"
 
@@ -596,6 +581,9 @@ msgstr "Формат"
 
 msgid "Download book"
 msgstr "Изтегляне на книга"
+
+msgid "More Similar Books"
+msgstr "Още подобни книги"
 
 msgid "Refresh"
 msgstr "Обновяване"
@@ -907,6 +895,21 @@ msgstr "Добавяне на категория…"
 msgid "New category"
 msgstr "Нова категория"
 
+msgid "Recent searches"
+msgstr "Последни търсения"
+
+msgid "Hold a search to remove it"
+msgstr "Задръжте търсене, за да го премахнете"
+
+msgid "Clear search history"
+msgstr "Изчистване на историята на търсенето"
+
+msgid "Clear your search history?"
+msgstr "Да се изчисти ли историята на търсенето?"
+
+msgid "Clear"
+msgstr "Изчистване"
+
 msgid "Set languages"
 msgstr "Задаване на езици"
 
@@ -929,20 +932,17 @@ msgstr "Формат: %s"
 msgid "Formats (%d)"
 msgstr "Формати (%d)"
 
-msgid "Search Z-library"
-msgstr "Търсене в Z-library"
-
 msgid "Please enter a search term."
 msgstr "Моля, въведете дума за търсене."
+
+msgid "Search Z-library"
+msgstr "Търсене в Z-library"
 
 msgid "Sort by"
 msgstr "Сортиране по"
 
 msgid "Unknown Title"
 msgstr "Непознато заглавие"
-
-msgid "Rating"
-msgstr "Оценка"
 
 msgid "Search Results"
 msgstr "Резултати от търсенето"
@@ -953,9 +953,6 @@ msgstr "Премахване на „%s“ от изтеглените ви кн
 
 msgid "Clear your stored username and password?"
 msgstr "Да се изчистят ли запазените потребителско име и парола?"
-
-msgid "Clear"
-msgstr "Изчистване"
 
 #, lua-format
 msgid "Download \"%s\"?"
@@ -1146,6 +1143,9 @@ msgstr "Задаване и проверка"
 msgid "Please fill in all fields"
 msgstr "Попълнете всички полета"
 
+#~ msgid "Rating"
+#~ msgstr "Оценка"
+
 #~ msgid "Login failed: Invalid session data"
 #~ msgstr "Неуспешно влизане: Невалидни данни за сесията"
 
@@ -1238,7 +1238,6 @@ msgstr "Попълнете всички полета"
 
 #~ msgid "Book ID is required"
 #~ msgstr "Изисква се ID на книгата"
-
 
 #~ msgid "Full Title"
 #~ msgstr "Пълно заглавие"

@@ -550,7 +550,7 @@ msgid "Request cancelled."
 msgstr "請求已取消。"
 
 msgid "Profile"
-msgstr "個人資料"
+msgstr "簡介"
 
 msgid "No description available"
 msgstr "無可用簡介"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 14:38+0000\n"
+"POT-Creation-Date: 2026-11-09 19:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -171,9 +171,6 @@ msgstr "APIがエラーを返しました。再試行してください"
 msgid "Z-library My Books"
 msgstr "Z-library マイブック"
 
-msgid "Downloaded"
-msgstr "ダウンロード済み"
-
 msgid "Favorites"
 msgstr "お気に入り"
 
@@ -185,6 +182,9 @@ msgstr "お気に入りの書籍の取得に失敗しました"
 
 msgid "Favorite books"
 msgstr "お気に入りの書籍"
+
+msgid "Downloaded"
+msgstr "ダウンロード済み"
 
 msgid "Remove from downloaded"
 msgstr "ダウンロード済みからの削除"
@@ -552,18 +552,6 @@ msgstr "リクエストをキャンセルしました。"
 msgid "Description"
 msgstr "内容紹介"
 
-msgid "Recent searches"
-msgstr "最近の検索"
-
-msgid "Hold a search to remove it"
-msgstr "長押しで検索を削除"
-
-msgid "Clear search history"
-msgstr "検索履歴を消去"
-
-msgid "Clear your search history?"
-msgstr "検索履歴を消去しますか？"
-
 msgid "No description available"
 msgstr "説明はありません"
 
@@ -579,9 +567,6 @@ msgstr "表紙"
 msgid "Back"
 msgstr "戻る"
 
-msgid "More Similar Books"
-msgstr "類似書籍をもっと見る"
-
 msgid "Download"
 msgstr "ダウンロード"
 
@@ -590,6 +575,9 @@ msgstr "形式"
 
 msgid "Download book"
 msgstr "書籍をダウンロード"
+
+msgid "More Similar Books"
+msgstr "類似書籍をもっと見る"
 
 msgid "Refresh"
 msgstr "更新"
@@ -901,6 +889,21 @@ msgstr "カテゴリを追加…"
 msgid "New category"
 msgstr "新しいカテゴリ"
 
+msgid "Recent searches"
+msgstr "最近の検索"
+
+msgid "Hold a search to remove it"
+msgstr "長押しで検索を削除"
+
+msgid "Clear search history"
+msgstr "検索履歴を消去"
+
+msgid "Clear your search history?"
+msgstr "検索履歴を消去しますか？"
+
+msgid "Clear"
+msgstr "クリア"
+
 msgid "Set languages"
 msgstr "言語を設定"
 
@@ -923,20 +926,17 @@ msgstr "形式: %s"
 msgid "Formats (%d)"
 msgstr "形式 (%d)"
 
-msgid "Search Z-library"
-msgstr "Z-libraryを検索"
-
 msgid "Please enter a search term."
 msgstr "検索語を入力してください。"
+
+msgid "Search Z-library"
+msgstr "Z-libraryを検索"
 
 msgid "Sort by"
 msgstr "並び替え"
 
 msgid "Unknown Title"
 msgstr "不明なタイトル"
-
-msgid "Rating"
-msgstr "評価"
 
 msgid "Search Results"
 msgstr "検索結果"
@@ -947,9 +947,6 @@ msgstr "\"%s\" をダウンロード済みの書籍から削除しますか？"
 
 msgid "Clear your stored username and password?"
 msgstr "保存されているユーザー名とパスワードをクリアしますか？"
-
-msgid "Clear"
-msgstr "クリア"
 
 #, lua-format
 msgid "Download \"%s\"?"
@@ -1140,6 +1137,9 @@ msgstr "設定して確認"
 msgid "Please fill in all fields"
 msgstr "すべての項目を入力してください"
 
+#~ msgid "Rating"
+#~ msgstr "評価"
+
 #~ msgid "Login failed: Invalid session data"
 #~ msgstr "ログインに失敗しました：セッションデータが不正です"
 
@@ -1196,7 +1196,6 @@ msgstr "すべての項目を入力してください"
 
 #~ msgid "Downloading…"
 #~ msgstr "ダウンロード中…"
-
 
 #~ msgid "Full Title"
 #~ msgstr "完全なタイトル"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 14:38+0000\n"
+"POT-Creation-Date: 2026-11-09 19:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -171,9 +171,6 @@ msgstr "أرجع API خطأ، يرجى إعادة المحاولة"
 msgid "Z-library My Books"
 msgstr "كتبي في Z-library"
 
-msgid "Downloaded"
-msgstr "المُنزَّلة"
-
 msgid "Favorites"
 msgstr "المفضلة"
 
@@ -185,6 +182,9 @@ msgstr "فشل جلب الكتب المفضلة"
 
 msgid "Favorite books"
 msgstr "الكتب المفضلة"
+
+msgid "Downloaded"
+msgstr "المُنزَّلة"
 
 msgid "Remove from downloaded"
 msgstr "الإزالة من التنزيلات"
@@ -552,18 +552,6 @@ msgstr "تم إلغاء الطلب."
 msgid "Description"
 msgstr "الوصف"
 
-msgid "Recent searches"
-msgstr "عمليات البحث الأخيرة"
-
-msgid "Hold a search to remove it"
-msgstr "اضغط مطولاً على بحث لإزالته"
-
-msgid "Clear search history"
-msgstr "مسح سجل البحث"
-
-msgid "Clear your search history?"
-msgstr "هل تريد مسح سجل البحث؟"
-
 msgid "No description available"
 msgstr "لا يوجد وصف"
 
@@ -579,9 +567,6 @@ msgstr "الغلاف"
 msgid "Back"
 msgstr "رجوع"
 
-msgid "More Similar Books"
-msgstr "مزيد من الكتب المشابهة"
-
 msgid "Download"
 msgstr "تنزيل"
 
@@ -590,6 +575,9 @@ msgstr "الصيغة"
 
 msgid "Download book"
 msgstr "تنزيل الكتاب"
+
+msgid "More Similar Books"
+msgstr "مزيد من الكتب المشابهة"
 
 msgid "Refresh"
 msgstr "تحديث"
@@ -901,6 +889,21 @@ msgstr "إضافة فئة…"
 msgid "New category"
 msgstr "فئة جديدة"
 
+msgid "Recent searches"
+msgstr "عمليات البحث الأخيرة"
+
+msgid "Hold a search to remove it"
+msgstr "اضغط مطولاً على بحث لإزالته"
+
+msgid "Clear search history"
+msgstr "مسح سجل البحث"
+
+msgid "Clear your search history?"
+msgstr "هل تريد مسح سجل البحث؟"
+
+msgid "Clear"
+msgstr "مسح"
+
 msgid "Set languages"
 msgstr "تعيين اللغات"
 
@@ -923,20 +926,17 @@ msgstr "التنسيق: %s"
 msgid "Formats (%d)"
 msgstr "التنسيقات (%d)"
 
-msgid "Search Z-library"
-msgstr "البحث في Z-library"
-
 msgid "Please enter a search term."
 msgstr "الرجاء إدخال مصطلح بحث."
+
+msgid "Search Z-library"
+msgstr "البحث في Z-library"
 
 msgid "Sort by"
 msgstr "الترتيب حسب"
 
 msgid "Unknown Title"
 msgstr "عنوان غير معروف"
-
-msgid "Rating"
-msgstr "التقييم"
 
 msgid "Search Results"
 msgstr "نتائج البحث"
@@ -947,9 +947,6 @@ msgstr "إزالة \"%s\" من كتبك المنزَّلة؟"
 
 msgid "Clear your stored username and password?"
 msgstr "مسح اسم المستخدم وكلمة المرور المخزَّنَين؟"
-
-msgid "Clear"
-msgstr "مسح"
 
 #, lua-format
 msgid "Download \"%s\"?"
@@ -1140,6 +1137,9 @@ msgstr "تعيين وتحقّق"
 msgid "Please fill in all fields"
 msgstr "يرجى ملء جميع الحقول"
 
+#~ msgid "Rating"
+#~ msgstr "التقييم"
+
 #~ msgid "Login failed: Invalid session data"
 #~ msgstr "فشل تسجيل الدخول: بيانات جلسة غير صالحة"
 
@@ -1196,7 +1196,6 @@ msgstr "يرجى ملء جميع الحقول"
 
 #~ msgid "Downloading…"
 #~ msgstr "جارٍ التنزيل..."
-
 
 #~ msgid "Full Title"
 #~ msgstr "العنوان الكامل"

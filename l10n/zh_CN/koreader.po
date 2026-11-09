@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 14:38+0000\n"
+"POT-Creation-Date: 2026-11-09 19:19+0000\n"
 "PO-Revision-Date: 2026-04-03 00:00+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
@@ -171,9 +171,6 @@ msgstr "API 返回错误，请重试"
 msgid "Z-library My Books"
 msgstr "Z-library 我的书籍"
 
-msgid "Downloaded"
-msgstr "已下载"
-
 msgid "Favorites"
 msgstr "收藏夹"
 
@@ -185,6 +182,9 @@ msgstr "获取收藏书籍失败"
 
 msgid "Favorite books"
 msgstr "收藏的书籍"
+
+msgid "Downloaded"
+msgstr "已下载"
 
 msgid "Remove from downloaded"
 msgstr "从已下载中移除"
@@ -552,18 +552,6 @@ msgstr "请求已取消。"
 msgid "Description"
 msgstr "简介"
 
-msgid "Recent searches"
-msgstr "最近搜索"
-
-msgid "Hold a search to remove it"
-msgstr "长按搜索项可删除"
-
-msgid "Clear search history"
-msgstr "清除搜索历史"
-
-msgid "Clear your search history?"
-msgstr "清除搜索历史？"
-
 msgid "No description available"
 msgstr "暂无简介"
 
@@ -579,9 +567,6 @@ msgstr "封面"
 msgid "Back"
 msgstr "返回"
 
-msgid "More Similar Books"
-msgstr "更多相似书籍"
-
 msgid "Download"
 msgstr "下载"
 
@@ -590,6 +575,9 @@ msgstr "格式"
 
 msgid "Download book"
 msgstr "下载书籍"
+
+msgid "More Similar Books"
+msgstr "更多相似书籍"
 
 msgid "Refresh"
 msgstr "刷新"
@@ -901,6 +889,21 @@ msgstr "添加分类…"
 msgid "New category"
 msgstr "新建分类"
 
+msgid "Recent searches"
+msgstr "最近搜索"
+
+msgid "Hold a search to remove it"
+msgstr "长按搜索项可删除"
+
+msgid "Clear search history"
+msgstr "清除搜索历史"
+
+msgid "Clear your search history?"
+msgstr "清除搜索历史？"
+
+msgid "Clear"
+msgstr "清除"
+
 msgid "Set languages"
 msgstr "设置语言"
 
@@ -923,20 +926,17 @@ msgstr "格式: %s"
 msgid "Formats (%d)"
 msgstr "格式 (%d)"
 
-msgid "Search Z-library"
-msgstr "搜索 Z-library"
-
 msgid "Please enter a search term."
 msgstr "请输入搜索词。"
+
+msgid "Search Z-library"
+msgstr "搜索 Z-library"
 
 msgid "Sort by"
 msgstr "排序方式"
 
 msgid "Unknown Title"
 msgstr "未知标题"
-
-msgid "Rating"
-msgstr "评分"
 
 msgid "Search Results"
 msgstr "搜索结果"
@@ -947,9 +947,6 @@ msgstr "从您的已下载书籍中移除\"%s\"？"
 
 msgid "Clear your stored username and password?"
 msgstr "清除已保存的用户名和密码？"
-
-msgid "Clear"
-msgstr "清除"
 
 #, lua-format
 msgid "Download \"%s\"?"
@@ -1140,6 +1137,9 @@ msgstr "设置并验证"
 msgid "Please fill in all fields"
 msgstr "请填写所有字段"
 
+#~ msgid "Rating"
+#~ msgstr "评分"
+
 #~ msgid "Login failed: Invalid session data"
 #~ msgstr "登录失败：会话数据无效"
 
@@ -1229,7 +1229,6 @@ msgstr "请填写所有字段"
 
 #~ msgid "Sync favorites summary"
 #~ msgstr "同步收藏摘要"
-
 
 #~ msgid "Full Title"
 #~ msgstr "完整标题"

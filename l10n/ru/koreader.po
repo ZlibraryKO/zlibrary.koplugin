@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 14:38+0000\n"
+"POT-Creation-Date: 2026-11-09 19:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -171,9 +171,6 @@ msgstr "API вернул ошибку, повторите попытку"
 msgid "Z-library My Books"
 msgstr "Z-library: мои книги"
 
-msgid "Downloaded"
-msgstr "Скачанные"
-
 msgid "Favorites"
 msgstr "Избранное"
 
@@ -185,6 +182,9 @@ msgstr "Не удалось получить избранные книги"
 
 msgid "Favorite books"
 msgstr "Избранные книги"
+
+msgid "Downloaded"
+msgstr "Скачанные"
 
 msgid "Remove from downloaded"
 msgstr "Удаление из скачанных"
@@ -552,18 +552,6 @@ msgstr "Запрос отменён."
 msgid "Description"
 msgstr "Описание"
 
-msgid "Recent searches"
-msgstr "Недавние запросы"
-
-msgid "Hold a search to remove it"
-msgstr "Удерживайте запрос, чтобы удалить его"
-
-msgid "Clear search history"
-msgstr "Очистить историю поиска"
-
-msgid "Clear your search history?"
-msgstr "Очистить историю поиска?"
-
 msgid "No description available"
 msgstr "Описание отсутствует"
 
@@ -579,9 +567,6 @@ msgstr "Обложка"
 msgid "Back"
 msgstr "Назад"
 
-msgid "More Similar Books"
-msgstr "Ещё похожие книги"
-
 msgid "Download"
 msgstr "Скачать"
 
@@ -590,6 +575,9 @@ msgstr "Формат"
 
 msgid "Download book"
 msgstr "Скачать книгу"
+
+msgid "More Similar Books"
+msgstr "Ещё похожие книги"
 
 msgid "Refresh"
 msgstr "Обновить"
@@ -901,6 +889,21 @@ msgstr "Добавить категорию…"
 msgid "New category"
 msgstr "Новая категория"
 
+msgid "Recent searches"
+msgstr "Недавние запросы"
+
+msgid "Hold a search to remove it"
+msgstr "Удерживайте запрос, чтобы удалить его"
+
+msgid "Clear search history"
+msgstr "Очистить историю поиска"
+
+msgid "Clear your search history?"
+msgstr "Очистить историю поиска?"
+
+msgid "Clear"
+msgstr "Очистить"
+
 msgid "Set languages"
 msgstr "Установить языки"
 
@@ -923,20 +926,17 @@ msgstr "Формат: %s"
 msgid "Formats (%d)"
 msgstr "Форматы (%d)"
 
-msgid "Search Z-library"
-msgstr "Поиск в Z-библиотеке"
-
 msgid "Please enter a search term."
 msgstr "Пожалуйста, введите поисковый запрос."
+
+msgid "Search Z-library"
+msgstr "Поиск в Z-библиотеке"
 
 msgid "Sort by"
 msgstr "Сортировать по"
 
 msgid "Unknown Title"
 msgstr "Неизвестное название"
-
-msgid "Rating"
-msgstr "Рейтинг"
 
 msgid "Search Results"
 msgstr "Результаты поиска"
@@ -947,9 +947,6 @@ msgstr "Удалить \"%s\" из скачанных книг?"
 
 msgid "Clear your stored username and password?"
 msgstr "Очистить сохранённые имя пользователя и пароль?"
-
-msgid "Clear"
-msgstr "Очистить"
 
 #, lua-format
 msgid "Download \"%s\"?"
@@ -1140,6 +1137,9 @@ msgstr "Указать и проверить"
 msgid "Please fill in all fields"
 msgstr "Пожалуйста, заполните все поля"
 
+#~ msgid "Rating"
+#~ msgstr "Рейтинг"
+
 #~ msgid "Login failed: Invalid session data"
 #~ msgstr "Ошибка входа: неверные данные сессии"
 
@@ -1196,7 +1196,6 @@ msgstr "Пожалуйста, заполните все поля"
 
 #~ msgid "Downloading…"
 #~ msgstr "Загрузка…"
-
 
 #~ msgid "Full Title"
 #~ msgstr "Полное название"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 14:38+0000\n"
+"POT-Creation-Date: 2026-11-09 19:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -171,9 +171,6 @@ msgstr "API retourneerde een fout, probeer het opnieuw"
 msgid "Z-library My Books"
 msgstr "Z-library mijn boeken"
 
-msgid "Downloaded"
-msgstr "Gedownload"
-
 msgid "Favorites"
 msgstr "Favorieten"
 
@@ -185,6 +182,9 @@ msgstr "Kan favoriete boeken niet ophalen"
 
 msgid "Favorite books"
 msgstr "Favoriete boeken"
+
+msgid "Downloaded"
+msgstr "Gedownload"
 
 msgid "Remove from downloaded"
 msgstr "Verwijderen uit gedownloade boeken"
@@ -552,18 +552,6 @@ msgstr "Verzoek geannuleerd."
 msgid "Description"
 msgstr "Beschrijving"
 
-msgid "Recent searches"
-msgstr "Recente zoekopdrachten"
-
-msgid "Hold a search to remove it"
-msgstr "Houd een zoekopdracht ingedrukt om deze te verwijderen"
-
-msgid "Clear search history"
-msgstr "Zoekgeschiedenis wissen"
-
-msgid "Clear your search history?"
-msgstr "Zoekgeschiedenis wissen?"
-
 msgid "No description available"
 msgstr "Geen beschrijving beschikbaar"
 
@@ -579,9 +567,6 @@ msgstr "Omslag"
 msgid "Back"
 msgstr "Terug"
 
-msgid "More Similar Books"
-msgstr "Meer vergelijkbare boeken"
-
 msgid "Download"
 msgstr "Downloaden"
 
@@ -590,6 +575,9 @@ msgstr "Formaat"
 
 msgid "Download book"
 msgstr "Boek downloaden"
+
+msgid "More Similar Books"
+msgstr "Meer vergelijkbare boeken"
 
 msgid "Refresh"
 msgstr "Vernieuwen"
@@ -901,6 +889,21 @@ msgstr "Categorie toevoegen…"
 msgid "New category"
 msgstr "Nieuwe categorie"
 
+msgid "Recent searches"
+msgstr "Recente zoekopdrachten"
+
+msgid "Hold a search to remove it"
+msgstr "Houd een zoekopdracht ingedrukt om deze te verwijderen"
+
+msgid "Clear search history"
+msgstr "Zoekgeschiedenis wissen"
+
+msgid "Clear your search history?"
+msgstr "Zoekgeschiedenis wissen?"
+
+msgid "Clear"
+msgstr "Wissen"
+
 msgid "Set languages"
 msgstr "Talen instellen"
 
@@ -923,20 +926,17 @@ msgstr "Formaat: %s"
 msgid "Formats (%d)"
 msgstr "Formaten (%d)"
 
-msgid "Search Z-library"
-msgstr "Zoek in Z-library"
-
 msgid "Please enter a search term."
 msgstr "Voer een zoekterm in."
+
+msgid "Search Z-library"
+msgstr "Zoek in Z-library"
 
 msgid "Sort by"
 msgstr "Sorteren op"
 
 msgid "Unknown Title"
 msgstr "Onbekende titel"
-
-msgid "Rating"
-msgstr "Beoordeling"
 
 msgid "Search Results"
 msgstr "Zoekresultaten"
@@ -947,9 +947,6 @@ msgstr "\"%s\" verwijderen uit je gedownloade boeken?"
 
 msgid "Clear your stored username and password?"
 msgstr "Je opgeslagen gebruikersnaam en wachtwoord wissen?"
-
-msgid "Clear"
-msgstr "Wissen"
 
 #, lua-format
 msgid "Download \"%s\"?"
@@ -1140,6 +1137,9 @@ msgstr "Instellen en verifiëren"
 msgid "Please fill in all fields"
 msgstr "Vul alle velden in"
 
+#~ msgid "Rating"
+#~ msgstr "Beoordeling"
+
 #~ msgid "Login failed: Invalid session data"
 #~ msgstr "Inloggen mislukt: ongeldige sessiegegevens"
 
@@ -1196,7 +1196,6 @@ msgstr "Vul alle velden in"
 
 #~ msgid "Downloading…"
 #~ msgstr "Bezig met downloaden…"
-
 
 #~ msgid "Full Title"
 #~ msgstr "Volledige titel"

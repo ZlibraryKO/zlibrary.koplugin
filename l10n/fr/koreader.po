@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 14:38+0000\n"
+"POT-Creation-Date: 2026-11-09 19:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -171,9 +171,6 @@ msgstr "L'API a retourné une erreur, veuillez réessayer"
 msgid "Z-library My Books"
 msgstr "Mes livres Z-library"
 
-msgid "Downloaded"
-msgstr "Téléchargés"
-
 msgid "Favorites"
 msgstr "Favoris"
 
@@ -185,6 +182,9 @@ msgstr "Échec de la récupération des livres favoris"
 
 msgid "Favorite books"
 msgstr "Livres favoris"
+
+msgid "Downloaded"
+msgstr "Téléchargés"
 
 msgid "Remove from downloaded"
 msgstr "Retirer des téléchargements"
@@ -552,18 +552,6 @@ msgstr "Requête annulée."
 msgid "Description"
 msgstr "Description"
 
-msgid "Recent searches"
-msgstr "Recherches récentes"
-
-msgid "Hold a search to remove it"
-msgstr "Appui long sur une recherche pour la supprimer"
-
-msgid "Clear search history"
-msgstr "Effacer l'historique de recherche"
-
-msgid "Clear your search history?"
-msgstr "Effacer l'historique de recherche ?"
-
 msgid "No description available"
 msgstr "Aucune description disponible"
 
@@ -579,9 +567,6 @@ msgstr "Couverture"
 msgid "Back"
 msgstr "Retour"
 
-msgid "More Similar Books"
-msgstr "Plus de livres similaires"
-
 msgid "Download"
 msgstr "Télécharger"
 
@@ -590,6 +575,9 @@ msgstr "Format"
 
 msgid "Download book"
 msgstr "Télécharger le livre"
+
+msgid "More Similar Books"
+msgstr "Plus de livres similaires"
 
 msgid "Refresh"
 msgstr "Actualiser"
@@ -901,6 +889,21 @@ msgstr "Ajouter une catégorie…"
 msgid "New category"
 msgstr "Nouvelle catégorie"
 
+msgid "Recent searches"
+msgstr "Recherches récentes"
+
+msgid "Hold a search to remove it"
+msgstr "Appui long sur une recherche pour la supprimer"
+
+msgid "Clear search history"
+msgstr "Effacer l'historique de recherche"
+
+msgid "Clear your search history?"
+msgstr "Effacer l'historique de recherche ?"
+
+msgid "Clear"
+msgstr "Effacer"
+
 msgid "Set languages"
 msgstr "Définir les langues"
 
@@ -923,20 +926,17 @@ msgstr "Format : %s"
 msgid "Formats (%d)"
 msgstr "Formats (%d)"
 
-msgid "Search Z-library"
-msgstr "Rechercher sur Z-library"
-
 msgid "Please enter a search term."
 msgstr "Veuillez saisir un terme de recherche."
+
+msgid "Search Z-library"
+msgstr "Rechercher sur Z-library"
 
 msgid "Sort by"
 msgstr "Trier par"
 
 msgid "Unknown Title"
 msgstr "Titre inconnu"
-
-msgid "Rating"
-msgstr "Évaluation"
 
 msgid "Search Results"
 msgstr "Résultats de recherche"
@@ -947,9 +947,6 @@ msgstr "Retirer \"%s\" de vos livres téléchargés ?"
 
 msgid "Clear your stored username and password?"
 msgstr "Effacer votre nom d'utilisateur et votre mot de passe enregistrés ?"
-
-msgid "Clear"
-msgstr "Effacer"
 
 #, lua-format
 msgid "Download \"%s\"?"
@@ -1140,6 +1137,9 @@ msgstr "Définir et vérifier"
 msgid "Please fill in all fields"
 msgstr "Veuillez remplir tous les champs"
 
+#~ msgid "Rating"
+#~ msgstr "Évaluation"
+
 #~ msgid "Login failed: Invalid session data"
 #~ msgstr "Échec de la connexion : Données de session invalides"
 
@@ -1196,7 +1196,6 @@ msgstr "Veuillez remplir tous les champs"
 
 #~ msgid "Downloading…"
 #~ msgstr "Téléchargement en cours…"
-
 
 #~ msgid "Full Title"
 #~ msgstr "Titre complet"

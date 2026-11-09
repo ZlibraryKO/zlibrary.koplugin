@@ -6,6 +6,14 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.56
+
+### Fixed
+
+**The book description has the right name in Chinese.** On the book details screen, Simplified
+and Traditional Chinese labelled the description 个人资料 / 個人資料, which means a person's
+profile. It now reads 简介 / 簡介.
+
 ## 1.0.55
 
 ### Added

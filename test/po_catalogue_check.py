@@ -22,10 +22,14 @@ pins the three things that must hold for a catalogue to load at all.
 
 usage: python3 po_catalogue_check.py <plugin-root> [<koreader-root>]
 """
+import gettext
 import glob
 import os
 import re
+import shutil
+import subprocess
 import sys
+import tempfile
 
 
 def header_block(po_text):
@@ -36,6 +40,58 @@ def header_block(po_text):
         return None
     # join the quoted continuation lines into the actual header string
     return "".join(re.findall(r'"((?:[^"\\]|\\.)*)"', m.group(1)))
+
+
+def po_translations(po_text):
+    """Single-line msgid/msgstr pairs that msgfmt would compile, skipping fuzzy and retired ones."""
+    def unescape(text):
+        return text.replace("\\n", "\n").replace("\\t", "\t").replace('\\"', '"').replace("\\\\", "\\")
+
+    pairs = {}
+    fuzzy = False
+    lines = po_text.split("\n")
+    for i, line in enumerate(lines):
+        if line.startswith("#,") and "fuzzy" in line:
+            fuzzy = True
+        if line == "":
+            fuzzy = False
+        msgid = re.match(r'^msgid "(.+)"$', line)
+        if msgid and i + 1 < len(lines) and not fuzzy:
+            msgstr = re.match(r'^msgstr "(.+)"$', lines[i + 1])
+            continued = i + 2 < len(lines) and lines[i + 2].startswith('"')
+            if msgstr and not continued:
+                pairs[unescape(msgid.group(1))] = unescape(msgstr.group(1))
+    return pairs
+
+
+def compiled_failures(locale_dirs):
+    """msgfmt is what the release runs: a file it rejects is not compiled, and ships out of date."""
+    if shutil.which("msgfmt") is None:
+        print("  SKIP: msgfmt not found, so the catalogues were not compiled")
+        return []
+    failures = []
+    for d in locale_dirs:
+        loc = os.path.basename(d)
+        po = os.path.join(d, "koreader.po")
+        mo = os.path.join(d, "koreader.mo")
+        if not (os.path.isfile(po) and os.path.isfile(mo)):
+            continue  # already reported
+        with tempfile.NamedTemporaryFile(suffix=".mo") as out:
+            done = subprocess.run(["msgfmt", "--check-format", "-o", out.name, po],
+                                  capture_output=True, text=True)
+        if done.returncode != 0:
+            first = done.stderr.strip().split("\n")[0]
+            failures.append("%s: msgfmt rejects koreader.po: %s" % (loc, first))
+            continue
+        with open(po, encoding="utf-8") as fh:
+            wanted = po_translations(fh.read())
+        with open(mo, "rb") as fh:
+            have = gettext.GNUTranslations(fh)._catalog
+        stale = sorted(k for k, v in wanted.items() if have.get(k) != v)
+        if stale:
+            failures.append('%s: koreader.mo is out of date for %d string(s), e.g. "%s" (run msgfmt)'
+                            % (loc, len(stale), stale[0]))
+    return failures
 
 
 def main(plugin_root, _koreader_root=None):
@@ -86,6 +142,8 @@ def main(plugin_root, _koreader_root=None):
         elif not re.search(r"plural=.*;", header):
             failures.append("%s: Plural-Forms header has no `plural=...;` clause -- parse_headers "
                             "leaves the plural expression nil and throws" % loc)
+
+    failures.extend(compiled_failures(locale_dirs))
 
     for f in failures:
         print("  [FAIL] %s" % f)

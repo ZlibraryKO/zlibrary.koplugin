@@ -24,7 +24,7 @@ local r = support.reporter()
 local function make()
     local rig = { saved = {}, typed = "" }
     local env = {
-        pairs = pairs, ipairs = ipairs, table = table, string = string,
+        pairs = pairs, ipairs = ipairs, table = table, string = string, next = next, pcall = pcall,
         type = type, tostring = tostring,
         T = function(s) return s end,
         util = { trim = function(s) return (s:gsub("^%s+", ""):gsub("%s+$", "")) end },
@@ -35,8 +35,8 @@ local function make()
     }
     env.Config = {
         getSetting = function(_, default) return rig.saved or default end,
-        saveSetting = function() end,
-        deleteSetting = function() end,
+        saveSetting = function(_, value) rig.written = value end,
+        deleteSetting = function() rig.deleted = true end,
     }
     env.Ui = { showInfoMessage = function() end }
     env.InputDialog = {
@@ -61,6 +61,7 @@ local function make()
     rig.open = function(options, saved, is_single)
         rig.saved = saved or {}
         rig.spec = nil
+        rig.written, rig.deleted = nil, nil
         pick({}, "Pick", "some_key", options, nil, is_single)
         return rig.spec
     end
@@ -267,5 +268,42 @@ do
     r.check("the previously-supported languages are all still there", #missing == 0,
             "dropped: " .. table.concat(missing, ", "))
 end
+
+-- ---------------------------------------------------------------- an option meaning "no setting"
+-- Search order has a Default row so the list always shows what is in effect. It must never be
+-- saved: "default" stored as a search order would go to the server as one.
+local ORDERS = {
+    { name = "Default", value = "default", is_default = true },
+    { name = "Year", value = "year" },
+    { name = "Size", value = "size" },
+}
+local CHECK = "\u{2714}"
+local function mark(menu, name) return has(menu.item_table, name).mandatory_func() end
+local function tap(menu, name) has(menu.item_table, name).callback() end
+
+local orders = rig.open(ORDERS, {}, true)
+r.check("with nothing saved, Default is the one ticked", mark(orders, "Default") == CHECK and mark(orders, "Year") == "",
+        mark(orders, "Default") .. "/" .. mark(orders, "Year"))
+orders.onClose()
+r.check("opening and leaving saves nothing", rig.written == nil and rig.deleted == true, tostring(rig.written))
+
+orders = rig.open(ORDERS, { "year" }, true)
+r.check("with a saved order, that one is ticked", mark(orders, "Default") == "" and mark(orders, "Year") == CHECK,
+        mark(orders, "Default") .. "/" .. mark(orders, "Year"))
+
+orders = rig.open(ORDERS, {}, true)
+tap(orders, "Year")
+r.check("choosing an order saves only that order",
+        rig.written and #rig.written == 1 and rig.written[1] == "year", tostring(rig.written and rig.written[1]))
+
+orders = rig.open(ORDERS, { "year" }, true)
+tap(orders, "Default")
+r.check("choosing Default clears the setting instead of saving it", rig.written == nil and rig.deleted == true,
+        tostring(rig.written and rig.written[1]))
+
+orders = rig.open(ORDERS, { "year" }, true)
+tap(orders, "Year")
+r.check("tapping the current order goes back to the default", rig.written == nil and rig.deleted == true,
+        tostring(rig.written and rig.written[1]))
 
 r.finish()

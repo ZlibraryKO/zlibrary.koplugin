@@ -10,6 +10,7 @@ local ButtonDialog = require("ui/widget/buttondialog")
 local ButtonTable = require("ui/widget/buttontable")
 local FocusManager = require("ui/widget/focusmanager")
 local InputContainer = require("ui/widget/container/inputcontainer")
+local InfoMessage = require("ui/widget/infomessage")
 local FrameContainer = require("ui/widget/container/framecontainer")
 local LeftContainer = require("ui/widget/container/leftcontainer")
 local CenterContainer = require("ui/widget/container/centercontainer")
@@ -280,20 +281,39 @@ function BookDetailsDialog:_buildContent()
     local vstack = VerticalGroup:new{ align = "left", not_focusable = true}
     local title_face = self.fonts.title
     local face_height = title_face.ftsize:getHeightAndAscender()
-    local title_max_h = math.floor(face_height * 2.2)
+    local title_max_h = math.floor(face_height * 3.2)
+    local self_ref = self
 
-    table.insert(vstack, TextBoxWidget:new{
+    local title_widget = TextBoxWidget:new{
         text = self.full_title,
         face = title_face,
         bold = true,
         alignment = "left",
         width = self.text_col_w,
-        height = title_max_h,
-        height_adjust = true, 
-        height_overflow_show_ellipsis = true 
-    })
+    }
+    if title_widget:getSize().h <= title_max_h then
+        table.insert(vstack, title_widget)
+    else
+        -- Lists shorten titles and this header can only hold so many lines, so a title this long
+        -- would otherwise never be readable in full anywhere on the device.
+        title_widget:free()
+        local clickable_title = makeClickable(TextBoxWidget:new{
+            text = self.full_title,
+            face = title_face,
+            bold = true,
+            alignment = "left",
+            width = self.text_col_w,
+            height = title_max_h,
+            height_adjust = true,
+            height_overflow_show_ellipsis = true,
+        }, function()
+            UIManager:show(InfoMessage:new{ text = self_ref.full_title })
+            return true
+        end)
+        table.insert(vstack, clickable_title)
+        table.insert(self._key_focus_rows, clickable_title)
+    end
 
-    local self_ref = self
     if self.full_author ~= "" then
         table.insert(vstack, VerticalSpan:new{ width = math.floor(Screen:scaleBySize(8)) })
         local author_group = HorizontalGroup:new{

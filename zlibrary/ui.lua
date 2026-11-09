@@ -7,6 +7,7 @@ local DownloadMgr = require("ui/downloadmgr")
 local InputDialog = require("ui/widget/inputdialog")
 local ButtonDialog = require("ui/widget/buttondialog")
 local Menu = require("zlibrary.menu")
+local BookRow = require("zlibrary.book_row")
 local Device = require("device")
 local util = require("util")
 local logger = require("logger")
@@ -885,30 +886,16 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
 end
 
 function Ui.createBookMenuItem(book_data, parent_zlibrary_instance, is_show_cover)
-    local year_str = (book_data.year and book_data.year ~= "N/A" and tostring(book_data.year) ~= "0") and (" (" .. book_data.year .. ")") or ""
     local title_for_html = (type(book_data.title) == "string" and book_data.title) or T("Unknown Title")
     local title = util.htmlEntitiesToUtf8(title_for_html)
     local author_for_html = (type(book_data.author) == "string" and book_data.author) or T("Unknown Author")
     local author = util.htmlEntitiesToUtf8(author_for_html)
-    local combined_text = string.format("\u{FFF1}\u{FFF2}%s\u{FFF3} by %s%s", title, author, year_str)
-
-    local additional_info_parts = {}
-    local selected_extensions = Config.getSearchExtensions()
-
-    if book_data.format and book_data.format ~= "N/A" then
-        if #selected_extensions ~= 1 then
-            table.insert(additional_info_parts, book_data.format)
-        end
-    end
-    if book_data.size and book_data.size ~= "N/A" then table.insert(additional_info_parts, book_data.size) end
-    if book_data.rating and book_data.rating ~= "N/A" then table.insert(additional_info_parts, _colon_concat(T("Rating"), book_data.rating)) end
-
-    if #additional_info_parts > 0 then
-        combined_text = combined_text .. " | " .. table.concat(additional_info_parts, " | ")
-    end
+    -- When only one format is being searched, every row would repeat it.
+    local book_row = BookRow.new(title, author, book_data, #Config.getSearchExtensions() == 1)
 
     return {
-        text = combined_text,
+        text = BookRow.text(book_row),
+        book_row = book_row,
         callback = function()
             if book_data.needs_detail_fetch then
                 parent_zlibrary_instance:onSelectSearchBook(book_data)
@@ -945,7 +932,8 @@ function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_it
         is_popout = false,
         is_borderless = true,
         title_bar_fm_style = true,
-        multilines_show_more_text = true,
+        multilines_forced = true,
+        multilines_show_more_text = false,
         list_per_page =opts and opts.search_per_page,
         show_cover = opts and opts.show_cover_search ~= false,
     }
@@ -1308,7 +1296,8 @@ function Ui.showSimilarBooksMenu(ui_self, books, plugin_self, source_title)
         is_popout = false,
         is_borderless = true,
         title_bar_fm_style = true,
-        multilines_show_more_text = true,
+        multilines_forced = true,
+        multilines_show_more_text = false,
         list_per_page =opts and opts.search_per_page,
         show_cover = show_cover,
     })

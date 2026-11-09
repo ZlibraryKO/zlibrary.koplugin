@@ -4,6 +4,7 @@ local Size = require("ui/size")
 local Geom = require("ui/geometry")
 local UIManager = require("ui/uimanager")
 local Menu = require("zlibrary.menu")
+local BookRow = require("zlibrary.book_row")
 local IconButton = require("ui/widget/iconbutton")
 local ButtonDialog = require("ui/widget/buttondialog")
 local TitleBar = require("ui/widget/titlebar")
@@ -295,17 +296,18 @@ function SearchDialog:_getMenuItems(books)
     local current_toggle = self:getActiveItem()
     local mandatory_func = current_toggle and current_toggle.mandatory_func
     
-    local title, author, menu_text, mandatory_text
+    local title, author, book_row, mandatory_text
     local is_show_cover = self.show_cover
     for i, book in ipairs(books) do
         title = book.title or T("Untitled")
         author = book.author or T("Unknown Author")
-        menu_text = string.format("\u{FFF1}\u{FFF2}%s\u{FFF3} - %s", title, author)
+        book_row = BookRow.new(title, author, book)
         mandatory_text = mandatory_func and mandatory_func(book)
 
         table.insert(menu_items, {
             book_index = i,
-            text = menu_text,
+            text = BookRow.text(book_row),
+            book_row = book_row,
             mandatory = mandatory_text,
             book_id = book.id,
             hash = book.hash,
@@ -390,7 +392,8 @@ function SearchDialog:createMenuContainer(books, height)
             custom_title_bar = self.compound_title_bar,
             show_captions = true,
             is_borderless = true,
-            multilines_show_more_text = true,
+            multilines_forced = true,
+            multilines_show_more_text = false,
             show_parent = self,
             show_cover = self:_activeShowCover(),
             list_per_page = self.list_per_page,

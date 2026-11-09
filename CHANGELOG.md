@@ -6,6 +6,22 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.57
+
+### Changed
+
+**Book lists are easier to read.** Each row now has the title on top and the author, year, format,
+size and rating below it, at one text size for the whole list. Long titles are shortened so those
+details stay visible, and with many rows per page the list uses a slightly smaller size so titles
+get two lines. This covers search results, Similar Books, Recommended, Most Popular and My Books.
+
+**No more "Rating: 0".** Books nobody has rated no longer show a score.
+
+**Books without a cover** show their first letter instead of an empty box.
+
+**Long titles can be read in full.** The book details screen shows up to three lines of the title.
+If it is longer than that, tap it to see all of it.
+
 ## 1.0.56
 
 ### Fixed

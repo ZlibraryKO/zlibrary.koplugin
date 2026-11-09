@@ -8,19 +8,44 @@ to `main` — so the top section is the one about to ship.
 
 ## 1.0.57
 
+### Added
+
+**Recent searches.** The search box remembers your last 10 searches that found something. Tap one
+to run it again, hold one to remove it, or clear the whole list. Clearing your credentials clears
+it too.
+
 ### Changed
 
-**Book lists are easier to read.** Each row now has the title on top and the author, year, format,
-size and rating below it, at one text size for the whole list. Long titles are shortened so those
-details stay visible, and with many rows per page the list uses a slightly smaller size so titles
-get two lines. This covers search results, Similar Books, Recommended, Most Popular and My Books.
+**Book lists are easier to read.** Each row has the title on top and the author below it, at one
+text size for the whole list. With many rows per page the list uses a slightly smaller size so
+titles get two lines, and a long author wraps when the title leaves room. Search results and
+Similar Books also show the year, size and, when you search several formats, the format. Recommended, Most Popular, My Books and
+booklists stay to the title and author.
 
-**No more "Rating: 0".** Books nobody has rated no longer show a score.
+**A clearer book details screen.** It now fills the screen and has an X to close it. Download has
+its own row at the top and the other buttons share rows, which leaves more room for the
+description. The description uses the same plain, left-aligned text as the rest of the plugin, and
+"Profile" is now called "Description".
+
+**Long titles and authors can be read in full.** The book details screen shows up to three lines
+of each. If a title is longer than that, tap it to see all of it.
+
+**Ratings moved to the details screen.** Lists no longer show them, and books nobody has rated no
+longer show a score of 0.
 
 **Books without a cover** show their first letter instead of an empty box.
 
-**Long titles can be read in full.** The book details screen shows up to three lines of the title.
-If it is longer than that, tap it to see all of it.
+**My Books.** The Downloaded tab is no longer cut off: your download count moved to the title of
+the screen. Dates now read in full, for example 2026-08-09.
+
+**Search options.** The pickers use a check mark. Search order has a Default entry, so it always
+shows what is in effect, and the search box names the language the way the picker does.
+
+### Fixed
+
+**Lists kept stopping early.** A list opened from the cache could not load more books, so Most
+Popular with languages or formats selected stopped at 30 until you refreshed it. It now carries
+on from where the cached list ends. A list already cached by an older version needs one refresh.
 
 ## 1.0.56
 

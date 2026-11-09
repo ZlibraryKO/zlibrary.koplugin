@@ -11,6 +11,8 @@ local ButtonTable = require("ui/widget/buttontable")
 local FocusManager = require("ui/widget/focusmanager")
 local InputContainer = require("ui/widget/container/inputcontainer")
 local InfoMessage = require("ui/widget/infomessage")
+local IconButton = require("ui/widget/iconbutton")
+local OverlapGroup = require("ui/widget/overlapgroup")
 local FrameContainer = require("ui/widget/container/framecontainer")
 local LeftContainer = require("ui/widget/container/leftcontainer")
 local CenterContainer = require("ui/widget/container/centercontainer")
@@ -185,6 +187,7 @@ function BookDetailsDialog:_buildInnerDialog()
         title = self.title,
         title_align = self.title_align,
         buttons = dialog_buttons,
+        width = self.dlg_w,
         --dismissable = false,
         _added_widgets = { content },
         show_parent = self,
@@ -221,7 +224,7 @@ end
 -- How much vertical room the content (header + divider + text) may use in the current view.
 --
 -- The dialog has to be the same height in every view, otherwise it visibly jumps when you press
--- Profile or Comments. ButtonDialog sizes itself to what it holds, and everything except our content
+-- Description or Comments. ButtonDialog sizes itself to what it holds, and everything except our content
 -- and the button rows is constant, so keeping (content + buttons) constant keeps the whole dialog
 -- constant. Measure the real button block for this view -- it is the full stack in the menu but a
 -- single "Back" row in the others -- and hand the remainder to the content. A view with fewer
@@ -243,7 +246,7 @@ function BookDetailsDialog:_contentBudget(buttons)
                    + 2 * Size.padding.large + 2 * Size.margin.title
                    + Size.line.medium
 
-    local target_h = math.floor(Screen:getHeight() * 0.95)
+    local target_h = Screen:getHeight()
     -- The margin above the popped-out cover comes out of the same budget, so it shifts the content
     -- down without making the dialog taller.
     return math.max(target_h - buttons_h - chrome_h - (self.cover_top_margin or 0), Screen:scaleBySize(120))
@@ -254,14 +257,13 @@ function BookDetailsDialog:_calculateDimensions()
     self.gap = math.floor(Screen:scaleBySize(16))
     self.left_padding = math.floor(Screen:scaleBySize(16))
     self.right_padding = math.floor(Screen:scaleBySize(20))
-    self.pop_out_offset = math.floor(Screen:scaleBySize(40))
-    -- _applyCoverPaintShadow paints the cover at (y - pop_out_offset), so it deliberately floats
-    -- above its layout slot. Without a little room above, it crowds the top of the dialog. This span
-    -- is taken out of the content budget in _contentBudget, so adding it cannot change the dialog's
-    -- overall height. Tune this to taste -- it is the only knob for the gap above the cover.
+    -- The dialog fills the screen, so a cover floating above it would be cut off by the screen edge.
+    self.pop_out_offset = 0
+    -- This span is taken out of the content budget in _contentBudget, so adding it cannot change the
+    -- dialog's overall height.
     self.cover_top_margin = math.floor(Screen:scaleBySize(12))
-    
-    self.dlg_w = math.floor(math.min(Screen:getWidth(), Screen:getHeight()) * 0.95)
+
+    self.dlg_w = math.min(Screen:getWidth(), Screen:getHeight())
     self.avail_w = math.floor(self.dlg_w - 2 * (Size.border.window + Size.padding.button) - 2 * (Size.padding.default + Size.margin.default))
 
     self.cover_max_w = math.floor(Screen:scaleBySize(160))
@@ -282,6 +284,10 @@ function BookDetailsDialog:_buildContent()
     local title_face = self.fonts.title
     local face_height = title_face.ftsize:getHeightAndAscender()
     local title_max_h = math.floor(face_height * 3.2)
+    -- Key-only readers have Back and nothing to tap an X with.
+    self.close_icon_size = Device:isTouchDevice()
+        and Screen:scaleBySize(G_defaults:readSetting("DGENERIC_ICON_SIZE") * 0.6) or nil
+    local title_w = self.text_col_w - (self.close_icon_size or 0)
     local self_ref = self
 
     local title_widget = TextBoxWidget:new{
@@ -289,7 +295,7 @@ function BookDetailsDialog:_buildContent()
         face = title_face,
         bold = true,
         alignment = "left",
-        width = self.text_col_w,
+        width = title_w,
     }
     if title_widget:getSize().h <= title_max_h then
         table.insert(vstack, title_widget)
@@ -302,7 +308,7 @@ function BookDetailsDialog:_buildContent()
             face = title_face,
             bold = true,
             alignment = "left",
-            width = self.text_col_w,
+            width = title_w,
             height = title_max_h,
             height_adjust = true,
             height_overflow_show_ellipsis = true,
@@ -316,16 +322,26 @@ function BookDetailsDialog:_buildContent()
 
     if self.full_author ~= "" then
         table.insert(vstack, VerticalSpan:new{ width = math.floor(Screen:scaleBySize(8)) })
-        local author_group = HorizontalGroup:new{
-            TextWidget:new{
-                -- Search glyph: tapping the author searches for them. U+F0013 was here, a
-                -- Nerd Fonts Material-Design codepoint that the bundled symbols.ttf does not
-                -- carry -- it has nothing at all in U+F0000-F1FFF -- so it drew as a box.
-                text = "\u{F002} " .. self.full_author,
+        -- Search glyph: tapping the author searches for them. U+F0013 was here, a
+        -- Nerd Fonts Material-Design codepoint that the bundled symbols.ttf does not
+        -- carry -- it has nothing at all in U+F0000-F1FFF -- so it drew as a box.
+        local author_text = "\u{F002} " .. self.full_author
+        local author_max_w = math.floor(self.text_col_w - Screen:scaleBySize(25)) - 2 * KEY_FOCUS_BORDER
+        local author_widget = TextWidget:new{ text = author_text, face = self.fonts.author }
+        if author_widget:getSize().w > author_max_w then
+            author_widget:free()
+            author_widget = TextBoxWidget:new{
+                text = author_text,
                 face = self.fonts.author,
-                max_width = math.floor(self.text_col_w - Screen:scaleBySize(25)) - 2 * KEY_FOCUS_BORDER,
-                truncation = "end"
-            },
+                alignment = "left",
+                width = author_max_w,
+                height = math.floor(self.fonts.author.ftsize:getHeightAndAscender() * 3.2),
+                height_adjust = true,
+                height_overflow_show_ellipsis = true,
+            }
+        end
+        local author_group = HorizontalGroup:new{
+            author_widget,
             TextWidget:new{ text = " \u{25B8}", face = self.fonts.author }
         }
         local clickable_author = makeClickable(author_group, function()
@@ -398,13 +414,33 @@ function BookDetailsDialog:_buildContent()
     if self.cover_top_margin and self.cover_top_margin > 0 then
         table.insert(content_group, VerticalSpan:new{ width = self.cover_top_margin })
     end
-    table.insert(content_group, header_widget)
+    if self.close_icon_size then
+        -- Same corner and size as the X on the list screens. The extra padding widens the tap zone
+        -- towards the screen, the same way TitleBar does.
+        local close_button = IconButton:new{
+            icon = "close",
+            width = self.close_icon_size,
+            height = self.close_icon_size,
+            padding_left = self.close_icon_size,
+            padding_bottom = self.close_icon_size,
+            show_parent = self,
+            callback = function() UIManager:close(self_ref) end,
+        }
+        close_button.overlap_align = "right"
+        table.insert(content_group, OverlapGroup:new{
+            dimen = Geom:new{ w = self.avail_w, h = self._header_h },
+            header_widget,
+            close_button,
+        })
+    else
+        table.insert(content_group, header_widget)
+    end
 
     -- Is there room for a text section at all? On a short landscape screen the cover and the full
     -- button stack nearly fill the height on their own, and forcing a section in anyway pushes the
     -- dialog past the screen -- at which point ButtonDialog wraps the buttons in a scroll container
     -- and the reader is left fighting two nested scrolling areas. In that case the menu view pads
-    -- instead and the Profile button remains the way in. The other views only ever carry one button,
+    -- instead and the Description button remains the way in. The other views only ever carry one button,
     -- so they always have room.
     local header_h = self._header_h or self.framed_h
     local text_room = (self._content_h or 0) - header_h - Screen:scaleBySize(45)
@@ -415,12 +451,12 @@ function BookDetailsDialog:_buildContent()
         table.insert(content_group, self:_buildHtmlSection(string.format("  %s  ", T("Comments")), self.book.comments_html, self.book.comments_css))
     elseif has_description and has_room then
         -- The menu view shows the description as well, not just the "description" view. That is what
-        -- keeps the dialog one size: every view fills the same content budget, and pressing Profile
+        -- keeps the dialog one size: every view fills the same content budget, and pressing Description
         -- only trades the button stack for more reading room rather than resizing the dialog.
-        local section = self:_buildHtmlSection(string.format("  %s  ", T("Profile")), self.book.description)
+        local section = self:_buildHtmlSection(string.format("  %s  ", T("Description")), self.book.description)
 
         -- In the menu view the description is only a preview, so tapping it opens the full view --
-        -- the same thing the Profile button does. ScrollHtmlWidget claims taps for scrolling
+        -- the same thing the Description button does. ScrollHtmlWidget claims taps for scrolling
         -- (onTapScrollText pages up or down by tap position) and only reports the event handled when
         -- it actually scrolled, so wrapping this in a tap container would expand only once the
         -- preview hit its end. Repurpose the widget's own tap handler instead, which leaves swipe
@@ -438,7 +474,7 @@ function BookDetailsDialog:_buildContent()
         -- something failed to load, and still fill the budget so a book without a description does
         -- not open a shorter dialog than one with it.
         table.insert(content_group, self:_buildHtmlSection(
-            string.format("  %s  ", T("Profile")),
+            string.format("  %s  ", T("Description")),
             string.format("<div>%s</div>", T("No description available"))))
     else
         -- No room for any text section (a short landscape screen). Pad to the budget so the dialog
@@ -457,8 +493,9 @@ function BookDetailsDialog:_buildHtmlSection(divider_text, raw_html, css)
     local clean_html = raw_html
     local engine_css = [[
         @page { margin: 0; }
-        body { margin: 0; padding: 0 12px 0 0; text-align: justify; line-height: 1.4; }
-        p, div { margin: 0; margin-bottom: 0.5em; text-indent: 1.5em; }
+        body { margin: 0; padding: 0 12px 0 0; font-family: sans-serif; text-align: left; line-height: 1.4; }
+        p, div { margin: 0; margin-bottom: 0.5em; }
+        b, strong, h1, h2, h3, h4, h5, h6 { font-weight: normal; }
         a { text-decoration: none; }
         img, iframe { display: none !important; }
     ]]
@@ -562,15 +599,16 @@ function BookDetailsDialog:_generateMetaLines()
     end
     if self.book.rating and self.book.rating ~= "N/A" then
         local rating_num = tonumber(self.book.rating)
-        if rating_num then
+        -- 0 means nobody has rated the book, the same as in the lists.
+        if rating_num and rating_num > 0 then
             self.book.rating = string.format("%.1f", rating_num)
-            table.insert(tech_parts, self.book.rating)
+            table.insert(tech_parts, "\u{2605}\u{00A0}" .. self.book.rating)
         end
     end
     if self.book.format and self.book.format ~= "N/A" then 
         table.insert(tech_parts, self.book.format:upper()) 
     end
-    if #tech_parts > 0 then table.insert(meta_lines, table.concat(tech_parts, " | ")) end
+    if #tech_parts > 0 then table.insert(meta_lines, table.concat(tech_parts, " · ")) end
 
     return meta_lines
 end
@@ -644,53 +682,59 @@ function BookDetailsDialog:_buildButtons()
 
     if self.view_state ~= "menu" then
         table.insert(dialog_buttons, {{
-            text = "\u{21A9}  " .. T("Back"),  align = "left",
+            text = "\u{21A9}  " .. T("Back"),
             preselect = true,
             callback = function() self:switchState("menu") end
         }})
         return dialog_buttons
     end
 
-     table.insert(dialog_buttons, {{
-        text = "\u{F002}  " .. T("More Similar Books"), align = "left",
-        preselect = true,
-        callback = function()
-            UIManager:close(self)
-            self.parent_zlibrary:searchSimilarBooks(self.book)
-        end
-    }})
-
+    -- Downloading is what this screen is for, so it gets a row of its own at the top and the key
+    -- focus. Everything else shares rows, which leaves more of the screen for the description.
     if self.book.format and self.book.format ~= "N/A" then
         if self.book.download then
             table.insert(dialog_buttons, {{
-                text = "\u{F019}  " .. string.format("%s (%s)", T("Download"), self.book.format:upper()), align = "left",
+                text = "\u{F019}  " .. string.format("%s (%s)", T("Download"), self.book.format:upper()),
+                preselect = true,
                 callback = function() self:onDownloadClick() end
             }})
         else
             table.insert(dialog_buttons, {{
                 text = "\u{F019}  " .. string.format("%s: %s (Not available)", T("Format"), self.book.format:upper()),
-                align = "left", enabled = false
+                enabled = false
             }})
         end
     elseif self.book.download then
         table.insert(dialog_buttons, {{
-            text = "\u{F019}  " .. T("Download book"), align = "left",
-            callback = function() self:onDownloadClick() end 
+            text = "\u{F019}  " .. T("Download book"),
+            preselect = true,
+            callback = function() self:onDownloadClick() end
         }})
     end
 
-    -- Only offer Profile when there is a description to expand. The menu view already shows it, so
-    -- this button trades the button stack for more reading room; with nothing to read it would lead
-    -- to a dead-end view holding only a "Back" button.
+    local secondary_buttons = {}
+
+    table.insert(secondary_buttons, {
+        text = "\u{F002}  " .. T("More Similar Books"),
+        preselect = #dialog_buttons == 0 or nil,
+        callback = function()
+            UIManager:close(self)
+            self.parent_zlibrary:searchSimilarBooks(self.book)
+        end
+    })
+
+    -- Only offer Description when there is one to expand. The menu view already shows it, so this
+    -- button trades the button stack for more reading room; with nothing to read it would lead to a
+    -- dead-end view holding only a "Back" button.
     if self.book.description and self.book.description ~= "" then
-        table.insert(dialog_buttons, {{
-            text = "\u{F02D}  " .. T("Profile"), align = "left",
+        table.insert(secondary_buttons, {
+            text = "\u{F02D}  " .. T("Description"),
             callback = function() self:switchState("description") end
-        }})
+        })
     end
 
-    table.insert(dialog_buttons, {{
-        text = "\u{F0E5}  " .. T("Comments"), align = "left",
+    table.insert(secondary_buttons, {
+        text = "\u{F0E5}  " .. T("Comments"),
         callback = function()
             if type(self.parent_zlibrary.fetchAndDisplayComments) == "function" then
                 self.parent_zlibrary:fetchAndDisplayComments(self.book, false, function(book_comments)
@@ -702,7 +746,7 @@ function BookDetailsDialog:_buildButtons()
                 end)
             end
         end
-    }})
+    })
 
     if self.has_favorite_ids_cache then
         -- A successful favorite/unfavorite from this dialog clears the shared favorites-id cache
@@ -718,30 +762,37 @@ function BookDetailsDialog:_buildButtons()
         else
             in_favorites = self._favorite_state_override == true
         end
-        table.insert(dialog_buttons, {self:_generateFavoriteButtonDef(in_favorites)})
+        local favorite_button = self:_generateFavoriteButtonDef(in_favorites)
+        favorite_button.align = nil
+        table.insert(secondary_buttons, favorite_button)
     end
 
     if self.is_cache then
-        table.insert(dialog_buttons, {{
-            text = "\u{F021}  " .. T("Refresh"), align = "left",
+        table.insert(secondary_buttons, {
+            text = "\u{F021}  " .. T("Refresh"),
             callback = function()
                 UIManager:close(self)
                 self.clear_cache_callback()
             end
-        }})
+        })
     end
 
-    table.insert(dialog_buttons, {{
-        text = "\u{21A9}  " .. T("Back"), align = "left",
+    table.insert(secondary_buttons, {
+        text = "\u{21A9}  " .. T("Back"),
         callback = function() UIManager:close(self) end
-    }})
-    
+    })
+
+    -- Two per row. With an odd number, Back ends up alone on the last row, where it has always been.
+    for i = 1, #secondary_buttons, 2 do
+        table.insert(dialog_buttons, { secondary_buttons[i], secondary_buttons[i + 1] })
+    end
+
     return dialog_buttons
 end
 
 function BookDetailsDialog:switchState(new_state)
     local orig_dimen = self.inner_dialog.dimen and self.inner_dialog.dimen:copy()
-    -- Leaving the button list (for Profile or Comments, or rebuilding it in place): note which
+    -- Leaving the button list (for Description or Comments, or rebuilding it in place): note which
     -- button had focus, so coming back lands on it rather than on the first one.
     if self.view_state == "menu" and self.inner_dialog and self.inner_dialog.selected then
         local focused = self.inner_dialog:getFocusItem()
@@ -879,7 +930,8 @@ end
 
 function BookDetailsDialog:_renderComments(book_comments)
     if not (type(book_comments) == "table" and type(book_comments[1]) == "table") then 
-        return T("No Comments"), "@page { margin: 0; }"
+        -- No css of its own, so it picks up the same text styling as "No description available".
+        return string.format("<div>%s</div>", T("No Comments"))
     end
     local function generateCommentsHTML(comments)
         local html_parts = {}

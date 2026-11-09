@@ -550,8 +550,20 @@ msgstr "API trả về lỗi đối với bình luận sách."
 msgid "Request cancelled."
 msgstr "Yêu cầu đã bị hủy."
 
-msgid "Profile"
-msgstr "Hồ sơ"
+msgid "Description"
+msgstr "Mô tả"
+
+msgid "Recent searches"
+msgstr "Tìm kiếm gần đây"
+
+msgid "Hold a search to remove it"
+msgstr "Nhấn giữ một tìm kiếm để xóa"
+
+msgid "Clear search history"
+msgstr "Xóa lịch sử tìm kiếm"
+
+msgid "Clear your search history?"
+msgstr "Xóa lịch sử tìm kiếm?"
 
 msgid "No description available"
 msgstr "Không có mô tả"
@@ -1219,8 +1231,6 @@ msgstr "Vui lòng điền đầy đủ các trường"
 #~ msgid "Sync favorites summary"
 #~ msgstr "Đồng bộ tóm tắt mục yêu thích"
 
-#~ msgid "Description"
-#~ msgstr "Mô tả"
 
 #~ msgid "Full Title"
 #~ msgstr "Tiêu đề đầy đủ"

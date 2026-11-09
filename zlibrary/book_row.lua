@@ -15,14 +15,6 @@ local function _usable(value)
     return text
 end
 
--- The API sends a score of 0 for a book nobody has rated. Shown as a number, that reads as a very
--- bad book, so a rating only appears when there is one.
-local function _rating(value)
-    local score = tonumber(value)
-    if not score or score <= 0 then return nil end
-    return string.format("\u{2605}\u{00A0}%.1f", score)
-end
-
 -- Some lists send a size in bytes as a bare number, which means nothing to a reader.
 local function _size(value)
     local text = _usable(value)
@@ -37,8 +29,9 @@ function BookRow.details(book, hide_format)
     end
     add(_usable(book.year))
     if not hide_format then add(_usable(book.format)) end
+    -- No rating: nearly every book scores 5.0, so it does not help tell results apart. The details
+    -- screen has it.
     add(_size(book.size))
-    add(_rating(book.rating))
     return table.concat(parts, BookRow.SEPARATOR)
 end
 

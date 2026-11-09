@@ -131,9 +131,9 @@ do
     r.check("selected entries hoist to the top, in list order", order(m.item_table) == "a,c,b,d,e",
             "got " .. order(m.item_table))
     r.check("hoisted entries read as selected",
-            m.item_table[1].mandatory_func() == "[X]" and m.item_table[2].mandatory_func() == "[X]",
+            m.item_table[1].mandatory_func() == "\u{2714}" and m.item_table[2].mandatory_func() == "\u{2714}",
             "a=" .. m.item_table[1].mandatory_func() .. " c=" .. m.item_table[2].mandatory_func())
-    r.check("and the rest read as unselected", m.item_table[3].mandatory_func() == "[ ]",
+    r.check("and the rest read as unselected", m.item_table[3].mandatory_func() == "",
             "b=" .. m.item_table[3].mandatory_func())
 end
 do
@@ -219,7 +219,7 @@ do
     local items = rig.filter("ish")
     r.check("within a filter, a selected match still hoists first", order(items) == "Irish,Cornish",
             "got " .. order(items))
-    r.check("and the selection survives the rebuild", has(items, "Irish").mandatory_func() == "[X]",
+    r.check("and the selection survives the rebuild", has(items, "Irish").mandatory_func() == "\u{2714}",
             "the selected row lost its tick after filtering")
 end
 

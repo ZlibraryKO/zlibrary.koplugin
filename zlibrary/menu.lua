@@ -286,10 +286,15 @@ function M:_fitBookRows()
                     item.text = BookRow.format(_fitToWidth(row.title, face, width, true))
                 else
                     local title = _fitToWidth(row.title, face, width * (lines - 1) * 0.9, true)
+                    -- Whatever lines a short title leaves over go to the author.
+                    local title_w = RenderText:sizeUtf8Text(0, width * lines * 2, face, title, true, true).x
+                    local title_lines = math.min(lines - 1, math.max(1, math.ceil(title_w / (width * 0.9))))
+                    local second_lines = lines - title_lines
+                    local second_w = second_lines > 1 and width * second_lines * 0.9 or width
                     local second_line = _fitToWidth(row.details or "", face, width, false)
-                    local room = width - RenderText:sizeUtf8Text(0, width, face, second_line .. BookRow.SEPARATOR, true, false).x - face.size * 1.5
+                    local room = second_w - RenderText:sizeUtf8Text(0, width, face, second_line .. BookRow.SEPARATOR, true, false).x - face.size * 1.5
                     if second_line == "" then
-                        second_line = _fitToWidth(row.author, face, width, false)
+                        second_line = _fitToWidth(row.author, face, second_w, false)
                     elseif room > face.size * 3 then
                         second_line = BookRow.secondLine(_fitToWidth(row.author, face, room, false), second_line)
                     end

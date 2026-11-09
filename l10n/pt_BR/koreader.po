@@ -550,8 +550,20 @@ msgstr "A API retornou um erro para os comentários do livro."
 msgid "Request cancelled."
 msgstr "Requisição cancelada."
 
-msgid "Profile"
-msgstr "Perfil"
+msgid "Description"
+msgstr "Descrição"
+
+msgid "Recent searches"
+msgstr "Buscas recentes"
+
+msgid "Hold a search to remove it"
+msgstr "Mantenha pressionada uma busca para removê-la"
+
+msgid "Clear search history"
+msgstr "Limpar histórico de busca"
+
+msgid "Clear your search history?"
+msgstr "Limpar o histórico de busca?"
 
 msgid "No description available"
 msgstr "Nenhuma descrição disponível"
@@ -1186,8 +1198,6 @@ msgstr "Por favor, preencha todos os campos"
 #~ msgid "Downloading…"
 #~ msgstr "Baixando…"
 
-#~ msgid "Description"
-#~ msgstr "Descrição"
 
 #~ msgid "Full Title"
 #~ msgstr "Título completo"

@@ -263,6 +263,12 @@ function SearchDialog:ToggleSwitchCallBack(_position)
     if cache_key then
         local cache_books = self._cache:get(cache_key, cache_expiry)
         if cache_books then
+            -- Without this a list opened from the cache could never load past what it holds.
+            local pagination = cache_books._pagination
+            if type(pagination) == "table" then
+                self.current_page_loaded = pagination.page
+                self.has_more_api_results = pagination.has_more
+            end
             self:_reloadFromBookData(cache_books, true)
             return true
         end
@@ -301,7 +307,9 @@ function SearchDialog:_getMenuItems(books)
     for i, book in ipairs(books) do
         title = book.title or T("Untitled")
         author = book.author or T("Unknown Author")
-        book_row = BookRow.new(title, author, book)
+        -- These lists are for browsing books, not comparing files: the title and author are what
+        -- matter, and the author gets the whole line. The details are one tap away.
+        book_row = BookRow.new(title, author, {})
         mandatory_text = mandatory_func and mandatory_func(book)
 
         table.insert(menu_items, {
@@ -357,6 +365,8 @@ function SearchDialog:_reloadFromBookData(books, skip_cache, select_number, no_r
     if not skip_cache then
         local cache_key = self:getActiveItemCacheKey()
         if cache_key and type(self.books) == "table" then
+            self.books._pagination = self.current_page_loaded
+                and { page = self.current_page_loaded, has_more = self.has_more_api_results } or nil
             self._cache:insert(cache_key, self.books)
         end
     end
@@ -614,32 +624,5 @@ function SearchDialog:getActiveItemCacheKey()
     end
 end
 
-function SearchDialog:setToggleTitle(position, title)  
-    local toggle_switch = self.toggle_switch
-    local toggle_items_count = #self.toggle_items
-     if position > toggle_items_count or position < 1 then return end
-    if not (toggle_switch.toggle_content and toggle_switch.n_pos) then return end  
-      
-    local n_pos = toggle_switch.n_pos  
-    local row = math.ceil(position / n_pos)  
-    local col = ((position - 1) % n_pos) + 1  
-      
-    local button = toggle_switch.toggle_content[row][col]  
-    if button and button[1] and button[1][1] then  
-        button[1][1]:setText(title)  
-        UIManager:setDirty("all", "ui")
-    else
-        self.toggle_items[position].text = title or ""
-        -- init re-derives _position from def_position, so keep the tab the user is on
-        -- rather than silently snapping back to the default one.
-        local keep_position = self._position
-        self:free()
-        self.menu_container = nil 
-        self:init()
-        self._position = keep_position
-        self.toggle_switch:setPosition(keep_position)
-        UIManager:setDirty("all", "ui")
-    end
-end
 
 return SearchDialog

@@ -549,8 +549,20 @@ msgstr "أرجع API خطأ لتعليقات الكتاب."
 msgid "Request cancelled."
 msgstr "تم إلغاء الطلب."
 
-msgid "Profile"
-msgstr "الملف الشخصي"
+msgid "Description"
+msgstr "الوصف"
+
+msgid "Recent searches"
+msgstr "عمليات البحث الأخيرة"
+
+msgid "Hold a search to remove it"
+msgstr "اضغط مطولاً على بحث لإزالته"
+
+msgid "Clear search history"
+msgstr "مسح سجل البحث"
+
+msgid "Clear your search history?"
+msgstr "هل تريد مسح سجل البحث؟"
 
 msgid "No description available"
 msgstr "لا يوجد وصف"
@@ -1185,8 +1197,6 @@ msgstr "يرجى ملء جميع الحقول"
 #~ msgid "Downloading…"
 #~ msgstr "جارٍ التنزيل..."
 
-#~ msgid "Description"
-#~ msgstr "الوصف"
 
 #~ msgid "Full Title"
 #~ msgstr "العنوان الكامل"

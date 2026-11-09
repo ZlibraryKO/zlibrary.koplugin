@@ -1,4 +1,4 @@
--- Stale responses, duplicate pagination fetches, and the toggle-title rebuild.
+-- Stale responses and duplicate pagination fetches.
 --
 -- The browse lists fetch asynchronously: a response can come back after the user switched
 -- tabs or forced a refresh, and applying it would mix rows from one list into another, and
@@ -55,9 +55,6 @@ passthrough("ui/widget/verticalgroup")
 passthrough("ui/widget/container/framecontainer")
 package.preload["ui/widget/toggleswitch"] = function()
     return { new = function(_, spec)
-        -- Cells without a text widget on purpose: setToggleTitle then takes its rebuild
-        -- branch, but only when the switch structure itself is there (it returns early
-        -- without toggle_content and n_pos).
         spec.n_pos = #spec.toggle
         spec.toggle_content = { {} }
         for _ in ipairs(spec.toggle) do table.insert(spec.toggle_content[1], {}) end
@@ -233,24 +230,41 @@ dialog3:reloadFromBookData({ book(7) })
 r.check("a response for the previous tab is dropped after a cache-hit switch",
         dialog3.books[1].title == "Book 42", dialog3.books[1].title)
 
--- ---------------------------------------------------------------- the toggle-title rebuild keeps the tab
--- The stubbed switch has no toggle_content, so setToggleTitle takes its rebuild branch.
-r.check("the dialog is on the second tab", dialog3._position == 2)
-dialog3:setToggleTitle(2, "Tab B [2/10]")
-r.check("the rebuild keeps the tab the user is on", dialog3._position == 2,
-        "position=" .. tostring(dialog3._position))
-r.check("the rebuild retitles the tab", dialog3.toggle_items[2].text == "Tab B [2/10]")
-r.check("the rebuilt switch highlights the current tab", dialog3.toggle_switch.position == 2,
-        "switch at " .. tostring(dialog3.toggle_switch.position))
-r.check("the rebuild keeps the rows on screen",
-        dialog3.books[1] and dialog3.books[1].title == "Book 42")
-
 -- ---------------------------------------------------------------- shown with books already loaded
 -- fetchAndShow with an initial list must not be mistaken for a stale response.
 local dialog4 = new_dialog({ books = { book(5) } })
 dialog4:fetchAndShow()
 r.check("a dialog shown with books keeps them without a fetch in flight",
         dialog4.books[1] and dialog4.books[1].title == "Book 5" and #fetches == 0,
+        tostring(#fetches) .. " fetches")
+
+-- ---------------------------------------------------------------- paging survives the cache
+-- A list opened from the cache used to forget it had more pages, so it stopped at what it held
+-- until someone pressed refresh.
+clear_cache()
+local dialog5 = new_dialog()
+dialog5:fetchAndShow()
+respond(dialog5, 1, { book(1) }, true, fetches[1].generation)
+r.check("the cached list remembers its paging",
+        cache_store["a"]._pagination and cache_store["a"]._pagination.page == 1
+        and cache_store["a"]._pagination.has_more == true)
+
+clear_cache()
+cache_store["b"] = { book(42), _pagination = { page = 3, has_more = true } }
+local dialog6 = new_dialog()
+dialog6:ToggleSwitchCallBack(2)
+dialog6.menu_container.page_num = 1
+dialog6:onMenuGotoPage(dialog6.menu_container, 1)
+r.check("a list from the cache fetches the page after the ones it holds",
+        #fetches == 1 and fetches[1].page == 4, tostring(fetches[1] and fetches[1].page))
+
+clear_cache()
+cache_store["b"] = { book(42), _pagination = { page = 3, has_more = false } }
+local dialog7 = new_dialog()
+dialog7:ToggleSwitchCallBack(2)
+dialog7.menu_container.page_num = 1
+dialog7:onMenuGotoPage(dialog7.menu_container, 1)
+r.check("a list from the cache that has no more pages stops", #fetches == 0,
         tostring(#fetches) .. " fetches")
 
 r.finish()

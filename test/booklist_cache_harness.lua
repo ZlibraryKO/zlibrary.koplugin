@@ -63,9 +63,11 @@ local multi_search = new_kv({
     booklist_999 = { { id = 11 } },
     favorites = {}, popular = {},
 })
+local search_history_cleared = false
 local config_env = { ipairs = ipairs, Config = {
     getConfigRuntimeCache = function() return { remove = function() end } end,
     getMultiSearchCache = function() return multi_search end,
+    clearSearchHistory = function() search_history_cleared = true end,
 } }
 local body = support.extract_block(PLUGIN .. "/zlibrary/config.lua",
                                    "(\nfunction Config%.clearPersonalCaches%(%).-\n)end\n")
@@ -78,5 +80,6 @@ r.check("signing out drops the booklists entry", data.booklists == nil)
 r.check("signing out drops a listed booklist's books", data.booklist_1 == nil)
 r.check("signing out drops a booklist no longer listed", data.booklist_999 == nil)
 r.check("signing out keeps popular", data.popular ~= nil)
+r.check("signing out clears the search history", search_history_cleared)
 
 r.finish()

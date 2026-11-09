@@ -7,6 +7,7 @@ local DownloadMgr = require("ui/downloadmgr")
 local InputDialog = require("ui/widget/inputdialog")
 local ButtonDialog = require("ui/widget/buttondialog")
 local Menu = require("zlibrary.menu")
+local BookRow = require("zlibrary.book_row")
 local Device = require("device")
 local util = require("util")
 local logger = require("logger")
@@ -318,6 +319,14 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
     for _, option_info in ipairs(options_list) do
         current_selection_state[option_info.value] = selected_values_set[option_info.value] or false
     end
+    -- An option standing for "no setting saved", so a radio list always shows what is in effect.
+    local default_option
+    for _, option_info in ipairs(options_list) do
+        if option_info.is_default then default_option = option_info end
+    end
+    if default_option and next(selected_values_set) == nil then
+        current_selection_state[default_option.value] = true
+    end
     -- The value the user's last tap switched on; a radio cleanup keeps this one when the stored
     -- setting carried stale extras.
     local last_toggled_value
@@ -343,7 +352,7 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
         return {
             text = option_info.name,
             mandatory_func = function()
-                return current_selection_state[option_value] and "[X]" or "[ ]"
+                return current_selection_state[option_value] and "\u{2714}" or ""
             end,
             callback = function()
                 current_selection_state[option_value] = not current_selection_state[option_value]
@@ -403,6 +412,14 @@ local function _showMultiSelectionDialog(parent_ui, title, setting_key, options_
                     local value_to_keep = last_toggled_value or selected_values_table[1]
                     for i = #new_selected_values, 1, -1 do
                         if new_selected_values[i] ~= value_to_keep then
+                            table.remove(new_selected_values, i)
+                        end
+                    end
+                end
+
+                if default_option then
+                    for i = #new_selected_values, 1, -1 do
+                        if new_selected_values[i] == default_option.value then
                             table.remove(new_selected_values, i)
                         end
                     end
@@ -504,7 +521,11 @@ function Ui.showExtensionSelectionDialog(parent_ui)
 end
 
 function Ui.showOrdersSelectionDialog(parent_ui, ok_callback)
-    _showRadioSelectionDialog(parent_ui, T("Select search order"), Config.SETTINGS_SEARCH_ORDERS_KEY, Config.SUPPORTED_ORDERS, ok_callback)
+    local options = { { name = T("Default"), value = "default", is_default = true } }
+    for _, option_info in ipairs(Config.SUPPORTED_ORDERS) do
+        options[#options + 1] = option_info
+    end
+    _showRadioSelectionDialog(parent_ui, T("Select search order"), Config.SETTINGS_SEARCH_ORDERS_KEY, options, ok_callback)
 end
 
 function Ui.showGenericInputDialog(title, setting_key, current_value_or_default, is_password, validate_and_save_callback, description)
@@ -785,6 +806,75 @@ function Ui.buildCategoriesMenuItems()
     return items
 end
 
+-- Tapping a search runs it, holding removes it. Going back returns to the search box with whatever
+-- had been typed there.
+function Ui.showSearchHistoryDialog(parent_zlibrary, typed_input)
+    local title = T("Recent searches")
+    local subtitle = T("Hold a search to remove it")
+    local menu
+
+    local function back_to_search()
+        UIManager:close(menu)
+        Ui.showSearchDialog(parent_zlibrary, typed_input)
+    end
+
+    local function build_items()
+        local items = {}
+        for _, query in ipairs(Config.getSearchHistory()) do
+            items[#items + 1] = {
+                text = query,
+                query = query,
+                keep_menu_open = true,
+                callback = function()
+                    UIManager:close(menu)
+                    Ui._last_search_input = query
+                    parent_zlibrary:performSearch(query)
+                end,
+            }
+        end
+        items[#items + 1] = {
+            text = T("Clear search history"),
+            keep_menu_open = true,
+            callback = function()
+                UIManager:show(ConfirmBox:new{
+                    text = T("Clear your search history?"),
+                    ok_text = T("Clear"),
+                    cancel_text = T("Cancel"),
+                    ok_callback = function()
+                        Config.clearSearchHistory()
+                        back_to_search()
+                    end,
+                })
+            end,
+        }
+        return items
+    end
+
+    menu = Menu:new{
+        title = title,
+        subtitle = subtitle,
+        item_table = build_items(),
+        parent = parent_zlibrary,
+        show_captions = true,
+        is_popout = false,
+        title_bar_fm_style = true,
+        onClose = back_to_search,
+    }
+    -- Menu calls this as a method, so the menu itself arrives as the first argument.
+    menu.onMenuHold = function(_, item)
+        if item and item.query then
+            Config.removeSearchHistory(item.query)
+            if #Config.getSearchHistory() == 0 then
+                back_to_search()
+            else
+                menu:switchItemTable(title, build_items(), -1, nil, subtitle)
+            end
+        end
+        return true
+    end
+    _showAndTrackDialog(menu)
+end
+
 function Ui.showSearchDialog(parent_zlibrary, def_input)
     -- save last search input
     if not def_input then
@@ -806,7 +896,14 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
     local lang_text = T("Set languages")
     if #selected_languages > 0 then
         if #selected_languages == 1 then
-            lang_text = string.format(T("Language: %s"), selected_languages[1])
+            local language_name = selected_languages[1]
+            for _, language_info in ipairs(Config.SUPPORTED_LANGUAGES) do
+                if language_info.value == selected_languages[1] then
+                    language_name = language_info.name
+                    break
+                end
+            end
+            lang_text = string.format(T("Language: %s"), language_name)
         else
             lang_text = string.format(T("Languages (%d)"), #selected_languages)
         end
@@ -826,10 +923,7 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
         end
     end
 
-    dialog = InputDialog:new{
-        title = T("Search Z-library"),
-        input = def_input,
-        buttons = {{{
+    local search_button = {
         text = T("Search"),
         callback = function()
             local query = dialog:getInputText()
@@ -845,7 +939,23 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
             local trimmed_query = util.trim(query)
             parent_zlibrary:performSearch(trimmed_query)
         end,
-        }},{{
+    }
+    local search_row = { search_button }
+    if #Config.getSearchHistory() > 0 then
+        search_row = { {
+            text = T("Recent searches"),
+            callback = function()
+                local typed_input = dialog:getInputText()
+                _closeAndUntrackDialog(dialog)
+                Ui.showSearchHistoryDialog(parent_zlibrary, typed_input)
+            end,
+        }, search_button }
+    end
+
+    dialog = InputDialog:new{
+        title = T("Search Z-library"),
+        input = def_input,
+        buttons = { search_row, {{
             text = string.format("%s: %s \u{25BC}", T("Sort by"), search_order_name),
             callback = function()
                 -- Carry over what the user has typed so far; def_input is the value captured
@@ -885,30 +995,16 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
 end
 
 function Ui.createBookMenuItem(book_data, parent_zlibrary_instance, is_show_cover)
-    local year_str = (book_data.year and book_data.year ~= "N/A" and tostring(book_data.year) ~= "0") and (" (" .. book_data.year .. ")") or ""
     local title_for_html = (type(book_data.title) == "string" and book_data.title) or T("Unknown Title")
     local title = util.htmlEntitiesToUtf8(title_for_html)
     local author_for_html = (type(book_data.author) == "string" and book_data.author) or T("Unknown Author")
     local author = util.htmlEntitiesToUtf8(author_for_html)
-    local combined_text = string.format("\u{FFF1}\u{FFF2}%s\u{FFF3} by %s%s", title, author, year_str)
-
-    local additional_info_parts = {}
-    local selected_extensions = Config.getSearchExtensions()
-
-    if book_data.format and book_data.format ~= "N/A" then
-        if #selected_extensions ~= 1 then
-            table.insert(additional_info_parts, book_data.format)
-        end
-    end
-    if book_data.size and book_data.size ~= "N/A" then table.insert(additional_info_parts, book_data.size) end
-    if book_data.rating and book_data.rating ~= "N/A" then table.insert(additional_info_parts, _colon_concat(T("Rating"), book_data.rating)) end
-
-    if #additional_info_parts > 0 then
-        combined_text = combined_text .. " | " .. table.concat(additional_info_parts, " | ")
-    end
+    -- When only one format is being searched, every row would repeat it.
+    local book_row = BookRow.new(title, author, book_data, #Config.getSearchExtensions() == 1)
 
     return {
-        text = combined_text,
+        text = BookRow.text(book_row),
+        book_row = book_row,
         callback = function()
             if book_data.needs_detail_fetch then
                 parent_zlibrary_instance:onSelectSearchBook(book_data)
@@ -945,7 +1041,8 @@ function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_it
         is_popout = false,
         is_borderless = true,
         title_bar_fm_style = true,
-        multilines_show_more_text = true,
+        multilines_forced = true,
+        multilines_show_more_text = false,
         list_per_page =opts and opts.search_per_page,
         show_cover = opts and opts.show_cover_search ~= false,
     }
@@ -1308,7 +1405,8 @@ function Ui.showSimilarBooksMenu(ui_self, books, plugin_self, source_title)
         is_popout = false,
         is_borderless = true,
         title_bar_fm_style = true,
-        multilines_show_more_text = true,
+        multilines_forced = true,
+        multilines_show_more_text = false,
         list_per_page =opts and opts.search_per_page,
         show_cover = show_cover,
     })

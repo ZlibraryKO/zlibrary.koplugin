@@ -5,6 +5,7 @@ local LuaSettings = require("luasettings")
 local socket_url = require("socket.url")
 local T = require("zlibrary.gettext")
 local Cache = require("zlibrary.cache")
+local SearchHistory = require("zlibrary.search_history")
 
 local Config = {
     _lua_settings = nil,
@@ -20,6 +21,7 @@ Config.SETTINGS_USER_KEY_KEY = "zlib_user_key"
 Config.SETTINGS_SEARCH_LANGUAGES_KEY = "zlibrary_search_languages"
 Config.SETTINGS_SEARCH_EXTENSIONS_KEY = "zlibrary_search_extensions"
 Config.SETTINGS_SEARCH_ORDERS_KEY = "zlibrary_search_order"
+Config.SETTINGS_SEARCH_HISTORY_KEY = "zlibrary_search_history"
 Config.SETTINGS_VIEW_SETTINGS_KEY = "zlibrary_view_settings"
 Config.SETTINGS_DOWNLOAD_DIR_KEY = "zlibrary_download_dir"
 Config.SETTINGS_CATEGORIES_KEY = "zlibrary_categories"
@@ -977,6 +979,24 @@ function Config.clearPersonalCaches()
         multi_search:remove(key)
     end
     multi_search:removePrefix("booklist_")
+
+    Config.clearSearchHistory()
+end
+
+function Config.getSearchHistory()
+    return Config.getSetting(Config.SETTINGS_SEARCH_HISTORY_KEY, {})
+end
+
+function Config.addSearchHistory(query)
+    Config.saveSetting(Config.SETTINGS_SEARCH_HISTORY_KEY, SearchHistory.add(Config.getSearchHistory(), query))
+end
+
+function Config.removeSearchHistory(query)
+    Config.saveSetting(Config.SETTINGS_SEARCH_HISTORY_KEY, SearchHistory.remove(Config.getSearchHistory(), query))
+end
+
+function Config.clearSearchHistory()
+    Config.deleteSetting(Config.SETTINGS_SEARCH_HISTORY_KEY)
 end
 
 -- Forget the account entirely: the stored username and password, the session tokens, and

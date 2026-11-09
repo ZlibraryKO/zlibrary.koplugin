@@ -930,6 +930,7 @@ do
     end
     -- The shared multi_search instance: clearing has to go through the same object the
     -- dialogs write through, or a stale copy's next flush resurrects what was just removed.
+    env.Config.clearSearchHistory = function() end
     env.Config.getMultiSearchCache = function()
         return {
             remove = function(_, k) removed.multi_search[k] = true end,

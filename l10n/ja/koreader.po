@@ -549,8 +549,20 @@ msgstr "書籍のコメントに対してAPIがエラーを返しました。"
 msgid "Request cancelled."
 msgstr "リクエストをキャンセルしました。"
 
-msgid "Profile"
-msgstr "プロフィール"
+msgid "Description"
+msgstr "内容紹介"
+
+msgid "Recent searches"
+msgstr "最近の検索"
+
+msgid "Hold a search to remove it"
+msgstr "長押しで検索を削除"
+
+msgid "Clear search history"
+msgstr "検索履歴を消去"
+
+msgid "Clear your search history?"
+msgstr "検索履歴を消去しますか？"
 
 msgid "No description available"
 msgstr "説明はありません"
@@ -1185,8 +1197,6 @@ msgstr "すべての項目を入力してください"
 #~ msgid "Downloading…"
 #~ msgstr "ダウンロード中…"
 
-#~ msgid "Description"
-#~ msgstr "説明"
 
 #~ msgid "Full Title"
 #~ msgstr "完全なタイトル"

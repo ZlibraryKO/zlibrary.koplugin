@@ -549,8 +549,20 @@ msgstr "API вернул ошибку для комментариев к кни�
 msgid "Request cancelled."
 msgstr "Запрос отменён."
 
-msgid "Profile"
-msgstr "Профиль"
+msgid "Description"
+msgstr "Описание"
+
+msgid "Recent searches"
+msgstr "Недавние запросы"
+
+msgid "Hold a search to remove it"
+msgstr "Удерживайте запрос, чтобы удалить его"
+
+msgid "Clear search history"
+msgstr "Очистить историю поиска"
+
+msgid "Clear your search history?"
+msgstr "Очистить историю поиска?"
 
 msgid "No description available"
 msgstr "Описание отсутствует"
@@ -1185,8 +1197,6 @@ msgstr "Пожалуйста, заполните все поля"
 #~ msgid "Downloading…"
 #~ msgstr "Загрузка…"
 
-#~ msgid "Description"
-#~ msgstr "Описание"
 
 #~ msgid "Full Title"
 #~ msgstr "Полное название"

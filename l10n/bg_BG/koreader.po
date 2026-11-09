@@ -555,8 +555,20 @@ msgstr "API върна грешка за коментарите на книга�
 msgid "Request cancelled."
 msgstr "Заявката е отменена."
 
-msgid "Profile"
-msgstr "Профил"
+msgid "Description"
+msgstr "Описание"
+
+msgid "Recent searches"
+msgstr "Последни търсения"
+
+msgid "Hold a search to remove it"
+msgstr "Задръжте търсене, за да го премахнете"
+
+msgid "Clear search history"
+msgstr "Изчистване на историята на търсенето"
+
+msgid "Clear your search history?"
+msgstr "Да се изчисти ли историята на търсенето?"
 
 msgid "No description available"
 msgstr "Няма налично описание"
@@ -1227,8 +1239,6 @@ msgstr "Попълнете всички полета"
 #~ msgid "Book ID is required"
 #~ msgstr "Изисква се ID на книгата"
 
-#~ msgid "Description"
-#~ msgstr "Описание"
 
 #~ msgid "Full Title"
 #~ msgstr "Пълно заглавие"

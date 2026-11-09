@@ -549,8 +549,20 @@ msgstr "API retourneerde een fout voor boekreacties."
 msgid "Request cancelled."
 msgstr "Verzoek geannuleerd."
 
-msgid "Profile"
-msgstr "Profiel"
+msgid "Description"
+msgstr "Beschrijving"
+
+msgid "Recent searches"
+msgstr "Recente zoekopdrachten"
+
+msgid "Hold a search to remove it"
+msgstr "Houd een zoekopdracht ingedrukt om deze te verwijderen"
+
+msgid "Clear search history"
+msgstr "Zoekgeschiedenis wissen"
+
+msgid "Clear your search history?"
+msgstr "Zoekgeschiedenis wissen?"
 
 msgid "No description available"
 msgstr "Geen beschrijving beschikbaar"
@@ -1185,8 +1197,6 @@ msgstr "Vul alle velden in"
 #~ msgid "Downloading…"
 #~ msgstr "Bezig met downloaden…"
 
-#~ msgid "Description"
-#~ msgstr "Beschrijving"
 
 #~ msgid "Full Title"
 #~ msgstr "Volledige titel"

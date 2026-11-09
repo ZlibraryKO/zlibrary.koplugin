@@ -549,8 +549,20 @@ msgstr "获取书籍评论出错。"
 msgid "Request cancelled."
 msgstr "请求已取消。"
 
-msgid "Profile"
+msgid "Description"
 msgstr "简介"
+
+msgid "Recent searches"
+msgstr "最近搜索"
+
+msgid "Hold a search to remove it"
+msgstr "长按搜索项可删除"
+
+msgid "Clear search history"
+msgstr "清除搜索历史"
+
+msgid "Clear your search history?"
+msgstr "清除搜索历史？"
 
 msgid "No description available"
 msgstr "暂无简介"
@@ -1218,8 +1230,6 @@ msgstr "请填写所有字段"
 #~ msgid "Sync favorites summary"
 #~ msgstr "同步收藏摘要"
 
-#~ msgid "Description"
-#~ msgstr "描述"
 
 #~ msgid "Full Title"
 #~ msgstr "完整标题"

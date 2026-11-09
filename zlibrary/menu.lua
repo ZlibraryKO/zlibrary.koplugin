@@ -4,6 +4,8 @@ local Screen = require("device").screen
 local CenterContainer = require("ui/widget/container/centercontainer")
 local FrameContainer = require("ui/widget/container/framecontainer")
 local TextBoxWidget = require("ui/widget/textboxwidget")
+local TextWidget = require("ui/widget/textwidget")
+local RenderText = require("ui/rendertext")
 local ImageWidget = require("ui/widget/imagewidget")
 local util = require("util")
 local UIManager = require("ui/uimanager") 
@@ -16,6 +18,7 @@ local PreHelper = require("zlibrary.preloader").helper
 local AsyncHelper = require("zlibrary.async_helper")
 local Api = require("zlibrary.api")
 local Cache = require("zlibrary.cache")
+local BookRow = require("zlibrary.book_row")
 
 local M = Menu:extend{
     _cover_channel = nil,
@@ -50,6 +53,24 @@ local function _cachedDetailsCover(book_hash)
     return type(details) == "table" and details.cover or nil
 end
 
+-- Punctuation that opens a title. 《西游记》 and "Dune" should both be filed under their first letter.
+local LEADING_PUNCTUATION = {
+    ["《"] = true, ["〈"] = true, ["「"] = true, ["『"] = true, ["【"] = true, ["（"] = true,
+    ["“"] = true, ["‘"] = true, ["\""] = true, ["'"] = true, ["("] = true, ["["] = true,
+    [" "] = true, ["°"] = true,
+}
+
+local function _coverLetter(item)
+    local title = item.book_row and item.book_row.title
+    if type(title) ~= "string" then return nil end
+    for _, char in ipairs(util.splitToChars(title)) do
+        if not LEADING_PUNCTUATION[char] then
+            return #char == 1 and char:upper() or char
+        end
+    end
+    return nil
+end
+
 local function _updateItemsBuildUI(item, cover_w, cover_h)
     if not (item and item.hash) then return nil end
     local cover_cache_path = item._is_cover_loaded or Cache:new{ type="cover" }:get(item.hash)
@@ -72,14 +93,17 @@ local function _updateItemsBuildUI(item, cover_w, cover_h)
 
     local border = Size.border.thin
     local in_w, in_h = cover_w - 2 * border, cover_h - 2 * border
+    local letter = _coverLetter(item)
     item.state = FrameContainer:new{
-        width = cover_w, height = cover_h, 
+        width = cover_w, height = cover_h,
         bordersize = border, margin = 0, padding = 0,
         CenterContainer:new{
             dimen = Geom:new{ w = in_w, h = in_h },
             TextBoxWidget:new{
-                text = "⛶",
-                face = Font:getFace("cfont", math.floor(in_h * 0.2)),
+                text = letter or "⛶",
+                -- Sized from the width as well: a tall, narrow slot must still fit a wide glyph.
+                face = Font:getFace("cfont", letter and math.floor(math.min(in_w * 0.6, in_h * 0.45)) or math.floor(in_h * 0.2)),
+                bold = letter ~= nil,
                 width = in_w, alignment = "center",
             }
         }
@@ -210,6 +234,77 @@ function M:_updateCoverItems(select_number, no_recalculate_dimen)
     end) 
 end
 
+local function _fitToWidth(text, face, max_width, bold)
+    if RenderText:getSubTextByWidth(text, face, max_width, true, bold) == text then return text end
+    return RenderText:truncateTextByWidth(text, face, max_width, true, bold)
+end
+
+-- With many rows per page, the normal font leaves room for two lines: one line of title and one of
+-- details cuts off most titles. Use one smaller size for the whole list so a title gets two lines,
+-- within the same limit KOReader sets for shrinking row text.
+function M:_fitFontToBookRows()
+    local first_item = self.item_table and self.item_table[1]
+    if not (first_item and first_item.book_row and self.item_dimen and self.font_size) then return end
+    local three_lines = TextBoxWidget:getFontSizeToFitHeight(self.item_dimen.h - 2 * self.linesize, 3)
+    if three_lines < self.font_size then
+        self.font_size = math.max(three_lines, 12, self.font_size - 8)
+    end
+end
+
+-- MenuItem wraps a row at one font size and cuts whatever does not fit off the bottom, so a long
+-- title would push the author and details out of sight. Shorten the title first: it gets every
+-- line but the last, which stays for the author and details. Wrapping breaks lines early, hence
+-- the margin on the title's width. When the details line is too long, the author gives way.
+function M:_fitBookRows()
+    if not (self.item_table and self.item_dimen and self.perpage and self.font_size) then return end
+    local face = Font:getFace("smallinfofont", self.font_size)
+    local content_w = self.item_dimen.w - 2 * Size.padding.fullscreen - (self.show_cover and self.state_w or 0)
+    local line_h = math.floor((1 + TextBoxWidget.line_height) * face.size + 0.5)
+    local lines = math.floor((self.item_dimen.h - 2 * self.linesize) / line_h)
+    local first = ((self.page or 1) - 1) * self.perpage + 1
+
+    for idx = first, first + self.perpage - 1 do
+        local item = self.item_table[idx]
+        local row = item and item.book_row
+        if row then
+            -- MenuItem replaces every newline with a space, then calls this hook on the result.
+            -- It is the one way to keep the title on a line of its own.
+            item.bidi_wrap_func = item.bidi_wrap_func or function() return item.text end
+            local width = content_w
+            if item.mandatory then
+                local mandatory = TextWidget:new{
+                    text = tostring(item.mandatory),
+                    face = Font:getFace("infont", self.items_mandatory_font_size or (self.font_size - 4)),
+                }
+                width = width - mandatory:getSize().w - Size.span.horizontal_default
+                mandatory:free()
+            end
+            local fit_key = table.concat({ width, lines, self.font_size }, "_")
+            if item._book_row_fit ~= fit_key then
+                item._book_row_fit = fit_key
+                if lines < 2 then
+                    item.text = BookRow.format(_fitToWidth(row.title, face, width, true))
+                else
+                    local title = _fitToWidth(row.title, face, width * (lines - 1) * 0.9, true)
+                    -- Whatever lines a short title leaves over go to the author.
+                    local title_w = RenderText:sizeUtf8Text(0, width * lines * 2, face, title, true, true).x
+                    local title_lines = math.min(lines - 1, math.max(1, math.ceil(title_w / (width * 0.9))))
+                    local second_lines = lines - title_lines
+                    local second_w = second_lines > 1 and width * second_lines * 0.9 or width
+                    local second_line = _fitToWidth(row.details or "", face, width, false)
+                    local room = second_w - RenderText:sizeUtf8Text(0, width, face, second_line .. BookRow.SEPARATOR, true, false).x - face.size * 1.5
+                    if second_line == "" then
+                        second_line = _fitToWidth(row.author, face, second_w, false)
+                    elseif room > face.size * 3 then
+                        second_line = BookRow.secondLine(_fitToWidth(row.author, face, room, false), second_line)
+                    end
+                    item.text = BookRow.format(title, second_line)
+                end
+            end
+        end
+    end
+end
+
 function M:_recalculateDimen()
     if not self.list_per_page then
         self.list_per_page = self.show_cover and self:getCoverItemsPerPage() or G_reader_settings:readSetting("items_per_page") or 10
@@ -223,6 +318,8 @@ function M:_recalculateDimen()
         self._cached_cover_w = math.floor(self._cached_cover_h * 2 / 3)
         self.state_w = self._cached_cover_w + 8 * Size.padding.small
     end
+    self:_fitFontToBookRows()
+    self:_fitBookRows()
 end
 -- The row on this page that has focus, or nil when focus is not on a book (the title bar, or a
 -- menu not drawn yet).

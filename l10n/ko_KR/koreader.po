@@ -549,8 +549,20 @@ msgstr "도서 댓글에 대해 API 오류가 반환되었습니다."
 msgid "Request cancelled."
 msgstr "요청이 취소되었습니다."
 
-msgid "Profile"
-msgstr "프로필"
+msgid "Description"
+msgstr "책 소개"
+
+msgid "Recent searches"
+msgstr "최근 검색"
+
+msgid "Hold a search to remove it"
+msgstr "길게 눌러 검색어 삭제"
+
+msgid "Clear search history"
+msgstr "검색 기록 지우기"
+
+msgid "Clear your search history?"
+msgstr "검색 기록을 지울까요?"
 
 msgid "No description available"
 msgstr "설명 없음"
@@ -1185,8 +1197,6 @@ msgstr "모든 항목을 입력하세요"
 #~ msgid "Downloading…"
 #~ msgstr "다운로드 중…"
 
-#~ msgid "Description"
-#~ msgstr "설명"
 
 #~ msgid "Full Title"
 #~ msgstr "전체 제목"

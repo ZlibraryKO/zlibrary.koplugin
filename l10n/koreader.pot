@@ -747,7 +747,19 @@ msgstr ""
 
 #: zlibrary/bookdetails_dialog.lua:400 zlibrary/bookdetails_dialog.lua:421
 #: zlibrary/bookdetails_dialog.lua:667
-msgid "Profile"
+msgid "Description"
+msgstr ""
+
+msgid "Recent searches"
+msgstr ""
+
+msgid "Hold a search to remove it"
+msgstr ""
+
+msgid "Clear search history"
+msgstr ""
+
+msgid "Clear your search history?"
 msgstr ""
 
 #: zlibrary/bookdetails_dialog.lua:422

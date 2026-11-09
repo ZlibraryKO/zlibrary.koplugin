@@ -549,8 +549,20 @@ msgstr "API gab einen Fehler für Buchkommentare zurück."
 msgid "Request cancelled."
 msgstr "Anfrage abgebrochen."
 
-msgid "Profile"
-msgstr "Profil"
+msgid "Description"
+msgstr "Beschreibung"
+
+msgid "Recent searches"
+msgstr "Letzte Suchen"
+
+msgid "Hold a search to remove it"
+msgstr "Suche gedrückt halten, um sie zu entfernen"
+
+msgid "Clear search history"
+msgstr "Suchverlauf löschen"
+
+msgid "Clear your search history?"
+msgstr "Suchverlauf löschen?"
 
 msgid "No description available"
 msgstr "Keine Beschreibung verfügbar"
@@ -1185,8 +1197,6 @@ msgstr "Bitte füllen Sie alle Felder aus"
 #~ msgid "Downloading…"
 #~ msgstr "Wird heruntergeladen…"
 
-#~ msgid "Description"
-#~ msgstr "Beschreibung"
 
 #~ msgid "Full Title"
 #~ msgstr "Vollständiger Titel"

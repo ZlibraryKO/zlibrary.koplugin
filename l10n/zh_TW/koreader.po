@@ -549,8 +549,20 @@ msgstr "API返回書籍評論錯誤。"
 msgid "Request cancelled."
 msgstr "請求已取消。"
 
-msgid "Profile"
+msgid "Description"
 msgstr "簡介"
+
+msgid "Recent searches"
+msgstr "最近搜尋"
+
+msgid "Hold a search to remove it"
+msgstr "長按搜尋項目可移除"
+
+msgid "Clear search history"
+msgstr "清除搜尋紀錄"
+
+msgid "Clear your search history?"
+msgstr "清除搜尋紀錄？"
 
 msgid "No description available"
 msgstr "無可用簡介"
@@ -1185,8 +1197,6 @@ msgstr "請填寫所有欄位"
 #~ msgid "Downloading…"
 #~ msgstr "正在下載…"
 
-#~ msgid "Description"
-#~ msgstr "描述"
 
 #~ msgid "Full Title"
 #~ msgstr "完整標題"

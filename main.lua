@@ -631,14 +631,13 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
              local timestamp = stringToSeconds(mandatory_text)
              if not timestamp then return nil end
              local short_date = secondsToDate(timestamp, false)
-             if type(short_date) == "string" then
-                return (short_date:gsub("^%d%d(%d%d)%-0?(%d+)%-0?(%d+).*", "%1.%2.%3"))
-             end
+             if type(short_date) == "string" then return short_date end
         end
 
         local opts = Config.getViewSettings()
         my_books_dialog = MultiSearchDialog:new{
-            title = T("Z-library My Books"),
+            -- In the title rather than on the Downloaded tab, which is too narrow to show it.
+            title = T("Z-library My Books") .. download_quota_status_string,
             def_position = def_position,
             show_cover = opts.show_cover_browse ~= false,
             list_per_page = opts.browse_per_page,
@@ -662,7 +661,10 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                     self.preLoader.getDownloadQuotaStatus(function(precheck_ok)
                         if precheck_ok == true then
                             download_quota_status_string = get_quota_status() or ""
-                            widget:setToggleTitle(2, T("Downloaded") .. download_quota_status_string)  
+                            local titlebar = widget.compound_title_bar and widget.compound_title_bar._titlebar
+                            if titlebar then
+                                titlebar:setTitle(T("Z-library My Books") .. download_quota_status_string)
+                            end
                         end
                     end)
                 end
@@ -700,7 +702,7 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                         requires_auth = true,
                     }, page)
                 end}, {
-                    text = T("Downloaded") .. download_quota_status_string,
+                    text = T("Downloaded"),
                     cache_key = "downloaded",
                     cache_expiry = 86400,
                     enable_pagination = true,
@@ -745,7 +747,6 @@ function Zlibrary:showMyBooksDialog(def_position, def_search_input)
                             requires_auth = true,
                      }, page)
                  end}, {
-                    -- After Downloaded: on_fetch_and_show retitles that tab by its position.
                     text = T("Booklists"),
                     cache_key = "booklists",
                     cache_expiry = 86400,
@@ -1357,6 +1358,7 @@ function Zlibrary:performSearch(query)
 
             Ui.closeMessage(loading_msg)
             logger.info(string.format("Zlibrary:performSearch - Fetch successful. Results: %d", #api_result.results))
+            Config.addSearchHistory(query)
             self.current_search_query = query
             self.current_search_api_page_loaded = current_page_to_search
             self.all_search_results_data = api_result.results

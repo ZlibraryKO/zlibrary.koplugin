@@ -549,8 +549,20 @@ msgstr "L'API a retourné une erreur pour les commentaires du livre."
 msgid "Request cancelled."
 msgstr "Requête annulée."
 
-msgid "Profile"
-msgstr "Profil"
+msgid "Description"
+msgstr "Description"
+
+msgid "Recent searches"
+msgstr "Recherches récentes"
+
+msgid "Hold a search to remove it"
+msgstr "Appui long sur une recherche pour la supprimer"
+
+msgid "Clear search history"
+msgstr "Effacer l'historique de recherche"
+
+msgid "Clear your search history?"
+msgstr "Effacer l'historique de recherche ?"
 
 msgid "No description available"
 msgstr "Aucune description disponible"
@@ -1185,8 +1197,6 @@ msgstr "Veuillez remplir tous les champs"
 #~ msgid "Downloading…"
 #~ msgstr "Téléchargement en cours…"
 
-#~ msgid "Description"
-#~ msgstr "Description"
 
 #~ msgid "Full Title"
 #~ msgstr "Titre complet"

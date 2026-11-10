@@ -14,6 +14,10 @@ to `main` — so the top section is the one about to ship.
 Browse Covers did nothing: covers stayed on and the box stayed ticked, and only a second tap
 turned them off. One tap now turns covers off and the next turns them back on.
 
+**Retry after a server hiccup, in every language.** Z-library sometimes answers a request with a
+passing "HTTP Error 400". In English the plugin offered Retry for it; in every other language it
+showed the bare error with no way to try again. All languages now get the Retry button.
+
 ## 1.0.57
 
 ### Added

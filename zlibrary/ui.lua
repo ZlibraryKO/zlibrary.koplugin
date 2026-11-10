@@ -1466,7 +1466,10 @@ function Ui.showRetryErrorDialog(err_msg, operation_name, retry_callback, cancel
     local error_string = tostring(err_msg)
     
 
-    local is_http_400 = string.match(error_string, "HTTP Error: 400")
+    -- The API gives intermittent 400s, so a 400 is worth a retry. Match the text the api layer
+    -- actually builds -- T("HTTP Error") .. ": " .. status -- not the English literal: every locale
+    -- translates "HTTP Error", and matching "HTTP Error: 400" kept Retry from everyone but English.
+    local is_http_400 = string.find(error_string, T("HTTP Error") .. ": 400", 1, true)
     -- The translated needles must be searched as plain text: a locale containing pattern
     -- magic (%, (, -) would throw "malformed pattern" on this error-handling path.
     local is_timeout = string.find(error_string, T("Request timed out"), 1, true) or

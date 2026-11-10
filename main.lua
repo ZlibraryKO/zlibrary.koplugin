@@ -72,8 +72,8 @@ end
 
 function Zlibrary:onZlibrarySearch(act_page)
     if act_page == "mybooks" then
-        local mybooks_tab_downloaded = 1
-        self:showMyBooksDialog(mybooks_tab_downloaded)
+        local mybooks_tab_favorites = 1
+        self:showMyBooksDialog(mybooks_tab_favorites)
     else
         local def_search_input
         if self.ui and self.ui.doc_settings and self.ui.doc_settings.data.doc_props then

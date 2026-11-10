@@ -229,7 +229,7 @@ end
 -- twice; an empty field would render a blank, unselectable row. Cheap to assert, easy to break.
 do
     local src = (function()
-        local fh = assert(io.open(PLUGIN .. "/zlibrary/config.lua"))
+        local fh = assert(io.open(PLUGIN .. "/zlibrary/config_catalog.lua"))
         local s = fh:read("*a"); fh:close(); return s
     end)()
     local block = src:match("SUPPORTED_LANGUAGES = (%b{})")

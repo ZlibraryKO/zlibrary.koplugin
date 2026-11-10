@@ -904,7 +904,7 @@ do
     local caches_cleared = 0
     env.Config.clearPersonalCaches = function() caches_cleared = caches_cleared + 1 end
 
-    local body = support.extract_block(PLUGIN .. "/zlibrary/config.lua",
+    local body = support.extract_block(PLUGIN .. "/zlibrary/config_account.lua",
                                        "(\nfunction Config%.clearCredentials%(%).-\n)end\n")
     local chunk = assert(loadstring("local Config = ...\n" .. body .. "end\nreturn Config",
                                     "=clearCredentials"))
@@ -938,7 +938,7 @@ do
         }
     end
 
-    local body = support.extract_block(PLUGIN .. "/zlibrary/config.lua",
+    local body = support.extract_block(PLUGIN .. "/zlibrary/config_account.lua",
                                        "(\nfunction Config%.clearPersonalCaches%(%).-\n)end\n")
     local chunk = assert(loadstring("local Config = ...\n" .. body .. "end\nreturn Config",
                                     "=clearPersonalCaches"))
@@ -983,7 +983,7 @@ do
     -- Anchored at a line-start end: the getter has a `return` between its `if` block's end and
     -- its own, so the usual unanchored `end\n` would cut the function off before the return.
     -- The capture therefore includes the closing end and none is appended below.
-    local body = support.extract_block(PLUGIN .. "/zlibrary/config.lua",
+    local body = support.extract_block(PLUGIN .. "/zlibrary/config_core.lua",
                                        "(\nfunction Config%.getMultiSearchCache%(%)[%s%S]-\nend\n)")
     local chunk = assert(loadstring("local Config = ...\n" .. body .. "return Config",
                                     "=getMultiSearchCache"))

@@ -69,7 +69,7 @@ local config_env = { ipairs = ipairs, Config = {
     getMultiSearchCache = function() return multi_search end,
     clearSearchHistory = function() search_history_cleared = true end,
 } }
-local body = support.extract_block(PLUGIN .. "/zlibrary/config.lua",
+local body = support.extract_block(PLUGIN .. "/zlibrary/config_account.lua",
                                    "(\nfunction Config%.clearPersonalCaches%(%).-\n)end\n")
 local chunk = assert(loadstring("local Config = ...\n" .. body .. "end\nreturn Config", "=clearPersonalCaches"))
 setfenv(chunk, config_env)

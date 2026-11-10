@@ -14,7 +14,7 @@
 --   * setViewSettings writes the settings file and drops the legacy entry, leaving a single
 --     source of truth
 --
--- The functions are extracted from the real config.lua; their Config collaborators
+-- The functions are extracted from the real config_prefs.lua; their Config collaborators
 -- (getSetting/saveSetting, covered by base_url_harness) are stubbed on the injected table.
 
 local PLUGIN = assert(arg[1], "usage: luajit view_settings_harness.lua <plugin-root> <luasocket-src>")
@@ -22,7 +22,7 @@ local PLUGIN = assert(arg[1], "usage: luajit view_settings_harness.lua <plugin-r
 local support = dofile(PLUGIN .. "/test/support.lua")
 local r = support.reporter()
 
-local CONFIG = PLUGIN .. "/zlibrary/config.lua"
+local CONFIG = PLUGIN .. "/zlibrary/config_prefs.lua"
 
 -- Both functions assign to fields of the Config table passed in, so one compile covers both.
 -- Each extracted block stops short of its closing 'end', so each gets its own.
@@ -44,7 +44,7 @@ local function newRig(persistent, legacy)
     }
     local Config = {
         SETTINGS_VIEW_SETTINGS_KEY = "zlibrary_view_settings",
-        -- config.lua calls these dot-style: Config.getSetting(key), not Config:getSetting(key).
+        -- config_prefs.lua calls these dot-style: Config.getSetting(key), not Config:getSetting(key).
         getSetting = function(key) return rig.store[key] end,
         saveSetting = function(key, value)
             rig.store[key] = value

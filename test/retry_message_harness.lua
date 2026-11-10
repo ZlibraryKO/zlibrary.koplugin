@@ -53,7 +53,7 @@ local DNS_ERROR_TEXT = api_constant("DNS_ERROR_TEXT")
 -- in the right shape, and a stub would only be asserting against itself.
 local Config
 do
-    local block = support.extract_block(PLUGIN .. "/zlibrary/config.lua",
+    local block = support.extract_block(PLUGIN .. "/zlibrary/config_prefs.lua",
         "(\nfunction Config%.formatSeconds%(.-\nend\n)")
     local chunk = assert(loadstring("local Config = ...\n" .. block .. "\nreturn Config",
         "=formatSeconds"))

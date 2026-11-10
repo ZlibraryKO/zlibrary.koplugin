@@ -130,7 +130,7 @@ end
 
 -- ---------------------------------------------------------------- the setting itself
 local cfg_src = (function()
-    local fh = assert(io.open(PLUGIN .. "/zlibrary/config.lua"))
+    local fh = assert(io.open(PLUGIN .. "/zlibrary/config_prefs.lua"))
     local s = fh:read("*a"); fh:close(); return s
 end)()
 r.check("the setting defaults to asking",

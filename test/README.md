@@ -61,7 +61,8 @@ Elsewhere, the release's AppImage or `.deb` for your machine's architecture work
 | `getplural_harness.lua` | That loading the plugin's catalogue leaves KOReader's own gettext globals as it found them. |
 | `rtl_fallback_harness.lua` | That under an RTL UI language — where bidi wraps untranslated strings in LTR isolate marks — a missing plugin translation still falls back to KOReader's own translation, and that `pgettext`/`ngettext`/`npgettext` query the plugin's catalogue rather than only KOReader's. |
 | `timeout_keys_harness.lua` | That every `operation_key` at a call site resolves to a real timeout getter. A typo yields no hint rather than an error, which is invisible at runtime. |
-| `base_url_harness.lua` | The base URL end to end against the real `config.lua`: the default seed has no trailing slash, `setAndValidateBaseUrl` keeps accepting bare/schemed/slashed hosts but refuses paths, queries, fragments and credentials, `saveSetting` trims strings except the password key, and the legacy-settings migration runs on any legacy key and flushes `G_reader_settings`. |
+| `config_surface_harness.lua` | That the `zlibrary.config` facade exposes exactly the fields the unsplit `config.lua` did (139, recorded 2026-11-10), with the same types: nothing left behind by the split into `config_core`/`_catalog`/`_mirrors`/`_urls`/`_account`/`_prefs`, nothing duplicated, and only `_getLuaSettings` added on purpose. |
+| `base_url_harness.lua` | The base URL end to end against the real `zlibrary.config` (`config_core`, `config_mirrors`, `config_urls`): the default seed has no trailing slash, `setAndValidateBaseUrl` keeps accepting bare/schemed/slashed hosts but refuses paths, queries, fragments and credentials, `saveSetting` trims strings except the password key, and the legacy-settings migration runs on any legacy key and flushes `G_reader_settings`. |
 | `loading_message_harness.lua` | That a loading message builds with one `InfoMessage:init` call, under KOReader's real `InfoMessage`, even when another plugin overrides `InfoMessage.init` to impose its own font the way appearance.koplugin does. |
 | `glyph_coverage_check.py` | That every non-ASCII codepoint the plugin can display — `\u{...}` escapes and literal UTF-8 alike — maps to a real glyph in some bundled font. Excludes U+FFF1–FFF3, which are `textboxwidget` control markers rather than glyphs. |
 
@@ -119,7 +120,7 @@ Known gaps, listed so the suite is not mistaken for more than it is:
   against a real server. That still needs a device and an account.
 - **`retry_on_stall`.** The retry-once-on-a-silent-server path in `makeHttpRequest` has no
   coverage; every guard in it could be deleted with the suite still green.
-- **The redirect-target cache** in `config.lua` (`setCacheRealUrl`, `clearCacheRealUrlIfPinned`,
+- **The redirect-target cache** in `config_mirrors.lua` (`setCacheRealUrl`, `clearCacheRealUrlIfPinned`,
   the TTL). The harnesses stub it, so only the fact that pinning is *called* is checked, not
   that it stores or expires correctly.
 - **A caller-supplied `options.source`.** Bodies are replayed correctly when passed as

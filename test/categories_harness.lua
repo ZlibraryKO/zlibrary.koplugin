@@ -11,7 +11,7 @@
 --   * removing a category takes its sub-categories with it; renaming is guarded against colliding
 --     with an existing name
 --
--- Drives the real Config helpers extracted from config.lua; the getSetting/saveSetting they build on
+-- Drives the real Config helpers extracted from config_prefs.lua; the getSetting/saveSetting they build on
 -- (covered by base_url_harness) are stubbed over a plain table, and util.trim is the real rule.
 
 local PLUGIN = assert(arg[1], "usage: luajit categories_harness.lua <plugin-root> <luasocket-src>")
@@ -19,7 +19,7 @@ local PLUGIN = assert(arg[1], "usage: luajit categories_harness.lua <plugin-root
 local support = dofile(PLUGIN .. "/test/support.lua")
 local r = support.reporter()
 
-local CONFIG = PLUGIN .. "/zlibrary/config.lua"
+local CONFIG = PLUGIN .. "/zlibrary/config_prefs.lua"
 
 -- All the category helpers plus the module-local findCategoryIndex they share, compiled into one
 -- chunk so the locals resolve. Each extracted block stops short of its closing 'end', so each gets
@@ -42,7 +42,7 @@ local function compile(Config)
         type = type,
         ipairs = ipairs,
         table = table,
-        -- The real trim (config.lua uses util.trim); the strip of illegal chars is in the source.
+        -- The real trim (config_prefs.lua uses util.trim); the strip of illegal chars is in the source.
         util = { trim = function(s) return s:match("^%s*(.-)%s*$") end },
     })
     return chunk(Config)

@@ -34,15 +34,15 @@ block = block
     :gsub("local retry_message\n", "retry_message = nil\n", 1)
     .. "end\n"
 
--- The constants the classifier matches on, read from api.lua rather than retyped: a reworded
+-- The constants the classifier matches on, read from api_core.lua rather than retyped: a reworded
 -- message must not be able to silently stop being recognised.
-local API = PLUGIN .. "/zlibrary/api.lua"
+local API = PLUGIN .. "/zlibrary/api_core.lua"
 local function api_constant(name)
     local fh = assert(io.open(API))
     local src = fh:read("*a")
     fh:close()
     local v = src:match("Api%." .. name .. ' = T%("([^"]+)"%)')
-    assert(v, "could not read Api." .. name .. " from api.lua")
+    assert(v, "could not read Api." .. name .. " from api_core.lua")
     return v
 end
 local BLOCKED_TEXT = api_constant("BLOCKED_TEXT")

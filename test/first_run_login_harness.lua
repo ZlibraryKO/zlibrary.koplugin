@@ -159,7 +159,7 @@ end
 -- unrecognised failure as a rejection -- would refuse to store credentials for anyone whose
 -- mirror is down, which for this plugin is the common case, not the edge case.
 do
-    local API = PLUGIN .. "/zlibrary/api.lua"
+    local API = PLUGIN .. "/zlibrary/api_core.lua"
     local env = { string = string, tostring = tostring, Api = {} }
     env.Api.CREDENTIALS_REJECTED_TEXT = "Credentials rejected or invalid response"
 
@@ -204,7 +204,7 @@ do
 
     -- Matched by value, not by English literal: it is a T() string, so a literal match would
     -- hold in one locale out of fourteen.
-    local api_src = read(PLUGIN .. "/zlibrary/api.lua")
+    local api_src = read(PLUGIN .. "/zlibrary/api_core.lua")
     r.check("the fallback text is matched by value, not as an English literal",
             api_src:find("string.find(error_str, Api.CREDENTIALS_REJECTED_TEXT", 1, true) ~= nil,
             "a translated build would stop recognising its own rejection message")
@@ -869,7 +869,8 @@ do
             "search now demands credentials -- it works without them, and being able to browse "
             .. "before signing in is deliberate")
 
-    local api_src = read(PLUGIN .. "/zlibrary/api.lua")
+    -- Api.search lives in api_books.lua and the cookie helper in api_shared.lua since the split.
+    local api_src = read(PLUGIN .. "/zlibrary/api_books.lua") .. "\n" .. read(PLUGIN .. "/zlibrary/api_shared.lua")
     local search_fn = ("\n" .. api_src):match("(\nfunction Api%.search%(.-\n)end\n")
     -- The cookie is built by _sessionCookie now, in one place shared with every other
     -- authenticated call, and that helper is what makes it optional: no session, no header.

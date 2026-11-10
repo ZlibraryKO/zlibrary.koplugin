@@ -18,7 +18,7 @@ local socket_url = support.preload_socket(LUASOCKET)
 local r = support.reporter()
 
 local checkRedirect = support.extract_function(
-    PLUGIN .. "/zlibrary/api.lua", "_checkAndHandleRedirect",
+    PLUGIN .. "/zlibrary/api_transport.lua", "_checkAndHandleRedirect",
     {
         socket_url = socket_url,
         logger = { err = function() end, dbg = function() end, info = function() end },

@@ -45,7 +45,7 @@ do
     -- The real classifier, so the chain from error text to verdict has no stub in the middle.
     local api_env = { string = string, tostring = tostring, Api = {} }
     api_env.Api.CREDENTIALS_REJECTED_TEXT = "Credentials rejected or invalid response"
-    local classifier_body = support.extract_block(PLUGIN .. "/zlibrary/api.lua",
+    local classifier_body = support.extract_block(PLUGIN .. "/zlibrary/api_core.lua",
         "(\nfunction Api%.isCredentialRejection%(.-\n)end\n")
     local classifier_chunk = assert(loadstring(
         "local Api = ...\n" .. classifier_body .. "end\nreturn Api", "=isCredentialRejection"))

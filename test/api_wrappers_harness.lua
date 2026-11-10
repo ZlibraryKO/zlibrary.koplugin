@@ -113,7 +113,7 @@ package.preload["zlibrary.config"] = function()
     })
 end
 
--- api.lua requires socket.http at load; nothing here reaches the real transport, since
+-- api_transport.lua requires socket.http at load; nothing here reaches the real transport, since
 -- makeHttpRequest is replaced below, but the require still has to resolve.
 package.preload["socket.http"] = function()
     return { request = function() error("the transport is stubbed in this harness") end }

@@ -1209,6 +1209,25 @@ function Config.getViewSettings()
     return {}
 end
 
+-- An on/off view setting that is on until the user turns it off (the cover toggles). Unset means
+-- on, so a fresh install shows covers without writing anything, and every reader of these keys
+-- tests `~= false` for the same reason.
+function Config.getViewFlag(key)
+    return Config.getViewSettings()[key] ~= false
+end
+
+-- Flip such a flag and return the new state. It flips what is in effect, not what is stored: the
+-- menu used to store `not opts[key]`, and from the unset default that is `not nil` -- true, still
+-- on -- so the first tap did nothing and only the second turned covers off. Always stores an
+-- explicit boolean, so the state never depends on the default again.
+function Config.toggleViewFlag(key)
+    local opts = Config.getViewSettings()
+    local on = opts[key] == false -- off becomes on; on, or unset, becomes off
+    opts[key] = on
+    Config.setViewSettings(opts)
+    return on
+end
+
 -- Download categories. A category is only a name; its folder is <download dir>/<name>, and a
 -- sub-category nests one level deeper (<download dir>/<parent>/<child>). The name doubles as the
 -- folder segment, so it is sanitised with the same rule the download filename uses

@@ -169,13 +169,11 @@ function Zlibrary:addToMainMenu(menu_items)
                                     text = T("Search Covers"),
                                     keep_menu_open = true,
                                     checked_func = function()
-                                        return Config.getViewSettings().show_cover_search ~= false
+                                        return Config.getViewFlag("show_cover_search")
                                     end,
-                                    callback = function() 
-                                        local opts = Config.getViewSettings()
-                                        opts.show_cover_search = not opts.show_cover_search
-                                        Config.setViewSettings(opts)
-                                    end, 
+                                    callback = function()
+                                        Config.toggleViewFlag("show_cover_search")
+                                    end,
                                 },  {
                                     text = T("Search Items/Page"),
                                     keep_menu_open = true,
@@ -185,12 +183,10 @@ function Zlibrary:addToMainMenu(menu_items)
                                     text = T("Browse Covers"),
                                     keep_menu_open = true,
                                     checked_func = function()
-                                        return Config.getViewSettings().show_cover_browse ~= false
+                                        return Config.getViewFlag("show_cover_browse")
                                     end,
                                     callback = function()
-                                        local opts = Config.getViewSettings()
-                                        opts.show_cover_browse = not opts.show_cover_browse
-                                        Config.setViewSettings(opts)
+                                        Config.toggleViewFlag("show_cover_browse")
                                     end,
                                 }, {
                                     text = T("Browse Items/Page"),

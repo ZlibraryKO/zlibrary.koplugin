@@ -6,6 +6,14 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.58
+
+### Fixed
+
+**The cover switches work on the first tap.** In View Settings, the first tap on Search Covers or
+Browse Covers did nothing: covers stayed on and the box stayed ticked, and only a second tap
+turned them off. One tap now turns covers off and the next turns them back on.
+
 ## 1.0.57
 
 ### Added

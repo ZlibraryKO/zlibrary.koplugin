@@ -137,10 +137,7 @@ r.check("the setting defaults to asking",
         cfg_src:find("SETTINGS_SKIP_OPEN_BOOK_PROMPT_KEY, false", 1, true) ~= nil,
         "default is not false -- the prompt would vanish for everyone on upgrade")
 
-local main_src = (function()
-    local fh = assert(io.open(PLUGIN .. "/main.lua"))
-    local s = fh:read("*a"); fh:close(); return s
-end)()
+local main_src = support.read_plugin_class(PLUGIN)
 r.check("the setting is reachable from the menu",
         main_src:find("getSkipOpenBookPrompt", 1, true) ~= nil
             and main_src:find("setSkipOpenBookPrompt", 1, true) ~= nil,

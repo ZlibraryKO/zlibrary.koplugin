@@ -19,7 +19,8 @@ local PLUGIN = assert(arg[1], "usage: luajit search_pagination_auth_harness.lua 
 local support = dofile(PLUGIN .. "/test/support.lua")
 local r = support.reporter()
 
-local MAIN = PLUGIN .. "/main.lua"
+-- The plugin class: main.lua and the plugin_* parts it mixes its methods in from.
+local MAIN = support.plugin_class_files(PLUGIN)
 
 -- Drop whole-line comments, so the prose above the code -- which names isAuthenticationError on
 -- purpose -- is never mistaken for a live call to it.

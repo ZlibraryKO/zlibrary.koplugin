@@ -108,7 +108,7 @@ package.preload["zlibrary.preloader"] = function() return { Preloader = { channe
 local SearchDialog = dofile(PLUGIN .. "/zlibrary/multisearch_dialog.lua")
 
 -- ---------------------------------------------------------------- a dialog with fake fetch callbacks
--- Shaped like the toggle callbacks in main.lua, but synchronous: each call records the
+-- Shaped like the toggle callbacks in plugin_browse.lua, but synchronous: each call records the
 -- fetch, and the harness "resolves" it by calling the response handlers the way
 -- _requestDispatcher's resolve_result does.
 local fetches
@@ -269,9 +269,9 @@ r.check("a list from the cache that has no more pages stops", #fetches == 0,
 
 -- ---------------------------------------------------------------- the real Most popular tab
 -- This paging has broken twice: 1.0.54 fixed the tab stopping at 30 books, and it stopped there
--- again whenever the list came from the cache. So this drives the tab as main.lua defines it,
+-- again whenever the list came from the cache. So this drives the tab as plugin_browse.lua defines it,
 -- through the real dialog, against a server of 90 books at 30 a page.
-local popular_block = support.extract_block(PLUGIN .. "/main.lua",
+local popular_block = support.extract_block(support.plugin_class_files(PLUGIN),
     "toggle_items = {{%s*(text = T%(\"Most popular\"%),.-end)}, {%s*text = T%(\"Recommended\"%)")
 
 local popular_requests

@@ -253,7 +253,7 @@ end
 local function slurp(path)
     local fh = assert(io.open(path)); local s = fh:read("*a"); fh:close(); return s
 end
-local main_src = slurp(PLUGIN .. "/main.lua")
+local main_src = support.read_plugin_class(PLUGIN)
 local ui_src = slurp(PLUGIN .. "/zlibrary/ui.lua")
 local download_src = slurp(PLUGIN .. "/zlibrary/download.lua")
 

@@ -15,13 +15,22 @@ local support = dofile(PLUGIN .. "/test/support.lua")
 local r = support.reporter()
 
 -- ---------------------------------------------------------------- build the graph
-local MODULES = {
-    "main", "zlibrary.api", "zlibrary.async_helper", "zlibrary.bookdetails_dialog",
-    "zlibrary.cache", "zlibrary.config", "zlibrary.dialog_manager", "zlibrary.discovery", "zlibrary.download",
-    "zlibrary.gettext",
-    "zlibrary.menu", "zlibrary.multisearch_dialog", "zlibrary.ota", "zlibrary.preloader",
-    "zlibrary.ui",
-}
+-- Every module the plugin ships: main.lua plus each zlibrary/*.lua, found by listing the folder.
+-- This used to be a fixed list, and a module missing from it was never read -- its requires went
+-- unchecked. By 2026-11 it had missed sixteen, every config_* and api_* part among them.
+local MODULES = { "main" }
+do
+    local ls = assert(io.popen('ls "' .. PLUGIN .. '/zlibrary"'))
+    for file in ls:lines() do
+        local name = file:match("^([%w_]+)%.lua$")
+        if name then MODULES[#MODULES + 1] = "zlibrary." .. name end
+    end
+    ls:close()
+end
+-- The plugin had 31 modules when the listing replaced the fixed list. Far fewer means the listing
+-- found the wrong folder, not that the plugin shrank.
+r.check("every module was listed (" .. #MODULES .. ")", #MODULES >= 30,
+        "only " .. #MODULES .. " modules found under " .. PLUGIN .. "/zlibrary")
 
 local function path_of(mod)
     if mod == "main" then return PLUGIN .. "/main.lua" end

@@ -22,7 +22,7 @@ local function read(path)
 end
 
 local ui_src = read(PLUGIN .. "/zlibrary/ui.lua")
-local main_src = read(PLUGIN .. "/main.lua")
+local main_src = support.read_plugin_class(PLUGIN)
 local config_src = read(PLUGIN .. "/zlibrary/config_prefs.lua")
 
 -- ---------------------------------------------------------------- the getters that exist

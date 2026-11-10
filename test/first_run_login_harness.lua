@@ -17,14 +17,15 @@ local PLUGIN = assert(arg[1], "usage: luajit first_run_login_harness.lua <plugin
 local support = dofile(PLUGIN .. "/test/support.lua")
 local r = support.reporter()
 
-local MAIN = PLUGIN .. "/main.lua"
+-- The plugin class: main.lua and the plugin_* parts it mixes its methods in from.
+local MAIN = support.plugin_class_files(PLUGIN)
 
 local function read(path)
     local fh = assert(io.open(path), "cannot open " .. path)
     local s = fh:read("*a"); fh:close(); return s
 end
 
-local main_src = read(MAIN)
+local main_src = support.read_plugin_class(PLUGIN)
 
 -- ---------------------------------------------------------------- a rig for the broker
 -- The broker is a method, so extract_function (which only knows `local function`) does not
@@ -635,7 +636,7 @@ end
 
 -- ---------------------------------------------------------------- and the login it hangs off
 -- The broker above is the hazardous part, but the branch that decides whether to reach it at all
--- lives in Zlibrary:login. Greping main.lua for the literals in that branch is not coverage:
+-- lives in Zlibrary:login. Greping the plugin source for the literals in that branch is not coverage:
 -- inverting `if not did_save then` leaves every literal intact, ships green, and silently
 -- restores the dead end this whole change removes. So drive the real function.
 local LOGIN_PATTERN = "(\nfunction Zlibrary:login%(.-\n)end\n"
@@ -1109,7 +1110,7 @@ do
     -- Counts calls, not mentions: the trailing "(" is what keeps the explanatory comment beside
     -- the call from being counted as a second call site.
     local calls = select(2, main_src:gsub("Ui%.showCredentialsDialog%(", ""))
-    r.check("main.lua opens the credentials dialog from exactly one place", calls == 1,
+    r.check("the plugin opens the credentials dialog from exactly one place", calls == 1,
             "found " .. calls .. " call sites")
 
     local broker = support.extract_block(MAIN, BROKER_PATTERN)

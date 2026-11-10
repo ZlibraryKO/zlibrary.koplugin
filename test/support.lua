@@ -137,12 +137,49 @@ end
 -- of a function into a comment above the working one, break the working one, and the suite
 -- reported 22 passed while exercising the commented-out copy. So refuse to guess -- if a name
 -- appears more than once at the start of a line, fail loudly and make a human look.
+-- `path` may also be a list of files (see support.plugin_class_files), read as one source: the
+-- uniqueness rule then holds across all of them, so a block defined in two files still fails.
 local function read_source(path)
+    if type(path) == "table" then
+        local parts = {}
+        for _, p in ipairs(path) do parts[#parts + 1] = read_source(p) end
+        return table.concat(parts, "\n")
+    end
     local fh = assert(io.open(path), "cannot open " .. path)
     local src = fh:read("*a")
     fh:close()
     -- A leading newline lets the anchored patterns below match a definition on line 1.
     return "\n" .. src
+end
+
+-- The plugin class's whole source: main.lua, then every zlibrary/plugin_*.lua it mixes its
+-- methods in from. Code that used to be read out of main.lua alone now lives across these, so a
+-- harness asking "does the plugin do X" passes this list to extract_block, extract_function or
+-- support.read_plugin_class. Found by listing the folder, so a new part is included automatically.
+function support.plugin_class_files(plugin)
+    local files = { plugin .. "/main.lua" }
+    local ls = assert(io.popen('ls "' .. plugin .. '/zlibrary"'))
+    local parts = {}
+    for file in ls:lines() do
+        if file:match("^plugin_[%w_]+%.lua$") then parts[#parts + 1] = file end
+    end
+    ls:close()
+    table.sort(parts)
+    for _, file in ipairs(parts) do files[#files + 1] = plugin .. "/zlibrary/" .. file end
+    return files
+end
+
+-- The same, as one string, for harnesses that search the source rather than extract a block.
+function support.read_plugin_class(plugin)
+    return read_source(support.plugin_class_files(plugin))
+end
+
+-- What to call a source in an error: its path, or for a list of files, the files it covers.
+local function source_label(path)
+    if type(path) ~= "table" then return path end
+    local names = {}
+    for _, p in ipairs(path) do names[#names + 1] = p:match("[^/]+$") end
+    return table.concat(names, " + ")
 end
 
 local function count_matches(src, pattern)
@@ -158,6 +195,7 @@ end
 
 function support.extract_function(path, name, env)
     local src = read_source(path)
+    path = source_label(path)
     -- Anchored to the start of a line so an indented mention, or the name appearing inside
     -- another expression, is not mistaken for the definition.
     local anchor = "\nlocal function " .. name .. "%("
@@ -182,6 +220,7 @@ end
 -- its own. Same uniqueness rule, for the same reason.
 function support.extract_block(path, pattern)
     local src = read_source(path)
+    path = source_label(path)
     local found = count_matches(src, pattern)
     assert(found > 0, "no block matching " .. pattern .. " in " .. path)
     assert(found == 1, string.format(

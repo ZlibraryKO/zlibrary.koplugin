@@ -98,16 +98,13 @@ r.check("no callback means no handler",
 r.check("no hold callback means no hold handler",
         plain.onMenuHold == nil, "onMenuHold = " .. type(plain.onMenuHold))
 
--- ---------------------------------------------------------------- the wiring in main.lua
--- The harness cannot run main.lua, but it can check the call site still passes a callback: the
+-- ---------------------------------------------------------------- the wiring in plugin_search.lua
+-- The harness cannot run the plugin, but it can check the call site still passes a callback: the
 -- feature is two halves and either alone is silent.
-local main_src = (function()
-    local fh = assert(io.open(PLUGIN .. "/main.lua"))
-    local s = fh:read("*a"); fh:close(); return s
-end)()
+local main_src = support.read_plugin_class(PLUGIN)
 local call = main_src:match("Ui%.createSearchResultsMenu%b()")
     or main_src:match("Ui%.createSearchResultsMenu%(.-\n.-%)")
-r.check("main.lua passes a new-search callback",
+r.check("plugin_search.lua passes a new-search callback",
         call ~= nil and call:find("showSearchDialog", 1, true) ~= nil,
         "call site: " .. tostring(call))
 r.check("the search box is seeded with the current query",
@@ -129,7 +126,7 @@ r.check("the hold call site does not confirm on its own",
         "call site confirms as well as downloadBook: " .. tostring(call))
 
 -- The confirmation moved to zlibrary/download.lua with the rest of downloading; the call site
--- that must NOT add its own is still here in main.lua.
+-- that must NOT add its own is still here in plugin_search.lua.
 local download_src = (function()
     local fh = assert(io.open(PLUGIN .. "/zlibrary/download.lua"))
     local s = fh:read("*a"); fh:close(); return s

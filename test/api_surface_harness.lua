@@ -7,7 +7,8 @@
 -- with the same kind of value -- and no internal leaked onto the table.
 --
 -- The list below was recorded from the real, unsplit api.lua on 2026-11-10 (33 fields, 29 of them
--- functions). Unlike config_surface_harness there is no allowed extra.
+-- functions). Unlike config_surface_harness there is no allowed extra. Added since: downloadToFile
+-- (2026-11-11, shared by the cover and OTA downloads).
 
 local PLUGIN = assert(arg[1], "usage: luajit api_surface_harness.lua <plugin-root> <luasocket-src>")
 local LUASOCKET = assert(arg[2], "usage: luajit api_surface_harness.lua <plugin-root> <luasocket-src>")
@@ -35,6 +36,7 @@ local EXPECTED = {
     "discardDownloadTempFile:function",
     "downloadBook:function",
     "downloadBookCover:function",
+    "downloadToFile:function",
     "favoriteBook:function",
     "fetchDynamicDomains:function",
     "getBookComments:function",

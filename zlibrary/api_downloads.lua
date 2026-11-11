@@ -121,16 +121,17 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
     end
 end
 
-function Api.downloadBookCover(download_url, target_filepath)
-    -- dbg, not info: a page of results fetches dozens of covers, and a START/END pair each buried
-    -- everything else in the log. Api.makeHttpRequest already logs its own START at dbg, so this
-    -- matches. Failures below stay at err, and are the part worth seeing.
-    logger.dbg(string.format("Zlibrary:Api.downloadBookCover - START - URL: %s, Target: %s", download_url, target_filepath))
+-- GET a URL straight into a file, for covers and the OTA update archive. Not for books: those go
+-- through a temp file and a progress sink, and have the quota answer to read (see downloadBook).
+-- Returns { success = true } or { error = ..., status_code = ... }, with status_code only when the
+-- server answered: the cover preloader stops retrying a book on 404 and 410. Callers log their own
+-- START and success; failures are logged here.
+function Api.downloadToFile(download_url, target_filepath, headers, timeout)
     local result = { success = false, error = nil }
     local file, err_open = io.open(target_filepath, "wb")
     if not file then
         result.error = T("Failed to open target file") .. ": " .. (err_open or T("Unknown error"))
-        logger.err(string.format("Zlibrary:Api.downloadBookCover - END (File open error) - Error: %s", result.error))
+        logger.err(string.format("Zlibrary:Api.downloadToFile - END (File open error) - Error: %s", result.error))
         return result
     end
 
@@ -141,21 +142,19 @@ function Api.downloadBookCover(download_url, target_filepath)
         pcall(os.remove, target_filepath)
     end
 
-    local headers = { ["User-Agent"] = Config.getUserAgent() }
-
     local http_result = Api.makeHttpRequest{
         url = download_url,
         method = "GET",
         headers = headers,
         sink = socketutil.file_sink(file),
-        timeout = Config.getCoverTimeout(),
+        timeout = timeout,
         redirect = true,
     }
 
     if http_result.error and not (http_result.status_code and http_result.headers) then
         result.error = http_result.error
         discardPartialFile()
-        logger.err(string.format("Zlibrary:Api.downloadBookCover - END (Request error) - Error: %s", result.error))
+        logger.err(string.format("Zlibrary:Api.downloadToFile - END (Request error) - Error: %s", result.error))
         return result
     end
 
@@ -163,7 +162,7 @@ function Api.downloadBookCover(download_url, target_filepath)
         result.error = http_result.error
         result.status_code = http_result.status_code
         discardPartialFile()
-        logger.err("Zlibrary:Api.downloadBookCover - END (HTTP error from Api.makeHttpRequest) - Error: " .. result.error .. ", Status: " .. tostring(http_result.status_code))
+        logger.err("Zlibrary:Api.downloadToFile - END (HTTP error from Api.makeHttpRequest) - Error: " .. result.error .. ", Status: " .. tostring(http_result.status_code))
         return result
     end
 
@@ -171,12 +170,24 @@ function Api.downloadBookCover(download_url, target_filepath)
         result.error = string.format("%s: %s", T("Download HTTP Error"), http_result.status_code)
         result.status_code = http_result.status_code
         discardPartialFile()
-        logger.err("Zlibrary:Api.downloadBookCover - END (HTTP status error) - Error: " .. result.error)
+        logger.err("Zlibrary:Api.downloadToFile - END (HTTP status error) - Error: " .. result.error)
         return result
     end
 
-    logger.dbg("Zlibrary:Api.downloadBookCover - END (Success)")
     result.success = true
+    return result
+end
+
+function Api.downloadBookCover(download_url, target_filepath)
+    -- dbg, not info: a page of results fetches dozens of covers, and a START/END pair each buried
+    -- everything else in the log. Api.makeHttpRequest already logs its own START at dbg, so this
+    -- matches. Failures stay at err, in downloadToFile, and are the part worth seeing.
+    logger.dbg(string.format("Zlibrary:Api.downloadBookCover - START - URL: %s, Target: %s", download_url, target_filepath))
+    local result = Api.downloadToFile(download_url, target_filepath,
+        { ["User-Agent"] = Config.getUserAgent() }, Config.getCoverTimeout())
+    if result.success then
+        logger.dbg("Zlibrary:Api.downloadBookCover - END (Success)")
+    end
     return result
 end
 

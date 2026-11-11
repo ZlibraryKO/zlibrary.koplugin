@@ -1,5 +1,4 @@
 local logger = require("logger")
-local socketutil = require("socketutil")
 local json = require("json")
 local T = require("zlibrary.gettext")
 local ConfirmBox = require("ui/widget/confirmbox")
@@ -165,52 +164,15 @@ end
 
 function Ota.downloadUpdate(url, destination_path)
     logger.info(string.format("Zlibrary:Ota.downloadUpdate - START - URL: %s, Dest: %s", url, destination_path))
-    local result = { success = false, error = nil }
-
-    local file, err_open = io.open(destination_path, "wb")
-    if not file then
-        result.error = "Failed to open target file for download: " .. (err_open or "Unknown error")
-        logger.err("Zlibrary:Ota.downloadUpdate - END (File open error) - " .. result.error)
-        return result
-    end
-
     -- A bare number is not a budget: it becomes socketutil:set_timeout(300), and that does
     -- `total_timeout or 15`. So `timeout = 300` bought 300 seconds of tolerated SILENCE plus a 15s
     -- total nobody asked for. The pair matches Api.downloadBook: give up after 15s of no data, but
     -- let a healthy transfer take as long as it needs.
-    local sink = socketutil.file_sink(file)
-    local http_options = {
-        url = url,
-        method = "GET",
-        headers = { ["User-Agent"] = "KOReader-ZLibrary-Plugin" },
-        sink = sink,
-        timeout = Config.getDownloadTimeout(),
-        redirect = true,
-    }
-
-    local http_result = Api.makeHttpRequest(http_options)
-
-    if http_result.error then
-        result.error = "Download network request failed: " .. http_result.error
-        -- The sink only closes the handle when it receives its terminating chunk; a request
-        -- that failed at connect time never called the sink at all, so close the handle
-        -- ourselves before removing the file out from under it.
-        pcall(function() file:close() end)
-        pcall(os.remove, destination_path)
-        logger.err("Zlibrary:Ota.downloadUpdate - END (HTTP error from Api.makeHttpRequest) - Error: " .. result.error .. ", Status: " .. tostring(http_result.status_code))
-        return result
+    local result = Api.downloadToFile(url, destination_path,
+        { ["User-Agent"] = "KOReader-ZLibrary-Plugin" }, Config.getDownloadTimeout())
+    if result.success then
+        logger.info("Zlibrary:Ota.downloadUpdate - END (Success)")
     end
-
-    if http_result.status_code ~= 200 then
-        result.error = string.format("Download HTTP Error: %s", http_result.status_code)
-        pcall(function() file:close() end)
-        pcall(os.remove, destination_path)
-        logger.err("Zlibrary:Ota.downloadUpdate - END (HTTP status error) - Error: " .. result.error)
-        return result
-    end
-
-    logger.info("Zlibrary:Ota.downloadUpdate - END (Success)")
-    result.success = true
     return result
 end
 

@@ -99,7 +99,7 @@ r.check("and hands it to every retry dialog",
         dialog_calls > 0 and dialog_with_session == dialog_calls,
         string.format("%d of %d showSearchErrorDialog calls pass user_session", dialog_with_session, dialog_calls))
 
-local retry = support.extract_block(PLUGIN .. "/zlibrary/ui.lua",
+local retry = support.extract_block(support.ui_files(PLUGIN),
     "(\nfunction Ui%.showSearchErrorDialog%(.-\nend\n)")
 r.check("whose Retry searches with that session",
         retry:find("Api.search(query, user_session.user_id, user_session.user_key", 1, true) ~= nil,

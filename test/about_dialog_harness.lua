@@ -16,10 +16,10 @@ local support = dofile(PLUGIN .. "/test/support.lua")
 local r = support.reporter()
 
 local function read(path) local fh = assert(io.open(path)); local s = fh:read("*a"); fh:close(); return s end
-local ui_src = read(PLUGIN .. "/zlibrary/ui.lua")
+local ui_src = support.read_ui(PLUGIN)
 
 local DONATION_URL = ui_src:match('\nlocal DONATION_URL = "([^"]+)"')
-assert(DONATION_URL, "no DONATION_URL constant in ui.lua -- the dialog has nowhere to point")
+assert(DONATION_URL, "no DONATION_URL constant in ui_core.lua -- the dialog has nowhere to point")
 
 local rig = { shown = nil, confirm = nil, untracked = {} }
 
@@ -45,7 +45,7 @@ env._plugin_instance = {
 env.Ui = {}
 
 for _, name in ipairs{ "showDonationQrCode", "showAboutDialog", "showUpdateInstalledDialog" } do
-    local block = support.extract_block(PLUGIN .. "/zlibrary/ui.lua",
+    local block = support.extract_block(support.ui_files(PLUGIN),
         "(\nfunction Ui%." .. name .. "%(.-\nend\n)")
     local chunk = assert(loadstring(block, "=Ui." .. name))
     setfenv(chunk, env)

@@ -18,7 +18,7 @@ local support = dofile(PLUGIN .. "/test/support.lua")
 support.preload_socket(LUASOCKET)
 local r = support.reporter()
 
-local UI = PLUGIN .. "/zlibrary/ui.lua"
+local UI = support.ui_files(PLUGIN)
 
 -- From the first classification line through the end of the wording chain, so the flags, the
 -- guard and the branch selection are all real code rather than harness inputs.

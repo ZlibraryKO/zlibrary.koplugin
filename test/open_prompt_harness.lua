@@ -16,7 +16,7 @@ local PLUGIN = assert(arg[1], "usage: luajit open_prompt_harness.lua <plugin-roo
 local support = dofile(PLUGIN .. "/test/support.lua")
 local r = support.reporter()
 
-local block = support.extract_block(PLUGIN .. "/zlibrary/ui.lua",
+local block = support.extract_block(support.ui_files(PLUGIN),
     "(\nfunction Ui%.confirmOpenBook%(.-\nend\n)")
 
 -- Rebuild against stubs that record what the function reached for.
@@ -50,7 +50,7 @@ local function build()
 end
 
 local confirmOpenBook = build()
-r.check("the function was recovered from ui.lua", type(confirmOpenBook) == "function",
+r.check("the function was recovered from ui_books.lua", type(confirmOpenBook) == "function",
         "got " .. type(confirmOpenBook))
 
 local function run(skip, wifi_pref)

@@ -9,14 +9,14 @@
 --   * _sortedCategories / _sortedNames sort case-insensitively and must not reorder the caller's
 --     list (the stored order is what the mutation helpers rewrite; only the display is sorted).
 --
--- Drives the real functions extracted from ui.lua.
+-- Drives the real functions extracted from ui_categories.lua.
 
 local PLUGIN = assert(arg[1], "usage: luajit category_create_harness.lua <plugin-root> <luasocket-src>")
 
 local support = dofile(PLUGIN .. "/test/support.lua")
 local r = support.reporter()
 
-local UI = PLUGIN .. "/zlibrary/ui.lua"
+local UI = support.ui_files(PLUGIN)
 
 -- ---------------------------------------------------------------- sorting
 do

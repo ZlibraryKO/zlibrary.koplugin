@@ -254,7 +254,7 @@ local function slurp(path)
     local fh = assert(io.open(path)); local s = fh:read("*a"); fh:close(); return s
 end
 local main_src = support.read_plugin_class(PLUGIN)
-local ui_src = slurp(PLUGIN .. "/zlibrary/ui.lua")
+local ui_src = support.read_ui(PLUGIN)
 local download_src = slurp(PLUGIN .. "/zlibrary/download.lua")
 
 r.check("the Settings menu reaches the category management builder",

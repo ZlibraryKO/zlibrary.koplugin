@@ -169,7 +169,27 @@ function support.plugin_class_files(plugin)
     return files
 end
 
--- The same, as one string, for harnesses that search the source rather than extract a block.
+-- The ui module's whole source: zlibrary/ui.lua (the facade) and every zlibrary/ui_*.lua part,
+-- sorted. Same idea as plugin_class_files, for the Ui table since ui.lua was split.
+function support.ui_files(plugin)
+    local files = { plugin .. "/zlibrary/ui.lua" }
+    local ls = assert(io.popen('ls "' .. plugin .. '/zlibrary"'))
+    local parts = {}
+    for file in ls:lines() do
+        if file:match("^ui_[%w_]+%.lua$") then parts[#parts + 1] = file end
+    end
+    ls:close()
+    table.sort(parts)
+    for _, file in ipairs(parts) do files[#files + 1] = plugin .. "/zlibrary/" .. file end
+    return files
+end
+
+-- The ui module's source (ui.lua plus its ui_* parts), as one string.
+function support.read_ui(plugin)
+    return read_source(support.ui_files(plugin))
+end
+
+-- The plugin class's source, as one string, for harnesses that search it rather than extract a block.
 function support.read_plugin_class(plugin)
     return read_source(support.plugin_class_files(plugin))
 end

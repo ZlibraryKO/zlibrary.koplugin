@@ -618,7 +618,7 @@ do
     r.check("the broker passes no separate verify callback", rig.last_test_cb == nil,
             "a test_callback is still being wired up")
 
-    local ui_src = read(PLUGIN .. "/zlibrary/ui.lua")
+    local ui_src = support.read_ui(PLUGIN)
     local body = ("\n" .. ui_src):match("(\nfunction Ui%.showCredentialsDialog%(.-\n)end\n")
     r.check("the credentials dialog body can be located", body ~= nil)
     if body then
@@ -1121,8 +1121,8 @@ end
 
 do
     -- Scoped to the credentials dialog: the same toast is used by unrelated settings dialogs
-    -- elsewhere in ui.lua, which have no reason to be quiet.
-    local ui_src = "\n" .. read(PLUGIN .. "/zlibrary/ui.lua")
+    -- elsewhere in the ui module, which have no reason to be quiet.
+    local ui_src = support.read_ui(PLUGIN)
     local body = ui_src:match("(\nfunction Ui%.showCredentialsDialog%(.-\n)end\n")
     r.check("the credentials dialog body can be located", body ~= nil)
     if body then

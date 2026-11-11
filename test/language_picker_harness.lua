@@ -57,7 +57,7 @@ local function make()
         end,
     }
 
-    local pick = support.extract_function(PLUGIN .. "/zlibrary/ui.lua", "_showMultiSelectionDialog", env)
+    local pick = support.extract_function(support.ui_files(PLUGIN), "_showMultiSelectionDialog", env)
     rig.open = function(options, saved, is_single)
         rig.saved = saved or {}
         rig.spec = nil

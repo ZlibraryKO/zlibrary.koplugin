@@ -191,13 +191,13 @@ r.check("a result with no usable session saves nothing", #saved_sessions == 0,
         #saved_sessions .. " save(s) from results that carried none")
 
 -- ---------------------------------------------------------------- a blocked mirror found in a child
--- Extracted rather than required: api.lua pulls in the socket stack, and the classifier is the
+-- Extracted rather than required: the api modules pull in the socket stack, and the classifier is the
 -- whole of what matters here. BLOCKED_TEXT is a sentinel in this env, so a match proves the
 -- function compares against the exported value and not an English literal -- which is what keeps
 -- it working in the other fifteen locales.
 local api_env = { string = string, tostring = tostring,
                   Api = { BLOCKED_TEXT = "<<blocked-text>>" } }
-local blocked_block = support.extract_block(PLUGIN .. "/zlibrary/api.lua",
+local blocked_block = support.extract_block(PLUGIN .. "/zlibrary/api_core.lua",
     "(\nfunction Api%.isBlockedError%(.-\nend\n)")
 local blocked_chunk = assert(loadstring(blocked_block, "=isBlockedError"))
 setfenv(blocked_chunk, api_env)

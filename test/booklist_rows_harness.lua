@@ -1,3 +1,12 @@
+-- The Booklists tab in My Books, driven through the plugin's real dialog code (plugin_browse.lua)
+-- on top of stubbed KOReader widgets.
+--
+-- Booklists is the one tab whose rows are not books: each row is a list with its book count, and
+-- a tap opens that list's books in their own screen. So switching to it has to turn covers off,
+-- clear the cover strip and restore the reader's rows per page, and switching back has to undo all
+-- of it. Refresh forgets each list's cached books but leaves the other tabs alone. And because
+-- every tab starts on page 1, a slow response is matched to its fetch by generation: books that
+-- land after a switch to another tab must not be shown, appended or cached under that tab.
 
 local PLUGIN = assert(arg[1], "usage: luajit booklist_rows_harness.lua <plugin-root> <luasocket-src>")
 
@@ -108,7 +117,7 @@ package.preload["zlibrary.preloader"] = function() return { Preloader = { channe
 
 local SearchDialog = dofile(PLUGIN .. "/zlibrary/multisearch_dialog.lua")
 
--- ---------------------------------------------------------------- main.lua's dialogs
+-- ---------------------------------------------------------------- the plugin's dialogs (plugin_browse.lua)
 local Api = { getFavoriteBooks = "getFavoriteBooks", getDownloadedBooks = "getDownloadedBooks",
               getBooklists = "getBooklists", getBooklistBooks = "getBooklistBooks" }
 local dialogs, requests, selected_books
@@ -129,7 +138,7 @@ local env = setmetatable({
     end,
 }, { __index = _G })
 for _, name in ipairs({ "showMyBooksDialog", "showBooklistDialog" }) do
-    local block = support.extract_block(PLUGIN .. "/main.lua",
+    local block = support.extract_block(support.plugin_class_files(PLUGIN),
         "(\nfunction Zlibrary:" .. name .. "%(.-\nend\n)")
     local chunk = assert(loadstring(block, "=" .. name))
     setfenv(chunk, env)

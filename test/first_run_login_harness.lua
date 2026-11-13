@@ -17,14 +17,15 @@ local PLUGIN = assert(arg[1], "usage: luajit first_run_login_harness.lua <plugin
 local support = dofile(PLUGIN .. "/test/support.lua")
 local r = support.reporter()
 
-local MAIN = PLUGIN .. "/main.lua"
+-- The plugin class: main.lua and the plugin_* parts it mixes its methods in from.
+local MAIN = support.plugin_class_files(PLUGIN)
 
 local function read(path)
     local fh = assert(io.open(path), "cannot open " .. path)
     local s = fh:read("*a"); fh:close(); return s
 end
 
-local main_src = read(MAIN)
+local main_src = support.read_plugin_class(PLUGIN)
 
 -- ---------------------------------------------------------------- a rig for the broker
 -- The broker is a method, so extract_function (which only knows `local function`) does not
@@ -159,7 +160,7 @@ end
 -- unrecognised failure as a rejection -- would refuse to store credentials for anyone whose
 -- mirror is down, which for this plugin is the common case, not the edge case.
 do
-    local API = PLUGIN .. "/zlibrary/api.lua"
+    local API = PLUGIN .. "/zlibrary/api_core.lua"
     local env = { string = string, tostring = tostring, Api = {} }
     env.Api.CREDENTIALS_REJECTED_TEXT = "Credentials rejected or invalid response"
 
@@ -204,7 +205,7 @@ do
 
     -- Matched by value, not by English literal: it is a T() string, so a literal match would
     -- hold in one locale out of fourteen.
-    local api_src = read(PLUGIN .. "/zlibrary/api.lua")
+    local api_src = read(PLUGIN .. "/zlibrary/api_core.lua")
     r.check("the fallback text is matched by value, not as an English literal",
             api_src:find("string.find(error_str, Api.CREDENTIALS_REJECTED_TEXT", 1, true) ~= nil,
             "a translated build would stop recognising its own rejection message")
@@ -617,7 +618,7 @@ do
     r.check("the broker passes no separate verify callback", rig.last_test_cb == nil,
             "a test_callback is still being wired up")
 
-    local ui_src = read(PLUGIN .. "/zlibrary/ui.lua")
+    local ui_src = support.read_ui(PLUGIN)
     local body = ("\n" .. ui_src):match("(\nfunction Ui%.showCredentialsDialog%(.-\n)end\n")
     r.check("the credentials dialog body can be located", body ~= nil)
     if body then
@@ -635,7 +636,7 @@ end
 
 -- ---------------------------------------------------------------- and the login it hangs off
 -- The broker above is the hazardous part, but the branch that decides whether to reach it at all
--- lives in Zlibrary:login. Greping main.lua for the literals in that branch is not coverage:
+-- lives in Zlibrary:login. Greping the plugin source for the literals in that branch is not coverage:
 -- inverting `if not did_save then` leaves every literal intact, ships green, and silently
 -- restores the dead end this whole change removes. So drive the real function.
 local LOGIN_PATTERN = "(\nfunction Zlibrary:login%(.-\n)end\n"
@@ -869,7 +870,8 @@ do
             "search now demands credentials -- it works without them, and being able to browse "
             .. "before signing in is deliberate")
 
-    local api_src = read(PLUGIN .. "/zlibrary/api.lua")
+    -- Api.search lives in api_books.lua and the cookie helper in api_shared.lua since the split.
+    local api_src = read(PLUGIN .. "/zlibrary/api_books.lua") .. "\n" .. read(PLUGIN .. "/zlibrary/api_shared.lua")
     local search_fn = ("\n" .. api_src):match("(\nfunction Api%.search%(.-\n)end\n")
     -- The cookie is built by _sessionCookie now, in one place shared with every other
     -- authenticated call, and that helper is what makes it optional: no session, no header.
@@ -904,7 +906,7 @@ do
     local caches_cleared = 0
     env.Config.clearPersonalCaches = function() caches_cleared = caches_cleared + 1 end
 
-    local body = support.extract_block(PLUGIN .. "/zlibrary/config.lua",
+    local body = support.extract_block(PLUGIN .. "/zlibrary/config_account.lua",
                                        "(\nfunction Config%.clearCredentials%(%).-\n)end\n")
     local chunk = assert(loadstring("local Config = ...\n" .. body .. "end\nreturn Config",
                                     "=clearCredentials"))
@@ -938,7 +940,7 @@ do
         }
     end
 
-    local body = support.extract_block(PLUGIN .. "/zlibrary/config.lua",
+    local body = support.extract_block(PLUGIN .. "/zlibrary/config_account.lua",
                                        "(\nfunction Config%.clearPersonalCaches%(%).-\n)end\n")
     local chunk = assert(loadstring("local Config = ...\n" .. body .. "end\nreturn Config",
                                     "=clearPersonalCaches"))
@@ -983,7 +985,7 @@ do
     -- Anchored at a line-start end: the getter has a `return` between its `if` block's end and
     -- its own, so the usual unanchored `end\n` would cut the function off before the return.
     -- The capture therefore includes the closing end and none is appended below.
-    local body = support.extract_block(PLUGIN .. "/zlibrary/config.lua",
+    local body = support.extract_block(PLUGIN .. "/zlibrary/config_core.lua",
                                        "(\nfunction Config%.getMultiSearchCache%(%)[%s%S]-\nend\n)")
     local chunk = assert(loadstring("local Config = ...\n" .. body .. "return Config",
                                     "=getMultiSearchCache"))
@@ -1108,7 +1110,7 @@ do
     -- Counts calls, not mentions: the trailing "(" is what keeps the explanatory comment beside
     -- the call from being counted as a second call site.
     local calls = select(2, main_src:gsub("Ui%.showCredentialsDialog%(", ""))
-    r.check("main.lua opens the credentials dialog from exactly one place", calls == 1,
+    r.check("the plugin opens the credentials dialog from exactly one place", calls == 1,
             "found " .. calls .. " call sites")
 
     local broker = support.extract_block(MAIN, BROKER_PATTERN)
@@ -1119,8 +1121,8 @@ end
 
 do
     -- Scoped to the credentials dialog: the same toast is used by unrelated settings dialogs
-    -- elsewhere in ui.lua, which have no reason to be quiet.
-    local ui_src = "\n" .. read(PLUGIN .. "/zlibrary/ui.lua")
+    -- elsewhere in the ui module, which have no reason to be quiet.
+    local ui_src = support.read_ui(PLUGIN)
     local body = ui_src:match("(\nfunction Ui%.showCredentialsDialog%(.-\n)end\n")
     r.check("the credentials dialog body can be located", body ~= nil)
     if body then

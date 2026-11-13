@@ -6,6 +6,27 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.58
+
+### Fixed
+
+**The cover switches work on the first tap.** In View Settings, the first tap on Search Covers or
+Browse Covers did nothing: covers stayed on and the box stayed ticked, and only a second tap
+turned them off. One tap now turns covers off and the next turns them back on.
+
+**Retry after a server hiccup, in every language.** Z-library sometimes answers a request with a
+passing "HTTP Error 400". In English the plugin offered Retry for it; in every other language it
+showed the bare error with no way to try again. All languages now get the Retry button.
+
+### Internal
+
+Nothing changes on screen. The five largest files — the settings, the server requests, the plugin
+itself, the dialogs and the book details screen, 1,000 to 2,200 lines each — are split into smaller
+files by topic, with the code moved unchanged, and the details screen's longest function is broken
+into one piece per part of the screen. Covers and the update download now share one download
+routine. A sign-in retry that search could never reach is gone. New tests check that every function
+survived each split exactly once, and pin what the details screen shows for each kind of book.
+
 ## 1.0.57
 
 ### Added

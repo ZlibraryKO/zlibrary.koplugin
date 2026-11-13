@@ -17,7 +17,7 @@ local PLUGIN = assert(arg[1], "usage: luajit results_menu_harness.lua <plugin-ro
 local support = dofile(PLUGIN .. "/test/support.lua")
 local r = support.reporter()
 
-local block = support.extract_block(PLUGIN .. "/zlibrary/ui.lua",
+local block = support.extract_block(support.ui_files(PLUGIN),
     "(\nfunction Ui%.createSearchResultsMenu%(.-\nend\n)")
 
 -- Rebuild the function against a captured Menu, so the constructor arguments are observable.
@@ -40,7 +40,7 @@ local function make()
 end
 
 local createSearchResultsMenu = make()
-r.check("the function was recovered from ui.lua", type(createSearchResultsMenu) == "function",
+r.check("the function was recovered from ui_search.lua", type(createSearchResultsMenu) == "function",
         "got " .. type(createSearchResultsMenu))
 
 -- ---------------------------------------------------------------- with a callback
@@ -98,16 +98,13 @@ r.check("no callback means no handler",
 r.check("no hold callback means no hold handler",
         plain.onMenuHold == nil, "onMenuHold = " .. type(plain.onMenuHold))
 
--- ---------------------------------------------------------------- the wiring in main.lua
--- The harness cannot run main.lua, but it can check the call site still passes a callback: the
+-- ---------------------------------------------------------------- the wiring in plugin_search.lua
+-- The harness cannot run the plugin, but it can check the call site still passes a callback: the
 -- feature is two halves and either alone is silent.
-local main_src = (function()
-    local fh = assert(io.open(PLUGIN .. "/main.lua"))
-    local s = fh:read("*a"); fh:close(); return s
-end)()
+local main_src = support.read_plugin_class(PLUGIN)
 local call = main_src:match("Ui%.createSearchResultsMenu%b()")
     or main_src:match("Ui%.createSearchResultsMenu%(.-\n.-%)")
-r.check("main.lua passes a new-search callback",
+r.check("plugin_search.lua passes a new-search callback",
         call ~= nil and call:find("showSearchDialog", 1, true) ~= nil,
         "call site: " .. tostring(call))
 r.check("the search box is seeded with the current query",
@@ -129,7 +126,7 @@ r.check("the hold call site does not confirm on its own",
         "call site confirms as well as downloadBook: " .. tostring(call))
 
 -- The confirmation moved to zlibrary/download.lua with the rest of downloading; the call site
--- that must NOT add its own is still here in main.lua.
+-- that must NOT add its own is still here in plugin_search.lua.
 local download_src = (function()
     local fh = assert(io.open(PLUGIN .. "/zlibrary/download.lua"))
     local s = fh:read("*a"); fh:close(); return s
@@ -140,10 +137,7 @@ r.check("exactly one confirmation exists in the download path", confirms == 1,
         confirms .. " calls to Ui.confirmDownload -- the user would answer that many dialogs")
 
 -- And the row has to carry the book, or the handler has nothing to act on.
-local ui_src = (function()
-    local fh = assert(io.open(PLUGIN .. "/zlibrary/ui.lua"))
-    local s = fh:read("*a"); fh:close(); return s
-end)()
+local ui_src = support.read_ui(PLUGIN)
 r.check("menu rows carry their book",
         ui_src:find("book_data = book_data", 1, true) ~= nil,
         "createBookMenuItem does not attach the book")

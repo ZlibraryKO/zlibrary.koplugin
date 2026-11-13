@@ -1,4 +1,4 @@
--- After a successful favorite/unfavorite, main.lua clears the shared favorites-id cache
+-- After a successful favorite/unfavorite, the plugin (plugin_books.lua) clears the shared favorites-id cache
 -- (resetFavoritesCache). The book details dialog rebuilds its buttons on every view switch, and
 -- a rebuild used to re-query that now-empty cache -- showing "Add To Favorites" for a book the
 -- user had just favorited. The dialog now records the toggled state in _favorite_state_override
@@ -6,7 +6,7 @@
 -- again (it reflects favorite changes made elsewhere too).
 --
 -- This harness compiles the real _buildButtons and _generateFavoriteButtonDef out of
--- bookdetails_dialog.lua and drives that cycle: toggle, rebuild with an empty cache, rebuild
+-- bookdetails_buttons.lua and drives that cycle: toggle, rebuild with an empty cache, rebuild
 -- with a repopulated cache.
 --
 -- usage: luajit bookdetails_favorites_harness.lua <plugin-root> <luasocket-src>
@@ -41,8 +41,8 @@ end
 
 local BookDetailsDialog = {}
 local chunk = assert(loadstring(
-    extract_method(PLUGIN .. "/zlibrary/bookdetails_dialog.lua", "_buildButtons")
-    .. extract_method(PLUGIN .. "/zlibrary/bookdetails_dialog.lua", "_generateFavoriteButtonDef"),
+    extract_method(PLUGIN .. "/zlibrary/bookdetails_buttons.lua", "_buildButtons")
+    .. extract_method(PLUGIN .. "/zlibrary/bookdetails_buttons.lua", "_generateFavoriteButtonDef"),
     "=bookdetails_favorites"))
 setfenv(chunk, {
     BookDetailsDialog = BookDetailsDialog,
@@ -52,7 +52,7 @@ setfenv(chunk, {
 })
 chunk()
 
--- Mirrors Zlibrary:isBookInFavorites / resetFavoritesCache from main.lua: cache_ids == nil means
+-- Mirrors Zlibrary:isBookInFavorites / resetFavoritesCache from plugin_browse.lua: cache_ids == nil means
 -- the shared cache is absent (never fetched, or cleared by a successful toggle).
 local function make_plugin(cache_ids)
     return {

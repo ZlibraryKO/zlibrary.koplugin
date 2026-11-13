@@ -147,10 +147,7 @@ r.check("a book with neither author nor title shows no dialog", ok and built == 
         tostring(err))
 
 -- ---------------------------------------------------------------- both screens are wired
-local main_src = (function()
-    local fh = assert(io.open(PLUGIN .. "/main.lua"))
-    local s = fh:read("*a"); fh:close(); return s
-end)()
+local main_src = support.read_plugin_class(PLUGIN)
 local n = 0
 for _ in main_src:gmatch("on_download_book_callback") do n = n + 1 end
 r.check("every browse dialog offers it", n == 3,

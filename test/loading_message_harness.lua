@@ -171,7 +171,7 @@ local env = {
     T = function(s) return s end,
 }
 for _, name in ipairs{ "showLoadingMessage", "showCancellableLoadingMessage" } do
-    local block = support.extract_block(PLUGIN .. "/zlibrary/ui.lua",
+    local block = support.extract_block(support.ui_files(PLUGIN),
         "(\nfunction Ui%." .. name .. "%(.-\nend\n)")
     local chunk = assert(loadstring(block, "=Ui." .. name))
     setfenv(chunk, env)

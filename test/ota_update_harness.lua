@@ -12,6 +12,8 @@
 --     walked out of the cache dir.
 --   * downloadUpdate only closed its file handle via the sink's terminating chunk; a
 --     connect-time failure never called the sink, so os.remove ran on a still-open file.
+--     The download now goes through Api.downloadToFile, shared with covers, and that is
+--     checked in file_download_harness; this one checks only what downloadUpdate asks it for.
 --   * installUpdate trusted unzip's exit status; an archive without the plugin tree still
 --     exits 0 after partially overwriting the live plugin directory.
 --
@@ -72,62 +74,34 @@ do
 end
 
 -- ---------------------------------------------------------------- downloadUpdate
-local function newDownloadRig(http_result)
-    local rig = { events = {} }
+do
+    local calls = {}
+    local answer = { success = false, error = "Download HTTP Error: 404", status_code = 404 }
     local env = setmetatable({
         logger = { info = function() end, err = function() end, warn = function() end },
-        socketutil = { file_sink = function() return function() end end },
-        Config = { getDownloadTimeout = function() return 30 end },
-        Api = { makeHttpRequest = function() return http_result end },
-        io = { open = function()
-            return { close = function() table.insert(rig.events, "close") end }
-        end },
-        os = { remove = function(path)
-            table.insert(rig.events, "remove " .. path)
-            return true
+        Config = { getDownloadTimeout = function() return { 15, -1 } end },
+        Api = { downloadToFile = function(...)
+            table.insert(calls, { ... })
+            return answer
         end },
     }, { __index = _G })
 
     local body = support.extract_block(OTA, "(\nfunction Ota%.downloadUpdate%(.-\n)end\n")
     local chunk = assert(loadstring("local Ota = {}\n" .. body .. "end\nreturn Ota", "=downloadUpdate"))
     setfenv(chunk, env)
-    rig.Ota = chunk()
-    return rig
-end
+    local Ota = chunk()
 
-local DEST = "/data/cache/zlibrary_plugin_v1.0.41.zip"
+    local DEST = "/data/cache/zlibrary_plugin_v1.0.41.zip"
+    local result = Ota.downloadUpdate("http://example/zip", DEST)
+    local call = calls[1] or {}
 
--- A connect-time failure never calls the sink, so the handle is still open when the partial
--- file is deleted. The close has to happen first.
-do
-    local rig = newDownloadRig({ error = "connection refused" })
-    local result = rig.Ota.downloadUpdate("http://example/zip", DEST)
-
-    r.check("a connect-time failure reports an error", result.error ~= nil and not result.success)
-    r.check("a connect-time failure closes the handle before removing the file",
-            rig.events[1] == "close" and rig.events[2] == "remove " .. DEST and #rig.events == 2,
-            table.concat(rig.events, ", "))
-end
-
--- Same on the HTTP-status error path: a 404 page may never terminate the sink either.
-do
-    local rig = newDownloadRig({ status_code = 404 })
-    local result = rig.Ota.downloadUpdate("http://example/zip", DEST)
-
-    r.check("an HTTP error reports an error", result.error ~= nil and not result.success)
-    r.check("an HTTP error closes the handle before removing the file",
-            rig.events[1] == "close" and rig.events[2] == "remove " .. DEST and #rig.events == 2,
-            table.concat(rig.events, ", "))
-end
-
--- A healthy transfer removes nothing and reports success.
-do
-    local rig = newDownloadRig({ status_code = 200 })
-    local result = rig.Ota.downloadUpdate("http://example/zip", DEST)
-
-    r.check("a successful download reports success", result.success == true and result.error == nil)
-    r.check("a successful download removes nothing", #rig.events == 0,
-            table.concat(rig.events, ", "))
+    r.check("downloadUpdate downloads once, into the destination",
+            #calls == 1 and call[1] == "http://example/zip" and call[2] == DEST)
+    r.check("downloadUpdate sends a User-Agent GitHub accepts",
+            type(call[3]) == "table" and call[3]["User-Agent"] == "KOReader-ZLibrary-Plugin")
+    r.check("downloadUpdate uses the download timeout",
+            type(call[4]) == "table" and call[4][1] == 15 and call[4][2] == -1)
+    r.check("downloadUpdate returns the download's result", result == answer)
 end
 
 -- ---------------------------------------------------------------- installUpdate

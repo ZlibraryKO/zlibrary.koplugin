@@ -113,7 +113,7 @@ package.preload["zlibrary.config"] = function()
     })
 end
 
--- api.lua requires socket.http at load; nothing here reaches the real transport, since
+-- api_transport.lua requires socket.http at load; nothing here reaches the real transport, since
 -- makeHttpRequest is replaced below, but the require still has to resolve.
 package.preload["socket.http"] = function()
     return { request = function() error("the transport is stubbed in this harness") end }
@@ -453,14 +453,14 @@ r.check("getMostPopularBooks: empty languages and formats keep the most-popular 
         "asked for: " .. table.concat(pused, ", "))
 
 -- The tab's cache entry is keyed by both selections, so changing either never serves a list
--- cached under the old one. Run against the real definition, pulled out of config.lua.
+-- cached under the old one. Run against the real definition, pulled out of config_prefs.lua.
 do
     local settings = {}
     local ConfigStub = {
         getSearchLanguages = function() return settings.languages or {} end,
         getSearchExtensions = function() return settings.extensions or {} end,
     }
-    local block = support.extract_block(PLUGIN .. "/zlibrary/config.lua",
+    local block = support.extract_block(PLUGIN .. "/zlibrary/config_prefs.lua",
         "\nfunction Config%.getMostPopularCacheKey%(%).-\nend\n")
     local chunk = assert(loadstring(block, "=getMostPopularCacheKey"))
     setfenv(chunk, { Config = ConfigStub, type = type, ipairs = ipairs, tostring = tostring,

@@ -18,7 +18,7 @@ local support = dofile(PLUGIN .. "/test/support.lua")
 support.preload_socket(LUASOCKET)
 local r = support.reporter()
 
-local UI = PLUGIN .. "/zlibrary/ui.lua"
+local UI = support.ui_files(PLUGIN)
 
 -- From the first classification line through the end of the wording chain, so the flags, the
 -- guard and the branch selection are all real code rather than harness inputs.
@@ -34,15 +34,15 @@ block = block
     :gsub("local retry_message\n", "retry_message = nil\n", 1)
     .. "end\n"
 
--- The constants the classifier matches on, read from api.lua rather than retyped: a reworded
+-- The constants the classifier matches on, read from api_core.lua rather than retyped: a reworded
 -- message must not be able to silently stop being recognised.
-local API = PLUGIN .. "/zlibrary/api.lua"
+local API = PLUGIN .. "/zlibrary/api_core.lua"
 local function api_constant(name)
     local fh = assert(io.open(API))
     local src = fh:read("*a")
     fh:close()
     local v = src:match("Api%." .. name .. ' = T%("([^"]+)"%)')
-    assert(v, "could not read Api." .. name .. " from api.lua")
+    assert(v, "could not read Api." .. name .. " from api_core.lua")
     return v
 end
 local BLOCKED_TEXT = api_constant("BLOCKED_TEXT")
@@ -53,7 +53,7 @@ local DNS_ERROR_TEXT = api_constant("DNS_ERROR_TEXT")
 -- in the right shape, and a stub would only be asserting against itself.
 local Config
 do
-    local block = support.extract_block(PLUGIN .. "/zlibrary/config.lua",
+    local block = support.extract_block(PLUGIN .. "/zlibrary/config_prefs.lua",
         "(\nfunction Config%.formatSeconds%(.-\nend\n)")
     local chunk = assert(loadstring("local Config = ...\n" .. block .. "\nreturn Config",
         "=formatSeconds"))
@@ -62,10 +62,11 @@ do
 end
 
 -- Run the real block against a raw error string, as showRetryErrorDialog would.
-local function classify(error_string)
+-- `translate` stands in for T; English (identity) unless a test passes one.
+local function classify(error_string, translate)
     local env = {
         string = string,
-        T = function(s) return s end,
+        T = translate or function(s) return s end,
         Api = { BLOCKED_TEXT = BLOCKED_TEXT, DNS_ERROR_TEXT = DNS_ERROR_TEXT },
         Config = Config,
         error_string = error_string,
@@ -127,6 +128,24 @@ local other = classify(OTHER)
 r.check("anything else: falls back to the generic wording",
         other.message and other.message:find("temporary issue", 1, true) ~= nil,
         "got: " .. tostring(other.message))
+
+-- A 400 in another UI language. The api layer builds the text from T("HTTP Error"), which every
+-- locale translates, and the dialog used to match the English literal "HTTP Error: 400" -- so the
+-- API's intermittent 400s were retryable in English only.
+local GERMAN = { ["HTTP Error"] = "HTTP-Fehler" }
+local function german(s) return GERMAN[s] or s end
+
+local de_400 = classify("HTTP-Fehler: 400 (Bad Request)", german)
+r.check("400 in German: dialog opens with the temporary-issue wording",
+        de_400.message and de_400.message:find("temporary issue", 1, true) ~= nil,
+        "got: " .. tostring(de_400.message) .. " -- the 400 match is not using the translated text")
+r.check("400 in German: does not offer auto-discovery (the mirror answered)",
+        de_400.offer_discover == nil, tostring(de_400.offer_discover))
+r.check("404 in German: dialog does not open",
+        classify("HTTP-Fehler: 404 (Not Found)", german).message == nil,
+        "a 404 was treated as retryable")
+r.check("400 in English: still opens the dialog",
+        classify("HTTP Error: 400 (Bad Request)").message ~= nil, "English 400 no longer retryable")
 
 -- An error resembling none of the recognised kinds must not open the dialog at all.
 local unknown = classify("Some entirely unrelated failure")

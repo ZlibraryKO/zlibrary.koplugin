@@ -7,7 +7,7 @@
 -- Z-library's sessions have not been seen to expire.
 --
 -- For that to be worth anything, a session on its own has to count as having an account: the gates
--- in main.lua, download.lua and preloader.lua all ask Config.hasCredentials() before a request that
+-- in plugin_requests.lua, download.lua and preloader.lua all ask Config.hasCredentials() before a request that
 -- needs one, and a reader with a pasted session has no password for them to find.
 --
 -- Drives the real zlibrary.config against a LuaSettings double, the way base_url_harness does: the
@@ -154,7 +154,7 @@ r.check("the credentials template documents the session fields",
         read(PLUGIN .. "/zlibrary_credentials.lua"):find("userKey", 1, true) ~= nil,
         "zlibrary_credentials.lua no longer shows userId/userKey")
 r.check("clearing the session warns when the file will set it again",
-        read(PLUGIN .. "/main.lua"):find("Config.sessionComesFromFile()", 1, true) ~= nil,
-        "main.lua reports a cleared session that comes straight back")
+        support.read_plugin_class(PLUGIN):find("Config.sessionComesFromFile()", 1, true) ~= nil,
+        "the menu (plugin_menu.lua) reports a cleared session that comes straight back")
 
 r.finish()

@@ -120,7 +120,7 @@ r.check("when every seed is blocked, discovery still gets a non-empty fallback l
 
 -- ---------------------------------------------------------------- wiring
 local api_src = (function()
-    local fh = assert(io.open(PLUGIN .. "/zlibrary/api.lua")); local s = fh:read("*a"); fh:close(); return s
+    local fh = assert(io.open(PLUGIN .. "/zlibrary/api_transport.lua")); local s = fh:read("*a"); fh:close(); return s
 end)()
 r.check("makeHttpRequest records a mirror that answers a bot-check page",
         select(2, api_src:gsub("Config%.markMirrorBlocked%(options%.url%)", "")) == 2,

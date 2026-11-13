@@ -16,7 +16,7 @@ local PLUGIN = assert(arg[1], "usage: luajit open_prompt_harness.lua <plugin-roo
 local support = dofile(PLUGIN .. "/test/support.lua")
 local r = support.reporter()
 
-local block = support.extract_block(PLUGIN .. "/zlibrary/ui.lua",
+local block = support.extract_block(support.ui_files(PLUGIN),
     "(\nfunction Ui%.confirmOpenBook%(.-\nend\n)")
 
 -- Rebuild against stubs that record what the function reached for.
@@ -50,7 +50,7 @@ local function build()
 end
 
 local confirmOpenBook = build()
-r.check("the function was recovered from ui.lua", type(confirmOpenBook) == "function",
+r.check("the function was recovered from ui_books.lua", type(confirmOpenBook) == "function",
         "got " .. type(confirmOpenBook))
 
 local function run(skip, wifi_pref)
@@ -130,17 +130,14 @@ end
 
 -- ---------------------------------------------------------------- the setting itself
 local cfg_src = (function()
-    local fh = assert(io.open(PLUGIN .. "/zlibrary/config.lua"))
+    local fh = assert(io.open(PLUGIN .. "/zlibrary/config_prefs.lua"))
     local s = fh:read("*a"); fh:close(); return s
 end)()
 r.check("the setting defaults to asking",
         cfg_src:find("SETTINGS_SKIP_OPEN_BOOK_PROMPT_KEY, false", 1, true) ~= nil,
         "default is not false -- the prompt would vanish for everyone on upgrade")
 
-local main_src = (function()
-    local fh = assert(io.open(PLUGIN .. "/main.lua"))
-    local s = fh:read("*a"); fh:close(); return s
-end)()
+local main_src = support.read_plugin_class(PLUGIN)
 r.check("the setting is reachable from the menu",
         main_src:find("getSkipOpenBookPrompt", 1, true) ~= nil
             and main_src:find("setSkipOpenBookPrompt", 1, true) ~= nil,

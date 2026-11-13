@@ -3,8 +3,8 @@
 -- Three seams carry that promise, and a mutation experiment proved none of them was pinned:
 -- each edit below was applied to the real source and the entire suite stayed green.
 --
---   1. swapping the "rejected"/"transport" verdicts in _verifyCredentials (main.lua)
---   2. inverting `if login_ok then` in the auth gate of _requestDispatcher (main.lua)
+--   1. swapping the "rejected"/"transport" verdicts in _verifyCredentials (plugin_signin.lua)
+--   2. inverting `if login_ok then` in the auth gate of _requestDispatcher (plugin_requests.lua)
 --   3. inverting `if login_ok then` in the credentials gate of Download.run (download.lua)
 --
 -- The verdict CONSUMERS are already covered: first_run_login_harness drives the credentials
@@ -19,7 +19,7 @@ local PLUGIN = assert(arg[1], "usage: luajit login_resume_harness.lua <plugin-ro
 local support = dofile(PLUGIN .. "/test/support.lua")
 local r = support.reporter()
 
-local MAIN = PLUGIN .. "/main.lua"
+local MAIN = support.plugin_class_files(PLUGIN)
 local DOWNLOAD = PLUGIN .. "/zlibrary/download.lua"
 
 -- AsyncHelper.run's decision shape, minus the coroutine: a task result carrying .error, or a
@@ -45,7 +45,7 @@ do
     -- The real classifier, so the chain from error text to verdict has no stub in the middle.
     local api_env = { string = string, tostring = tostring, Api = {} }
     api_env.Api.CREDENTIALS_REJECTED_TEXT = "Credentials rejected or invalid response"
-    local classifier_body = support.extract_block(PLUGIN .. "/zlibrary/api.lua",
+    local classifier_body = support.extract_block(PLUGIN .. "/zlibrary/api_core.lua",
         "(\nfunction Api%.isCredentialRejection%(.-\n)end\n")
     local classifier_chunk = assert(loadstring(
         "local Api = ...\n" .. classifier_body .. "end\nreturn Api", "=isCredentialRejection"))

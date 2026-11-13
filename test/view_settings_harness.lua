@@ -14,7 +14,7 @@
 --   * setViewSettings writes the settings file and drops the legacy entry, leaving a single
 --     source of truth
 --
--- The functions are extracted from the real config.lua; their Config collaborators
+-- The functions are extracted from the real config_prefs.lua; their Config collaborators
 -- (getSetting/saveSetting, covered by base_url_harness) are stubbed on the injected table.
 
 local PLUGIN = assert(arg[1], "usage: luajit view_settings_harness.lua <plugin-root> <luasocket-src>")
@@ -22,13 +22,15 @@ local PLUGIN = assert(arg[1], "usage: luajit view_settings_harness.lua <plugin-r
 local support = dofile(PLUGIN .. "/test/support.lua")
 local r = support.reporter()
 
-local CONFIG = PLUGIN .. "/zlibrary/config.lua"
+local CONFIG = PLUGIN .. "/zlibrary/config_prefs.lua"
 
 -- Both functions assign to fields of the Config table passed in, so one compile covers both.
 -- Each extracted block stops short of its closing 'end', so each gets its own.
 local function compile(Config)
     local body = support.extract_block(CONFIG, "(\nfunction Config%.setViewSettings%(.-\n)end\n") .. "end\n"
         .. support.extract_block(CONFIG, "(\nfunction Config%.getViewSettings%(.-\n)end\n") .. "end\n"
+        .. support.extract_block(CONFIG, "(\nfunction Config%.getViewFlag%(.-\n)end\n") .. "end\n"
+        .. support.extract_block(CONFIG, "(\nfunction Config%.toggleViewFlag%(.-\n)end\n") .. "end\n"
     local chunk = assert(loadstring("local Config = ...\n" .. body .. "return Config",
                                     "=view_settings"))
     setfenv(chunk, { type = type })
@@ -42,7 +44,7 @@ local function newRig(persistent, legacy)
     }
     local Config = {
         SETTINGS_VIEW_SETTINGS_KEY = "zlibrary_view_settings",
-        -- config.lua calls these dot-style: Config.getSetting(key), not Config:getSetting(key).
+        -- config_prefs.lua calls these dot-style: Config.getSetting(key), not Config:getSetting(key).
         getSetting = function(key) return rig.store[key] end,
         saveSetting = function(key, value)
             rig.store[key] = value
@@ -126,6 +128,52 @@ do
     r.check("a non-table argument is stored as an empty table, not nil",
             #rig_nil.saved == 1 and type(rig_nil.saved[1].value) == "table",
             "saved value: " .. tostring(rig_nil.saved[1] and rig_nil.saved[1].value))
+end
+
+-- ---------------------------------------------------------------- cover toggles: default on, one tap off
+-- The menu used to store `not opts[key]`. From the unset default that is `not nil` -- true, still on --
+-- so the first tap on "Search Covers" or "Browse Covers" changed nothing anyone could see.
+do
+    local rig = newRig(nil, nil)
+    r.check("an unset cover flag reads as on",
+            rig.Config.getViewFlag("show_cover_search") == true, "unset read as off")
+
+    local after_first = rig.Config.toggleViewFlag("show_cover_search")
+    r.check("the first toggle from the default turns it off",
+            after_first == false and rig.store.zlibrary_view_settings.show_cover_search == false,
+            "returned " .. tostring(after_first) .. ", stored "
+                .. tostring(rig.store.zlibrary_view_settings and rig.store.zlibrary_view_settings.show_cover_search))
+    r.check("and reads back as off",
+            rig.Config.getViewFlag("show_cover_search") == false, "still reads as on")
+
+    local after_second = rig.Config.toggleViewFlag("show_cover_search")
+    r.check("a second toggle turns it back on, stored as true",
+            after_second == true and rig.store.zlibrary_view_settings.show_cover_search == true,
+            "returned " .. tostring(after_second))
+end
+
+do
+    -- What an earlier version stored after a single (ineffective) tap.
+    local rig = newRig({ show_cover_browse = true }, nil)
+    local after = rig.Config.toggleViewFlag("show_cover_browse")
+    r.check("a true stored by an earlier version toggles to off",
+            after == false and rig.store.zlibrary_view_settings.show_cover_browse == false,
+            "returned " .. tostring(after))
+end
+
+do
+    local rig = newRig({ search_per_page = 10, show_cover_browse = false }, nil)
+    rig.Config.toggleViewFlag("show_cover_search")
+    local stored = rig.store.zlibrary_view_settings
+    r.check("toggling one flag leaves the other flag and the page sizes alone",
+            stored.show_cover_browse == false and stored.search_per_page == 10,
+            string.format("browse=%s search_per_page=%s",
+                tostring(stored.show_cover_browse), tostring(stored.search_per_page)))
+    r.check("the toggled flag is stored as a boolean",
+            type(stored.show_cover_search) == "boolean", "stored a " .. type(stored.show_cover_search))
+    r.check("and goes through setViewSettings, so the legacy cache entry is dropped too",
+            #rig.removed >= 1 and rig.removed[#rig.removed] == "view_settings",
+            "removed: " .. #rig.removed)
 end
 
 r.finish()

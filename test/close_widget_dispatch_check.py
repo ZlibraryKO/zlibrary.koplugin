@@ -2,7 +2,7 @@
 """Assert the first-run credentials prompt still hears about its dialog closing.
 
 The prompt resolves every waiting caller from an instance-level onCloseWidget override on the
-credentials dialog (main.lua, Zlibrary:_promptForCredentials). That placement is deliberate:
+credentials dialog (zlibrary/plugin_signin.lua, Zlibrary:_promptForCredentials). That placement is deliberate:
 Cancel, Set, the hardware back key and dialog_manager:closeAllDialogs() all reach
 UIManager:close, and only the teardown hook sees all four. A Cancel-button hook would miss
 three of them.
@@ -115,11 +115,18 @@ def main():
         failures.append("cannot read widgetcontainer.lua: %s" % exc)
 
     # 3. And the plugin must still be relying on the hook, or this check is vestigial.
-    main_lua = os.path.join(plugin_root, "main.lua")
-    with open(main_lua, "r", encoding="utf-8", errors="replace") as fh:
-        main_src = fh.read()
+    # The plugin class: main.lua plus the zlibrary/plugin_*.lua parts it mixes its methods in from.
+    # The credentials prompt lives in plugin_signin.lua since main.lua was split.
+    class_files = [os.path.join(plugin_root, "main.lua")] + sorted(
+        os.path.join(plugin_root, "zlibrary", f)
+        for f in os.listdir(os.path.join(plugin_root, "zlibrary"))
+        if f.startswith("plugin_") and f.endswith(".lua"))
+    main_src = ""
+    for path in class_files:
+        with open(path, "r", encoding="utf-8", errors="replace") as fh:
+            main_src += fh.read() + "\n"
     if "function dialog:onCloseWidget()" not in main_src:
-        failures.append("main.lua no longer overrides onCloseWidget on the credentials dialog; "
+        failures.append("the plugin no longer overrides onCloseWidget on the credentials dialog; "
                         "if the prompt now resolves another way, delete this check")
 
     for f in failures:

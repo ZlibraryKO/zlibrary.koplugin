@@ -7,6 +7,7 @@ offline against a scripted server, so they need no z-library account, no network
 ```sh
 ./test/run.sh              # everything
 ./test/run.sh redirect     # only harnesses whose name matches
+./test/run.sh --list       # what each one covers, from its opening comment; takes a filter too
 ```
 
 Exits non-zero if anything fails, so it works as a pre-push check.
@@ -50,18 +51,28 @@ Elsewhere, the release's AppImage or `.deb` for your machine's architecture work
 
 ## What each one covers
 
+A selection, with more detail than the opening comments that `--list` prints.
+
 | Harness | Covers |
 | --- | --- |
 | `redirect_resolve_harness.lua` | Which `Location` shapes resolve, and to what. Relative, root-relative, protocol-relative, same-host, cross-host, 301/302/303/307/308. Also that `real_url_base` — the signal that pins a new base URL — is set only for a genuine cross-host move. |
 | `redirect_follow_harness.lua` | What `makeHttpRequest` does with them: multi-hop chains, POST body replay, method conversion per RFC, loop termination, cookie handling, and that `onRedirect` still owns mirror moves. |
 | `bot_challenge_harness.lua` | Recognising a "verifying your browser" interstitial, and — as importantly — not mistaking a JSON API error, an nginx error page, or a book description for one. |
+| `file_download_harness.lua` | Downloading a URL into a file, for covers and the OTA archive: on a connect-time failure or a non-200 answer the handle is closed before the partial file is removed, the HTTP status is handed back when there is one (the cover preloader stops retrying on 404/410), and a 200 removes nothing. |
 | `retry_message_harness.lua` | That the dialog classifies a failure from the raw error string, opens for the kinds it should, offers auto-discovery only where switching mirrors would help, and says something true and distinct for each. |
 | `cancellable_run_harness.lua` | That a cancellable request routes its outcome to exactly one callback: a finished child behaves like `AsyncHelper.run` (a result carrying `.error`, or a crash, goes to `on_error`), a dismiss goes to `on_cancel` with no retry dialog, and a fork failure or an unreadable result falls back to the in-process run instead of being reported as a cancellation. |
 | `view_settings_harness.lua` | That view settings live in the persistent settings file: a stored setting wins over the legacy runtime-cache entry, a legacy entry is migrated once (saved, then removed from the cache), a fresh install writes nothing, and `setViewSettings` leaves the settings file as the only source of truth. |
 | `getplural_harness.lua` | That loading the plugin's catalogue leaves KOReader's own gettext globals as it found them. |
 | `rtl_fallback_harness.lua` | That under an RTL UI language — where bidi wraps untranslated strings in LTR isolate marks — a missing plugin translation still falls back to KOReader's own translation, and that `pgettext`/`ngettext`/`npgettext` query the plugin's catalogue rather than only KOReader's. |
 | `timeout_keys_harness.lua` | That every `operation_key` at a call site resolves to a real timeout getter. A typo yields no hint rather than an error, which is invisible at runtime. |
-| `base_url_harness.lua` | The base URL end to end against the real `config.lua`: the default seed has no trailing slash, `setAndValidateBaseUrl` keeps accepting bare/schemed/slashed hosts but refuses paths, queries, fragments and credentials, `saveSetting` trims strings except the password key, and the legacy-settings migration runs on any legacy key and flushes `G_reader_settings`. |
+| `module_graph_harness.lua` | That the plugin's modules form no require cycle, counting requires wherever they appear (a deferred one is still a cycle). Reads `main.lua` and every `zlibrary/*.lua` by listing the folder, and that `cache` and `gettext` stay leaves. |
+| `ui_surface_harness.lua` | That the `Ui` table still defines the 44 functions the unsplit `ui.lua` did (recorded 2026-11-10), across `ui.lua` and its `ui_*` parts (`support.ui_files`): none missing, none defined twice, and none of the private helpers in `ui_shared`/`ui_pickers` put on `Ui`. |
+| `bookdetails_surface_harness.lua` | That the book details dialog still defines the 20 methods the unsplit `bookdetails_dialog.lua` did (recorded 2026-11-13, plus the six `_buildContent` was split into), across the entry point and its `bookdetails_*` parts: none missing, none defined twice, none added; that the entry point requires every part in the folder; and that it still returns `showBookDetails` and `BookDetailsDialog`. |
+| `bookdetails_content_harness.lua` | What the details dialog builds above its buttons, on stand-in widgets, since the emulator can't open the screen without an account: the header rows in order, which are tappable and reachable by keys, the close X on touch screens only, and which text section fills the rest. `ZL_DUMP=<file>` writes every case's widget tree, to diff before and after a layout change. |
+| `plugin_surface_harness.lua` | That the plugin class still defines the 32 methods the unsplit `main.lua` did (recorded 2026-11-10), across `main.lua` and the `plugin_*` parts it mixes in: none missing, none defined twice, none new, and every `plugin_*.lua` in the folder named in `main.lua`'s mixin list. |
+| `api_surface_harness.lua` | That the `zlibrary.api` facade exposes exactly the fields the unsplit `api.lua` did (33, recorded 2026-11-10), with the same types: nothing left behind by the split into `api_core`/`_transport`/`_login`/`_books`/`_downloads`/`_account`/`_mirrors`, and none of the helpers in `api_shared` leaked onto `Api`. |
+| `config_surface_harness.lua` | That the `zlibrary.config` facade exposes exactly the fields the unsplit `config.lua` did (139, recorded 2026-11-10), with the same types: nothing left behind by the split into `config_core`/`_catalog`/`_mirrors`/`_urls`/`_account`/`_prefs`, nothing duplicated, and only `_getLuaSettings` added on purpose. |
+| `base_url_harness.lua` | The base URL end to end against the real `zlibrary.config` (`config_core`, `config_mirrors`, `config_urls`): the default seed has no trailing slash, `setAndValidateBaseUrl` keeps accepting bare/schemed/slashed hosts but refuses paths, queries, fragments and credentials, `saveSetting` trims strings except the password key, and the legacy-settings migration runs on any legacy key and flushes `G_reader_settings`. |
 | `loading_message_harness.lua` | That a loading message builds with one `InfoMessage:init` call, under KOReader's real `InfoMessage`, even when another plugin overrides `InfoMessage.init` to impose its own font the way appearance.koplugin does. |
 | `glyph_coverage_check.py` | That every non-ASCII codepoint the plugin can display — `\u{...}` escapes and literal UTF-8 alike — maps to a real glyph in some bundled font. Excludes U+FFF1–FFF3, which are `textboxwidget` control markers rather than glyphs. |
 
@@ -119,7 +130,7 @@ Known gaps, listed so the suite is not mistaken for more than it is:
   against a real server. That still needs a device and an account.
 - **`retry_on_stall`.** The retry-once-on-a-silent-server path in `makeHttpRequest` has no
   coverage; every guard in it could be deleted with the suite still green.
-- **The redirect-target cache** in `config.lua` (`setCacheRealUrl`, `clearCacheRealUrlIfPinned`,
+- **The redirect-target cache** in `config_mirrors.lua` (`setCacheRealUrl`, `clearCacheRealUrlIfPinned`,
   the TTL). The harnesses stub it, so only the fact that pinning is *called* is checked, not
   that it stores or expires correctly.
 - **A caller-supplied `options.source`.** Bodies are replayed correctly when passed as

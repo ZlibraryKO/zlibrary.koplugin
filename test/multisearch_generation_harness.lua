@@ -108,7 +108,7 @@ package.preload["zlibrary.preloader"] = function() return { Preloader = { channe
 local SearchDialog = dofile(PLUGIN .. "/zlibrary/multisearch_dialog.lua")
 
 -- ---------------------------------------------------------------- a dialog with fake fetch callbacks
--- Shaped like the toggle callbacks in main.lua, but synchronous: each call records the
+-- Shaped like the toggle callbacks in plugin_browse.lua, but synchronous: each call records the
 -- fetch, and the harness "resolves" it by calling the response handlers the way
 -- _requestDispatcher's resolve_result does.
 local fetches
@@ -266,5 +266,95 @@ dialog7.menu_container.page_num = 1
 dialog7:onMenuGotoPage(dialog7.menu_container, 1)
 r.check("a list from the cache that has no more pages stops", #fetches == 0,
         tostring(#fetches) .. " fetches")
+
+-- ---------------------------------------------------------------- the real Most popular tab
+-- This paging has broken twice: 1.0.54 fixed the tab stopping at 30 books, and it stopped there
+-- again whenever the list came from the cache. So this drives the tab as plugin_browse.lua defines it,
+-- through the real dialog, against a server of 90 books at 30 a page.
+local popular_block = support.extract_block(support.plugin_class_files(PLUGIN),
+    "toggle_items = {{%s*(text = T%(\"Most popular\"%),.-end)}, {%s*text = T%(\"Recommended\"%)")
+
+local popular_requests
+local function popular_toggle(total)
+    local env = {
+        T = function(s) return s end,
+        Api = { getMostPopularBooks = "api_method" },
+        Config = {
+            getMostPopularCacheKey = function() return "popular" end,
+            getSearchLanguages = function() return { "english" } end,
+            getSearchExtensions = function() return { "EPUB" } end,
+        },
+        self = {
+            _fetchBookList = function(_, options, _, _, page)
+                popular_requests[#popular_requests + 1] = page or 1
+                local number = page or 1
+                local books = {}
+                for id = (number - 1) * 30 + 1, math.min(number * 30, total or 90) do
+                    books[#books + 1] = book(id)
+                end
+                options.display_menu_func(nil, books, nil,
+                    { has_more_results = total ~= nil and number * 30 < total or nil })
+            end,
+        },
+    }
+    local chunk = assert(loadstring("return {" .. popular_block .. "}", "=most_popular_toggle"))
+    setfenv(chunk, env)
+    return chunk()
+end
+
+local function open_popular(total)
+    popular_requests = {}
+    local dialog = new_dialog({ toggle_items = { popular_toggle(total) } })
+    dialog:ToggleSwitchCallBack(1)
+    return dialog
+end
+
+local function reach_last_page(dialog)
+    dialog.menu_container.page_num = 1
+    dialog:onMenuGotoPage(dialog.menu_container, 1)
+end
+
+local function requested() return table.concat(popular_requests, ",") end
+
+local function unique_ids(dialog)
+    local seen, count = {}, 0
+    for _, b in ipairs(dialog.books) do
+        if not seen[b.id] then seen[b.id] = true; count = count + 1 end
+    end
+    return count
+end
+
+clear_cache()
+local popular = open_popular(90)
+r.check("Most popular: opens on the first page", requested() == "1" and #popular.books == 30,
+        requested() .. ", " .. #popular.books .. " books")
+reach_last_page(popular)
+r.check("Most popular: reaching the end loads the next 30, not just the first page",
+        requested() == "1,2" and #popular.books == 60, requested() .. ", " .. #popular.books .. " books")
+r.check("Most popular: the new page is added to the list, without repeats",
+        unique_ids(popular) == 60 and popular.books[1].id == "1", tostring(unique_ids(popular)))
+
+-- Stop after two pages, as a reader does, and come back later.
+popular = open_popular(90)
+r.check("Most popular: reopening uses the cache", requested() == "" and #popular.books == 60,
+        requested() .. ", " .. #popular.books .. " books")
+reach_last_page(popular)
+r.check("Most popular: a cached list carries on where it ended",
+        requested() == "3" and #popular.books == 90, requested() .. ", " .. #popular.books .. " books")
+r.check("Most popular: a cached list gains no repeats", unique_ids(popular) == 90, tostring(unique_ids(popular)))
+
+reach_last_page(popular)
+r.check("Most popular: stops once it has every book", requested() == "3", requested())
+
+popular = open_popular(90)
+reach_last_page(popular)
+r.check("Most popular: a complete cached list stops too", requested() == "" and #popular.books == 90,
+        requested() .. ", " .. #popular.books .. " books")
+
+-- With no languages or formats, Z-library sends one fixed list and says nothing about more.
+clear_cache()
+popular = open_popular(nil)
+reach_last_page(popular)
+r.check("Most popular: Z-library's own fixed list never asks for another page", requested() == "1", requested())
 
 r.finish()

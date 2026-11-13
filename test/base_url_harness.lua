@@ -68,7 +68,7 @@ package.preload["zlibrary.cache"] = function()
     end }
 end
 
--- Read by config.lua at load time for the download-dir fallback; returning a home dir keeps the
+-- Read by config_core.lua at load time for the download-dir fallback; returning a home dir keeps the
 -- filemanagerutil require on the unused side of the `or`.
 G_reader_settings = make_settings({ home_dir = "/home" })
 

@@ -56,10 +56,10 @@ env.Api = {
 
 -- The real one, not a copy: downloadBook builds its Cookie header with it, and a stand-in here
 -- would stop telling the truth the moment the session format changed.
-env._sessionCookie = support.extract_function(PLUGIN .. "/zlibrary/api.lua", "_sessionCookie",
+env._sessionCookie = support.extract_function(PLUGIN .. "/zlibrary/api_shared.lua", "_sessionCookie",
     { string = string })
 
-local block = support.extract_block(PLUGIN .. "/zlibrary/api.lua",
+local block = support.extract_block(PLUGIN .. "/zlibrary/api_downloads.lua",
     "(\nfunction Api%.downloadBook%(.-\nend\n)")
 local chunk = assert(loadstring(block, "=downloadBook"))
 setfenv(chunk, env)

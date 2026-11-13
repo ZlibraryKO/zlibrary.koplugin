@@ -34,7 +34,7 @@ local env = {
     _showAndTrackDialog = function(dialog) shown = dialog return dialog end,
 }
 
-local block = support.extract_block(PLUGIN .. "/zlibrary/ui.lua",
+local block = support.extract_block(support.ui_files(PLUGIN),
     "(\nfunction Ui%.showCoverDialog%(.-\nend\n)")
 env.Ui = {}
 local chunk = assert(loadstring(block, "=showCoverDialog"))

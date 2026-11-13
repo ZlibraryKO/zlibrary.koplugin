@@ -21,13 +21,13 @@ local function read(path)
     return src
 end
 
-local ui_src = read(PLUGIN .. "/zlibrary/ui.lua")
-local main_src = read(PLUGIN .. "/main.lua")
-local config_src = read(PLUGIN .. "/zlibrary/config.lua")
+local ui_src = support.read_ui(PLUGIN)
+local main_src = support.read_plugin_class(PLUGIN)
+local config_src = read(PLUGIN .. "/zlibrary/config_prefs.lua")
 
 -- ---------------------------------------------------------------- the getters that exist
 local table_src = ui_src:match("local TIMEOUT_GETTERS = {(.-)\n}")
-assert(table_src, "could not find TIMEOUT_GETTERS in ui.lua")
+assert(table_src, "could not find TIMEOUT_GETTERS in ui_core.lua")
 
 local getters, getter_fns = {}, {}
 for key, fn in table_src:gmatch("([%w_]+)%s*=%s*(Config%.[%w_]+)") do
@@ -56,7 +56,7 @@ end
 -- ---------------------------------------------------------------- the getters resolve
 for key, fn in pairs(getters) do
     local name = fn:match("^Config%.([%w_]+)$")
-    r.check(string.format("%s -> %s exists in config.lua", key, fn),
+    r.check(string.format("%s -> %s exists in config_prefs.lua", key, fn),
             config_src:find("function Config." .. name, 1, true) ~= nil,
             fn .. " is not defined")
 end

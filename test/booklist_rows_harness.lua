@@ -1,3 +1,12 @@
+-- The Booklists tab in My Books, driven through the plugin's real dialog code (plugin_browse.lua)
+-- on top of stubbed KOReader widgets.
+--
+-- Booklists is the one tab whose rows are not books: each row is a list with its book count, and
+-- a tap opens that list's books in their own screen. So switching to it has to turn covers off,
+-- clear the cover strip and restore the reader's rows per page, and switching back has to undo all
+-- of it. Refresh forgets each list's cached books but leaves the other tabs alone. And because
+-- every tab starts on page 1, a slow response is matched to its fetch by generation: books that
+-- land after a switch to another tab must not be shown, appended or cached under that tab.
 
 local PLUGIN = assert(arg[1], "usage: luajit booklist_rows_harness.lua <plugin-root> <luasocket-src>")
 

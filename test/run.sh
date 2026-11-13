@@ -10,6 +10,7 @@
 #
 #   ./test/run.sh                    run everything
 #   ./test/run.sh redirect           run harnesses whose name matches
+#   ./test/run.sh --list [filter]    say what each harness covers, without running anything
 #   KOREADER_DIR=/path ./test/run.sh use a specific checkout or install
 #
 # Exits non-zero if any harness fails, so it is usable as a pre-push check.
@@ -18,6 +19,28 @@ set -eu
 
 PLUGIN_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 FILTER=${1:-}
+
+# ---------------------------------------------------------------- --list
+# What each harness covers, taken from its opening comment (a Python checker's docstring), so the
+# list can't go stale. Needs no KOReader, so it comes before the lookup below.
+if [ "$FILTER" = "--list" ]; then
+    FILTER=${2:-}
+    for f in "$PLUGIN_DIR"/test/*_harness.lua "$PLUGIN_DIR"/test/*_check.py; do
+        [ -e "$f" ] || continue
+        name=$(basename "$f"); name=${name%.*}
+        case "$name" in *"$FILTER"*) ;; *) continue ;; esac
+        printf '%s\n' "$name"
+        # The first paragraph: comment lines (or docstring lines) up to the first blank one.
+        awk '
+            NR == 1 && /^#!/ { next }
+            /^"""/ { sub(/^"""/, ""); doc = 1 }
+            doc { if ($0 ~ /^[[:space:]]*$/) exit; sub(/"""$/, ""); print "    " $0; next }
+            /^--( |$)/ { if ($0 == "--") exit; sub(/^-- /, ""); print "    " $0; next }
+            { exit }
+        ' "$f"
+    done
+    exit 0
+fi
 
 # ---------------------------------------------------------------- locate KOReader
 # Machine-local settings first. scripts/ is gitignored, so it is the place for a path that

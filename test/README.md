@@ -7,6 +7,7 @@ offline against a scripted server, so they need no z-library account, no network
 ```sh
 ./test/run.sh              # everything
 ./test/run.sh redirect     # only harnesses whose name matches
+./test/run.sh --list       # what each one covers, from its opening comment; takes a filter too
 ```
 
 Exits non-zero if anything fails, so it works as a pre-push check.
@@ -49,6 +50,8 @@ Elsewhere, the release's AppImage or `.deb` for your machine's architecture work
 (`--appimage-extract`), or at `/usr/lib/koreader` once the `.deb` is installed.
 
 ## What each one covers
+
+A selection, with more detail than the opening comments that `--list` prints.
 
 | Harness | Covers |
 | --- | --- |

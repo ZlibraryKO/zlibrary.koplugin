@@ -3,8 +3,9 @@
 -- redirect_resolve_harness proves which Location shapes resolve. This proves what
 -- makeHttpRequest then DOES with them: that it follows more than one hop, that a 307 POST
 -- re-sends its body instead of an empty one, that a 302 POST degrades to GET per RFC, that a
--- mirror pointing at itself is not chased five times, and that a cookie set by a challenge is
--- returned to the host that set it and to nowhere else.
+-- mirror pointing at itself is not chased five times, that a cookie set by a challenge is
+-- returned to the host that set it and to nowhere else, and that nothing is followed from https
+-- down to plain http, where the cookie and a sign-in's password would travel in the clear.
 --
 -- The body case is the subtle one. An ltn12 source is a one-shot generator, so a naive re-issue
 -- sends nothing while still advertising the original Content-Length: the server would see a
@@ -286,5 +287,35 @@ r.check("cross-host: onRedirect function is invoked",
         res and res.handled == true and called_with and
         called_with.real_url_base == "https://b.example",
         "handled=" .. tostring(res and res.handled))
+
+-- ---------------------------------------------------------------- never down to plain http
+-- A 307 from an https sign-in to an http host would re-send the password in the clear, and any
+-- hop would re-send the session cookie. Same host or another, it is not followed, and no mirror
+-- move is pinned on its say-so.
+for _, target in ipairs({ "http://a.example/eapi/user/login", "http://b.example/eapi/user/login" }) do
+    reset({ [A] = { status = 307, headers = { location = target } },
+            [target] = { status = 200, body = "{}" } })
+    local redirect_called = false
+    res = Api.makeHttpRequest{
+        url = A, method = "POST", body = "email=x&password=y",
+        headers = { Cookie = "remix_userid=1; remix_userkey=k" },
+        onRedirect = function() redirect_called = true; return target end,
+    }
+    r.check("https -> http (" .. target .. "): not followed",
+            #server.seen == 1, "made " .. #server.seen .. " requests")
+    r.check("https -> http (" .. target .. "): reported as the redirect it was",
+            res.status_code == 307 and res.error ~= nil,
+            "status " .. tostring(res.status_code) .. " error=" .. tostring(res.error))
+    r.check("https -> http (" .. target .. "): nothing pinned, no rebuild asked for",
+            pinned == nil and not redirect_called, "pinned=" .. tostring(pinned))
+end
+
+-- An http request moving up to https is fine, and still followed.
+local H = "http://a.example/eapi/info/ok"
+reset({ [H] = { status = 301, headers = { location = "https://a.example/eapi/info/ok" } },
+        ["https://a.example/eapi/info/ok"] = { status = 200, body = "{}" } })
+res = Api.makeHttpRequest{ url = H, method = "GET", headers = {} }
+r.check("http -> https: still followed", res.status_code == 200 and #server.seen == 2,
+        "status " .. tostring(res.status_code))
 
 r.finish()

@@ -24,25 +24,9 @@ local Ui = require("zlibrary.ui")
 local T = require("zlibrary.gettext")
 local lfs = require("libs/libkoreader-lfs")
 local logger = require("logger")
-local socket_url = require("socket.url")
 local util = require("util")
 
 local Download = {}
-
--- scheme://host[:port]/path of a url, without the query: a resolved download link carries its
--- signature in the query, which is credential-equivalent and must not land in crash.log.
-local function _loggableUrl(url)
-    local parsed = socket_url.parse(url or "")
-    if not (parsed and parsed.scheme and parsed.host) then
-        return "<unparsable>"
-    end
-    return socket_url.build({
-        scheme = parsed.scheme,
-        host = parsed.host,
-        port = parsed.port,
-        path = parsed.path,
-    })
-end
 
 local function _usableFormat(format)
     if type(format) ~= "string" then
@@ -286,7 +270,7 @@ function Download.run(self, book)
                 return { success = false, error = link_result.error }
             end
 
-            logger.info(string.format("Zlibrary:downloadBook - Got download link from endpoint: %s", _loggableUrl(link_result.download_link)))
+            logger.info(string.format("Zlibrary:downloadBook - Got download link from endpoint: %s", Api.loggableUrl(link_result.download_link)))
 
             -- No progress callback: it would run in this process and could not reach the parent's
             -- dialog. The parent watches the temp file instead.
@@ -397,7 +381,7 @@ function Download.run(self, book)
             end
             
             local error_string = tostring(err_msg)
-            if string.find(error_string, "Download limit reached or file is an HTML page", 1, true) then
+            if string.find(error_string, Api.DOWNLOAD_LIMIT_HTML_TEXT, 1, true) then
                 Ui.closeMessage(loading_msg)
                 Ui.showErrorMessage(T("Download limit reached. Please try again later or check your account."))
                 return

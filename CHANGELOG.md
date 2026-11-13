@@ -6,6 +6,37 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.59
+
+### Fixed
+
+**Working servers are no longer written off as blocked.** A search result whose book descriptions
+contained HTML, and whose text happened to include a phrase like "Just a moment", was taken for a
+"verifying your browser" page: the plugin reported the server as refusing automated access and
+skipped it for six months. Real answers are now never mistaken for one.
+
+**The favourite button knows all your favourites.** It only knew the 30 most recently saved, so
+an older favourite showed "Add To Favorites". It now reads the whole list (up to 600). With no
+favourites at all, the list is no longer fetched again on every book you open.
+
+**The download limit message in every language.** When the daily limit was used up, only English
+showed the "Download limit reached" notice; other languages got a raw error with a Retry button.
+
+**Updating the plugin is safer.** The update is now unpacked next to the installed plugin, checked,
+and only then swapped in, so an interrupted or damaged update leaves the old version working
+instead of a mix of both, and files a release removed no longer linger. Checking for and
+downloading an update no longer freezes the screen, and can be cancelled with a tap.
+
+**A request that ends without an answer is not sent again behind your back.** It now says it
+failed and offers Retry, instead of silently repeating it with the screen frozen.
+
+### Security
+
+Download links, which work like a password for that one file, and what you search for no longer
+appear in KOReader's log at its normal level — the log people attach to bug reports. Redirects
+from a secure (https) address to an insecure (http) one are no longer followed, so your session
+and password are never sent unencrypted.
+
 ## 1.0.58
 
 ### Fixed

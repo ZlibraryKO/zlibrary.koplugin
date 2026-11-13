@@ -9,6 +9,9 @@ local Api = require("zlibrary.api")
 local Config = require("zlibrary.config")
 local Ui = require("zlibrary.ui")
 local DataStorage = require("datastorage")
+local AsyncHelper = require("zlibrary.async_helper")
+local ffiUtil = require("ffi/util")
+local lfs = require("libs/libkoreader-lfs")
 
 local Ota = {}
 
@@ -176,8 +179,43 @@ function Ota.downloadUpdate(url, destination_path)
     return result
 end
 
+-- Remove a directory tree without following links out of it: a link is unlinked like a file. Not
+-- ffiUtil.purgeDir, which stats with lfs.attributes and so recurses through a link to a
+-- directory -- and a plugin directory linked in from a git checkout is how development installs
+-- are set up. Returns true when the path is gone.
+local function _removeTree(path)
+    local mode = lfs.symlinkattributes(path, "mode")
+    if mode == nil then return true end
+    if mode == "directory" then
+        local listed, iter, dir_obj = pcall(lfs.dir, path)
+        if listed then
+            for entry in iter, dir_obj do
+                if entry ~= "." and entry ~= ".." then
+                    _removeTree(path .. "/" .. entry)
+                end
+            end
+        end
+        return lfs.rmdir(path) and true or false
+    end
+    return os.remove(path) and true or false
+end
+
+-- The archive holds plugins/zlibrary.koplugin/...; these are paths inside it.
+local ZIP_PLUGIN_DIR = "plugins/zlibrary.koplugin"
+local CREDENTIALS_IN_ZIP = ZIP_PLUGIN_DIR .. "/zlibrary_credentials.lua"
+
+-- Install the downloaded archive in place of the running plugin.
+--
+-- Extracted beside the live directory first, checked, and only then swapped in with two renames.
+-- Unzipping straight over the live directory -- what this used to do -- left a plugin that was
+-- part old release and part new if the extraction stopped half way (a full disk, the battery),
+-- and it never removed a file a release had dropped, so a deleted module stayed loadable forever.
+-- Now the live directory is either the old release, untouched, or the new one, whole.
+--
+-- The reader's zlibrary_credentials.lua is not in the new tree (the archive's template is left
+-- out on extraction, as before) and is carried over from the live one.
 function Ota.installUpdate(zip_filepath, plugin_base_path)
-    logger.info("Zlibrary:Ota.installUpdate - START - File: " .. zip_filepath .. " Target Path: " .. plugin_base_path)
+    logger.info("Zlibrary:Ota.installUpdate - START - File: " .. zip_filepath .. " Target Path: " .. tostring(plugin_base_path))
 
     if not plugin_base_path or not util.directoryExists(plugin_base_path) then
         local err_msg = "Invalid or missing plugin base path for installation: " .. tostring(plugin_base_path)
@@ -186,38 +224,83 @@ function Ota.installUpdate(zip_filepath, plugin_base_path)
         return { error = err_msg }
     end
 
+    local live_dir = plugin_base_path:gsub("/+$", "")
+    local parent_dir = live_dir:match("^(.*)/[^/]+$")
+    if lfs.symlinkattributes(live_dir, "mode") ~= "directory" or not parent_dir then
+        -- A link (a development install pointing at a checkout): swapping would replace the
+        -- link with a copy and quietly cut the install off from where it points.
+        local err_msg = "Plugin directory is a link or has no parent, not updating it: " .. live_dir
+        logger.err("Zlibrary:Ota.installUpdate - " .. err_msg)
+        _show_ota_final_message(T("Update installation failed."), true)
+        return { error = err_msg }
+    end
+
     _show_ota_status_loading(T("Installing update..."))
 
-    local target_unzip_dir = DataStorage:getDataDir()
-    local excluded_file_path_in_zip = "plugins/zlibrary.koplugin/zlibrary_credentials.lua"
+    -- Hidden names beside the live directory: the same filesystem, so the swap is a rename, and
+    -- not *.koplugin, so KOReader never loads either of them as a plugin.
+    local staging_dir = parent_dir .. "/.zlibrary_update"
+    local backup_dir = parent_dir .. "/.zlibrary_previous"
+    local new_dir = staging_dir .. "/" .. ZIP_PLUGIN_DIR
+    -- Whatever an earlier attempt left behind.
+    _removeTree(staging_dir)
+    _removeTree(backup_dir)
 
-    local unzip_command = string.format("unzip -o '%s' -d '%s' -x '%s'", zip_filepath, target_unzip_dir, excluded_file_path_in_zip)
+    local function fail(detail, user_text)
+        logger.err("Zlibrary:Ota.installUpdate - " .. detail)
+        _removeTree(staging_dir)
+        _show_ota_final_message(user_text or T("Update installation failed."), true)
+        return { error = detail }
+    end
+
+    if not lfs.mkdir(staging_dir) then
+        return fail("Could not create " .. staging_dir)
+    end
+
+    local unzip_command = string.format("unzip -o '%s' -d '%s' -x '%s'", zip_filepath, staging_dir, CREDENTIALS_IN_ZIP)
     logger.info("Zlibrary:Ota.installUpdate - Executing: " .. unzip_command)
 
     -- LuaJIT keeps Lua 5.1's os.execute: it returns the raw system() status as a single number and
     -- nothing else, so the extra return values were always nil and, worse, 0 is truthy in Lua --
     -- `if not ok` could never fire. Compare against 0, as KOReader does at every other call site.
     local exec_status = os.execute(unzip_command)
-
     if exec_status ~= 0 then
-        local error_detail = "unzip status: " .. tostring(exec_status)
-        logger.err("Zlibrary:Ota.installUpdate - Failed to extract ZIP: " .. error_detail .. " Command: " .. unzip_command)
-        _show_ota_final_message(T("Update installation failed."), true)
-        return { error = "Failed to extract update package: " .. error_detail }
+        return fail("Failed to extract update package: unzip status: " .. tostring(exec_status))
     end
 
-    -- unzip's exit status only says the archive was readable. An archive missing the plugin
-    -- tree (or one that died mid-extract) can still exit 0 after overwriting whatever it did
-    -- contain, leaving the live plugin directory partially replaced. Refuse to call that a
-    -- success: the plugin's own entry point must be there afterwards.
-    local installed_meta_path = target_unzip_dir .. "/plugins/zlibrary.koplugin/_meta.lua"
-    if not util.fileExists(installed_meta_path) then
-        logger.err("Zlibrary:Ota.installUpdate - Extracted archive has no plugin tree: missing " .. installed_meta_path)
-        _show_ota_final_message(T("Update installation failed."), true)
-        return { error = "Extracted update package is missing the plugin tree." }
+    -- unzip's exit status only says the archive was readable. Check that what came out is a
+    -- plugin, and a whole one: its entry point, and a _meta.lua that runs and names a version.
+    local meta_ok, meta = pcall(dofile, new_dir .. "/_meta.lua")
+    if not (meta_ok and type(meta) == "table" and type(meta.version) == "string"
+            and util.fileExists(new_dir .. "/main.lua")) then
+        return fail("Extracted update package is missing the plugin tree or its _meta.lua is broken.")
     end
 
-    logger.info("Zlibrary:Ota.installUpdate - ZIP extracted successfully.")
+    local credentials = live_dir .. "/" .. Config.CREDENTIALS_FILENAME
+    if util.fileExists(credentials) then
+        local copy_err = ffiUtil.copyFile(credentials, new_dir .. "/" .. Config.CREDENTIALS_FILENAME)
+        if copy_err then
+            return fail("Could not carry over " .. Config.CREDENTIALS_FILENAME .. ": " .. tostring(copy_err))
+        end
+    end
+
+    -- The swap. Between the two renames there is no plugin directory at all, so the second one
+    -- failing puts the old one straight back.
+    local moved_aside, aside_err = os.rename(live_dir, backup_dir)
+    if not moved_aside then
+        return fail("Could not move the installed plugin aside: " .. tostring(aside_err))
+    end
+    local moved_in, in_err = os.rename(new_dir, live_dir)
+    if not moved_in then
+        local restored = os.rename(backup_dir, live_dir)
+        logger.err("Zlibrary:Ota.installUpdate - could not move the new release in: " .. tostring(in_err)
+            .. (restored and "; the installed plugin was put back" or "; RESTORING THE INSTALLED PLUGIN FAILED, it is at " .. backup_dir))
+        return fail("Could not move the new release into place: " .. tostring(in_err))
+    end
+
+    _removeTree(backup_dir)
+    _removeTree(staging_dir)
+    logger.info("Zlibrary:Ota.installUpdate - Installed " .. meta.version)
 
     local rm_ok, rm_err = os.remove(zip_filepath)
     if not rm_ok then
@@ -257,17 +340,47 @@ function Ota.startUpdateProcess(plugin_path_from_main)
         return
     end
 
-    _show_ota_status_loading(T("Checking for updates..."))
-
-    local fetch_result = Ota.fetchLatestReleaseInfo()
-
-    if fetch_result.error or not fetch_result.release_info then
-        logger.err("Zlibrary:Ota.startUpdateProcess - Failed to fetch release info: " .. (fetch_result.error or "Unknown error - release_info is nil"))
+    -- In a forked child, like every other request, so the reader can tap the check away instead
+    -- of waiting out a stalled GitHub with the UI frozen. Only the fields used below come back:
+    -- the full release record carries json nulls, which do not survive the pipe.
+    _close_current_ota_status_widget()
+    current_ota_status_widget = Ui.showCancellableLoadingMessage(T("Checking for updates..."))
+    AsyncHelper.runCancellable(function()
+        local fetched = Ota.fetchLatestReleaseInfo()
+        if fetched.error or type(fetched.release_info) ~= "table" then
+            return { error = fetched.error or "release_info is nil" }
+        end
+        local info = fetched.release_info
+        local assets = {}
+        if type(info.assets) == "table" then
+            for _, a in ipairs(info.assets) do
+                if type(a) == "table" then
+                    assets[#assets + 1] = {
+                        name = type(a.name) == "string" and a.name or nil,
+                        browser_download_url = type(a.browser_download_url) == "string" and a.browser_download_url or nil,
+                    }
+                end
+            end
+        end
+        return { release_info = {
+            tag_name = type(info.tag_name) == "string" and info.tag_name or nil,
+            assets = assets,
+        } }
+    end, function(fetched)
+        Ota._offerUpdate(plugin_path_from_main, fetched.release_info)
+    end, function(err)
+        current_ota_status_widget = nil -- runCancellable has closed it
+        logger.err("Zlibrary:Ota.startUpdateProcess - Failed to fetch release info: " .. tostring(err))
         _show_ota_final_message(T("Failed to check for updates. Please check your internet connection."), true)
-        return
-    end
+    end, current_ota_status_widget, function()
+        current_ota_status_widget = nil
+    end)
+end
 
-    local release_info = fetch_result.release_info
+-- The rest of the check, once the release is known: compare versions and ask.
+function Ota._offerUpdate(plugin_path_from_main, release_info)
+    -- runCancellable closed the checking message itself.
+    current_ota_status_widget = nil
     if not release_info or type(release_info) ~= "table" then
         logger.err("Zlibrary:Ota.startUpdateProcess - Invalid release_info structure received.")
         _show_ota_final_message(T("Could not find update information (invalid data format)."), true)
@@ -342,38 +455,39 @@ function Ota.startUpdateProcess(plugin_path_from_main)
         ok_text = T("Update"),
         cancel_text = T("Cancel"),
         ok_callback = function()
-            _show_ota_status_loading(T("Downloading update..."))
             local temp_path_base = DataStorage:getDataDir() .. "/cache"
             local temp_zip_path = temp_path_base .. "/" .. asset_name
-
             logger.info("Zlibrary:Ota.startUpdateProcess - Temporary download path: " .. temp_zip_path)
 
-            local download_result = Ota.downloadUpdate(download_url, temp_zip_path)
+            local function discardZip()
+                if util.fileExists(temp_zip_path) then os.remove(temp_zip_path) end
+            end
 
-            if download_result.error or not download_result.success then
-                logger.err("Zlibrary:Ota.startUpdateProcess - Download failed: " .. (download_result.error or "Unknown error"))
+            -- Forked and cancellable, like the check above: a release archive on a slow
+            -- connection takes long enough that a frozen screen reads as a hang.
+            _close_current_ota_status_widget()
+            current_ota_status_widget = Ui.showCancellableLoadingMessage(T("Downloading update..."))
+            AsyncHelper.runCancellable(function()
+                return Ota.downloadUpdate(download_url, temp_zip_path)
+            end, function()
+                current_ota_status_widget = nil
+                logger.info("Zlibrary:Ota.startUpdateProcess - Download successful: " .. temp_zip_path)
+                local install_result = Ota.installUpdate(temp_zip_path, plugin_path_from_main)
+                if install_result.error then
+                    logger.err("Zlibrary:Ota.startUpdateProcess - Installation failed: " .. install_result.error)
+                    discardZip()
+                else
+                    logger.info("Zlibrary:Ota.startUpdateProcess - Installation successful.")
+                end
+            end, function(err)
+                current_ota_status_widget = nil
+                logger.err("Zlibrary:Ota.startUpdateProcess - Download failed: " .. tostring(err))
                 _show_ota_final_message(T("Download failed. Please try again later."), true)
-                if util.fileExists(temp_zip_path) then
-                    os.remove(temp_zip_path)
-                end
-                return
-            end
-
-            logger.info("Zlibrary:Ota.startUpdateProcess - Download successful: " .. temp_zip_path)
-            local install_result = Ota.installUpdate(temp_zip_path, plugin_path_from_main)
-
-            if install_result.error then
-                logger.err("Zlibrary:Ota.startUpdateProcess - Installation failed: " .. install_result.error)
-            else
-                logger.info("Zlibrary:Ota.startUpdateProcess - Installation successful.")
-            end
-
-            if util.fileExists(temp_zip_path) and (install_result.error or not install_result.success) then
-                local rm_ok, rm_err = os.remove(temp_zip_path)
-                if not rm_ok then
-                    logger.warn("Zlibrary:Ota.startUpdateProcess - Could not remove temp ZIP after failed/partial install: " .. temp_zip_path .. " Error: " .. tostring(rm_err))
-                end
-            end
+                discardZip()
+            end, current_ota_status_widget, function()
+                current_ota_status_widget = nil
+                discardZip()
+            end)
         end,
         cancel_callback = function()
             _close_current_ota_status_widget()

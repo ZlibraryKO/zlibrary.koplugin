@@ -11,8 +11,9 @@
 --     over a cancellation the user just asked for
 --   * a fork failure (completed=false with NO yield -- the poll loop was never reached) is not
 --     a cancellation: the request falls back to the in-process run so it still happens
---   * a child that finished without a usable answer falls back the same way, rather than
---     inventing an error the task never produced
+--   * a child that finished without a usable answer is a failed request, routed to on_error in a
+--     form the retry dialog recognises -- not re-run in-process, which sent the request twice and
+--     blocked the UI behind a cancel message that could not cancel
 --
 -- The yielded/unyielded distinction is what keeps "this device cannot fork" from being reported
 -- to the user as "you cancelled". Both sides of it are driven below.
@@ -183,11 +184,15 @@ end
 
 do
     local rig = runScenario({ no_output = true }, function() return {} end, true)
-    r.check("a child that finished without a usable answer also falls back to the in-process run",
-            #rig.fallbacks == 1, "fallbacks: " .. #rig.fallbacks)
-    r.check("rather than inventing an error or a cancellation",
-            #rig.errors == 0 and #rig.successes == 0 and rig.cancels == 0,
+    r.check("a child that finished without a usable answer is not re-run in-process",
+            #rig.fallbacks == 0, "fallbacks: " .. #rig.fallbacks)
+    r.check("it goes to on_error, once",
+            #rig.errors == 1 and #rig.successes == 0 and rig.cancels == 0,
             string.format("errors=%d successes=%d cancels=%d", #rig.errors, #rig.successes, rig.cancels))
+    r.check("as a network failure, so the retry dialog offers Retry",
+            type(rig.errors[1]) == "string" and rig.errors[1]:find("Network request failed", 1, true) == 1,
+            tostring(rig.errors[1]))
+    r.check("and the loading widget is closed", closed_loading(rig))
 end
 
 r.finish()

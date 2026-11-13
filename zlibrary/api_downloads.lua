@@ -10,6 +10,11 @@ local Api = require("zlibrary.api_core")
 local Shared = require("zlibrary.api_shared")
 local _sessionCookie = Shared._sessionCookie
 local _authedHeaders = Shared._authedHeaders
+local _loggableUrl = Shared._loggableUrl
+
+-- A URL with its query removed, for logging. Public because download.lua logs the resolved
+-- download link too, and that link's query is its signature; see _loggableUrl in api_shared.
+Api.loggableUrl = _loggableUrl
 
 -- The file Api.downloadBook writes into before renaming it onto the target. Exposed so a caller that
 -- kills the download -- which skips downloadBook's own cleanup -- can sweep what it left behind, and so
@@ -27,7 +32,7 @@ function Api.discardDownloadTempFile(target_filepath)
 end
 
 function Api.downloadBook(download_url, target_filepath, user_id, user_key, referer_url, progress_callback)
-    logger.info(string.format("Zlibrary:Api.downloadBook - START - URL: %s, Target: %s", download_url, target_filepath))
+    logger.info(string.format("Zlibrary:Api.downloadBook - START - URL: %s, Target: %s", _loggableUrl(download_url), target_filepath))
 
     local result = { success = false, error = nil }
 
@@ -79,9 +84,9 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
 
     local content_type = http_result.headers and http_result.headers["content-type"]
     if content_type and string.find(string.lower(content_type), "text/html") then
-        result.error = T("Download limit reached or file is an HTML page")
+        result.error = Api.DOWNLOAD_LIMIT_HTML_TEXT
         discardTempFile()
-        logger.warn(string.format("Zlibrary:Api.downloadBook - END (HTML content detected) - URL: %s, Status: %s, Content-Type: %s", download_url, tostring(http_result.status_code), content_type))
+        logger.warn(string.format("Zlibrary:Api.downloadBook - END (HTML content detected) - URL: %s, Status: %s, Content-Type: %s", _loggableUrl(download_url), tostring(http_result.status_code), content_type))
         return result
     end
 
@@ -182,7 +187,7 @@ function Api.downloadBookCover(download_url, target_filepath)
     -- dbg, not info: a page of results fetches dozens of covers, and a START/END pair each buried
     -- everything else in the log. Api.makeHttpRequest already logs its own START at dbg, so this
     -- matches. Failures stay at err, in downloadToFile, and are the part worth seeing.
-    logger.dbg(string.format("Zlibrary:Api.downloadBookCover - START - URL: %s, Target: %s", download_url, target_filepath))
+    logger.dbg(string.format("Zlibrary:Api.downloadBookCover - START - URL: %s, Target: %s", _loggableUrl(download_url), target_filepath))
     local result = Api.downloadToFile(download_url, target_filepath,
         { ["User-Agent"] = Config.getUserAgent() }, Config.getCoverTimeout())
     if result.success then

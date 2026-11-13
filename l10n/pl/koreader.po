@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 19:19+0000\n"
+"POT-Creation-Date: 2026-11-13 09:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,11 +24,618 @@ msgstr "Wyszukiwanie w Z-library"
 msgid "My books"
 msgstr "Moje książki"
 
-msgid "Settings"
-msgstr "Ustawienia"
+msgid "Z-library server URL not configured."
+msgstr "Adres URL serwera Z-library nie został skonfigurowany."
+
+msgid "Failed to fetch downloaded books (no response body)."
+msgstr "Nie udało się pobrać listy pobranych książek (brak treści odpowiedzi)."
+
+msgid "Failed to parse downloaded books response."
+msgstr "Nie udało się przetworzyć odpowiedzi z pobranymi książkami."
+
+msgid "API returned an error for downloaded books."
+msgstr "API zwróciło błąd dla pobranych książek."
+
+msgid "Failed to fetch favorite books (no response body)."
+msgstr "Nie udało się pobrać ulubionych książek (brak treści odpowiedzi)."
+
+msgid "Failed to parse favorite books response."
+msgstr "Nie udało się przetworzyć odpowiedzi z ulubionymi książkami."
+
+msgid "API returned an error for favorite books."
+msgstr "API zwróciło błąd dla ulubionych książek."
+
+msgid "Failed to fetch booklists (no response body)."
+msgstr ""
+
+msgid "Failed to parse booklists response."
+msgstr ""
+
+msgid "API returned an error for booklists."
+msgstr ""
+
+msgid "Untitled"
+msgstr "Bez tytułu"
+
+msgid "Failed to fetch booklist books (no response body)."
+msgstr ""
+
+msgid "Failed to parse booklist books response."
+msgstr ""
+
+msgid "API returned an error for booklist books."
+msgstr ""
+
+msgid "Failed to remove the book from downloaded (no response body)."
+msgstr "Nie udało się usunąć książki z pobranych (brak treści odpowiedzi)."
+
+msgid "Failed to parse the remove from downloaded response."
+msgstr "Nie udało się przetworzyć odpowiedzi usuwania z pobranych."
+
+msgid "API returned an error for remove from downloaded."
+msgstr "API zwróciło błąd dla usuwania z pobranych."
+
+msgid "Failed to fetch unfavorite book (no response body)."
+msgstr "Nie udało się usunąć książki z ulubionych (brak treści odpowiedzi)."
+
+msgid "Failed to parse unfavorite book response."
+msgstr "Nie udało się przetworzyć odpowiedzi o usunięciu z ulubionych."
+
+msgid "API returned an error for unfavorite book."
+msgstr "API zwróciło błąd przy usuwaniu z ulubionych."
+
+msgid "Failed to fetch download quota status (no response body)."
+msgstr "Nie udało się pobrać stanu limitu pobrań (brak treści odpowiedzi)."
+
+msgid "Failed to parse download quota status response."
+msgstr "Nie udało się przetworzyć odpowiedzi o stanie limitu pobrań."
+
+msgid "API returned an error for download quota status."
+msgstr "API zwróciło błąd dla stanu limitu pobrań."
+
+msgid "Failed to fetch favorite-book IDs (no response body)."
+msgstr "Nie udało się pobrać identyfikatorów ulubionych książek (brak treści odpowiedzi)."
+
+msgid "Failed to parse favorite-book IDs."
+msgstr "Nie udało się przetworzyć identyfikatorów ulubionych książek."
+
+msgid "API returned an error for favorite-book IDs."
+msgstr "API zwróciło błąd dla identyfikatorów ulubionych książek."
+
+msgid "Failed to fetch favorite book (no response body)."
+msgstr "Nie udało się dodać książki do ulubionych (brak treści odpowiedzi)."
+
+msgid "Failed to parse favorite book response."
+msgstr "Nie udało się przetworzyć odpowiedzi o dodaniu do ulubionych."
+
+msgid "API returned an error for favorite book."
+msgstr "API zwróciło błąd przy dodawaniu do ulubionych."
+
+msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
+msgstr "Adres serwera Z-library (URL) nie jest ustawiony. Skonfiguruj go w ustawieniach wtyczki Z-library."
+
+msgid "No response received from server - please try again"
+msgstr "Brak odpowiedzi serwera – spróbuj ponownie"
+
+msgid "Invalid response format from server"
+msgstr "Nieprawidłowy format odpowiedzi serwera"
+
+msgid "Search API error"
+msgstr "Błąd API wyszukiwania"
+
+msgid "Failed to fetch recommended books (no response body)."
+msgstr "Nie udało się pobrać polecanych książek (brak treści odpowiedzi)."
+
+msgid "Failed to parse recommended books response."
+msgstr "Nie udało się przetworzyć odpowiedzi z polecanymi książkami."
+
+msgid "API returned an error for recommended books."
+msgstr "API zwróciło błąd dla polecanych książek."
+
+msgid "Failed to fetch most popular books (no response body)."
+msgstr "Nie udało się pobrać najpopularniejszych książek (brak treści odpowiedzi)."
+
+msgid "Failed to parse most popular books response."
+msgstr "Nie udało się przetworzyć odpowiedzi z najpopularniejszymi książkami."
+
+msgid "API returned an error for most popular books."
+msgstr "API zwróciło błąd dla najpopularniejszych książek."
+
+msgid "Z-library server URL not configured or book identifiers missing."
+msgstr "Adres URL serwera Z-library nie został skonfigurowany lub brakuje identyfikatorów książek."
+
+msgid "Failed to fetch book details (no response body)."
+msgstr "Nie udało się pobrać szczegółów książki (brak treści odpowiedzi)."
+
+msgid "Failed to parse book details response."
+msgstr "Nie udało się przetworzyć odpowiedzi z danymi książki."
+
+msgid "API returned an error for book details."
+msgstr "API zwróciło błąd dla szczegółów książki."
+
+msgid "Failed to process book details."
+msgstr "Nie udało się przetworzyć szczegółów książki."
+
+msgid "Failed to fetch similar books (no response body)."
+msgstr "Nie udało się pobrać podobnych książek (brak treści odpowiedzi)."
+
+msgid "Failed to parse similar books response."
+msgstr "Nie udało się przetworzyć odpowiedzi z podobnymi książkami."
+
+msgid "API returned an error for similar books."
+msgstr "API zwróciło błąd dla podobnych książek."
+
+msgid "Book ID is required."
+msgstr "Identyfikator książki jest wymagany."
+
+msgid "Failed to fetch book comments (no response body)."
+msgstr "Nie udało się pobrać komentarzy do książki (brak treści odpowiedzi)."
+
+msgid "Failed to parse book comments response."
+msgstr "Nie udało się przetworzyć odpowiedzi z komentarzami do książki."
+
+msgid "API returned an error for book comments."
+msgstr "API zwróciło błąd dla komentarzy do książki."
+
+msgid "Could not find the server address"
+msgstr "Nie znaleziono adresu serwera"
+
+msgid "This Z-library server is refusing automated access"
+msgstr "Ten serwer Z-library blokuje zautomatyzowany dostęp"
+
+msgid "Credentials rejected or invalid response"
+msgstr "Odrzucono dane logowania lub nieprawidłowa odpowiedź"
+
+msgid "Failed to open target file"
+msgstr "Nie udało się otworzyć pliku docelowego"
+
+msgid "Unknown error"
+msgstr "Nieznany błąd"
+
+msgid "Download limit reached or file is an HTML page"
+msgstr "Osiągnięto limit pobrań lub plik jest stroną HTML"
+
+msgid "HTTP Error"
+msgstr "Błąd HTTP"
+
+msgid "Download failed: the server sent an empty file"
+msgstr ""
+
+msgid "Failed to save downloaded file"
+msgstr "Nie udało się zapisać pobranego pliku"
+
+msgid "Download HTTP Error"
+msgstr "Błąd HTTP pobierania"
+
+msgid "Failed to fetch download link (no response body)."
+msgstr "Nie udało się pobrać linku do pobrania (brak treści odpowiedzi)."
+
+msgid "Failed to parse download link response."
+msgstr "Nie udało się przetworzyć odpowiedzi z linkiem do pobrania."
+
+msgid "API returned an error for download link."
+msgstr "API zwróciło błąd dla linku do pobrania."
+
+msgid "Download limit reached. Please try again later or check your account."
+msgstr "Osiągnięto limit pobrań. Spróbuj ponownie później lub sprawdź swoje konto."
+
+msgid "No download link provided in API response."
+msgstr "Brak linku do pobrania w odpowiedzi API."
+
+msgid "Login failed"
+msgstr "Logowanie nie powiodło się"
+
+msgid "Login failed: Empty response from server"
+msgstr "Logowanie nie powiodło się: Pusta odpowiedź serwera"
+
+msgid "Login failed: Invalid response format"
+msgstr "Logowanie nie powiodło się: Nieprawidłowy format odpowiedzi"
+
+msgid "Request timed out - please check your connection and try again"
+msgstr "Przekroczono limit czasu – sprawdź połączenie i spróbuj ponownie"
+
+msgid "Network request failed"
+msgstr "Żądanie sieciowe nie powiodło się"
+
+msgid "The Z-library address may be wrong or no longer exist."
+msgstr "Adres Z-library może być nieprawidłowy lub już nie istnieć."
+
+msgid "Network connection error - please check your internet connection and try again"
+msgstr "Błąd połączenia sieciowego – sprawdź połączenie z internetem i spróbuj ponownie"
+
+msgid "Too many redirects"
+msgstr "Zbyt wiele przekierowań"
+
+msgid "Try a different Z-library server."
+msgstr "Spróbuj innego serwera Z-library."
+
+msgid "Unknown Status"
+msgstr "Nieznany status"
+
+msgid "Request cancelled."
+msgstr "Żądanie anulowane."
+
+msgid "pages"
+msgstr "stron"
+
+msgid "Back"
+msgstr "Wstecz"
+
+msgid "Download"
+msgstr "Pobierz"
+
+msgid "Format"
+msgstr "Format"
+
+msgid "Download book"
+msgstr "Pobierz książkę"
+
+msgid "More Similar Books"
+msgstr "Więcej podobnych książek"
+
+msgid "Description"
+msgstr "Opis"
+
+msgid "Comments"
+msgstr "Komentarze"
+
+msgid "Refresh"
+msgstr "Odśwież"
+
+msgid "Remove From Favorites"
+msgstr "Usuń z ulubionych"
+
+msgid "Add To Favorites"
+msgstr "Dodaj do ulubionych"
+
+msgid "No Comments"
+msgstr "Brak komentarzy"
+
+msgid "No description available"
+msgstr "Brak opisu"
+
+msgid "Selection copied to clipboard."
+msgstr "Skopiowano zaznaczenie do schowka."
+
+msgid "Cover"
+msgstr "Okładka"
+
+msgid "Most popular"
+msgstr "Najpopularniejsze"
+
+msgid "Best match"
+msgstr "Najlepsze dopasowanie"
+
+msgid "Recently added"
+msgstr "Ostatnio dodane"
+
+msgid "Title"
+msgstr "Tytuł"
+
+msgid "Year"
+msgstr "Rok"
+
+msgid "File size"
+msgstr "Rozmiar pliku"
+
+msgid "Default"
+msgstr "Domyślne"
+
+#, lua-format
+msgid "%ds"
+msgstr "%ds"
+
+msgid "infinite"
+msgstr "nieskończony"
+
+#, lua-format
+msgid "Block: %ds, Total: %s"
+msgstr "Blok: %ds, Łącznie: %s"
+
+msgid "Operation failed, please retry."
+msgstr "Operacja nie powiodła się, spróbuj ponownie."
+
+msgid "Fetching domains..."
+msgstr "Pobieranie domen..."
+
+msgid "Successfully set base URL to: "
+msgstr "Ustawiono adres bazowy na:"
+
+msgid "Failed to find a working base URL."
+msgstr "Nie udało się znaleźć działającego podstawowego URL."
+
+msgid "Queued"
+msgstr "W kolejce"
+
+msgid "Checking"
+msgstr "Sprawdzanie"
 
 msgid "Set base URL"
 msgstr "Ustaw podstawowy adres URL"
+
+msgid "Invalid Base URL."
+msgstr "Nieprawidłowy podstawowy adres URL."
+
+msgid "Failed"
+msgstr "Niepowodzenie"
+
+msgid "Searching for working Z-library server..."
+msgstr "Wyszukiwanie działającego serwera Z-library..."
+
+msgid "Current Base URL:"
+msgstr "Bieżący adres bazowy:"
+
+msgid "Mirror site redirected to: "
+msgstr "Przekierowanie serwera lustrzanego do:"
+
+msgid "Auto-discover base URL"
+msgstr "Automatyczne wykrywanie podstawowego URL"
+
+msgid "Network unavailable."
+msgstr "Sieć niedostępna."
+
+msgid "Discovery is already running..."
+msgstr "Wykrywanie już trwa..."
+
+msgid "Refresh Dynamic Domains"
+msgstr "Odśwież dynamiczne domeny"
+
+msgid "Fetching book details..."
+msgstr "Pobieranie szczegółów książki..."
+
+msgid "Could not retrieve book details."
+msgstr "Nie można pobrać szczegółów książki."
+
+msgid "This book's file type is unknown, so it cannot be downloaded."
+msgstr "Format tej książki jest nieznany, więc nie można jej pobrać."
+
+msgid "Book details"
+msgstr "Szczegóły książki"
+
+msgid "Book identifiers missing. Cannot download."
+msgstr "Brak identyfikatorów książki. Nie można pobrać."
+
+#, lua-format
+msgid "Cannot create downloads directory: %s"
+msgstr "Nie można utworzyć katalogu pobierania: %s"
+
+#, lua-format
+msgid "Couldn't create the folder for \"%s\". The book is in the download folder."
+msgstr "Nie można utworzyć folderu dla „%s”. Książka znajduje się w folderze pobierania."
+
+#, lua-format
+msgid "Moved to \"%s\"."
+msgstr "Przeniesiono do „%s”."
+
+#, lua-format
+msgid "Couldn't move the book into \"%s\". It's in the download folder."
+msgstr "Nie można przenieść książki do „%s”. Znajduje się w folderze pobierania."
+
+msgid "Could not open reader UI."
+msgstr "Nie można otworzyć interfejsu czytnika."
+
+msgid "Download failed: Unknown error"
+msgstr "Pobieranie nie powiodło się: Nieznany błąd"
+
+msgid "Book download"
+msgstr "Pobieranie książki"
+
+msgid "Retrying download… (tap to cancel)"
+msgstr "Ponawianie pobierania… (dotknij, aby anulować)"
+
+msgid "Download cancelled."
+msgstr "Pobieranie anulowane."
+
+msgid "Unknown Author"
+msgstr "Nieznany autor"
+
+msgid "Author"
+msgstr "Autor"
+
+msgid "Search"
+msgstr "Szukaj"
+
+msgid "Update failed: Could not determine where to install the plugin."
+msgstr "Aktualizacja nie powiodła się: Nie można określić miejsca instalacji wtyczki."
+
+msgid "Installing update..."
+msgstr "Instalowanie aktualizacji..."
+
+msgid "Update installation failed."
+msgstr "Instalacja aktualizacji nie powiodła się."
+
+msgid "Update check failed: Could not determine plugin location."
+msgstr "Sprawdzenie aktualizacji nie powiodło się: Nie można określić lokalizacji wtyczki."
+
+#, lua-format
+msgid "Unsupported plugin path for OTA update: %s. Only 'plugins/zlibrary.koplugin' is supported."
+msgstr "Nieobsługiwana ścieżka wtyczki dla aktualizacji OTA: %s. Obsługiwana jest tylko 'plugins/zlibrary.koplugin'."
+
+msgid "Checking for updates..."
+msgstr "Sprawdzanie aktualizacji..."
+
+msgid "Failed to check for updates. Please check your internet connection."
+msgstr "Nie udało się sprawdzić aktualizacji. Sprawdź połączenie z internetem."
+
+msgid "Could not find update information (invalid data format)."
+msgstr "Nie znaleziono informacji o aktualizacji (nieprawidłowy format danych)."
+
+msgid "Could not find update version information."
+msgstr "Nie znaleziono informacji o wersji aktualizacji."
+
+msgid "Could not understand the update version format."
+msgstr "Nie można rozpoznać formatu wersji aktualizacji."
+
+msgid "Could not find update files."
+msgstr "Nie znaleziono plików aktualizacji."
+
+msgid "Could not find a download link for the update."
+msgstr "Nie znaleziono linku do pobrania aktualizacji."
+
+#, lua-format
+msgid "You are already on the latest version (%s) or newer."
+msgstr "Używasz już najnowszej wersji (%s) lub nowszej."
+
+#, lua-format
+msgid "Could not determine your current version, but the latest is %s. If you recently updated, you might be up-to-date."
+msgstr "Nie można określić aktualnej wersji, ale najnowsza to %s. Jeśli ostatnio zaktualizowałeś, prawdopodobnie masz aktualną wersję."
+
+#, lua-format
+msgid "New version available: %s (you have %s). Download and install?"
+msgstr "Dostępna nowa wersja: %s (obecnie masz %s). Pobrać i zainstalować?"
+
+msgid "an older version"
+msgstr "starsza wersja"
+
+msgid "Update available"
+msgstr "Dostępna aktualizacja"
+
+msgid "Update"
+msgstr "Aktualizuj"
+
+msgid "Cancel"
+msgstr "Anuluj"
+
+msgid "Downloading update..."
+msgstr "Pobieranie aktualizacji..."
+
+msgid "Download failed. Please try again later."
+msgstr "Pobieranie nie powiodło się. Spróbuj ponownie później."
+
+msgid "Finding similar books..."
+msgstr "Szukanie podobnych książek..."
+
+msgid "No similar books found"
+msgstr "Nie znaleziono podobnych książek"
+
+msgid "Similar books"
+msgstr "Podobne książki"
+
+msgid "Removing book from downloaded…"
+msgstr "Usuwanie książki z pobranych…"
+
+msgid "Failed to remove book from downloaded"
+msgstr "Nie udało się usunąć książki z pobranych"
+
+msgid "Remove from downloaded"
+msgstr "Usuwanie z pobranych"
+
+msgid "Book removed from downloaded, please refresh"
+msgstr "Książka usunięta z pobranych, odśwież listę"
+
+msgid "API returned an error, please try again"
+msgstr "API zwróciło błąd, spróbuj ponownie"
+
+msgid "Removing book from favorites…"
+msgstr "Usuwanie książki z ulubionych…"
+
+msgid "Failed to remove book from favorites"
+msgstr "Nie udało się usunąć książki z ulubionych"
+
+msgid "Unfavorite book"
+msgstr "Usuwanie z ulubionych"
+
+msgid "Book removed from favorites, please refresh"
+msgstr "Usunięto książkę z ulubionych, odśwież listę"
+
+msgid "Adding book to favorites…"
+msgstr "Dodawanie książki do ulubionych…"
+
+msgid "Failed to add book to favorites"
+msgstr "Nie udało się dodać książki do ulubionych"
+
+msgid "Favorite book"
+msgstr "Ulubiona książka"
+
+msgid "Book added to favorites, please refresh"
+msgstr "Dodano książkę do ulubionych, odśwież listę"
+
+msgid "Failed to fetch book details"
+msgstr "Nie udało się pobrać szczegółów książki"
+
+msgid "Loading comments..."
+msgstr "Wczytywanie komentarzy..."
+
+msgid "Failed to load comments"
+msgstr "Nie udało się wczytać komentarzy"
+
+msgid "No comments to display"
+msgstr "Brak komentarzy do wyświetlenia"
+
+msgid "Fetching most popular books..."
+msgstr "Pobieranie najpopularniejszych książek..."
+
+msgid "Failed to fetch most popular books"
+msgstr "Nie udało się pobrać najpopularniejszych książek"
+
+msgid "Most popular books"
+msgstr "Najpopularniejsze książki"
+
+msgid "Recommended"
+msgstr "Polecane"
+
+msgid "Fetching recommended books..."
+msgstr "Pobieranie polecanych książek..."
+
+msgid "Failed to fetch recommended books"
+msgstr "Nie udało się pobrać polecanych książek"
+
+msgid "Recommended books"
+msgstr "Polecane książki"
+
+msgid "Z-library My Books"
+msgstr "Z-library – moje książki"
+
+msgid "Favorites"
+msgstr "Ulubione"
+
+msgid "Getting your favorites..."
+msgstr "Wczytywanie ulubionych..."
+
+msgid "Failed to fetch favorite books"
+msgstr "Nie udało się wczytać ulubionych książek"
+
+msgid "Favorite books"
+msgstr "Ulubione książki"
+
+msgid "Downloaded"
+msgstr "Pobrane"
+
+msgid "Getting your downloaded..."
+msgstr "Wczytywanie pobranych..."
+
+msgid "Failed to fetch downloaded books"
+msgstr "Nie udało się wczytać pobranych książek"
+
+msgid "Downloaded books"
+msgstr "Pobrane książki"
+
+msgid "Booklists"
+msgstr ""
+
+msgid "Getting your booklists..."
+msgstr ""
+
+msgid "Failed to fetch booklists"
+msgstr ""
+
+msgid "You have no booklists yet"
+msgstr ""
+
+msgid "Getting booklist books..."
+msgstr ""
+
+msgid "Failed to fetch booklist books"
+msgstr ""
+
+msgid "Booklist books"
+msgstr ""
+
+msgid "This booklist is empty"
+msgstr ""
+
+msgid "Settings"
+msgstr "Ustawienia"
 
 msgid "Set credentials"
 msgstr "Ustaw dane logowania"
@@ -126,15 +733,6 @@ msgstr "Przedstawiaj się jako przeglądarka"
 msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
 msgstr "Wysyła User-Agent przeglądarki zamiast własnego. Warto spróbować tylko wtedy, gdy serwer odrzuca samą wtyczkę."
 
-msgid "Search"
-msgstr "Szukaj"
-
-msgid "Recommended"
-msgstr "Polecane"
-
-msgid "Most popular"
-msgstr "Najpopularniejsze"
-
 msgid "About"
 msgstr ""
 
@@ -146,150 +744,6 @@ msgstr "Brak książek pasujących do wybranych języków i formatów wyszukiwan
 
 msgid "No books found, please try again"
 msgstr "Nie znaleziono książek, spróbuj ponownie"
-
-msgid "Fetching most popular books..."
-msgstr "Pobieranie najpopularniejszych książek..."
-
-msgid "Failed to fetch most popular books"
-msgstr "Nie udało się pobrać najpopularniejszych książek"
-
-msgid "Most popular books"
-msgstr "Najpopularniejsze książki"
-
-msgid "Fetching recommended books..."
-msgstr "Pobieranie polecanych książek..."
-
-msgid "Failed to fetch recommended books"
-msgstr "Nie udało się pobrać polecanych książek"
-
-msgid "Recommended books"
-msgstr "Polecane książki"
-
-msgid "API returned an error, please try again"
-msgstr "API zwróciło błąd, spróbuj ponownie"
-
-msgid "Z-library My Books"
-msgstr "Z-library – moje książki"
-
-msgid "Favorites"
-msgstr "Ulubione"
-
-msgid "Getting your favorites..."
-msgstr "Wczytywanie ulubionych..."
-
-msgid "Failed to fetch favorite books"
-msgstr "Nie udało się wczytać ulubionych książek"
-
-msgid "Favorite books"
-msgstr "Ulubione książki"
-
-msgid "Downloaded"
-msgstr "Pobrane"
-
-msgid "Remove from downloaded"
-msgstr "Usuwanie z pobranych"
-
-msgid "Getting your downloaded..."
-msgstr "Wczytywanie pobranych..."
-
-msgid "Failed to fetch downloaded books"
-msgstr "Nie udało się wczytać pobranych książek"
-
-msgid "Downloaded books"
-msgstr "Pobrane książki"
-
-msgid "Booklists"
-msgstr ""
-
-msgid "Untitled"
-msgstr "Bez tytułu"
-
-msgid "Getting your booklists..."
-msgstr ""
-
-msgid "Failed to fetch booklists"
-msgstr ""
-
-msgid "You have no booklists yet"
-msgstr ""
-
-msgid "Getting booklist books..."
-msgstr ""
-
-msgid "Failed to fetch booklist books"
-msgstr ""
-
-msgid "Booklist books"
-msgstr ""
-
-msgid "This booklist is empty"
-msgstr ""
-
-msgid "Finding similar books..."
-msgstr "Szukanie podobnych książek..."
-
-msgid "No similar books found"
-msgstr "Nie znaleziono podobnych książek"
-
-msgid "Similar books"
-msgstr "Podobne książki"
-
-msgid "Removing book from downloaded…"
-msgstr "Usuwanie książki z pobranych…"
-
-msgid "Failed to remove book from downloaded"
-msgstr "Nie udało się usunąć książki z pobranych"
-
-msgid "Book removed from downloaded, please refresh"
-msgstr "Książka usunięta z pobranych, odśwież listę"
-
-msgid "Removing book from favorites…"
-msgstr "Usuwanie książki z ulubionych…"
-
-msgid "Failed to remove book from favorites"
-msgstr "Nie udało się usunąć książki z ulubionych"
-
-msgid "Unfavorite book"
-msgstr "Usuwanie z ulubionych"
-
-msgid "Book removed from favorites, please refresh"
-msgstr "Usunięto książkę z ulubionych, odśwież listę"
-
-msgid "Adding book to favorites…"
-msgstr "Dodawanie książki do ulubionych…"
-
-msgid "Failed to add book to favorites"
-msgstr "Nie udało się dodać książki do ulubionych"
-
-msgid "Favorite book"
-msgstr "Ulubiona książka"
-
-msgid "Book added to favorites, please refresh"
-msgstr "Dodano książkę do ulubionych, odśwież listę"
-
-msgid "Fetching book details..."
-msgstr "Pobieranie szczegółów książki..."
-
-msgid "Failed to fetch book details"
-msgstr "Nie udało się pobrać szczegółów książki"
-
-msgid "Book details"
-msgstr "Szczegóły książki"
-
-msgid "Could not retrieve book details."
-msgstr "Nie można pobrać szczegółów książki."
-
-msgid "Logging in..."
-msgstr "Logowanie..."
-
-msgid "Credentials saved, but they could not be checked right now."
-msgstr "Dane logowania zapisane, ale nie udało się ich teraz sprawdzić."
-
-msgid "Please set both username and password first."
-msgstr "Najpierw ustaw nazwę użytkownika i hasło."
-
-msgid "Sign-in"
-msgstr "Logowanie"
 
 #, lua-format
 msgid "Searching for \"%s\"..."
@@ -309,535 +763,64 @@ msgstr "Nie udało się załadować więcej wyników"
 msgid "No more results found."
 msgstr "Nie znaleziono więcej wyników."
 
-msgid "Book ID is required."
-msgstr "Identyfikator książki jest wymagany."
+msgid "Logging in..."
+msgstr "Logowanie..."
 
-msgid "Loading comments..."
-msgstr "Wczytywanie komentarzy..."
+msgid "Credentials saved, but they could not be checked right now."
+msgstr "Dane logowania zapisane, ale nie udało się ich teraz sprawdzić."
 
-msgid "Failed to load comments"
-msgstr "Nie udało się wczytać komentarzy"
+msgid "Please set both username and password first."
+msgstr "Najpierw ustaw nazwę użytkownika i hasło."
 
-msgid "Comments"
-msgstr "Komentarze"
-
-msgid "No comments to display"
-msgstr "Brak komentarzy do wyświetlenia"
-
-msgid "Could not find the server address"
-msgstr "Nie znaleziono adresu serwera"
-
-msgid "This Z-library server is refusing automated access"
-msgstr "Ten serwer Z-library blokuje zautomatyzowany dostęp"
-
-msgid "Credentials rejected or invalid response"
-msgstr "Odrzucono dane logowania lub nieprawidłowa odpowiedź"
-
-msgid "Request timed out - please check your connection and try again"
-msgstr "Przekroczono limit czasu – sprawdź połączenie i spróbuj ponownie"
-
-msgid "Network request failed"
-msgstr "Żądanie sieciowe nie powiodło się"
-
-msgid "The Z-library address may be wrong or no longer exist."
-msgstr "Adres Z-library może być nieprawidłowy lub już nie istnieć."
-
-msgid "Network connection error - please check your internet connection and try again"
-msgstr "Błąd połączenia sieciowego – sprawdź połączenie z internetem i spróbuj ponownie"
-
-msgid "Too many redirects"
-msgstr "Zbyt wiele przekierowań"
-
-msgid "Try a different Z-library server."
-msgstr "Spróbuj innego serwera Z-library."
-
-msgid "HTTP Error"
-msgstr "Błąd HTTP"
-
-msgid "Unknown Status"
-msgstr "Nieznany status"
-
-msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
-msgstr "Adres serwera Z-library (URL) nie jest ustawiony. Skonfiguruj go w ustawieniach wtyczki Z-library."
-
-msgid "Login failed"
-msgstr "Logowanie nie powiodło się"
-
-msgid "Login failed: Empty response from server"
-msgstr "Logowanie nie powiodło się: Pusta odpowiedź serwera"
-
-msgid "Login failed: Invalid response format"
-msgstr "Logowanie nie powiodło się: Nieprawidłowy format odpowiedzi"
-
-msgid "No response received from server - please try again"
-msgstr "Brak odpowiedzi serwera – spróbuj ponownie"
-
-msgid "Invalid response format from server"
-msgstr "Nieprawidłowy format odpowiedzi serwera"
-
-msgid "Search API error"
-msgstr "Błąd API wyszukiwania"
-
-msgid "Failed to open target file"
-msgstr "Nie udało się otworzyć pliku docelowego"
-
-msgid "Unknown error"
-msgstr "Nieznany błąd"
-
-msgid "Download limit reached or file is an HTML page"
-msgstr "Osiągnięto limit pobrań lub plik jest stroną HTML"
-
-msgid "Download failed: the server sent an empty file"
-msgstr ""
-
-msgid "Failed to save downloaded file"
-msgstr "Nie udało się zapisać pobranego pliku"
-
-msgid "Download HTTP Error"
-msgstr "Błąd HTTP pobierania"
-
-msgid "Z-library server URL not configured."
-msgstr "Adres URL serwera Z-library nie został skonfigurowany."
-
-msgid "Failed to fetch recommended books (no response body)."
-msgstr "Nie udało się pobrać polecanych książek (brak treści odpowiedzi)."
-
-msgid "Failed to parse recommended books response."
-msgstr "Nie udało się przetworzyć odpowiedzi z polecanymi książkami."
-
-msgid "API returned an error for recommended books."
-msgstr "API zwróciło błąd dla polecanych książek."
-
-msgid "Failed to fetch most popular books (no response body)."
-msgstr "Nie udało się pobrać najpopularniejszych książek (brak treści odpowiedzi)."
-
-msgid "Failed to parse most popular books response."
-msgstr "Nie udało się przetworzyć odpowiedzi z najpopularniejszymi książkami."
-
-msgid "API returned an error for most popular books."
-msgstr "API zwróciło błąd dla najpopularniejszych książek."
-
-msgid "Z-library server URL not configured or book identifiers missing."
-msgstr "Adres URL serwera Z-library nie został skonfigurowany lub brakuje identyfikatorów książek."
-
-msgid "Failed to fetch book details (no response body)."
-msgstr "Nie udało się pobrać szczegółów książki (brak treści odpowiedzi)."
-
-msgid "Failed to parse book details response."
-msgstr "Nie udało się przetworzyć odpowiedzi z danymi książki."
-
-msgid "API returned an error for book details."
-msgstr "API zwróciło błąd dla szczegółów książki."
-
-msgid "Failed to process book details."
-msgstr "Nie udało się przetworzyć szczegółów książki."
-
-msgid "Failed to fetch download link (no response body)."
-msgstr "Nie udało się pobrać linku do pobrania (brak treści odpowiedzi)."
-
-msgid "Failed to parse download link response."
-msgstr "Nie udało się przetworzyć odpowiedzi z linkiem do pobrania."
-
-msgid "API returned an error for download link."
-msgstr "API zwróciło błąd dla linku do pobrania."
-
-msgid "Download limit reached. Please try again later or check your account."
-msgstr "Osiągnięto limit pobrań. Spróbuj ponownie później lub sprawdź swoje konto."
-
-msgid "No download link provided in API response."
-msgstr "Brak linku do pobrania w odpowiedzi API."
-
-msgid "Failed to fetch similar books (no response body)."
-msgstr "Nie udało się pobrać podobnych książek (brak treści odpowiedzi)."
-
-msgid "Failed to parse similar books response."
-msgstr "Nie udało się przetworzyć odpowiedzi z podobnymi książkami."
-
-msgid "API returned an error for similar books."
-msgstr "API zwróciło błąd dla podobnych książek."
-
-msgid "Failed to fetch downloaded books (no response body)."
-msgstr "Nie udało się pobrać listy pobranych książek (brak treści odpowiedzi)."
-
-msgid "Failed to parse downloaded books response."
-msgstr "Nie udało się przetworzyć odpowiedzi z pobranymi książkami."
-
-msgid "API returned an error for downloaded books."
-msgstr "API zwróciło błąd dla pobranych książek."
-
-msgid "Failed to fetch favorite books (no response body)."
-msgstr "Nie udało się pobrać ulubionych książek (brak treści odpowiedzi)."
-
-msgid "Failed to parse favorite books response."
-msgstr "Nie udało się przetworzyć odpowiedzi z ulubionymi książkami."
-
-msgid "API returned an error for favorite books."
-msgstr "API zwróciło błąd dla ulubionych książek."
-
-msgid "Failed to fetch booklists (no response body)."
-msgstr ""
-
-msgid "Failed to parse booklists response."
-msgstr ""
-
-msgid "API returned an error for booklists."
-msgstr ""
-
-msgid "Failed to fetch booklist books (no response body)."
-msgstr ""
-
-msgid "Failed to parse booklist books response."
-msgstr ""
-
-msgid "API returned an error for booklist books."
-msgstr ""
-
-msgid "Failed to remove the book from downloaded (no response body)."
-msgstr "Nie udało się usunąć książki z pobranych (brak treści odpowiedzi)."
-
-msgid "Failed to parse the remove from downloaded response."
-msgstr "Nie udało się przetworzyć odpowiedzi usuwania z pobranych."
-
-msgid "API returned an error for remove from downloaded."
-msgstr "API zwróciło błąd dla usuwania z pobranych."
-
-msgid "Failed to fetch unfavorite book (no response body)."
-msgstr "Nie udało się usunąć książki z ulubionych (brak treści odpowiedzi)."
-
-msgid "Failed to parse unfavorite book response."
-msgstr "Nie udało się przetworzyć odpowiedzi o usunięciu z ulubionych."
-
-msgid "API returned an error for unfavorite book."
-msgstr "API zwróciło błąd przy usuwaniu z ulubionych."
-
-msgid "Failed to fetch download quota status (no response body)."
-msgstr "Nie udało się pobrać stanu limitu pobrań (brak treści odpowiedzi)."
-
-msgid "Failed to parse download quota status response."
-msgstr "Nie udało się przetworzyć odpowiedzi o stanie limitu pobrań."
-
-msgid "API returned an error for download quota status."
-msgstr "API zwróciło błąd dla stanu limitu pobrań."
-
-msgid "Failed to fetch favorite-book IDs (no response body)."
-msgstr "Nie udało się pobrać identyfikatorów ulubionych książek (brak treści odpowiedzi)."
-
-msgid "Failed to parse favorite-book IDs."
-msgstr "Nie udało się przetworzyć identyfikatorów ulubionych książek."
-
-msgid "API returned an error for favorite-book IDs."
-msgstr "API zwróciło błąd dla identyfikatorów ulubionych książek."
-
-msgid "Failed to fetch favorite book (no response body)."
-msgstr "Nie udało się dodać książki do ulubionych (brak treści odpowiedzi)."
-
-msgid "Failed to parse favorite book response."
-msgstr "Nie udało się przetworzyć odpowiedzi o dodaniu do ulubionych."
-
-msgid "API returned an error for favorite book."
-msgstr "API zwróciło błąd przy dodawaniu do ulubionych."
-
-msgid "Failed to fetch book comments (no response body)."
-msgstr "Nie udało się pobrać komentarzy do książki (brak treści odpowiedzi)."
-
-msgid "Failed to parse book comments response."
-msgstr "Nie udało się przetworzyć odpowiedzi z komentarzami do książki."
-
-msgid "API returned an error for book comments."
-msgstr "API zwróciło błąd dla komentarzy do książki."
-
-msgid "Request cancelled."
-msgstr "Żądanie anulowane."
-
-msgid "Description"
-msgstr "Opis"
-
-msgid "No description available"
-msgstr "Brak opisu"
-
-msgid "Selection copied to clipboard."
-msgstr "Skopiowano zaznaczenie do schowka."
-
-msgid "pages"
-msgstr "stron"
-
-msgid "Cover"
-msgstr "Okładka"
-
-msgid "Back"
-msgstr "Wstecz"
-
-msgid "Download"
-msgstr "Pobierz"
-
-msgid "Format"
-msgstr "Format"
-
-msgid "Download book"
-msgstr "Pobierz książkę"
-
-msgid "More Similar Books"
-msgstr "Więcej podobnych książek"
-
-msgid "Refresh"
-msgstr "Odśwież"
-
-msgid "Remove From Favorites"
-msgstr "Usuń z ulubionych"
-
-msgid "Add To Favorites"
-msgstr "Dodaj do ulubionych"
-
-msgid "No Comments"
-msgstr "Brak komentarzy"
-
-msgid "Best match"
-msgstr "Najlepsze dopasowanie"
-
-msgid "Recently added"
-msgstr "Ostatnio dodane"
-
-msgid "Title"
-msgstr "Tytuł"
-
-msgid "Year"
-msgstr "Rok"
-
-msgid "File size"
-msgstr "Rozmiar pliku"
-
-msgid "Default"
-msgstr "Domyślne"
+msgid "Sign-in"
+msgstr "Logowanie"
 
 #, lua-format
-msgid "%ds"
-msgstr "%ds"
+msgid "Remove \"%s\" from your downloaded books?"
+msgstr "Usunąć \"%s\" z pobranych książek?"
 
-msgid "infinite"
-msgstr "nieskończony"
+msgid "Unknown Title"
+msgstr "Nieznany tytuł"
 
-#, lua-format
-msgid "Block: %ds, Total: %s"
-msgstr "Blok: %ds, Łącznie: %s"
-
-msgid "Operation failed, please retry."
-msgstr "Operacja nie powiodła się, spróbuj ponownie."
-
-msgid "Fetching domains..."
-msgstr "Pobieranie domen..."
-
-msgid "Successfully set base URL to: "
-msgstr "Ustawiono adres bazowy na:"
-
-msgid "Failed to find a working base URL."
-msgstr "Nie udało się znaleźć działającego podstawowego URL."
-
-msgid "Queued"
-msgstr "W kolejce"
-
-msgid "Checking"
-msgstr "Sprawdzanie"
-
-msgid "Invalid Base URL."
-msgstr "Nieprawidłowy podstawowy adres URL."
-
-msgid "Failed"
-msgstr "Niepowodzenie"
-
-msgid "Searching for working Z-library server..."
-msgstr "Wyszukiwanie działającego serwera Z-library..."
-
-msgid "Current Base URL:"
-msgstr "Bieżący adres bazowy:"
-
-msgid "Mirror site redirected to: "
-msgstr "Przekierowanie serwera lustrzanego do:"
-
-msgid "Auto-discover base URL"
-msgstr "Automatyczne wykrywanie podstawowego URL"
-
-msgid "Network unavailable."
-msgstr "Sieć niedostępna."
-
-msgid "Discovery is already running..."
-msgstr "Wykrywanie już trwa..."
-
-msgid "Refresh Dynamic Domains"
-msgstr "Odśwież dynamiczne domeny"
-
-msgid "This book's file type is unknown, so it cannot be downloaded."
-msgstr "Format tej książki jest nieznany, więc nie można jej pobrać."
-
-msgid "Book identifiers missing. Cannot download."
-msgstr "Brak identyfikatorów książki. Nie można pobrać."
+msgid "Remove"
+msgstr "Usuń"
 
 #, lua-format
-msgid "Cannot create downloads directory: %s"
-msgstr "Nie można utworzyć katalogu pobierania: %s"
+msgid "Download \"%s\"?"
+msgstr "Pobrać \"%s\"?"
 
 #, lua-format
-msgid "Couldn't create the folder for \"%s\". The book is in the download folder."
-msgstr "Nie można utworzyć folderu dla „%s”. Książka znajduje się w folderze pobierania."
+msgid "\"%s\" downloaded."
+msgstr "Pobrano „%s”."
+
+msgid "Download folder"
+msgstr "Folder pobierania"
+
+msgid "Book downloaded successfully. Open it now?"
+msgstr "Książka pomyślnie pobrana. Otworzyć teraz?"
+
+msgid "Turn off Wi-Fi after closing this dialog"
+msgstr "Wyłącz Wi-Fi po zamknięciu tego okna"
 
 #, lua-format
-msgid "Moved to \"%s\"."
-msgstr "Przeniesiono do „%s”."
+msgid "Move to: %s"
+msgstr "Przenieś do: %s"
 
-#, lua-format
-msgid "Couldn't move the book into \"%s\". It's in the download folder."
-msgstr "Nie można przenieść książki do „%s”. Znajduje się w folderze pobierania."
-
-msgid "Could not open reader UI."
-msgstr "Nie można otworzyć interfejsu czytnika."
-
-msgid "Download failed: Unknown error"
-msgstr "Pobieranie nie powiodło się: Nieznany błąd"
-
-msgid "Book download"
-msgstr "Pobieranie książki"
-
-msgid "Retrying download… (tap to cancel)"
-msgstr "Ponawianie pobierania… (dotknij, aby anulować)"
-
-msgid "Download cancelled."
-msgstr "Pobieranie anulowane."
-
-msgid "Unknown Author"
-msgstr "Nieznany autor"
-
-msgid "Author"
-msgstr "Autor"
-
-msgid "Update failed: Could not determine where to install the plugin."
-msgstr "Aktualizacja nie powiodła się: Nie można określić miejsca instalacji wtyczki."
-
-msgid "Installing update..."
-msgstr "Instalowanie aktualizacji..."
-
-msgid "Update installation failed."
-msgstr "Instalacja aktualizacji nie powiodła się."
-
-msgid "Update check failed: Could not determine plugin location."
-msgstr "Sprawdzenie aktualizacji nie powiodło się: Nie można określić lokalizacji wtyczki."
-
-#, lua-format
-msgid "Unsupported plugin path for OTA update: %s. Only 'plugins/zlibrary.koplugin' is supported."
-msgstr "Nieobsługiwana ścieżka wtyczki dla aktualizacji OTA: %s. Obsługiwana jest tylko 'plugins/zlibrary.koplugin'."
-
-msgid "Checking for updates..."
-msgstr "Sprawdzanie aktualizacji..."
-
-msgid "Failed to check for updates. Please check your internet connection."
-msgstr "Nie udało się sprawdzić aktualizacji. Sprawdź połączenie z internetem."
-
-msgid "Could not find update information (invalid data format)."
-msgstr "Nie znaleziono informacji o aktualizacji (nieprawidłowy format danych)."
-
-msgid "Could not find update version information."
-msgstr "Nie znaleziono informacji o wersji aktualizacji."
-
-msgid "Could not understand the update version format."
-msgstr "Nie można rozpoznać formatu wersji aktualizacji."
-
-msgid "Could not find update files."
-msgstr "Nie znaleziono plików aktualizacji."
-
-msgid "Could not find a download link for the update."
-msgstr "Nie znaleziono linku do pobrania aktualizacji."
-
-#, lua-format
-msgid "You are already on the latest version (%s) or newer."
-msgstr "Używasz już najnowszej wersji (%s) lub nowszej."
-
-#, lua-format
-msgid "Could not determine your current version, but the latest is %s. If you recently updated, you might be up-to-date."
-msgstr "Nie można określić aktualnej wersji, ale najnowsza to %s. Jeśli ostatnio zaktualizowałeś, prawdopodobnie masz aktualną wersję."
-
-#, lua-format
-msgid "New version available: %s (you have %s). Download and install?"
-msgstr "Dostępna nowa wersja: %s (obecnie masz %s). Pobrać i zainstalować?"
-
-msgid "an older version"
-msgstr "starsza wersja"
-
-msgid "Update available"
-msgstr "Dostępna aktualizacja"
-
-msgid "Update"
-msgstr "Aktualizuj"
-
-msgid "Cancel"
-msgstr "Anuluj"
-
-msgid "Downloading update..."
-msgstr "Pobieranie aktualizacji..."
-
-msgid "Download failed. Please try again later."
-msgstr "Pobieranie nie powiodło się. Spróbuj ponownie później."
-
-#, lua-format
-msgid "%s (tap to cancel)"
-msgstr "%s (dotknij, aby anulować)"
-
-msgid "Downloading… (tap to cancel)"
-msgstr "Pobieranie… (dotknij, aby anulować)"
-
-msgid "Z-library plugin"
-msgstr "Wtyczka Z-library"
-
-msgid "(version unknown)"
-msgstr "(nieznana wersja)"
-
-msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
-msgstr "Utrzymuję tę wtyczkę w wolnym czasie. Z-library zmienia się bez ostrzeżenia: logowanie trzeba było w tym roku wymieniać już dwa razy. Utrzymanie działania wyszukiwania, logowania i pobierania to ciągła praca."
-
-msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
-msgstr "Jeśli lubisz tę wtyczkę i chcesz, aby nadal działała, pomoże cena jednej kawy:"
-
-msgid "Show QR code"
-msgstr ""
+msgid "Open book"
+msgstr "Otwórz książkę"
 
 msgid "Close"
 msgstr "Zamknij"
 
-msgid "Update installed successfully. Please restart KOReader for changes to take effect."
-msgstr "Aktualizacja została pomyślnie zainstalowana. Uruchom ponownie KOReader, aby zmiany zaczęły obowiązywać."
-
-msgid "Update installed"
-msgstr "Aktualizacja zainstalowana"
-
-msgid "Select Z-library Download Directory"
-msgstr "Wybierz katalog pobierania Z-library"
-
 #, lua-format
-msgid "Download directory set to: %s"
-msgstr "Ustawiono katalog pobierania: %s"
+msgid "No %s found, please try again. Sometimes this requires a couple of retries."
+msgstr "Nie znaleziono: %s. Spróbuj ponownie – czasem potrzeba kilku prób."
 
-msgid "No directory selected."
-msgstr "Nie wybrano katalogu."
+msgid "Z-library Similar Books"
+msgstr "Z-library – podobne książki"
 
-#, lua-format
-msgid "%d items selected for %s."
-msgstr "Wybrano %d elementów dla %s."
-
-#, lua-format
-msgid "Filter cleared for %s."
-msgstr "Filtr dla %s został usunięty."
-
-msgid "Filter"
-msgstr "Filtruj"
-
-msgid "Show all"
-msgstr "Pokaż wszystkie"
-
-msgid "Set"
-msgstr "Ustaw"
-
-msgid "Setting saved successfully!"
-msgstr "Ustawienie zapisane pomyślnie!"
-
-msgid "Setting cleared."
-msgstr "Ustawienie zostało usunięte."
+msgid "Book Details"
+msgstr "Szczegóły książki"
 
 msgid "Please enter a name."
 msgstr "Wprowadź nazwę."
@@ -856,9 +839,6 @@ msgstr "Zmień nazwę"
 
 msgid "Rename sub-category"
 msgstr "Zmień nazwę podkategorii"
-
-msgid "Remove"
-msgstr "Usuń"
 
 #, lua-format
 msgid "Remove the sub-category \"%s\"? Books already filed there stay where they are."
@@ -888,6 +868,100 @@ msgstr "Dodaj kategorię…"
 
 msgid "New category"
 msgstr "Nowa kategoria"
+
+msgid "Please enter a category name."
+msgstr "Wprowadź nazwę kategorii."
+
+msgid "Category"
+msgstr "Kategoria"
+
+msgid "Category name"
+msgstr "Nazwa kategorii"
+
+msgid "Sub-category (optional)"
+msgstr "Podkategoria (opcjonalnie)"
+
+msgid "Sub-category name"
+msgstr "Nazwa podkategorii"
+
+msgid "Create"
+msgstr "Utwórz"
+
+msgid "Keep in download folder"
+msgstr "Zachowaj w folderze pobierania"
+
+msgid "New category…"
+msgstr "Nowa kategoria…"
+
+msgid "Move to"
+msgstr "Przenieś do"
+
+#, lua-format
+msgid "%s (tap to cancel)"
+msgstr "%s (dotknij, aby anulować)"
+
+msgid "Downloading… (tap to cancel)"
+msgstr "Pobieranie… (dotknij, aby anulować)"
+
+msgid "Z-library plugin"
+msgstr "Wtyczka Z-library"
+
+msgid "(version unknown)"
+msgstr "(nieznana wersja)"
+
+msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
+msgstr "Utrzymuję tę wtyczkę w wolnym czasie. Z-library zmienia się bez ostrzeżenia: logowanie trzeba było w tym roku wymieniać już dwa razy. Utrzymanie działania wyszukiwania, logowania i pobierania to ciągła praca."
+
+msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
+msgstr "Jeśli lubisz tę wtyczkę i chcesz, aby nadal działała, pomoże cena jednej kawy:"
+
+msgid "Show QR code"
+msgstr ""
+
+msgid "Update installed successfully. Please restart KOReader for changes to take effect."
+msgstr "Aktualizacja została pomyślnie zainstalowana. Uruchom ponownie KOReader, aby zmiany zaczęły obowiązywać."
+
+msgid "Update installed"
+msgstr "Aktualizacja zainstalowana"
+
+msgid "Request timed out"
+msgstr "Przekroczono limit czasu"
+
+msgid "Network connection error"
+msgstr "Błąd połączenia sieciowego"
+
+#, lua-format
+msgid "Could not complete \"%s\" due to a timeout%s. Would you like to retry?"
+msgstr "Nie udało się wykonać: „%s”. Przekroczono limit czasu%s. Czy spróbować ponownie?"
+
+#, lua-format
+msgid "Could not complete \"%s\" because the server address could not be found. Would you like to retry?"
+msgstr "Nie udało się wykonać: „%s”. Nie znaleziono adresu serwera. Czy spróbować ponownie?"
+
+#, lua-format
+msgid "Could not complete \"%s\" due to a network error. Would you like to retry?"
+msgstr "Nie udało się wykonać: „%s”. Wystąpił błąd sieci. Czy spróbować ponownie?"
+
+#, lua-format
+msgid "Could not complete \"%s\" due to a temporary issue. Would you like to retry?"
+msgstr "Nie udało się wykonać: „%s”. Wystąpił tymczasowy problem. Czy spróbować ponownie?"
+
+msgid "Retry"
+msgstr "Spróbuj ponownie"
+
+#, lua-format
+msgid "%d items selected for %s."
+msgstr "Wybrano %d elementów dla %s."
+
+#, lua-format
+msgid "Filter cleared for %s."
+msgstr "Filtr dla %s został usunięty."
+
+msgid "Filter"
+msgstr "Filtruj"
+
+msgid "Show all"
+msgstr "Pokaż wszystkie"
 
 msgid "Recent searches"
 msgstr "Ostatnie wyszukiwania"
@@ -935,79 +1009,8 @@ msgstr "Szukaj w Z-library"
 msgid "Sort by"
 msgstr "Sortuj według"
 
-msgid "Unknown Title"
-msgstr "Nieznany tytuł"
-
 msgid "Search Results"
 msgstr "Wyniki wyszukiwania"
-
-#, lua-format
-msgid "Remove \"%s\" from your downloaded books?"
-msgstr "Usunąć \"%s\" z pobranych książek?"
-
-msgid "Clear your stored username and password?"
-msgstr "Wyczyścić zapisaną nazwę użytkownika i hasło?"
-
-#, lua-format
-msgid "Download \"%s\"?"
-msgstr "Pobrać \"%s\"?"
-
-msgid "Please enter a category name."
-msgstr "Wprowadź nazwę kategorii."
-
-msgid "Category"
-msgstr "Kategoria"
-
-msgid "Category name"
-msgstr "Nazwa kategorii"
-
-msgid "Sub-category (optional)"
-msgstr "Podkategoria (opcjonalnie)"
-
-msgid "Sub-category name"
-msgstr "Nazwa podkategorii"
-
-msgid "Create"
-msgstr "Utwórz"
-
-msgid "Keep in download folder"
-msgstr "Zachowaj w folderze pobierania"
-
-msgid "New category…"
-msgstr "Nowa kategoria…"
-
-msgid "Move to"
-msgstr "Przenieś do"
-
-#, lua-format
-msgid "\"%s\" downloaded."
-msgstr "Pobrano „%s”."
-
-msgid "Download folder"
-msgstr "Folder pobierania"
-
-msgid "Book downloaded successfully. Open it now?"
-msgstr "Książka pomyślnie pobrana. Otworzyć teraz?"
-
-msgid "Turn off Wi-Fi after closing this dialog"
-msgstr "Wyłącz Wi-Fi po zamknięciu tego okna"
-
-#, lua-format
-msgid "Move to: %s"
-msgstr "Przenieś do: %s"
-
-msgid "Open book"
-msgstr "Otwórz książkę"
-
-#, lua-format
-msgid "No %s found, please try again. Sometimes this requires a couple of retries."
-msgstr "Nie znaleziono: %s. Spróbuj ponownie – czasem potrzeba kilku prób."
-
-msgid "Z-library Similar Books"
-msgstr "Z-library – podobne książki"
-
-msgid "Book Details"
-msgstr "Szczegóły książki"
 
 #, lua-format
 msgid "Retrying search for \"%s\"..."
@@ -1016,30 +1019,27 @@ msgstr "Ponawianie wyszukiwania dla \"%s\"..."
 msgid "Book search"
 msgstr "Wyszukiwanie książek"
 
-msgid "Request timed out"
-msgstr "Przekroczono limit czasu"
-
-msgid "Network connection error"
-msgstr "Błąd połączenia sieciowego"
+msgid "Select Z-library Download Directory"
+msgstr "Wybierz katalog pobierania Z-library"
 
 #, lua-format
-msgid "Could not complete \"%s\" due to a timeout%s. Would you like to retry?"
-msgstr "Nie udało się wykonać: „%s”. Przekroczono limit czasu%s. Czy spróbować ponownie?"
+msgid "Download directory set to: %s"
+msgstr "Ustawiono katalog pobierania: %s"
 
-#, lua-format
-msgid "Could not complete \"%s\" because the server address could not be found. Would you like to retry?"
-msgstr "Nie udało się wykonać: „%s”. Nie znaleziono adresu serwera. Czy spróbować ponownie?"
+msgid "No directory selected."
+msgstr "Nie wybrano katalogu."
 
-#, lua-format
-msgid "Could not complete \"%s\" due to a network error. Would you like to retry?"
-msgstr "Nie udało się wykonać: „%s”. Wystąpił błąd sieci. Czy spróbować ponownie?"
+msgid "Set"
+msgstr "Ustaw"
 
-#, lua-format
-msgid "Could not complete \"%s\" due to a temporary issue. Would you like to retry?"
-msgstr "Nie udało się wykonać: „%s”. Wystąpił tymczasowy problem. Czy spróbować ponownie?"
+msgid "Setting saved successfully!"
+msgstr "Ustawienie zapisane pomyślnie!"
 
-msgid "Retry"
-msgstr "Spróbuj ponownie"
+msgid "Setting cleared."
+msgstr "Ustawienie zostało usunięte."
+
+msgid "Clear your stored username and password?"
+msgstr "Wyczyścić zapisaną nazwę użytkownika i hasło?"
 
 #, lua-format
 msgid "Block timeout: %s"

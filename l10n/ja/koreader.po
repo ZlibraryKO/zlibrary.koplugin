@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 19:19+0000\n"
+"POT-Creation-Date: 2026-11-13 09:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,11 +24,618 @@ msgstr "Z-library検索"
 msgid "My books"
 msgstr "マイブック"
 
-msgid "Settings"
-msgstr "設定"
+msgid "Z-library server URL not configured."
+msgstr "Z-libraryサーバーのURLが設定されていません。"
+
+msgid "Failed to fetch downloaded books (no response body)."
+msgstr "ダウンロード済み書籍の取得に失敗しました（応答本文がありません）。"
+
+msgid "Failed to parse downloaded books response."
+msgstr "ダウンロード済み書籍の応答の解析に失敗しました。"
+
+msgid "API returned an error for downloaded books."
+msgstr "ダウンロード済み書籍に対してAPIがエラーを返しました。"
+
+msgid "Failed to fetch favorite books (no response body)."
+msgstr "お気に入りの書籍の取得に失敗しました（応答本文がありません）。"
+
+msgid "Failed to parse favorite books response."
+msgstr "お気に入りの書籍の応答の解析に失敗しました。"
+
+msgid "API returned an error for favorite books."
+msgstr "お気に入りの書籍に対してAPIがエラーを返しました。"
+
+msgid "Failed to fetch booklists (no response body)."
+msgstr ""
+
+msgid "Failed to parse booklists response."
+msgstr ""
+
+msgid "API returned an error for booklists."
+msgstr ""
+
+msgid "Untitled"
+msgstr "無題"
+
+msgid "Failed to fetch booklist books (no response body)."
+msgstr ""
+
+msgid "Failed to parse booklist books response."
+msgstr ""
+
+msgid "API returned an error for booklist books."
+msgstr ""
+
+msgid "Failed to remove the book from downloaded (no response body)."
+msgstr "ダウンロード済みからの書籍の削除に失敗しました（応答がありません）。"
+
+msgid "Failed to parse the remove from downloaded response."
+msgstr "ダウンロード済みからの削除応答の解析に失敗しました。"
+
+msgid "API returned an error for remove from downloaded."
+msgstr "ダウンロード済みからの削除に対してAPIがエラーを返しました。"
+
+msgid "Failed to fetch unfavorite book (no response body)."
+msgstr "お気に入り解除の取得に失敗しました（応答本文がありません）。"
+
+msgid "Failed to parse unfavorite book response."
+msgstr "お気に入り解除の応答の解析に失敗しました。"
+
+msgid "API returned an error for unfavorite book."
+msgstr "お気に入り解除に対してAPIがエラーを返しました。"
+
+msgid "Failed to fetch download quota status (no response body)."
+msgstr "ダウンロード上限の状況の取得に失敗しました（応答本文がありません）。"
+
+msgid "Failed to parse download quota status response."
+msgstr "ダウンロード上限の状況の応答の解析に失敗しました。"
+
+msgid "API returned an error for download quota status."
+msgstr "ダウンロード上限の状況に対してAPIがエラーを返しました。"
+
+msgid "Failed to fetch favorite-book IDs (no response body)."
+msgstr "お気に入り書籍のIDの取得に失敗しました（応答本文がありません）。"
+
+msgid "Failed to parse favorite-book IDs."
+msgstr "お気に入り書籍のIDの解析に失敗しました。"
+
+msgid "API returned an error for favorite-book IDs."
+msgstr "お気に入り書籍のIDに対してAPIがエラーを返しました。"
+
+msgid "Failed to fetch favorite book (no response body)."
+msgstr "お気に入り書籍の取得に失敗しました（応答本文がありません）。"
+
+msgid "Failed to parse favorite book response."
+msgstr "お気に入り書籍の応答の解析に失敗しました。"
+
+msgid "API returned an error for favorite book."
+msgstr "お気に入り書籍に対してAPIがエラーを返しました。"
+
+msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
+msgstr "Z-libraryサーバーのアドレス（URL）が設定されていません。Z-libraryプラグインの設定で指定してください。"
+
+msgid "No response received from server - please try again"
+msgstr "サーバーから応答がありません - 再試行してください"
+
+msgid "Invalid response format from server"
+msgstr "サーバーからの応答の形式が不正です"
+
+msgid "Search API error"
+msgstr "検索APIエラー"
+
+msgid "Failed to fetch recommended books (no response body)."
+msgstr "おすすめの書籍の取得に失敗しました（応答がありません）。"
+
+msgid "Failed to parse recommended books response."
+msgstr "おすすめの書籍の応答の解析に失敗しました。"
+
+msgid "API returned an error for recommended books."
+msgstr "おすすめの書籍に対してAPIがエラーを返しました。"
+
+msgid "Failed to fetch most popular books (no response body)."
+msgstr "人気の書籍の取得に失敗しました（応答がありません）。"
+
+msgid "Failed to parse most popular books response."
+msgstr "人気の書籍の応答の解析に失敗しました。"
+
+msgid "API returned an error for most popular books."
+msgstr "人気の書籍に対してAPIがエラーを返しました。"
+
+msgid "Z-library server URL not configured or book identifiers missing."
+msgstr "Z-libraryのサーバーURLが設定されていないか、書籍識別子が不足しています。"
+
+msgid "Failed to fetch book details (no response body)."
+msgstr "書籍の詳細の取得に失敗しました（応答がありません）。"
+
+msgid "Failed to parse book details response."
+msgstr "書籍の詳細応答の解析に失敗しました。"
+
+msgid "API returned an error for book details."
+msgstr "書籍の詳細に対してAPIがエラーを返しました。"
+
+msgid "Failed to process book details."
+msgstr "書籍の詳細の処理に失敗しました。"
+
+msgid "Failed to fetch similar books (no response body)."
+msgstr "類似書籍の取得に失敗しました（応答本文がありません）。"
+
+msgid "Failed to parse similar books response."
+msgstr "類似書籍の応答の解析に失敗しました。"
+
+msgid "API returned an error for similar books."
+msgstr "類似書籍に対してAPIがエラーを返しました。"
+
+msgid "Book ID is required."
+msgstr "書籍IDが必要です。"
+
+msgid "Failed to fetch book comments (no response body)."
+msgstr "書籍のコメントの取得に失敗しました（応答本文がありません）。"
+
+msgid "Failed to parse book comments response."
+msgstr "書籍のコメントの応答の解析に失敗しました。"
+
+msgid "API returned an error for book comments."
+msgstr "書籍のコメントに対してAPIがエラーを返しました。"
+
+msgid "Could not find the server address"
+msgstr "サーバーアドレスが見つかりませんでした"
+
+msgid "This Z-library server is refusing automated access"
+msgstr "このZ-libraryサーバーは自動アクセスを拒否しています"
+
+msgid "Credentials rejected or invalid response"
+msgstr "認証情報が拒否されたか、応答が不正です"
+
+msgid "Failed to open target file"
+msgstr "対象ファイルを開けませんでした"
+
+msgid "Unknown error"
+msgstr "不明なエラー"
+
+msgid "Download limit reached or file is an HTML page"
+msgstr "ダウンロード上限に達したか、ファイルがHTMLページです"
+
+msgid "HTTP Error"
+msgstr "HTTPエラー"
+
+msgid "Download failed: the server sent an empty file"
+msgstr ""
+
+msgid "Failed to save downloaded file"
+msgstr "ダウンロードしたファイルの保存に失敗しました"
+
+msgid "Download HTTP Error"
+msgstr "ダウンロードHTTPエラー"
+
+msgid "Failed to fetch download link (no response body)."
+msgstr "ダウンロードリンクの取得に失敗しました（応答本文がありません）。"
+
+msgid "Failed to parse download link response."
+msgstr "ダウンロードリンクの応答の解析に失敗しました。"
+
+msgid "API returned an error for download link."
+msgstr "ダウンロードリンクに対してAPIがエラーを返しました。"
+
+msgid "Download limit reached. Please try again later or check your account."
+msgstr "ダウンロード上限に達しました。後でもう一度お試しいただくか、アカウントをご確認ください。"
+
+msgid "No download link provided in API response."
+msgstr "APIの応答にダウンロードリンクがありません。"
+
+msgid "Login failed"
+msgstr "ログインに失敗しました"
+
+msgid "Login failed: Empty response from server"
+msgstr "ログインに失敗しました：サーバーからの応答が空です"
+
+msgid "Login failed: Invalid response format"
+msgstr "ログインに失敗しました：応答の形式が不正です"
+
+msgid "Request timed out - please check your connection and try again"
+msgstr "リクエストがタイムアウトしました - 接続を確認して再試行してください"
+
+msgid "Network request failed"
+msgstr "ネットワークリクエストに失敗しました"
+
+msgid "The Z-library address may be wrong or no longer exist."
+msgstr "Z-libraryのアドレスが間違っているか、存在しなくなった可能性があります。"
+
+msgid "Network connection error - please check your internet connection and try again"
+msgstr "ネットワーク接続エラー - インターネット接続を確認して再試行してください"
+
+msgid "Too many redirects"
+msgstr "リダイレクトが多すぎます"
+
+msgid "Try a different Z-library server."
+msgstr "別のZ-libraryサーバーをお試しください。"
+
+msgid "Unknown Status"
+msgstr "不明なステータス"
+
+msgid "Request cancelled."
+msgstr "リクエストをキャンセルしました。"
+
+msgid "pages"
+msgstr "ページ"
+
+msgid "Back"
+msgstr "戻る"
+
+msgid "Download"
+msgstr "ダウンロード"
+
+msgid "Format"
+msgstr "形式"
+
+msgid "Download book"
+msgstr "書籍をダウンロード"
+
+msgid "More Similar Books"
+msgstr "類似書籍をもっと見る"
+
+msgid "Description"
+msgstr "内容紹介"
+
+msgid "Comments"
+msgstr "コメント"
+
+msgid "Refresh"
+msgstr "更新"
+
+msgid "Remove From Favorites"
+msgstr "お気に入りから削除"
+
+msgid "Add To Favorites"
+msgstr "お気に入りに追加"
+
+msgid "No Comments"
+msgstr "コメントなし"
+
+msgid "No description available"
+msgstr "説明はありません"
+
+msgid "Selection copied to clipboard."
+msgstr "選択範囲をクリップボードにコピーしました。"
+
+msgid "Cover"
+msgstr "表紙"
+
+msgid "Most popular"
+msgstr "人気順"
+
+msgid "Best match"
+msgstr "関連度順"
+
+msgid "Recently added"
+msgstr "追加日順"
+
+msgid "Title"
+msgstr "タイトル"
+
+msgid "Year"
+msgstr "出版年"
+
+msgid "File size"
+msgstr "ファイルサイズ"
+
+msgid "Default"
+msgstr "デフォルト"
+
+#, lua-format
+msgid "%ds"
+msgstr "%d秒"
+
+msgid "infinite"
+msgstr "無限"
+
+#, lua-format
+msgid "Block: %ds, Total: %s"
+msgstr "ブロック：%d秒、合計：%s"
+
+msgid "Operation failed, please retry."
+msgstr "操作に失敗しました。再試行してください。"
+
+msgid "Fetching domains..."
+msgstr "ドメインを取得中..."
+
+msgid "Successfully set base URL to: "
+msgstr "ベースURLを次に設定しました:"
+
+msgid "Failed to find a working base URL."
+msgstr "動作するベースURLが見つかりませんでした。"
+
+msgid "Queued"
+msgstr "待機中"
+
+msgid "Checking"
+msgstr "確認中"
 
 msgid "Set base URL"
 msgstr "ベースURLを設定"
+
+msgid "Invalid Base URL."
+msgstr "無効なベースURLです。"
+
+msgid "Failed"
+msgstr "失敗"
+
+msgid "Searching for working Z-library server..."
+msgstr "動作中のZ-libraryサーバーを検索しています..."
+
+msgid "Current Base URL:"
+msgstr "現在のベースURL:"
+
+msgid "Mirror site redirected to: "
+msgstr "ミラーサイトのリダイレクト先:"
+
+msgid "Auto-discover base URL"
+msgstr "ベースURLを自動検出"
+
+msgid "Network unavailable."
+msgstr "ネットワークが利用できません。"
+
+msgid "Discovery is already running..."
+msgstr "検出は既に実行中です..."
+
+msgid "Refresh Dynamic Domains"
+msgstr "動的ドメインを更新"
+
+msgid "Fetching book details..."
+msgstr "書籍の詳細を取得中..."
+
+msgid "Could not retrieve book details."
+msgstr "書籍の詳細を取得できませんでした。"
+
+msgid "This book's file type is unknown, so it cannot be downloaded."
+msgstr "この書籍のファイル形式が不明なため、ダウンロードできません。"
+
+msgid "Book details"
+msgstr "書籍の詳細"
+
+msgid "Book identifiers missing. Cannot download."
+msgstr "書籍の識別子がありません。ダウンロードできません。"
+
+#, lua-format
+msgid "Cannot create downloads directory: %s"
+msgstr "ダウンロードディレクトリを作成できません: %s"
+
+#, lua-format
+msgid "Couldn't create the folder for \"%s\". The book is in the download folder."
+msgstr "「%s」のフォルダを作成できませんでした。書籍はダウンロードフォルダにあります。"
+
+#, lua-format
+msgid "Moved to \"%s\"."
+msgstr "「%s」に移動しました。"
+
+#, lua-format
+msgid "Couldn't move the book into \"%s\". It's in the download folder."
+msgstr "書籍を「%s」に移動できませんでした。書籍はダウンロードフォルダにあります。"
+
+msgid "Could not open reader UI."
+msgstr "リーダーUIを開けませんでした。"
+
+msgid "Download failed: Unknown error"
+msgstr "ダウンロードに失敗しました：不明なエラー"
+
+msgid "Book download"
+msgstr "書籍ダウンロード"
+
+msgid "Retrying download… (tap to cancel)"
+msgstr "ダウンロードを再試行中…（タップしてキャンセル）"
+
+msgid "Download cancelled."
+msgstr "ダウンロードをキャンセルしました。"
+
+msgid "Unknown Author"
+msgstr "不明な著者"
+
+msgid "Author"
+msgstr "著者"
+
+msgid "Search"
+msgstr "検索"
+
+msgid "Update failed: Could not determine where to install the plugin."
+msgstr "アップデートに失敗しました：プラグインのインストール先が不明です。"
+
+msgid "Installing update..."
+msgstr "アップデートをインストール中..."
+
+msgid "Update installation failed."
+msgstr "アップデートのインストールに失敗しました。"
+
+msgid "Update check failed: Could not determine plugin location."
+msgstr "アップデートの確認に失敗しました：プラグインの場所が不明です。"
+
+#, lua-format
+msgid "Unsupported plugin path for OTA update: %s. Only 'plugins/zlibrary.koplugin' is supported."
+msgstr "OTAアップデートに対応していないプラグインパス: %s。'plugins/zlibrary.koplugin'のみサポートされています。"
+
+msgid "Checking for updates..."
+msgstr "アップデートを確認中..."
+
+msgid "Failed to check for updates. Please check your internet connection."
+msgstr "アップデートの確認に失敗しました。インターネット接続を確認してください。"
+
+msgid "Could not find update information (invalid data format)."
+msgstr "アップデート情報が見つかりません（無効なデータ形式）。"
+
+msgid "Could not find update version information."
+msgstr "アップデートのバージョン情報が見つかりませんでした。"
+
+msgid "Could not understand the update version format."
+msgstr "アップデートのバージョン形式が不明です。"
+
+msgid "Could not find update files."
+msgstr "アップデートファイルが見つかりませんでした。"
+
+msgid "Could not find a download link for the update."
+msgstr "アップデートのダウンロードリンクが見つかりませんでした。"
+
+#, lua-format
+msgid "You are already on the latest version (%s) or newer."
+msgstr "すでに最新バージョン（%s）またはそれ以上を使用しています。"
+
+#, lua-format
+msgid "Could not determine your current version, but the latest is %s. If you recently updated, you might be up-to-date."
+msgstr "現在のバージョンが特定できませんが、最新は%sです。最近アップデートした場合は、すでに最新かもしれません。"
+
+#, lua-format
+msgid "New version available: %s (you have %s). Download and install?"
+msgstr "新しいバージョンが利用可能です：%s（現在のバージョン：%s）。ダウンロードしてインストールしますか？"
+
+msgid "an older version"
+msgstr "旧バージョン"
+
+msgid "Update available"
+msgstr "アップデートがあります"
+
+msgid "Update"
+msgstr "アップデート"
+
+msgid "Cancel"
+msgstr "キャンセル"
+
+msgid "Downloading update..."
+msgstr "アップデートをダウンロード中..."
+
+msgid "Download failed. Please try again later."
+msgstr "ダウンロードに失敗しました。後でもう一度お試しください。"
+
+msgid "Finding similar books..."
+msgstr "類似書籍を検索中..."
+
+msgid "No similar books found"
+msgstr "類似書籍が見つかりません"
+
+msgid "Similar books"
+msgstr "類似書籍"
+
+msgid "Removing book from downloaded…"
+msgstr "ダウンロード済みから書籍を削除中…"
+
+msgid "Failed to remove book from downloaded"
+msgstr "ダウンロード済みからの書籍の削除に失敗しました"
+
+msgid "Remove from downloaded"
+msgstr "ダウンロード済みからの削除"
+
+msgid "Book removed from downloaded, please refresh"
+msgstr "ダウンロード済みから書籍を削除しました。更新してください。"
+
+msgid "API returned an error, please try again"
+msgstr "APIがエラーを返しました。再試行してください"
+
+msgid "Removing book from favorites…"
+msgstr "お気に入りから削除中…"
+
+msgid "Failed to remove book from favorites"
+msgstr "お気に入りからの削除に失敗しました"
+
+msgid "Unfavorite book"
+msgstr "お気に入りからの削除"
+
+msgid "Book removed from favorites, please refresh"
+msgstr "お気に入りから削除しました。更新してください"
+
+msgid "Adding book to favorites…"
+msgstr "お気に入りに追加中…"
+
+msgid "Failed to add book to favorites"
+msgstr "お気に入りへの追加に失敗しました"
+
+msgid "Favorite book"
+msgstr "お気に入り書籍"
+
+msgid "Book added to favorites, please refresh"
+msgstr "お気に入りに追加しました。更新してください"
+
+msgid "Failed to fetch book details"
+msgstr "書籍の詳細の取得に失敗しました"
+
+msgid "Loading comments..."
+msgstr "コメントを読み込み中..."
+
+msgid "Failed to load comments"
+msgstr "コメントの読み込みに失敗しました"
+
+msgid "No comments to display"
+msgstr "表示するコメントはありません"
+
+msgid "Fetching most popular books..."
+msgstr "人気の書籍を取得中..."
+
+msgid "Failed to fetch most popular books"
+msgstr "人気の書籍の取得に失敗しました"
+
+msgid "Most popular books"
+msgstr "人気の書籍"
+
+msgid "Recommended"
+msgstr "おすすめ"
+
+msgid "Fetching recommended books..."
+msgstr "おすすめの書籍を取得中..."
+
+msgid "Failed to fetch recommended books"
+msgstr "おすすめの書籍の取得に失敗しました"
+
+msgid "Recommended books"
+msgstr "おすすめの書籍"
+
+msgid "Z-library My Books"
+msgstr "Z-library マイブック"
+
+msgid "Favorites"
+msgstr "お気に入り"
+
+msgid "Getting your favorites..."
+msgstr "お気に入りを取得中..."
+
+msgid "Failed to fetch favorite books"
+msgstr "お気に入りの書籍の取得に失敗しました"
+
+msgid "Favorite books"
+msgstr "お気に入りの書籍"
+
+msgid "Downloaded"
+msgstr "ダウンロード済み"
+
+msgid "Getting your downloaded..."
+msgstr "ダウンロード済みを取得中..."
+
+msgid "Failed to fetch downloaded books"
+msgstr "ダウンロード済み書籍の取得に失敗しました"
+
+msgid "Downloaded books"
+msgstr "ダウンロード済み書籍"
+
+msgid "Booklists"
+msgstr ""
+
+msgid "Getting your booklists..."
+msgstr ""
+
+msgid "Failed to fetch booklists"
+msgstr ""
+
+msgid "You have no booklists yet"
+msgstr ""
+
+msgid "Getting booklist books..."
+msgstr ""
+
+msgid "Failed to fetch booklist books"
+msgstr ""
+
+msgid "Booklist books"
+msgstr ""
+
+msgid "This booklist is empty"
+msgstr ""
+
+msgid "Settings"
+msgstr "設定"
 
 msgid "Set credentials"
 msgstr "認証情報を設定"
@@ -126,15 +733,6 @@ msgstr "ウェブブラウザとして名乗る"
 msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
 msgstr "プラグイン自身のものではなく、ブラウザの User-Agent を送信します。サーバーがプラグイン自体を拒否する場合にのみ試す価値があります。"
 
-msgid "Search"
-msgstr "検索"
-
-msgid "Recommended"
-msgstr "おすすめ"
-
-msgid "Most popular"
-msgstr "人気順"
-
 msgid "About"
 msgstr ""
 
@@ -146,150 +744,6 @@ msgstr "選択した検索言語とフォーマットに一致する書籍はあ
 
 msgid "No books found, please try again"
 msgstr "書籍が見つかりませんでした。もう一度お試しください。"
-
-msgid "Fetching most popular books..."
-msgstr "人気の書籍を取得中..."
-
-msgid "Failed to fetch most popular books"
-msgstr "人気の書籍の取得に失敗しました"
-
-msgid "Most popular books"
-msgstr "人気の書籍"
-
-msgid "Fetching recommended books..."
-msgstr "おすすめの書籍を取得中..."
-
-msgid "Failed to fetch recommended books"
-msgstr "おすすめの書籍の取得に失敗しました"
-
-msgid "Recommended books"
-msgstr "おすすめの書籍"
-
-msgid "API returned an error, please try again"
-msgstr "APIがエラーを返しました。再試行してください"
-
-msgid "Z-library My Books"
-msgstr "Z-library マイブック"
-
-msgid "Favorites"
-msgstr "お気に入り"
-
-msgid "Getting your favorites..."
-msgstr "お気に入りを取得中..."
-
-msgid "Failed to fetch favorite books"
-msgstr "お気に入りの書籍の取得に失敗しました"
-
-msgid "Favorite books"
-msgstr "お気に入りの書籍"
-
-msgid "Downloaded"
-msgstr "ダウンロード済み"
-
-msgid "Remove from downloaded"
-msgstr "ダウンロード済みからの削除"
-
-msgid "Getting your downloaded..."
-msgstr "ダウンロード済みを取得中..."
-
-msgid "Failed to fetch downloaded books"
-msgstr "ダウンロード済み書籍の取得に失敗しました"
-
-msgid "Downloaded books"
-msgstr "ダウンロード済み書籍"
-
-msgid "Booklists"
-msgstr ""
-
-msgid "Untitled"
-msgstr "無題"
-
-msgid "Getting your booklists..."
-msgstr ""
-
-msgid "Failed to fetch booklists"
-msgstr ""
-
-msgid "You have no booklists yet"
-msgstr ""
-
-msgid "Getting booklist books..."
-msgstr ""
-
-msgid "Failed to fetch booklist books"
-msgstr ""
-
-msgid "Booklist books"
-msgstr ""
-
-msgid "This booklist is empty"
-msgstr ""
-
-msgid "Finding similar books..."
-msgstr "類似書籍を検索中..."
-
-msgid "No similar books found"
-msgstr "類似書籍が見つかりません"
-
-msgid "Similar books"
-msgstr "類似書籍"
-
-msgid "Removing book from downloaded…"
-msgstr "ダウンロード済みから書籍を削除中…"
-
-msgid "Failed to remove book from downloaded"
-msgstr "ダウンロード済みからの書籍の削除に失敗しました"
-
-msgid "Book removed from downloaded, please refresh"
-msgstr "ダウンロード済みから書籍を削除しました。更新してください。"
-
-msgid "Removing book from favorites…"
-msgstr "お気に入りから削除中…"
-
-msgid "Failed to remove book from favorites"
-msgstr "お気に入りからの削除に失敗しました"
-
-msgid "Unfavorite book"
-msgstr "お気に入りからの削除"
-
-msgid "Book removed from favorites, please refresh"
-msgstr "お気に入りから削除しました。更新してください"
-
-msgid "Adding book to favorites…"
-msgstr "お気に入りに追加中…"
-
-msgid "Failed to add book to favorites"
-msgstr "お気に入りへの追加に失敗しました"
-
-msgid "Favorite book"
-msgstr "お気に入り書籍"
-
-msgid "Book added to favorites, please refresh"
-msgstr "お気に入りに追加しました。更新してください"
-
-msgid "Fetching book details..."
-msgstr "書籍の詳細を取得中..."
-
-msgid "Failed to fetch book details"
-msgstr "書籍の詳細の取得に失敗しました"
-
-msgid "Book details"
-msgstr "書籍の詳細"
-
-msgid "Could not retrieve book details."
-msgstr "書籍の詳細を取得できませんでした。"
-
-msgid "Logging in..."
-msgstr "ログイン中..."
-
-msgid "Credentials saved, but they could not be checked right now."
-msgstr "認証情報は保存されましたが、現時点では確認できませんでした。"
-
-msgid "Please set both username and password first."
-msgstr "まずユーザー名とパスワードを設定してください。"
-
-msgid "Sign-in"
-msgstr "ログイン"
 
 #, lua-format
 msgid "Searching for \"%s\"..."
@@ -309,535 +763,64 @@ msgstr "追加結果の読み込みに失敗しました"
 msgid "No more results found."
 msgstr "これ以上の結果は見つかりませんでした。"
 
-msgid "Book ID is required."
-msgstr "書籍IDが必要です。"
+msgid "Logging in..."
+msgstr "ログイン中..."
 
-msgid "Loading comments..."
-msgstr "コメントを読み込み中..."
+msgid "Credentials saved, but they could not be checked right now."
+msgstr "認証情報は保存されましたが、現時点では確認できませんでした。"
 
-msgid "Failed to load comments"
-msgstr "コメントの読み込みに失敗しました"
+msgid "Please set both username and password first."
+msgstr "まずユーザー名とパスワードを設定してください。"
 
-msgid "Comments"
-msgstr "コメント"
-
-msgid "No comments to display"
-msgstr "表示するコメントはありません"
-
-msgid "Could not find the server address"
-msgstr "サーバーアドレスが見つかりませんでした"
-
-msgid "This Z-library server is refusing automated access"
-msgstr "このZ-libraryサーバーは自動アクセスを拒否しています"
-
-msgid "Credentials rejected or invalid response"
-msgstr "認証情報が拒否されたか、応答が不正です"
-
-msgid "Request timed out - please check your connection and try again"
-msgstr "リクエストがタイムアウトしました - 接続を確認して再試行してください"
-
-msgid "Network request failed"
-msgstr "ネットワークリクエストに失敗しました"
-
-msgid "The Z-library address may be wrong or no longer exist."
-msgstr "Z-libraryのアドレスが間違っているか、存在しなくなった可能性があります。"
-
-msgid "Network connection error - please check your internet connection and try again"
-msgstr "ネットワーク接続エラー - インターネット接続を確認して再試行してください"
-
-msgid "Too many redirects"
-msgstr "リダイレクトが多すぎます"
-
-msgid "Try a different Z-library server."
-msgstr "別のZ-libraryサーバーをお試しください。"
-
-msgid "HTTP Error"
-msgstr "HTTPエラー"
-
-msgid "Unknown Status"
-msgstr "不明なステータス"
-
-msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
-msgstr "Z-libraryサーバーのアドレス（URL）が設定されていません。Z-libraryプラグインの設定で指定してください。"
-
-msgid "Login failed"
-msgstr "ログインに失敗しました"
-
-msgid "Login failed: Empty response from server"
-msgstr "ログインに失敗しました：サーバーからの応答が空です"
-
-msgid "Login failed: Invalid response format"
-msgstr "ログインに失敗しました：応答の形式が不正です"
-
-msgid "No response received from server - please try again"
-msgstr "サーバーから応答がありません - 再試行してください"
-
-msgid "Invalid response format from server"
-msgstr "サーバーからの応答の形式が不正です"
-
-msgid "Search API error"
-msgstr "検索APIエラー"
-
-msgid "Failed to open target file"
-msgstr "対象ファイルを開けませんでした"
-
-msgid "Unknown error"
-msgstr "不明なエラー"
-
-msgid "Download limit reached or file is an HTML page"
-msgstr "ダウンロード上限に達したか、ファイルがHTMLページです"
-
-msgid "Download failed: the server sent an empty file"
-msgstr ""
-
-msgid "Failed to save downloaded file"
-msgstr "ダウンロードしたファイルの保存に失敗しました"
-
-msgid "Download HTTP Error"
-msgstr "ダウンロードHTTPエラー"
-
-msgid "Z-library server URL not configured."
-msgstr "Z-libraryサーバーのURLが設定されていません。"
-
-msgid "Failed to fetch recommended books (no response body)."
-msgstr "おすすめの書籍の取得に失敗しました（応答がありません）。"
-
-msgid "Failed to parse recommended books response."
-msgstr "おすすめの書籍の応答の解析に失敗しました。"
-
-msgid "API returned an error for recommended books."
-msgstr "おすすめの書籍に対してAPIがエラーを返しました。"
-
-msgid "Failed to fetch most popular books (no response body)."
-msgstr "人気の書籍の取得に失敗しました（応答がありません）。"
-
-msgid "Failed to parse most popular books response."
-msgstr "人気の書籍の応答の解析に失敗しました。"
-
-msgid "API returned an error for most popular books."
-msgstr "人気の書籍に対してAPIがエラーを返しました。"
-
-msgid "Z-library server URL not configured or book identifiers missing."
-msgstr "Z-libraryのサーバーURLが設定されていないか、書籍識別子が不足しています。"
-
-msgid "Failed to fetch book details (no response body)."
-msgstr "書籍の詳細の取得に失敗しました（応答がありません）。"
-
-msgid "Failed to parse book details response."
-msgstr "書籍の詳細応答の解析に失敗しました。"
-
-msgid "API returned an error for book details."
-msgstr "書籍の詳細に対してAPIがエラーを返しました。"
-
-msgid "Failed to process book details."
-msgstr "書籍の詳細の処理に失敗しました。"
-
-msgid "Failed to fetch download link (no response body)."
-msgstr "ダウンロードリンクの取得に失敗しました（応答本文がありません）。"
-
-msgid "Failed to parse download link response."
-msgstr "ダウンロードリンクの応答の解析に失敗しました。"
-
-msgid "API returned an error for download link."
-msgstr "ダウンロードリンクに対してAPIがエラーを返しました。"
-
-msgid "Download limit reached. Please try again later or check your account."
-msgstr "ダウンロード上限に達しました。後でもう一度お試しいただくか、アカウントをご確認ください。"
-
-msgid "No download link provided in API response."
-msgstr "APIの応答にダウンロードリンクがありません。"
-
-msgid "Failed to fetch similar books (no response body)."
-msgstr "類似書籍の取得に失敗しました（応答本文がありません）。"
-
-msgid "Failed to parse similar books response."
-msgstr "類似書籍の応答の解析に失敗しました。"
-
-msgid "API returned an error for similar books."
-msgstr "類似書籍に対してAPIがエラーを返しました。"
-
-msgid "Failed to fetch downloaded books (no response body)."
-msgstr "ダウンロード済み書籍の取得に失敗しました（応答本文がありません）。"
-
-msgid "Failed to parse downloaded books response."
-msgstr "ダウンロード済み書籍の応答の解析に失敗しました。"
-
-msgid "API returned an error for downloaded books."
-msgstr "ダウンロード済み書籍に対してAPIがエラーを返しました。"
-
-msgid "Failed to fetch favorite books (no response body)."
-msgstr "お気に入りの書籍の取得に失敗しました（応答本文がありません）。"
-
-msgid "Failed to parse favorite books response."
-msgstr "お気に入りの書籍の応答の解析に失敗しました。"
-
-msgid "API returned an error for favorite books."
-msgstr "お気に入りの書籍に対してAPIがエラーを返しました。"
-
-msgid "Failed to fetch booklists (no response body)."
-msgstr ""
-
-msgid "Failed to parse booklists response."
-msgstr ""
-
-msgid "API returned an error for booklists."
-msgstr ""
-
-msgid "Failed to fetch booklist books (no response body)."
-msgstr ""
-
-msgid "Failed to parse booklist books response."
-msgstr ""
-
-msgid "API returned an error for booklist books."
-msgstr ""
-
-msgid "Failed to remove the book from downloaded (no response body)."
-msgstr "ダウンロード済みからの書籍の削除に失敗しました（応答がありません）。"
-
-msgid "Failed to parse the remove from downloaded response."
-msgstr "ダウンロード済みからの削除応答の解析に失敗しました。"
-
-msgid "API returned an error for remove from downloaded."
-msgstr "ダウンロード済みからの削除に対してAPIがエラーを返しました。"
-
-msgid "Failed to fetch unfavorite book (no response body)."
-msgstr "お気に入り解除の取得に失敗しました（応答本文がありません）。"
-
-msgid "Failed to parse unfavorite book response."
-msgstr "お気に入り解除の応答の解析に失敗しました。"
-
-msgid "API returned an error for unfavorite book."
-msgstr "お気に入り解除に対してAPIがエラーを返しました。"
-
-msgid "Failed to fetch download quota status (no response body)."
-msgstr "ダウンロード上限の状況の取得に失敗しました（応答本文がありません）。"
-
-msgid "Failed to parse download quota status response."
-msgstr "ダウンロード上限の状況の応答の解析に失敗しました。"
-
-msgid "API returned an error for download quota status."
-msgstr "ダウンロード上限の状況に対してAPIがエラーを返しました。"
-
-msgid "Failed to fetch favorite-book IDs (no response body)."
-msgstr "お気に入り書籍のIDの取得に失敗しました（応答本文がありません）。"
-
-msgid "Failed to parse favorite-book IDs."
-msgstr "お気に入り書籍のIDの解析に失敗しました。"
-
-msgid "API returned an error for favorite-book IDs."
-msgstr "お気に入り書籍のIDに対してAPIがエラーを返しました。"
-
-msgid "Failed to fetch favorite book (no response body)."
-msgstr "お気に入り書籍の取得に失敗しました（応答本文がありません）。"
-
-msgid "Failed to parse favorite book response."
-msgstr "お気に入り書籍の応答の解析に失敗しました。"
-
-msgid "API returned an error for favorite book."
-msgstr "お気に入り書籍に対してAPIがエラーを返しました。"
-
-msgid "Failed to fetch book comments (no response body)."
-msgstr "書籍のコメントの取得に失敗しました（応答本文がありません）。"
-
-msgid "Failed to parse book comments response."
-msgstr "書籍のコメントの応答の解析に失敗しました。"
-
-msgid "API returned an error for book comments."
-msgstr "書籍のコメントに対してAPIがエラーを返しました。"
-
-msgid "Request cancelled."
-msgstr "リクエストをキャンセルしました。"
-
-msgid "Description"
-msgstr "内容紹介"
-
-msgid "No description available"
-msgstr "説明はありません"
-
-msgid "Selection copied to clipboard."
-msgstr "選択範囲をクリップボードにコピーしました。"
-
-msgid "pages"
-msgstr "ページ"
-
-msgid "Cover"
-msgstr "表紙"
-
-msgid "Back"
-msgstr "戻る"
-
-msgid "Download"
-msgstr "ダウンロード"
-
-msgid "Format"
-msgstr "形式"
-
-msgid "Download book"
-msgstr "書籍をダウンロード"
-
-msgid "More Similar Books"
-msgstr "類似書籍をもっと見る"
-
-msgid "Refresh"
-msgstr "更新"
-
-msgid "Remove From Favorites"
-msgstr "お気に入りから削除"
-
-msgid "Add To Favorites"
-msgstr "お気に入りに追加"
-
-msgid "No Comments"
-msgstr "コメントなし"
-
-msgid "Best match"
-msgstr "関連度順"
-
-msgid "Recently added"
-msgstr "追加日順"
-
-msgid "Title"
-msgstr "タイトル"
-
-msgid "Year"
-msgstr "出版年"
-
-msgid "File size"
-msgstr "ファイルサイズ"
-
-msgid "Default"
-msgstr "デフォルト"
+msgid "Sign-in"
+msgstr "ログイン"
 
 #, lua-format
-msgid "%ds"
-msgstr "%d秒"
+msgid "Remove \"%s\" from your downloaded books?"
+msgstr "\"%s\" をダウンロード済みの書籍から削除しますか？"
 
-msgid "infinite"
-msgstr "無限"
+msgid "Unknown Title"
+msgstr "不明なタイトル"
 
-#, lua-format
-msgid "Block: %ds, Total: %s"
-msgstr "ブロック：%d秒、合計：%s"
-
-msgid "Operation failed, please retry."
-msgstr "操作に失敗しました。再試行してください。"
-
-msgid "Fetching domains..."
-msgstr "ドメインを取得中..."
-
-msgid "Successfully set base URL to: "
-msgstr "ベースURLを次に設定しました:"
-
-msgid "Failed to find a working base URL."
-msgstr "動作するベースURLが見つかりませんでした。"
-
-msgid "Queued"
-msgstr "待機中"
-
-msgid "Checking"
-msgstr "確認中"
-
-msgid "Invalid Base URL."
-msgstr "無効なベースURLです。"
-
-msgid "Failed"
-msgstr "失敗"
-
-msgid "Searching for working Z-library server..."
-msgstr "動作中のZ-libraryサーバーを検索しています..."
-
-msgid "Current Base URL:"
-msgstr "現在のベースURL:"
-
-msgid "Mirror site redirected to: "
-msgstr "ミラーサイトのリダイレクト先:"
-
-msgid "Auto-discover base URL"
-msgstr "ベースURLを自動検出"
-
-msgid "Network unavailable."
-msgstr "ネットワークが利用できません。"
-
-msgid "Discovery is already running..."
-msgstr "検出は既に実行中です..."
-
-msgid "Refresh Dynamic Domains"
-msgstr "動的ドメインを更新"
-
-msgid "This book's file type is unknown, so it cannot be downloaded."
-msgstr "この書籍のファイル形式が不明なため、ダウンロードできません。"
-
-msgid "Book identifiers missing. Cannot download."
-msgstr "書籍の識別子がありません。ダウンロードできません。"
+msgid "Remove"
+msgstr "削除"
 
 #, lua-format
-msgid "Cannot create downloads directory: %s"
-msgstr "ダウンロードディレクトリを作成できません: %s"
+msgid "Download \"%s\"?"
+msgstr "\"%s\" をダウンロードしますか？"
 
 #, lua-format
-msgid "Couldn't create the folder for \"%s\". The book is in the download folder."
-msgstr "「%s」のフォルダを作成できませんでした。書籍はダウンロードフォルダにあります。"
+msgid "\"%s\" downloaded."
+msgstr "「%s」をダウンロードしました。"
+
+msgid "Download folder"
+msgstr "ダウンロードフォルダ"
+
+msgid "Book downloaded successfully. Open it now?"
+msgstr "書籍のダウンロードが完了しました。今すぐ開きますか？"
+
+msgid "Turn off Wi-Fi after closing this dialog"
+msgstr "このダイアログを閉じた後にWi-Fiをオフにする"
 
 #, lua-format
-msgid "Moved to \"%s\"."
-msgstr "「%s」に移動しました。"
+msgid "Move to: %s"
+msgstr "移動先: %s"
 
-#, lua-format
-msgid "Couldn't move the book into \"%s\". It's in the download folder."
-msgstr "書籍を「%s」に移動できませんでした。書籍はダウンロードフォルダにあります。"
-
-msgid "Could not open reader UI."
-msgstr "リーダーUIを開けませんでした。"
-
-msgid "Download failed: Unknown error"
-msgstr "ダウンロードに失敗しました：不明なエラー"
-
-msgid "Book download"
-msgstr "書籍ダウンロード"
-
-msgid "Retrying download… (tap to cancel)"
-msgstr "ダウンロードを再試行中…（タップしてキャンセル）"
-
-msgid "Download cancelled."
-msgstr "ダウンロードをキャンセルしました。"
-
-msgid "Unknown Author"
-msgstr "不明な著者"
-
-msgid "Author"
-msgstr "著者"
-
-msgid "Update failed: Could not determine where to install the plugin."
-msgstr "アップデートに失敗しました：プラグインのインストール先が不明です。"
-
-msgid "Installing update..."
-msgstr "アップデートをインストール中..."
-
-msgid "Update installation failed."
-msgstr "アップデートのインストールに失敗しました。"
-
-msgid "Update check failed: Could not determine plugin location."
-msgstr "アップデートの確認に失敗しました：プラグインの場所が不明です。"
-
-#, lua-format
-msgid "Unsupported plugin path for OTA update: %s. Only 'plugins/zlibrary.koplugin' is supported."
-msgstr "OTAアップデートに対応していないプラグインパス: %s。'plugins/zlibrary.koplugin'のみサポートされています。"
-
-msgid "Checking for updates..."
-msgstr "アップデートを確認中..."
-
-msgid "Failed to check for updates. Please check your internet connection."
-msgstr "アップデートの確認に失敗しました。インターネット接続を確認してください。"
-
-msgid "Could not find update information (invalid data format)."
-msgstr "アップデート情報が見つかりません（無効なデータ形式）。"
-
-msgid "Could not find update version information."
-msgstr "アップデートのバージョン情報が見つかりませんでした。"
-
-msgid "Could not understand the update version format."
-msgstr "アップデートのバージョン形式が不明です。"
-
-msgid "Could not find update files."
-msgstr "アップデートファイルが見つかりませんでした。"
-
-msgid "Could not find a download link for the update."
-msgstr "アップデートのダウンロードリンクが見つかりませんでした。"
-
-#, lua-format
-msgid "You are already on the latest version (%s) or newer."
-msgstr "すでに最新バージョン（%s）またはそれ以上を使用しています。"
-
-#, lua-format
-msgid "Could not determine your current version, but the latest is %s. If you recently updated, you might be up-to-date."
-msgstr "現在のバージョンが特定できませんが、最新は%sです。最近アップデートした場合は、すでに最新かもしれません。"
-
-#, lua-format
-msgid "New version available: %s (you have %s). Download and install?"
-msgstr "新しいバージョンが利用可能です：%s（現在のバージョン：%s）。ダウンロードしてインストールしますか？"
-
-msgid "an older version"
-msgstr "旧バージョン"
-
-msgid "Update available"
-msgstr "アップデートがあります"
-
-msgid "Update"
-msgstr "アップデート"
-
-msgid "Cancel"
-msgstr "キャンセル"
-
-msgid "Downloading update..."
-msgstr "アップデートをダウンロード中..."
-
-msgid "Download failed. Please try again later."
-msgstr "ダウンロードに失敗しました。後でもう一度お試しください。"
-
-#, lua-format
-msgid "%s (tap to cancel)"
-msgstr "%s（タップしてキャンセル）"
-
-msgid "Downloading… (tap to cancel)"
-msgstr "ダウンロード中…（タップしてキャンセル）"
-
-msgid "Z-library plugin"
-msgstr "Z-library プラグイン"
-
-msgid "(version unknown)"
-msgstr "(バージョン不明)"
-
-msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
-msgstr "このプラグインは空き時間に保守しています。Z-library は予告なく変更され、今年はログイン方式を二度も差し替える必要がありました。検索・ログイン・ダウンロードを動き続けさせるには、継続的な作業が必要です。"
-
-msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
-msgstr "このプラグインを気に入り、これからも使い続けたいと思われましたら、コーヒー一杯分のご支援が助けになります:"
-
-msgid "Show QR code"
-msgstr ""
+msgid "Open book"
+msgstr "書籍を開く"
 
 msgid "Close"
 msgstr "閉じる"
 
-msgid "Update installed successfully. Please restart KOReader for changes to take effect."
-msgstr "アップデートが正常にインストールされました。変更を有効にするにはKOReaderを再起動してください。"
-
-msgid "Update installed"
-msgstr "更新をインストールしました"
-
-msgid "Select Z-library Download Directory"
-msgstr "Z-libraryのダウンロードディレクトリを選択"
-
 #, lua-format
-msgid "Download directory set to: %s"
-msgstr "ダウンロードディレクトリが設定されました: %s"
+msgid "No %s found, please try again. Sometimes this requires a couple of retries."
+msgstr "%sが見つかりませんでした。再試行してください。数回の再試行が必要な場合があります。"
 
-msgid "No directory selected."
-msgstr "ディレクトリが選択されていません。"
+msgid "Z-library Similar Books"
+msgstr "Z-library 類似書籍"
 
-#, lua-format
-msgid "%d items selected for %s."
-msgstr "%dに対して%s件が選択されました。"
-
-#, lua-format
-msgid "Filter cleared for %s."
-msgstr "%sのフィルターがクリアされました。"
-
-msgid "Filter"
-msgstr "フィルター"
-
-msgid "Show all"
-msgstr "すべて表示"
-
-msgid "Set"
-msgstr "設定"
-
-msgid "Setting saved successfully!"
-msgstr "設定が正常に保存されました！"
-
-msgid "Setting cleared."
-msgstr "設定がクリアされました。"
+msgid "Book Details"
+msgstr "書籍の詳細"
 
 msgid "Please enter a name."
 msgstr "名前を入力してください。"
@@ -856,9 +839,6 @@ msgstr "名前を変更"
 
 msgid "Rename sub-category"
 msgstr "サブカテゴリ名を変更"
-
-msgid "Remove"
-msgstr "削除"
 
 #, lua-format
 msgid "Remove the sub-category \"%s\"? Books already filed there stay where they are."
@@ -888,6 +868,100 @@ msgstr "カテゴリを追加…"
 
 msgid "New category"
 msgstr "新しいカテゴリ"
+
+msgid "Please enter a category name."
+msgstr "カテゴリ名を入力してください。"
+
+msgid "Category"
+msgstr "カテゴリ"
+
+msgid "Category name"
+msgstr "カテゴリ名"
+
+msgid "Sub-category (optional)"
+msgstr "サブカテゴリ（任意）"
+
+msgid "Sub-category name"
+msgstr "サブカテゴリ名"
+
+msgid "Create"
+msgstr "作成"
+
+msgid "Keep in download folder"
+msgstr "ダウンロードフォルダに保存"
+
+msgid "New category…"
+msgstr "新しいカテゴリ…"
+
+msgid "Move to"
+msgstr "移動先"
+
+#, lua-format
+msgid "%s (tap to cancel)"
+msgstr "%s（タップしてキャンセル）"
+
+msgid "Downloading… (tap to cancel)"
+msgstr "ダウンロード中…（タップしてキャンセル）"
+
+msgid "Z-library plugin"
+msgstr "Z-library プラグイン"
+
+msgid "(version unknown)"
+msgstr "(バージョン不明)"
+
+msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
+msgstr "このプラグインは空き時間に保守しています。Z-library は予告なく変更され、今年はログイン方式を二度も差し替える必要がありました。検索・ログイン・ダウンロードを動き続けさせるには、継続的な作業が必要です。"
+
+msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
+msgstr "このプラグインを気に入り、これからも使い続けたいと思われましたら、コーヒー一杯分のご支援が助けになります:"
+
+msgid "Show QR code"
+msgstr ""
+
+msgid "Update installed successfully. Please restart KOReader for changes to take effect."
+msgstr "アップデートが正常にインストールされました。変更を有効にするにはKOReaderを再起動してください。"
+
+msgid "Update installed"
+msgstr "更新をインストールしました"
+
+msgid "Request timed out"
+msgstr "リクエストがタイムアウトしました"
+
+msgid "Network connection error"
+msgstr "ネットワーク接続エラー"
+
+#, lua-format
+msgid "Could not complete \"%s\" due to a timeout%s. Would you like to retry?"
+msgstr "「%s」はタイムアウト%sのため完了できませんでした。再試行しますか？"
+
+#, lua-format
+msgid "Could not complete \"%s\" because the server address could not be found. Would you like to retry?"
+msgstr "「%s」はサーバーアドレスが見つからないため完了できませんでした。再試行しますか？"
+
+#, lua-format
+msgid "Could not complete \"%s\" due to a network error. Would you like to retry?"
+msgstr "「%s」はネットワークエラーのため完了できませんでした。再試行しますか？"
+
+#, lua-format
+msgid "Could not complete \"%s\" due to a temporary issue. Would you like to retry?"
+msgstr "「%s」は一時的な問題のため完了できませんでした。再試行しますか？"
+
+msgid "Retry"
+msgstr "再試行"
+
+#, lua-format
+msgid "%d items selected for %s."
+msgstr "%dに対して%s件が選択されました。"
+
+#, lua-format
+msgid "Filter cleared for %s."
+msgstr "%sのフィルターがクリアされました。"
+
+msgid "Filter"
+msgstr "フィルター"
+
+msgid "Show all"
+msgstr "すべて表示"
 
 msgid "Recent searches"
 msgstr "最近の検索"
@@ -935,79 +1009,8 @@ msgstr "Z-libraryを検索"
 msgid "Sort by"
 msgstr "並び替え"
 
-msgid "Unknown Title"
-msgstr "不明なタイトル"
-
 msgid "Search Results"
 msgstr "検索結果"
-
-#, lua-format
-msgid "Remove \"%s\" from your downloaded books?"
-msgstr "\"%s\" をダウンロード済みの書籍から削除しますか？"
-
-msgid "Clear your stored username and password?"
-msgstr "保存されているユーザー名とパスワードをクリアしますか？"
-
-#, lua-format
-msgid "Download \"%s\"?"
-msgstr "\"%s\" をダウンロードしますか？"
-
-msgid "Please enter a category name."
-msgstr "カテゴリ名を入力してください。"
-
-msgid "Category"
-msgstr "カテゴリ"
-
-msgid "Category name"
-msgstr "カテゴリ名"
-
-msgid "Sub-category (optional)"
-msgstr "サブカテゴリ（任意）"
-
-msgid "Sub-category name"
-msgstr "サブカテゴリ名"
-
-msgid "Create"
-msgstr "作成"
-
-msgid "Keep in download folder"
-msgstr "ダウンロードフォルダに保存"
-
-msgid "New category…"
-msgstr "新しいカテゴリ…"
-
-msgid "Move to"
-msgstr "移動先"
-
-#, lua-format
-msgid "\"%s\" downloaded."
-msgstr "「%s」をダウンロードしました。"
-
-msgid "Download folder"
-msgstr "ダウンロードフォルダ"
-
-msgid "Book downloaded successfully. Open it now?"
-msgstr "書籍のダウンロードが完了しました。今すぐ開きますか？"
-
-msgid "Turn off Wi-Fi after closing this dialog"
-msgstr "このダイアログを閉じた後にWi-Fiをオフにする"
-
-#, lua-format
-msgid "Move to: %s"
-msgstr "移動先: %s"
-
-msgid "Open book"
-msgstr "書籍を開く"
-
-#, lua-format
-msgid "No %s found, please try again. Sometimes this requires a couple of retries."
-msgstr "%sが見つかりませんでした。再試行してください。数回の再試行が必要な場合があります。"
-
-msgid "Z-library Similar Books"
-msgstr "Z-library 類似書籍"
-
-msgid "Book Details"
-msgstr "書籍の詳細"
 
 #, lua-format
 msgid "Retrying search for \"%s\"..."
@@ -1016,30 +1019,27 @@ msgstr "再検索中: \"%s\"..."
 msgid "Book search"
 msgstr "書籍検索"
 
-msgid "Request timed out"
-msgstr "リクエストがタイムアウトしました"
-
-msgid "Network connection error"
-msgstr "ネットワーク接続エラー"
+msgid "Select Z-library Download Directory"
+msgstr "Z-libraryのダウンロードディレクトリを選択"
 
 #, lua-format
-msgid "Could not complete \"%s\" due to a timeout%s. Would you like to retry?"
-msgstr "「%s」はタイムアウト%sのため完了できませんでした。再試行しますか？"
+msgid "Download directory set to: %s"
+msgstr "ダウンロードディレクトリが設定されました: %s"
 
-#, lua-format
-msgid "Could not complete \"%s\" because the server address could not be found. Would you like to retry?"
-msgstr "「%s」はサーバーアドレスが見つからないため完了できませんでした。再試行しますか？"
+msgid "No directory selected."
+msgstr "ディレクトリが選択されていません。"
 
-#, lua-format
-msgid "Could not complete \"%s\" due to a network error. Would you like to retry?"
-msgstr "「%s」はネットワークエラーのため完了できませんでした。再試行しますか？"
+msgid "Set"
+msgstr "設定"
 
-#, lua-format
-msgid "Could not complete \"%s\" due to a temporary issue. Would you like to retry?"
-msgstr "「%s」は一時的な問題のため完了できませんでした。再試行しますか？"
+msgid "Setting saved successfully!"
+msgstr "設定が正常に保存されました！"
 
-msgid "Retry"
-msgstr "再試行"
+msgid "Setting cleared."
+msgstr "設定がクリアされました。"
+
+msgid "Clear your stored username and password?"
+msgstr "保存されているユーザー名とパスワードをクリアしますか？"
 
 #, lua-format
 msgid "Block timeout: %s"

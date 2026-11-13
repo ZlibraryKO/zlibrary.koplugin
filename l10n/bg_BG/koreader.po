@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 19:19+0000\n"
+"POT-Creation-Date: 2026-11-13 09:25+0000\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -30,11 +30,618 @@ msgstr "Търсене в Z-library"
 msgid "My books"
 msgstr "Моите книги"
 
-msgid "Settings"
-msgstr "Настройки"
+msgid "Z-library server URL not configured."
+msgstr "URL адресът на сървъра на Z-library не е конфигуриран."
+
+msgid "Failed to fetch downloaded books (no response body)."
+msgstr "Неуспешно зареждане на изтеглени книги (няма тяло на отговора)."
+
+msgid "Failed to parse downloaded books response."
+msgstr "Неуспешен разбор на отговора за изтеглени книги."
+
+msgid "API returned an error for downloaded books."
+msgstr "API върна грешка за изтеглени книги."
+
+msgid "Failed to fetch favorite books (no response body)."
+msgstr "Неуспешно зареждане на любими книги (няма тяло на отговора)."
+
+msgid "Failed to parse favorite books response."
+msgstr "Неуспешен разбор на отговора за любими книги."
+
+msgid "API returned an error for favorite books."
+msgstr "API върна грешка за любими книги."
+
+msgid "Failed to fetch booklists (no response body)."
+msgstr ""
+
+msgid "Failed to parse booklists response."
+msgstr ""
+
+msgid "API returned an error for booklists."
+msgstr ""
+
+msgid "Untitled"
+msgstr "Без заглавие"
+
+msgid "Failed to fetch booklist books (no response body)."
+msgstr ""
+
+msgid "Failed to parse booklist books response."
+msgstr ""
+
+msgid "API returned an error for booklist books."
+msgstr ""
+
+msgid "Failed to remove the book from downloaded (no response body)."
+msgstr "Неуспешно премахване на книгата от изтеглени (няма тяло на отговора)."
+
+msgid "Failed to parse the remove from downloaded response."
+msgstr "Неуспешен разбор на отговора при премахване от изтеглени."
+
+msgid "API returned an error for remove from downloaded."
+msgstr "API върна грешка при премахване от изтеглени."
+
+msgid "Failed to fetch unfavorite book (no response body)."
+msgstr "Неуспешно зареждане при премахване от любими (няма тяло на отговора)."
+
+msgid "Failed to parse unfavorite book response."
+msgstr "Неуспешен разбор на отговора при премахване от любими."
+
+msgid "API returned an error for unfavorite book."
+msgstr "API върна грешка при премахване от любими."
+
+msgid "Failed to fetch download quota status (no response body)."
+msgstr "Неуспешно зареждане на статус на лимита за изтегляне (няма тяло на отговора)."
+
+msgid "Failed to parse download quota status response."
+msgstr "Неуспешен разбор на отговора за статус на лимита за изтегляне."
+
+msgid "API returned an error for download quota status."
+msgstr "API върна грешка за статус на лимита за изтегляне."
+
+msgid "Failed to fetch favorite-book IDs (no response body)."
+msgstr "Неуспешно зареждане на идентификатори на любими книги (няма тяло на отговора)."
+
+msgid "Failed to parse favorite-book IDs."
+msgstr "Неуспешен разбор на идентификатори на любими книги."
+
+msgid "API returned an error for favorite-book IDs."
+msgstr "API върна грешка за идентификатори на любими книги."
+
+msgid "Failed to fetch favorite book (no response body)."
+msgstr "Неуспешно зареждане на любима книга (няма тяло на отговора)."
+
+msgid "Failed to parse favorite book response."
+msgstr "Неуспешен разбор на отговора за любима книга."
+
+msgid "API returned an error for favorite book."
+msgstr "API върна грешка за любима книга."
+
+msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
+msgstr "Адресът (URL) на сървъра на Z-library не е зададен. Конфигурирайте го в настройките на приставката."
+
+msgid "No response received from server - please try again"
+msgstr "Не е получен отговор от сървъра — опитайте отново"
+
+msgid "Invalid response format from server"
+msgstr "Невалиден формат на отговора от сървъра"
+
+msgid "Search API error"
+msgstr "Грешка в API за търсене"
+
+msgid "Failed to fetch recommended books (no response body)."
+msgstr "Неуспешно зареждане на препоръчани книги (няма тяло на отговора)."
+
+msgid "Failed to parse recommended books response."
+msgstr "Неуспешен разбор на отговора за препоръчани книги."
+
+msgid "API returned an error for recommended books."
+msgstr "API върна грешка за препоръчани книги."
+
+msgid "Failed to fetch most popular books (no response body)."
+msgstr "Неуспешно зареждане на най-популярни книги (няма тяло на отговора)."
+
+msgid "Failed to parse most popular books response."
+msgstr "Неуспешен разбор на отговора за най-популярни книги."
+
+msgid "API returned an error for most popular books."
+msgstr "API върна грешка за най-популярни книги."
+
+msgid "Z-library server URL not configured or book identifiers missing."
+msgstr "URL адресът на сървъра не е конфигуриран или липсват идентификатори на книгата."
+
+msgid "Failed to fetch book details (no response body)."
+msgstr "Неуспешно зареждане на детайли за книгата (няма тяло на отговора)."
+
+msgid "Failed to parse book details response."
+msgstr "Неуспешен разбор на отговора за детайли на книгата."
+
+msgid "API returned an error for book details."
+msgstr "API върна грешка за детайли на книгата."
+
+msgid "Failed to process book details."
+msgstr "Неуспешна обработка на детайли за книгата."
+
+msgid "Failed to fetch similar books (no response body)."
+msgstr "Неуспешно зареждане на подобни книги (няма тяло на отговора)."
+
+msgid "Failed to parse similar books response."
+msgstr "Неуспешен разбор на отговора за подобни книги."
+
+msgid "API returned an error for similar books."
+msgstr "API върна грешка за подобни книги."
+
+msgid "Book ID is required."
+msgstr "Изисква се ID на книгата."
+
+msgid "Failed to fetch book comments (no response body)."
+msgstr "Неуспешно извличане на коментари за книгата (няма отговор)."
+
+msgid "Failed to parse book comments response."
+msgstr "Не успя да се анализира отговорът с коментари за книгата."
+
+msgid "API returned an error for book comments."
+msgstr "API върна грешка за коментарите на книгата."
+
+msgid "Could not find the server address"
+msgstr "Не може да се намери адресът на сървъра"
+
+msgid "This Z-library server is refusing automated access"
+msgstr "Този сървър на Z-library блокира автоматизирания достъп"
+
+msgid "Credentials rejected or invalid response"
+msgstr "Отхвърлени идентификационни данни или невалиден отговор"
+
+msgid "Failed to open target file"
+msgstr "Неуспешно отваряне на целевия файл"
+
+msgid "Unknown error"
+msgstr "Непозната грешка"
+
+msgid "Download limit reached or file is an HTML page"
+msgstr "Достигнат лимит за изтегляне или файлът е HTML страница"
+
+msgid "HTTP Error"
+msgstr "HTTP грешка"
+
+msgid "Download failed: the server sent an empty file"
+msgstr ""
+
+msgid "Failed to save downloaded file"
+msgstr "Неуспешно запазване на изтегления файл"
+
+msgid "Download HTTP Error"
+msgstr "HTTP грешка при изтегляне"
+
+msgid "Failed to fetch download link (no response body)."
+msgstr "Неуспешно зареждане на линк за изтегляне (няма тяло на отговора)."
+
+msgid "Failed to parse download link response."
+msgstr "Неуспешен разбор на отговора за линк за изтегляне."
+
+msgid "API returned an error for download link."
+msgstr "API върна грешка за линк за изтегляне."
+
+msgid "Download limit reached. Please try again later or check your account."
+msgstr "Достигнат лимит за изтегляне. Опитайте по-късно или проверете акаунта си."
+
+msgid "No download link provided in API response."
+msgstr "В отговора на API не е предоставен линк за изтегляне."
+
+msgid "Login failed"
+msgstr "Неуспешно влизане"
+
+msgid "Login failed: Empty response from server"
+msgstr "Неуспешно влизане: Празен отговор от сървъра"
+
+msgid "Login failed: Invalid response format"
+msgstr "Неуспешно влизане: Невалиден формат на отговора"
+
+msgid "Request timed out - please check your connection and try again"
+msgstr "Заявката изтече — проверете връзката си и опитайте отново"
+
+msgid "Network request failed"
+msgstr "Мрежовата заявка неуспешна"
+
+msgid "The Z-library address may be wrong or no longer exist."
+msgstr "Адресът на Z-library може да е грешен или вече да не съществува."
+
+msgid "Network connection error - please check your internet connection and try again"
+msgstr "Грешка в мрежовата връзка — проверете интернет връзката си и опитайте отново"
+
+msgid "Too many redirects"
+msgstr "Твърде много пренасочвания"
+
+msgid "Try a different Z-library server."
+msgstr "Опитайте друг сървър на Z-library."
+
+msgid "Unknown Status"
+msgstr "Непознат статус"
+
+msgid "Request cancelled."
+msgstr "Заявката е отменена."
+
+msgid "pages"
+msgstr "страници"
+
+msgid "Back"
+msgstr "Назад"
+
+msgid "Download"
+msgstr "Изтегляне"
+
+msgid "Format"
+msgstr "Формат"
+
+msgid "Download book"
+msgstr "Изтегляне на книга"
+
+msgid "More Similar Books"
+msgstr "Още подобни книги"
+
+msgid "Description"
+msgstr "Описание"
+
+msgid "Comments"
+msgstr "Коментари"
+
+msgid "Refresh"
+msgstr "Обновяване"
+
+msgid "Remove From Favorites"
+msgstr "Премахване от любими"
+
+msgid "Add To Favorites"
+msgstr "Добавяне към любими"
+
+msgid "No Comments"
+msgstr "Няма коментари"
+
+msgid "No description available"
+msgstr "Няма налично описание"
+
+msgid "Selection copied to clipboard."
+msgstr "Селекцията е копирана в клипборда."
+
+msgid "Cover"
+msgstr "Корица"
+
+msgid "Most popular"
+msgstr "Най-популярни"
+
+msgid "Best match"
+msgstr "Най-добро съвпадение"
+
+msgid "Recently added"
+msgstr "Наскоро добавени"
+
+msgid "Title"
+msgstr "Заглавие"
+
+msgid "Year"
+msgstr "Година"
+
+msgid "File size"
+msgstr "Размер на файла"
+
+msgid "Default"
+msgstr "По подразбиране"
+
+#, lua-format
+msgid "%ds"
+msgstr "%d сек"
+
+msgid "infinite"
+msgstr "безкрайно"
+
+#, lua-format
+msgid "Block: %ds, Total: %s"
+msgstr "Блок: %d сек, Общо: %s"
+
+msgid "Operation failed, please retry."
+msgstr "Операцията е неуспешна, моля опитайте отново."
+
+msgid "Fetching domains..."
+msgstr "Извличане на домейни…"
+
+msgid "Successfully set base URL to: "
+msgstr "Основният URL е зададен успешно: "
+
+msgid "Failed to find a working base URL."
+msgstr "Неуспешно намиране на работещ основен URL."
+
+msgid "Queued"
+msgstr "В опашката"
+
+msgid "Checking"
+msgstr "Проверка"
 
 msgid "Set base URL"
 msgstr "Задаване на основен URL"
+
+msgid "Invalid Base URL."
+msgstr "Невалиден основен URL."
+
+msgid "Failed"
+msgstr "Неуспешно"
+
+msgid "Searching for working Z-library server..."
+msgstr "Търсене на работещ сървър на Z-library..."
+
+msgid "Current Base URL:"
+msgstr "Текущ основен URL:"
+
+msgid "Mirror site redirected to: "
+msgstr "Огледалният сайт пренасочи към: "
+
+msgid "Auto-discover base URL"
+msgstr "Автоматично намиране на основен URL"
+
+msgid "Network unavailable."
+msgstr "Мрежата не е налична."
+
+msgid "Discovery is already running..."
+msgstr "Търсенето вече е в ход…"
+
+msgid "Refresh Dynamic Domains"
+msgstr "Обновяване на динамичните домейни"
+
+msgid "Fetching book details..."
+msgstr "Зареждане на детайли за книгата..."
+
+msgid "Could not retrieve book details."
+msgstr "Не може да се получат детайли за книгата."
+
+msgid "This book's file type is unknown, so it cannot be downloaded."
+msgstr "Форматът на тази книга е неизвестен, затова не може да бъде изтеглена."
+
+msgid "Book details"
+msgstr "Детайли за книгата"
+
+msgid "Book identifiers missing. Cannot download."
+msgstr "Липсват идентификатори на книгата. Изтеглянето е невъзможно."
+
+#, lua-format
+msgid "Cannot create downloads directory: %s"
+msgstr "Не може да се създаде папка за изтегляне: %s"
+
+#, lua-format
+msgid "Couldn't create the folder for \"%s\". The book is in the download folder."
+msgstr "Папката за „%s“ не можа да бъде създадена. Книгата е в папката за изтегляне."
+
+#, lua-format
+msgid "Moved to \"%s\"."
+msgstr "Преместено в „%s“."
+
+#, lua-format
+msgid "Couldn't move the book into \"%s\". It's in the download folder."
+msgstr "Книгата не можа да бъде преместена в „%s“. Тя е в папката за изтегляне."
+
+msgid "Could not open reader UI."
+msgstr "Не може да се отвори интерфейсът на четеца."
+
+msgid "Download failed: Unknown error"
+msgstr "Изтеглянето неуспешно: Непозната грешка"
+
+msgid "Book download"
+msgstr "Изтегляне на книга"
+
+msgid "Retrying download… (tap to cancel)"
+msgstr "Повторен опит за изтегляне… (докоснете за отказ)"
+
+msgid "Download cancelled."
+msgstr "Изтеглянето е отменено."
+
+msgid "Unknown Author"
+msgstr "Непознат автор"
+
+msgid "Author"
+msgstr "Автор"
+
+msgid "Search"
+msgstr "Търсене"
+
+msgid "Update failed: Could not determine where to install the plugin."
+msgstr "Актуализацията неуспешна: Не може да се определи къде да се инсталира приставката."
+
+msgid "Installing update..."
+msgstr "Инсталиране на актуализацията..."
+
+msgid "Update installation failed."
+msgstr "Инсталирането на актуализацията неуспешно."
+
+msgid "Update check failed: Could not determine plugin location."
+msgstr "Проверката за актуализации неуспешна: Не може да се определи местоположението на приставката."
+
+#, lua-format
+msgid "Unsupported plugin path for OTA update: %s. Only 'plugins/zlibrary.koplugin' is supported."
+msgstr "Неподдържан път на приставката за OTA актуализация: %s. Поддържа се само 'plugins/zlibrary.koplugin'."
+
+msgid "Checking for updates..."
+msgstr "Проверка за актуализации..."
+
+msgid "Failed to check for updates. Please check your internet connection."
+msgstr "Неуспешна проверка за актуализации. Проверете интернет връзката си."
+
+msgid "Could not find update information (invalid data format)."
+msgstr "Не може да се намери информация за актуализацията (невалиден формат на данните)."
+
+msgid "Could not find update version information."
+msgstr "Не може да се намери информация за версията на актуализацията."
+
+msgid "Could not understand the update version format."
+msgstr "Не може да се разпознае форматът на версията на актуализацията."
+
+msgid "Could not find update files."
+msgstr "Не може да се намерят файловете за актуализация."
+
+msgid "Could not find a download link for the update."
+msgstr "Не може да се намери линк за изтегляне на актуализацията."
+
+#, lua-format
+msgid "You are already on the latest version (%s) or newer."
+msgstr "Вече имате най-новата версия (%s) или по-нова."
+
+#, lua-format
+msgid "Could not determine your current version, but the latest is %s. If you recently updated, you might be up-to-date."
+msgstr "Не може да се определи текущата ви версия, но най-новата е %s. Ако наскоро сте актуализирали, може би сте актуални."
+
+#, lua-format
+msgid "New version available: %s (you have %s). Download and install?"
+msgstr "Налична е нова версия: %s (вие имате %s). Изтегляне и инсталиране?"
+
+msgid "an older version"
+msgstr "по-стара версия"
+
+msgid "Update available"
+msgstr "Налична актуализация"
+
+msgid "Update"
+msgstr "Актуализация"
+
+msgid "Cancel"
+msgstr "Отказ"
+
+msgid "Downloading update..."
+msgstr "Изтегляне на актуализацията..."
+
+msgid "Download failed. Please try again later."
+msgstr "Изтеглянето неуспешно. Опитайте отново по-късно."
+
+msgid "Finding similar books..."
+msgstr "Търсене на подобни книги..."
+
+msgid "No similar books found"
+msgstr "Не са намерени подобни книги"
+
+msgid "Similar books"
+msgstr "Подобни книги"
+
+msgid "Removing book from downloaded…"
+msgstr "Премахване на книгата от изтеглени…"
+
+msgid "Failed to remove book from downloaded"
+msgstr "Неуспешно премахване на книгата от изтеглени"
+
+msgid "Remove from downloaded"
+msgstr "Премахване от изтеглени"
+
+msgid "Book removed from downloaded, please refresh"
+msgstr "Книгата е премахната от изтеглени, моля опреснете"
+
+msgid "API returned an error, please try again"
+msgstr "API върна грешка, моля опитайте отново"
+
+msgid "Removing book from favorites…"
+msgstr "Премахване на книгата от любими…"
+
+msgid "Failed to remove book from favorites"
+msgstr "Неуспешно премахване на книгата от любими"
+
+msgid "Unfavorite book"
+msgstr "Премахване от любими"
+
+msgid "Book removed from favorites, please refresh"
+msgstr "Книгата е премахната от любими, моля опреснете"
+
+msgid "Adding book to favorites…"
+msgstr "Добавяне на книгата към любими…"
+
+msgid "Failed to add book to favorites"
+msgstr "Неуспешно добавяне на книгата към любими"
+
+msgid "Favorite book"
+msgstr "Любима книга"
+
+msgid "Book added to favorites, please refresh"
+msgstr "Книгата е добавена към любими, моля опреснете"
+
+msgid "Failed to fetch book details"
+msgstr "Неуспешно зареждане на детайли за книгата"
+
+msgid "Loading comments..."
+msgstr "Коментарите се зареждат..."
+
+msgid "Failed to load comments"
+msgstr "Неуспешно зареждане на коментарите"
+
+msgid "No comments to display"
+msgstr "Няма коментари за показване"
+
+msgid "Fetching most popular books..."
+msgstr "Зареждане на най-популярни книги..."
+
+msgid "Failed to fetch most popular books"
+msgstr "Неуспешно зареждане на най-популярни книги"
+
+msgid "Most popular books"
+msgstr "Най-популярни книги"
+
+msgid "Recommended"
+msgstr "Препоръчани"
+
+msgid "Fetching recommended books..."
+msgstr "Зареждане на препоръчани книги..."
+
+msgid "Failed to fetch recommended books"
+msgstr "Неуспешно зареждане на препоръчани книги"
+
+msgid "Recommended books"
+msgstr "Препоръчани книги"
+
+msgid "Z-library My Books"
+msgstr "Моите книги в Z-library"
+
+msgid "Favorites"
+msgstr "Любими"
+
+msgid "Getting your favorites..."
+msgstr "Зареждане на любимите книги..."
+
+msgid "Failed to fetch favorite books"
+msgstr "Неуспешно зареждане на любимите книги"
+
+msgid "Favorite books"
+msgstr "Любими книги"
+
+msgid "Downloaded"
+msgstr "Изтеглени"
+
+msgid "Getting your downloaded..."
+msgstr "Зареждане на изтеглените книги..."
+
+msgid "Failed to fetch downloaded books"
+msgstr "Неуспешно зареждане на изтеглените книги"
+
+msgid "Downloaded books"
+msgstr "Изтеглени книги"
+
+msgid "Booklists"
+msgstr ""
+
+msgid "Getting your booklists..."
+msgstr ""
+
+msgid "Failed to fetch booklists"
+msgstr ""
+
+msgid "You have no booklists yet"
+msgstr ""
+
+msgid "Getting booklist books..."
+msgstr ""
+
+msgid "Failed to fetch booklist books"
+msgstr ""
+
+msgid "Booklist books"
+msgstr ""
+
+msgid "This booklist is empty"
+msgstr ""
+
+msgid "Settings"
+msgstr "Настройки"
 
 msgid "Set credentials"
 msgstr "Задаване на данни за вход"
@@ -132,15 +739,6 @@ msgstr "Представяне като уеб браузър"
 msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
 msgstr "Изпраща User-Agent на браузър вместо собствения на приставката. Струва си да се опита само ако сървърът отказва самата приставка."
 
-msgid "Search"
-msgstr "Търсене"
-
-msgid "Recommended"
-msgstr "Препоръчани"
-
-msgid "Most popular"
-msgstr "Най-популярни"
-
 msgid "About"
 msgstr ""
 
@@ -152,150 +750,6 @@ msgstr "Няма книги, отговарящи на избраните ези
 
 msgid "No books found, please try again"
 msgstr "Не са намерени книги, моля опитайте отново"
-
-msgid "Fetching most popular books..."
-msgstr "Зареждане на най-популярни книги..."
-
-msgid "Failed to fetch most popular books"
-msgstr "Неуспешно зареждане на най-популярни книги"
-
-msgid "Most popular books"
-msgstr "Най-популярни книги"
-
-msgid "Fetching recommended books..."
-msgstr "Зареждане на препоръчани книги..."
-
-msgid "Failed to fetch recommended books"
-msgstr "Неуспешно зареждане на препоръчани книги"
-
-msgid "Recommended books"
-msgstr "Препоръчани книги"
-
-msgid "API returned an error, please try again"
-msgstr "API върна грешка, моля опитайте отново"
-
-msgid "Z-library My Books"
-msgstr "Моите книги в Z-library"
-
-msgid "Favorites"
-msgstr "Любими"
-
-msgid "Getting your favorites..."
-msgstr "Зареждане на любимите книги..."
-
-msgid "Failed to fetch favorite books"
-msgstr "Неуспешно зареждане на любимите книги"
-
-msgid "Favorite books"
-msgstr "Любими книги"
-
-msgid "Downloaded"
-msgstr "Изтеглени"
-
-msgid "Remove from downloaded"
-msgstr "Премахване от изтеглени"
-
-msgid "Getting your downloaded..."
-msgstr "Зареждане на изтеглените книги..."
-
-msgid "Failed to fetch downloaded books"
-msgstr "Неуспешно зареждане на изтеглените книги"
-
-msgid "Downloaded books"
-msgstr "Изтеглени книги"
-
-msgid "Booklists"
-msgstr ""
-
-msgid "Untitled"
-msgstr "Без заглавие"
-
-msgid "Getting your booklists..."
-msgstr ""
-
-msgid "Failed to fetch booklists"
-msgstr ""
-
-msgid "You have no booklists yet"
-msgstr ""
-
-msgid "Getting booklist books..."
-msgstr ""
-
-msgid "Failed to fetch booklist books"
-msgstr ""
-
-msgid "Booklist books"
-msgstr ""
-
-msgid "This booklist is empty"
-msgstr ""
-
-msgid "Finding similar books..."
-msgstr "Търсене на подобни книги..."
-
-msgid "No similar books found"
-msgstr "Не са намерени подобни книги"
-
-msgid "Similar books"
-msgstr "Подобни книги"
-
-msgid "Removing book from downloaded…"
-msgstr "Премахване на книгата от изтеглени…"
-
-msgid "Failed to remove book from downloaded"
-msgstr "Неуспешно премахване на книгата от изтеглени"
-
-msgid "Book removed from downloaded, please refresh"
-msgstr "Книгата е премахната от изтеглени, моля опреснете"
-
-msgid "Removing book from favorites…"
-msgstr "Премахване на книгата от любими…"
-
-msgid "Failed to remove book from favorites"
-msgstr "Неуспешно премахване на книгата от любими"
-
-msgid "Unfavorite book"
-msgstr "Премахване от любими"
-
-msgid "Book removed from favorites, please refresh"
-msgstr "Книгата е премахната от любими, моля опреснете"
-
-msgid "Adding book to favorites…"
-msgstr "Добавяне на книгата към любими…"
-
-msgid "Failed to add book to favorites"
-msgstr "Неуспешно добавяне на книгата към любими"
-
-msgid "Favorite book"
-msgstr "Любима книга"
-
-msgid "Book added to favorites, please refresh"
-msgstr "Книгата е добавена към любими, моля опреснете"
-
-msgid "Fetching book details..."
-msgstr "Зареждане на детайли за книгата..."
-
-msgid "Failed to fetch book details"
-msgstr "Неуспешно зареждане на детайли за книгата"
-
-msgid "Book details"
-msgstr "Детайли за книгата"
-
-msgid "Could not retrieve book details."
-msgstr "Не може да се получат детайли за книгата."
-
-msgid "Logging in..."
-msgstr "Влизане..."
-
-msgid "Credentials saved, but they could not be checked right now."
-msgstr "Данните за вход са запазени, но в момента не могат да бъдат проверени."
-
-msgid "Please set both username and password first."
-msgstr "Моля, задайте първо потребителско име и парола."
-
-msgid "Sign-in"
-msgstr "Влизане"
 
 #, lua-format
 msgid "Searching for \"%s\"..."
@@ -315,535 +769,64 @@ msgstr "Неуспешно зареждане на още резултати"
 msgid "No more results found."
 msgstr "Няма повече резултати."
 
-msgid "Book ID is required."
-msgstr "Изисква се ID на книгата."
+msgid "Logging in..."
+msgstr "Влизане..."
 
-msgid "Loading comments..."
-msgstr "Коментарите се зареждат..."
+msgid "Credentials saved, but they could not be checked right now."
+msgstr "Данните за вход са запазени, но в момента не могат да бъдат проверени."
 
-msgid "Failed to load comments"
-msgstr "Неуспешно зареждане на коментарите"
+msgid "Please set both username and password first."
+msgstr "Моля, задайте първо потребителско име и парола."
 
-msgid "Comments"
-msgstr "Коментари"
-
-msgid "No comments to display"
-msgstr "Няма коментари за показване"
-
-msgid "Could not find the server address"
-msgstr "Не може да се намери адресът на сървъра"
-
-msgid "This Z-library server is refusing automated access"
-msgstr "Този сървър на Z-library блокира автоматизирания достъп"
-
-msgid "Credentials rejected or invalid response"
-msgstr "Отхвърлени идентификационни данни или невалиден отговор"
-
-msgid "Request timed out - please check your connection and try again"
-msgstr "Заявката изтече — проверете връзката си и опитайте отново"
-
-msgid "Network request failed"
-msgstr "Мрежовата заявка неуспешна"
-
-msgid "The Z-library address may be wrong or no longer exist."
-msgstr "Адресът на Z-library може да е грешен или вече да не съществува."
-
-msgid "Network connection error - please check your internet connection and try again"
-msgstr "Грешка в мрежовата връзка — проверете интернет връзката си и опитайте отново"
-
-msgid "Too many redirects"
-msgstr "Твърде много пренасочвания"
-
-msgid "Try a different Z-library server."
-msgstr "Опитайте друг сървър на Z-library."
-
-msgid "HTTP Error"
-msgstr "HTTP грешка"
-
-msgid "Unknown Status"
-msgstr "Непознат статус"
-
-msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
-msgstr "Адресът (URL) на сървъра на Z-library не е зададен. Конфигурирайте го в настройките на приставката."
-
-msgid "Login failed"
-msgstr "Неуспешно влизане"
-
-msgid "Login failed: Empty response from server"
-msgstr "Неуспешно влизане: Празен отговор от сървъра"
-
-msgid "Login failed: Invalid response format"
-msgstr "Неуспешно влизане: Невалиден формат на отговора"
-
-msgid "No response received from server - please try again"
-msgstr "Не е получен отговор от сървъра — опитайте отново"
-
-msgid "Invalid response format from server"
-msgstr "Невалиден формат на отговора от сървъра"
-
-msgid "Search API error"
-msgstr "Грешка в API за търсене"
-
-msgid "Failed to open target file"
-msgstr "Неуспешно отваряне на целевия файл"
-
-msgid "Unknown error"
-msgstr "Непозната грешка"
-
-msgid "Download limit reached or file is an HTML page"
-msgstr "Достигнат лимит за изтегляне или файлът е HTML страница"
-
-msgid "Download failed: the server sent an empty file"
-msgstr ""
-
-msgid "Failed to save downloaded file"
-msgstr "Неуспешно запазване на изтегления файл"
-
-msgid "Download HTTP Error"
-msgstr "HTTP грешка при изтегляне"
-
-msgid "Z-library server URL not configured."
-msgstr "URL адресът на сървъра на Z-library не е конфигуриран."
-
-msgid "Failed to fetch recommended books (no response body)."
-msgstr "Неуспешно зареждане на препоръчани книги (няма тяло на отговора)."
-
-msgid "Failed to parse recommended books response."
-msgstr "Неуспешен разбор на отговора за препоръчани книги."
-
-msgid "API returned an error for recommended books."
-msgstr "API върна грешка за препоръчани книги."
-
-msgid "Failed to fetch most popular books (no response body)."
-msgstr "Неуспешно зареждане на най-популярни книги (няма тяло на отговора)."
-
-msgid "Failed to parse most popular books response."
-msgstr "Неуспешен разбор на отговора за най-популярни книги."
-
-msgid "API returned an error for most popular books."
-msgstr "API върна грешка за най-популярни книги."
-
-msgid "Z-library server URL not configured or book identifiers missing."
-msgstr "URL адресът на сървъра не е конфигуриран или липсват идентификатори на книгата."
-
-msgid "Failed to fetch book details (no response body)."
-msgstr "Неуспешно зареждане на детайли за книгата (няма тяло на отговора)."
-
-msgid "Failed to parse book details response."
-msgstr "Неуспешен разбор на отговора за детайли на книгата."
-
-msgid "API returned an error for book details."
-msgstr "API върна грешка за детайли на книгата."
-
-msgid "Failed to process book details."
-msgstr "Неуспешна обработка на детайли за книгата."
-
-msgid "Failed to fetch download link (no response body)."
-msgstr "Неуспешно зареждане на линк за изтегляне (няма тяло на отговора)."
-
-msgid "Failed to parse download link response."
-msgstr "Неуспешен разбор на отговора за линк за изтегляне."
-
-msgid "API returned an error for download link."
-msgstr "API върна грешка за линк за изтегляне."
-
-msgid "Download limit reached. Please try again later or check your account."
-msgstr "Достигнат лимит за изтегляне. Опитайте по-късно или проверете акаунта си."
-
-msgid "No download link provided in API response."
-msgstr "В отговора на API не е предоставен линк за изтегляне."
-
-msgid "Failed to fetch similar books (no response body)."
-msgstr "Неуспешно зареждане на подобни книги (няма тяло на отговора)."
-
-msgid "Failed to parse similar books response."
-msgstr "Неуспешен разбор на отговора за подобни книги."
-
-msgid "API returned an error for similar books."
-msgstr "API върна грешка за подобни книги."
-
-msgid "Failed to fetch downloaded books (no response body)."
-msgstr "Неуспешно зареждане на изтеглени книги (няма тяло на отговора)."
-
-msgid "Failed to parse downloaded books response."
-msgstr "Неуспешен разбор на отговора за изтеглени книги."
-
-msgid "API returned an error for downloaded books."
-msgstr "API върна грешка за изтеглени книги."
-
-msgid "Failed to fetch favorite books (no response body)."
-msgstr "Неуспешно зареждане на любими книги (няма тяло на отговора)."
-
-msgid "Failed to parse favorite books response."
-msgstr "Неуспешен разбор на отговора за любими книги."
-
-msgid "API returned an error for favorite books."
-msgstr "API върна грешка за любими книги."
-
-msgid "Failed to fetch booklists (no response body)."
-msgstr ""
-
-msgid "Failed to parse booklists response."
-msgstr ""
-
-msgid "API returned an error for booklists."
-msgstr ""
-
-msgid "Failed to fetch booklist books (no response body)."
-msgstr ""
-
-msgid "Failed to parse booklist books response."
-msgstr ""
-
-msgid "API returned an error for booklist books."
-msgstr ""
-
-msgid "Failed to remove the book from downloaded (no response body)."
-msgstr "Неуспешно премахване на книгата от изтеглени (няма тяло на отговора)."
-
-msgid "Failed to parse the remove from downloaded response."
-msgstr "Неуспешен разбор на отговора при премахване от изтеглени."
-
-msgid "API returned an error for remove from downloaded."
-msgstr "API върна грешка при премахване от изтеглени."
-
-msgid "Failed to fetch unfavorite book (no response body)."
-msgstr "Неуспешно зареждане при премахване от любими (няма тяло на отговора)."
-
-msgid "Failed to parse unfavorite book response."
-msgstr "Неуспешен разбор на отговора при премахване от любими."
-
-msgid "API returned an error for unfavorite book."
-msgstr "API върна грешка при премахване от любими."
-
-msgid "Failed to fetch download quota status (no response body)."
-msgstr "Неуспешно зареждане на статус на лимита за изтегляне (няма тяло на отговора)."
-
-msgid "Failed to parse download quota status response."
-msgstr "Неуспешен разбор на отговора за статус на лимита за изтегляне."
-
-msgid "API returned an error for download quota status."
-msgstr "API върна грешка за статус на лимита за изтегляне."
-
-msgid "Failed to fetch favorite-book IDs (no response body)."
-msgstr "Неуспешно зареждане на идентификатори на любими книги (няма тяло на отговора)."
-
-msgid "Failed to parse favorite-book IDs."
-msgstr "Неуспешен разбор на идентификатори на любими книги."
-
-msgid "API returned an error for favorite-book IDs."
-msgstr "API върна грешка за идентификатори на любими книги."
-
-msgid "Failed to fetch favorite book (no response body)."
-msgstr "Неуспешно зареждане на любима книга (няма тяло на отговора)."
-
-msgid "Failed to parse favorite book response."
-msgstr "Неуспешен разбор на отговора за любима книга."
-
-msgid "API returned an error for favorite book."
-msgstr "API върна грешка за любима книга."
-
-msgid "Failed to fetch book comments (no response body)."
-msgstr "Неуспешно извличане на коментари за книгата (няма отговор)."
-
-msgid "Failed to parse book comments response."
-msgstr "Не успя да се анализира отговорът с коментари за книгата."
-
-msgid "API returned an error for book comments."
-msgstr "API върна грешка за коментарите на книгата."
-
-msgid "Request cancelled."
-msgstr "Заявката е отменена."
-
-msgid "Description"
-msgstr "Описание"
-
-msgid "No description available"
-msgstr "Няма налично описание"
-
-msgid "Selection copied to clipboard."
-msgstr "Селекцията е копирана в клипборда."
-
-msgid "pages"
-msgstr "страници"
-
-msgid "Cover"
-msgstr "Корица"
-
-msgid "Back"
-msgstr "Назад"
-
-msgid "Download"
-msgstr "Изтегляне"
-
-msgid "Format"
-msgstr "Формат"
-
-msgid "Download book"
-msgstr "Изтегляне на книга"
-
-msgid "More Similar Books"
-msgstr "Още подобни книги"
-
-msgid "Refresh"
-msgstr "Обновяване"
-
-msgid "Remove From Favorites"
-msgstr "Премахване от любими"
-
-msgid "Add To Favorites"
-msgstr "Добавяне към любими"
-
-msgid "No Comments"
-msgstr "Няма коментари"
-
-msgid "Best match"
-msgstr "Най-добро съвпадение"
-
-msgid "Recently added"
-msgstr "Наскоро добавени"
-
-msgid "Title"
-msgstr "Заглавие"
-
-msgid "Year"
-msgstr "Година"
-
-msgid "File size"
-msgstr "Размер на файла"
-
-msgid "Default"
-msgstr "По подразбиране"
+msgid "Sign-in"
+msgstr "Влизане"
 
 #, lua-format
-msgid "%ds"
-msgstr "%d сек"
+msgid "Remove \"%s\" from your downloaded books?"
+msgstr "Премахване на „%s“ от изтеглените ви книги?"
 
-msgid "infinite"
-msgstr "безкрайно"
+msgid "Unknown Title"
+msgstr "Непознато заглавие"
 
-#, lua-format
-msgid "Block: %ds, Total: %s"
-msgstr "Блок: %d сек, Общо: %s"
-
-msgid "Operation failed, please retry."
-msgstr "Операцията е неуспешна, моля опитайте отново."
-
-msgid "Fetching domains..."
-msgstr "Извличане на домейни…"
-
-msgid "Successfully set base URL to: "
-msgstr "Основният URL е зададен успешно: "
-
-msgid "Failed to find a working base URL."
-msgstr "Неуспешно намиране на работещ основен URL."
-
-msgid "Queued"
-msgstr "В опашката"
-
-msgid "Checking"
-msgstr "Проверка"
-
-msgid "Invalid Base URL."
-msgstr "Невалиден основен URL."
-
-msgid "Failed"
-msgstr "Неуспешно"
-
-msgid "Searching for working Z-library server..."
-msgstr "Търсене на работещ сървър на Z-library..."
-
-msgid "Current Base URL:"
-msgstr "Текущ основен URL:"
-
-msgid "Mirror site redirected to: "
-msgstr "Огледалният сайт пренасочи към: "
-
-msgid "Auto-discover base URL"
-msgstr "Автоматично намиране на основен URL"
-
-msgid "Network unavailable."
-msgstr "Мрежата не е налична."
-
-msgid "Discovery is already running..."
-msgstr "Търсенето вече е в ход…"
-
-msgid "Refresh Dynamic Domains"
-msgstr "Обновяване на динамичните домейни"
-
-msgid "This book's file type is unknown, so it cannot be downloaded."
-msgstr "Форматът на тази книга е неизвестен, затова не може да бъде изтеглена."
-
-msgid "Book identifiers missing. Cannot download."
-msgstr "Липсват идентификатори на книгата. Изтеглянето е невъзможно."
+msgid "Remove"
+msgstr "Премахване"
 
 #, lua-format
-msgid "Cannot create downloads directory: %s"
-msgstr "Не може да се създаде папка за изтегляне: %s"
+msgid "Download \"%s\"?"
+msgstr "Изтегляне на „%s“?"
 
 #, lua-format
-msgid "Couldn't create the folder for \"%s\". The book is in the download folder."
-msgstr "Папката за „%s“ не можа да бъде създадена. Книгата е в папката за изтегляне."
+msgid "\"%s\" downloaded."
+msgstr "„%s“ е изтеглен."
+
+msgid "Download folder"
+msgstr "Папка за изтегляне"
+
+msgid "Book downloaded successfully. Open it now?"
+msgstr "Книгата е изтеглена успешно. Искате ли да я отворите сега?"
+
+msgid "Turn off Wi-Fi after closing this dialog"
+msgstr "Изключване на Wi-Fi след затваряне на диалога"
 
 #, lua-format
-msgid "Moved to \"%s\"."
-msgstr "Преместено в „%s“."
+msgid "Move to: %s"
+msgstr "Преместване в: %s"
 
-#, lua-format
-msgid "Couldn't move the book into \"%s\". It's in the download folder."
-msgstr "Книгата не можа да бъде преместена в „%s“. Тя е в папката за изтегляне."
-
-msgid "Could not open reader UI."
-msgstr "Не може да се отвори интерфейсът на четеца."
-
-msgid "Download failed: Unknown error"
-msgstr "Изтеглянето неуспешно: Непозната грешка"
-
-msgid "Book download"
-msgstr "Изтегляне на книга"
-
-msgid "Retrying download… (tap to cancel)"
-msgstr "Повторен опит за изтегляне… (докоснете за отказ)"
-
-msgid "Download cancelled."
-msgstr "Изтеглянето е отменено."
-
-msgid "Unknown Author"
-msgstr "Непознат автор"
-
-msgid "Author"
-msgstr "Автор"
-
-msgid "Update failed: Could not determine where to install the plugin."
-msgstr "Актуализацията неуспешна: Не може да се определи къде да се инсталира приставката."
-
-msgid "Installing update..."
-msgstr "Инсталиране на актуализацията..."
-
-msgid "Update installation failed."
-msgstr "Инсталирането на актуализацията неуспешно."
-
-msgid "Update check failed: Could not determine plugin location."
-msgstr "Проверката за актуализации неуспешна: Не може да се определи местоположението на приставката."
-
-#, lua-format
-msgid "Unsupported plugin path for OTA update: %s. Only 'plugins/zlibrary.koplugin' is supported."
-msgstr "Неподдържан път на приставката за OTA актуализация: %s. Поддържа се само 'plugins/zlibrary.koplugin'."
-
-msgid "Checking for updates..."
-msgstr "Проверка за актуализации..."
-
-msgid "Failed to check for updates. Please check your internet connection."
-msgstr "Неуспешна проверка за актуализации. Проверете интернет връзката си."
-
-msgid "Could not find update information (invalid data format)."
-msgstr "Не може да се намери информация за актуализацията (невалиден формат на данните)."
-
-msgid "Could not find update version information."
-msgstr "Не може да се намери информация за версията на актуализацията."
-
-msgid "Could not understand the update version format."
-msgstr "Не може да се разпознае форматът на версията на актуализацията."
-
-msgid "Could not find update files."
-msgstr "Не може да се намерят файловете за актуализация."
-
-msgid "Could not find a download link for the update."
-msgstr "Не може да се намери линк за изтегляне на актуализацията."
-
-#, lua-format
-msgid "You are already on the latest version (%s) or newer."
-msgstr "Вече имате най-новата версия (%s) или по-нова."
-
-#, lua-format
-msgid "Could not determine your current version, but the latest is %s. If you recently updated, you might be up-to-date."
-msgstr "Не може да се определи текущата ви версия, но най-новата е %s. Ако наскоро сте актуализирали, може би сте актуални."
-
-#, lua-format
-msgid "New version available: %s (you have %s). Download and install?"
-msgstr "Налична е нова версия: %s (вие имате %s). Изтегляне и инсталиране?"
-
-msgid "an older version"
-msgstr "по-стара версия"
-
-msgid "Update available"
-msgstr "Налична актуализация"
-
-msgid "Update"
-msgstr "Актуализация"
-
-msgid "Cancel"
-msgstr "Отказ"
-
-msgid "Downloading update..."
-msgstr "Изтегляне на актуализацията..."
-
-msgid "Download failed. Please try again later."
-msgstr "Изтеглянето неуспешно. Опитайте отново по-късно."
-
-#, lua-format
-msgid "%s (tap to cancel)"
-msgstr "%s (докоснете за отказ)"
-
-msgid "Downloading… (tap to cancel)"
-msgstr "Изтегляне… (докоснете за отказ)"
-
-msgid "Z-library plugin"
-msgstr "Приставка Z-library"
-
-msgid "(version unknown)"
-msgstr "(неизвестна версия)"
-
-msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
-msgstr "Поддържам тази приставка в свободното си време. Z-library се променя без предупреждение: тази година входът вече беше подменян два пъти. Поддържането на търсенето, входа и изтеглянията работещи е постоянна работа."
-
-msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
-msgstr "Ако харесвате приставката и искате да продължи да работи, цената на едно кафе помага:"
-
-msgid "Show QR code"
-msgstr ""
+msgid "Open book"
+msgstr "Отваряне на книга"
 
 msgid "Close"
 msgstr "Затваряне"
 
-msgid "Update installed successfully. Please restart KOReader for changes to take effect."
-msgstr "Актуализацията е инсталирана успешно. Рестартирайте KOReader за да влязат в сила промените."
-
-msgid "Update installed"
-msgstr "Обновлението е инсталирано"
-
-msgid "Select Z-library Download Directory"
-msgstr "Изберете папка за изтегляне от Z-library"
-
 #, lua-format
-msgid "Download directory set to: %s"
-msgstr "Папката за изтегляне е зададена на: %s"
+msgid "No %s found, please try again. Sometimes this requires a couple of retries."
+msgstr "Не са намерени %s, опитайте отново. Понякога са нужни няколко опита."
 
-msgid "No directory selected."
-msgstr "Не е избрана папка."
+msgid "Z-library Similar Books"
+msgstr "Подобни книги от Z-library"
 
-#, lua-format
-msgid "%d items selected for %s."
-msgstr "Избрани са %d елемента за %s."
-
-#, lua-format
-msgid "Filter cleared for %s."
-msgstr "Филтърът за %s е изчистен."
-
-msgid "Filter"
-msgstr "Филтър"
-
-msgid "Show all"
-msgstr "Показване на всички"
-
-msgid "Set"
-msgstr "Задаване"
-
-msgid "Setting saved successfully!"
-msgstr "Настройката е запазена успешно!"
-
-msgid "Setting cleared."
-msgstr "Настройката е изчистена."
+msgid "Book Details"
+msgstr "Детайли за книгата"
 
 msgid "Please enter a name."
 msgstr "Моля, въведете име."
@@ -862,9 +845,6 @@ msgstr "Преименуване"
 
 msgid "Rename sub-category"
 msgstr "Преименуване на подкатегория"
-
-msgid "Remove"
-msgstr "Премахване"
 
 #, lua-format
 msgid "Remove the sub-category \"%s\"? Books already filed there stay where they are."
@@ -894,6 +874,100 @@ msgstr "Добавяне на категория…"
 
 msgid "New category"
 msgstr "Нова категория"
+
+msgid "Please enter a category name."
+msgstr "Моля, въведете име на категория."
+
+msgid "Category"
+msgstr "Категория"
+
+msgid "Category name"
+msgstr "Име на категория"
+
+msgid "Sub-category (optional)"
+msgstr "Подкатегория (по избор)"
+
+msgid "Sub-category name"
+msgstr "Име на подкатегория"
+
+msgid "Create"
+msgstr "Създаване"
+
+msgid "Keep in download folder"
+msgstr "Запазване в папката за изтегляне"
+
+msgid "New category…"
+msgstr "Нова категория…"
+
+msgid "Move to"
+msgstr "Преместване в"
+
+#, lua-format
+msgid "%s (tap to cancel)"
+msgstr "%s (докоснете за отказ)"
+
+msgid "Downloading… (tap to cancel)"
+msgstr "Изтегляне… (докоснете за отказ)"
+
+msgid "Z-library plugin"
+msgstr "Приставка Z-library"
+
+msgid "(version unknown)"
+msgstr "(неизвестна версия)"
+
+msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
+msgstr "Поддържам тази приставка в свободното си време. Z-library се променя без предупреждение: тази година входът вече беше подменян два пъти. Поддържането на търсенето, входа и изтеглянията работещи е постоянна работа."
+
+msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
+msgstr "Ако харесвате приставката и искате да продължи да работи, цената на едно кафе помага:"
+
+msgid "Show QR code"
+msgstr ""
+
+msgid "Update installed successfully. Please restart KOReader for changes to take effect."
+msgstr "Актуализацията е инсталирана успешно. Рестартирайте KOReader за да влязат в сила промените."
+
+msgid "Update installed"
+msgstr "Обновлението е инсталирано"
+
+msgid "Request timed out"
+msgstr "Заявката изтече"
+
+msgid "Network connection error"
+msgstr "Грешка в мрежовата връзка"
+
+#, lua-format
+msgid "Could not complete \"%s\" due to a timeout%s. Would you like to retry?"
+msgstr "Заявката „%s“ е неуспешна поради изтичане на времето%s. Искате ли да опитате отново?"
+
+#, lua-format
+msgid "Could not complete \"%s\" because the server address could not be found. Would you like to retry?"
+msgstr "Заявката „%s“ е неуспешна, защото адресът на сървъра не беше намерен. Искате ли да опитате отново?"
+
+#, lua-format
+msgid "Could not complete \"%s\" due to a network error. Would you like to retry?"
+msgstr "Заявката „%s“ е неуспешна поради мрежова грешка. Искате ли да опитате отново?"
+
+#, lua-format
+msgid "Could not complete \"%s\" due to a temporary issue. Would you like to retry?"
+msgstr "Заявката „%s“ е неуспешна поради временен проблем. Искате ли да опитате отново?"
+
+msgid "Retry"
+msgstr "Повторен опит"
+
+#, lua-format
+msgid "%d items selected for %s."
+msgstr "Избрани са %d елемента за %s."
+
+#, lua-format
+msgid "Filter cleared for %s."
+msgstr "Филтърът за %s е изчистен."
+
+msgid "Filter"
+msgstr "Филтър"
+
+msgid "Show all"
+msgstr "Показване на всички"
 
 msgid "Recent searches"
 msgstr "Последни търсения"
@@ -941,79 +1015,8 @@ msgstr "Търсене в Z-library"
 msgid "Sort by"
 msgstr "Сортиране по"
 
-msgid "Unknown Title"
-msgstr "Непознато заглавие"
-
 msgid "Search Results"
 msgstr "Резултати от търсенето"
-
-#, lua-format
-msgid "Remove \"%s\" from your downloaded books?"
-msgstr "Премахване на „%s“ от изтеглените ви книги?"
-
-msgid "Clear your stored username and password?"
-msgstr "Да се изчистят ли запазените потребителско име и парола?"
-
-#, lua-format
-msgid "Download \"%s\"?"
-msgstr "Изтегляне на „%s“?"
-
-msgid "Please enter a category name."
-msgstr "Моля, въведете име на категория."
-
-msgid "Category"
-msgstr "Категория"
-
-msgid "Category name"
-msgstr "Име на категория"
-
-msgid "Sub-category (optional)"
-msgstr "Подкатегория (по избор)"
-
-msgid "Sub-category name"
-msgstr "Име на подкатегория"
-
-msgid "Create"
-msgstr "Създаване"
-
-msgid "Keep in download folder"
-msgstr "Запазване в папката за изтегляне"
-
-msgid "New category…"
-msgstr "Нова категория…"
-
-msgid "Move to"
-msgstr "Преместване в"
-
-#, lua-format
-msgid "\"%s\" downloaded."
-msgstr "„%s“ е изтеглен."
-
-msgid "Download folder"
-msgstr "Папка за изтегляне"
-
-msgid "Book downloaded successfully. Open it now?"
-msgstr "Книгата е изтеглена успешно. Искате ли да я отворите сега?"
-
-msgid "Turn off Wi-Fi after closing this dialog"
-msgstr "Изключване на Wi-Fi след затваряне на диалога"
-
-#, lua-format
-msgid "Move to: %s"
-msgstr "Преместване в: %s"
-
-msgid "Open book"
-msgstr "Отваряне на книга"
-
-#, lua-format
-msgid "No %s found, please try again. Sometimes this requires a couple of retries."
-msgstr "Не са намерени %s, опитайте отново. Понякога са нужни няколко опита."
-
-msgid "Z-library Similar Books"
-msgstr "Подобни книги от Z-library"
-
-msgid "Book Details"
-msgstr "Детайли за книгата"
 
 #, lua-format
 msgid "Retrying search for \"%s\"..."
@@ -1022,30 +1025,27 @@ msgstr "Повторен опит за търсене на \"%s\"..."
 msgid "Book search"
 msgstr "Търсене на книги"
 
-msgid "Request timed out"
-msgstr "Заявката изтече"
-
-msgid "Network connection error"
-msgstr "Грешка в мрежовата връзка"
+msgid "Select Z-library Download Directory"
+msgstr "Изберете папка за изтегляне от Z-library"
 
 #, lua-format
-msgid "Could not complete \"%s\" due to a timeout%s. Would you like to retry?"
-msgstr "Заявката „%s“ е неуспешна поради изтичане на времето%s. Искате ли да опитате отново?"
+msgid "Download directory set to: %s"
+msgstr "Папката за изтегляне е зададена на: %s"
 
-#, lua-format
-msgid "Could not complete \"%s\" because the server address could not be found. Would you like to retry?"
-msgstr "Заявката „%s“ е неуспешна, защото адресът на сървъра не беше намерен. Искате ли да опитате отново?"
+msgid "No directory selected."
+msgstr "Не е избрана папка."
 
-#, lua-format
-msgid "Could not complete \"%s\" due to a network error. Would you like to retry?"
-msgstr "Заявката „%s“ е неуспешна поради мрежова грешка. Искате ли да опитате отново?"
+msgid "Set"
+msgstr "Задаване"
 
-#, lua-format
-msgid "Could not complete \"%s\" due to a temporary issue. Would you like to retry?"
-msgstr "Заявката „%s“ е неуспешна поради временен проблем. Искате ли да опитате отново?"
+msgid "Setting saved successfully!"
+msgstr "Настройката е запазена успешно!"
 
-msgid "Retry"
-msgstr "Повторен опит"
+msgid "Setting cleared."
+msgstr "Настройката е изчистена."
+
+msgid "Clear your stored username and password?"
+msgstr "Да се изчистят ли запазените потребителско име и парола?"
 
 #, lua-format
 msgid "Block timeout: %s"

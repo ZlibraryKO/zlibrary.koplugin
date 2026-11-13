@@ -18,6 +18,15 @@ turned them off. One tap now turns covers off and the next turns them back on.
 passing "HTTP Error 400". In English the plugin offered Retry for it; in every other language it
 showed the bare error with no way to try again. All languages now get the Retry button.
 
+### Internal
+
+Nothing changes on screen. The five largest files — the settings, the server requests, the plugin
+itself, the dialogs and the book details screen, 1,000 to 2,200 lines each — are split into smaller
+files by topic, with the code moved unchanged, and the details screen's longest function is broken
+into one piece per part of the screen. Covers and the update download now share one download
+routine. A sign-in retry that search could never reach is gone. New tests check that every function
+survived each split exactly once, and pin what the details screen shows for each kind of book.
+
 ## 1.0.57
 
 ### Added

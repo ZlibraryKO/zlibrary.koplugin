@@ -8,7 +8,9 @@
 -- defined twice silently replaces the other.
 --
 -- Read from the sources rather than by loading the class, which needs KOReader's widget stack. The
--- list was recorded from the unsplit bookdetails_dialog.lua on 2026-11-13 (20 methods).
+-- list was recorded from the unsplit bookdetails_dialog.lua on 2026-11-13 (20 methods). Added since:
+-- _buildTextColumn, _buildTitle, _buildAuthorLine, _buildHeader, _withCloseButton and
+-- _buildTextSection (2026-11-13, out of _buildContent).
 
 local PLUGIN = assert(arg[1], "usage: luajit bookdetails_surface_harness.lua <plugin-root> <luasocket-src>")
 local support = dofile(PLUGIN .. "/test/support.lua")
@@ -20,6 +22,12 @@ local EXPECTED = {
     "_contentBudget",
     "_calculateDimensions",
     "_buildContent",
+    "_buildTextColumn",
+    "_buildTitle",
+    "_buildAuthorLine",
+    "_buildHeader",
+    "_withCloseButton",
+    "_buildTextSection",
     "_buildHtmlSection",
     "_buildIsbnLine",
     "_generateMetaLines",

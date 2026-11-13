@@ -60,79 +60,39 @@ local function makeClickable(content_widget, callback)
     return container
 end
 
+-- Everything above the buttons: the header (the cover beside the title, author, metadata and ISBN),
+-- then the text section that fills what the buttons leave. Each piece below builds one part; the
+-- rows that act on a tap register themselves in _key_focus_rows, in screen order, so a reader
+-- without a touchscreen can reach them (_addKeyFocusRows).
 function BookDetailsDialog:_buildContent()
     self._key_focus_rows = {}
-    local vstack = VerticalGroup:new{ align = "left", not_focusable = true}
-    local title_face = self.fonts.title
-    local face_height = title_face.ftsize:getHeightAndAscender()
-    local title_max_h = math.floor(face_height * 3.2)
     -- Key-only readers have Back and nothing to tap an X with.
     self.close_icon_size = Device:isTouchDevice()
         and Screen:scaleBySize(G_defaults:readSetting("DGENERIC_ICON_SIZE") * 0.6) or nil
-    local title_w = self.text_col_w - (self.close_icon_size or 0)
-    local self_ref = self
 
-    local title_widget = TextBoxWidget:new{
-        text = self.full_title,
-        face = title_face,
-        bold = true,
-        alignment = "left",
-        width = title_w,
-    }
-    if title_widget:getSize().h <= title_max_h then
-        table.insert(vstack, title_widget)
-    else
-        -- Lists shorten titles and this header can only hold so many lines, so a title this long
-        -- would otherwise never be readable in full anywhere on the device.
-        title_widget:free()
-        local clickable_title = makeClickable(TextBoxWidget:new{
-            text = self.full_title,
-            face = title_face,
-            bold = true,
-            alignment = "left",
-            width = title_w,
-            height = title_max_h,
-            height_adjust = true,
-            height_overflow_show_ellipsis = true,
-        }, function()
-            UIManager:show(InfoMessage:new{ text = self_ref.full_title })
-            return true
-        end)
-        table.insert(vstack, clickable_title)
-        table.insert(self._key_focus_rows, clickable_title)
+    local header_widget = self:_buildHeader(self:_buildTextColumn())
+
+    local content_group = VerticalGroup:new{ not_focusable = true }
+    if self.cover_top_margin and self.cover_top_margin > 0 then
+        table.insert(content_group, VerticalSpan:new{ width = self.cover_top_margin })
     end
+    table.insert(content_group, self:_withCloseButton(header_widget))
+    local text_section = self:_buildTextSection()
+    if text_section then
+        table.insert(content_group, text_section)
+    end
+    return content_group
+end
 
-    if self.full_author ~= "" then
+-- The column beside the cover: title, author, metadata lines, ISBN.
+function BookDetailsDialog:_buildTextColumn()
+    local vstack = VerticalGroup:new{ align = "left", not_focusable = true}
+    table.insert(vstack, self:_buildTitle())
+
+    local author_line = self:_buildAuthorLine()
+    if author_line then
         table.insert(vstack, VerticalSpan:new{ width = math.floor(Screen:scaleBySize(8)) })
-        -- Search glyph: tapping the author searches for them. U+F0013 was here, a
-        -- Nerd Fonts Material-Design codepoint that the bundled symbols.ttf does not
-        -- carry -- it has nothing at all in U+F0000-F1FFF -- so it drew as a box.
-        local author_text = "\u{F002} " .. self.full_author
-        local author_max_w = math.floor(self.text_col_w - Screen:scaleBySize(25)) - 2 * KEY_FOCUS_BORDER
-        local author_widget = TextWidget:new{ text = author_text, face = self.fonts.author }
-        if author_widget:getSize().w > author_max_w then
-            author_widget:free()
-            author_widget = TextBoxWidget:new{
-                text = author_text,
-                face = self.fonts.author,
-                alignment = "left",
-                width = author_max_w,
-                height = math.floor(self.fonts.author.ftsize:getHeightAndAscender() * 3.2),
-                height_adjust = true,
-                height_overflow_show_ellipsis = true,
-            }
-        end
-        local author_group = HorizontalGroup:new{
-            author_widget,
-            TextWidget:new{ text = " \u{25B8}", face = self.fonts.author }
-        }
-        local clickable_author = makeClickable(author_group, function()
-            UIManager:close(self_ref)
-            self_ref.Ui_module.showSearchDialog(self_ref.parent_zlibrary, self_ref.full_author)
-            return true
-        end)
-        table.insert(vstack, clickable_author)
-        table.insert(self._key_focus_rows, clickable_author)
+        table.insert(vstack, author_line)
     end
 
     local meta_lines = self:_generateMetaLines()
@@ -153,18 +113,94 @@ function BookDetailsDialog:_buildContent()
         table.insert(vstack, VerticalSpan:new{ width = math.floor(Screen:scaleBySize(#meta_lines > 0 and 4 or 10)) })
         table.insert(vstack, isbn_line)
     end
+    return vstack
+end
 
+-- Up to three lines of title, beside the close X when there is one.
+function BookDetailsDialog:_buildTitle()
+    local title_face = self.fonts.title
+    local face_height = title_face.ftsize:getHeightAndAscender()
+    local title_max_h = math.floor(face_height * 3.2)
+    local title_w = self.text_col_w - (self.close_icon_size or 0)
+
+    local title_widget = TextBoxWidget:new{
+        text = self.full_title,
+        face = title_face,
+        bold = true,
+        alignment = "left",
+        width = title_w,
+    }
+    if title_widget:getSize().h <= title_max_h then
+        return title_widget
+    end
+    -- Lists shorten titles and this header can only hold so many lines, so a title this long
+    -- would otherwise never be readable in full anywhere on the device.
+    title_widget:free()
+    local clickable_title = makeClickable(TextBoxWidget:new{
+        text = self.full_title,
+        face = title_face,
+        bold = true,
+        alignment = "left",
+        width = title_w,
+        height = title_max_h,
+        height_adjust = true,
+        height_overflow_show_ellipsis = true,
+    }, function()
+        UIManager:show(InfoMessage:new{ text = self.full_title })
+        return true
+    end)
+    table.insert(self._key_focus_rows, clickable_title)
+    return clickable_title
+end
+
+-- The author, tappable to search for them. nil when the record has no author.
+function BookDetailsDialog:_buildAuthorLine()
+    if self.full_author == "" then return nil end
+    -- Search glyph: tapping the author searches for them. U+F0013 was here, a
+    -- Nerd Fonts Material-Design codepoint that the bundled symbols.ttf does not
+    -- carry -- it has nothing at all in U+F0000-F1FFF -- so it drew as a box.
+    local author_text = "\u{F002} " .. self.full_author
+    local author_max_w = math.floor(self.text_col_w - Screen:scaleBySize(25)) - 2 * KEY_FOCUS_BORDER
+    local author_widget = TextWidget:new{ text = author_text, face = self.fonts.author }
+    if author_widget:getSize().w > author_max_w then
+        author_widget:free()
+        author_widget = TextBoxWidget:new{
+            text = author_text,
+            face = self.fonts.author,
+            alignment = "left",
+            width = author_max_w,
+            height = math.floor(self.fonts.author.ftsize:getHeightAndAscender() * 3.2),
+            height_adjust = true,
+            height_overflow_show_ellipsis = true,
+        }
+    end
+    local author_group = HorizontalGroup:new{
+        author_widget,
+        TextWidget:new{ text = " \u{25B8}", face = self.fonts.author }
+    }
+    local clickable_author = makeClickable(author_group, function()
+        UIManager:close(self)
+        self.Ui_module.showSearchDialog(self.parent_zlibrary, self.full_author)
+        return true
+    end)
+    table.insert(self._key_focus_rows, clickable_author)
+    return clickable_author
+end
+
+-- The cover (tap to open it large) beside the text column. Sets self._header_h, which the text
+-- section below is sized from.
+function BookDetailsDialog:_buildHeader(text_column)
     self.cover_frame = self:_buildCoverComponent()
     self:_applyCoverPaintShadow(self.cover_frame)
     local clickable_cover = makeClickable(self.cover_frame, function()
-        self_ref.parent_zlibrary:downloadAndShowCover(self_ref.book)
+        self.parent_zlibrary:downloadAndShowCover(self.book)
         return true
     end)
     -- The row must be tall enough for whichever column is taller. The cover used to decide this on
     -- its own, which held while it was always the tallest thing here -- but now that it is capped
     -- against a short landscape screen, the metadata column can outgrow it, and a row sized to the
     -- cover alone lets whatever follows be drawn straight through the text.
-    local text_col_h = vstack:getSize().h
+    local text_col_h = text_column:getSize().h
     local header_box_h = math.max(self.framed_h, text_col_h)
     local header_widget = LeftContainer:new{
         dimen = Geom:new{ w = self.avail_w, h = header_box_h },
@@ -173,10 +209,10 @@ function BookDetailsDialog:_buildContent()
             HorizontalSpan:new{ width = self.left_padding },
             clickable_cover,
             HorizontalSpan:new{ width = self.gap },
-            vstack
+            text_column
         }
     }
-    
+
     local orig_header_getSize = header_widget.getSize
     local offset = self.pop_out_offset
     header_widget.getSize = function(widget)
@@ -191,33 +227,37 @@ function BookDetailsDialog:_buildContent()
     -- Remember what the header actually costs (the override above already discounts the cover's
     -- pop-out shadow) so _buildHtmlSection can give the rest of the screen to the text.
     self._header_h = header_widget:getSize().h
+    return header_widget
+end
 
-    local content_group = VerticalGroup:new{ not_focusable = true }
-    if self.cover_top_margin and self.cover_top_margin > 0 then
-        table.insert(content_group, VerticalSpan:new{ width = self.cover_top_margin })
+-- The header with the close X over its top right corner, on a touch screen; the header alone
+-- otherwise.
+function BookDetailsDialog:_withCloseButton(header_widget)
+    if not self.close_icon_size then
+        return header_widget
     end
-    if self.close_icon_size then
-        -- Same corner and size as the X on the list screens. The extra padding widens the tap zone
-        -- towards the screen, the same way TitleBar does.
-        local close_button = IconButton:new{
-            icon = "close",
-            width = self.close_icon_size,
-            height = self.close_icon_size,
-            padding_left = self.close_icon_size,
-            padding_bottom = self.close_icon_size,
-            show_parent = self,
-            callback = function() UIManager:close(self_ref) end,
-        }
-        close_button.overlap_align = "right"
-        table.insert(content_group, OverlapGroup:new{
-            dimen = Geom:new{ w = self.avail_w, h = self._header_h },
-            header_widget,
-            close_button,
-        })
-    else
-        table.insert(content_group, header_widget)
-    end
+    -- Same corner and size as the X on the list screens. The extra padding widens the tap zone
+    -- towards the screen, the same way TitleBar does.
+    local close_button = IconButton:new{
+        icon = "close",
+        width = self.close_icon_size,
+        height = self.close_icon_size,
+        padding_left = self.close_icon_size,
+        padding_bottom = self.close_icon_size,
+        show_parent = self,
+        callback = function() UIManager:close(self) end,
+    }
+    close_button.overlap_align = "right"
+    return OverlapGroup:new{
+        dimen = Geom:new{ w = self.avail_w, h = self._header_h },
+        header_widget,
+        close_button,
+    }
+end
 
+-- What fills the rest of the budget under the header: the comments, the description, a note that
+-- there is none, or -- with no room for text -- padding. nil when there is nothing to pad.
+function BookDetailsDialog:_buildTextSection()
     -- Is there room for a text section at all? On a short landscape screen the cover and the full
     -- button stack nearly fill the height on their own, and forcing a section in anyway pushes the
     -- dialog past the screen -- at which point ButtonDialog wraps the buttons in a scroll container
@@ -230,7 +270,7 @@ function BookDetailsDialog:_buildContent()
     local has_description = self.book.description and self.book.description ~= ""
 
     if self.view_state == "comments" and self.book.comments_html then
-        table.insert(content_group, self:_buildHtmlSection(string.format("  %s  ", T("Comments")), self.book.comments_html, self.book.comments_css))
+        return self:_buildHtmlSection(string.format("  %s  ", T("Comments")), self.book.comments_html, self.book.comments_css)
     elseif has_description and has_room then
         -- The menu view shows the description as well, not just the "description" view. That is what
         -- keeps the dialog one size: every view fills the same content budget, and pressing Description
@@ -249,25 +289,22 @@ function BookDetailsDialog:_buildContent()
                 return true
             end
         end
-
-        table.insert(content_group, section)
+        return section
     elseif not has_description and has_room then
         -- No description at all. Say so rather than leaving a blank region, which reads like
         -- something failed to load, and still fill the budget so a book without a description does
         -- not open a shorter dialog than one with it.
-        table.insert(content_group, self:_buildHtmlSection(
+        return self:_buildHtmlSection(
             string.format("  %s  ", T("Description")),
-            string.format("<div>%s</div>", T("No description available"))))
-    else
-        -- No room for any text section (a short landscape screen). Pad to the budget so the dialog
-        -- keeps one size across views, and leave the height to the buttons rather than overflowing.
-        local pad_h = (self._content_h or 0) - header_h
-        if pad_h > 0 then
-            table.insert(content_group, VerticalSpan:new{ width = math.floor(pad_h) })
-        end
+            string.format("<div>%s</div>", T("No description available")))
     end
-
-    return content_group
+    -- No room for any text section (a short landscape screen). Pad to the budget so the dialog
+    -- keeps one size across views, and leave the height to the buttons rather than overflowing.
+    local pad_h = (self._content_h or 0) - header_h
+    if pad_h > 0 then
+        return VerticalSpan:new{ width = math.floor(pad_h) }
+    end
+    return nil
 end
 
 function BookDetailsDialog:_buildHtmlSection(divider_text, raw_html, css)

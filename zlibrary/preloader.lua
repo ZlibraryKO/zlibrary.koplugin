@@ -124,7 +124,9 @@ end
 function  Preloader.getFavoriteBookIds(callback)
         local wrap_callback = getSafeCallback(callback)
         local cached_ids = Config.getConfigRuntimeCache():get("favorite_book_ids", 1800)
-        if type(cached_ids) == "table" and next(cached_ids) then return wrap_callback(true) end
+        -- Any table, empty included: an empty one is a fetched answer ("no favourites"), not a
+        -- miss. Testing next() as well refetched the list on every call for anyone who has none.
+        if type(cached_ids) == "table" then return wrap_callback(true) end
         if not NetworkMgr:isConnected() then return wrap_callback(false) end
         local task = function() return ApiHelper.fetchWithAuth(Api.getFavoriteBookIds) end
         _pushTask(task, function(success, res)

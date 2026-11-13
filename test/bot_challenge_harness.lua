@@ -140,4 +140,25 @@ r.check("a JSON response quoting a challenge phrase is not misread as a challeng
 r.check("a JSON response quoting a challenge phrase does not block the mirror",
         #blocked_calls == 0, "wrongly blocked: " .. table.concat(blocked_calls, ", "))
 
+-- The same, with HTML in it: descriptions are HTML, so a real search result carries a "<" as
+-- well as whatever its titles say. That combination used to pass the HTML gate and match.
+for _, case in ipairs({
+    { label = "an object", body = '{"success":1,"books":[{"title":"Just a moment","description":"<p>A novel.</p>"}]}' },
+    { label = "an array, after whitespace", body = '\n  [{"title":"Checking your browser","description":"<b>x</b>"}]' },
+}) do
+    n = 0
+    blocked_calls = {}
+    serve = function(p)
+        n = n + 1
+        if p.sink then p.sink(case.body) end
+        return 1, 200, {}, "HTTP/1.1 200"
+    end
+    res = Api.makeHttpRequest{ url = "https://good.example/eapi/book/search", method = "GET", headers = {} }
+    r.check("JSON with HTML and a challenge phrase (" .. case.label .. ") is not misread as a challenge",
+            res.status_code == 200 and res.error == nil,
+            "status=" .. tostring(res.status_code) .. " error=" .. tostring(res.error))
+    r.check("and does not block the mirror (" .. case.label .. ")",
+            #blocked_calls == 0, "wrongly blocked: " .. table.concat(blocked_calls, ", "))
+end
+
 r.finish()

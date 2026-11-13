@@ -1,6 +1,6 @@
 -- Comment author names, comment text and relative dates come from the Z-Library server and are
 -- interpolated into the HTML handed to ScrollHtmlWidget. Without escaping, a "<" or "&" in any
--- of them corrupts the layout or injects markup. bookdetails_dialog.lua escapes them through a
+-- of them corrupts the layout or injects markup. bookdetails_comments.lua escapes them through a
 -- file-local htmlEscape helper; this harness pulls that helper out of the source and checks it
 -- neutralises exactly the characters that matter to an HTML attribute/text context.
 --
@@ -11,7 +11,7 @@ package.path = PLUGIN .. "/test/?.lua;" .. package.path
 local support = require("support")
 
 local htmlEscape = support.extract_function(
-    PLUGIN .. "/zlibrary/bookdetails_dialog.lua", "htmlEscape",
+    PLUGIN .. "/zlibrary/bookdetails_comments.lua", "htmlEscape",
     { tostring = tostring, string = string })
 
 local r = support.reporter()

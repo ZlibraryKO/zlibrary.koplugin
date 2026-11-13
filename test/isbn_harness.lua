@@ -1,6 +1,6 @@
 -- Z-Library returns the ISBN with every book record and the plugin dropped it, so the number that
 -- a desktop needs to identify an edition had to be dug out of the downloaded file by hand.
--- bookdetails_dialog.lua now picks one out of that field through a file-local normalizeIsbn; this
+-- bookdetails_book.lua now picks one out of that field through a file-local normalizeIsbn; this
 -- harness pulls that helper out of the source and checks it on the shapes the server actually
 -- sends -- and, as much as it matters, on the junk it sometimes sends instead.
 --
@@ -11,7 +11,7 @@ package.path = PLUGIN .. "/test/?.lua;" .. package.path
 local support = require("support")
 
 local normalizeIsbn = support.extract_function(
-    PLUGIN .. "/zlibrary/bookdetails_dialog.lua", "normalizeIsbn",
+    PLUGIN .. "/zlibrary/bookdetails_book.lua", "normalizeIsbn",
     { type = type, string = string })
 
 local r = support.reporter()

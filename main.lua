@@ -79,7 +79,7 @@ end
 -- so the `or "unknown"` fallback never fired -- and the slash inside it turned
 -- "<title> - <author>.N/A.downloading" into a directory that does not exist. The download died
 -- at the open with "No such file or directory", naming a path no one had asked for.
--- Delegate to zlibrary/download.lua. Kept as methods: bookdetails_dialog calls downloadBook
+-- Delegate to zlibrary/download.lua. Kept as methods: bookdetails_buttons calls downloadBook
 -- on the plugin instance, and the retry and detail-fetch paths recurse through both.
 function Zlibrary:_fetchDetailsThenDownload(book_stub)
     return Download.fetchDetailsThenDownload(self, book_stub)

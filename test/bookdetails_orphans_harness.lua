@@ -4,7 +4,7 @@
 -- forever and were never rendered. _renderComments now appends such orphans at the end as
 -- top-level comments.
 --
--- This harness compiles the real _renderComments out of bookdetails_dialog.lua and checks that
+-- This harness compiles the real _renderComments out of bookdetails_comments.lua and checks that
 -- threaded replies, orphans, and the flatten fallback all render exactly once.
 --
 -- usage: luajit bookdetails_orphans_harness.lua <plugin-root> <luasocket-src>
@@ -36,12 +36,12 @@ local function extract_method(path, name)
 end
 
 local htmlEscape = support.extract_function(
-    PLUGIN .. "/zlibrary/bookdetails_dialog.lua", "htmlEscape",
+    PLUGIN .. "/zlibrary/bookdetails_comments.lua", "htmlEscape",
     { tostring = tostring, string = string })
 
 local BookDetailsDialog = {}
 local chunk = assert(loadstring(
-    extract_method(PLUGIN .. "/zlibrary/bookdetails_dialog.lua", "_renderComments"),
+    extract_method(PLUGIN .. "/zlibrary/bookdetails_comments.lua", "_renderComments"),
     "=bookdetails_orphans"))
 setfenv(chunk, {
     BookDetailsDialog = BookDetailsDialog,

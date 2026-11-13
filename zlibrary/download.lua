@@ -8,7 +8,7 @@
 -- longer is: 1b3bd89 added the Config.hasCredentials gate and the login resume to
 -- Download.run, and later edits have landed since. Diff against history, not this header.
 --
--- main.lua keeps two one-line methods delegating here, because bookdetails_dialog calls
+-- main.lua keeps two one-line methods delegating here, because bookdetails_buttons calls
 -- downloadBook on the plugin instance and the retry paths recurse through it.
 
 local Api = require("zlibrary.api")

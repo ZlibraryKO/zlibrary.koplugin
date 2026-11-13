@@ -6,7 +6,7 @@
 -- again (it reflects favorite changes made elsewhere too).
 --
 -- This harness compiles the real _buildButtons and _generateFavoriteButtonDef out of
--- bookdetails_dialog.lua and drives that cycle: toggle, rebuild with an empty cache, rebuild
+-- bookdetails_buttons.lua and drives that cycle: toggle, rebuild with an empty cache, rebuild
 -- with a repopulated cache.
 --
 -- usage: luajit bookdetails_favorites_harness.lua <plugin-root> <luasocket-src>
@@ -41,8 +41,8 @@ end
 
 local BookDetailsDialog = {}
 local chunk = assert(loadstring(
-    extract_method(PLUGIN .. "/zlibrary/bookdetails_dialog.lua", "_buildButtons")
-    .. extract_method(PLUGIN .. "/zlibrary/bookdetails_dialog.lua", "_generateFavoriteButtonDef"),
+    extract_method(PLUGIN .. "/zlibrary/bookdetails_buttons.lua", "_buildButtons")
+    .. extract_method(PLUGIN .. "/zlibrary/bookdetails_buttons.lua", "_generateFavoriteButtonDef"),
     "=bookdetails_favorites"))
 setfenv(chunk, {
     BookDetailsDialog = BookDetailsDialog,

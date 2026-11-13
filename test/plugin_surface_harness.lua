@@ -3,7 +3,7 @@
 -- main.lua was one 1,579-line file. Its methods now live in main.lua and six parts --
 -- plugin_menu, plugin_requests, plugin_browse, plugin_books, plugin_signin, plugin_search -- which
 -- main.lua copies onto the class at load. Other modules call these methods on the plugin instance
--- (ui.lua, bookdetails_dialog.lua, download.lua, discovery.lua), so a method left behind is a nil
+-- (ui.lua, the bookdetails_* parts, download.lua, discovery.lua), so a method left behind is a nil
 -- call on a device, and one defined twice is a silent overwrite.
 --
 -- Read from the sources rather than by loading the class, which needs KOReader's widget stack. The

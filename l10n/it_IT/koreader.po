@@ -812,9 +812,8 @@ msgstr "Apri libro"
 msgid "Close"
 msgstr "Chiudi"
 
-#, lua-format
-msgid "No %s found, please try again. Sometimes this requires a couple of retries."
-msgstr "Nessun %s trovato, riprova. A volte servono un paio di tentativi."
+msgid "No similar books found, please try again. Sometimes this requires a couple of retries."
+msgstr "Nessun libro simile trovato, riprova. A volte servono un paio di tentativi."
 
 msgid "Z-library Similar Books"
 msgstr "Z-library Libri simili"

@@ -117,10 +117,14 @@ function Config.getBooklistBooksUrl(booklist_id, page)
     return string.format("%s/papi/booklist/%d/get-books/%d", base, id, page or 1)
 end
 
-function Config.getFavoriteBookIdsUrl()
+-- One page of the saved list, for collecting every favourite's id. Paged like the list itself:
+-- the endpoint caps a page at SEARCH_RESULTS_LIMIT, so reading page 1 alone knew only the 30 most
+-- recently saved books.
+function Config.getFavoriteBookIdsUrl(page)
     local base = Config.getBaseUrl()
     local limit = Config.SEARCH_RESULTS_LIMIT
-    return base and (base .. "/eapi/user/book/saved?order=saved_date&page=1&limit=" .. limit)
+    return base and string.format("%s/eapi/user/book/saved?order=saved_date&page=%d&limit=%d",
+        base, tonumber(page) or 1, limit)
 end
 
 function Config.getDeleteDownloadedUrl(book_id)

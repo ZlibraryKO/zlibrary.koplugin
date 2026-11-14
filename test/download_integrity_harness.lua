@@ -58,6 +58,8 @@ env.Api = {
 -- would stop telling the truth the moment the session format changed.
 env._sessionCookie = support.extract_function(PLUGIN .. "/zlibrary/api_shared.lua", "_sessionCookie",
     { string = string })
+-- Only used to keep the signed query out of the log; log_redaction_harness checks what it does.
+env._loggableUrl = function(url) return tostring(url) end
 
 local block = support.extract_block(PLUGIN .. "/zlibrary/api_downloads.lua",
     "(\nfunction Api%.downloadBook%(.-\nend\n)")

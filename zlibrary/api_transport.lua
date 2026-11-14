@@ -13,6 +13,7 @@ local T = require("zlibrary.gettext")
 local Api = require("zlibrary.api_core")
 local Shared = require("zlibrary.api_shared")
 local _extractErrorFromJsonBody = Shared._extractErrorFromJsonBody
+local _loggableUrl = Shared._loggableUrl
 
 -- Reads the mirror's new address out of a 30x that the caller has already received. The headers
 -- come from that very response: makeHttpRequest only asks for this check when options.redirect was
@@ -39,7 +40,7 @@ local function _checkAndHandleRedirect(skip_check, status_code, current_url, hea
     local location = type(headers) == "table" and (headers.location or headers.Location) or nil
     if type(location) ~= "string" or location == "" then
         logger.err("Zlibrary:Api - Redirect carried no Location header:", headers)
-        result.error = string.format("Redirect from %s carried no Location header", current_url)
+        result.error = string.format("Redirect from %s carried no Location header", _loggableUrl(current_url))
         return result
     end
 
@@ -52,7 +53,17 @@ local function _checkAndHandleRedirect(skip_check, status_code, current_url, hea
     local real_url_parse = real_url and socket_url.parse(real_url) or nil
     if not (real_url_parse and real_url_parse.host and real_url_parse.scheme) then
         result.error = string.format("Redirect target could not be resolved against %s: %s",
-            current_url, location)
+            _loggableUrl(current_url), _loggableUrl(location))
+        return result
+    end
+    -- Never from https down to plain http. The hop re-sends the session cookie, and on 307/308 a
+    -- sign-in's body with the password in it, and over http anyone on the network reads both. A
+    -- mirror that moves to a plain-http host is not one worth following; LuaSocket refuses the
+    -- same downgrade when it follows a chain itself (redirect = true), so this matches it.
+    if string.lower(current_url_parse.scheme or "") == "https"
+            and string.lower(real_url_parse.scheme) ~= "https" then
+        result.error = string.format("Refusing to follow a redirect from https to %s: %s",
+            tostring(real_url_parse.scheme), _loggableUrl(real_url))
         return result
     end
     result.real_url = real_url
@@ -100,6 +111,13 @@ local function _looksLikeBotChallenge(body)
     -- Only ever an HTML page where JSON was expected; bound the scan so a large body cannot
     -- turn every failed request into a full-text search.
     local head = string.sub(body, 1, 4096)
+    -- A JSON answer is the API working, whatever it contains. Book descriptions are HTML and
+    -- titles are free text, so a search result can hold both a "<" and a marker phrase ("Just a
+    -- moment" is a plausible title); without this a healthy mirror was reported as bot-walled
+    -- and skipped by discovery for BLOCKED_MIRROR_TTL. A challenge page never starts with { or [.
+    if string.find(head, "^%s*[%[{]") then
+        return false
+    end
     if not string.find(head, "<", 1, true) then
         return false
     end
@@ -222,7 +240,7 @@ local function _applyRedirectMethod(options, status_code)
 end
 
 function Api.makeHttpRequest(options)
-    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - START - URL: %s, Method: %s", options.url, options.method or "GET"))
+    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - START - URL: %s, Method: %s", _loggableUrl(options.url), options.method or "GET"))
     
     local response_body_table = {}
     local result = { body = nil, status_code = nil, error = nil, headers = nil }
@@ -293,7 +311,7 @@ function Api.makeHttpRequest(options)
         redirect = options.redirect or false,
     }
 
-    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Timeout: %s", request_params.url, request_params.method, tostring(options.timeout)))
+    logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Request Params: URL: %s, Method: %s, Timeout: %s", _loggableUrl(request_params.url), request_params.method, tostring(options.timeout)))
     
     start_time = time.now()
     local req_ok, r_val, r_code, r_headers_tbl, r_status_str = pcall(http.request, request_params)
@@ -322,7 +340,7 @@ function Api.makeHttpRequest(options)
         end
         logger.err(string.format(
             "Zlibrary:Api.makeHttpRequest - END (pcall error) - %s %s - raw=[%s] elapsed=%dms first_byte=%s - Error: %s",
-            tostring(request_params.method), tostring(options.url),
+            tostring(request_params.method), _loggableUrl(options.url),
             error_msg, result.elapsed or -1,
             first_byte_ms and (first_byte_ms .. "ms") or "none", result.error))
         return result
@@ -345,7 +363,7 @@ function Api.makeHttpRequest(options)
         if Config.clearCacheRealUrlIfPinned(options.url) then
             logger.info(string.format(
                 "Zlibrary:Api.makeHttpRequest - Dropped cached redirect target; it failed: %s (status: %s)",
-                tostring(options.url), tostring(result.status_code)))
+                _loggableUrl(options.url), tostring(result.status_code)))
         end
     end
 
@@ -372,7 +390,7 @@ function Api.makeHttpRequest(options)
             options._retried = true
             logger.info(string.format(
                 "Zlibrary:Api.makeHttpRequest - stalled with no response after %dms, retrying once - %s %s",
-                result.elapsed or -1, tostring(request_params.method), tostring(options.url)))
+                result.elapsed or -1, tostring(request_params.method), _loggableUrl(options.url)))
             return Api.makeHttpRequest(options)
         end
 
@@ -394,7 +412,7 @@ function Api.makeHttpRequest(options)
         end
         logger.err(string.format(
             "Zlibrary:Api.makeHttpRequest - END (Invalid response code type) - %s %s - transport_error=[%s] (type %s) elapsed=%dms first_byte=%s - Error: %s",
-            tostring(request_params.method), tostring(options.url),
+            tostring(request_params.method), _loggableUrl(options.url),
             status_str, type(result.status_code), result.elapsed or -1,
             first_byte_ms and (first_byte_ms .. "ms") or "none", result.error))
         return result
@@ -447,7 +465,7 @@ function Api.makeHttpRequest(options)
                 result.error = string.format("%s (%s)", T("Too many redirects"), tostring(redir_res.real_url))
                 logger.err(string.format(
                     "Zlibrary:Api.makeHttpRequest - Redirect loop: %s was already requested, not following it again",
-                    tostring(redir_res.real_url)))
+                    _loggableUrl(redir_res.real_url)))
                 return result
             end
             seen[redir_res.real_url] = true
@@ -457,11 +475,11 @@ function Api.makeHttpRequest(options)
                 result.error = string.format("%s (%s)", T("Too many redirects"), tostring(options.url))
                 logger.err(string.format(
                     "Zlibrary:Api.makeHttpRequest - Redirect chain exceeded %d hops, giving up at %s",
-                    MAX_REDIRECT_HOPS, tostring(options.url)))
+                    MAX_REDIRECT_HOPS, _loggableUrl(options.url)))
                 return result
             end
             logger.info(string.format("Zlibrary:Api.makeHttpRequest - Following %s: %s -> %s (hop %d)",
-                tostring(result.status_code), tostring(options.url), tostring(redir_res.real_url), hops))
+                tostring(result.status_code), _loggableUrl(options.url), _loggableUrl(redir_res.real_url), hops))
             options._redirect_hops = hops
             _applyRedirectMethod(options, result.status_code)
             options.url = redir_res.real_url
@@ -488,7 +506,7 @@ function Api.makeHttpRequest(options)
                 Config.markMirrorBlocked(options.url)
                 logger.err(string.format(
                     "Zlibrary:Api.makeHttpRequest - %s answered a bot-check page (status %s), not the API",
-                    tostring(options.url), tostring(result.status_code)))
+                    _loggableUrl(options.url), tostring(result.status_code)))
             elseif json_error then
                 result.error = json_error
             else
@@ -508,7 +526,7 @@ function Api.makeHttpRequest(options)
         Config.markMirrorBlocked(options.url)
         logger.err(string.format(
             "Zlibrary:Api.makeHttpRequest - %s answered a bot-check page with status %s, not the API",
-            tostring(options.url), tostring(result.status_code)))
+            _loggableUrl(options.url), tostring(result.status_code)))
     end
 
     logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - END - Status: %s, Headers found: %s, Error: %s",

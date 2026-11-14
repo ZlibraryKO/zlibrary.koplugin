@@ -123,6 +123,25 @@ local function _transformApiBookData(api_books)
     return is_single and transformed_books[1] or transformed_books
 end
 
+-- A URL as it may appear in the log: scheme://host[:port]/path, without the query or fragment.
+-- A resolved download link carries its signature in the query, which is credential-equivalent,
+-- and crash.log is what readers attach to bug reports. Anything that does not parse as an
+-- absolute URL -- a relative Location, a garbled header -- is cut at the first ? or # instead,
+-- so nothing reaches the log with its query intact.
+local function _loggableUrl(url)
+    if type(url) ~= "string" then return tostring(url) end
+    local parsed = socket_url.parse(url)
+    if parsed and parsed.scheme and parsed.host then
+        return socket_url.build({
+            scheme = parsed.scheme,
+            host = parsed.host,
+            port = parsed.port,
+            path = parsed.path,
+        })
+    end
+    return (url:gsub("[?#].*$", ""))
+end
+
 local function _extractErrorFromJsonBody(body)
     if not body or body == "" then
         return nil
@@ -151,4 +170,5 @@ return {
     _authedHeaders = _authedHeaders,
     _transformApiBookData = _transformApiBookData,
     _extractErrorFromJsonBody = _extractErrorFromJsonBody,
+    _loggableUrl = _loggableUrl,
 }

@@ -813,9 +813,8 @@ msgstr "Mở sách"
 msgid "Close"
 msgstr "Đóng"
 
-#, lua-format
-msgid "No %s found, please try again. Sometimes this requires a couple of retries."
-msgstr "Không tìm thấy %s, vui lòng thử lại. Đôi khi bạn cần thử lại vài lần."
+msgid "No similar books found, please try again. Sometimes this requires a couple of retries."
+msgstr "Không tìm thấy sách tương tự, vui lòng thử lại. Đôi khi bạn cần thử lại vài lần."
 
 msgid "Z-library Similar Books"
 msgstr "Z-library Sách tương tự"

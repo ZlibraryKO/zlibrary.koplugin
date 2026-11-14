@@ -26,6 +26,8 @@ end
 local env = {
     type = type, tostring = tostring, string = string, pcall = pcall,
     T = function(s) return s end,
+    -- Only used to keep queries out of the log; log_redaction_harness checks what it does.
+    _loggableUrl = function(url) return tostring(url) end,
     logger = { info = function() end, warn = function() end, err = function() end, dbg = function() end },
     Config = {
         getUserAgent = function() return "UA" end,

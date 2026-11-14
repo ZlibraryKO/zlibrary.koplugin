@@ -590,10 +590,13 @@ function AsyncHelper.runCancellable(task_func, on_success, on_error, loading_msg
 
         if type(envelope) ~= "table" then
             -- The child finished but its answer did not survive the pipe (a hard crash before
-            -- the write, or a value buffer.encode cannot represent). Re-run in-process rather
-            -- than invent an error the task never produced.
-            logger.warn("AsyncHelper.runCancellable - no usable result from subprocess, falling back to in-process run")
-            AsyncHelper.run(task_func, on_success, on_error, loading_msg_widget_to_close)
+            -- the write, or a value buffer.encode cannot represent). Report it as a failed
+            -- request, which the caller's retry dialog offers to repeat. This used to re-run the
+            -- task in-process instead: the request reached the server a second time, and the UI
+            -- froze for up to its whole timeout under a "tap to cancel" message no tap could
+            -- reach. A fork failure (above) still falls back, since nothing was sent there.
+            logger.warn("AsyncHelper.runCancellable - no usable result from subprocess")
+            deliver(false, T("Network request failed") .. ": no result from the background request")
             return
         end
 

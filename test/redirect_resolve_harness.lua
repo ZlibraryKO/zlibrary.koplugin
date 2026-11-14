@@ -23,6 +23,8 @@ local checkRedirect = support.extract_function(
         socket_url = socket_url,
         logger = { err = function() end, dbg = function() end, info = function() end },
         string = string, type = type, tostring = tostring, pairs = pairs,
+        _loggableUrl = support.extract_function(PLUGIN .. "/zlibrary/api_shared.lua", "_loggableUrl",
+            { socket_url = socket_url, type = type, tostring = tostring }),
     })
 
 local CURRENT = "https://z-lib.example/eapi/user/login"

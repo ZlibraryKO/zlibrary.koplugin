@@ -363,45 +363,86 @@ function Api.getDownloadQuotaStatus(user_id, user_key)
     return { quota_status = {today = data.user.downloads_today, limit = data.user.downloads_limit}}
 end
 
+-- How many pages getFavoriteBookIds reads before it stops: 20 pages of 30 is 600 favourites.
+-- The bound is for the request count, not the memory -- this is a free service, and the ids are
+-- refetched every half hour while the cache is in use. Past it, older favourites read as not
+-- favourited, which is what every favourite past the 30th did before the list was paged.
+local FAVORITE_IDS_MAX_PAGES = 20
+
+-- The id of every saved book, for the favourite button. The cache this fills is taken as the
+-- whole truth -- a book missing from it shows "Add To Favorites" -- so it has to be the whole
+-- list: every page, and an error rather than a partial list when a later page fails. Returns
+-- { books = { { id = ... }, ... } } with nothing but ids, since the result crosses a pipe from
+-- the preloader's child and full book records for hundreds of favourites would be most of it.
 function Api.getFavoriteBookIds(user_id, user_key)
-    local url = Config.getFavoriteBookIdsUrl()
-    if not url then
-        logger.warn("Api.getFavoriteBookIds - Base URL not configured")
-        return { error = T("Z-library server URL not configured.") }
-    end
-
     local headers = _authedHeaders(user_id, user_key)
+    local ids = {}
+    local page = 1
 
-    local http_result = Api.makeHttpRequest{
-        url = url,
-        method = "GET",
-        headers = headers,
-        timeout = Config.getPopularTimeout(),
-        onRedirect = Config.getFavoriteBookIdsUrl,
-    }
+    while true do
+        local url = Config.getFavoriteBookIdsUrl(page)
+        if not url then
+            logger.warn("Api.getFavoriteBookIds - Base URL not configured")
+            return { error = T("Z-library server URL not configured.") }
+        end
 
-    if http_result.error then
-        logger.warn("Api.getFavoriteBookIds - HTTP request error: ", http_result.error)
-        return { error = http_result.error }
+        local http_result = Api.makeHttpRequest{
+            url = url,
+            method = "GET",
+            headers = headers,
+            timeout = Config.getPopularTimeout(),
+            onRedirect = function()
+                return Config.getFavoriteBookIdsUrl(page)
+            end,
+        }
+
+        if http_result.error then
+            logger.warn("Api.getFavoriteBookIds - HTTP request error: ", http_result.error)
+            return { error = http_result.error }
+        end
+
+        if not http_result.body then
+            logger.warn("Api.getFavoriteBookIds - No response body")
+            return { error = T("Failed to fetch favorite-book IDs (no response body).") }
+        end
+
+        local success, data = pcall(json.decode, http_result.body, json.decode.simple)
+        if not success or not data then
+            logger.warn("Api.getFavoriteBookIds - Failed to decode JSON: ", http_result.body)
+            return { error = T("Failed to parse favorite-book IDs.") }
+        end
+
+        if not (data.success == 1 and type(data.books) == "table") then
+            logger.warn("Api.getFavoriteBookIds - API error: ", http_result.body)
+            return { error = data.message or T("API returned an error for favorite-book IDs.") }
+        end
+
+        for _, book in ipairs(data.books) do
+            if type(book) == "table" and book.id ~= nil then
+                ids[#ids + 1] = { id = book.id }
+            end
+        end
+
+        -- The pagination block when there is one; otherwise a full page is the only hint that
+        -- another may follow, the same fallback getBooklistBooks uses.
+        local pagination = data.pagination
+        local total_pages = type(pagination) == "table" and tonumber(pagination.total_pages)
+        local more
+        if total_pages then
+            more = page < total_pages
+        else
+            more = #data.books >= Config.SEARCH_RESULTS_LIMIT
+        end
+        if not more or #data.books == 0 then break end
+        if page >= FAVORITE_IDS_MAX_PAGES then
+            logger.warn(string.format("Api.getFavoriteBookIds - stopped after %d pages; older favourites are not known",
+                FAVORITE_IDS_MAX_PAGES))
+            break
+        end
+        page = page + 1
     end
 
-    if not http_result.body then
-        logger.warn("Api.getFavoriteBookIds - No response body")
-        return { error = T("Failed to fetch favorite-book IDs (no response body).") }
-    end
-
-    local success, data = pcall(json.decode, http_result.body, json.decode.simple)
-    if not success or not data then
-        logger.warn("Api.getFavoriteBookIds - Failed to decode JSON: ", http_result.body)
-        return { error = T("Failed to parse favorite-book IDs.") }
-    end
-    
-    if not (data.success == 1 and data.books) then
-        logger.warn("Api.getFavoriteBookIds - API error: ", http_result.body)
-        return { error = data.message or T("API returned an error for favorite-book IDs.") }
-    end
-    
-    return { books = data.books }
+    return { books = ids }
 end
 
 function Api.favoriteBook(user_id, user_key, book_stub)

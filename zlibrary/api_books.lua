@@ -18,7 +18,10 @@ local _transformApiBookData = Shared._transformApiBookData
 Api.usableCoverUrl = _usableCoverUrl
 
 function Api.search(query, user_id, user_key, languages, extensions, order, page, is_redir_callback)
-    logger.info(string.format("Zlibrary:Api.search - START - Query: %s, Page: %s", query, tostring(page)))
+    -- The query at dbg, not info: what someone searches for is theirs, and crash.log at the default level is
+    -- what gets attached to bug reports. The page number is enough to follow a session there.
+    logger.info(string.format("Zlibrary:Api.search - START - Page: %s", tostring(page)))
+    logger.dbg(string.format("Zlibrary:Api.search - Query: %s", tostring(query)))
     local result = { results = nil, total_count = nil, error = nil }
 
     local search_url = Config.getSearchUrl()

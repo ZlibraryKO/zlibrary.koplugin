@@ -185,7 +185,7 @@ function Ui.showSimilarBooksMenu(ui_self, books, plugin_self, source_title)
     end
 
     if #menu_items == 0 then
-       Ui.showInfoMessage(string.format(T("No %s found, please try again. Sometimes this requires a couple of retries."), "similar books"))
+       Ui.showInfoMessage(T("No similar books found, please try again. Sometimes this requires a couple of retries."))
         return
     end
     

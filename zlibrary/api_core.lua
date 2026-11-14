@@ -28,6 +28,12 @@ Api.BLOCKED_TEXT = T("This Z-library server is refusing automated access")
 -- one locale out of fourteen.
 Api.CREDENTIALS_REJECTED_TEXT = T("Credentials rejected or invalid response")
 
+-- What Api.downloadBook reports when the mirror answers a download with an HTML page, which is
+-- how it says the daily quota is spent. Exported for the same reason as the texts above:
+-- Download.run matches on it to show the quota notice, and an English literal matched only in
+-- English -- every other locale got the raw message and a retry dialog instead.
+Api.DOWNLOAD_LIMIT_HTML_TEXT = T("Download limit reached or file is an HTML page")
+
 -- Did the server read these credentials and refuse them?
 --
 -- Positive matches only. Anything unrecognised -- a timeout, a dead mirror, a bot-challenge page,

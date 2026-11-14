@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 09:25+0000\n"
+"POT-Creation-Date: 2026-11-14 19:30+0000\n"
 "PO-Revision-Date: 2026-07-22 00:39+0100\n"
 "Last-Translator: CookieCaptainD\n"
 "Language-Team: pt_PT\n"
@@ -192,14 +192,14 @@ msgstr "Este servidor Z-library está a recusar o acesso automático"
 msgid "Credentials rejected or invalid response"
 msgstr "Credenciais rejeitadas ou resposta inválida"
 
+msgid "Download limit reached or file is an HTML page"
+msgstr "Limite de transferências atingido ou o ficheiro é uma página HTML"
+
 msgid "Failed to open target file"
 msgstr "Falha ao abrir o ficheiro de destino"
 
 msgid "Unknown error"
 msgstr "Erro desconhecido"
-
-msgid "Download limit reached or file is an HTML page"
-msgstr "Limite de transferências atingido ou o ficheiro é uma página HTML"
 
 msgid "HTTP Error"
 msgstr "Erro HTTP"
@@ -444,11 +444,11 @@ msgstr "Pesquisar"
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "A atualização falhou: Não foi possível determinar onde instalar o plugin."
 
-msgid "Installing update..."
-msgstr "A instalar a atualização..."
-
 msgid "Update installation failed."
 msgstr "A instalação da atualização falhou."
+
+msgid "Installing update..."
+msgstr "A instalar a atualização..."
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "Falha ao procurar atualizações: Não foi possível determinar a localização do plugin."

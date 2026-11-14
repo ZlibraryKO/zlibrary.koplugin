@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 09:25+0000\n"
+"POT-Creation-Date: 2026-11-14 19:30+0000\n"
 "PO-Revision-Date: 2026-09-05 13:23+0700\n"
 "Last-Translator: \n"
 "Language-Team: vi <vi@li.org>\n"
@@ -187,14 +187,14 @@ msgstr "Máy chủ Z-library này từ chối truy cập tự động"
 msgid "Credentials rejected or invalid response"
 msgstr "Thông tin xác thực bị từ chối hoặc phản hồi không hợp lệ"
 
+msgid "Download limit reached or file is an HTML page"
+msgstr "Đã đạt giới hạn tải về hoặc tệp là trang HTML"
+
 msgid "Failed to open target file"
 msgstr "Không thể mở tệp đích"
 
 msgid "Unknown error"
 msgstr "Lỗi không xác định"
-
-msgid "Download limit reached or file is an HTML page"
-msgstr "Đã đạt giới hạn tải về hoặc tệp là trang HTML"
 
 msgid "HTTP Error"
 msgstr "Lỗi HTTP"
@@ -439,11 +439,11 @@ msgstr "Tìm kiếm"
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "Cập nhật thất bại: Không thể xác định vị trí cài đặt plugin."
 
-msgid "Installing update..."
-msgstr "Đang cài đặt bản cập nhật..."
-
 msgid "Update installation failed."
 msgstr "Cài đặt cập nhật thất bại."
+
+msgid "Installing update..."
+msgstr "Đang cài đặt bản cập nhật..."
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "Kiểm tra cập nhật thất bại: Không thể xác định vị trí plugin."

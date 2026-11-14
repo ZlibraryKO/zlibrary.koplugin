@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 09:25+0000\n"
+"POT-Creation-Date: 2026-11-14 19:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -186,14 +186,14 @@ msgstr "خادم Z-library هذا يرفض الوصول الآلي"
 msgid "Credentials rejected or invalid response"
 msgstr "تم رفض بيانات الاعتماد أو استجابة غير صالحة"
 
+msgid "Download limit reached or file is an HTML page"
+msgstr "تم بلوغ حد التنزيل أو الملف صفحة HTML"
+
 msgid "Failed to open target file"
 msgstr "فشل فتح الملف الهدف"
 
 msgid "Unknown error"
 msgstr "خطأ غير معروف"
-
-msgid "Download limit reached or file is an HTML page"
-msgstr "تم بلوغ حد التنزيل أو الملف صفحة HTML"
 
 msgid "HTTP Error"
 msgstr "خطأ HTTP"
@@ -438,11 +438,11 @@ msgstr "بحث"
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "فشل التحديث: تعذر تحديد مكان تثبيت المكون الإضافي."
 
-msgid "Installing update..."
-msgstr "جارٍ تثبيت التحديث..."
-
 msgid "Update installation failed."
 msgstr "فشل تثبيت التحديث."
+
+msgid "Installing update..."
+msgstr "جارٍ تثبيت التحديث..."
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "فشل التحقق من التحديث: تعذر تحديد موقع المكون الإضافي."

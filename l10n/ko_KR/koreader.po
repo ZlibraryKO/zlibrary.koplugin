@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 09:25+0000\n"
+"POT-Creation-Date: 2026-11-14 19:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -186,14 +186,14 @@ msgstr "이 Z-library 서버가 자동화된 접근을 차단하고 있습니다
 msgid "Credentials rejected or invalid response"
 msgstr "인증 정보가 거부되었거나 응답이 잘못되었습니다"
 
+msgid "Download limit reached or file is an HTML page"
+msgstr "다운로드 한도에 도달했거나 파일이 HTML 페이지입니다"
+
 msgid "Failed to open target file"
 msgstr "대상 파일을 열지 못했습니다"
 
 msgid "Unknown error"
 msgstr "알 수 없는 오류"
-
-msgid "Download limit reached or file is an HTML page"
-msgstr "다운로드 한도에 도달했거나 파일이 HTML 페이지입니다"
 
 msgid "HTTP Error"
 msgstr "HTTP 오류"
@@ -438,11 +438,11 @@ msgstr "검색"
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "업데이트 실패: 플러그인 설치 위치를 확인할 수 없습니다."
 
-msgid "Installing update..."
-msgstr "업데이트 설치 중..."
-
 msgid "Update installation failed."
 msgstr "업데이트 설치에 실패했습니다."
+
+msgid "Installing update..."
+msgstr "업데이트 설치 중..."
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "업데이트 확인 실패: 플러그인 위치를 확인할 수 없습니다."

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 09:25+0000\n"
+"POT-Creation-Date: 2026-11-14 19:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -186,14 +186,14 @@ msgstr "Этот сервер Z-library блокирует автоматиче�
 msgid "Credentials rejected or invalid response"
 msgstr "Учётные данные отклонены или неверный ответ"
 
+msgid "Download limit reached or file is an HTML page"
+msgstr "Достигнут лимит загрузок или файл является HTML-страницей"
+
 msgid "Failed to open target file"
 msgstr "Не удалось открыть целевой файл"
 
 msgid "Unknown error"
 msgstr "Неизвестная ошибка"
-
-msgid "Download limit reached or file is an HTML page"
-msgstr "Достигнут лимит загрузок или файл является HTML-страницей"
 
 msgid "HTTP Error"
 msgstr "Ошибка HTTP"
@@ -438,11 +438,11 @@ msgstr "Поиск"
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "Ошибка обновления: Не удалось определить место установки плагина."
 
-msgid "Installing update..."
-msgstr "Установка обновления..."
-
 msgid "Update installation failed."
 msgstr "Ошибка установки обновления."
+
+msgid "Installing update..."
+msgstr "Установка обновления..."
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "Ошибка проверки обновлений: Не удалось определить расположение плагина."

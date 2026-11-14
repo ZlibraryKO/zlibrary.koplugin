@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 09:25+0000\n"
+"POT-Creation-Date: 2026-11-14 19:30+0000\n"
 "PO-Revision-Date: 2026-04-03 00:00+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
@@ -186,14 +186,14 @@ msgstr "此 Z-library 服务器拒绝自动访问"
 msgid "Credentials rejected or invalid response"
 msgstr "凭证被拒绝或响应无效"
 
+msgid "Download limit reached or file is an HTML page"
+msgstr "已达下载限制或文件为HTML页面"
+
 msgid "Failed to open target file"
 msgstr "无法打开目标文件"
 
 msgid "Unknown error"
 msgstr "未知错误"
-
-msgid "Download limit reached or file is an HTML page"
-msgstr "已达下载限制或文件为HTML页面"
 
 msgid "HTTP Error"
 msgstr "HTTP 错误"
@@ -438,11 +438,11 @@ msgstr "搜索"
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "更新失败：无法确定插件安装位置。"
 
-msgid "Installing update..."
-msgstr "正在安装更新..."
-
 msgid "Update installation failed."
 msgstr "更新安装失败。"
+
+msgid "Installing update..."
+msgstr "正在安装更新..."
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "更新检查失败：无法确定插件位置。"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 09:25+0000\n"
+"POT-Creation-Date: 2026-11-14 19:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -186,14 +186,14 @@ msgstr "Deze Z-library server weigert geautomatiseerde toegang"
 msgid "Credentials rejected or invalid response"
 msgstr "Inloggegevens geweigerd of ongeldig antwoord"
 
+msgid "Download limit reached or file is an HTML page"
+msgstr "Downloadlimiet bereikt of bestand is een HTML-pagina"
+
 msgid "Failed to open target file"
 msgstr "Kan doelbestand niet openen"
 
 msgid "Unknown error"
 msgstr "Onbekende fout"
-
-msgid "Download limit reached or file is an HTML page"
-msgstr "Downloadlimiet bereikt of bestand is een HTML-pagina"
 
 msgid "HTTP Error"
 msgstr "HTTP-fout"
@@ -438,11 +438,11 @@ msgstr "Zoeken"
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "Update mislukt: Kan de installatieplek van de plugin niet bepalen."
 
-msgid "Installing update..."
-msgstr "Update installeren..."
-
 msgid "Update installation failed."
 msgstr "Update-installatie mislukt."
+
+msgid "Installing update..."
+msgstr "Update installeren..."
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "Updatecontrole mislukt: Kan de locatie van de plugin niet bepalen."

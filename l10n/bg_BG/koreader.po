@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 09:25+0000\n"
+"POT-Creation-Date: 2026-11-14 19:30+0000\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -192,14 +192,14 @@ msgstr "Този сървър на Z-library блокира автоматизи
 msgid "Credentials rejected or invalid response"
 msgstr "Отхвърлени идентификационни данни или невалиден отговор"
 
+msgid "Download limit reached or file is an HTML page"
+msgstr "Достигнат лимит за изтегляне или файлът е HTML страница"
+
 msgid "Failed to open target file"
 msgstr "Неуспешно отваряне на целевия файл"
 
 msgid "Unknown error"
 msgstr "Непозната грешка"
-
-msgid "Download limit reached or file is an HTML page"
-msgstr "Достигнат лимит за изтегляне или файлът е HTML страница"
 
 msgid "HTTP Error"
 msgstr "HTTP грешка"
@@ -444,11 +444,11 @@ msgstr "Търсене"
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "Актуализацията неуспешна: Не може да се определи къде да се инсталира приставката."
 
-msgid "Installing update..."
-msgstr "Инсталиране на актуализацията..."
-
 msgid "Update installation failed."
 msgstr "Инсталирането на актуализацията неуспешно."
+
+msgid "Installing update..."
+msgstr "Инсталиране на актуализацията..."
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "Проверката за актуализации неуспешна: Не може да се определи местоположението на приставката."

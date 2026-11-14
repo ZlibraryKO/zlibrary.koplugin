@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 09:25+0000\n"
+"POT-Creation-Date: 2026-11-14 19:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -186,14 +186,14 @@ msgstr "Dieser Z-library-Server verweigert den automatisierten Zugriff"
 msgid "Credentials rejected or invalid response"
 msgstr "Zugangsdaten abgelehnt oder ungültige Antwort"
 
+msgid "Download limit reached or file is an HTML page"
+msgstr "Download-Limit erreicht oder Datei ist eine HTML-Seite"
+
 msgid "Failed to open target file"
 msgstr "Zieldatei konnte nicht geöffnet werden"
 
 msgid "Unknown error"
 msgstr "Unbekannter Fehler"
-
-msgid "Download limit reached or file is an HTML page"
-msgstr "Download-Limit erreicht oder Datei ist eine HTML-Seite"
 
 msgid "HTTP Error"
 msgstr "HTTP-Fehler"
@@ -438,11 +438,11 @@ msgstr "Suchen"
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "Update fehlgeschlagen: Installationsort des Plugins konnte nicht bestimmt werden."
 
-msgid "Installing update..."
-msgstr "Update wird installiert..."
-
 msgid "Update installation failed."
 msgstr "Update-Installation fehlgeschlagen."
+
+msgid "Installing update..."
+msgstr "Update wird installiert..."
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "Update-Prüfung fehlgeschlagen: Plugin-Speicherort konnte nicht bestimmt werden."

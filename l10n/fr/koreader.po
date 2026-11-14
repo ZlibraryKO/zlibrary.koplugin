@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 09:25+0000\n"
+"POT-Creation-Date: 2026-11-14 19:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -186,14 +186,14 @@ msgstr "Ce serveur Z-library refuse les accès automatisés"
 msgid "Credentials rejected or invalid response"
 msgstr "Identifiants refusés ou réponse invalide"
 
+msgid "Download limit reached or file is an HTML page"
+msgstr "Limite de téléchargement atteinte ou le fichier est une page HTML"
+
 msgid "Failed to open target file"
 msgstr "Échec de l'ouverture du fichier cible"
 
 msgid "Unknown error"
 msgstr "Erreur inconnue"
-
-msgid "Download limit reached or file is an HTML page"
-msgstr "Limite de téléchargement atteinte ou le fichier est une page HTML"
 
 msgid "HTTP Error"
 msgstr "Erreur HTTP"
@@ -438,11 +438,11 @@ msgstr "Rechercher"
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "Échec de la mise à jour : Impossible de déterminer où installer le plugin."
 
-msgid "Installing update..."
-msgstr "Installation de la mise à jour..."
-
 msgid "Update installation failed."
 msgstr "L'installation de la mise à jour a échoué."
+
+msgid "Installing update..."
+msgstr "Installation de la mise à jour..."
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "Échec de la vérification de la mise à jour : Impossible de déterminer l'emplacement du plugin."

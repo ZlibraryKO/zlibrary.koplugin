@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 09:25+0000\n"
+"POT-Creation-Date: 2026-11-14 19:30+0000\n"
 "PO-Revision-Date: 2026-11-14 20:11+0100\n"
 "Last-Translator: Wajsar Josef <Wajsar.Josef@hotmail.com>\n"
 "Language-Team: \n"
@@ -187,14 +187,14 @@ msgstr "Tento server Z-library odmítá automatizovaný přístup"
 msgid "Credentials rejected or invalid response"
 msgstr "Přihlašovací údaje byly odmítnuty nebo server odeslal neplatnou odpověď"
 
+msgid "Download limit reached or file is an HTML page"
+msgstr "Byl dosažen limit stahování nebo je soubor ve formátu HTML"
+
 msgid "Failed to open target file"
 msgstr "Nepodařilo se otevřít cílový soubor"
 
 msgid "Unknown error"
 msgstr "Neznámá chyba"
-
-msgid "Download limit reached or file is an HTML page"
-msgstr "Byl dosažen limit stahování nebo je soubor ve formátu HTML"
 
 msgid "HTTP Error"
 msgstr "Chyba HTTP"
@@ -439,11 +439,11 @@ msgstr "Hledat"
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "Aktualizace selhala: Nepodařilo se určit, kam plugin nainstalovat."
 
-msgid "Installing update..."
-msgstr "Instalace aktualizace..."
-
 msgid "Update installation failed."
 msgstr "Instalace aktualizace selhala."
+
+msgid "Installing update..."
+msgstr "Instalace aktualizace..."
 
 msgid "Update check failed: Could not determine plugin location."
 msgstr "Kontrola aktualizací selhala: Nepodařilo se určit umístění pluginu."
@@ -813,7 +813,6 @@ msgstr "Otevřít knihu"
 msgid "Close"
 msgstr "Zavřít"
 
-#, lua-format
 msgid "No similar books found, please try again. Sometimes this requires a couple of retries."
 msgstr "Nebyly nalezeny žádné podobné knihy, zkuste to prosím znovu. Někdy je potřeba to zkusit několikrát."
 

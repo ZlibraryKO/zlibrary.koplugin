@@ -19,6 +19,9 @@ skipped it for six months. Real answers are now never mistaken for one.
 an older favourite showed "Add To Favorites". It now reads the whole list (up to 600). With no
 favourites at all, the list is no longer fetched again on every book you open.
 
+**"No similar books found" is fully translated.** When a book had no similar books, other
+languages showed the English words "similar books" in the middle of a translated sentence.
+
 **The download limit message in every language.** When the daily limit was used up, only English
 showed the "Download limit reached" notice; other languages got a raw error with a Retry button.
 

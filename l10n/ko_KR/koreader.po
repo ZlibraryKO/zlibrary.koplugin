@@ -812,9 +812,8 @@ msgstr "도서 열기"
 msgid "Close"
 msgstr "닫기"
 
-#, lua-format
-msgid "No %s found, please try again. Sometimes this requires a couple of retries."
-msgstr "%s을(를) 찾을 수 없습니다. 다시 시도하세요. 몇 번 재시도해야 할 때도 있습니다."
+msgid "No similar books found, please try again. Sometimes this requires a couple of retries."
+msgstr "비슷한 책을 찾을 수 없습니다. 다시 시도하세요. 몇 번 재시도해야 할 때도 있습니다."
 
 msgid "Z-library Similar Books"
 msgstr "Z-library 비슷한 책"

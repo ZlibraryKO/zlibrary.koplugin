@@ -818,9 +818,8 @@ msgstr "Отваряне на книга"
 msgid "Close"
 msgstr "Затваряне"
 
-#, lua-format
-msgid "No %s found, please try again. Sometimes this requires a couple of retries."
-msgstr "Не са намерени %s, опитайте отново. Понякога са нужни няколко опита."
+msgid "No similar books found, please try again. Sometimes this requires a couple of retries."
+msgstr "Не са намерени подобни книги, опитайте отново. Понякога са нужни няколко опита."
 
 msgid "Z-library Similar Books"
 msgstr "Подобни книги от Z-library"

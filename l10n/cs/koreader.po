@@ -1,0 +1,1306 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: v1.0.15\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-13 09:25+0000\n"
+"PO-Revision-Date: 2026-11-14 14:18+0100\n"
+"Last-Translator: Wajsar Josef <Wajsar.Josef@hotmail.com>\n"
+"Language-Team: \n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.10\n"
+
+msgid "Z-library"
+msgstr "Z-library"
+
+msgid "[[A plugin to search and download books from Z-library.]]"
+msgstr "[[Plugin pro vyhledávání a stahování knih z Z-library.]]"
+
+msgid "Z-library search"
+msgstr "Vyhledávání na Z-library"
+
+msgid "My books"
+msgstr "Moje knihy"
+
+msgid "Z-library server URL not configured."
+msgstr "URL serveru Z-library není nastavena."
+
+msgid "Failed to fetch downloaded books (no response body)."
+msgstr "Nepodařilo se načíst stažené knihy (odpověď neobsahuje žádná data)."
+
+msgid "Failed to parse downloaded books response."
+msgstr "Nepodařilo se zpracovat odpověď se staženými knihami."
+
+msgid "API returned an error for downloaded books."
+msgstr "API vrátilo chybu při načítání stažených knih."
+
+msgid "Failed to fetch favorite books (no response body)."
+msgstr "Nepodařilo se načíst oblíbené knihy (odpověď neobsahuje žádná data)."
+
+msgid "Failed to parse favorite books response."
+msgstr "Nepodařilo se zpracovat odpověď s oblíbenými knihami."
+
+msgid "API returned an error for favorite books."
+msgstr "API vrátilo chybu při načítání oblíbených knih."
+
+msgid "Failed to fetch booklists (no response body)."
+msgstr "Nepodařilo se načíst seznamy knih (odpověď neobsahuje žádná data)."
+
+msgid "Failed to parse booklists response."
+msgstr "Nepodařilo se zpracovat odpověď se seznamy knih."
+
+msgid "API returned an error for booklists."
+msgstr "API vrátilo chybu při načítání seznamů knih."
+
+msgid "Untitled"
+msgstr "Bez názvu"
+
+msgid "Failed to fetch booklist books (no response body)."
+msgstr "Nepodařilo se načíst knihy ze seznamu (odpověď neobsahuje žádná data)."
+
+msgid "Failed to parse booklist books response."
+msgstr "Nepodařilo se zpracovat odpověď s knihami ze seznamu."
+
+msgid "API returned an error for booklist books."
+msgstr "API vrátilo chybu při načítání knih ze seznamu."
+
+msgid "Failed to remove the book from downloaded (no response body)."
+msgstr "Nepodařilo se odebrat knihu ze stažených (odpověď neobsahuje žádná data)."
+
+msgid "Failed to parse the remove from downloaded response."
+msgstr "Nepodařilo se zpracovat odpověď při odebírání ze stažených."
+
+msgid "API returned an error for remove from downloaded."
+msgstr "API vrátilo chybu při odebírání knihy ze stažených."
+
+msgid "Failed to fetch unfavorite book (no response body)."
+msgstr "Nepodařilo se odebrat knihu z oblíbených (odpověď neobsahuje žádná data)."
+
+msgid "Failed to parse unfavorite book response."
+msgstr "Nepodařilo se zpracovat odpověď při odebírání knihy z oblíbených."
+
+msgid "API returned an error for unfavorite book."
+msgstr "API vrátilo chybu při odebírání knihy z oblíbených."
+
+msgid "Failed to fetch download quota status (no response body)."
+msgstr "Nepodařilo se načíst stav limitu stahování (odpověď neobsahuje žádná data)."
+
+msgid "Failed to parse download quota status response."
+msgstr "Nepodařilo se zpracovat odpověď se stavem limitu stahování."
+
+msgid "API returned an error for download quota status."
+msgstr "API vrátilo chybu při načítání stavu limitu stahování."
+
+msgid "Failed to fetch favorite-book IDs (no response body)."
+msgstr "Nepodařilo se načíst ID oblíbených knih (odpověď neobsahuje žádná data)."
+
+msgid "Failed to parse favorite-book IDs."
+msgstr "Nepodařilo se zpracovat ID oblíbených knih."
+
+msgid "API returned an error for favorite-book IDs."
+msgstr "API vrátilo chybu při načítání ID oblíbených knih."
+
+msgid "Failed to fetch favorite book (no response body)."
+msgstr "Nepodařilo se přidat knihu do oblíbených (odpověď neobsahuje žádná data)."
+
+msgid "Failed to parse favorite book response."
+msgstr "Nepodařilo se zpracovat odpověď při přidávání knihy do oblíbených."
+
+msgid "API returned an error for favorite book."
+msgstr "API vrátilo chybu při přidávání knihy do oblíbených."
+
+msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
+msgstr "Adresa serveru Z-library (URL) není nastavena. Nastavte ji prosím v nastavení pluginu Z-library."
+
+msgid "No response received from server - please try again"
+msgstr "Server neodeslal žádnou odpověď - zkuste to prosím znovu"
+
+msgid "Invalid response format from server"
+msgstr "Neplatný formát odpovědi serveru"
+
+msgid "Search API error"
+msgstr "Chyba vyhledávacího API"
+
+msgid "Failed to fetch recommended books (no response body)."
+msgstr "Nepodařilo se načíst doporučené knihy (odpověď neobsahuje žádná data)."
+
+msgid "Failed to parse recommended books response."
+msgstr "Nepodařilo se zpracovat odpověď s doporučenými knihami."
+
+msgid "API returned an error for recommended books."
+msgstr "API vrátilo chybu při načítání doporučených knih."
+
+msgid "Failed to fetch most popular books (no response body)."
+msgstr "Nepodařilo se načíst nejoblíbenější knihy (odpověď neobsahuje žádná data)."
+
+msgid "Failed to parse most popular books response."
+msgstr "Nepodařilo se zpracovat odpověď s nejoblíbenějšími knihami."
+
+msgid "API returned an error for most popular books."
+msgstr "API vrátilo chybu při načítání nejoblíbenějších knih."
+
+msgid "Z-library server URL not configured or book identifiers missing."
+msgstr "URL serveru Z-library není nastavena nebo chybí identifikátory knih."
+
+msgid "Failed to fetch book details (no response body)."
+msgstr "Nepodařilo se načíst podrobnosti o knize (odpověď neobsahuje žádná data)."
+
+msgid "Failed to parse book details response."
+msgstr "Nepodařilo se zpracovat odpověď s podrobnostmi o knize."
+
+msgid "API returned an error for book details."
+msgstr "API vrátilo chybu při načítání podrobností o knize."
+
+msgid "Failed to process book details."
+msgstr "Nepodařilo se zpracovat podrobnosti o knize."
+
+msgid "Failed to fetch similar books (no response body)."
+msgstr "Nepodařilo se načíst podobné knihy (odpověď neobsahuje žádná data)."
+
+msgid "Failed to parse similar books response."
+msgstr "Nepodařilo se zpracovat odpověď s podobnými knihami."
+
+msgid "API returned an error for similar books."
+msgstr "API vrátilo chybu při načítání podobných knih."
+
+msgid "Book ID is required."
+msgstr "Je vyžadováno ID knihy."
+
+msgid "Failed to fetch book comments (no response body)."
+msgstr "Nepodařilo se načíst komentáře ke knize (odpověď neobsahuje žádná data)."
+
+msgid "Failed to parse book comments response."
+msgstr "Nepodařilo se zpracovat odpověď s komentáři ke knize."
+
+msgid "API returned an error for book comments."
+msgstr "API vrátilo chybu při načítání komentářů ke knize."
+
+msgid "Could not find the server address"
+msgstr "Nepodařilo se najít adresu serveru"
+
+msgid "This Z-library server is refusing automated access"
+msgstr "Tento server Z-library odmítá automatizovaný přístup"
+
+msgid "Credentials rejected or invalid response"
+msgstr "Přihlašovací údaje byly odmítnuty nebo server odeslal neplatnou odpověď"
+
+msgid "Failed to open target file"
+msgstr "Nepodařilo se otevřít cílový soubor"
+
+msgid "Unknown error"
+msgstr "Neznámá chyba"
+
+msgid "Download limit reached or file is an HTML page"
+msgstr "Byl dosažen limit stahování nebo je soubor ve formátu HTML"
+
+msgid "HTTP Error"
+msgstr "Chyba HTTP"
+
+msgid "Download failed: the server sent an empty file"
+msgstr "Stahování selhalo: server odeslal prázdný soubor"
+
+msgid "Failed to save downloaded file"
+msgstr "Nepodařilo se uložit stažený soubor"
+
+msgid "Download HTTP Error"
+msgstr "Chyba HTTP při stahování"
+
+msgid "Failed to fetch download link (no response body)."
+msgstr "Nepodařilo se získat odkaz ke stažení (odpověď neobsahuje žádná data)."
+
+msgid "Failed to parse download link response."
+msgstr "Nepodařilo se zpracovat odpověď s odkazem ke stažení."
+
+msgid "API returned an error for download link."
+msgstr "API vrátilo chybu při získávání odkazu ke stažení."
+
+msgid "Download limit reached. Please try again later or check your account."
+msgstr "Byl dosažen limit stahování. Zkuste to prosím později nebo zkontrolujte svůj účet."
+
+msgid "No download link provided in API response."
+msgstr "Odpověď API neobsahuje odkaz ke stažení."
+
+msgid "Login failed"
+msgstr "Přihlášení se nezdařilo"
+
+msgid "Login failed: Empty response from server"
+msgstr "Přihlášení se nezdařilo: server odeslal prázdnou odpověď"
+
+msgid "Login failed: Invalid response format"
+msgstr "Přihlášení se nezdařilo: neplatný formát odpovědi"
+
+msgid "Request timed out - please check your connection and try again"
+msgstr "Požadavek vypršel - zkontrolujte prosím připojení a zkuste to znovu"
+
+msgid "Network request failed"
+msgstr "Síťový požadavek selhal"
+
+msgid "The Z-library address may be wrong or no longer exist."
+msgstr "Adresa Z-library může být chybná nebo již nemusí existovat."
+
+msgid "Network connection error - please check your internet connection and try again"
+msgstr "Chyba síťového připojení - zkontrolujte prosím připojení k internetu a zkuste to znovu"
+
+msgid "Too many redirects"
+msgstr "Příliš mnoho přesměrování"
+
+msgid "Try a different Z-library server."
+msgstr "Zkuste jiný server Z-library."
+
+msgid "Unknown Status"
+msgstr "Neznámý stav"
+
+msgid "Request cancelled."
+msgstr "Požadavek byl zrušen."
+
+msgid "pages"
+msgstr "stran"
+
+msgid "Back"
+msgstr "Zpět"
+
+msgid "Download"
+msgstr "Stáhnout"
+
+msgid "Format"
+msgstr "Formát"
+
+msgid "Download book"
+msgstr "Stáhnout knihu"
+
+msgid "More Similar Books"
+msgstr "Další podobné knihy"
+
+msgid "Description"
+msgstr "Popis"
+
+msgid "Comments"
+msgstr "Komentáře"
+
+msgid "Refresh"
+msgstr "Obnovit"
+
+msgid "Remove From Favorites"
+msgstr "Odebrat z oblíbených"
+
+msgid "Add To Favorites"
+msgstr "Přidat do oblíbených"
+
+msgid "No Comments"
+msgstr "Žádné komentáře"
+
+msgid "No description available"
+msgstr "Popis není k dispozici"
+
+msgid "Selection copied to clipboard."
+msgstr "Výběr byl zkopírován do schránky."
+
+msgid "Cover"
+msgstr "Obálka"
+
+msgid "Most popular"
+msgstr "Nejoblíbenější"
+
+msgid "Best match"
+msgstr "Nejlepší shoda"
+
+msgid "Recently added"
+msgstr "Nedávno přidané"
+
+msgid "Title"
+msgstr "Název"
+
+msgid "Year"
+msgstr "Rok"
+
+msgid "File size"
+msgstr "Velikost souboru"
+
+msgid "Default"
+msgstr "Výchozí"
+
+#, lua-format
+msgid "%ds"
+msgstr "%ds"
+
+msgid "infinite"
+msgstr "neomezeně"
+
+#, lua-format
+msgid "Block: %ds, Total: %s"
+msgstr "Blok: %ds, Celkem: %s"
+
+msgid "Operation failed, please retry."
+msgstr "Operace se nezdařila, zkuste to prosím znovu."
+
+msgid "Fetching domains..."
+msgstr "Načítání domén..."
+
+msgid "Successfully set base URL to: "
+msgstr "Základní URL byla úspěšně nastavena na: "
+
+msgid "Failed to find a working base URL."
+msgstr "Nepodařilo se najít funkční základní URL."
+
+msgid "Queued"
+msgstr "Ve frontě"
+
+msgid "Checking"
+msgstr "Kontrola"
+
+msgid "Set base URL"
+msgstr "Nastavit základní URL"
+
+msgid "Invalid Base URL."
+msgstr "Neplatná základní URL."
+
+msgid "Failed"
+msgstr "Selhalo"
+
+msgid "Searching for working Z-library server..."
+msgstr "Vyhledávání funkčního serveru Z-library..."
+
+msgid "Current Base URL:"
+msgstr "Aktuální základní URL:"
+
+msgid "Mirror site redirected to: "
+msgstr "Zrcadlový web přesměroval na: "
+
+msgid "Auto-discover base URL"
+msgstr "Automaticky vyhledat základní URL"
+
+msgid "Network unavailable."
+msgstr "Síť není dostupná."
+
+msgid "Discovery is already running..."
+msgstr "Vyhledávání již probíhá..."
+
+msgid "Refresh Dynamic Domains"
+msgstr "Obnovit dynamické domény"
+
+msgid "Fetching book details..."
+msgstr "Načítání podrobností o knize..."
+
+msgid "Could not retrieve book details."
+msgstr "Nepodařilo se získat podrobnosti o knize."
+
+msgid "This book's file type is unknown, so it cannot be downloaded."
+msgstr "Typ souboru této knihy není znám, proto ji nelze stáhnout."
+
+msgid "Book details"
+msgstr "Podrobnosti o knize"
+
+msgid "Book identifiers missing. Cannot download."
+msgstr "Chybí identifikátory knihy. Nelze ji stáhnout."
+
+#, lua-format
+msgid "Cannot create downloads directory: %s"
+msgstr "Nelze vytvořit složku pro stažené soubory: %s"
+
+#, lua-format
+msgid "Couldn't create the folder for \"%s\". The book is in the download folder."
+msgstr "Nepodařilo se vytvořit složku pro „%s“. Kniha se nachází ve složce pro stažené soubory."
+
+#, lua-format
+msgid "Moved to \"%s\"."
+msgstr "Přesunuto do „%s“."
+
+#, lua-format
+msgid "Couldn't move the book into \"%s\". It's in the download folder."
+msgstr "Nepodařilo se přesunout knihu do „%s“. Nachází se ve složce pro stažené soubory."
+
+msgid "Could not open reader UI."
+msgstr "Nepodařilo se otevřít čtečku."
+
+msgid "Download failed: Unknown error"
+msgstr "Stahování selhalo: Neznámá chyba"
+
+msgid "Book download"
+msgstr "Stahování knihy"
+
+msgid "Retrying download… (tap to cancel)"
+msgstr "Opakování stahování… (klepnutím zrušíte)"
+
+msgid "Download cancelled."
+msgstr "Stahování bylo zrušeno."
+
+msgid "Unknown Author"
+msgstr "Neznámý autor"
+
+msgid "Author"
+msgstr "Autor"
+
+msgid "Search"
+msgstr "Hledat"
+
+msgid "Update failed: Could not determine where to install the plugin."
+msgstr "Aktualizace selhala: Nepodařilo se určit, kam plugin nainstalovat."
+
+msgid "Installing update..."
+msgstr "Instalace aktualizace..."
+
+msgid "Update installation failed."
+msgstr "Instalace aktualizace selhala."
+
+msgid "Update check failed: Could not determine plugin location."
+msgstr "Kontrola aktualizací selhala: Nepodařilo se určit umístění pluginu."
+
+#, lua-format
+msgid "Unsupported plugin path for OTA update: %s. Only 'plugins/zlibrary.koplugin' is supported."
+msgstr "Cesta k pluginu není pro aktualizaci OTA podporována: %s. Podporována je pouze cesta 'plugins/zlibrary.koplugin'."
+
+msgid "Checking for updates..."
+msgstr "Kontrola aktualizací..."
+
+msgid "Failed to check for updates. Please check your internet connection."
+msgstr "Nepodařilo se zkontrolovat aktualizace. Zkontrolujte prosím připojení k internetu."
+
+msgid "Could not find update information (invalid data format)."
+msgstr "Nepodařilo se najít informace o aktualizaci (neplatný formát dat)."
+
+msgid "Could not find update version information."
+msgstr "Nepodařilo se najít informace o verzi aktualizace."
+
+msgid "Could not understand the update version format."
+msgstr "Nepodařilo se rozpoznat formát verze aktualizace."
+
+msgid "Could not find update files."
+msgstr "Nepodařilo se najít soubory aktualizace."
+
+msgid "Could not find a download link for the update."
+msgstr "Nepodařilo se najít odkaz ke stažení aktualizace."
+
+#, lua-format
+msgid "You are already on the latest version (%s) or newer."
+msgstr "Již používáte nejnovější verzi (%s) nebo novější."
+
+#, lua-format
+msgid "Could not determine your current version, but the latest is %s. If you recently updated, you might be up-to-date."
+msgstr "Nepodařilo se zjistit vaši aktuální verzi, nejnovější verze je však %s. Pokud jste nedávno provedli aktualizaci, možná již máte aktuální verzi."
+
+#, lua-format
+msgid "New version available: %s (you have %s). Download and install?"
+msgstr "Je dostupná nová verze: %s (používáte %s). Stáhnout a nainstalovat?"
+
+msgid "an older version"
+msgstr "starší verzi"
+
+msgid "Update available"
+msgstr "Je dostupná aktualizace"
+
+msgid "Update"
+msgstr "Aktualizovat"
+
+msgid "Cancel"
+msgstr "Zrušit"
+
+msgid "Downloading update..."
+msgstr "Stahování aktualizace..."
+
+msgid "Download failed. Please try again later."
+msgstr "Stahování selhalo. Zkuste to prosím později."
+
+msgid "Finding similar books..."
+msgstr "Vyhledávání podobných knih..."
+
+msgid "No similar books found"
+msgstr "Nebyly nalezeny žádné podobné knihy"
+
+msgid "Similar books"
+msgstr "Podobné knihy"
+
+msgid "Removing book from downloaded…"
+msgstr "Odebírání knihy ze stažených…"
+
+msgid "Failed to remove book from downloaded"
+msgstr "Nepodařilo se odebrat knihu ze stažených"
+
+msgid "Remove from downloaded"
+msgstr "Odebrat ze stažených"
+
+msgid "Book removed from downloaded, please refresh"
+msgstr "Kniha byla odebrána ze stažených, obnovte prosím seznam"
+
+msgid "API returned an error, please try again"
+msgstr "API vrátilo chybu, zkuste to prosím znovu"
+
+msgid "Removing book from favorites…"
+msgstr "Odebírání knihy z oblíbených…"
+
+msgid "Failed to remove book from favorites"
+msgstr "Nepodařilo se odebrat knihu z oblíbených"
+
+msgid "Unfavorite book"
+msgstr "Odebrat knihu z oblíbených"
+
+msgid "Book removed from favorites, please refresh"
+msgstr "Kniha byla odebrána z oblíbených, obnovte prosím seznam"
+
+msgid "Adding book to favorites…"
+msgstr "Přidávání knihy do oblíbených…"
+
+msgid "Failed to add book to favorites"
+msgstr "Nepodařilo se přidat knihu do oblíbených"
+
+msgid "Favorite book"
+msgstr "Oblíbit knihu"
+
+msgid "Book added to favorites, please refresh"
+msgstr "Kniha byla přidána do oblíbených, obnovte prosím seznam"
+
+msgid "Failed to fetch book details"
+msgstr "Nepodařilo se načíst podrobnosti o knize"
+
+msgid "Loading comments..."
+msgstr "Načítání komentářů..."
+
+msgid "Failed to load comments"
+msgstr "Nepodařilo se načíst komentáře"
+
+msgid "No comments to display"
+msgstr "Žádné komentáře k zobrazení"
+
+msgid "Fetching most popular books..."
+msgstr "Načítání nejoblíbenějších knih..."
+
+msgid "Failed to fetch most popular books"
+msgstr "Nepodařilo se načíst nejoblíbenější knihy"
+
+msgid "Most popular books"
+msgstr "Nejoblíbenější knihy"
+
+msgid "Recommended"
+msgstr "Doporučené"
+
+msgid "Fetching recommended books..."
+msgstr "Načítání doporučených knih..."
+
+msgid "Failed to fetch recommended books"
+msgstr "Nepodařilo se načíst doporučené knihy"
+
+msgid "Recommended books"
+msgstr "Doporučené knihy"
+
+msgid "Z-library My Books"
+msgstr "Moje knihy na Z-library"
+
+msgid "Favorites"
+msgstr "Oblíbené"
+
+msgid "Getting your favorites..."
+msgstr "Načítání oblíbených knih..."
+
+msgid "Failed to fetch favorite books"
+msgstr "Nepodařilo se načíst oblíbené knihy"
+
+msgid "Favorite books"
+msgstr "Oblíbené knihy"
+
+msgid "Downloaded"
+msgstr "Stažené"
+
+msgid "Getting your downloaded..."
+msgstr "Načítání stažených knih..."
+
+msgid "Failed to fetch downloaded books"
+msgstr "Nepodařilo se načíst stažené knihy"
+
+msgid "Downloaded books"
+msgstr "Stažené knihy"
+
+msgid "Booklists"
+msgstr "Seznamy knih"
+
+msgid "Getting your booklists..."
+msgstr "Načítání vašich seznamů knih..."
+
+msgid "Failed to fetch booklists"
+msgstr "Nepodařilo se načíst seznamy knih"
+
+msgid "You have no booklists yet"
+msgstr "Zatím nemáte žádné seznamy knih"
+
+msgid "Getting booklist books..."
+msgstr "Načítání knih ze seznamu..."
+
+msgid "Failed to fetch booklist books"
+msgstr "Nepodařilo se načíst knihy ze seznamu"
+
+msgid "Booklist books"
+msgstr "Knihy v seznamu"
+
+msgid "This booklist is empty"
+msgstr "Tento seznam knih je prázdný"
+
+msgid "Settings"
+msgstr "Nastavení"
+
+msgid "Set credentials"
+msgstr "Nastavit přihlašovací údaje"
+
+msgid "Login successful!"
+msgstr "Přihlášení proběhlo úspěšně!"
+
+msgid "Set download directory"
+msgstr "Nastavit složku pro stahování"
+
+msgid "Ask to open after download"
+msgstr "Zeptat se na otevření po stažení"
+
+msgid "Download categories"
+msgstr "Kategorie stažených knih"
+
+msgid "View Settings"
+msgstr "Nastavení zobrazení"
+
+msgid "Search Covers"
+msgstr "Obálky ve výsledcích hledání"
+
+msgid "Search Items/Page"
+msgstr "Počet výsledků na stránku při hledání"
+
+msgid "Browse Covers"
+msgstr "Obálky při procházení"
+
+msgid "Browse Items/Page"
+msgstr "Počet položek na stránku při procházení"
+
+msgid "Search options"
+msgstr "Možnosti vyhledávání"
+
+msgid "Select search languages"
+msgstr "Vybrat jazyky vyhledávání"
+
+msgid "Select search formats"
+msgstr "Vybrat formáty vyhledávání"
+
+msgid "Select search order"
+msgstr "Vybrat řazení výsledků"
+
+msgid "Timeout settings"
+msgstr "Nastavení časových limitů"
+
+msgid "Check for updates"
+msgstr "Zkontrolovat aktualizace"
+
+msgid "Error: Plugin path not found. Cannot check for updates."
+msgstr "Chyba: Cesta k pluginu nebyla nalezena. Nelze zkontrolovat aktualizace."
+
+msgid "Advanced"
+msgstr "Pokročilé"
+
+msgid "Clear credentials"
+msgstr "Vymazat přihlašovací údaje"
+
+#, lua-format
+msgid "Credentials cleared, but %s still sets them. Edit that file to stop it."
+msgstr "Přihlašovací údaje byly vymazány, ale %s je stále nastavuje. Chcete-li tomu zabránit, upravte tento soubor."
+
+msgid "Credentials cleared."
+msgstr "Přihlašovací údaje byly vymazány."
+
+msgid "Clear user session"
+msgstr "Vymazat uživatelskou relaci"
+
+#, lua-format
+msgid "Session cleared, but %s still sets one. Edit that file to stop it."
+msgstr "Relace byla vymazána, ale %s ji stále nastavuje. Chcete-li tomu zabránit, upravte tento soubor."
+
+msgid "Session cleared. You will need to login again."
+msgstr "Relace byla vymazána. Budete se muset znovu přihlásit."
+
+msgid "Clear runtime cache"
+msgstr "Vymazat dočasnou mezipaměť"
+
+msgid "Runtime cache cleared."
+msgstr "Dočasná mezipaměť byla vymazána."
+
+msgid "Clear cover cache"
+msgstr "Vymazat mezipaměť obálek"
+
+#, lua-format
+msgid "Cleared %s of cached covers."
+msgstr "Bylo vymazáno %s obálek z mezipaměti."
+
+msgid "No cached covers to remove."
+msgstr "V mezipaměti nejsou žádné obálky k odstranění."
+
+msgid "Identify as a web browser"
+msgstr "Vydávat se za webový prohlížeč"
+
+msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+msgstr "Odesílá User-Agent webového prohlížeče místo vlastního User-Agent pluginu. Má smysl to zkusit pouze v případě, že server odmítá samotný plugin."
+
+msgid "About"
+msgstr "O pluginu"
+
+msgid "Operation"
+msgstr "Operace"
+
+msgid "No books match the selected search languages and formats"
+msgstr "Žádné knihy neodpovídají vybraným jazykům a formátům vyhledávání"
+
+msgid "No books found, please try again"
+msgstr "Nebyly nalezeny žádné knihy, zkuste to prosím znovu"
+
+#, lua-format
+msgid "Searching for \"%s\"..."
+msgstr "Vyhledávání „%s“..."
+
+#, lua-format
+msgid "No results found for \"%s\"."
+msgstr "Pro „%s“ nebyly nalezeny žádné výsledky."
+
+#, lua-format
+msgid "Loading more results (Page %s)..."
+msgstr "Načítání dalších výsledků (strana %s)..."
+
+msgid "Failed to load more results"
+msgstr "Nepodařilo se načíst další výsledky"
+
+msgid "No more results found."
+msgstr "Žádné další výsledky nebyly nalezeny."
+
+msgid "Logging in..."
+msgstr "Přihlašování..."
+
+msgid "Credentials saved, but they could not be checked right now."
+msgstr "Přihlašovací údaje byly uloženy, ale nyní je nelze ověřit."
+
+msgid "Please set both username and password first."
+msgstr "Nejprve prosím nastavte uživatelské jméno i heslo."
+
+msgid "Sign-in"
+msgstr "Přihlášení"
+
+#, lua-format
+msgid "Remove \"%s\" from your downloaded books?"
+msgstr "Odebrat „%s“ ze stažených knih?"
+
+msgid "Unknown Title"
+msgstr "Neznámý název"
+
+msgid "Remove"
+msgstr "Odebrat"
+
+#, lua-format
+msgid "Download \"%s\"?"
+msgstr "Stáhnout „%s“?"
+
+#, lua-format
+msgid "\"%s\" downloaded."
+msgstr "„%s“ bylo staženo."
+
+msgid "Download folder"
+msgstr "Složka stažených souborů"
+
+msgid "Book downloaded successfully. Open it now?"
+msgstr "Kniha byla úspěšně stažena. Otevřít ji nyní?"
+
+msgid "Turn off Wi-Fi after closing this dialog"
+msgstr "Po zavření tohoto dialogu vypnout Wi-Fi"
+
+#, lua-format
+msgid "Move to: %s"
+msgstr "Přesunout do: %s"
+
+msgid "Open book"
+msgstr "Otevřít knihu"
+
+msgid "Close"
+msgstr "Zavřít"
+
+#, lua-format
+msgid "No %s found, please try again. Sometimes this requires a couple of retries."
+msgstr "Nebylo nalezeno žádné %s, zkuste to prosím znovu. Někdy je potřeba pokus několikrát opakovat."
+
+msgid "Z-library Similar Books"
+msgstr "Podobné knihy na Z-library"
+
+msgid "Book Details"
+msgstr "Podrobnosti o knize"
+
+msgid "Please enter a name."
+msgstr "Zadejte prosím název."
+
+msgid "A category with that name already exists."
+msgstr "Kategorie s tímto názvem již existuje."
+
+msgid "That category no longer exists."
+msgstr "Tato kategorie již neexistuje."
+
+msgid "Save"
+msgstr "Uložit"
+
+msgid "Rename"
+msgstr "Přejmenovat"
+
+msgid "Rename sub-category"
+msgstr "Přejmenovat podkategorii"
+
+#, lua-format
+msgid "Remove the sub-category \"%s\"? Books already filed there stay where they are."
+msgstr "Odebrat podkategorii „%s“? Knihy, které jsou v ní již zařazeny, zůstanou na svém místě."
+
+msgid "Add sub-category…"
+msgstr "Přidat podkategorii…"
+
+msgid "New sub-category"
+msgstr "Nová podkategorie"
+
+msgid "Rename category…"
+msgstr "Přejmenovat kategorii…"
+
+msgid "Rename category"
+msgstr "Přejmenovat kategorii"
+
+msgid "Remove category"
+msgstr "Odebrat kategorii"
+
+#, lua-format
+msgid "Remove the category \"%s\" and its sub-categories? Books already filed there stay where they are."
+msgstr "Odebrat kategorii „%s“ a její podkategorie? Knihy, které jsou v nich již zařazeny, zůstanou na svém místě."
+
+msgid "Add category…"
+msgstr "Přidat kategorii…"
+
+msgid "New category"
+msgstr "Nová kategorie"
+
+msgid "Please enter a category name."
+msgstr "Zadejte prosím název kategorie."
+
+msgid "Category"
+msgstr "Kategorie"
+
+msgid "Category name"
+msgstr "Název kategorie"
+
+msgid "Sub-category (optional)"
+msgstr "Podkategorie (volitelné)"
+
+msgid "Sub-category name"
+msgstr "Název podkategorie"
+
+msgid "Create"
+msgstr "Vytvořit"
+
+msgid "Keep in download folder"
+msgstr "Ponechat ve složce stažených souborů"
+
+msgid "New category…"
+msgstr "Nová kategorie…"
+
+msgid "Move to"
+msgstr "Přesunout do"
+
+#, lua-format
+msgid "%s (tap to cancel)"
+msgstr "%s (klepnutím zrušíte)"
+
+msgid "Downloading… (tap to cancel)"
+msgstr "Stahování… (klepnutím zrušíte)"
+
+msgid "Z-library plugin"
+msgstr "Plugin Z-library"
+
+msgid "(version unknown)"
+msgstr "(neznámá verze)"
+
+msgid "This plugin is maintained in my spare time. Z-library changes without warning -- the sign-in it uses has had to be replaced twice this year -- so keeping search, sign-in and downloads working is ongoing work."
+msgstr "Tomuto pluginu se věnuji ve svém volném čase. Z-library se mění bez upozornění -- přihlašování, které plugin používá, bylo letos nutné již dvakrát nahradit -- proto je průběžná údržba vyhledávání, přihlašování a stahování neustálou prací."
+
+msgid "If you like the plugin and want it to keep working, the price of a coffee helps:"
+msgstr "Pokud se vám plugin líbí a chcete, aby fungoval i nadále, pomůže příspěvek v ceně kávy:"
+
+msgid "Show QR code"
+msgstr "Zobrazit QR kód"
+
+msgid "Update installed successfully. Please restart KOReader for changes to take effect."
+msgstr "Aktualizace byla úspěšně nainstalována. Aby se změny projevily, restartujte prosím KOReader."
+
+msgid "Update installed"
+msgstr "Aktualizace nainstalována"
+
+msgid "Request timed out"
+msgstr "Vypršel časový limit požadavku"
+
+msgid "Network connection error"
+msgstr "Chyba síťového připojení"
+
+#, lua-format
+msgid "Could not complete \"%s\" due to a timeout%s. Would you like to retry?"
+msgstr "Operaci „%s“ se nepodařilo dokončit kvůli vypršení časového limitu%s. Chcete to zkusit znovu?"
+
+#, lua-format
+msgid "Could not complete \"%s\" because the server address could not be found. Would you like to retry?"
+msgstr "Operaci „%s“ se nepodařilo dokončit, protože nebylo možné najít adresu serveru. Chcete to zkusit znovu?"
+
+#, lua-format
+msgid "Could not complete \"%s\" due to a network error. Would you like to retry?"
+msgstr "Operaci „%s“ se nepodařilo dokončit kvůli síťové chybě. Chcete to zkusit znovu?"
+
+#, lua-format
+msgid "Could not complete \"%s\" due to a temporary issue. Would you like to retry?"
+msgstr "Operaci „%s“ se nepodařilo dokončit kvůli dočasnému problému. Chcete to zkusit znovu?"
+
+msgid "Retry"
+msgstr "Zkusit znovu"
+
+#, lua-format
+msgid "%d items selected for %s."
+msgstr "%d položek vybráno pro %s."
+
+#, lua-format
+msgid "Filter cleared for %s."
+msgstr "Filtr pro %s byl vymazán."
+
+msgid "Filter"
+msgstr "Filtr"
+
+msgid "Show all"
+msgstr "Zobrazit vše"
+
+msgid "Recent searches"
+msgstr "Nedávná vyhledávání"
+
+msgid "Hold a search to remove it"
+msgstr "Podržením vyhledávání jej odeberete"
+
+msgid "Clear search history"
+msgstr "Vymazat historii vyhledávání"
+
+msgid "Clear your search history?"
+msgstr "Vymazat historii vyhledávání?"
+
+msgid "Clear"
+msgstr "Vymazat"
+
+msgid "Set languages"
+msgstr "Nastavit jazyky"
+
+#, lua-format
+msgid "Language: %s"
+msgstr "Jazyk: %s"
+
+#, lua-format
+msgid "Languages (%d)"
+msgstr "Jazyky (%d)"
+
+msgid "Set formats"
+msgstr "Nastavit formáty"
+
+#, lua-format
+msgid "Format: %s"
+msgstr "Formát: %s"
+
+#, lua-format
+msgid "Formats (%d)"
+msgstr "Formáty (%d)"
+
+msgid "Please enter a search term."
+msgstr "Zadejte prosím hledaný výraz."
+
+msgid "Search Z-library"
+msgstr "Hledat na Z-library"
+
+msgid "Sort by"
+msgstr "Seřadit podle"
+
+msgid "Search Results"
+msgstr "Výsledky vyhledávání"
+
+#, lua-format
+msgid "Retrying search for \"%s\"..."
+msgstr "Opakování vyhledávání výrazu „%s“..."
+
+msgid "Book search"
+msgstr "Vyhledávání knih"
+
+msgid "Select Z-library Download Directory"
+msgstr "Vybrat složku pro stahování ze Z-library"
+
+#, lua-format
+msgid "Download directory set to: %s"
+msgstr "Složka pro stahování byla nastavena na: %s"
+
+msgid "No directory selected."
+msgstr "Nebyla vybrána žádná složka."
+
+msgid "Set"
+msgstr "Nastavit"
+
+msgid "Setting saved successfully!"
+msgstr "Nastavení bylo úspěšně uloženo!"
+
+msgid "Setting cleared."
+msgstr "Nastavení bylo vymazáno."
+
+msgid "Clear your stored username and password?"
+msgstr "Vymazat uložené uživatelské jméno a heslo?"
+
+#, lua-format
+msgid "Block timeout: %s"
+msgstr "Časový limit bloku: %s"
+
+#, lua-format
+msgid "Total timeout: %s"
+msgstr "Celkový časový limit: %s"
+
+#, lua-format
+msgid "Set %s block timeout (seconds)"
+msgstr "Nastavit časový limit bloku %s (sekundy)"
+
+msgid "Please enter a valid number (minimum 1 second)"
+msgstr "Zadejte prosím platné číslo (minimálně 1 sekunda)"
+
+#, lua-format
+msgid "Set %s total timeout (seconds, -1 for infinite)"
+msgstr "Nastavit celkový časový limit %s (sekundy, -1 pro neomezený)"
+
+msgid "Please enter a valid number (minimum 1 second or -1 for infinite)"
+msgstr "Zadejte prosím platné číslo (minimálně 1 sekunda nebo -1 pro neomezený čas)"
+
+msgid "Reset to defaults"
+msgstr "Obnovit výchozí nastavení"
+
+#, lua-format
+msgid "Reset %s timeouts to default values?"
+msgstr "Obnovit výchozí časové limity pro %s?"
+
+msgid "Timeout settings reset to defaults"
+msgstr "Časové limity byly obnoveny na výchozí hodnoty"
+
+msgid "Reset"
+msgstr "Obnovit"
+
+#, lua-format
+msgid "%s Timeout Settings"
+msgstr "Nastavení časových limitů: %s"
+
+msgid "Login timeouts"
+msgstr "Časové limity přihlášení"
+
+msgid "Search timeouts"
+msgstr "Časové limity vyhledávání"
+
+msgid "Book details timeouts"
+msgstr "Časové limity podrobností o knize"
+
+msgid "Recommended books timeouts"
+msgstr "Časové limity doporučených knih"
+
+msgid "Popular books timeouts"
+msgstr "Časové limity oblíbených knih"
+
+msgid "Popular books"
+msgstr "Oblíbené knihy"
+
+msgid "Download timeouts"
+msgstr "Časové limity stahování"
+
+msgid "Cover download timeouts"
+msgstr "Časové limity stahování obálek"
+
+msgid "Cover download"
+msgstr "Stahování obálek"
+
+msgid "Reset all timeouts to defaults"
+msgstr "Obnovit výchozí hodnoty všech časových limitů"
+
+msgid "Reset all timeout settings to default values?"
+msgstr "Obnovit výchozí hodnoty všech nastavení časových limitů?"
+
+msgid "All timeout settings reset to defaults"
+msgstr "Všechna nastavení časových limitů byla obnovena na výchozí hodnoty"
+
+msgid "Reset All"
+msgstr "Obnovit vše"
+
+msgid "Timeout Settings"
+msgstr "Nastavení časových limitů"
+
+msgid "Email Address"
+msgstr "E-mailová adresa"
+
+msgid "Password"
+msgstr "Heslo"
+
+msgid "Enter password"
+msgstr "Zadejte heslo"
+
+msgid "Set and verify"
+msgstr "Nastavit a ověřit"
+
+msgid "Please fill in all fields"
+msgstr "Vyplňte prosím všechna pole"
+
+#~ msgid "Rating"
+#~ msgstr "Hodnocení"
+
+#~ msgid "Login failed: Invalid session data"
+#~ msgstr "Přihlášení se nezdařilo: Neplatná data relace"
+
+#~ msgid "Verify credentials"
+#~ msgstr "Ověřit přihlašovací údaje"
+
+#~ msgid "Developer options"
+#~ msgstr "Možnosti pro vývojáře"
+
+#~ msgid "Feature not implemented"
+#~ msgstr "Funkce není implementována"
+
+#~ msgid "Download this book?"
+#~ msgstr "Stáhnout tuto knihu?"
+
+#, lua-format
+#~ msgid "\"%s\" downloaded successfully. Open it now?"
+#~ msgstr "„%s“ bylo úspěšně staženo. Otevřít nyní?"
+
+#, lua-format
+#~ msgid "Block timeout: %s seconds"
+#~ msgstr "Časový limit bloku: %s sekund"
+
+#~ msgid "seconds"
+#~ msgstr "sekund"
+
+#, lua-format
+#~ msgid "%s failed due to a timeout%s. Would you like to retry?"
+#~ msgstr "%s selhalo kvůli vypršení časového limitu%s. Chcete to zkusit znovu?"
+
+#, lua-format
+#~ msgid "%s failed because the server address could not be found. Would you like to retry?"
+#~ msgstr "%s selhalo, protože nebylo možné najít adresu serveru. Chcete to zkusit znovu?"
+
+#, lua-format
+#~ msgid "%s failed due to a network error. Would you like to retry?"
+#~ msgstr "%s selhalo kvůli síťové chybě. Chcete to zkusit znovu?"
+
+#, lua-format
+#~ msgid "%s failed due to a temporary issue. Would you like to retry?"
+#~ msgstr "%s selhalo kvůli dočasnému problému. Chcete to zkusit znovu?"
+
+#~ msgid "Login"
+#~ msgstr "Přihlášení"
+
+#~ msgid "Retrying search for \""
+#~ msgstr "Opakování vyhledávání výrazu \""
+
+#~ msgid "Searching for \""
+#~ msgstr "Vyhledávání výrazu \""
+
+#~ msgid "No results found for \""
+#~ msgstr "Nebyly nalezeny žádné výsledky pro \""
+
+#~ msgid "Downloading…"
+#~ msgstr "Stahování…"
+
+#~ msgid "Full Title"
+#~ msgstr "Celý název"
+
+#~ msgid "Language"
+#~ msgstr "Jazyk"
+
+#, lua-format
+#~ msgid "Format: %s (tap to download)"
+#~ msgstr "Formát: %s (klepnutím stáhnete)"
+
+#, lua-format
+#~ msgid "Format: %s (Download not available)"
+#~ msgstr "Formát: %s (stažení není k dispozici)"
+
+#~ msgid "Download Book (Unknown Format)"
+#~ msgstr "Stáhnout knihu (neznámý formát)"
+
+#~ msgid "Size"
+#~ msgstr "Velikost"
+
+#~ msgid "Pages"
+#~ msgstr "Stránky"
+
+#~ msgid "Publisher"
+#~ msgstr "Vydavatel"
+
+#~ msgid "Series"
+#~ msgstr "Edice"
+
+#~ msgid "Set email"
+#~ msgstr "Nastavit e-mail"
+
+#~ msgid "Set password"
+#~ msgstr "Nastavit heslo"
+
+#~ msgid "Z-library Recommended Books"
+#~ msgstr "Doporučené knihy na Z-library"
+
+#~ msgid "Z-library Most Popular Books"
+#~ msgstr "Nejoblíbenější knihy na Z-library"
+
+#~ msgid "Fetch most recommended book from Z-library?"
+#~ msgstr "Načíst nejdoporučovanější knihu ze Z-library?"
+
+#~ msgid "OK"
+#~ msgstr "OK"
+
+#~ msgid "Fetch most popular books from Z-library?"
+#~ msgstr "Načíst nejoblíbenější knihy ze Z-library?"
+
+#~ msgid "Network not available. Please connect and try again."
+#~ msgstr "Síť není dostupná. Připojte se prosím a zkuste to znovu."
+
+#~ msgid "Successfully found and set base URL to: "
+#~ msgstr "Základní URL byla úspěšně nalezena a nastavena na: "
+
+#~ msgid "Error during auto-discovery: "
+#~ msgstr "Chyba při automatickém vyhledávání: "
+
+#~ msgid "Could not find a working Z-library server. Please check your internet connection or set the base URL manually."
+#~ msgstr "Nepodařilo se najít funkční server Z-library. Zkontrolujte prosím připojení k internetu nebo nastavte základní URL ručně."
+
+#~ msgid "No internet connection detected."
+#~ msgstr "Nebylo zjištěno připojení k internetu."
+
+#~ msgid "No internet connection detected. Please connect to the internet and try again."
+#~ msgstr "Nebylo zjištěno připojení k internetu. Připojte se prosím k internetu a zkuste to znovu."
+
+#~ msgid "No download link available for this book."
+#~ msgstr "Pro tuto knihu není k dispozici odkaz ke stažení."
+
+#~ msgid "No recommended books found, please try again. Sometimes this requires a couple of retries."
+#~ msgstr "Nebyly nalezeny žádné doporučené knihy, zkuste to prosím znovu. Někdy je potřeba pokus několikrát opakovat."
+
+#~ msgid "No most popular books found. The list was empty, please try again."
+#~ msgstr "Nebyly nalezeny žádné nejoblíbenější knihy. Seznam byl prázdný, zkuste to prosím znovu."
+
+#~ msgid "Search failed"
+#~ msgstr "Vyhledávání selhalo"
+
+#~ msgid "Search failed due to a temporary issue (HTTP 400). Would you like to retry?"
+#~ msgstr "Vyhledávání selhalo kvůli dočasnému problému (HTTP 400). Chcete to zkusit znovu?"
+
+#~ msgid "Z-library most popular"
+#~ msgstr "Nejoblíbenější na Z-library"
+
+#~ msgid "Z-library recommended"
+#~ msgstr "Doporučené na Z-library"
+
+#~ msgid "Failed to retrieve user session after login."
+#~ msgstr "Po přihlášení se nepodařilo získat uživatelskou relaci."
+
+#~ msgid "Full Author"
+#~ msgstr "Celé jméno autora"
+
+#~ msgid "Description (tap to view)"
+#~ msgstr "Popis (klepnutím zobrazíte)"
+
+#~ msgid "Downloading"
+#~ msgstr "Stahování"
+
+#~ msgid "Set username"
+#~ msgstr "Nastavit uživatelské jméno"
+
+#~ msgid "Downloading..."
+#~ msgstr "Stahování..."

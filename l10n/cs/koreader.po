@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-13 09:25+0000\n"
-"PO-Revision-Date: 2026-11-14 14:18+0100\n"
+"PO-Revision-Date: 2026-11-14 20:11+0100\n"
 "Last-Translator: Wajsar Josef <Wajsar.Josef@hotmail.com>\n"
 "Language-Team: \n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Generator: Poedit 3.10\n"
 
 msgid "Z-library"
@@ -134,13 +134,13 @@ msgid "API returned an error for recommended books."
 msgstr "API vrátilo chybu při načítání doporučených knih."
 
 msgid "Failed to fetch most popular books (no response body)."
-msgstr "Nepodařilo se načíst nejoblíbenější knihy (odpověď neobsahuje žádná data)."
+msgstr "Nepodařilo se načíst nejpopulárnější knihy (odpověď neobsahuje žádná data)."
 
 msgid "Failed to parse most popular books response."
-msgstr "Nepodařilo se zpracovat odpověď s nejoblíbenějšími knihami."
+msgstr "Nepodařilo se zpracovat odpověď s nejpopulárnějšími knihami."
 
 msgid "API returned an error for most popular books."
-msgstr "API vrátilo chybu při načítání nejoblíbenějších knih."
+msgstr "API vrátilo chybu při načítání nejpopulárnějších knih."
 
 msgid "Z-library server URL not configured or book identifiers missing."
 msgstr "URL serveru Z-library není nastavena nebo chybí identifikátory knih."
@@ -564,13 +564,13 @@ msgid "No comments to display"
 msgstr "Žádné komentáře k zobrazení"
 
 msgid "Fetching most popular books..."
-msgstr "Načítání nejoblíbenějších knih..."
+msgstr "Načítání nejpopulárnějších knih..."
 
 msgid "Failed to fetch most popular books"
-msgstr "Nepodařilo se načíst nejoblíbenější knihy"
+msgstr "Nepodařilo se načíst nejpopulárnější knihy"
 
 msgid "Most popular books"
-msgstr "Nejoblíbenější knihy"
+msgstr "Nejpopulárnější knihy"
 
 msgid "Recommended"
 msgstr "Doporučené"
@@ -723,7 +723,7 @@ msgstr "Vymazat mezipaměť obálek"
 
 #, lua-format
 msgid "Cleared %s of cached covers."
-msgstr "Bylo vymazáno %s obálek z mezipaměti."
+msgstr "Z mezipaměti obálek bylo vymazáno %s."
 
 msgid "No cached covers to remove."
 msgstr "V mezipaměti nejsou žádné obálky k odstranění."
@@ -814,8 +814,8 @@ msgid "Close"
 msgstr "Zavřít"
 
 #, lua-format
-msgid "No %s found, please try again. Sometimes this requires a couple of retries."
-msgstr "Nebylo nalezeno žádné %s, zkuste to prosím znovu. Někdy je potřeba pokus několikrát opakovat."
+msgid "No similar books found, please try again. Sometimes this requires a couple of retries."
+msgstr "Nebyly nalezeny žádné podobné knihy, zkuste to prosím znovu. Někdy je potřeba to zkusit několikrát."
 
 msgid "Z-library Similar Books"
 msgstr "Podobné knihy na Z-library"
@@ -1094,10 +1094,10 @@ msgid "Recommended books timeouts"
 msgstr "Časové limity doporučených knih"
 
 msgid "Popular books timeouts"
-msgstr "Časové limity oblíbených knih"
+msgstr "Časové limity populárních knih"
 
 msgid "Popular books"
-msgstr "Oblíbené knihy"
+msgstr "Populární knihy"
 
 msgid "Download timeouts"
 msgstr "Časové limity stahování"

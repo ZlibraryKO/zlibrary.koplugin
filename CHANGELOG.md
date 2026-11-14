@@ -8,6 +8,10 @@ to `main` — so the top section is the one about to ship.
 
 ## 1.0.59
 
+### Added
+
+**Czech.** The plugin now speaks Czech, thanks to PepikVaio (#266).
+
 ### Fixed
 
 **Working servers are no longer written off as blocked.** A search result whose book descriptions

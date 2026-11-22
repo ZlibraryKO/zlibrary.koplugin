@@ -32,7 +32,7 @@ function Api.discardDownloadTempFile(target_filepath)
 end
 
 function Api.downloadBook(download_url, target_filepath, user_id, user_key, referer_url, progress_callback)
-    logger.info(string.format("Zlibrary:Api.downloadBook - START - URL: %s, Target: %s", _loggableUrl(download_url), target_filepath))
+    logger.dbg(string.format("Zlibrary:Api.downloadBook - START - URL: %s, Target: %s", _loggableUrl(download_url), target_filepath))
 
     local result = { success = false, error = nil }
 
@@ -121,7 +121,7 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
             return result
         end
         result.success = true
-        logger.info(string.format("Zlibrary:Api.downloadBook - END (Success) - Target: %s", target_filepath))
+        logger.dbg(string.format("Zlibrary:Api.downloadBook - END (Success) - Target: %s", target_filepath))
         return result
     end
 end

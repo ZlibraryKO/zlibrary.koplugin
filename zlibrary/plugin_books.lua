@@ -154,7 +154,7 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
     end
 
     local on_success = function(ui_self, api_result, plugin_self)
-        logger.info(string.format("Zlibrary:onSelectRecommendedBook - Fetch successful for book ID: %s", tostring(api_result.book.id)))
+        logger.dbg(string.format("Zlibrary:onSelectRecommendedBook - Fetch successful for book ID: %s", tostring(api_result.book.id)))
         Ui.showBookDetails(self, api_result.book)
         book_cache:insert(book_stub.hash, api_result.book)
     end
@@ -213,7 +213,7 @@ function Zlibrary:onSelectSearchBook(book_data)
             end
 
             Ui.closeMessage(loading_msg)
-            logger.info(string.format("Zlibrary:onSelectSearchBook - Fetch successful for book ID: %s", tostring(api_result.book.id)))
+            logger.dbg(string.format("Zlibrary:onSelectSearchBook - Fetch successful for book ID: %s", tostring(api_result.book.id)))
 
             Ui.showBookDetails(self, api_result.book)
         end

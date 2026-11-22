@@ -1,0 +1,47 @@
+-- The plugin is quiet in crash.log unless debug logging is on.
+--
+-- KOReader writes info and above to crash.log by default, and the plugin used to log every
+-- request's START and END, every successful fetch and three lines at each startup at info: about
+-- a fifth of the whole log on a Kindle in daily use. Routine lines are dbg now, which KOReader
+-- writes only with Developer options -> Enable debug logging, the step the bug report template
+-- already asks for. warn and err are unchanged. The only info lines left are the
+-- "Zlibrary:network -" pair around a Wi-Fi wait, which appear only when Wi-Fi was off and are
+-- there to catch a re-run KOReader drops. This fails on any other logger.info in main.lua or
+-- zlibrary/*.lua, so a new one has to be added here on purpose.
+
+local PLUGIN = assert(arg[1], "usage: luajit log_level_harness.lua <plugin-root> <luasocket-src>")
+
+local support = dofile(PLUGIN .. "/test/support.lua")
+local r = support.reporter()
+
+-- Lines allowed at info, by the text they log.
+local ALLOWED = { "Zlibrary:network - " }
+
+local files = { "main.lua" }
+local ls = assert(io.popen('ls "' .. PLUGIN .. '/zlibrary"'))
+for f in ls:lines() do
+    if f:match("%.lua$") then files[#files + 1] = "zlibrary/" .. f end
+end
+ls:close()
+
+local stray, allowed = {}, 0
+for _, rel in ipairs(files) do
+    local n = 0
+    for line in io.lines(PLUGIN .. "/" .. rel) do
+        n = n + 1
+        -- Any reference, not only a call: logger.info passed along as a function logs at info too.
+        if line:find("logger%.info") and not line:match("^%s*%-%-") then
+            local ok = false
+            for _, a in ipairs(ALLOWED) do
+                if line:find(a, 1, true) then ok = true end
+            end
+            if ok then allowed = allowed + 1 else stray[#stray + 1] = string.format("%s:%d", rel, n) end
+        end
+    end
+end
+
+r.check("nothing else logs at info", #stray == 0,
+        #stray .. " line(s), first " .. tostring(stray[1]) .. " -- use logger.dbg, or add it to ALLOWED")
+r.check("the Wi-Fi wait lines are still at info", allowed >= 14, allowed .. " found")
+
+r.finish()

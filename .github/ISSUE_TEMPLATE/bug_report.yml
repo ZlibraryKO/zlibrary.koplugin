@@ -140,7 +140,8 @@ body:
       description: |
         The log is at `koreader/crash.log` on your device (on Kindle: `/mnt/us/koreader/crash.log`).
 
-        1. Turn on **Tools (gear) → More tools → Developer options → Enable debug logging**
+        1. Turn on **Tools (gear) → More tools → Developer options → Enable debug logging**.
+           Without it the plugin logs almost nothing: only warnings and errors.
         2. Do the thing that goes wrong again
         3. Paste the lines around it — everything mentioning `Zlibrary:` is the useful part
 
@@ -148,7 +149,7 @@ body:
         `userKey` from `zlibrary_credentials.lua`: none of them help, and an issue is public.
       render: text
       placeholder: |
-        09/26/26-17:55:45 INFO  Zlibrary:Api.login - START
-        09/26/26-17:55:45 INFO  Zlibrary:Api.login - END (Success) - UserID: 12345678 [server=https://z-lib.gd/rpc.php status=200]
+        09/26/26-17:55:45 DEBUG Zlibrary:Api.login - START
+        09/26/26-17:55:45 DEBUG Zlibrary:Api.login - END (Success) - UserID: 12345678 [server=https://z-lib.gd/rpc.php status=200]
     validations:
       required: true

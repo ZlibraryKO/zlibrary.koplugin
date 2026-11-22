@@ -46,7 +46,7 @@ local env = {
     LuaSettings = { open = function(_, path) return files[path] or settings(path) end },
     util = { fileExists = function(path) return files[path] ~= nil or mtimes[path] ~= nil end },
     lfs = { attributes = function(path) return mtimes[path] and { modification = mtimes[path] } end },
-    logger = { info = function() end, warn = function() end },
+    logger = { dbg = function() end, info = function() end, warn = function() end },
 }
 
 for _, pattern in ipairs({

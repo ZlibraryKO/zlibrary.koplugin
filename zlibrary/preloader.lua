@@ -89,7 +89,7 @@ local function _adoptRenewedSession(res)
     if type(res) ~= "table" then return res end
     local session = res.renewed_session
     if type(session) == "table" and session.user_id and session.user_key then
-        logger.info("Preloader: adopting the session a background task renewed")
+        logger.dbg("Preloader: adopting the session a background task renewed")
         Config.saveUserSession(session.user_id, session.user_key)
     end
     res.renewed_session = nil

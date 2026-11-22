@@ -100,7 +100,7 @@ function Zlibrary:_requestDispatcher(options, ...)
             end
 
             Ui.closeMessage(loading_msg)
-            logger.info(string.format("Zlibrary:%s - Fetch successful.", options.log_context))
+            logger.dbg(string.format("Zlibrary:%s - Fetch successful.", options.log_context))
             UIManager:nextTick(function()
                 options.resolve_result(self.ui, api_result, self)
             end)

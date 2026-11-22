@@ -222,7 +222,7 @@ local function _attemptLogin(endpoint, email, password)
     if user_id ~= "" and user_key ~= "" then
         result.user_id = user_id
         result.user_key = user_key
-        logger.info(string.format("Zlibrary:Api.login - END (Success) - UserID: %s%s", result.user_id, diag))
+        logger.dbg(string.format("Zlibrary:Api.login - END (Success) - UserID: %s%s", result.user_id, diag))
         return result, "session"
     end
 
@@ -244,7 +244,7 @@ local function _attemptLogin(endpoint, email, password)
 end
 
 function Api.login(email, password)
-    logger.info(string.format("Zlibrary:Api.login - START"))
+    logger.dbg(string.format("Zlibrary:Api.login - START"))
 
     local primary, secondary = Api.LOGIN_ENDPOINTS[1], Api.LOGIN_ENDPOINTS[2]
     local result, outcome = _attemptLogin(primary, email, password)
@@ -266,12 +266,12 @@ function Api.login(email, password)
     -- reader is told their password is wrong: the endpoints have taken turns being the broken one,
     -- and a refusal from one of them has meant nothing about the other. Only on this path, so a
     -- sign-in that works still costs a single request.
-    logger.info(string.format("Zlibrary:Api.login - %s refused the sign-in (%s); asking %s",
+    logger.dbg(string.format("Zlibrary:Api.login - %s refused the sign-in (%s); asking %s",
         primary.label, tostring(result.error), secondary.label))
 
     local fallback = _attemptLogin(secondary, email, password)
     if fallback.user_id then
-        logger.info(string.format("Zlibrary:Api.login - %s accepted the sign-in %s refused",
+        logger.dbg(string.format("Zlibrary:Api.login - %s accepted the sign-in %s refused",
             secondary.label, primary.label))
         return fallback
     end

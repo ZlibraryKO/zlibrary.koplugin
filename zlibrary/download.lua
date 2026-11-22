@@ -203,7 +203,7 @@ function Download.run(self, book)
         util.trim(book.author or "Unknown Author"),
         book_format)
     local filename = util.getSafeFilename(proposed, nil, 240 - TEMP_SUFFIX_ROOM)
-    logger.info(string.format("Zlibrary:downloadBook - Proposed filename: %s", filename))
+    logger.dbg(string.format("Zlibrary:downloadBook - Proposed filename: %s", filename))
 
     local target_dir = Config.getDownloadDir()
 
@@ -211,7 +211,7 @@ function Download.run(self, book)
         target_dir = Config.DEFAULT_DOWNLOAD_DIR_FALLBACK
         logger.warn(string.format("Zlibrary:downloadBook - Download directory setting not found, using fallback: %s", target_dir))
     else
-        logger.info(string.format("Zlibrary:downloadBook - Using configured download directory: %s", target_dir))
+        logger.dbg(string.format("Zlibrary:downloadBook - Using configured download directory: %s", target_dir))
     end
 
     if lfs.attributes(target_dir, "mode") ~= "directory" then
@@ -220,11 +220,11 @@ function Download.run(self, book)
             Ui.showErrorMessage(string.format(T("Cannot create downloads directory: %s"), err_mkdir or "Unknown error"))
             return
         end
-        logger.info(string.format("Zlibrary:downloadBook - Created downloads directory: %s", target_dir))
+        logger.dbg(string.format("Zlibrary:downloadBook - Created downloads directory: %s", target_dir))
     end
 
     local target_filepath = target_dir .. "/" .. filename
-    logger.info(string.format("Zlibrary:downloadBook - Target filepath: %s", target_filepath))
+    logger.dbg(string.format("Zlibrary:downloadBook - Target filepath: %s", target_filepath))
 
     local attemptDownload
 
@@ -264,7 +264,7 @@ function Download.run(self, book)
             -- Nothing it writes there can help, and some of it would destroy the parent's copy.
             Config.disableSubprocessWrites()
 
-            logger.info(string.format("Zlibrary:downloadBook - Fetching download link from endpoint for book ID: %s", book.id))
+            logger.dbg(string.format("Zlibrary:downloadBook - Fetching download link from endpoint for book ID: %s", book.id))
             local link_result = Api.getDownloadLink(user_session and user_session.user_id,
                 user_session and user_session.user_key, book.id, book.hash)
 
@@ -272,7 +272,7 @@ function Download.run(self, book)
                 return { success = false, error = link_result.error }
             end
 
-            logger.info(string.format("Zlibrary:downloadBook - Got download link from endpoint: %s", Api.loggableUrl(link_result.download_link)))
+            logger.dbg(string.format("Zlibrary:downloadBook - Got download link from endpoint: %s", Api.loggableUrl(link_result.download_link)))
 
             -- No progress callback: it would run in this process and could not reach the parent's
             -- dialog. The parent watches the temp file instead.
@@ -330,14 +330,14 @@ function Download.run(self, book)
                 Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, function(should_turn_off_wifi, chosen_target)
                     if should_turn_off_wifi then
                         NetworkMgr:disableWifi(function()
-                            logger.info("Zlibrary:downloadBook - Wi-Fi disabled after download as requested by user")
+                            logger.dbg("Zlibrary:downloadBook - Wi-Fi disabled after download as requested by user")
                         end)
                     end
 
                     local final_filepath = fileInto(chosen_target)
 
                     if ReaderUI then
-                        logger.info("Zlibrary:downloadBook - Cleaning up dialogs before opening reader")
+                        logger.dbg("Zlibrary:downloadBook - Cleaning up dialogs before opening reader")
                         self.dialog_manager:closeAllDialogs()
                         ReaderUI:showReader(final_filepath)
                     else
@@ -350,9 +350,9 @@ function Download.run(self, book)
                     fileInto(chosen_target)
                     if should_turn_off_wifi then
                         NetworkMgr:disableWifi(function()
-                            logger.info("Zlibrary:downloadBook - Wi-Fi disabled after download as requested by user")
+                            logger.dbg("Zlibrary:downloadBook - Wi-Fi disabled after download as requested by user")
                         end)
-                        logger.info("Zlibrary:downloadBook - Cleaning up dialogs cause wifi is turned off")
+                        logger.dbg("Zlibrary:downloadBook - Cleaning up dialogs cause wifi is turned off")
                         self.dialog_manager:closeAllDialogs()
                     end
                     -- The reader stays where it was (typically the FileManager); show the new book

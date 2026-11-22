@@ -94,7 +94,7 @@ end
 -- is passed only so the log still says which hook ran.
 function Zlibrary:_teardown(hook)
     if self.dialog_manager and self.dialog_manager:getDialogCount() > 0 then
-        logger.info(hook .. " - Cleaning up " .. self.dialog_manager:getDialogCount() .. " remaining dialogs")
+        logger.dbg(hook .. " - Cleaning up " .. self.dialog_manager:getDialogCount() .. " remaining dialogs")
         self.dialog_manager:closeAllDialogs()
     end
     Cache.autoCacheCleanup(Config.getConfigRuntimeCache())

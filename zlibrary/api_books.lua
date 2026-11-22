@@ -20,7 +20,7 @@ Api.usableCoverUrl = _usableCoverUrl
 function Api.search(query, user_id, user_key, languages, extensions, order, page, is_redir_callback)
     -- The query at dbg, not info: what someone searches for is theirs, and crash.log at the default level is
     -- what gets attached to bug reports. The page number is enough to follow a session there.
-    logger.info(string.format("Zlibrary:Api.search - START - Page: %s", tostring(page)))
+    logger.dbg(string.format("Zlibrary:Api.search - START - Page: %s", tostring(page)))
     logger.dbg(string.format("Zlibrary:Api.search - Query: %s", tostring(query)))
     local result = { results = nil, total_count = nil, error = nil }
 
@@ -129,7 +129,7 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
         logger.warn("Zlibrary:Api.search - Total count not found in API response pagination or exactBooksCount.")
     end
 
-    logger.info(string.format("Zlibrary:Api.search - END (Success) - Found %d results, Total reported: %s", #result.results, tostring(result.total_count)))
+    logger.dbg(string.format("Zlibrary:Api.search - END (Success) - Found %d results, Total reported: %s", #result.results, tostring(result.total_count)))
     return result
 end
 

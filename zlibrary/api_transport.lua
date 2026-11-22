@@ -361,7 +361,7 @@ function Api.makeHttpRequest(options)
     if not options.skipRedirectCache and
        (type(result.status_code) ~= "number" or result.status_code >= 500) then
         if Config.clearCacheRealUrlIfPinned(options.url) then
-            logger.info(string.format(
+            logger.dbg(string.format(
                 "Zlibrary:Api.makeHttpRequest - Dropped cached redirect target; it failed: %s (status: %s)",
                 _loggableUrl(options.url), tostring(result.status_code)))
         end
@@ -388,7 +388,7 @@ function Api.makeHttpRequest(options)
         if options.retry_on_stall and not options._retried and is_timeout
                 and first_byte_ms == nil and not options.sink then
             options._retried = true
-            logger.info(string.format(
+            logger.dbg(string.format(
                 "Zlibrary:Api.makeHttpRequest - stalled with no response after %dms, retrying once - %s %s",
                 result.elapsed or -1, tostring(request_params.method), _loggableUrl(options.url)))
             return Api.makeHttpRequest(options)
@@ -478,7 +478,7 @@ function Api.makeHttpRequest(options)
                     MAX_REDIRECT_HOPS, _loggableUrl(options.url)))
                 return result
             end
-            logger.info(string.format("Zlibrary:Api.makeHttpRequest - Following %s: %s -> %s (hop %d)",
+            logger.dbg(string.format("Zlibrary:Api.makeHttpRequest - Following %s: %s -> %s (hop %d)",
                 tostring(result.status_code), _loggableUrl(options.url), _loggableUrl(redir_res.real_url), hops))
             options._redirect_hops = hops
             _applyRedirectMethod(options, result.status_code)
@@ -489,7 +489,7 @@ function Api.makeHttpRequest(options)
             -- followable, it is not a response. Overwriting result with it used to throw away the
             -- real body, headers and elapsed time and replace the status with the probe's own.
             -- Leave the response intact and let the status handling below report it.
-            logger.info("Zlibrary:Api.makeHttpRequest - Not following redirect: " .. tostring(redir_res.error))
+            logger.dbg("Zlibrary:Api.makeHttpRequest - Not following redirect: " .. tostring(redir_res.error))
         end
     end
 

@@ -95,7 +95,7 @@ local function _migrateLegacyCacheDir()
 
     if lfs.attributes(BASE_CACHE_DIR, "mode") == nil
         and os.rename(LEGACY_CACHE_DIR, BASE_CACHE_DIR) then
-        logger.info("Zlibrary:Cache - moved the cache out of shared storage into " .. BASE_CACHE_DIR)
+        logger.dbg("Zlibrary:Cache - moved the cache out of shared storage into " .. BASE_CACHE_DIR)
         return "moved"
     end
 
@@ -192,7 +192,7 @@ function BaseCache:gc_clean()
             if not oldest then break end
             if os.remove(oldest.path) then
                 total_size = total_size - oldest.size
-                logger.info("Cache LRU GC: Removed " .. oldest.path)
+                logger.dbg("Cache LRU GC: Removed " .. oldest.path)
             end
         end
     end)
@@ -439,7 +439,7 @@ function CoverCache:clearAll()
     end)
     if not ok then logger.warn("Zlibrary:CoverCache.clearAll - " .. tostring(err)) end
 
-    logger.info(string.format("Zlibrary:CoverCache.clearAll - removed %d file(s), %d byte(s)", removed, bytes))
+    logger.dbg(string.format("Zlibrary:CoverCache.clearAll - removed %d file(s), %d byte(s)", removed, bytes))
     return removed, bytes
 end
 
@@ -498,12 +498,12 @@ function M.autoCacheCleanup(timestamp_store)
     local last_cleaned_at = tonumber(timestamp_store:get("last_cleaned_at"))
     if not last_cleaned_at or (current_time - last_cleaned_at) > CACHE_CLEAN_INTERVAL then
         timestamp_store:insert("last_cleaned_at", current_time)
-        logger.info("Cache: Starting global GC clean...")
+        logger.dbg("Cache: Starting global GC clean...")
         local cover_cache = M:new({type="cover"})
         cover_cache:gc_clean()
         local info_cache = M:new({type="bookinfo"})
         info_cache:gc_clean()
-        logger.info("Cache: Global GC clean finished.")
+        logger.dbg("Cache: Global GC clean finished.")
     end
 end
 

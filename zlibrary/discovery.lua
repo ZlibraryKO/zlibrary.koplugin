@@ -46,7 +46,7 @@ function Discovery.run(self, is_interactive, retry_callback)
         return
     end
 
-    logger.info("Zlibrary:autoDiscoverAndSetBaseUrl - START")
+    logger.dbg("Zlibrary:autoDiscoverAndSetBaseUrl - START")
     local loading_msg = false
     local safe_close_loading_msg = function()
         if type(loading_msg) == "table" then 

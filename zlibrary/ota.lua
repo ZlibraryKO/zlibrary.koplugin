@@ -43,7 +43,7 @@ end
 
 local function getCurrentPluginVersion(plugin_base_path)
     local meta_file_full_path = plugin_base_path .. "_meta.lua"
-    logger.info("Zlibrary:Ota.getCurrentPluginVersion - Attempting to load version via dofile from: " .. meta_file_full_path)
+    logger.dbg("Zlibrary:Ota.getCurrentPluginVersion - Attempting to load version via dofile from: " .. meta_file_full_path)
 
     local ok, result = pcall(dofile, meta_file_full_path)
 
@@ -53,7 +53,7 @@ local function getCurrentPluginVersion(plugin_base_path)
     end
 
     if type(result) == "table" and result.version and type(result.version) == "string" then
-        logger.info("Zlibrary:Ota.getCurrentPluginVersion - Found version: " .. result.version)
+        logger.dbg("Zlibrary:Ota.getCurrentPluginVersion - Found version: " .. result.version)
         return result.version
     else
         local details = "Unknown issue."
@@ -119,7 +119,7 @@ local function isVersionOlder(version1, version2)
 end
 
 function Ota.fetchLatestReleaseInfo()
-    logger.info("Zlibrary:Ota.fetchLatestReleaseInfo - START")
+    logger.dbg("Zlibrary:Ota.fetchLatestReleaseInfo - START")
     local result = { release_info = nil, error = nil }
 
     local http_options = {
@@ -160,13 +160,13 @@ function Ota.fetchLatestReleaseInfo()
         return result
     end
 
-    logger.info("Zlibrary:Ota.fetchLatestReleaseInfo - END (Success)")
+    logger.dbg("Zlibrary:Ota.fetchLatestReleaseInfo - END (Success)")
     result.release_info = data
     return result
 end
 
 function Ota.downloadUpdate(url, destination_path)
-    logger.info(string.format("Zlibrary:Ota.downloadUpdate - START - URL: %s, Dest: %s", url, destination_path))
+    logger.dbg(string.format("Zlibrary:Ota.downloadUpdate - START - URL: %s, Dest: %s", url, destination_path))
     -- A bare number is not a budget: it becomes socketutil:set_timeout(300), and that does
     -- `total_timeout or 15`. So `timeout = 300` bought 300 seconds of tolerated SILENCE plus a 15s
     -- total nobody asked for. The pair matches Api.downloadBook: give up after 15s of no data, but
@@ -174,7 +174,7 @@ function Ota.downloadUpdate(url, destination_path)
     local result = Api.downloadToFile(url, destination_path,
         { ["User-Agent"] = "KOReader-ZLibrary-Plugin" }, Config.getDownloadTimeout())
     if result.success then
-        logger.info("Zlibrary:Ota.downloadUpdate - END (Success)")
+        logger.dbg("Zlibrary:Ota.downloadUpdate - END (Success)")
     end
     return result
 end
@@ -215,7 +215,7 @@ local CREDENTIALS_IN_ZIP = ZIP_PLUGIN_DIR .. "/zlibrary_credentials.lua"
 -- The reader's zlibrary_credentials.lua is not in the new tree (the archive's template is left
 -- out on extraction, as before) and is carried over from the live one.
 function Ota.installUpdate(zip_filepath, plugin_base_path)
-    logger.info("Zlibrary:Ota.installUpdate - START - File: " .. zip_filepath .. " Target Path: " .. tostring(plugin_base_path))
+    logger.dbg("Zlibrary:Ota.installUpdate - START - File: " .. zip_filepath .. " Target Path: " .. tostring(plugin_base_path))
 
     if not plugin_base_path or not util.directoryExists(plugin_base_path) then
         local err_msg = "Invalid or missing plugin base path for installation: " .. tostring(plugin_base_path)
@@ -258,7 +258,7 @@ function Ota.installUpdate(zip_filepath, plugin_base_path)
     end
 
     local unzip_command = string.format("unzip -o '%s' -d '%s' -x '%s'", zip_filepath, staging_dir, CREDENTIALS_IN_ZIP)
-    logger.info("Zlibrary:Ota.installUpdate - Executing: " .. unzip_command)
+    logger.dbg("Zlibrary:Ota.installUpdate - Executing: " .. unzip_command)
 
     -- LuaJIT keeps Lua 5.1's os.execute: it returns the raw system() status as a single number and
     -- nothing else, so the extra return values were always nil and, worse, 0 is truthy in Lua --
@@ -300,13 +300,13 @@ function Ota.installUpdate(zip_filepath, plugin_base_path)
 
     _removeTree(backup_dir)
     _removeTree(staging_dir)
-    logger.info("Zlibrary:Ota.installUpdate - Installed " .. meta.version)
+    logger.dbg("Zlibrary:Ota.installUpdate - Installed " .. meta.version)
 
     local rm_ok, rm_err = os.remove(zip_filepath)
     if not rm_ok then
         logger.warn("Zlibrary:Ota.installUpdate - Could not remove downloaded ZIP file: " .. zip_filepath .. " Error: " .. tostring(rm_err))
     else
-        logger.info("Zlibrary:Ota.installUpdate - Cleaned up ZIP file: " .. zip_filepath)
+        logger.dbg("Zlibrary:Ota.installUpdate - Cleaned up ZIP file: " .. zip_filepath)
     end
 
     -- Not _show_ota_final_message: that shows a notice that times out in three seconds, which is
@@ -319,7 +319,7 @@ function Ota.installUpdate(zip_filepath, plugin_base_path)
 end
 
 function Ota.startUpdateProcess(plugin_path_from_main)
-    logger.info("Zlibrary:Ota.startUpdateProcess - Initiated by user. Plugin path: " .. tostring(plugin_path_from_main))
+    logger.dbg("Zlibrary:Ota.startUpdateProcess - Initiated by user. Plugin path: " .. tostring(plugin_path_from_main))
 
     if NetworkMgr:willRerunWhenOnline(function()
         logger.info("Zlibrary:network - network is up, re-running", "Ota.startUpdateProcess")
@@ -404,7 +404,7 @@ function Ota._offerUpdate(plugin_path_from_main, release_info)
         _show_ota_final_message(T("Could not understand the update version format."), true)
         return
     end
-    logger.info("Zlibrary:Ota.startUpdateProcess - GitHub tag: " .. latest_version_tag .. ", Normalized latest version: " .. normalized_latest_version)
+    logger.dbg("Zlibrary:Ota.startUpdateProcess - GitHub tag: " .. latest_version_tag .. ", Normalized latest version: " .. normalized_latest_version)
 
     if not assets or type(assets) ~= "table" or #assets == 0 then
         logger.warn("Zlibrary:Ota.startUpdateProcess - Invalid or missing assets in release information.")
@@ -425,14 +425,14 @@ function Ota._offerUpdate(plugin_path_from_main, release_info)
     -- out of the quoting, a slash would walk the path out of the cache dir. Keep only
     -- characters that are safe in both a filename and a single-quoted shell word.
     local asset_name = asset.name:gsub("[^%w._%-]", "")
-    logger.info("Zlibrary:Ota.startUpdateProcess - Selected release asset: " .. asset_name)
+    logger.dbg("Zlibrary:Ota.startUpdateProcess - Selected release asset: " .. asset_name)
 
     local current_version = getCurrentPluginVersion(plugin_path_from_main)
     if not current_version then
         logger.warn("Zlibrary:Ota.startUpdateProcess - Could not determine current plugin version. Proceeding with update check, but comparison might be skipped.")
     end
 
-    logger.info(string.format("Zlibrary:Ota.startUpdateProcess - Latest version from GitHub (normalized): %s, Current installed version: %s", normalized_latest_version, current_version or "Unknown"))
+    logger.dbg(string.format("Zlibrary:Ota.startUpdateProcess - Latest version from GitHub (normalized): %s, Current installed version: %s", normalized_latest_version, current_version or "Unknown"))
 
     if not isVersionOlder(current_version, normalized_latest_version) then
         local message
@@ -442,7 +442,7 @@ function Ota._offerUpdate(plugin_path_from_main, release_info)
             message = string.format(T("Could not determine your current version, but the latest is %s. If you recently updated, you might be up-to-date."), normalized_latest_version)
         end
         _show_ota_final_message(message, false)
-        logger.info("Zlibrary:Ota.startUpdateProcess - No new update needed. Current: " .. (current_version or "Unknown") .. ", Latest (normalized): " .. normalized_latest_version)
+        logger.dbg("Zlibrary:Ota.startUpdateProcess - No new update needed. Current: " .. (current_version or "Unknown") .. ", Latest (normalized): " .. normalized_latest_version)
         return
     end
 
@@ -459,7 +459,7 @@ function Ota._offerUpdate(plugin_path_from_main, release_info)
         ok_callback = function()
             local temp_path_base = DataStorage:getDataDir() .. "/cache"
             local temp_zip_path = temp_path_base .. "/" .. asset_name
-            logger.info("Zlibrary:Ota.startUpdateProcess - Temporary download path: " .. temp_zip_path)
+            logger.dbg("Zlibrary:Ota.startUpdateProcess - Temporary download path: " .. temp_zip_path)
 
             local function discardZip()
                 if util.fileExists(temp_zip_path) then os.remove(temp_zip_path) end
@@ -473,13 +473,13 @@ function Ota._offerUpdate(plugin_path_from_main, release_info)
                 return Ota.downloadUpdate(download_url, temp_zip_path)
             end, function()
                 current_ota_status_widget = nil
-                logger.info("Zlibrary:Ota.startUpdateProcess - Download successful: " .. temp_zip_path)
+                logger.dbg("Zlibrary:Ota.startUpdateProcess - Download successful: " .. temp_zip_path)
                 local install_result = Ota.installUpdate(temp_zip_path, plugin_path_from_main)
                 if install_result.error then
                     logger.err("Zlibrary:Ota.startUpdateProcess - Installation failed: " .. install_result.error)
                     discardZip()
                 else
-                    logger.info("Zlibrary:Ota.startUpdateProcess - Installation successful.")
+                    logger.dbg("Zlibrary:Ota.startUpdateProcess - Installation successful.")
                 end
             end, function(err)
                 current_ota_status_widget = nil
@@ -493,7 +493,7 @@ function Ota._offerUpdate(plugin_path_from_main, release_info)
         end,
         cancel_callback = function()
             _close_current_ota_status_widget()
-            logger.info("Zlibrary:Ota.startUpdateProcess - User cancelled update.")
+            logger.dbg("Zlibrary:Ota.startUpdateProcess - User cancelled update.")
         end
     }
     -- Every other exit from the update check goes through _show_ota_final_message, which closes the

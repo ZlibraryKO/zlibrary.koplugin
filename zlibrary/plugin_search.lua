@@ -63,7 +63,7 @@ function Zlibrary:performSearch(query)
             end
 
             Ui.closeMessage(loading_msg)
-            logger.info(string.format("Zlibrary:performSearch - Fetch successful. Results: %d", #api_result.results))
+            logger.dbg(string.format("Zlibrary:performSearch - Fetch successful. Results: %d", #api_result.results))
             Config.addSearchHistory(query)
             self.current_search_query = query
             self.current_search_api_page_loaded = current_page_to_search
@@ -90,12 +90,12 @@ end
 
 function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
     if not initial_book_data_list or #initial_book_data_list == 0 then
-        logger.info("Zlibrary:displaySearchResults - No initial results to display.")
+        logger.dbg("Zlibrary:displaySearchResults - No initial results to display.")
         return
     end
 
     local menu_items = {}
-    logger.info(string.format("Zlibrary:displaySearchResults - Preparing menu items from %d initial results.", #initial_book_data_list))
+    logger.dbg(string.format("Zlibrary:displaySearchResults - Preparing menu items from %d initial results.", #initial_book_data_list))
     local opts = Config.getViewSettings()
     local  is_show_cover = opts.show_cover_search ~= false
 
@@ -116,7 +116,7 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
         local is_last_page_of_current_items = (new_page_number == menu_instance.page_num)
 
         if is_last_page_of_current_items and self.has_more_api_results then
-            logger.info(string.format("Zlibrary: Reached page %d (last page of current items). Attempting to load more from API.", new_page_number))
+            logger.dbg(string.format("Zlibrary: Reached page %d (last page of current items). Attempting to load more from API.", new_page_number))
 
             local next_api_page_to_fetch = self.current_search_api_page_loaded + 1
             local loading_msg_more = Ui.showCancellableLoadingMessage(string.format(T("Loading more results (Page %s)..."), next_api_page_to_fetch))
@@ -152,7 +152,7 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
 
                 local new_book_objects = api_result_more.results
                 if new_book_objects and #new_book_objects > 0 then
-                    logger.info(string.format("Zlibrary: Adding %d new book objects from API.", #new_book_objects))
+                    logger.dbg(string.format("Zlibrary: Adding %d new book objects from API.", #new_book_objects))
                     self.current_search_api_page_loaded = next_api_page_to_fetch
 
                     local new_menu_items_to_add = {}
@@ -162,7 +162,7 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
                     end
                     Ui.appendSearchResultsToMenu(menu_instance, new_menu_items_to_add)
                 else
-                    logger.info("Zlibrary: No more results from API or API returned empty.")
+                    logger.dbg("Zlibrary: No more results from API or API returned empty.")
                     self.has_more_api_results = false
                     Ui.showInfoMessage(T("No more results found."))
                     menu_instance:updateItems(1, true)
@@ -184,7 +184,7 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
             end)
         else
             if is_last_page_of_current_items and not self.has_more_api_results then
-                logger.info("Zlibrary: Reached last page, and no more API results to load.")
+                logger.dbg("Zlibrary: Reached last page, and no more API results to load.")
             end
             menu_instance:updateItems(1, true)
         end

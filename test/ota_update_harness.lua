@@ -88,7 +88,7 @@ do
     local calls = {}
     local answer = { success = false, error = "Download HTTP Error: 404", status_code = 404 }
     local env = setmetatable({
-        logger = { info = function() end, err = function() end, warn = function() end },
+        logger = { dbg = function() end, info = function() end, err = function() end, warn = function() end },
         Config = { getDownloadTimeout = function() return { 15, -1 } end },
         Api = { downloadToFile = function(...)
             table.insert(calls, { ... })
@@ -201,7 +201,7 @@ local function newInstall(opts)
         end,
     }, { __index = os })
     local env = setmetatable({
-        logger = { info = function() end, err = function() end, warn = function() end },
+        logger = { dbg = function() end, info = function() end, err = function() end, warn = function() end },
         T = function(s) return s end,
         lfs = lfs,
         os = wrapped_os,
@@ -364,7 +364,7 @@ sh("rm -rf " .. q(ROOT))
 local function newFlow(opts)
     local rig = { runs = {}, finals = {}, shown = {}, installs = {}, removed = {}, loading = {} }
     local env = setmetatable({
-        logger = { info = function() end, err = function() end, warn = function() end },
+        logger = { dbg = function() end, info = function() end, err = function() end, warn = function() end },
         T = function(s) return s end,
         NetworkMgr = { willRerunWhenOnline = function() return false end },
         DataStorage = { getDataDir = function() return "/data" end },

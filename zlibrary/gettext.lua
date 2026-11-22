@@ -166,7 +166,7 @@ local function createGetTextProxy(new_gettext, gettext)
             local new_lang = new_gettext.current_lang
             local dump_path = string.format("%s/%s/%s", new_gettext.dirname, new_lang, "debug_logs.lua")
             require("luasettings"):open(dump_path):saveSetting("po", new_gettext):flush()
-            logger.info(string.format("debug_dump: %s.po to %s", new_lang, dump_path))
+            logger.dbg(string.format("debug_dump: %s.po to %s", new_lang, dump_path))
       end
     }, mt)
 end

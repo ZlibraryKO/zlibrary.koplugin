@@ -59,53 +59,60 @@ function Zlibrary:addToMainMenu(menu_items)
                             -- Verification now lives in the dialog this opens.
                             separator = true,
                     }, {
-                            text = T("Set download directory"),
+                            -- The settings for what happens to a download, together: on their own
+                            -- in Settings, "Author folders" or "Ask to open after download" said
+                            -- little about what they were for.
+                            text = T("Downloads"),
                             keep_menu_open = true,
-                            callback = function()
-                                Ui.showDownloadDirectoryDialog()
-                            end,
+                            sub_item_table = { {
+                                text = T("Download folder"),
+                                keep_menu_open = true,
+                                callback = function()
+                                    Ui.showDownloadDirectoryDialog()
+                                end,
+                            }, {
+                                -- Here rather than under View settings: it changes what happens after
+                                -- a download, not how a list looks.
+                                text = T("Ask to open after download"),
+                                keep_menu_open = true,
+                                checked_func = function()
+                                    return not Config.getSkipOpenBookPrompt()
+                                end,
+                                callback = function()
+                                    Config.setSkipOpenBookPrompt(not Config.getSkipOpenBookPrompt())
+                                end,
+                            }, {
+                                -- Named folders under the download folder; the post-download
+                                -- dialog offers to file the book into one. Rebuilt on each open so it
+                                -- always shows the current set. Greyed out when "Ask to open after
+                                -- download" is off: categories are only chosen from that dialog, so
+                                -- with no dialog there is nothing they could do.
+                                text = T("Download categories"),
+                                keep_menu_open = true,
+                                enabled_func = function()
+                                    return not Config.getSkipOpenBookPrompt()
+                                end,
+                                sub_item_table_func = function()
+                                    return Ui.buildCategoriesMenuItems()
+                                end,
+                            }, {
+                                -- No enabled_func, unlike categories: author folders need no choice
+                                -- from the open prompt, so they work with it switched off too.
+                                text = T("Author folders"),
+                                keep_menu_open = true,
+                                help_text = T("Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."),
+                                checked_func = function()
+                                    return Config.getAuthorFolders()
+                                end,
+                                callback = function()
+                                    Config.setAuthorFolders(not Config.getAuthorFolders())
+                                end,
+                            } },
                         }, {
-                            -- Sits beside the download directory rather than under View Settings:
-                            -- it changes what happens after a download, not how a list looks.
-                            text = T("Ask to open after download"),
-                            keep_menu_open = true,
-                            checked_func = function()
-                                return not Config.getSkipOpenBookPrompt()
-                            end,
-                            callback = function()
-                                Config.setSkipOpenBookPrompt(not Config.getSkipOpenBookPrompt())
-                            end,
-                        }, {
-                            -- Named folders under the download directory; the post-download dialog
-                            -- offers to file the book into one. Rebuilt on each open so it always
-                            -- shows the current set. Greyed out when "Ask to open after download" is
-                            -- off: categories are only chosen from that dialog, so with no dialog
-                            -- there is nothing they could do.
-                            text = T("Download categories"),
-                            keep_menu_open = true,
-                            enabled_func = function()
-                                return not Config.getSkipOpenBookPrompt()
-                            end,
-                            sub_item_table_func = function()
-                                return Ui.buildCategoriesMenuItems()
-                            end,
-                        }, {
-                            -- No enabled_func, unlike categories: author folders need no choice
-                            -- from the open prompt, so they work with it switched off too.
-                            text = T("Author folders"),
-                            keep_menu_open = true,
-                            help_text = T("Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."),
-                            checked_func = function()
-                                return Config.getAuthorFolders()
-                            end,
-                            callback = function()
-                                Config.setAuthorFolders(not Config.getAuthorFolders())
-                            end,
-                        }, {
-                                text = T("View Settings"),
+                                text = T("View settings"),
                                 keep_menu_open = true,
                                 sub_item_table = { {
-                                    text = T("Search Covers"),
+                                    text = T("Search covers"),
                                     keep_menu_open = true,
                                     checked_func = function()
                                         return Config.getViewFlag("show_cover_search")
@@ -114,12 +121,12 @@ function Zlibrary:addToMainMenu(menu_items)
                                         Config.toggleViewFlag("show_cover_search")
                                     end,
                                 },  {
-                                    text = T("Search Items/Page"),
+                                    text = T("Search items per page"),
                                     keep_menu_open = true,
                                     separator = true,
-                                    callback = Ui.createPerPageSettingCallback(T("Search Items/Page"), "search_per_page"),
+                                    callback = Ui.createPerPageSettingCallback(T("Search items per page"), "search_per_page"),
                                 }, {
-                                    text = T("Browse Covers"),
+                                    text = T("Browse covers"),
                                     keep_menu_open = true,
                                     checked_func = function()
                                         return Config.getViewFlag("show_cover_browse")
@@ -128,9 +135,9 @@ function Zlibrary:addToMainMenu(menu_items)
                                         Config.toggleViewFlag("show_cover_browse")
                                     end,
                                 }, {
-                                    text = T("Browse Items/Page"),
+                                    text = T("Browse items per page"),
                                     keep_menu_open = true,
-                                    callback = Ui.createPerPageSettingCallback(T("Browse Items/Page"), "browse_per_page"),
+                                    callback = Ui.createPerPageSettingCallback(T("Browse items per page"), "browse_per_page"),
                                 }},
                         }, {
                             text = T("Search options"),

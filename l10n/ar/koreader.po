@@ -658,19 +658,22 @@ msgstr "مجلدات المؤلفين"
 msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
 msgstr "يحفظ كل كتاب يتم تنزيله في مجلد باسم مؤلفه، داخل مجلد التنزيل أو الفئة المختارة."
 
-msgid "View Settings"
+msgid "Downloads"
+msgstr "التنزيلات"
+
+msgid "View settings"
 msgstr "إعدادات العرض"
 
-msgid "Search Covers"
+msgid "Search covers"
 msgstr "أغلفة البحث"
 
-msgid "Search Items/Page"
+msgid "Search items per page"
 msgstr "عناصر البحث/الصفحة"
 
-msgid "Browse Covers"
+msgid "Browse covers"
 msgstr "أغلفة التصفح"
 
-msgid "Browse Items/Page"
+msgid "Browse items per page"
 msgstr "عناصر التصفح/الصفحة"
 
 msgid "Search options"

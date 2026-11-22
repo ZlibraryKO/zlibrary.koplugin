@@ -658,19 +658,22 @@ msgstr "Carpetas por autor"
 msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
 msgstr "Guarda cada libro descargado en una carpeta con el nombre de su autor, dentro de la carpeta de descargas o de la categoría elegida."
 
-msgid "View Settings"
+msgid "Downloads"
+msgstr "Descargas"
+
+msgid "View settings"
 msgstr "Ajustes de visualización"
 
-msgid "Search Covers"
+msgid "Search covers"
 msgstr "Portadas en búsqueda"
 
-msgid "Search Items/Page"
+msgid "Search items per page"
 msgstr "Elementos/página en búsqueda"
 
-msgid "Browse Covers"
+msgid "Browse covers"
 msgstr "Portadas al explorar"
 
-msgid "Browse Items/Page"
+msgid "Browse items per page"
 msgstr "Elementos/página al explorar"
 
 msgid "Search options"

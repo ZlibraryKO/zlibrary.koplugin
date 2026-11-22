@@ -658,19 +658,22 @@ msgstr "Foldery autorów"
 msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
 msgstr "Zapisuje każdą pobraną książkę w folderze nazwanym od jej autora, w folderze pobierania lub w wybranej kategorii."
 
-msgid "View Settings"
+msgid "Downloads"
+msgstr "Pobieranie"
+
+msgid "View settings"
 msgstr "Ustawienia widoku"
 
-msgid "Search Covers"
+msgid "Search covers"
 msgstr "Okładki w wyszukiwaniu"
 
-msgid "Search Items/Page"
+msgid "Search items per page"
 msgstr "Wyników na stronę"
 
-msgid "Browse Covers"
+msgid "Browse covers"
 msgstr "Okładki w przeglądaniu"
 
-msgid "Browse Items/Page"
+msgid "Browse items per page"
 msgstr "Pozycji na stronę"
 
 msgid "Search options"

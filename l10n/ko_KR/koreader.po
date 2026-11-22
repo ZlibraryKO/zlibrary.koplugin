@@ -658,19 +658,22 @@ msgstr "저자별 폴더"
 msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
 msgstr "다운로드한 각 책을 다운로드 폴더 또는 선택한 카테고리 안에 있는 저자 이름의 폴더에 저장합니다."
 
-msgid "View Settings"
+msgid "Downloads"
+msgstr "다운로드"
+
+msgid "View settings"
 msgstr "보기 설정"
 
-msgid "Search Covers"
+msgid "Search covers"
 msgstr "검색 표지"
 
-msgid "Search Items/Page"
+msgid "Search items per page"
 msgstr "검색 항목/페이지"
 
-msgid "Browse Covers"
+msgid "Browse covers"
 msgstr "둘러보기 표지"
 
-msgid "Browse Items/Page"
+msgid "Browse items per page"
 msgstr "둘러보기 항목/페이지"
 
 msgid "Search options"

@@ -921,24 +921,28 @@ msgstr ""
 msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
 msgstr ""
 
+#: zlibrary/plugin_menu.lua:65
+msgid "Downloads"
+msgstr ""
+
 #: zlibrary/plugin_menu.lua:93
-msgid "View Settings"
+msgid "View settings"
 msgstr ""
 
 #: zlibrary/plugin_menu.lua:96
-msgid "Search Covers"
+msgid "Search covers"
 msgstr ""
 
 #: zlibrary/plugin_menu.lua:105 zlibrary/plugin_menu.lua:108
-msgid "Search Items/Page"
+msgid "Search items per page"
 msgstr ""
 
 #: zlibrary/plugin_menu.lua:110
-msgid "Browse Covers"
+msgid "Browse covers"
 msgstr ""
 
 #: zlibrary/plugin_menu.lua:119 zlibrary/plugin_menu.lua:121
-msgid "Browse Items/Page"
+msgid "Browse items per page"
 msgstr ""
 
 #: zlibrary/plugin_menu.lua:124

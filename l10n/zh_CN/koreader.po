@@ -658,19 +658,22 @@ msgstr "按作者分文件夹"
 msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
 msgstr "将每本下载的书保存到以作者命名的文件夹中，位于下载文件夹或所选分类内。"
 
-msgid "View Settings"
+msgid "Downloads"
+msgstr "下载"
+
+msgid "View settings"
 msgstr "视图设置"
 
-msgid "Search Covers"
+msgid "Search covers"
 msgstr "搜索封面"
 
-msgid "Search Items/Page"
+msgid "Search items per page"
 msgstr "搜索每页条目"
 
-msgid "Browse Covers"
+msgid "Browse covers"
 msgstr "浏览封面"
 
-msgid "Browse Items/Page"
+msgid "Browse items per page"
 msgstr "浏览每页条目"
 
 msgid "Search options"

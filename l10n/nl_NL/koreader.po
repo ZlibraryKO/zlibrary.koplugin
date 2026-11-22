@@ -658,19 +658,22 @@ msgstr "Auteursmappen"
 msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
 msgstr "Slaat elk gedownload boek op in een map met de naam van de auteur, in de downloadmap of in de gekozen categorie."
 
-msgid "View Settings"
+msgid "Downloads"
+msgstr "Downloads"
+
+msgid "View settings"
 msgstr "Weergave-instellingen"
 
-msgid "Search Covers"
+msgid "Search covers"
 msgstr "Omslagen bij zoeken"
 
-msgid "Search Items/Page"
+msgid "Search items per page"
 msgstr "Zoekitems/pagina"
 
-msgid "Browse Covers"
+msgid "Browse covers"
 msgstr "Omslagen bij bladeren"
 
-msgid "Browse Items/Page"
+msgid "Browse items per page"
 msgstr "Bladeritems/pagina"
 
 msgid "Search options"

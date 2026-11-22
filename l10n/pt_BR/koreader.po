@@ -659,19 +659,22 @@ msgstr "Pastas por autor"
 msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
 msgstr "Salva cada livro baixado em uma pasta com o nome do autor, dentro da pasta de download ou da categoria escolhida."
 
-msgid "View Settings"
+msgid "Downloads"
+msgstr "Downloads"
+
+msgid "View settings"
 msgstr "Configurações de exibição"
 
-msgid "Search Covers"
+msgid "Search covers"
 msgstr "Capas na busca"
 
-msgid "Search Items/Page"
+msgid "Search items per page"
 msgstr "Itens/página na busca"
 
-msgid "Browse Covers"
+msgid "Browse covers"
 msgstr "Capas ao navegar"
 
-msgid "Browse Items/Page"
+msgid "Browse items per page"
 msgstr "Itens/página ao navegar"
 
 msgid "Search options"

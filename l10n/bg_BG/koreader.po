@@ -664,19 +664,22 @@ msgstr "Папки по автори"
 msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
 msgstr "Запазва всяка изтеглена книга в папка с името на автора ѝ, в папката за изтегляне или в избраната категория."
 
-msgid "View Settings"
+msgid "Downloads"
+msgstr "Изтегляния"
+
+msgid "View settings"
 msgstr "Настройки на изгледа"
 
-msgid "Search Covers"
+msgid "Search covers"
 msgstr "Корици при търсене"
 
-msgid "Search Items/Page"
+msgid "Search items per page"
 msgstr "Търсене: резултати/стр."
 
-msgid "Browse Covers"
+msgid "Browse covers"
 msgstr "Корици при разглеждане"
 
-msgid "Browse Items/Page"
+msgid "Browse items per page"
 msgstr "Разглеждане: резултати/стр."
 
 msgid "Search options"

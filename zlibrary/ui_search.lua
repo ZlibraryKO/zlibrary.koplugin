@@ -8,6 +8,11 @@ local UIManager = require("ui/uimanager")
 local ConfirmBox = require("ui/widget/confirmbox")
 local T = require("zlibrary.gettext")
 local InputDialog = require("ui/widget/inputdialog")
+local TitleBar = require("ui/widget/titlebar")
+local IconButton = require("ui/widget/iconbutton")
+local IconWidget = require("ui/widget/iconwidget")
+local HorizontalGroup = require("ui/widget/horizontalgroup")
+local HorizontalSpan = require("ui/widget/horizontalspan")
 local Menu = require("zlibrary.menu")
 local BookRow = require("zlibrary.book_row")
 local Device = require("device")
@@ -23,8 +28,100 @@ local _closeAndUntrackDialog = Shared._closeAndUntrackDialog
 local _colon_concat = Shared._colon_concat
 local _showMultiSelectionDialog = Pickers._showMultiSelectionDialog
 
--- Tapping a search runs it, holding removes it. Going back returns to the search box with whatever
--- had been typed there.
+-- The plugin's own icons (icons/ beside zlibrary/), for what KOReader has no icon for. Found from
+-- this file's path, so it works wherever the plugin is installed. nil when the file is missing --
+-- an install that copied only the .lua files -- and callers then fall back to a text button.
+local function _pluginIcon(name)
+    local source = debug.getinfo(1, "S").source:gsub("^@", "")
+    local root = source:match("^(.*/)zlibrary/[^/]+$") or ""
+    local path = root .. "icons/" .. name .. ".svg"
+    if util.fileExists(path) then return path end
+    return nil
+end
+
+-- The search box with a close cross in its title bar, like the plugin's other windows. KOReader's
+-- InputDialog builds its TitleBar without one and has no option for it, so this swaps in the same
+-- title bar plus close_callback once InputDialog has built itself. init runs again on every
+-- keyboard resize (InputDialog.reinit), and this method with it, so the cross survives that.
+--
+-- There is no Cancel button: the cross replaces it. InputDialog closes on the Back key, and on a
+-- tap outside the dialog, by running its button with id "close" (onCloseDialog), so with no such
+-- button those would do nothing. onCloseDialog is defined here instead to run on_close, and the
+-- cross calls the same.
+local SearchInputDialog = InputDialog:extend{}
+
+function SearchInputDialog:onCloseDialog()
+    if self.on_close then
+        self.on_close()
+        return true
+    end
+    return InputDialog.onCloseDialog(self)
+end
+
+function SearchInputDialog:init()
+    local Screen = Device.screen
+    -- With a history_icon, the field gives up room on its right for it. The width is fixed here,
+    -- before InputDialog sizes the field from it; the same default InputDialog would pick.
+    local icon_size, gap
+    if self.history_icon then
+        self.width = self.width or math.floor(math.min(Screen:getWidth(), Screen:getHeight()) * 0.8)
+        icon_size = Screen:scaleBySize(G_defaults:readSetting("DGENERIC_ICON_SIZE"))
+        gap = Screen:scaleBySize(8)
+        self.text_width = math.floor(self.width * 0.9) - icon_size - gap
+    end
+    InputDialog.init(self)
+    if self.history_icon then
+        -- IconButton only knows KOReader's own icon names, so it is built with one and given our
+        -- file afterwards; update() re-measures it and re-arms the tap area from the new image.
+        local button = IconButton:new{
+            icon = "appbar.search",
+            width = icon_size,
+            height = icon_size,
+            padding = 0,
+            callback = self.history_callback,
+            show_parent = self,
+        }
+        button.image:free()
+        button.image = IconWidget:new{ file = self.history_icon, width = icon_size, height = icon_size }
+        button.horizontal_group[2] = button.image
+        button:update()
+        for _, widget in ipairs(self.vgroup) do
+            if type(widget) == "table" and widget[1] == self._input_widget then
+                widget[1] = HorizontalGroup:new{
+                    align = "center",
+                    self._input_widget,
+                    HorizontalSpan:new{ width = gap },
+                    button,
+                }
+                break
+            end
+        end
+        -- So a keypad can reach it from the field.
+        table.insert(self.layout[1], button)
+    end
+    local plain = self.title_bar
+    self.title_bar = TitleBar:new{
+        width = self.width,
+        align = "left",
+        with_bottom_line = true,
+        title = self.title,
+        title_multilines = true,
+        bottom_v_padding = self.bottom_v_padding,
+        info_text = self.description,
+        show_parent = self,
+        close_callback = function() self:onCloseDialog() end,
+    }
+    for i, widget in ipairs(self.vgroup) do
+        if widget == plain then
+            self.vgroup[i] = self.title_bar
+            plain:free()
+            break
+        end
+    end
+end
+
+-- Tapping a search puts it in the search box, holding removes it. Going back returns to the search
+-- box with whatever had been typed there.
 function Ui.showSearchHistoryDialog(parent_zlibrary, typed_input)
     local title = T("Recent searches")
     local subtitle = T("Hold a search to remove it")
@@ -42,10 +139,14 @@ function Ui.showSearchHistoryDialog(parent_zlibrary, typed_input)
                 text = query,
                 query = query,
                 keep_menu_open = true,
+                -- Fills the search box rather than searching: the history keeps only the words,
+                -- not the Content, language or format choice they were searched with, so the
+                -- dialog shows what this search would run with -- and an old query is more often
+                -- refined than repeated as is.
                 callback = function()
                     UIManager:close(menu)
                     Ui._last_search_input = query
-                    parent_zlibrary:performSearch(query)
+                    Ui.showSearchDialog(parent_zlibrary, query)
                 end,
             }
         end
@@ -157,22 +258,39 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
             parent_zlibrary:performSearch(trimmed_query)
         end,
     }
-    local search_row = { search_button }
-    if #Config.getSearchHistory() > 0 then
-        search_row = { {
-            text = T("Recent searches"),
-            callback = function()
-                local typed_input = dialog:getInputText()
-                _closeAndUntrackDialog(dialog)
-                Ui.showSearchHistoryDialog(parent_zlibrary, typed_input)
-            end,
-        }, search_button }
+    -- Books or articles. A toggle rather than a picker: there are only the two, and the label says
+    -- which one the next search looks for.
+    local content_type = Config.getSearchContentType()
+    local content_button = {
+        text = content_type == "article" and T("Content: Articles") or T("Content: Books"),
+        callback = function()
+            local typed_input = dialog:getInputText()
+            _closeAndUntrackDialog(dialog)
+            Config.setSearchContentType(content_type == "article" and "book" or "article")
+            Ui.showSearchDialog(parent_zlibrary, typed_input)
+        end,
+    }
+    -- Search always fills the first row, so it sits in the same place with or without history.
+    local function openHistory()
+        local typed_input = dialog:getInputText()
+        _closeAndUntrackDialog(dialog)
+        Ui.showSearchHistoryDialog(parent_zlibrary, typed_input)
     end
+    -- Recent searches is a clock icon beside the field; the text button is only the fallback for
+    -- an install without the icon file.
+    local has_history = #Config.getSearchHistory() > 0
+    local history_icon = has_history and _pluginIcon("history") or nil
+    -- Without the icon file, Recent searches falls back to a text button on a row of its own.
+    local fallback_row = (has_history and not history_icon)
+        and { { text = T("Recent searches"), callback = openHistory } } or nil
 
-    dialog = InputDialog:new{
+    dialog = SearchInputDialog:new{
         title = T("Search Z-library"),
         input = def_input,
-        buttons = { search_row, {{
+        history_icon = history_icon,
+        on_close = function() _closeAndUntrackDialog(dialog) end,
+        history_callback = history_icon and openHistory or nil,
+        buttons = { { search_button }, {{
             text = string.format("%s: %s \u{25BC}", T("Sort by"), search_order_name),
             callback = function()
                 -- Carry over what the user has typed so far; def_input is the value captured
@@ -183,7 +301,7 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
                     Ui.showSearchDialog(parent_zlibrary, typed_input)
                 end)
             end
-        }},{{
+        }, content_button},{{
             text = lang_text,
             callback = function()
                 local typed_input = dialog:getInputText()
@@ -193,7 +311,10 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
                 end)
             end
         },{
-            text = format_text,
+            -- Greyed out for articles: an article search does not send the format filter, and the
+            -- label says why the stored one has no effect there.
+            text = content_type == "article" and T("Formats: books only") or format_text,
+            enabled = content_type ~= "article",
             callback = function()
                 local typed_input = dialog:getInputText()
                 _closeAndUntrackDialog(dialog)
@@ -201,11 +322,7 @@ function Ui.showSearchDialog(parent_zlibrary, def_input)
                     Ui.showSearchDialog(parent_zlibrary, typed_input)
                 end)
             end
-        }},{{
-            text = T("Cancel"),
-            id = "close",
-            callback = function() _closeAndUntrackDialog(dialog) end,
-        }}}
+        }}, fallback_row }
     }
     _showAndTrackDialog(dialog)
     dialog:onShowKeyboard()
@@ -216,8 +333,10 @@ function Ui.createBookMenuItem(book_data, parent_zlibrary_instance, is_show_cove
     local title = util.htmlEntitiesToUtf8(title_for_html)
     local author_for_html = (type(book_data.author) == "string" and book_data.author) or T("Unknown Author")
     local author = util.htmlEntitiesToUtf8(author_for_html)
-    -- When only one format is being searched, every row would repeat it.
-    local book_row = BookRow.new(title, author, book_data, #Config.getSearchExtensions() == 1)
+    -- When only one format is being searched, every row would repeat it. Not for articles: the
+    -- format filter does not apply to them, so their format is not implied.
+    local book_row = BookRow.new(title, author, book_data,
+        #Config.getSearchExtensions() == 1 and book_data.content_type ~= "article")
 
     return {
         text = BookRow.text(book_row),
@@ -244,11 +363,13 @@ end
 -- started again. The multi-search screen has had this button all along, so this is parity rather
 -- than a new idea, and it is the only route available -- TitleBar exposes callbacks for its
 -- icons and not for the title text, so tapping the "Search Results: x" caption is not an option.
-function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_items, on_goto_page_handler, opts, on_new_search, on_hold_book)
+function Ui.createSearchResultsMenu(parent_ui_ref, query_string, initial_menu_items, on_goto_page_handler, opts, on_new_search, on_hold_book, content_type)
     local search_order_name = Config.getSearchOrderName()
     local menu = Menu:new{
         title = _colon_concat(T("Search Results"), query_string),
-        subtitle = string.format("%s: %s", T("Sort by"), search_order_name),
+        subtitle = (content_type == "article")
+            and string.format("%s: %s · %s", T("Sort by"), search_order_name, T("Articles"))
+            or string.format("%s: %s", T("Sort by"), search_order_name),
         title_bar_left_icon = on_new_search and "appbar.search" or nil,
         item_table = initial_menu_items,
         parent = parent_ui_ref,
@@ -289,14 +410,14 @@ function Ui.appendSearchResultsToMenu(menu_instance, new_menu_items)
     menu_instance:switchItemTable(menu_instance.title, menu_instance.item_table, -1, nil, menu_instance.subtitle)
 end
 
-function Ui.showSearchErrorDialog(err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page, loading_msg_to_close, original_on_success, original_on_error)
+function Ui.showSearchErrorDialog(err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page, loading_msg_to_close, original_on_success, original_on_error, content_type)
     local retry_callback = function()
         local new_loading_msg = Ui.showCancellableLoadingMessage(string.format(T("Retrying search for \"%s\"..."), query))
         local retry_task = function()
-            return Api.search(query, user_session.user_id, user_session.user_key, selected_languages, selected_extensions, selected_order, current_page)
+            return Api.search(query, user_session.user_id, user_session.user_key, selected_languages, selected_extensions, selected_order, current_page, content_type)
         end
         AsyncHelper.runCancellable(retry_task, original_on_success, function(new_err_msg)
-            Ui.showSearchErrorDialog(new_err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page, new_loading_msg, original_on_success, original_on_error)
+            Ui.showSearchErrorDialog(new_err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page, new_loading_msg, original_on_success, original_on_error, content_type)
         end, new_loading_msg)
     end
     

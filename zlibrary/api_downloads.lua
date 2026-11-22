@@ -2,7 +2,7 @@
 -- replaces the target once complete), and covers. Part of the Api facade; see api_core.lua.
 
 local Config = require("zlibrary.config")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 local json = require("json")
 local socketutil = require("socketutil")
 local T = require("zlibrary.gettext")
@@ -32,7 +32,7 @@ function Api.discardDownloadTempFile(target_filepath)
 end
 
 function Api.downloadBook(download_url, target_filepath, user_id, user_key, referer_url, progress_callback)
-    logger.info(string.format("Zlibrary:Api.downloadBook - START - URL: %s, Target: %s", _loggableUrl(download_url), target_filepath))
+    logger.dbg(string.format("Zlibrary:Api.downloadBook - START - URL: %s, Target: %s", _loggableUrl(download_url), target_filepath))
 
     local result = { success = false, error = nil }
 
@@ -121,7 +121,7 @@ function Api.downloadBook(download_url, target_filepath, user_id, user_key, refe
             return result
         end
         result.success = true
-        logger.info(string.format("Zlibrary:Api.downloadBook - END (Success) - Target: %s", target_filepath))
+        logger.dbg(string.format("Zlibrary:Api.downloadBook - END (Success) - Target: %s", target_filepath))
         return result
     end
 end

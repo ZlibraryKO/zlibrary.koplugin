@@ -15,7 +15,7 @@ local TextViewer = require("ui/widget/textviewer")
 local T = require("zlibrary.gettext")
 local Device = require("device")
 local util = require("util")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 local Config = require("zlibrary.config")
 local Api = require("zlibrary.api")
 

@@ -913,24 +913,36 @@ msgstr ""
 msgid "Download categories"
 msgstr ""
 
+#: zlibrary/plugin_menu.lua:95
+msgid "Author folders"
+msgstr ""
+
+#: zlibrary/plugin_menu.lua:97
+msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
+msgstr ""
+
+#: zlibrary/plugin_menu.lua:65
+msgid "Downloads"
+msgstr ""
+
 #: zlibrary/plugin_menu.lua:93
-msgid "View Settings"
+msgid "View settings"
 msgstr ""
 
 #: zlibrary/plugin_menu.lua:96
-msgid "Search Covers"
+msgid "Search covers"
 msgstr ""
 
 #: zlibrary/plugin_menu.lua:105 zlibrary/plugin_menu.lua:108
-msgid "Search Items/Page"
+msgid "Search items per page"
 msgstr ""
 
 #: zlibrary/plugin_menu.lua:110
-msgid "Browse Covers"
+msgid "Browse covers"
 msgstr ""
 
 #: zlibrary/plugin_menu.lua:119 zlibrary/plugin_menu.lua:121
-msgid "Browse Items/Page"
+msgid "Browse items per page"
 msgstr ""
 
 #: zlibrary/plugin_menu.lua:124
@@ -1383,6 +1395,22 @@ msgstr ""
 
 #: zlibrary/ui_search.lua:129
 msgid "Set formats"
+msgstr ""
+
+#: zlibrary/ui_search.lua:164
+msgid "Content: Books"
+msgstr ""
+
+#: zlibrary/ui_search.lua:164
+msgid "Content: Articles"
+msgstr ""
+
+#: zlibrary/ui_search.lua:264
+msgid "Articles"
+msgstr ""
+
+#: zlibrary/ui_search.lua:210
+msgid "Formats: books only"
 msgstr ""
 
 #: zlibrary/ui_search.lua:134

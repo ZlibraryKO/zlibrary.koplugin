@@ -7,7 +7,7 @@ when transitioning between UI states or on plugin exit.
 --]]--
 
 local UIManager = require("ui/uimanager")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 
 local DialogManager = {}
 
@@ -73,7 +73,7 @@ function DialogManager:closeAllDialogs()
     end
 
     if closed_count > 0 or error_count > 0 or cleaned_invalid_count > 0 then
-        logger.info(string.format("DialogManager: Dialog cleanup complete - Closed: %d, Errors: %d, Cleaned invalid: %d",
+        logger.dbg(string.format("DialogManager: Dialog cleanup complete - Closed: %d, Errors: %d, Cleaned invalid: %d",
                                 closed_count, error_count, cleaned_invalid_count))
     end
 end

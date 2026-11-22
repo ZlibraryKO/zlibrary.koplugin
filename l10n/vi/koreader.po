@@ -653,20 +653,29 @@ msgstr "Yêu cầu mở sau khi tải xuống"
 msgid "Download categories"
 msgstr "Danh mục tải về"
 
-msgid "View Settings"
+msgid "Author folders"
+msgstr "Thư mục theo tác giả"
+
+msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
+msgstr "Lưu mỗi sách tải về vào một thư mục mang tên tác giả, bên trong thư mục tải về hoặc danh mục đã chọn."
+
+msgid "Downloads"
+msgstr "Tải về"
+
+msgid "View settings"
 msgstr "Cài đặt hiển thị"
 
-msgid "Search Covers"
+msgid "Search covers"
 msgstr "Bìa khi tìm kiếm"
 
-msgid "Search Items/Page"
-msgstr "Số mục tìm kiếm/Trang"
+msgid "Search items per page"
+msgstr "Số mục tìm kiếm/trang"
 
-msgid "Browse Covers"
+msgid "Browse covers"
 msgstr "Bìa khi duyệt"
 
-msgid "Browse Items/Page"
-msgstr "Số mục duyệt/Trang"
+msgid "Browse items per page"
+msgstr "Số mục duyệt/trang"
 
 msgid "Search options"
 msgstr "Tùy chọn tìm kiếm"
@@ -991,6 +1000,18 @@ msgstr "Ngôn ngữ (%d)"
 
 msgid "Set formats"
 msgstr "Đặt định dạng"
+
+msgid "Content: Books"
+msgstr "Nội dung: sách"
+
+msgid "Content: Articles"
+msgstr "Nội dung: bài báo"
+
+msgid "Articles"
+msgstr "Bài báo"
+
+msgid "Formats: books only"
+msgstr "Định dạng: chỉ cho sách"
 
 #, lua-format
 msgid "Format: %s"

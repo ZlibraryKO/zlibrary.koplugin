@@ -18,7 +18,7 @@ local NetworkMgr = require("ui/network/manager")
 local UIManager = require("ui/uimanager")
 local Ui = require("zlibrary.ui")
 local T = require("zlibrary.gettext")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 
 -- Pick a URL at random from the k fastest working mirrors. Selecting the single quickest every time
 -- lands the reader on the same mirror on every sweep; spreading the choice over the top few keeps it
@@ -39,10 +39,14 @@ local Discovery = {}
 
 function Discovery.run(self, is_interactive, retry_callback)
     if not is_interactive and NetworkMgr:willRerunWhenOnline(function()
+        logger.dbg("Zlibrary:network - network is up, re-running", "autoDiscoverAndSetBaseUrl")
         self:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
-    end) then return end
+    end) then
+        logger.dbg("Zlibrary:network - waiting for the network before", "autoDiscoverAndSetBaseUrl")
+        return
+    end
 
-    logger.info("Zlibrary:autoDiscoverAndSetBaseUrl - START")
+    logger.dbg("Zlibrary:autoDiscoverAndSetBaseUrl - START")
     local loading_msg = false
     local safe_close_loading_msg = function()
         if type(loading_msg) == "table" then 

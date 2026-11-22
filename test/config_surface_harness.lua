@@ -211,23 +211,57 @@ local EXPECTED = {
     "toggleViewFlag:function",
 }
 
--- Added on purpose by the split: the settings accessor config_mirrors shares with config_core.
-local ALLOWED_EXTRA = { ["_getLuaSettings:function"] = true }
+-- Added on purpose: the settings accessor config_mirrors shares with config_core (the split), and
+-- the Detailed logging setting (2026-11-22, see zlibrary/log.lua), and the Author folders setting
+-- (2026-11-22, see author_folder_harness), and books-or-articles search (2026-11-22, see
+-- api_wrappers_harness).
+local ALLOWED_EXTRA = {
+    ["SETTINGS_AUTHOR_FOLDERS_KEY:string"] = true,
+    ["getAuthorFolders:function"] = true,
+    ["setAuthorFolders:function"] = true,
+    ["SETTINGS_SEARCH_CONTENT_TYPE_KEY:string"] = true,
+    ["getSearchContentType:function"] = true,
+    ["setSearchContentType:function"] = true,
+    ["_getLuaSettings:function"] = true,
+    ["SETTINGS_DETAILED_LOGGING_KEY:string"] = true,
+    ["getDetailedLogging:function"] = true,
+    ["setDetailedLogging:function"] = true,
+}
 
 local actual = {}
 for k, v in pairs(Config) do actual[k .. ":" .. type(v)] = true end
 local expected = {}
 for _, entry in ipairs(EXPECTED) do expected[entry] = true end
 
-local missing, extra = {}, {}
-for entry in pairs(expected) do if not actual[entry] then missing[#missing + 1] = entry end end
+-- Removed on purpose: "Identify as a web browser" (2026-11-22, see user_agent_harness).
+local REMOVED = {
+    ["BROWSER_USER_AGENT:string"] = true,
+    ["SETTINGS_BROWSER_USER_AGENT_KEY:string"] = true,
+    ["getUseBrowserUserAgent:function"] = true,
+    ["setUseBrowserUserAgent:function"] = true,
+}
+
+local missing, extra, still_there = {}, {}, {}
+for entry in pairs(expected) do
+    if REMOVED[entry] then
+        if actual[entry] then still_there[#still_there + 1] = entry end
+    elseif not actual[entry] then
+        missing[#missing + 1] = entry
+    end
+end
 for entry in pairs(actual) do
     if not expected[entry] and not ALLOWED_EXTRA[entry] then extra[#extra + 1] = entry end
 end
 table.sort(missing)
 table.sort(extra)
 
-r.check(string.format("all %d recorded Config fields are still there, with the same type", #EXPECTED),
+local removed_count = 0
+for _ in pairs(REMOVED) do removed_count = removed_count + 1 end
+table.sort(still_there)
+r.check("the fields removed on purpose are gone", #still_there == 0,
+        "still there: " .. table.concat(still_there, ", "))
+r.check(string.format("all %d other recorded Config fields are still there, with the same type",
+                      #EXPECTED - removed_count),
         #missing == 0, "missing: " .. table.concat(missing, ", "))
 r.check("and nothing unexpected was added",
         #extra == 0, "extra: " .. table.concat(extra, ", "))

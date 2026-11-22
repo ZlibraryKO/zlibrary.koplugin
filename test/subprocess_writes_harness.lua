@@ -170,7 +170,7 @@ r.check("a failed re-login hands back no session and keeps the original error",
 -- ---------------------------------------------------------------- the parent adopts it
 local adopt_env = {
     type = type,
-    logger = { info = function() end },
+    logger = { dbg = function() end, info = function() end },
     Config = { saveUserSession = function(id, key) saved_sessions[#saved_sessions + 1] = { id, key } end },
 }
 local adopt = support.extract_function(PLUGIN .. "/zlibrary/preloader.lua", "_adoptRenewedSession", adopt_env)

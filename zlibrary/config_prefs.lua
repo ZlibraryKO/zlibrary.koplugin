@@ -4,25 +4,15 @@
 local util = require("util")
 local T = require("zlibrary.gettext")
 local Config = require("zlibrary.config_core")
+local Log = require("zlibrary.log")
 
--- What the plugin calls itself.
+-- What the plugin calls itself: its own name, version and repository, never a browser's.
 --
--- It used to always send the browser string below, and that string had claimed to be Chrome 96 --
--- released November 2021 -- ever since #94. It was never worth much: probing the public domains
--- endpoint across four mirrors with this string, a current Chrome, an honest one and no
--- User-Agent at all returns the same status and the same bytes every time, and the mirrors that
--- refuse do it with a 307 loop back to themselves, which is a cookie challenge rather than
--- anything read off this header. The servers say so themselves -- they answer "Vary: Origin", not
--- "Vary: User-Agent".
---
--- A stale browser claim is also the worse lie of the two if that ever changes: nothing else about
--- the connection is Chrome -- no Accept-Language, no Sec-CH-UA, no Sec-Fetch-*, and a LuaSocket
--- TLS handshake -- so the mismatch is a louder signal than saying plainly what this is.
---
--- The browser string stays as something the reader can switch back on, because the day a mirror
--- does start refusing unfamiliar clients, that switch is the difference between a setting and a
--- release.
-Config.BROWSER_USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
+-- It sent a Chrome 96 string from #94 until 1.0.52, and then kept it as the "Identify as a web
+-- browser" setting in case a mirror ever started refusing unfamiliar clients. None has: the same
+-- endpoints answer a browser string, an honest one and none at all with the same status and
+-- bytes, and refuse with a 307 cookie loop rather than anything read off this header. The setting
+-- was removed on 2026-11-22; a stored value of it is ignored.
 
 -- Set once at startup from the version Ota reads out of _meta.lua, because config cannot ask Ota
 -- itself: ota requires config, and reading _meta.lua a second way here is how the two come to
@@ -34,9 +24,6 @@ function Config.setPluginVersion(version)
 end
 
 function Config.getUserAgent()
-    if Config.getUseBrowserUserAgent() then
-        return Config.BROWSER_USER_AGENT
-    end
     return string.format("zlibrary.koplugin/%s (KOReader; +https://github.com/ZlibraryKO/zlibrary.koplugin)",
         plugin_version or "unknown")
 end
@@ -116,14 +103,16 @@ function Config.getSearchOrderName()
     return search_order_name
 end
 
--- Off by default: the plugin says what it is. On, it sends BROWSER_USER_AGENT instead -- the
--- escape hatch for a mirror that turns out to care, which no mirror measurably does today.
-function Config.getUseBrowserUserAgent()
-    return Config.getSetting(Config.SETTINGS_BROWSER_USER_AGENT_KEY, false)
+-- Off by default: the plugin's routine lines are dbg, out of crash.log unless KOReader's debug
+-- logging is on. On, they are written at info on their own; see zlibrary/log.lua. Setting it
+-- takes effect at once, and main.lua's init applies the stored value at startup.
+function Config.getDetailedLogging()
+    return Config.getSetting(Config.SETTINGS_DETAILED_LOGGING_KEY, false) == true
 end
 
-function Config.setUseBrowserUserAgent(use_browser)
-    Config.saveSetting(Config.SETTINGS_BROWSER_USER_AGENT_KEY, use_browser)
+function Config.setDetailedLogging(on)
+    Config.saveSetting(Config.SETTINGS_DETAILED_LOGGING_KEY, on == true)
+    Log.setDetailed(on == true)
 end
 
 function Config.getTurnOffWifiAfterDownload()
@@ -142,6 +131,30 @@ end
 
 function Config.setSkipOpenBookPrompt(skip)
     Config.saveSetting(Config.SETTINGS_SKIP_OPEN_BOOK_PROMPT_KEY, skip)
+end
+
+-- Off by default: filing every download under its author changes where books end up, so it has
+-- to be asked for. Independent of the open prompt, which only matters for categories.
+function Config.getAuthorFolders()
+    return Config.getSetting(Config.SETTINGS_AUTHOR_FOLDERS_KEY, false) == true
+end
+
+function Config.setAuthorFolders(on)
+    Config.saveSetting(Config.SETTINGS_AUTHOR_FOLDERS_KEY, on == true)
+end
+
+-- What a search looks for: "book" (the default) or "article". Anything else stored reads as
+-- "book", so a hand-edited value can never turn into an unknown content type in the request.
+function Config.getSearchContentType()
+    if Config.getSetting(Config.SETTINGS_SEARCH_CONTENT_TYPE_KEY) == "article" then
+        return "article"
+    end
+    return "book"
+end
+
+function Config.setSearchContentType(content_type)
+    Config.saveSetting(Config.SETTINGS_SEARCH_CONTENT_TYPE_KEY,
+        content_type == "article" and "article" or "book")
 end
 
 -- Timeout configuration functions

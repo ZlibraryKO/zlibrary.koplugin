@@ -8,9 +8,9 @@
 -- browser claim from a client that sends no Accept-Language, no Sec-CH-UA and a LuaSocket TLS
 -- handshake is the louder signal of the two if anything ever does start looking.
 --
--- The default is now honest and the browser string is a setting, because the day a mirror starts
--- refusing unfamiliar clients that switch is the difference between a setting and a release. Both
--- halves are tested: that the default says what this is, and that the escape hatch still works.
+-- The agent is honest now. The browser string survived for a while as "Identify as a web browser",
+-- in case a mirror started to care; none did, and the setting was removed on 2026-11-22. A reader
+-- who had it on still has the stored value, so that is checked too: it must change nothing.
 --
 -- Requires the real zlibrary.config: what is under test is how these read the settings object.
 
@@ -40,7 +40,8 @@ package.preload["datastorage"] = function()
     return { getSettingsDir = function() return "/nonexistent-test-dir" end }
 end
 package.preload["luasettings"] = function()
-    return { open = function() return make_settings() end }
+    -- The removed setting, stored on, as a reader who had switched it on still has it.
+    return { open = function() return make_settings({ zlibrary_browser_user_agent = true }) end }
 end
 package.preload["zlibrary.cache"] = function()
     return { new = function()
@@ -85,21 +86,14 @@ r.check("and neither does an empty one",
         Config.getUserAgent())
 Config.setPluginVersion("1.0.51")
 
--- ---------------------------------------------------------------- the escape hatch
-r.check("the browser string is off by default",
-        Config.getUseBrowserUserAgent() == false, tostring(Config.getUseBrowserUserAgent()))
-
-Config.setUseBrowserUserAgent(true)
-r.check("switching it on sends a browser agent",
-        Config.getUserAgent() == Config.BROWSER_USER_AGENT, Config.getUserAgent())
-r.check("and that agent is a browser one, not a relabelled plugin string",
-        Config.BROWSER_USER_AGENT:find("Mozilla/5.0", 1, true) == 1
-            and Config.BROWSER_USER_AGENT:find("Chrome/", 1, true) ~= nil,
-        Config.BROWSER_USER_AGENT)
-
-Config.setUseBrowserUserAgent(false)
-r.check("switching it off restores the plugin's own agent",
+-- ---------------------------------------------------------------- the removed setting
+-- The settings file above has "Identify as a web browser" stored on. Every check so far ran with
+-- it there, so this only names that and makes sure nothing of the setting is left to call.
+r.check("a stored browser setting from an older version is ignored",
         Config.getUserAgent():find("zlibrary.koplugin/", 1, true) == 1, Config.getUserAgent())
+r.check("and nothing of the setting is left on Config",
+        Config.getUseBrowserUserAgent == nil and Config.setUseBrowserUserAgent == nil
+            and Config.BROWSER_USER_AGENT == nil and Config.SETTINGS_BROWSER_USER_AGENT_KEY == nil)
 
 -- ---------------------------------------------------------------- no caller left behind
 -- Every request builds its headers from getUserAgent now. A Config.USER_AGENT left anywhere would

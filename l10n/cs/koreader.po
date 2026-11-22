@@ -653,19 +653,28 @@ msgstr "Zeptat se na otevření po stažení"
 msgid "Download categories"
 msgstr "Kategorie stažených knih"
 
-msgid "View Settings"
+msgid "Author folders"
+msgstr "Složky podle autorů"
+
+msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
+msgstr "Uloží každou staženou knihu do složky pojmenované podle jejího autora, uvnitř složky stažených souborů nebo zvolené kategorie."
+
+msgid "Downloads"
+msgstr "Stahování"
+
+msgid "View settings"
 msgstr "Nastavení zobrazení"
 
-msgid "Search Covers"
+msgid "Search covers"
 msgstr "Obálky ve výsledcích hledání"
 
-msgid "Search Items/Page"
+msgid "Search items per page"
 msgstr "Počet výsledků na stránku při hledání"
 
-msgid "Browse Covers"
+msgid "Browse covers"
 msgstr "Obálky při procházení"
 
-msgid "Browse Items/Page"
+msgid "Browse items per page"
 msgstr "Počet položek na stránku při procházení"
 
 msgid "Search options"
@@ -991,6 +1000,18 @@ msgstr "Jazyky (%d)"
 
 msgid "Set formats"
 msgstr "Nastavit formáty"
+
+msgid "Content: Books"
+msgstr "Obsah: knihy"
+
+msgid "Content: Articles"
+msgstr "Obsah: články"
+
+msgid "Articles"
+msgstr "Články"
+
+msgid "Formats: books only"
+msgstr "Formáty: jen pro knihy"
 
 #, lua-format
 msgid "Format: %s"

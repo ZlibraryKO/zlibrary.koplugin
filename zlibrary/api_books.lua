@@ -3,7 +3,7 @@
 
 local Config = require("zlibrary.config")
 local util = require("util")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 local json = require("json")
 local T = require("zlibrary.gettext")
 local Api = require("zlibrary.api_core")
@@ -17,10 +17,14 @@ local _transformApiBookData = Shared._transformApiBookData
 -- existed still carries the URLs it rejects.
 Api.usableCoverUrl = _usableCoverUrl
 
-function Api.search(query, user_id, user_key, languages, extensions, order, page, is_redir_callback)
+-- content_type "article" searches Z-library's articles instead of its books. Not in the app API's
+-- documentation, but the search endpoint honours it (checked 2026-11-22): each result then carries
+-- content_type "article", and opens and downloads through the same endpoints as a book. Anything
+-- else sends no content type, so a book search is the request it always was.
+function Api.search(query, user_id, user_key, languages, extensions, order, page, content_type, is_redir_callback)
     -- The query at dbg, not info: what someone searches for is theirs, and crash.log at the default level is
     -- what gets attached to bug reports. The page number is enough to follow a session there.
-    logger.info(string.format("Zlibrary:Api.search - START - Page: %s", tostring(page)))
+    logger.dbg(string.format("Zlibrary:Api.search - START - Page: %s", tostring(page)))
     logger.dbg(string.format("Zlibrary:Api.search - Query: %s", tostring(query)))
     local result = { results = nil, total_count = nil, error = nil }
 
@@ -44,13 +48,18 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
             table.insert(body_data_parts, string.format("languages[%d]=%s", i - 1, util.urlEncode(lang)))
         end
     end
-    if extensions and #extensions > 0 then
+    -- The format filter is for books. Articles are PDF (299 of 300 in a sample, 2026-11-22), so
+    -- with "EPUB" selected an article search found next to nothing.
+    if extensions and #extensions > 0 and content_type ~= "article" then
         for i, ext in ipairs(extensions) do
             table.insert(body_data_parts, string.format("extensions[%d]=%s", i - 1, util.urlEncode(ext)))
         end
     end
     if order and #order > 0 then
             table.insert(body_data_parts, "order=" .. util.urlEncode(order[1]))
+    end
+    if content_type == "article" then
+        table.insert(body_data_parts, "content_type=article")
     end
 
     local body = table.concat(body_data_parts, "&")
@@ -75,7 +84,7 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
         -- asked for this, and such a stall is transient. See makeHttpRequest.
         retry_on_stall = true,
         onRedirect = (not is_redir_callback) and function()
-            return function(redir_res) return Api.search(query, user_id, user_key, languages, extensions, order, page, true) end
+            return function(redir_res) return Api.search(query, user_id, user_key, languages, extensions, order, page, content_type, true) end
         end,
     }
 
@@ -129,7 +138,7 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
         logger.warn("Zlibrary:Api.search - Total count not found in API response pagination or exactBooksCount.")
     end
 
-    logger.info(string.format("Zlibrary:Api.search - END (Success) - Found %d results, Total reported: %s", #result.results, tostring(result.total_count)))
+    logger.dbg(string.format("Zlibrary:Api.search - END (Success) - Found %d results, Total reported: %s", #result.results, tostring(result.total_count)))
     return result
 end
 

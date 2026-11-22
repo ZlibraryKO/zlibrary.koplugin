@@ -153,6 +153,16 @@ jobs:
             echo "Info: 'l10n' directory not found. Skipping files from 'l10n'."
           fi
 
+          # Add the plugin's own icons (icons/*.svg): KOReader has no icon for some of what the
+          # plugin shows, such as the recent-searches clock. Their attribution is icons/README.md,
+          # which the *.md find below already picks up.
+          if [ -d "icons" ]; then
+            TEMP_ICON_FILES=$(find ./icons -maxdepth 1 -type f -name '*.svg')
+            if [ -n "$TEMP_ICON_FILES" ]; then
+              FILE_LINES="${FILE_LINES}${TEMP_ICON_FILES}"$'\n'
+            fi
+          fi
+
           # Add README*.md *.md if it exists and is a file.
           # test/ is excluded: the harnesses there are for developing the plugin, not for running
           # it, and at -maxdepth 2 test/README.md would otherwise be shipped to every user. The

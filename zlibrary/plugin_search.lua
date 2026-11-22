@@ -14,14 +14,16 @@ local Config = require("zlibrary.config")
 local Api = require("zlibrary.api")
 local Ui = require("zlibrary.ui")
 local AsyncHelper = require("zlibrary.async_helper")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 
 local Zlibrary = {}
 
 function Zlibrary:performSearch(query)
     if NetworkMgr:willRerunWhenOnline(function()
+        logger.dbg("Zlibrary:network - network is up, re-running", "performSearch")
         self:performSearch(query)
     end) then
+        logger.dbg("Zlibrary:network - waiting for the network before", "performSearch")
         return
     end
 
@@ -38,10 +40,11 @@ function Zlibrary:performSearch(query)
         local selected_languages = Config.getSearchLanguages()
         local selected_extensions = Config.getSearchExtensions()
         local selected_order = Config.getSearchOrder()
+        local content_type = Config.getSearchContentType()
         local current_page_to_search = 1
 
         local task = function()
-            return Api.search(query, user_session and user_session.user_id, user_session and user_session.user_key, selected_languages, selected_extensions, selected_order, current_page_to_search)
+            return Api.search(query, user_session and user_session.user_id, user_session and user_session.user_key, selected_languages, selected_extensions, selected_order, current_page_to_search, content_type)
         end
 
         local on_success
@@ -50,7 +53,7 @@ function Zlibrary:performSearch(query)
                 -- Use the retry dialog for timeouts and HTTP 400 errors
                 Ui.showSearchErrorDialog(api_result.error, query, user_session, selected_languages, selected_extensions, selected_order, current_page_to_search, loading_msg, on_success, function(final_err_msg)
                     -- Cancel callback - user already knows about the error
-                end)
+                end, content_type)
                 return
             end
 
@@ -61,9 +64,12 @@ function Zlibrary:performSearch(query)
             end
 
             Ui.closeMessage(loading_msg)
-            logger.info(string.format("Zlibrary:performSearch - Fetch successful. Results: %d", #api_result.results))
+            logger.dbg(string.format("Zlibrary:performSearch - Fetch successful. Results: %d", #api_result.results))
             Config.addSearchHistory(query)
             self.current_search_query = query
+            -- Kept with the results rather than read again for the next page: switching the
+            -- dialog's toggle and cancelling would otherwise append articles to a list of books.
+            self.current_search_content_type = content_type
             self.current_search_api_page_loaded = current_page_to_search
             self.all_search_results_data = api_result.results
             self.has_more_api_results = true
@@ -77,7 +83,7 @@ function Zlibrary:performSearch(query)
             -- Use the retry dialog for timeouts and HTTP 400 errors
             Ui.showSearchErrorDialog(err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page_to_search, loading_msg, on_success, function(final_err_msg)
                 -- Cancel callback - user already knows about the error
-            end)
+            end, content_type)
         end
 
         AsyncHelper.runCancellable(task, on_success, on_error_handler, loading_msg)
@@ -88,12 +94,12 @@ end
 
 function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
     if not initial_book_data_list or #initial_book_data_list == 0 then
-        logger.info("Zlibrary:displaySearchResults - No initial results to display.")
+        logger.dbg("Zlibrary:displaySearchResults - No initial results to display.")
         return
     end
 
     local menu_items = {}
-    logger.info(string.format("Zlibrary:displaySearchResults - Preparing menu items from %d initial results.", #initial_book_data_list))
+    logger.dbg(string.format("Zlibrary:displaySearchResults - Preparing menu items from %d initial results.", #initial_book_data_list))
     local opts = Config.getViewSettings()
     local  is_show_cover = opts.show_cover_search ~= false
 
@@ -114,7 +120,7 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
         local is_last_page_of_current_items = (new_page_number == menu_instance.page_num)
 
         if is_last_page_of_current_items and self.has_more_api_results then
-            logger.info(string.format("Zlibrary: Reached page %d (last page of current items). Attempting to load more from API.", new_page_number))
+            logger.dbg(string.format("Zlibrary: Reached page %d (last page of current items). Attempting to load more from API.", new_page_number))
 
             local next_api_page_to_fetch = self.current_search_api_page_loaded + 1
             local loading_msg_more = Ui.showCancellableLoadingMessage(string.format(T("Loading more results (Page %s)..."), next_api_page_to_fetch))
@@ -125,7 +131,7 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
             local selected_order_more = Config.getSearchOrder()
 
             local task_load_more = function()
-                return Api.search(self.current_search_query, user_session_more.user_id, user_session_more.user_key, selected_languages_more, selected_extensions_more, selected_order_more, next_api_page_to_fetch)
+                return Api.search(self.current_search_query, user_session_more.user_id, user_session_more.user_key, selected_languages_more, selected_extensions_more, selected_order_more, next_api_page_to_fetch, self.current_search_content_type)
             end
 
             local on_success_load_more
@@ -150,7 +156,7 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
 
                 local new_book_objects = api_result_more.results
                 if new_book_objects and #new_book_objects > 0 then
-                    logger.info(string.format("Zlibrary: Adding %d new book objects from API.", #new_book_objects))
+                    logger.dbg(string.format("Zlibrary: Adding %d new book objects from API.", #new_book_objects))
                     self.current_search_api_page_loaded = next_api_page_to_fetch
 
                     local new_menu_items_to_add = {}
@@ -160,7 +166,7 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
                     end
                     Ui.appendSearchResultsToMenu(menu_instance, new_menu_items_to_add)
                 else
-                    logger.info("Zlibrary: No more results from API or API returned empty.")
+                    logger.dbg("Zlibrary: No more results from API or API returned empty.")
                     self.has_more_api_results = false
                     Ui.showInfoMessage(T("No more results found."))
                     menu_instance:updateItems(1, true)
@@ -182,7 +188,7 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
             end)
         else
             if is_last_page_of_current_items and not self.has_more_api_results then
-                logger.info("Zlibrary: Reached last page, and no more API results to load.")
+                logger.dbg("Zlibrary: Reached last page, and no more API results to load.")
             end
             menu_instance:updateItems(1, true)
         end
@@ -196,7 +202,8 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
         -- Holding a row downloads it without opening the detail view. downloadBook resolves the
         -- link from the id and hash a search result already carries, and ends by confirming, so
         -- this hands straight over -- asking here as well produced two dialogs in a row.
-        function(book) self:downloadBook(book) end)
+        function(book) self:downloadBook(book) end,
+        self.current_search_content_type)
 end
 
 return Zlibrary

@@ -14,7 +14,7 @@ local Config = require("zlibrary.config")
 local Api = require("zlibrary.api")
 local Ui = require("zlibrary.ui")
 local AsyncHelper = require("zlibrary.async_helper")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 
 local Zlibrary = {}
 
@@ -237,8 +237,10 @@ function Zlibrary:login(callback, opts)
     end
 
     if NetworkMgr:willRerunWhenOnline(function()
+        logger.dbg("Zlibrary:network - network is up, re-running", "login")
         self:login(callback, opts)
     end) then
+        logger.dbg("Zlibrary:network - waiting for the network before", "login")
         return
     end
 

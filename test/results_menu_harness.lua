@@ -142,4 +142,45 @@ r.check("menu rows carry their book",
         ui_src:find("book_data = book_data", 1, true) ~= nil,
         "createBookMenuItem does not attach the book")
 
+-- ---------------------------------------------------------------- articles
+-- The subtitle says when the list holds articles, and only then.
+built = nil
+createSearchResultsMenu({}, "attention", {}, function() end, {}, nil, nil, "article")
+r.check("an article search's subtitle names articles",
+        built and built.subtitle == "Sort by: Popular · Articles",
+        "subtitle = " .. tostring(built and built.subtitle))
+built = nil
+createSearchResultsMenu({}, "dune", {}, function() end, {}, nil, nil, "book")
+r.check("a book search's subtitle is as before",
+        built and built.subtitle == "Sort by: Popular",
+        "subtitle = " .. tostring(built and built.subtitle))
+
+-- A row leaves its format out when exactly one format is searched, since every row would repeat
+-- it. The format filter does not apply to articles, so an article row must keep its "pdf".
+do
+    local item_block = support.extract_block(support.ui_files(PLUGIN),
+        "(\nfunction Ui%.createBookMenuItem%(.-\nend\n)")
+    local hide_format
+    local Ui = {}
+    local env = {
+        Ui = Ui, type = type,
+        T = function(s) return s end,
+        util = { htmlEntitiesToUtf8 = function(s) return s end },
+        Config = { getSearchExtensions = function() return { "EPUB" } end },
+        BookRow = {
+            new = function(_, _, _, hide) hide_format = hide; return {} end,
+            text = function() return "" end,
+        },
+    }
+    local chunk = assert(loadstring(item_block, "=createBookMenuItem"))
+    setfenv(chunk, env)
+    chunk()
+    Ui.createBookMenuItem({ title = "Dune", author = "Frank Herbert" }, {}, false)
+    r.check("with one format searched, a book row leaves the format out", hide_format == true,
+            "hide_format = " .. tostring(hide_format))
+    Ui.createBookMenuItem({ title = "Attention", author = "Vaswani", content_type = "article" }, {}, false)
+    r.check("an article row keeps its format", hide_format == false,
+            "hide_format = " .. tostring(hide_format))
+end
+
 r.finish()

@@ -107,7 +107,7 @@ local function newRig(opts)
         isWidgetShown = function(_, w) return rig.widget_shown and w == rig.last_dialog end,
     }
 
-    env.logger = { warn = function() end, info = function() end, err = function() end }
+    env.logger = { dbg = function() end, warn = function() end, info = function() end, err = function() end }
 
     -- The file-local the broker coordinates through.
     env.credential_prompt = { waiters = nil, dialog = nil }
@@ -683,7 +683,7 @@ local function newLoginRig(cfg)
     env.Api = { login = function() return {} end }
     -- Reaching here means the credential branch let the request through.
     env.AsyncHelper = { run = function() rig.logins_started = rig.logins_started + 1 end }
-    env.logger = { warn = function() end, info = function() end, err = function() end }
+    env.logger = { dbg = function() end, warn = function() end, info = function() end, err = function() end }
 
     local body = support.extract_block(MAIN, LOGIN_PATTERN)
     local chunk = assert(loadstring("local Zlibrary = {}\n" .. body .. "end\nreturn Zlibrary",

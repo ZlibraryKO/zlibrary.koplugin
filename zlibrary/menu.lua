@@ -11,7 +11,7 @@ local util = require("util")
 local UIManager = require("ui/uimanager") 
 local Geom = require("ui/geometry")
 local Size = require("ui/size")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 local Menu = require("ui/widget/menu")
 local PreLoader = require("zlibrary.preloader").Preloader
 local PreHelper = require("zlibrary.preloader").helper
@@ -163,7 +163,7 @@ function M:_updateCoverItems(select_number, no_recalculate_dimen)
     local is_summary_changed = (new_last_page_summary ~= self._last_page_summary)
     if not is_summary_changed then return false end
 
-    logger.info("[menucovers] Page change detected, restarting task...")
+    logger.dbg("[menucovers] Page change detected, restarting task...")
     self._cover_channel = self._cover_channel or AsyncHelper:createChannel("Menu_Covers", 4)
     self:_clearTasks()
     -- debounce

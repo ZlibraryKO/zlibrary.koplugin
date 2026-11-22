@@ -17,7 +17,7 @@
 -- required here.
 
 local UIManager = require("ui/uimanager")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 
 local BookDetailsDialog = require("zlibrary.bookdetails_core")
 require("zlibrary.bookdetails_book")

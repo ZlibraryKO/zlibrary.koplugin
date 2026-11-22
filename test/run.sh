@@ -180,10 +180,6 @@ command -v python3 >/dev/null 2>&1 && have_python3=1
 
 for checker in "$PLUGIN_DIR"/test/*_check.py; do
     [ -e "$checker" ] || continue
-    if [ "$have_python3" -eq 0 ]; then
-        printf '== %s ==\n  SKIP: python3 not found\n\n' "$(basename "$checker" .py)"
-        continue
-    fi
     name=$(basename "$checker" .py)
     case "$name" in
         *"$FILTER"*) ;;
@@ -191,6 +187,14 @@ for checker in "$PLUGIN_DIR"/test/*_check.py; do
     esac
     ran=$((ran + 1))
     printf '== %s ==\n' "$name"
+    # A failure, not a skip. As a skip, a machine without python3 ended on "All N harnesses
+    # passed" with the glyph, .po and close-dispatch checks never run -- a green result that
+    # was not checking what it claimed to.
+    if [ "$have_python3" -eq 0 ]; then
+        printf '  FAIL: python3 not found, so this check could not run\n\n'
+        failed=$((failed + 1))
+        continue
+    fi
     if python3 "$checker" "$PLUGIN_DIR" "$KOREADER_DIR"; then
         :
     else

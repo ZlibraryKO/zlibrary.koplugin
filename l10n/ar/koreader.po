@@ -652,19 +652,28 @@ msgstr "السؤال عن الفتح بعد التنزيل"
 msgid "Download categories"
 msgstr "فئات التنزيل"
 
-msgid "View Settings"
+msgid "Author folders"
+msgstr "مجلدات المؤلفين"
+
+msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
+msgstr "يحفظ كل كتاب يتم تنزيله في مجلد باسم مؤلفه، داخل مجلد التنزيل أو الفئة المختارة."
+
+msgid "Downloads"
+msgstr "التنزيلات"
+
+msgid "View settings"
 msgstr "إعدادات العرض"
 
-msgid "Search Covers"
+msgid "Search covers"
 msgstr "أغلفة البحث"
 
-msgid "Search Items/Page"
+msgid "Search items per page"
 msgstr "عناصر البحث/الصفحة"
 
-msgid "Browse Covers"
+msgid "Browse covers"
 msgstr "أغلفة التصفح"
 
-msgid "Browse Items/Page"
+msgid "Browse items per page"
 msgstr "عناصر التصفح/الصفحة"
 
 msgid "Search options"
@@ -990,6 +999,18 @@ msgstr "اللغات (%d)"
 
 msgid "Set formats"
 msgstr "تعيين التنسيقات"
+
+msgid "Content: Books"
+msgstr "المحتوى: كتب"
+
+msgid "Content: Articles"
+msgstr "المحتوى: مقالات"
+
+msgid "Articles"
+msgstr "مقالات"
+
+msgid "Formats: books only"
+msgstr "الصيغ: للكتب فقط"
 
 #, lua-format
 msgid "Format: %s"

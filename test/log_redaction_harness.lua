@@ -141,6 +141,6 @@ local QUERY = "a very private search"
 Api.search(QUERY, nil, nil, {}, {}, {}, 1)
 local found = leaks(QUERY, { info = true, warn = true, err = true })
 r.check("the search query is not logged above dbg", #found == 0, found[1])
-r.check("the search is still logged at info (page only)", #leaks("Api.search - START", { info = true }) == 1)
+r.check("the search is still logged at dbg (page only)", #leaks("Api.search - START", { dbg = true }) == 1)
 
 r.finish()

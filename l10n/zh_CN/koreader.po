@@ -652,19 +652,28 @@ msgstr "下载后询问是否打开"
 msgid "Download categories"
 msgstr "下载分类"
 
-msgid "View Settings"
+msgid "Author folders"
+msgstr "按作者分文件夹"
+
+msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
+msgstr "将每本下载的书保存到以作者命名的文件夹中，位于下载文件夹或所选分类内。"
+
+msgid "Downloads"
+msgstr "下载"
+
+msgid "View settings"
 msgstr "视图设置"
 
-msgid "Search Covers"
+msgid "Search covers"
 msgstr "搜索封面"
 
-msgid "Search Items/Page"
+msgid "Search items per page"
 msgstr "搜索每页条目"
 
-msgid "Browse Covers"
+msgid "Browse covers"
 msgstr "浏览封面"
 
-msgid "Browse Items/Page"
+msgid "Browse items per page"
 msgstr "浏览每页条目"
 
 msgid "Search options"
@@ -990,6 +999,18 @@ msgstr "语言 (%d)"
 
 msgid "Set formats"
 msgstr "设置格式"
+
+msgid "Content: Books"
+msgstr "内容：图书"
+
+msgid "Content: Articles"
+msgstr "内容：文章"
+
+msgid "Articles"
+msgstr "文章"
+
+msgid "Formats: books only"
+msgstr "格式：仅限图书"
 
 #, lua-format
 msgid "Format: %s"

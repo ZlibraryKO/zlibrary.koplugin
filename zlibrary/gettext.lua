@@ -1,6 +1,6 @@
 local util = require("util")
 local GetText = require("gettext")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 
 local full_source_path = debug.getinfo(1, "S").source
 if full_source_path:sub(1, 1) == "@" then
@@ -166,7 +166,7 @@ local function createGetTextProxy(new_gettext, gettext)
             local new_lang = new_gettext.current_lang
             local dump_path = string.format("%s/%s/%s", new_gettext.dirname, new_lang, "debug_logs.lua")
             require("luasettings"):open(dump_path):saveSetting("po", new_gettext):flush()
-            logger.info(string.format("debug_dump: %s.po to %s", new_lang, dump_path))
+            logger.dbg(string.format("debug_dump: %s.po to %s", new_lang, dump_path))
       end
     }, mt)
 end

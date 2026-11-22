@@ -47,14 +47,15 @@ for _, src in ipairs({ ui_src, main_src }) do
 end
 r.check("found operation keys in use", next(used) ~= nil, "parsed none")
 
-for key in pairs(used) do
+for _, key in ipairs(support.sorted_keys(used)) do
     r.check(string.format("operation_key %q resolves to a getter", key),
             getters[key] ~= nil,
             "not in TIMEOUT_GETTERS -- the timeout hint silently vanishes for this operation")
 end
 
 -- ---------------------------------------------------------------- the getters resolve
-for key, fn in pairs(getters) do
+for _, key in ipairs(support.sorted_keys(getters)) do
+    local fn = getters[key]
     local name = fn:match("^Config%.([%w_]+)$")
     r.check(string.format("%s -> %s exists in config_prefs.lua", key, fn),
             config_src:find("function Config." .. name, 1, true) ~= nil,
@@ -63,7 +64,7 @@ end
 
 -- A getter nothing dispatches to is dead weight, and more usefully, its absence from the call
 -- sites usually means an operation was wired up without its key.
-for key in pairs(getters) do
+for _, key in ipairs(support.sorted_keys(getters)) do
     if not used[key] then
         print(string.format("  note: TIMEOUT_GETTERS has %q but no call site passes it", key))
     end

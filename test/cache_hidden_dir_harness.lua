@@ -119,7 +119,7 @@ local function migrator(fs)
     })
     return support.extract_function(SRC, "_migrateLegacyCacheDir", {
         lfs = fs.lfs, os = fs.os,
-        logger = { info = function() end, warn = function() end },
+        logger = { dbg = function() end, info = function() end, warn = function() end },
         LEGACY_CACHE_DIR = LEGACY, BASE_CACHE_DIR = HIDDEN,
         _removeCacheTree = removeTree,
     }), removeTree
@@ -278,7 +278,7 @@ local function clearAllOn(fs)
     setfenv(chunk, {
         CoverCache = {}, util = { directoryExists = function(d) return fs.nodes[d] == "directory" end },
         lfs = fs.lfs, os = fs.os, pcall = pcall, string = string, tostring = tostring,
-        logger = { info = function() end, warn = function() end },
+        logger = { dbg = function() end, info = function() end, warn = function() end },
         _isDisposableEntry = isDisposable,
     })
     return chunk()

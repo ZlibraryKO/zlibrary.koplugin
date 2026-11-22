@@ -2,7 +2,7 @@
 -- and adding/removing favourites and downloaded entries. Part of the Api facade; see api_core.lua.
 
 local Config = require("zlibrary.config")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 local json = require("json")
 local T = require("zlibrary.gettext")
 local Api = require("zlibrary.api_core")

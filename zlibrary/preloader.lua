@@ -1,7 +1,7 @@
 local RenderImage = require("ui/renderimage")
 local NetworkMgr = require("ui/network/manager")
 local util = require("util")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 local Config = require("zlibrary.config")
 local Api = require("zlibrary.api")
 local Cache = require("zlibrary.cache")
@@ -89,7 +89,7 @@ local function _adoptRenewedSession(res)
     if type(res) ~= "table" then return res end
     local session = res.renewed_session
     if type(session) == "table" and session.user_id and session.user_key then
-        logger.info("Preloader: adopting the session a background task renewed")
+        logger.dbg("Preloader: adopting the session a background task renewed")
         Config.saveUserSession(session.user_id, session.user_key)
     end
     res.renewed_session = nil

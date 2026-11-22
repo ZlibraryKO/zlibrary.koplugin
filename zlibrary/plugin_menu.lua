@@ -12,7 +12,7 @@ local util = require("util")
 local T = require("zlibrary.gettext")
 local Config = require("zlibrary.config")
 local Ui = require("zlibrary.ui")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 local Ota = require("zlibrary.ota")
 local Cache = require("zlibrary.cache")
 
@@ -59,41 +59,60 @@ function Zlibrary:addToMainMenu(menu_items)
                             -- Verification now lives in the dialog this opens.
                             separator = true,
                     }, {
-                            text = T("Set download directory"),
+                            -- The settings for what happens to a download, together: on their own
+                            -- in Settings, "Author folders" or "Ask to open after download" said
+                            -- little about what they were for.
+                            text = T("Downloads"),
                             keep_menu_open = true,
-                            callback = function()
-                                Ui.showDownloadDirectoryDialog()
-                            end,
+                            sub_item_table = { {
+                                text = T("Download folder"),
+                                keep_menu_open = true,
+                                callback = function()
+                                    Ui.showDownloadDirectoryDialog()
+                                end,
+                            }, {
+                                -- Here rather than under View settings: it changes what happens after
+                                -- a download, not how a list looks.
+                                text = T("Ask to open after download"),
+                                keep_menu_open = true,
+                                checked_func = function()
+                                    return not Config.getSkipOpenBookPrompt()
+                                end,
+                                callback = function()
+                                    Config.setSkipOpenBookPrompt(not Config.getSkipOpenBookPrompt())
+                                end,
+                            }, {
+                                -- Named folders under the download folder; the post-download
+                                -- dialog offers to file the book into one. Rebuilt on each open so it
+                                -- always shows the current set. Greyed out when "Ask to open after
+                                -- download" is off: categories are only chosen from that dialog, so
+                                -- with no dialog there is nothing they could do.
+                                text = T("Download categories"),
+                                keep_menu_open = true,
+                                enabled_func = function()
+                                    return not Config.getSkipOpenBookPrompt()
+                                end,
+                                sub_item_table_func = function()
+                                    return Ui.buildCategoriesMenuItems()
+                                end,
+                            }, {
+                                -- No enabled_func, unlike categories: author folders need no choice
+                                -- from the open prompt, so they work with it switched off too.
+                                text = T("Author folders"),
+                                keep_menu_open = true,
+                                help_text = T("Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."),
+                                checked_func = function()
+                                    return Config.getAuthorFolders()
+                                end,
+                                callback = function()
+                                    Config.setAuthorFolders(not Config.getAuthorFolders())
+                                end,
+                            } },
                         }, {
-                            -- Sits beside the download directory rather than under View Settings:
-                            -- it changes what happens after a download, not how a list looks.
-                            text = T("Ask to open after download"),
-                            keep_menu_open = true,
-                            checked_func = function()
-                                return not Config.getSkipOpenBookPrompt()
-                            end,
-                            callback = function()
-                                Config.setSkipOpenBookPrompt(not Config.getSkipOpenBookPrompt())
-                            end,
-                        }, {
-                            -- Named folders under the download directory; the post-download dialog
-                            -- offers to file the book into one. Rebuilt on each open so it always
-                            -- shows the current set. Greyed out when "Ask to open after download" is
-                            -- off: categories are only chosen from that dialog, so with no dialog
-                            -- there is nothing they could do.
-                            text = T("Download categories"),
-                            keep_menu_open = true,
-                            enabled_func = function()
-                                return not Config.getSkipOpenBookPrompt()
-                            end,
-                            sub_item_table_func = function()
-                                return Ui.buildCategoriesMenuItems()
-                            end,
-                        }, {
-                                text = T("View Settings"),
+                                text = T("View settings"),
                                 keep_menu_open = true,
                                 sub_item_table = { {
-                                    text = T("Search Covers"),
+                                    text = T("Search covers"),
                                     keep_menu_open = true,
                                     checked_func = function()
                                         return Config.getViewFlag("show_cover_search")
@@ -102,12 +121,12 @@ function Zlibrary:addToMainMenu(menu_items)
                                         Config.toggleViewFlag("show_cover_search")
                                     end,
                                 },  {
-                                    text = T("Search Items/Page"),
+                                    text = T("Search items per page"),
                                     keep_menu_open = true,
                                     separator = true,
-                                    callback = Ui.createPerPageSettingCallback(T("Search Items/Page"), "search_per_page"),
+                                    callback = Ui.createPerPageSettingCallback(T("Search items per page"), "search_per_page"),
                                 }, {
-                                    text = T("Browse Covers"),
+                                    text = T("Browse covers"),
                                     keep_menu_open = true,
                                     checked_func = function()
                                         return Config.getViewFlag("show_cover_browse")
@@ -116,9 +135,9 @@ function Zlibrary:addToMainMenu(menu_items)
                                         Config.toggleViewFlag("show_cover_browse")
                                     end,
                                 }, {
-                                    text = T("Browse Items/Page"),
+                                    text = T("Browse items per page"),
                                     keep_menu_open = true,
-                                    callback = Ui.createPerPageSettingCallback(T("Browse Items/Page"), "browse_per_page"),
+                                    callback = Ui.createPerPageSettingCallback(T("Browse items per page"), "browse_per_page"),
                                 }},
                         }, {
                             text = T("Search options"),
@@ -236,19 +255,16 @@ function Zlibrary:addToMainMenu(menu_items)
                                         end,
                                     },
                                     {
-                                        -- The plugin names itself to the server by default. No
-                                        -- mirror measurably cares -- they answer the same to an
-                                        -- honest agent, a browser one and none at all -- but if
-                                        -- one ever starts refusing unfamiliar clients, this is
-                                        -- the switch that fixes it without waiting for a release.
-                                        text = T("Identify as a web browser"),
+                                        -- The plugin's own switch for its dbg lines, so they can
+                                        -- be had without KOReader's whole debug output.
+                                        text = T("Detailed logging"),
                                         keep_menu_open = true,
-                                        help_text = T("Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."),
+                                        help_text = T("Writes everything the plugin does to crash.log, including what you search for. Without it only warnings and errors are logged."),
                                         checked_func = function()
-                                            return Config.getUseBrowserUserAgent() == true
+                                            return Config.getDetailedLogging()
                                         end,
                                         callback = function()
-                                            Config.setUseBrowserUserAgent(not Config.getUseBrowserUserAgent())
+                                            Config.setDetailedLogging(not Config.getDetailedLogging())
                                         end,
                                     },
                                 }

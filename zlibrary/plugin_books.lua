@@ -13,7 +13,7 @@ local Config = require("zlibrary.config")
 local Api = require("zlibrary.api")
 local Ui = require("zlibrary.ui")
 local AsyncHelper = require("zlibrary.async_helper")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 local Cache = require("zlibrary.cache")
 
 local Zlibrary = {}
@@ -154,7 +154,7 @@ function Zlibrary:onSelectRecommendedBook(book_stub)
     end
 
     local on_success = function(ui_self, api_result, plugin_self)
-        logger.info(string.format("Zlibrary:onSelectRecommendedBook - Fetch successful for book ID: %s", tostring(api_result.book.id)))
+        logger.dbg(string.format("Zlibrary:onSelectRecommendedBook - Fetch successful for book ID: %s", tostring(api_result.book.id)))
         Ui.showBookDetails(self, api_result.book)
         book_cache:insert(book_stub.hash, api_result.book)
     end
@@ -178,8 +178,10 @@ end
 
 function Zlibrary:onSelectSearchBook(book_data)
     if NetworkMgr:willRerunWhenOnline(function()
+        logger.dbg("Zlibrary:network - network is up, re-running", "onSelectSearchBook")
         self:onSelectSearchBook(book_data)
     end) then
+        logger.dbg("Zlibrary:network - waiting for the network before", "onSelectSearchBook")
         return
     end
 
@@ -211,7 +213,7 @@ function Zlibrary:onSelectSearchBook(book_data)
             end
 
             Ui.closeMessage(loading_msg)
-            logger.info(string.format("Zlibrary:onSelectSearchBook - Fetch successful for book ID: %s", tostring(api_result.book.id)))
+            logger.dbg(string.format("Zlibrary:onSelectSearchBook - Fetch successful for book ID: %s", tostring(api_result.book.id)))
 
             Ui.showBookDetails(self, api_result.book)
         end

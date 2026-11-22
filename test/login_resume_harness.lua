@@ -127,7 +127,7 @@ do
             type = type, tostring = tostring, string = string, table = table,
             T = function(s) return s end,
         }
-        env.logger = { err = function() end, info = function() end, warn = function() end }
+        env.logger = { dbg = function() end, err = function() end, info = function() end, warn = function() end }
         env.UIManager = { nextTick = function(_, fn) table.insert(rig.ticks, fn) end }
         env.Config = {
             hasCredentials = function() return rig.credentials end,

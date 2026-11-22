@@ -23,7 +23,7 @@ local UIManager = require("ui/uimanager")
 local Ui = require("zlibrary.ui")
 local T = require("zlibrary.gettext")
 local lfs = require("libs/libkoreader-lfs")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 local util = require("util")
 
 local Download = {}
@@ -67,6 +67,54 @@ local function _categoryDestDir(download_dir, target)
         end
     end
     return dir
+end
+
+-- The longest author folder name, in bytes. Shorter than the 240 a file name gets: the file name
+-- already repeats the author, and on the FAT storage of a Kindle or Kobo long paths add up.
+local AUTHOR_FOLDER_MAX_BYTES = 100
+
+-- The folder an author's books go into, or nil for no author folder. The author text is used as
+-- Z-library gives it, co-authors included. Unlike a category name it comes from the server, not
+-- the user, so ".." is refused here rather than trusted.
+local function _authorFolderName(author)
+    if type(author) ~= "string" then return nil end
+    -- Whitespace first, so a newline becomes a space rather than the "_" the sanitiser makes of a
+    -- control character.
+    local name = author:gsub("%s+", " ")
+    name = Config.sanitizeCategoryName(name)
+    if name == "Unknown Author" then return nil end
+    -- FAT and Windows drop trailing dots and spaces, so "Tolkien, J. R. R." would not round-trip.
+    name = name:gsub("[%. ]+$", "")
+    if #name > AUTHOR_FOLDER_MAX_BYTES then
+        -- Step back while the first byte left out continues a character, so the cut lands between
+        -- two characters instead of inside one.
+        local cut = AUTHOR_FOLDER_MAX_BYTES
+        while cut > 0 do
+            local next_byte = name:byte(cut + 1)
+            if next_byte < 0x80 or next_byte >= 0xC0 then break end
+            cut = cut - 1
+        end
+        name = name:sub(1, cut):gsub("[%. ]+$", "")
+    end
+    if name == "" then return nil end
+    return name
+end
+
+-- Where a finished download is filed, and the label messages name it by. The category folder (or
+-- the download folder) is the base; an author folder, when there is one, goes below it. nil when
+-- the book stays where it was downloaded.
+local function _filingDestDir(download_dir, target, author)
+    local dir = _categoryDestDir(download_dir, target)
+    local label
+    if dir then
+        label = target.sub and (target.name .. " › " .. target.sub) or target.name
+    end
+    if author then
+        dir = (dir or download_dir) .. "/" .. author
+        label = label and (label .. " › " .. author) or author
+    end
+    if not dir then return nil end
+    return dir, label
 end
 
 -- A path in dir for filename that does not clash: "Book.epub", then "Book (2).epub",
@@ -168,8 +216,10 @@ function Download.run(self, book)
     end
 
     if NetworkMgr:willRerunWhenOnline(function()
+        logger.dbg("Zlibrary:network - network is up, re-running", "downloadBook")
         self:downloadBook(book)
     end) then
+        logger.dbg("Zlibrary:network - waiting for the network before", "downloadBook")
         return
     end
 
@@ -201,7 +251,7 @@ function Download.run(self, book)
         util.trim(book.author or "Unknown Author"),
         book_format)
     local filename = util.getSafeFilename(proposed, nil, 240 - TEMP_SUFFIX_ROOM)
-    logger.info(string.format("Zlibrary:downloadBook - Proposed filename: %s", filename))
+    logger.dbg(string.format("Zlibrary:downloadBook - Proposed filename: %s", filename))
 
     local target_dir = Config.getDownloadDir()
 
@@ -209,7 +259,7 @@ function Download.run(self, book)
         target_dir = Config.DEFAULT_DOWNLOAD_DIR_FALLBACK
         logger.warn(string.format("Zlibrary:downloadBook - Download directory setting not found, using fallback: %s", target_dir))
     else
-        logger.info(string.format("Zlibrary:downloadBook - Using configured download directory: %s", target_dir))
+        logger.dbg(string.format("Zlibrary:downloadBook - Using configured download directory: %s", target_dir))
     end
 
     if lfs.attributes(target_dir, "mode") ~= "directory" then
@@ -218,11 +268,11 @@ function Download.run(self, book)
             Ui.showErrorMessage(string.format(T("Cannot create downloads directory: %s"), err_mkdir or "Unknown error"))
             return
         end
-        logger.info(string.format("Zlibrary:downloadBook - Created downloads directory: %s", target_dir))
+        logger.dbg(string.format("Zlibrary:downloadBook - Created downloads directory: %s", target_dir))
     end
 
     local target_filepath = target_dir .. "/" .. filename
-    logger.info(string.format("Zlibrary:downloadBook - Target filepath: %s", target_filepath))
+    logger.dbg(string.format("Zlibrary:downloadBook - Target filepath: %s", target_filepath))
 
     local attemptDownload
 
@@ -262,7 +312,7 @@ function Download.run(self, book)
             -- Nothing it writes there can help, and some of it would destroy the parent's copy.
             Config.disableSubprocessWrites()
 
-            logger.info(string.format("Zlibrary:downloadBook - Fetching download link from endpoint for book ID: %s", book.id))
+            logger.dbg(string.format("Zlibrary:downloadBook - Fetching download link from endpoint for book ID: %s", book.id))
             local link_result = Api.getDownloadLink(user_session and user_session.user_id,
                 user_session and user_session.user_key, book.id, book.hash)
 
@@ -270,7 +320,7 @@ function Download.run(self, book)
                 return { success = false, error = link_result.error }
             end
 
-            logger.info(string.format("Zlibrary:downloadBook - Got download link from endpoint: %s", Api.loggableUrl(link_result.download_link)))
+            logger.dbg(string.format("Zlibrary:downloadBook - Got download link from endpoint: %s", Api.loggableUrl(link_result.download_link)))
 
             -- No progress callback: it would run in this process and could not reach the parent's
             -- dialog. The parent watches the temp file instead.
@@ -302,10 +352,11 @@ function Download.run(self, book)
                 -- Move the finished book into the category the user picked in the dialog, returning
                 -- the path it ends up at. On no choice, or any failure, this is target_filepath --
                 -- so whatever we hand to the reader below is always a file that exists.
+                -- With "Author folders" on, the book goes one level deeper, into a folder named after
+                -- its author -- also when no category was picked, and when there was no prompt.
+                local author = Config.getAuthorFolders() and _authorFolderName(book.author) or nil
                 local function fileInto(target)
-                    if not target then return target_filepath end
-                    local label = target.sub and (target.name .. " › " .. target.sub) or target.name
-                    local dest_dir = _categoryDestDir(target_dir, target)
+                    local dest_dir, label = _filingDestDir(target_dir, target, author)
                     if not dest_dir then return target_filepath end
                     if not util.directoryExists(dest_dir) then
                         util.makePath(dest_dir)
@@ -317,7 +368,12 @@ function Download.run(self, book)
                     end
                     local dest = _uniqueDestPath(dest_dir, filename)
                     if _safeMove(target_filepath, dest) then
-                        Ui.showInfoMessage(string.format(T("Moved to \"%s\"."), label))
+                        -- The author folder on its own is where the user asked every book to go,
+                        -- so it needs no message; a category is a choice made just now, and is
+                        -- confirmed.
+                        if target then
+                            Ui.showInfoMessage(string.format(T("Moved to \"%s\"."), label))
+                        end
                         return dest
                     end
                     Ui.showInfoMessage(string.format(
@@ -328,14 +384,14 @@ function Download.run(self, book)
                 Ui.confirmOpenBook(filename, has_wifi_toggle, default_turn_off_wifi, function(should_turn_off_wifi, chosen_target)
                     if should_turn_off_wifi then
                         NetworkMgr:disableWifi(function()
-                            logger.info("Zlibrary:downloadBook - Wi-Fi disabled after download as requested by user")
+                            logger.dbg("Zlibrary:downloadBook - Wi-Fi disabled after download as requested by user")
                         end)
                     end
 
                     local final_filepath = fileInto(chosen_target)
 
                     if ReaderUI then
-                        logger.info("Zlibrary:downloadBook - Cleaning up dialogs before opening reader")
+                        logger.dbg("Zlibrary:downloadBook - Cleaning up dialogs before opening reader")
                         self.dialog_manager:closeAllDialogs()
                         ReaderUI:showReader(final_filepath)
                     else
@@ -348,9 +404,9 @@ function Download.run(self, book)
                     fileInto(chosen_target)
                     if should_turn_off_wifi then
                         NetworkMgr:disableWifi(function()
-                            logger.info("Zlibrary:downloadBook - Wi-Fi disabled after download as requested by user")
+                            logger.dbg("Zlibrary:downloadBook - Wi-Fi disabled after download as requested by user")
                         end)
-                        logger.info("Zlibrary:downloadBook - Cleaning up dialogs cause wifi is turned off")
+                        logger.dbg("Zlibrary:downloadBook - Cleaning up dialogs cause wifi is turned off")
                         self.dialog_manager:closeAllDialogs()
                     end
                     -- The reader stays where it was (typically the FileManager); show the new book

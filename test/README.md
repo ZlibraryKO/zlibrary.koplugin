@@ -65,7 +65,11 @@ A selection, with more detail than the opening comments that `--list` prints.
 | `log_redaction_harness.lua` | That a signed download link's query never reaches the log on any path through `makeHttpRequest` or `downloadBook`, and that search queries stay below `info`. |
 | `favorite_ids_harness.lua` | That the favourite button's id list covers every page of favourites (up to a bound), fails rather than return a partial list, and that an empty list counts as cached. |
 | `download_limit_harness.lua` | That a spent download quota is recognised under a translation, by matching `Api.DOWNLOAD_LIMIT_HTML_TEXT` rather than the English text. |
+| `author_folder_harness.lua` | Author folders: the folder name made from the server's author text (co-authors kept whole, unsafe characters replaced, no trailing dots or spaces, cut to 100 bytes between UTF-8 characters, and never "", "." or ".." or the "Unknown Author" placeholder), and where a download is filed: category first, author folder below it, and with no author exactly the category folder as before. |
+| `plugin_icons_harness.lua` | The plugin's own icons (icons/, for what KOReader has no icon for): found from the plugin's install path, nil when missing so the dialog falls back to a text button, every icon the code asks for exists and is credited in icons/README.md, and the release zip ships icons/*.svg. |
+| `recent_searches_harness.lua` | The recent-searches list: tapping an entry fills the search box instead of searching (the history does not keep the Content, language or format choice), holding removes it, and going back returns to the search box with the typed text. |
 | `view_settings_harness.lua` | That view settings live in the persistent settings file: a stored setting wins over the legacy runtime-cache entry, a legacy entry is migrated once (saved, then removed from the cache), a fresh install writes nothing, and `setViewSettings` leaves the settings file as the only source of truth. |
+| `cache_expiry_harness.lua` | When cached entries expire, on a clock the harness supplies through `cache.lua`'s `now()`: kv entries, book info files and covers (by mtime) are still a hit exactly TTL seconds old and a miss one second later (removed unless `skip_rm`); a stamp ahead of the clock is a miss; a TTL of 0 never expires; the kv default TTL applies when none is given; and the GC sweep runs only once more than a day has passed. |
 | `getplural_harness.lua` | That loading the plugin's catalogue leaves KOReader's own gettext globals as it found them. |
 | `rtl_fallback_harness.lua` | That under an RTL UI language — where bidi wraps untranslated strings in LTR isolate marks — a missing plugin translation still falls back to KOReader's own translation, and that `pgettext`/`ngettext`/`npgettext` query the plugin's catalogue rather than only KOReader's. |
 | `timeout_keys_harness.lua` | That every `operation_key` at a call site resolves to a real timeout getter. A typo yields no hint rather than an error, which is invisible at runtime. |
@@ -83,7 +87,9 @@ A selection, with more detail than the opening comments that `--list` prints.
 ## Conventions
 
 Each `*_harness.lua` is invoked as `luajit <harness> <plugin-root> <luasocket-src> <koreader-root>`
-and each `*_check.py` as `python3 <check> <plugin-root> <koreader-root>`. Drop a new file matching
+and each `*_check.py` as `python3 <check> <plugin-root> <koreader-root>`. Without `python3` on
+`PATH` each check counts as failed rather than skipped, so the suite can't pass with them unrun.
+Drop a new file matching
 either pattern into this directory and `run.sh` picks it up.
 
 `support.lua` holds the shared pieces: the pass/fail reporter, the KOReader module stubs, and

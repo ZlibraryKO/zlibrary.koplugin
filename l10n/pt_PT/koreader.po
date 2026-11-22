@@ -658,20 +658,29 @@ msgstr "Perguntar se deseja abrir após a transferência"
 msgid "Download categories"
 msgstr "Categorias de transferências"
 
-msgid "View Settings"
+msgid "Author folders"
+msgstr "Pastas por autor"
+
+msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
+msgstr "Guarda cada livro transferido numa pasta com o nome do autor, dentro da pasta de transferências ou da categoria escolhida."
+
+msgid "Downloads"
+msgstr "Transferências"
+
+msgid "View settings"
 msgstr "Definições de visualização"
 
-msgid "Search Covers"
+msgid "Search covers"
 msgstr "Capas na pesquisa"
 
-msgid "Search Items/Page"
-msgstr "Itens/Página na pesquisa"
+msgid "Search items per page"
+msgstr "Itens/página na pesquisa"
 
-msgid "Browse Covers"
+msgid "Browse covers"
 msgstr "Capas na navegação"
 
-msgid "Browse Items/Page"
-msgstr "Itens/Página na navegação"
+msgid "Browse items per page"
+msgstr "Itens/página na navegação"
 
 msgid "Search options"
 msgstr "Opções de pesquisa"
@@ -996,6 +1005,18 @@ msgstr "Idiomas (%d)"
 
 msgid "Set formats"
 msgstr "Definir formatos"
+
+msgid "Content: Books"
+msgstr "Conteúdo: livros"
+
+msgid "Content: Articles"
+msgstr "Conteúdo: artigos"
+
+msgid "Articles"
+msgstr "Artigos"
+
+msgid "Formats: books only"
+msgstr "Formatos: só livros"
 
 #, lua-format
 msgid "Format: %s"

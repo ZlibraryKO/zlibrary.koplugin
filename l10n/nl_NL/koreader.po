@@ -652,19 +652,28 @@ msgstr "Vragen om te openen na downloaden"
 msgid "Download categories"
 msgstr "Downloadcategorieën"
 
-msgid "View Settings"
+msgid "Author folders"
+msgstr "Auteursmappen"
+
+msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
+msgstr "Slaat elk gedownload boek op in een map met de naam van de auteur, in de downloadmap of in de gekozen categorie."
+
+msgid "Downloads"
+msgstr "Downloads"
+
+msgid "View settings"
 msgstr "Weergave-instellingen"
 
-msgid "Search Covers"
+msgid "Search covers"
 msgstr "Omslagen bij zoeken"
 
-msgid "Search Items/Page"
+msgid "Search items per page"
 msgstr "Zoekitems/pagina"
 
-msgid "Browse Covers"
+msgid "Browse covers"
 msgstr "Omslagen bij bladeren"
 
-msgid "Browse Items/Page"
+msgid "Browse items per page"
 msgstr "Bladeritems/pagina"
 
 msgid "Search options"
@@ -990,6 +999,18 @@ msgstr "Talen (%d)"
 
 msgid "Set formats"
 msgstr "Formaten instellen"
+
+msgid "Content: Books"
+msgstr "Inhoud: boeken"
+
+msgid "Content: Articles"
+msgstr "Inhoud: artikelen"
+
+msgid "Articles"
+msgstr "Artikelen"
+
+msgid "Formats: books only"
+msgstr "Formaten: alleen boeken"
 
 #, lua-format
 msgid "Format: %s"

@@ -652,19 +652,28 @@ msgstr "Спрашивать об открытии после загрузки"
 msgid "Download categories"
 msgstr "Категории загрузок"
 
-msgid "View Settings"
+msgid "Author folders"
+msgstr "Папки по авторам"
+
+msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
+msgstr "Сохраняет каждую загруженную книгу в папку с именем её автора — в папке загрузок или в выбранной категории."
+
+msgid "Downloads"
+msgstr "Загрузки"
+
+msgid "View settings"
 msgstr "Настройки просмотра"
 
-msgid "Search Covers"
+msgid "Search covers"
 msgstr "Обложки в поиске"
 
-msgid "Search Items/Page"
+msgid "Search items per page"
 msgstr "Элементов на странице (поиск)"
 
-msgid "Browse Covers"
+msgid "Browse covers"
 msgstr "Обложки в обзоре"
 
-msgid "Browse Items/Page"
+msgid "Browse items per page"
 msgstr "Элементов на странице (обзор)"
 
 msgid "Search options"
@@ -990,6 +999,18 @@ msgstr "Языки (%d)"
 
 msgid "Set formats"
 msgstr "Установить форматы"
+
+msgid "Content: Books"
+msgstr "Тип: книги"
+
+msgid "Content: Articles"
+msgstr "Тип: статьи"
+
+msgid "Articles"
+msgstr "Статьи"
+
+msgid "Formats: books only"
+msgstr "Форматы: только для книг"
 
 #, lua-format
 msgid "Format: %s"

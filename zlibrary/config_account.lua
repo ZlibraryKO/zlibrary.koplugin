@@ -2,7 +2,7 @@
 -- produce, and the caches and history that belong to one account. Part of the Config facade; see
 -- config_core.lua.
 
-local logger = require("logger")
+local logger = require("zlibrary.log")
 local LuaSettings = require("luasettings")
 local SearchHistory = require("zlibrary.search_history")
 local Config = require("zlibrary.config_core")
@@ -16,16 +16,16 @@ function Config.loadCredentialsFromFile(plugin_path)
     local cred_file_path = plugin_path .. Config.CREDENTIALS_FILENAME
     local creds = LuaSettings:open(cred_file_path)
     if not creds.data or not next(creds.data) then
-        logger.info(Config.CREDENTIALS_FILENAME .. " is undefined. Using UI settings if available.")
+        logger.dbg(Config.CREDENTIALS_FILENAME .. " is undefined. Using UI settings if available.")
         return
     end
-    logger.info("Successfully loaded credentials from " .. Config.CREDENTIALS_FILENAME)
+    logger.dbg("Successfully loaded credentials from " .. Config.CREDENTIALS_FILENAME)
 
     local base_url = creds:readSetting("baseUrl")
     if base_url then
         local success, err_msg = Config.setAndValidateBaseUrl(base_url)
         if success then
-            logger.info("Overriding Base URL from " .. Config.CREDENTIALS_FILENAME)
+            logger.dbg("Overriding Base URL from " .. Config.CREDENTIALS_FILENAME)
         else
             logger.warn("Invalid Base URL from " .. Config.CREDENTIALS_FILENAME .. ": " .. (err_msg or "Unknown error"))
         end
@@ -34,13 +34,13 @@ function Config.loadCredentialsFromFile(plugin_path)
     if identity then
         Config.saveSetting(Config.SETTINGS_USERNAME_KEY, identity)
         Config._credentials_from_file = true
-        logger.info("Overriding Identity (Username/Email) from " .. Config.CREDENTIALS_FILENAME)
+        logger.dbg("Overriding Identity (Username/Email) from " .. Config.CREDENTIALS_FILENAME)
     end
     local password = creds:readSetting("password")
     if password then
         Config.saveSetting(Config.SETTINGS_PASSWORD_KEY, password)
         Config._credentials_from_file = true
-        logger.info("Overriding Password from " .. Config.CREDENTIALS_FILENAME)
+        logger.dbg("Overriding Password from " .. Config.CREDENTIALS_FILENAME)
     end
 
     -- A session, for when signing in is not possible at all. Both of Z-library's login endpoints
@@ -57,7 +57,7 @@ function Config.loadCredentialsFromFile(plugin_path)
     if user_id and user_key then
         Config.saveUserSession(tostring(user_id), tostring(user_key))
         Config._session_from_file = true
-        logger.info("Overriding User Session from " .. Config.CREDENTIALS_FILENAME)
+        logger.dbg("Overriding User Session from " .. Config.CREDENTIALS_FILENAME)
     elseif user_id or user_key then
         logger.warn(string.format("%s sets only %s -- a session needs both userId and userKey, ignoring it",
             Config.CREDENTIALS_FILENAME, user_id and "userId" or "userKey"))

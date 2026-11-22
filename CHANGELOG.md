@@ -6,6 +6,47 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.60
+
+### Added
+
+**Author folders.** A new setting, Z-library → Settings → Downloads → Author folders, saves each
+downloaded book in a folder named after its author, created the first time and reused after that.
+When you also pick a download category, the author folder goes inside it (Fiction/Frank Herbert).
+It works with "Ask to open after download" switched off too. Off by default. Suggested in
+discussion #34.
+
+**Article search.** The search dialog has a new "Content" button that switches between books and
+articles, so you can find and download scientific articles too. Your choice is remembered, and
+the results list says "Articles" when it shows them. The format filter only applies to books
+(articles are almost all PDF), so an "EPUB only" setting no longer hides them. Most popular stays
+books. Suggested in discussion #142.
+
+**Detailed logging.** Settings → Advanced → Detailed logging writes everything the plugin does to
+crash.log, without turning on KOReader's own (much louder) debug logging. Useful when reporting a
+problem. It includes what you search for, so it is off by default.
+
+### Changed
+
+**A tidier search dialog.** Search is one big button under the search field, a cross in the
+title bar closes the dialog (so does the Back key), and the Cancel button is gone. Recent
+searches is now a clock icon beside the field, and tapping one of them puts it in the search box
+so you can check the filters or change the words before searching, instead of searching right
+away.
+
+**Download settings in one place.** Settings has a new Downloads menu with the download folder,
+"Ask to open after download", download categories and author folders, so Settings fits on one
+page again. Menu names now use the same capitals as KOReader's own menus ("View settings").
+
+**A quieter crash.log.** The plugin no longer writes a line for every request it makes, so
+crash.log stays readable on a device in daily use. Turn on Detailed logging to see them again.
+
+### Removed
+
+**"Identify as a web browser".** The plugin has named itself to Z-library since 1.0.52, and no
+server has turned it away for that, so the setting to pose as a web browser is gone. Nothing
+changes for you if you had it on.
+
 ## 1.0.59
 
 ### Added

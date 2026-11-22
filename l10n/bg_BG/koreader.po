@@ -658,19 +658,28 @@ msgstr "Питане за отваряне след изтегляне"
 msgid "Download categories"
 msgstr "Категории за изтегляне"
 
-msgid "View Settings"
+msgid "Author folders"
+msgstr "Папки по автори"
+
+msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
+msgstr "Запазва всяка изтеглена книга в папка с името на автора ѝ, в папката за изтегляне или в избраната категория."
+
+msgid "Downloads"
+msgstr "Изтегляния"
+
+msgid "View settings"
 msgstr "Настройки на изгледа"
 
-msgid "Search Covers"
+msgid "Search covers"
 msgstr "Корици при търсене"
 
-msgid "Search Items/Page"
+msgid "Search items per page"
 msgstr "Търсене: резултати/стр."
 
-msgid "Browse Covers"
+msgid "Browse covers"
 msgstr "Корици при разглеждане"
 
-msgid "Browse Items/Page"
+msgid "Browse items per page"
 msgstr "Разглеждане: резултати/стр."
 
 msgid "Search options"
@@ -996,6 +1005,18 @@ msgstr "Езици (%d)"
 
 msgid "Set formats"
 msgstr "Задаване на формати"
+
+msgid "Content: Books"
+msgstr "Съдържание: книги"
+
+msgid "Content: Articles"
+msgstr "Съдържание: статии"
+
+msgid "Articles"
+msgstr "Статии"
+
+msgid "Formats: books only"
+msgstr "Формати: само за книги"
 
 #, lua-format
 msgid "Format: %s"

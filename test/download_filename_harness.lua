@@ -45,7 +45,8 @@ r.check("a non-string is refused", usableFormat(nil) == nil and usableFormat(42)
 
 -- ---------------------------------------------------------------- what is
 local usable = { epub = "epub", pdf = "pdf", mobi = "mobi", azw3 = "azw3", djvu = "djvu" }
-for value, want in pairs(usable) do
+for _, value in ipairs(support.sorted_keys(usable)) do
+    local want = usable[value]
     r.check(string.format("%q is kept as %q", value, want), usableFormat(value) == want,
             "returned " .. tostring(usableFormat(value)))
 end

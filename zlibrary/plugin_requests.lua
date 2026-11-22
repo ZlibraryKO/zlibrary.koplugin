@@ -14,7 +14,7 @@ local Config = require("zlibrary.config")
 local Api = require("zlibrary.api")
 local Ui = require("zlibrary.ui")
 local AsyncHelper = require("zlibrary.async_helper")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 
 local Zlibrary = {}
 
@@ -47,8 +47,12 @@ function Zlibrary:_requestDispatcher(options, ...)
     end
 
     if NetworkMgr:willRerunWhenOnline(function()
+        logger.dbg("Zlibrary:network - network is up, re-running", options.log_context)
         self:_requestDispatcher(options, table.unpack(api_extra_params))
     end) then
+        -- Both lines go to the log so a re-run KOReader drops can be seen: "waiting" with no
+        -- "re-running" after it. Without them most actions leave no trace of having started.
+        logger.dbg("Zlibrary:network - waiting for the network before", options.log_context)
         return
     end
 
@@ -96,7 +100,7 @@ function Zlibrary:_requestDispatcher(options, ...)
             end
 
             Ui.closeMessage(loading_msg)
-            logger.info(string.format("Zlibrary:%s - Fetch successful.", options.log_context))
+            logger.dbg(string.format("Zlibrary:%s - Fetch successful.", options.log_context))
             UIManager:nextTick(function()
                 options.resolve_result(self.ui, api_result, self)
             end)

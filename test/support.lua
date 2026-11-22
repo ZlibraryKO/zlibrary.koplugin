@@ -33,6 +33,16 @@ function support.reporter()
     return r
 end
 
+-- A table's keys in sorted order. Loop over this rather than pairs() wherever the order decides
+-- what is printed: pairs() order changes from run to run, so two runs of the same code printed
+-- their checks in a different order and could not be diffed against each other.
+function support.sorted_keys(t)
+    local keys = {}
+    for k in pairs(t) do keys[#keys + 1] = k end
+    table.sort(keys, function(a, b) return tostring(a) < tostring(b) end)
+    return keys
+end
+
 -- ---------------------------------------------------------------- socket
 -- url.lua wants require("socket"), which pulls in the C core we have no reason to build here.
 -- It only uses that module as a namespace to hang socket.url off, so an empty table is enough.

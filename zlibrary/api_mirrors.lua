@@ -2,7 +2,7 @@
 -- facade; see api_core.lua.
 
 local Config = require("zlibrary.config")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 local json = require("json")
 local Api = require("zlibrary.api_core")
 
@@ -49,7 +49,7 @@ function Api.healthCheck(baseUrl, skip_redir_cache, redir_url)
     end
 
     if data.success == 1 then
-        logger.info("Api.healthCheck - Success for " .. baseUrl .. " (status: " .. tostring(http_result.status_code) .. ")")
+        logger.dbg("Api.healthCheck - Success for " .. baseUrl .. " (status: " .. tostring(http_result.status_code) .. ")")
         return { success = true, url = baseUrl, elapsed = http_result.elapsed }
     end
 
@@ -91,7 +91,7 @@ function Api.fetchDynamicDomains()
     local url = cdn_urls[next_cdn_index]
     next_cdn_index = next_cdn_index % #cdn_urls + 1
 
-    logger.info(string.format("Api.fetchDynamicDomains - START - URL: %s", url))
+    logger.dbg(string.format("Api.fetchDynamicDomains - START - URL: %s", url))
 
     local http_result = Api.makeHttpRequest{
         url = url,
@@ -120,7 +120,7 @@ function Api.fetchDynamicDomains()
         return { success = false }
     end
 
-    logger.info("Api.fetchDynamicDomains - END (Success)")
+    logger.dbg("Api.fetchDynamicDomains - END (Success)")
     return { success = true, domains = data }
 end
 

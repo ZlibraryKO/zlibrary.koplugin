@@ -83,6 +83,7 @@ A selection, with more detail than the opening comments that `--list` prints.
 | `base_url_harness.lua` | The base URL end to end against the real `zlibrary.config` (`config_core`, `config_mirrors`, `config_urls`): the default seed has no trailing slash, `setAndValidateBaseUrl` keeps accepting bare/schemed/slashed hosts but refuses paths, queries, fragments and credentials, `saveSetting` trims strings except the password key, and the legacy-settings migration runs on any legacy key and flushes `G_reader_settings`. |
 | `loading_message_harness.lua` | That a loading message builds with one `InfoMessage:init` call, under KOReader's real `InfoMessage`, even when another plugin overrides `InfoMessage.init` to impose its own font the way appearance.koplugin does. |
 | `glyph_coverage_check.py` | That every non-ASCII codepoint the plugin can display — `\u{...}` escapes and literal UTF-8 alike — maps to a real glyph in some bundled font. Excludes U+FFF1–FFF3, which are `textboxwidget` control markers rather than glyphs. |
+| `translation_coverage_check.py` | Every locale translates every string the plugin shows. The strings are extracted from the shipped code the way the release does (xgettext, keyword T), not read from the template, so a string added since the last release fails at once; each .po is merged against them and must leave nothing untranslated or fuzzy. Needs gettext; fails without it. |
 
 ## Conventions
 

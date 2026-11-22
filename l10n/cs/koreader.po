@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 19:30+0000\n"
+"POT-Creation-Date: 2026-11-22 12:45+0000\n"
 "PO-Revision-Date: 2026-11-14 20:11+0100\n"
 "Last-Translator: Wajsar Josef <Wajsar.Josef@hotmail.com>\n"
 "Language-Team: \n"
@@ -644,8 +644,11 @@ msgstr "Nastavit přihlašovací údaje"
 msgid "Login successful!"
 msgstr "Přihlášení proběhlo úspěšně!"
 
-msgid "Set download directory"
-msgstr "Nastavit složku pro stahování"
+msgid "Downloads"
+msgstr "Stahování"
+
+msgid "Download folder"
+msgstr "Složka stažených souborů"
 
 msgid "Ask to open after download"
 msgstr "Zeptat se na otevření po stažení"
@@ -658,9 +661,6 @@ msgstr "Složky podle autorů"
 
 msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
 msgstr "Uloží každou staženou knihu do složky pojmenované podle jejího autora, uvnitř složky stažených souborů nebo zvolené kategorie."
-
-msgid "Downloads"
-msgstr "Stahování"
 
 msgid "View settings"
 msgstr "Nastavení zobrazení"
@@ -737,11 +737,11 @@ msgstr "Z mezipaměti obálek bylo vymazáno %s."
 msgid "No cached covers to remove."
 msgstr "V mezipaměti nejsou žádné obálky k odstranění."
 
-msgid "Identify as a web browser"
-msgstr "Vydávat se za webový prohlížeč"
+msgid "Detailed logging"
+msgstr ""
 
-msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
-msgstr "Odesílá User-Agent webového prohlížeče místo vlastního User-Agent pluginu. Má smysl to zkusit pouze v případě, že server odmítá samotný plugin."
+msgid "Writes everything the plugin does to crash.log, including what you search for. Without it only warnings and errors are logged."
+msgstr ""
 
 msgid "About"
 msgstr "O pluginu"
@@ -802,9 +802,6 @@ msgstr "Stáhnout „%s“?"
 #, lua-format
 msgid "\"%s\" downloaded."
 msgstr "„%s“ bylo staženo."
-
-msgid "Download folder"
-msgstr "Složka stažených souborů"
 
 msgid "Book downloaded successfully. Open it now?"
 msgstr "Kniha byla úspěšně stažena. Otevřít ji nyní?"
@@ -1001,18 +998,6 @@ msgstr "Jazyky (%d)"
 msgid "Set formats"
 msgstr "Nastavit formáty"
 
-msgid "Content: Books"
-msgstr "Obsah: knihy"
-
-msgid "Content: Articles"
-msgstr "Obsah: články"
-
-msgid "Articles"
-msgstr "Články"
-
-msgid "Formats: books only"
-msgstr "Formáty: jen pro knihy"
-
 #, lua-format
 msgid "Format: %s"
 msgstr "Formát: %s"
@@ -1024,14 +1009,26 @@ msgstr "Formáty (%d)"
 msgid "Please enter a search term."
 msgstr "Zadejte prosím hledaný výraz."
 
+msgid "Content: Articles"
+msgstr "Obsah: články"
+
+msgid "Content: Books"
+msgstr "Obsah: knihy"
+
 msgid "Search Z-library"
 msgstr "Hledat na Z-library"
 
 msgid "Sort by"
 msgstr "Seřadit podle"
 
+msgid "Formats: books only"
+msgstr "Formáty: jen pro knihy"
+
 msgid "Search Results"
 msgstr "Výsledky vyhledávání"
+
+msgid "Articles"
+msgstr "Články"
 
 #, lua-format
 msgid "Retrying search for \"%s\"..."
@@ -1157,6 +1154,15 @@ msgstr "Nastavit a ověřit"
 
 msgid "Please fill in all fields"
 msgstr "Vyplňte prosím všechna pole"
+
+#~ msgid "Set download directory"
+#~ msgstr "Nastavit složku pro stahování"
+
+#~ msgid "Identify as a web browser"
+#~ msgstr "Vydávat se za webový prohlížeč"
+
+#~ msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+#~ msgstr "Odesílá User-Agent webového prohlížeče místo vlastního User-Agent pluginu. Má smysl to zkusit pouze v případě, že server odmítá samotný plugin."
 
 #~ msgid "Rating"
 #~ msgstr "Hodnocení"

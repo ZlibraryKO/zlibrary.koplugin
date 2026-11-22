@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 19:30+0000\n"
+"POT-Creation-Date: 2026-11-22 12:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese <zh@li.org>\n"
@@ -643,8 +643,11 @@ msgstr "設置憑證"
 msgid "Login successful!"
 msgstr "登入成功！"
 
-msgid "Set download directory"
-msgstr "設置下載目錄"
+msgid "Downloads"
+msgstr "下載"
+
+msgid "Download folder"
+msgstr "下載資料夾"
 
 msgid "Ask to open after download"
 msgstr "下載後詢問是否打開"
@@ -657,9 +660,6 @@ msgstr "依作者分資料夾"
 
 msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
 msgstr "將每本下載的書儲存到以作者命名的資料夾中，位於下載資料夾或所選分類內。"
-
-msgid "Downloads"
-msgstr "下載"
 
 msgid "View settings"
 msgstr "查看設置"
@@ -736,11 +736,11 @@ msgstr "已清除 %s 的封面快取。"
 msgid "No cached covers to remove."
 msgstr "沒有可清除的封面快取。"
 
-msgid "Identify as a web browser"
-msgstr "識別為網頁瀏覽器"
+msgid "Detailed logging"
+msgstr ""
 
-msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
-msgstr "傳送瀏覽器的 User-Agent，而非外掛自己的。僅當伺服器拒絕外掛本身時才值得一試。"
+msgid "Writes everything the plugin does to crash.log, including what you search for. Without it only warnings and errors are logged."
+msgstr ""
 
 msgid "About"
 msgstr ""
@@ -801,9 +801,6 @@ msgstr "下載\"%s\"？"
 #, lua-format
 msgid "\"%s\" downloaded."
 msgstr "「%s」下載完成。"
-
-msgid "Download folder"
-msgstr "下載資料夾"
 
 msgid "Book downloaded successfully. Open it now?"
 msgstr "書籍下載成功。現在打開嗎？"
@@ -1000,18 +997,6 @@ msgstr "語言 (%d)"
 msgid "Set formats"
 msgstr "設定格式"
 
-msgid "Content: Books"
-msgstr "內容：圖書"
-
-msgid "Content: Articles"
-msgstr "內容：文章"
-
-msgid "Articles"
-msgstr "文章"
-
-msgid "Formats: books only"
-msgstr "格式：僅限圖書"
-
 #, lua-format
 msgid "Format: %s"
 msgstr "格式: %s"
@@ -1023,14 +1008,26 @@ msgstr "格式 (%d)"
 msgid "Please enter a search term."
 msgstr "請輸入搜索詞。"
 
+msgid "Content: Articles"
+msgstr "內容：文章"
+
+msgid "Content: Books"
+msgstr "內容：圖書"
+
 msgid "Search Z-library"
 msgstr "搜索Z-圖書館"
 
 msgid "Sort by"
 msgstr "排序方式"
 
+msgid "Formats: books only"
+msgstr "格式：僅限圖書"
+
 msgid "Search Results"
 msgstr "搜索結果"
+
+msgid "Articles"
+msgstr "文章"
 
 #, lua-format
 msgid "Retrying search for \"%s\"..."
@@ -1156,6 +1153,15 @@ msgstr "設置並驗證"
 
 msgid "Please fill in all fields"
 msgstr "請填寫所有欄位"
+
+#~ msgid "Set download directory"
+#~ msgstr "設置下載目錄"
+
+#~ msgid "Identify as a web browser"
+#~ msgstr "識別為網頁瀏覽器"
+
+#~ msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+#~ msgstr "傳送瀏覽器的 User-Agent，而非外掛自己的。僅當伺服器拒絕外掛本身時才值得一試。"
 
 #~ msgid "Rating"
 #~ msgstr "評分"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 19:30+0000\n"
+"POT-Creation-Date: 2026-11-22 12:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -643,8 +643,11 @@ msgstr "Inloggegevens instellen"
 msgid "Login successful!"
 msgstr "Succesvol ingelogd!"
 
-msgid "Set download directory"
-msgstr "Downloadmap instellen"
+msgid "Downloads"
+msgstr "Downloads"
+
+msgid "Download folder"
+msgstr "Downloadmap"
 
 msgid "Ask to open after download"
 msgstr "Vragen om te openen na downloaden"
@@ -657,9 +660,6 @@ msgstr "Auteursmappen"
 
 msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
 msgstr "Slaat elk gedownload boek op in een map met de naam van de auteur, in de downloadmap of in de gekozen categorie."
-
-msgid "Downloads"
-msgstr "Downloads"
 
 msgid "View settings"
 msgstr "Weergave-instellingen"
@@ -736,11 +736,11 @@ msgstr "%s aan opgeslagen omslagen gewist."
 msgid "No cached covers to remove."
 msgstr "Geen opgeslagen omslagen om te wissen."
 
-msgid "Identify as a web browser"
-msgstr "Voordoen als webbrowser"
+msgid "Detailed logging"
+msgstr ""
 
-msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
-msgstr "Stuurt de User-Agent van een browser in plaats van die van de plug-in. Alleen het proberen waard als een server de plug-in zelf weigert."
+msgid "Writes everything the plugin does to crash.log, including what you search for. Without it only warnings and errors are logged."
+msgstr ""
 
 msgid "About"
 msgstr ""
@@ -801,9 +801,6 @@ msgstr "\"%s\" downloaden?"
 #, lua-format
 msgid "\"%s\" downloaded."
 msgstr "\"%s\" gedownload."
-
-msgid "Download folder"
-msgstr "Downloadmap"
 
 msgid "Book downloaded successfully. Open it now?"
 msgstr "Boek succesvol gedownload. Nu openen?"
@@ -1000,18 +997,6 @@ msgstr "Talen (%d)"
 msgid "Set formats"
 msgstr "Formaten instellen"
 
-msgid "Content: Books"
-msgstr "Inhoud: boeken"
-
-msgid "Content: Articles"
-msgstr "Inhoud: artikelen"
-
-msgid "Articles"
-msgstr "Artikelen"
-
-msgid "Formats: books only"
-msgstr "Formaten: alleen boeken"
-
 #, lua-format
 msgid "Format: %s"
 msgstr "Formaat: %s"
@@ -1023,14 +1008,26 @@ msgstr "Formaten (%d)"
 msgid "Please enter a search term."
 msgstr "Voer een zoekterm in."
 
+msgid "Content: Articles"
+msgstr "Inhoud: artikelen"
+
+msgid "Content: Books"
+msgstr "Inhoud: boeken"
+
 msgid "Search Z-library"
 msgstr "Zoek in Z-library"
 
 msgid "Sort by"
 msgstr "Sorteren op"
 
+msgid "Formats: books only"
+msgstr "Formaten: alleen boeken"
+
 msgid "Search Results"
 msgstr "Zoekresultaten"
+
+msgid "Articles"
+msgstr "Artikelen"
 
 #, lua-format
 msgid "Retrying search for \"%s\"..."
@@ -1156,6 +1153,15 @@ msgstr "Instellen en verifiëren"
 
 msgid "Please fill in all fields"
 msgstr "Vul alle velden in"
+
+#~ msgid "Set download directory"
+#~ msgstr "Downloadmap instellen"
+
+#~ msgid "Identify as a web browser"
+#~ msgstr "Voordoen als webbrowser"
+
+#~ msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+#~ msgstr "Stuurt de User-Agent van een browser in plaats van die van de plug-in. Alleen het proberen waard als een server de plug-in zelf weigert."
 
 #~ msgid "Rating"
 #~ msgstr "Beoordeling"

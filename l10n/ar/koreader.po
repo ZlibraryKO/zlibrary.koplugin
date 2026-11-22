@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 19:30+0000\n"
+"POT-Creation-Date: 2026-11-22 12:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -643,8 +643,11 @@ msgstr "تعيين بيانات الاعتماد"
 msgid "Login successful!"
 msgstr "تم تسجيل الدخول بنجاح!"
 
-msgid "Set download directory"
-msgstr "تعيين دليل التنزيل"
+msgid "Downloads"
+msgstr "التنزيلات"
+
+msgid "Download folder"
+msgstr "مجلد التنزيل"
 
 msgid "Ask to open after download"
 msgstr "السؤال عن الفتح بعد التنزيل"
@@ -657,9 +660,6 @@ msgstr "مجلدات المؤلفين"
 
 msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
 msgstr "يحفظ كل كتاب يتم تنزيله في مجلد باسم مؤلفه، داخل مجلد التنزيل أو الفئة المختارة."
-
-msgid "Downloads"
-msgstr "التنزيلات"
 
 msgid "View settings"
 msgstr "إعدادات العرض"
@@ -736,11 +736,11 @@ msgstr "تم مسح %s من الأغلفة المخزنة مؤقتاً."
 msgid "No cached covers to remove."
 msgstr "لا توجد أغلفة مخزنة مؤقتاً لمسحها."
 
-msgid "Identify as a web browser"
-msgstr "التعريف كمتصفح ويب"
+msgid "Detailed logging"
+msgstr ""
 
-msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
-msgstr "يرسل User-Agent الخاص بمتصفح بدلاً من الخاص بالإضافة. لا يستحق المحاولة إلا إذا كان الخادم يرفض الإضافة نفسها."
+msgid "Writes everything the plugin does to crash.log, including what you search for. Without it only warnings and errors are logged."
+msgstr ""
 
 msgid "About"
 msgstr ""
@@ -801,9 +801,6 @@ msgstr "تنزيل \"%s\"؟"
 #, lua-format
 msgid "\"%s\" downloaded."
 msgstr "تم تنزيل \"%s\"."
-
-msgid "Download folder"
-msgstr "مجلد التنزيل"
 
 msgid "Book downloaded successfully. Open it now?"
 msgstr "تم تنزيل الكتاب بنجاح. هل تريد فتحه الآن؟"
@@ -1000,18 +997,6 @@ msgstr "اللغات (%d)"
 msgid "Set formats"
 msgstr "تعيين التنسيقات"
 
-msgid "Content: Books"
-msgstr "المحتوى: كتب"
-
-msgid "Content: Articles"
-msgstr "المحتوى: مقالات"
-
-msgid "Articles"
-msgstr "مقالات"
-
-msgid "Formats: books only"
-msgstr "الصيغ: للكتب فقط"
-
 #, lua-format
 msgid "Format: %s"
 msgstr "التنسيق: %s"
@@ -1023,14 +1008,26 @@ msgstr "التنسيقات (%d)"
 msgid "Please enter a search term."
 msgstr "الرجاء إدخال مصطلح بحث."
 
+msgid "Content: Articles"
+msgstr "المحتوى: مقالات"
+
+msgid "Content: Books"
+msgstr "المحتوى: كتب"
+
 msgid "Search Z-library"
 msgstr "البحث في Z-library"
 
 msgid "Sort by"
 msgstr "الترتيب حسب"
 
+msgid "Formats: books only"
+msgstr "الصيغ: للكتب فقط"
+
 msgid "Search Results"
 msgstr "نتائج البحث"
+
+msgid "Articles"
+msgstr "مقالات"
 
 #, lua-format
 msgid "Retrying search for \"%s\"..."
@@ -1156,6 +1153,15 @@ msgstr "تعيين وتحقّق"
 
 msgid "Please fill in all fields"
 msgstr "يرجى ملء جميع الحقول"
+
+#~ msgid "Set download directory"
+#~ msgstr "تعيين دليل التنزيل"
+
+#~ msgid "Identify as a web browser"
+#~ msgstr "التعريف كمتصفح ويب"
+
+#~ msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+#~ msgstr "يرسل User-Agent الخاص بمتصفح بدلاً من الخاص بالإضافة. لا يستحق المحاولة إلا إذا كان الخادم يرفض الإضافة نفسها."
 
 #~ msgid "Rating"
 #~ msgstr "التقييم"

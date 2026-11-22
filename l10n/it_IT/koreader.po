@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 19:30+0000\n"
+"POT-Creation-Date: 2026-11-22 12:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -643,8 +643,11 @@ msgstr "Imposta credenziali"
 msgid "Login successful!"
 msgstr "Accesso riuscito!"
 
-msgid "Set download directory"
-msgstr "Imposta directory di download"
+msgid "Downloads"
+msgstr "Download"
+
+msgid "Download folder"
+msgstr "Cartella di download"
 
 msgid "Ask to open after download"
 msgstr "Chiedi se aprire dopo il download"
@@ -657,9 +660,6 @@ msgstr "Cartelle per autore"
 
 msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
 msgstr "Salva ogni libro scaricato in una cartella con il nome del suo autore, all'interno della cartella di download o della categoria scelta."
-
-msgid "Downloads"
-msgstr "Download"
 
 msgid "View settings"
 msgstr "Impostazioni di visualizzazione"
@@ -736,11 +736,11 @@ msgstr "Eliminati %s di copertine in cache."
 msgid "No cached covers to remove."
 msgstr "Nessuna copertina in cache da eliminare."
 
-msgid "Identify as a web browser"
-msgstr "Identificarsi come browser web"
+msgid "Detailed logging"
+msgstr ""
 
-msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
-msgstr "Invia lo User-Agent di un browser al posto di quello del plugin. Vale la pena provarlo solo se un server rifiuta il plugin stesso."
+msgid "Writes everything the plugin does to crash.log, including what you search for. Without it only warnings and errors are logged."
+msgstr ""
 
 msgid "About"
 msgstr ""
@@ -801,9 +801,6 @@ msgstr "Scaricare \"%s\"?"
 #, lua-format
 msgid "\"%s\" downloaded."
 msgstr "\"%s\" scaricato."
-
-msgid "Download folder"
-msgstr "Cartella di download"
 
 msgid "Book downloaded successfully. Open it now?"
 msgstr "Libro scaricato con successo. Aprirlo ora?"
@@ -1000,18 +997,6 @@ msgstr "Lingue (%d)"
 msgid "Set formats"
 msgstr "Imposta formati"
 
-msgid "Content: Books"
-msgstr "Contenuto: libri"
-
-msgid "Content: Articles"
-msgstr "Contenuto: articoli"
-
-msgid "Articles"
-msgstr "Articoli"
-
-msgid "Formats: books only"
-msgstr "Formati: solo libri"
-
 #, lua-format
 msgid "Format: %s"
 msgstr "Formato: %s"
@@ -1023,14 +1008,26 @@ msgstr "Formati (%d)"
 msgid "Please enter a search term."
 msgstr "Inserisci un termine di ricerca."
 
+msgid "Content: Articles"
+msgstr "Contenuto: articoli"
+
+msgid "Content: Books"
+msgstr "Contenuto: libri"
+
 msgid "Search Z-library"
 msgstr "Cerca su Z-library"
 
 msgid "Sort by"
 msgstr "Ordina per"
 
+msgid "Formats: books only"
+msgstr "Formati: solo libri"
+
 msgid "Search Results"
 msgstr "Risultati della ricerca"
+
+msgid "Articles"
+msgstr "Articoli"
 
 #, lua-format
 msgid "Retrying search for \"%s\"..."
@@ -1156,6 +1153,15 @@ msgstr "Imposta e verifica"
 
 msgid "Please fill in all fields"
 msgstr "Compila tutti i campi"
+
+#~ msgid "Set download directory"
+#~ msgstr "Imposta directory di download"
+
+#~ msgid "Identify as a web browser"
+#~ msgstr "Identificarsi come browser web"
+
+#~ msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+#~ msgstr "Invia lo User-Agent di un browser al posto di quello del plugin. Vale la pena provarlo solo se un server rifiuta il plugin stesso."
 
 #~ msgid "Rating"
 #~ msgstr "Valutazione"

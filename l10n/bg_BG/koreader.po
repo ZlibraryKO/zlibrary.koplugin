@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zlibrary.koplugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 19:30+0000\n"
+"POT-Creation-Date: 2026-11-22 12:45+0000\n"
 "PO-Revision-Date: 2026-05-15 21:20+0300\n"
 "Last-Translator: d0nizam\n"
 "Language-Team: Bulgarian\n"
@@ -649,8 +649,11 @@ msgstr "Задаване на данни за вход"
 msgid "Login successful!"
 msgstr "Успешно влизане!"
 
-msgid "Set download directory"
-msgstr "Задаване на папка за изтегляне"
+msgid "Downloads"
+msgstr "Изтегляния"
+
+msgid "Download folder"
+msgstr "Папка за изтегляне"
 
 msgid "Ask to open after download"
 msgstr "Питане за отваряне след изтегляне"
@@ -663,9 +666,6 @@ msgstr "Папки по автори"
 
 msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
 msgstr "Запазва всяка изтеглена книга в папка с името на автора ѝ, в папката за изтегляне или в избраната категория."
-
-msgid "Downloads"
-msgstr "Изтегляния"
 
 msgid "View settings"
 msgstr "Настройки на изгледа"
@@ -742,11 +742,11 @@ msgstr "Изчистени са %s кеширани корици."
 msgid "No cached covers to remove."
 msgstr "Няма кеширани корици за изчистване."
 
-msgid "Identify as a web browser"
-msgstr "Представяне като уеб браузър"
+msgid "Detailed logging"
+msgstr ""
 
-msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
-msgstr "Изпраща User-Agent на браузър вместо собствения на приставката. Струва си да се опита само ако сървърът отказва самата приставка."
+msgid "Writes everything the plugin does to crash.log, including what you search for. Without it only warnings and errors are logged."
+msgstr ""
 
 msgid "About"
 msgstr ""
@@ -807,9 +807,6 @@ msgstr "Изтегляне на „%s“?"
 #, lua-format
 msgid "\"%s\" downloaded."
 msgstr "„%s“ е изтеглен."
-
-msgid "Download folder"
-msgstr "Папка за изтегляне"
 
 msgid "Book downloaded successfully. Open it now?"
 msgstr "Книгата е изтеглена успешно. Искате ли да я отворите сега?"
@@ -1006,18 +1003,6 @@ msgstr "Езици (%d)"
 msgid "Set formats"
 msgstr "Задаване на формати"
 
-msgid "Content: Books"
-msgstr "Съдържание: книги"
-
-msgid "Content: Articles"
-msgstr "Съдържание: статии"
-
-msgid "Articles"
-msgstr "Статии"
-
-msgid "Formats: books only"
-msgstr "Формати: само за книги"
-
 #, lua-format
 msgid "Format: %s"
 msgstr "Формат: %s"
@@ -1029,14 +1014,26 @@ msgstr "Формати (%d)"
 msgid "Please enter a search term."
 msgstr "Моля, въведете дума за търсене."
 
+msgid "Content: Articles"
+msgstr "Съдържание: статии"
+
+msgid "Content: Books"
+msgstr "Съдържание: книги"
+
 msgid "Search Z-library"
 msgstr "Търсене в Z-library"
 
 msgid "Sort by"
 msgstr "Сортиране по"
 
+msgid "Formats: books only"
+msgstr "Формати: само за книги"
+
 msgid "Search Results"
 msgstr "Резултати от търсенето"
+
+msgid "Articles"
+msgstr "Статии"
 
 #, lua-format
 msgid "Retrying search for \"%s\"..."
@@ -1162,6 +1159,15 @@ msgstr "Задаване и проверка"
 
 msgid "Please fill in all fields"
 msgstr "Попълнете всички полета"
+
+#~ msgid "Set download directory"
+#~ msgstr "Задаване на папка за изтегляне"
+
+#~ msgid "Identify as a web browser"
+#~ msgstr "Представяне като уеб браузър"
+
+#~ msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+#~ msgstr "Изпраща User-Agent на браузър вместо собствения на приставката. Струва си да се опита само ако сървърът отказва самата приставка."
 
 #~ msgid "Rating"
 #~ msgstr "Оценка"

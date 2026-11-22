@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 19:30+0000\n"
+"POT-Creation-Date: 2026-11-22 12:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -643,8 +643,11 @@ msgstr "Указать учётные данные"
 msgid "Login successful!"
 msgstr "Вход выполнен успешно!"
 
-msgid "Set download directory"
-msgstr "Установить папку для загрузок"
+msgid "Downloads"
+msgstr "Загрузки"
+
+msgid "Download folder"
+msgstr "Папка загрузок"
 
 msgid "Ask to open after download"
 msgstr "Спрашивать об открытии после загрузки"
@@ -657,9 +660,6 @@ msgstr "Папки по авторам"
 
 msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
 msgstr "Сохраняет каждую загруженную книгу в папку с именем её автора — в папке загрузок или в выбранной категории."
-
-msgid "Downloads"
-msgstr "Загрузки"
 
 msgid "View settings"
 msgstr "Настройки просмотра"
@@ -736,11 +736,11 @@ msgstr "Удалено %s кэшированных обложек."
 msgid "No cached covers to remove."
 msgstr "Кэшированных обложек нет."
 
-msgid "Identify as a web browser"
-msgstr "Представляться веб-браузером"
+msgid "Detailed logging"
+msgstr ""
 
-msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
-msgstr "Отправляет User-Agent браузера вместо собственного. Имеет смысл пробовать, только если сервер отклоняет сам плагин."
+msgid "Writes everything the plugin does to crash.log, including what you search for. Without it only warnings and errors are logged."
+msgstr ""
 
 msgid "About"
 msgstr ""
@@ -801,9 +801,6 @@ msgstr "Скачать \"%s\"?"
 #, lua-format
 msgid "\"%s\" downloaded."
 msgstr "«%s»: загрузка завершена."
-
-msgid "Download folder"
-msgstr "Папка загрузок"
 
 msgid "Book downloaded successfully. Open it now?"
 msgstr "Книга успешно скачана. Открыть сейчас?"
@@ -1000,18 +997,6 @@ msgstr "Языки (%d)"
 msgid "Set formats"
 msgstr "Установить форматы"
 
-msgid "Content: Books"
-msgstr "Тип: книги"
-
-msgid "Content: Articles"
-msgstr "Тип: статьи"
-
-msgid "Articles"
-msgstr "Статьи"
-
-msgid "Formats: books only"
-msgstr "Форматы: только для книг"
-
 #, lua-format
 msgid "Format: %s"
 msgstr "Формат: %s"
@@ -1023,14 +1008,26 @@ msgstr "Форматы (%d)"
 msgid "Please enter a search term."
 msgstr "Пожалуйста, введите поисковый запрос."
 
+msgid "Content: Articles"
+msgstr "Тип: статьи"
+
+msgid "Content: Books"
+msgstr "Тип: книги"
+
 msgid "Search Z-library"
 msgstr "Поиск в Z-библиотеке"
 
 msgid "Sort by"
 msgstr "Сортировать по"
 
+msgid "Formats: books only"
+msgstr "Форматы: только для книг"
+
 msgid "Search Results"
 msgstr "Результаты поиска"
+
+msgid "Articles"
+msgstr "Статьи"
 
 #, lua-format
 msgid "Retrying search for \"%s\"..."
@@ -1156,6 +1153,15 @@ msgstr "Указать и проверить"
 
 msgid "Please fill in all fields"
 msgstr "Пожалуйста, заполните все поля"
+
+#~ msgid "Set download directory"
+#~ msgstr "Установить папку для загрузок"
+
+#~ msgid "Identify as a web browser"
+#~ msgstr "Представляться веб-браузером"
+
+#~ msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+#~ msgstr "Отправляет User-Agent браузера вместо собственного. Имеет смысл пробовать, только если сервер отклоняет сам плагин."
 
 #~ msgid "Rating"
 #~ msgstr "Рейтинг"

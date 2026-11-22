@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 19:30+0000\n"
+"POT-Creation-Date: 2026-11-22 12:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -643,8 +643,11 @@ msgstr "인증 정보 설정"
 msgid "Login successful!"
 msgstr "로그인 성공!"
 
-msgid "Set download directory"
-msgstr "다운로드 디렉토리 설정"
+msgid "Downloads"
+msgstr "다운로드"
+
+msgid "Download folder"
+msgstr "다운로드 폴더"
 
 msgid "Ask to open after download"
 msgstr "다운로드 후 열기 확인"
@@ -657,9 +660,6 @@ msgstr "저자별 폴더"
 
 msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
 msgstr "다운로드한 각 책을 다운로드 폴더 또는 선택한 카테고리 안에 있는 저자 이름의 폴더에 저장합니다."
-
-msgid "Downloads"
-msgstr "다운로드"
 
 msgid "View settings"
 msgstr "보기 설정"
@@ -736,11 +736,11 @@ msgstr "캐시된 표지 %s을(를) 삭제했습니다."
 msgid "No cached covers to remove."
 msgstr "삭제할 표지 캐시가 없습니다."
 
-msgid "Identify as a web browser"
-msgstr "웹 브라우저로 식별"
+msgid "Detailed logging"
+msgstr ""
 
-msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
-msgstr "플러그인 자체의 User-Agent 대신 브라우저의 User-Agent를 보냅니다. 서버가 플러그인 자체를 거부할 때만 시도할 가치가 있습니다."
+msgid "Writes everything the plugin does to crash.log, including what you search for. Without it only warnings and errors are logged."
+msgstr ""
 
 msgid "About"
 msgstr ""
@@ -801,9 +801,6 @@ msgstr "\"%s\"을(를) 다운로드하시겠습니까?"
 #, lua-format
 msgid "\"%s\" downloaded."
 msgstr "“%s” 다운로드 완료."
-
-msgid "Download folder"
-msgstr "다운로드 폴더"
 
 msgid "Book downloaded successfully. Open it now?"
 msgstr "도서가 성공적으로 다운로드되었습니다. 지금 열까요?"
@@ -1000,18 +997,6 @@ msgstr "언어 (%d)"
 msgid "Set formats"
 msgstr "형식 설정"
 
-msgid "Content: Books"
-msgstr "콘텐츠: 도서"
-
-msgid "Content: Articles"
-msgstr "콘텐츠: 논문"
-
-msgid "Articles"
-msgstr "논문"
-
-msgid "Formats: books only"
-msgstr "형식: 도서 전용"
-
 #, lua-format
 msgid "Format: %s"
 msgstr "형식: %s"
@@ -1023,14 +1008,26 @@ msgstr "형식 (%d)"
 msgid "Please enter a search term."
 msgstr "검색어를 입력하세요."
 
+msgid "Content: Articles"
+msgstr "콘텐츠: 논문"
+
+msgid "Content: Books"
+msgstr "콘텐츠: 도서"
+
 msgid "Search Z-library"
 msgstr "Z-라이브러리 검색"
 
 msgid "Sort by"
 msgstr "정렬 기준"
 
+msgid "Formats: books only"
+msgstr "형식: 도서 전용"
+
 msgid "Search Results"
 msgstr "검색 결과"
+
+msgid "Articles"
+msgstr "논문"
 
 #, lua-format
 msgid "Retrying search for \"%s\"..."
@@ -1156,6 +1153,15 @@ msgstr "설정 후 확인"
 
 msgid "Please fill in all fields"
 msgstr "모든 항목을 입력하세요"
+
+#~ msgid "Set download directory"
+#~ msgstr "다운로드 디렉토리 설정"
+
+#~ msgid "Identify as a web browser"
+#~ msgstr "웹 브라우저로 식별"
+
+#~ msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+#~ msgstr "플러그인 자체의 User-Agent 대신 브라우저의 User-Agent를 보냅니다. 서버가 플러그인 자체를 거부할 때만 시도할 가치가 있습니다."
 
 #~ msgid "Rating"
 #~ msgstr "평점"

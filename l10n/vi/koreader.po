@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 19:30+0000\n"
+"POT-Creation-Date: 2026-11-22 12:45+0000\n"
 "PO-Revision-Date: 2026-09-05 13:23+0700\n"
 "Last-Translator: \n"
 "Language-Team: vi <vi@li.org>\n"
@@ -644,8 +644,11 @@ msgstr "Thông tin đăng nhập"
 msgid "Login successful!"
 msgstr "Đăng nhập thành công!"
 
-msgid "Set download directory"
-msgstr "Đặt thư mục tải về"
+msgid "Downloads"
+msgstr "Tải về"
+
+msgid "Download folder"
+msgstr "Thư mục tải về"
 
 msgid "Ask to open after download"
 msgstr "Yêu cầu mở sau khi tải xuống"
@@ -658,9 +661,6 @@ msgstr "Thư mục theo tác giả"
 
 msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
 msgstr "Lưu mỗi sách tải về vào một thư mục mang tên tác giả, bên trong thư mục tải về hoặc danh mục đã chọn."
-
-msgid "Downloads"
-msgstr "Tải về"
 
 msgid "View settings"
 msgstr "Cài đặt hiển thị"
@@ -737,11 +737,11 @@ msgstr "Đã xoá %s bìa sách trong bộ nhớ đệm."
 msgid "No cached covers to remove."
 msgstr "Không có bìa sách nào trong bộ nhớ đệm."
 
-msgid "Identify as a web browser"
-msgstr "Nhận dạng như một trình duyệt web"
+msgid "Detailed logging"
+msgstr ""
 
-msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
-msgstr "Gửi User-Agent của trình duyệt thay vì của chính tiện ích. Chỉ đáng thử nếu máy chủ từ chối chính tiện ích này."
+msgid "Writes everything the plugin does to crash.log, including what you search for. Without it only warnings and errors are logged."
+msgstr ""
 
 msgid "About"
 msgstr ""
@@ -802,9 +802,6 @@ msgstr "Tải về \"%s\"?"
 #, lua-format
 msgid "\"%s\" downloaded."
 msgstr "Đã tải về \"%s\"."
-
-msgid "Download folder"
-msgstr "Thư mục tải về"
 
 msgid "Book downloaded successfully. Open it now?"
 msgstr "Tải sách thành công. Mở sách ngay?"
@@ -1001,18 +998,6 @@ msgstr "Ngôn ngữ (%d)"
 msgid "Set formats"
 msgstr "Đặt định dạng"
 
-msgid "Content: Books"
-msgstr "Nội dung: sách"
-
-msgid "Content: Articles"
-msgstr "Nội dung: bài báo"
-
-msgid "Articles"
-msgstr "Bài báo"
-
-msgid "Formats: books only"
-msgstr "Định dạng: chỉ cho sách"
-
 #, lua-format
 msgid "Format: %s"
 msgstr "Định dạng: %s"
@@ -1024,14 +1009,26 @@ msgstr "Định dạng (%d)"
 msgid "Please enter a search term."
 msgstr "Vui lòng nhập từ khóa tìm kiếm."
 
+msgid "Content: Articles"
+msgstr "Nội dung: bài báo"
+
+msgid "Content: Books"
+msgstr "Nội dung: sách"
+
 msgid "Search Z-library"
 msgstr "Tìm kiếm Z-library"
 
 msgid "Sort by"
 msgstr "Sắp xếp theo"
 
+msgid "Formats: books only"
+msgstr "Định dạng: chỉ cho sách"
+
 msgid "Search Results"
 msgstr "Kết quả tìm kiếm"
+
+msgid "Articles"
+msgstr "Bài báo"
 
 #, lua-format
 msgid "Retrying search for \"%s\"..."
@@ -1157,6 +1154,15 @@ msgstr "Thiết lập và xác minh"
 
 msgid "Please fill in all fields"
 msgstr "Vui lòng điền đầy đủ các trường"
+
+#~ msgid "Set download directory"
+#~ msgstr "Đặt thư mục tải về"
+
+#~ msgid "Identify as a web browser"
+#~ msgstr "Nhận dạng như một trình duyệt web"
+
+#~ msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+#~ msgstr "Gửi User-Agent của trình duyệt thay vì của chính tiện ích. Chỉ đáng thử nếu máy chủ từ chối chính tiện ích này."
 
 #~ msgid "Rating"
 #~ msgstr "Đánh giá"

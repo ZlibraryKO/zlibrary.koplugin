@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 19:30+0000\n"
+"POT-Creation-Date: 2026-11-22 12:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -643,8 +643,11 @@ msgstr "認証情報を設定"
 msgid "Login successful!"
 msgstr "ログインに成功しました！"
 
-msgid "Set download directory"
-msgstr "ダウンロードディレクトリを設定"
+msgid "Downloads"
+msgstr "ダウンロード"
+
+msgid "Download folder"
+msgstr "ダウンロードフォルダ"
 
 msgid "Ask to open after download"
 msgstr "ダウンロード後に開くか確認"
@@ -657,9 +660,6 @@ msgstr "著者別フォルダ"
 
 msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
 msgstr "ダウンロードした本を、ダウンロードフォルダまたは選択したカテゴリ内の、著者名のフォルダに保存します。"
-
-msgid "Downloads"
-msgstr "ダウンロード"
 
 msgid "View settings"
 msgstr "表示設定"
@@ -736,11 +736,11 @@ msgstr "キャッシュされた表紙 %s 分を削除しました。"
 msgid "No cached covers to remove."
 msgstr "削除する表紙キャッシュはありません。"
 
-msgid "Identify as a web browser"
-msgstr "ウェブブラウザとして名乗る"
+msgid "Detailed logging"
+msgstr ""
 
-msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
-msgstr "プラグイン自身のものではなく、ブラウザの User-Agent を送信します。サーバーがプラグイン自体を拒否する場合にのみ試す価値があります。"
+msgid "Writes everything the plugin does to crash.log, including what you search for. Without it only warnings and errors are logged."
+msgstr ""
 
 msgid "About"
 msgstr ""
@@ -801,9 +801,6 @@ msgstr "\"%s\" をダウンロードしますか？"
 #, lua-format
 msgid "\"%s\" downloaded."
 msgstr "「%s」をダウンロードしました。"
-
-msgid "Download folder"
-msgstr "ダウンロードフォルダ"
 
 msgid "Book downloaded successfully. Open it now?"
 msgstr "書籍のダウンロードが完了しました。今すぐ開きますか？"
@@ -1000,18 +997,6 @@ msgstr "言語 (%d)"
 msgid "Set formats"
 msgstr "形式を設定"
 
-msgid "Content: Books"
-msgstr "種類: 書籍"
-
-msgid "Content: Articles"
-msgstr "種類: 論文"
-
-msgid "Articles"
-msgstr "論文"
-
-msgid "Formats: books only"
-msgstr "形式: 書籍のみ"
-
 #, lua-format
 msgid "Format: %s"
 msgstr "形式: %s"
@@ -1023,14 +1008,26 @@ msgstr "形式 (%d)"
 msgid "Please enter a search term."
 msgstr "検索語を入力してください。"
 
+msgid "Content: Articles"
+msgstr "種類: 論文"
+
+msgid "Content: Books"
+msgstr "種類: 書籍"
+
 msgid "Search Z-library"
 msgstr "Z-libraryを検索"
 
 msgid "Sort by"
 msgstr "並び替え"
 
+msgid "Formats: books only"
+msgstr "形式: 書籍のみ"
+
 msgid "Search Results"
 msgstr "検索結果"
+
+msgid "Articles"
+msgstr "論文"
 
 #, lua-format
 msgid "Retrying search for \"%s\"..."
@@ -1156,6 +1153,15 @@ msgstr "設定して確認"
 
 msgid "Please fill in all fields"
 msgstr "すべての項目を入力してください"
+
+#~ msgid "Set download directory"
+#~ msgstr "ダウンロードディレクトリを設定"
+
+#~ msgid "Identify as a web browser"
+#~ msgstr "ウェブブラウザとして名乗る"
+
+#~ msgid "Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."
+#~ msgstr "プラグイン自身のものではなく、ブラウザの User-Agent を送信します。サーバーがプラグイン自体を拒否する場合にのみ試す価値があります。"
 
 #~ msgid "Rating"
 #~ msgstr "評価"

@@ -738,10 +738,10 @@ msgid "No cached covers to remove."
 msgstr "V mezipaměti nejsou žádné obálky k odstranění."
 
 msgid "Detailed logging"
-msgstr ""
+msgstr "Podrobné protokolování"
 
 msgid "Writes everything the plugin does to crash.log, including what you search for. Without it only warnings and errors are logged."
-msgstr ""
+msgstr "Zapisuje do crash.log vše, co plugin dělá, včetně toho, co hledáte. Bez této volby se zaznamenávají jen varování a chyby."
 
 msgid "About"
 msgstr "O pluginu"

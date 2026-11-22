@@ -46,25 +46,25 @@ msgid "API returned an error for favorite books."
 msgstr "API返回了收藏书籍的错误。"
 
 msgid "Failed to fetch booklists (no response body)."
-msgstr ""
+msgstr "获取书单失败(无响应体)。"
 
 msgid "Failed to parse booklists response."
-msgstr ""
+msgstr "解析书单响应失败。"
 
 msgid "API returned an error for booklists."
-msgstr ""
+msgstr "API返回了书单的错误。"
 
 msgid "Untitled"
 msgstr "无标题"
 
 msgid "Failed to fetch booklist books (no response body)."
-msgstr ""
+msgstr "获取书单中的书籍失败(无响应体)。"
 
 msgid "Failed to parse booklist books response."
-msgstr ""
+msgstr "解析书单书籍响应失败。"
 
 msgid "API returned an error for booklist books."
-msgstr ""
+msgstr "API返回了书单书籍的错误。"
 
 msgid "Failed to remove the book from downloaded (no response body)."
 msgstr "从已下载中移除书籍失败(无响应体)。"
@@ -199,7 +199,7 @@ msgid "HTTP Error"
 msgstr "HTTP 错误"
 
 msgid "Download failed: the server sent an empty file"
-msgstr ""
+msgstr "下载失败：服务器发送了空文件"
 
 msgid "Failed to save downloaded file"
 msgstr "保存下载文件失败"
@@ -611,28 +611,28 @@ msgid "Downloaded books"
 msgstr "已下载书籍"
 
 msgid "Booklists"
-msgstr ""
+msgstr "书单"
 
 msgid "Getting your booklists..."
-msgstr ""
+msgstr "正在获取书单..."
 
 msgid "Failed to fetch booklists"
-msgstr ""
+msgstr "获取书单失败"
 
 msgid "You have no booklists yet"
-msgstr ""
+msgstr "你还没有书单"
 
 msgid "Getting booklist books..."
-msgstr ""
+msgstr "正在获取书单中的书籍..."
 
 msgid "Failed to fetch booklist books"
-msgstr ""
+msgstr "获取书单中的书籍失败"
 
 msgid "Booklist books"
-msgstr ""
+msgstr "书单中的书籍"
 
 msgid "This booklist is empty"
-msgstr ""
+msgstr "此书单为空"
 
 msgid "Settings"
 msgstr "设置"
@@ -737,13 +737,13 @@ msgid "No cached covers to remove."
 msgstr "没有可清除的封面缓存。"
 
 msgid "Detailed logging"
-msgstr ""
+msgstr "详细日志"
 
 msgid "Writes everything the plugin does to crash.log, including what you search for. Without it only warnings and errors are logged."
-msgstr ""
+msgstr "将插件的所有操作写入 crash.log，包括你搜索的内容。关闭时只记录警告和错误。"
 
 msgid "About"
-msgstr ""
+msgstr "关于"
 
 msgid "Operation"
 msgstr "操作"
@@ -921,7 +921,7 @@ msgid "If you like the plugin and want it to keep working, the price of a coffee
 msgstr "如果您喜欢这个插件并希望它继续可用，一杯咖啡的支持就很有帮助："
 
 msgid "Show QR code"
-msgstr ""
+msgstr "显示二维码"
 
 msgid "Update installed successfully. Please restart KOReader for changes to take effect."
 msgstr "更新安装成功。请重启KOReader使更改生效。"

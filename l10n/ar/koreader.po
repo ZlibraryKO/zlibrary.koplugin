@@ -46,25 +46,25 @@ msgid "API returned an error for favorite books."
 msgstr "أرجع API خطأ للكتب المفضلة."
 
 msgid "Failed to fetch booklists (no response body)."
-msgstr ""
+msgstr "فشل جلب قوائم الكتب (لا يوجد محتوى استجابة)."
 
 msgid "Failed to parse booklists response."
-msgstr ""
+msgstr "فشل تحليل استجابة قوائم الكتب."
 
 msgid "API returned an error for booklists."
-msgstr ""
+msgstr "أرجع API خطأ لقوائم الكتب."
 
 msgid "Untitled"
 msgstr "بلا عنوان"
 
 msgid "Failed to fetch booklist books (no response body)."
-msgstr ""
+msgstr "فشل جلب كتب القائمة (لا يوجد محتوى استجابة)."
 
 msgid "Failed to parse booklist books response."
-msgstr ""
+msgstr "فشل تحليل استجابة كتب القائمة."
 
 msgid "API returned an error for booklist books."
-msgstr ""
+msgstr "أرجع API خطأ لكتب القائمة."
 
 msgid "Failed to remove the book from downloaded (no response body)."
 msgstr "فشل إزالة الكتاب من التنزيلات (لا يوجد نص استجابة)."
@@ -199,7 +199,7 @@ msgid "HTTP Error"
 msgstr "خطأ HTTP"
 
 msgid "Download failed: the server sent an empty file"
-msgstr ""
+msgstr "فشل التنزيل: أرسل الخادم ملفًا فارغًا"
 
 msgid "Failed to save downloaded file"
 msgstr "فشل حفظ الملف المنزَّل"
@@ -611,28 +611,28 @@ msgid "Downloaded books"
 msgstr "الكتب المُنزَّلة"
 
 msgid "Booklists"
-msgstr ""
+msgstr "قوائم الكتب"
 
 msgid "Getting your booklists..."
-msgstr ""
+msgstr "جارٍ جلب قوائم كتبك..."
 
 msgid "Failed to fetch booklists"
-msgstr ""
+msgstr "فشل جلب قوائم الكتب"
 
 msgid "You have no booklists yet"
-msgstr ""
+msgstr "ليست لديك قوائم كتب بعد"
 
 msgid "Getting booklist books..."
-msgstr ""
+msgstr "جارٍ جلب كتب القائمة..."
 
 msgid "Failed to fetch booklist books"
-msgstr ""
+msgstr "فشل جلب كتب القائمة"
 
 msgid "Booklist books"
-msgstr ""
+msgstr "كتب القائمة"
 
 msgid "This booklist is empty"
-msgstr ""
+msgstr "قائمة الكتب هذه فارغة"
 
 msgid "Settings"
 msgstr "الإعدادات"
@@ -737,13 +737,13 @@ msgid "No cached covers to remove."
 msgstr "لا توجد أغلفة مخزنة مؤقتاً لمسحها."
 
 msgid "Detailed logging"
-msgstr ""
+msgstr "سجل مفصل"
 
 msgid "Writes everything the plugin does to crash.log, including what you search for. Without it only warnings and errors are logged."
-msgstr ""
+msgstr "يكتب كل ما تفعله الإضافة في crash.log، بما في ذلك ما تبحث عنه. بدونه تُسجَّل التحذيرات والأخطاء فقط."
 
 msgid "About"
-msgstr ""
+msgstr "حول"
 
 msgid "Operation"
 msgstr "العملية"
@@ -921,7 +921,7 @@ msgid "If you like the plugin and want it to keep working, the price of a coffee
 msgstr "إذا أعجبتك الإضافة وأردت أن تستمر في العمل، فثمن فنجان قهوة يساعد:"
 
 msgid "Show QR code"
-msgstr ""
+msgstr "عرض رمز QR"
 
 msgid "Update installed successfully. Please restart KOReader for changes to take effect."
 msgstr "تم تثبيت التحديث بنجاح. يرجى إعادة تشغيل KOReader لتطبيق التغييرات."

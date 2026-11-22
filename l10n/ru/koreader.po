@@ -46,25 +46,25 @@ msgid "API returned an error for favorite books."
 msgstr "API вернул ошибку для избранных книг."
 
 msgid "Failed to fetch booklists (no response body)."
-msgstr ""
+msgstr "Не удалось получить списки книг (нет тела ответа)."
 
 msgid "Failed to parse booklists response."
-msgstr ""
+msgstr "Не удалось разобрать ответ со списками книг."
 
 msgid "API returned an error for booklists."
-msgstr ""
+msgstr "API вернул ошибку для списков книг."
 
 msgid "Untitled"
 msgstr "Без названия"
 
 msgid "Failed to fetch booklist books (no response body)."
-msgstr ""
+msgstr "Не удалось получить книги из списка (нет тела ответа)."
 
 msgid "Failed to parse booklist books response."
-msgstr ""
+msgstr "Не удалось разобрать ответ с книгами из списка."
 
 msgid "API returned an error for booklist books."
-msgstr ""
+msgstr "API вернул ошибку для книг из списка."
 
 msgid "Failed to remove the book from downloaded (no response body)."
 msgstr "Не удалось удалить книгу из скачанных (нет тела ответа)."
@@ -199,7 +199,7 @@ msgid "HTTP Error"
 msgstr "Ошибка HTTP"
 
 msgid "Download failed: the server sent an empty file"
-msgstr ""
+msgstr "Ошибка загрузки: сервер прислал пустой файл"
 
 msgid "Failed to save downloaded file"
 msgstr "Не удалось сохранить скачанный файл"
@@ -611,28 +611,28 @@ msgid "Downloaded books"
 msgstr "Скачанные книги"
 
 msgid "Booklists"
-msgstr ""
+msgstr "Списки книг"
 
 msgid "Getting your booklists..."
-msgstr ""
+msgstr "Загрузка списков книг..."
 
 msgid "Failed to fetch booklists"
-msgstr ""
+msgstr "Не удалось получить списки книг"
 
 msgid "You have no booklists yet"
-msgstr ""
+msgstr "У вас пока нет списков книг"
 
 msgid "Getting booklist books..."
-msgstr ""
+msgstr "Загрузка книг из списка..."
 
 msgid "Failed to fetch booklist books"
-msgstr ""
+msgstr "Не удалось получить книги из списка"
 
 msgid "Booklist books"
-msgstr ""
+msgstr "Книги из списка"
 
 msgid "This booklist is empty"
-msgstr ""
+msgstr "Этот список книг пуст"
 
 msgid "Settings"
 msgstr "Настройки"
@@ -737,13 +737,13 @@ msgid "No cached covers to remove."
 msgstr "Кэшированных обложек нет."
 
 msgid "Detailed logging"
-msgstr ""
+msgstr "Подробный журнал"
 
 msgid "Writes everything the plugin does to crash.log, including what you search for. Without it only warnings and errors are logged."
-msgstr ""
+msgstr "Записывает в crash.log всё, что делает плагин, включая ваши поисковые запросы. Без этого записываются только предупреждения и ошибки."
 
 msgid "About"
-msgstr ""
+msgstr "О плагине"
 
 msgid "Operation"
 msgstr "Операция"
@@ -921,7 +921,7 @@ msgid "If you like the plugin and want it to keep working, the price of a coffee
 msgstr "Если вам нравится плагин и вы хотите, чтобы он продолжал работать, поможет цена чашки кофе:"
 
 msgid "Show QR code"
-msgstr ""
+msgstr "Показать QR-код"
 
 msgid "Update installed successfully. Please restart KOReader for changes to take effect."
 msgstr "Обновление успешно установлено. Перезапустите KOReader для применения изменений."

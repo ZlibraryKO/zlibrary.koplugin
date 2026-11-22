@@ -46,25 +46,25 @@ msgid "API returned an error for favorite books."
 msgstr "즐겨찾기 도서에 대해 API 오류가 반환되었습니다."
 
 msgid "Failed to fetch booklists (no response body)."
-msgstr ""
+msgstr "도서 목록을 가져오지 못했습니다 (응답 본문 없음)."
 
 msgid "Failed to parse booklists response."
-msgstr ""
+msgstr "도서 목록 응답을 해석하지 못했습니다."
 
 msgid "API returned an error for booklists."
-msgstr ""
+msgstr "도서 목록에 대해 API 오류가 반환되었습니다."
 
 msgid "Untitled"
 msgstr "제목 없음"
 
 msgid "Failed to fetch booklist books (no response body)."
-msgstr ""
+msgstr "목록의 도서를 가져오지 못했습니다 (응답 본문 없음)."
 
 msgid "Failed to parse booklist books response."
-msgstr ""
+msgstr "목록의 도서 응답을 해석하지 못했습니다."
 
 msgid "API returned an error for booklist books."
-msgstr ""
+msgstr "목록의 도서에 대해 API 오류가 반환되었습니다."
 
 msgid "Failed to remove the book from downloaded (no response body)."
 msgstr "다운로드 목록에서 도서를 제거하지 못했습니다(응답 본문 없음)."
@@ -199,7 +199,7 @@ msgid "HTTP Error"
 msgstr "HTTP 오류"
 
 msgid "Download failed: the server sent an empty file"
-msgstr ""
+msgstr "다운로드 실패: 서버가 빈 파일을 보냈습니다"
 
 msgid "Failed to save downloaded file"
 msgstr "다운로드한 파일을 저장하지 못했습니다"
@@ -611,28 +611,28 @@ msgid "Downloaded books"
 msgstr "다운로드한 도서"
 
 msgid "Booklists"
-msgstr ""
+msgstr "도서 목록"
 
 msgid "Getting your booklists..."
-msgstr ""
+msgstr "도서 목록 가져오는 중..."
 
 msgid "Failed to fetch booklists"
-msgstr ""
+msgstr "도서 목록을 가져오지 못했습니다"
 
 msgid "You have no booklists yet"
-msgstr ""
+msgstr "아직 도서 목록이 없습니다"
 
 msgid "Getting booklist books..."
-msgstr ""
+msgstr "목록의 도서 가져오는 중..."
 
 msgid "Failed to fetch booklist books"
-msgstr ""
+msgstr "목록의 도서를 가져오지 못했습니다"
 
 msgid "Booklist books"
-msgstr ""
+msgstr "목록의 도서"
 
 msgid "This booklist is empty"
-msgstr ""
+msgstr "이 도서 목록은 비어 있습니다"
 
 msgid "Settings"
 msgstr "설정"
@@ -737,13 +737,13 @@ msgid "No cached covers to remove."
 msgstr "삭제할 표지 캐시가 없습니다."
 
 msgid "Detailed logging"
-msgstr ""
+msgstr "상세 로그"
 
 msgid "Writes everything the plugin does to crash.log, including what you search for. Without it only warnings and errors are logged."
-msgstr ""
+msgstr "플러그인이 하는 모든 작업을 crash.log에 기록합니다 (검색어 포함). 끄면 경고와 오류만 기록됩니다."
 
 msgid "About"
-msgstr ""
+msgstr "정보"
 
 msgid "Operation"
 msgstr "작업"
@@ -921,7 +921,7 @@ msgid "If you like the plugin and want it to keep working, the price of a coffee
 msgstr "이 플러그인이 마음에 들고 계속 작동하기를 바라신다면, 커피 한 잔 값이 도움이 됩니다:"
 
 msgid "Show QR code"
-msgstr ""
+msgstr "QR 코드 표시"
 
 msgid "Update installed successfully. Please restart KOReader for changes to take effect."
 msgstr "업데이트가 성공적으로 설치되었습니다. 변경 사항을 적용하려면 KOReader를 재시작하세요."

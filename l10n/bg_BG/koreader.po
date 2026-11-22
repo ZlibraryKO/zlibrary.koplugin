@@ -52,25 +52,25 @@ msgid "API returned an error for favorite books."
 msgstr "API върна грешка за любими книги."
 
 msgid "Failed to fetch booklists (no response body)."
-msgstr ""
+msgstr "Неуспешно зареждане на списъци с книги (няма тяло на отговора)."
 
 msgid "Failed to parse booklists response."
-msgstr ""
+msgstr "Неуспешен разбор на отговора за списъци с книги."
 
 msgid "API returned an error for booklists."
-msgstr ""
+msgstr "API върна грешка за списъци с книги."
 
 msgid "Untitled"
 msgstr "Без заглавие"
 
 msgid "Failed to fetch booklist books (no response body)."
-msgstr ""
+msgstr "Неуспешно зареждане на книгите от списъка (няма тяло на отговора)."
 
 msgid "Failed to parse booklist books response."
-msgstr ""
+msgstr "Неуспешен разбор на отговора за книгите от списъка."
 
 msgid "API returned an error for booklist books."
-msgstr ""
+msgstr "API върна грешка за книгите от списъка."
 
 msgid "Failed to remove the book from downloaded (no response body)."
 msgstr "Неуспешно премахване на книгата от изтеглени (няма тяло на отговора)."
@@ -205,7 +205,7 @@ msgid "HTTP Error"
 msgstr "HTTP грешка"
 
 msgid "Download failed: the server sent an empty file"
-msgstr ""
+msgstr "Изтеглянето неуспешно: сървърът изпрати празен файл"
 
 msgid "Failed to save downloaded file"
 msgstr "Неуспешно запазване на изтегления файл"
@@ -617,28 +617,28 @@ msgid "Downloaded books"
 msgstr "Изтеглени книги"
 
 msgid "Booklists"
-msgstr ""
+msgstr "Списъци с книги"
 
 msgid "Getting your booklists..."
-msgstr ""
+msgstr "Зареждане на списъците с книги..."
 
 msgid "Failed to fetch booklists"
-msgstr ""
+msgstr "Неуспешно зареждане на списъци с книги"
 
 msgid "You have no booklists yet"
-msgstr ""
+msgstr "Все още нямате списъци с книги"
 
 msgid "Getting booklist books..."
-msgstr ""
+msgstr "Зареждане на книгите от списъка..."
 
 msgid "Failed to fetch booklist books"
-msgstr ""
+msgstr "Неуспешно зареждане на книгите от списъка"
 
 msgid "Booklist books"
-msgstr ""
+msgstr "Книги от списъка"
 
 msgid "This booklist is empty"
-msgstr ""
+msgstr "Този списък с книги е празен"
 
 msgid "Settings"
 msgstr "Настройки"
@@ -743,13 +743,13 @@ msgid "No cached covers to remove."
 msgstr "Няма кеширани корици за изчистване."
 
 msgid "Detailed logging"
-msgstr ""
+msgstr "Подробен дневник"
 
 msgid "Writes everything the plugin does to crash.log, including what you search for. Without it only warnings and errors are logged."
-msgstr ""
+msgstr "Записва в crash.log всичко, което прави приставката, включително какво търсите. Без това се записват само предупреждения и грешки."
 
 msgid "About"
-msgstr ""
+msgstr "Относно"
 
 msgid "Operation"
 msgstr "Операция"
@@ -927,7 +927,7 @@ msgid "If you like the plugin and want it to keep working, the price of a coffee
 msgstr "Ако харесвате приставката и искате да продължи да работи, цената на едно кафе помага:"
 
 msgid "Show QR code"
-msgstr ""
+msgstr "Показване на QR код"
 
 msgid "Update installed successfully. Please restart KOReader for changes to take effect."
 msgstr "Актуализацията е инсталирана успешно. Рестартирайте KOReader за да влязат в сила промените."

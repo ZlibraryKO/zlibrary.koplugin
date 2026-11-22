@@ -46,25 +46,25 @@ msgid "API returned an error for favorite books."
 msgstr "お気に入りの書籍に対してAPIがエラーを返しました。"
 
 msgid "Failed to fetch booklists (no response body)."
-msgstr ""
+msgstr "ブックリストの取得に失敗しました（応答本文がありません）。"
 
 msgid "Failed to parse booklists response."
-msgstr ""
+msgstr "ブックリストの応答の解析に失敗しました。"
 
 msgid "API returned an error for booklists."
-msgstr ""
+msgstr "ブックリストに対してAPIがエラーを返しました。"
 
 msgid "Untitled"
 msgstr "無題"
 
 msgid "Failed to fetch booklist books (no response body)."
-msgstr ""
+msgstr "ブックリストの書籍の取得に失敗しました（応答本文がありません）。"
 
 msgid "Failed to parse booklist books response."
-msgstr ""
+msgstr "ブックリストの書籍の応答の解析に失敗しました。"
 
 msgid "API returned an error for booklist books."
-msgstr ""
+msgstr "ブックリストの書籍に対してAPIがエラーを返しました。"
 
 msgid "Failed to remove the book from downloaded (no response body)."
 msgstr "ダウンロード済みからの書籍の削除に失敗しました（応答がありません）。"
@@ -199,7 +199,7 @@ msgid "HTTP Error"
 msgstr "HTTPエラー"
 
 msgid "Download failed: the server sent an empty file"
-msgstr ""
+msgstr "ダウンロードに失敗しました：サーバーが空のファイルを送信しました"
 
 msgid "Failed to save downloaded file"
 msgstr "ダウンロードしたファイルの保存に失敗しました"
@@ -611,28 +611,28 @@ msgid "Downloaded books"
 msgstr "ダウンロード済み書籍"
 
 msgid "Booklists"
-msgstr ""
+msgstr "ブックリスト"
 
 msgid "Getting your booklists..."
-msgstr ""
+msgstr "ブックリストを取得中..."
 
 msgid "Failed to fetch booklists"
-msgstr ""
+msgstr "ブックリストの取得に失敗しました"
 
 msgid "You have no booklists yet"
-msgstr ""
+msgstr "ブックリストはまだありません"
 
 msgid "Getting booklist books..."
-msgstr ""
+msgstr "ブックリストの書籍を取得中..."
 
 msgid "Failed to fetch booklist books"
-msgstr ""
+msgstr "ブックリストの書籍の取得に失敗しました"
 
 msgid "Booklist books"
-msgstr ""
+msgstr "ブックリストの書籍"
 
 msgid "This booklist is empty"
-msgstr ""
+msgstr "このブックリストは空です"
 
 msgid "Settings"
 msgstr "設定"
@@ -737,13 +737,13 @@ msgid "No cached covers to remove."
 msgstr "削除する表紙キャッシュはありません。"
 
 msgid "Detailed logging"
-msgstr ""
+msgstr "詳細ログ"
 
 msgid "Writes everything the plugin does to crash.log, including what you search for. Without it only warnings and errors are logged."
-msgstr ""
+msgstr "プラグインの動作をすべて crash.log に書き込みます（検索内容も含む）。オフのときは警告とエラーのみ記録されます。"
 
 msgid "About"
-msgstr ""
+msgstr "このプラグインについて"
 
 msgid "Operation"
 msgstr "操作"
@@ -921,7 +921,7 @@ msgid "If you like the plugin and want it to keep working, the price of a coffee
 msgstr "このプラグインを気に入り、これからも使い続けたいと思われましたら、コーヒー一杯分のご支援が助けになります:"
 
 msgid "Show QR code"
-msgstr ""
+msgstr "QRコードを表示"
 
 msgid "Update installed successfully. Please restart KOReader for changes to take effect."
 msgstr "アップデートが正常にインストールされました。変更を有効にするにはKOReaderを再起動してください。"

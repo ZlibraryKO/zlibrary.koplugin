@@ -46,25 +46,25 @@ msgid "API returned an error for favorite books."
 msgstr "API gab einen Fehler für favorisierte Bücher zurück."
 
 msgid "Failed to fetch booklists (no response body)."
-msgstr ""
+msgstr "Bücherlisten konnten nicht abgerufen werden (kein Antworttext)."
 
 msgid "Failed to parse booklists response."
-msgstr ""
+msgstr "Antwort zu Bücherlisten konnte nicht verarbeitet werden."
 
 msgid "API returned an error for booklists."
-msgstr ""
+msgstr "API gab einen Fehler für Bücherlisten zurück."
 
 msgid "Untitled"
 msgstr "Ohne Titel"
 
 msgid "Failed to fetch booklist books (no response body)."
-msgstr ""
+msgstr "Bücher der Bücherliste konnten nicht abgerufen werden (kein Antworttext)."
 
 msgid "Failed to parse booklist books response."
-msgstr ""
+msgstr "Antwort zu Büchern der Bücherliste konnte nicht verarbeitet werden."
 
 msgid "API returned an error for booklist books."
-msgstr ""
+msgstr "API gab einen Fehler für Bücher der Bücherliste zurück."
 
 msgid "Failed to remove the book from downloaded (no response body)."
 msgstr "Buch konnte nicht aus den Downloads entfernt werden (kein Antworttext)."
@@ -199,7 +199,7 @@ msgid "HTTP Error"
 msgstr "HTTP-Fehler"
 
 msgid "Download failed: the server sent an empty file"
-msgstr ""
+msgstr "Download fehlgeschlagen: Der Server hat eine leere Datei gesendet"
 
 msgid "Failed to save downloaded file"
 msgstr "Heruntergeladene Datei konnte nicht gespeichert werden"
@@ -611,28 +611,28 @@ msgid "Downloaded books"
 msgstr "Heruntergeladene Bücher"
 
 msgid "Booklists"
-msgstr ""
+msgstr "Bücherlisten"
 
 msgid "Getting your booklists..."
-msgstr ""
+msgstr "Bücherlisten werden geladen..."
 
 msgid "Failed to fetch booklists"
-msgstr ""
+msgstr "Bücherlisten konnten nicht abgerufen werden"
 
 msgid "You have no booklists yet"
-msgstr ""
+msgstr "Du hast noch keine Bücherlisten"
 
 msgid "Getting booklist books..."
-msgstr ""
+msgstr "Bücher der Liste werden geladen..."
 
 msgid "Failed to fetch booklist books"
-msgstr ""
+msgstr "Bücher der Bücherliste konnten nicht abgerufen werden"
 
 msgid "Booklist books"
-msgstr ""
+msgstr "Bücher der Liste"
 
 msgid "This booklist is empty"
-msgstr ""
+msgstr "Diese Bücherliste ist leer"
 
 msgid "Settings"
 msgstr "Einstellungen"
@@ -737,13 +737,13 @@ msgid "No cached covers to remove."
 msgstr "Keine zwischengespeicherten Cover vorhanden."
 
 msgid "Detailed logging"
-msgstr ""
+msgstr "Ausführliche Protokollierung"
 
 msgid "Writes everything the plugin does to crash.log, including what you search for. Without it only warnings and errors are logged."
-msgstr ""
+msgstr "Schreibt alles, was das Plugin tut, in crash.log, auch wonach du suchst. Ohne diese Option werden nur Warnungen und Fehler protokolliert."
 
 msgid "About"
-msgstr ""
+msgstr "Über"
 
 msgid "Operation"
 msgstr "Vorgang"
@@ -921,7 +921,7 @@ msgid "If you like the plugin and want it to keep working, the price of a coffee
 msgstr "Wenn Ihnen das Plugin gefällt und es weiterhin funktionieren soll, hilft der Preis eines Kaffees:"
 
 msgid "Show QR code"
-msgstr ""
+msgstr "QR-Code anzeigen"
 
 msgid "Update installed successfully. Please restart KOReader for changes to take effect."
 msgstr "Update erfolgreich installiert. Bitte starten Sie KOReader neu, damit die Änderungen wirksam werden."

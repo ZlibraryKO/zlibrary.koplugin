@@ -47,25 +47,25 @@ msgid "API returned an error for favorite books."
 msgstr "API trả về lỗi đối với sách yêu thích."
 
 msgid "Failed to fetch booklists (no response body)."
-msgstr ""
+msgstr "Lấy danh sách sách thất bại (không có nội dung phản hồi)."
 
 msgid "Failed to parse booklists response."
-msgstr ""
+msgstr "Không thể phân tích phản hồi danh sách sách."
 
 msgid "API returned an error for booklists."
-msgstr ""
+msgstr "API trả về lỗi đối với danh sách sách."
 
 msgid "Untitled"
 msgstr "Không có tiêu đề"
 
 msgid "Failed to fetch booklist books (no response body)."
-msgstr ""
+msgstr "Lấy sách trong danh sách thất bại (không có nội dung phản hồi)."
 
 msgid "Failed to parse booklist books response."
-msgstr ""
+msgstr "Không thể phân tích phản hồi sách trong danh sách."
 
 msgid "API returned an error for booklist books."
-msgstr ""
+msgstr "API trả về lỗi đối với sách trong danh sách."
 
 msgid "Failed to remove the book from downloaded (no response body)."
 msgstr "Xóa sách khỏi danh sách đã tải thất bại (không có nội dung phản hồi)."
@@ -200,7 +200,7 @@ msgid "HTTP Error"
 msgstr "Lỗi HTTP"
 
 msgid "Download failed: the server sent an empty file"
-msgstr ""
+msgstr "Tải về thất bại: máy chủ đã gửi một tệp trống"
 
 msgid "Failed to save downloaded file"
 msgstr "Lưu tệp tải về thất bại"
@@ -612,28 +612,28 @@ msgid "Downloaded books"
 msgstr "Sách đã tải về"
 
 msgid "Booklists"
-msgstr ""
+msgstr "Danh sách sách"
 
 msgid "Getting your booklists..."
-msgstr ""
+msgstr "Đang lấy danh sách sách của bạn..."
 
 msgid "Failed to fetch booklists"
-msgstr ""
+msgstr "Lấy danh sách sách thất bại"
 
 msgid "You have no booklists yet"
-msgstr ""
+msgstr "Bạn chưa có danh sách sách nào"
 
 msgid "Getting booklist books..."
-msgstr ""
+msgstr "Đang lấy sách trong danh sách..."
 
 msgid "Failed to fetch booklist books"
-msgstr ""
+msgstr "Lấy sách trong danh sách thất bại"
 
 msgid "Booklist books"
-msgstr ""
+msgstr "Sách trong danh sách"
 
 msgid "This booklist is empty"
-msgstr ""
+msgstr "Danh sách sách này trống"
 
 msgid "Settings"
 msgstr "Cài đặt"
@@ -738,13 +738,13 @@ msgid "No cached covers to remove."
 msgstr "Không có bìa sách nào trong bộ nhớ đệm."
 
 msgid "Detailed logging"
-msgstr ""
+msgstr "Nhật ký chi tiết"
 
 msgid "Writes everything the plugin does to crash.log, including what you search for. Without it only warnings and errors are logged."
-msgstr ""
+msgstr "Ghi mọi việc plugin làm vào crash.log, kể cả nội dung bạn tìm kiếm. Khi tắt, chỉ ghi cảnh báo và lỗi."
 
 msgid "About"
-msgstr ""
+msgstr "Giới thiệu"
 
 msgid "Operation"
 msgstr "Thao tác"
@@ -922,7 +922,7 @@ msgid "If you like the plugin and want it to keep working, the price of a coffee
 msgstr "Nếu bạn thích tiện ích này và muốn nó tiếp tục hoạt động, giá một ly cà phê sẽ giúp ích:"
 
 msgid "Show QR code"
-msgstr ""
+msgstr "Hiện mã QR"
 
 msgid "Update installed successfully. Please restart KOReader for changes to take effect."
 msgstr "Cập nhật thành công. Vui lòng khởi động lại KOReader để thay đổi có hiệu lực."

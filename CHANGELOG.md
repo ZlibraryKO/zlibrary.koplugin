@@ -6,6 +6,14 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.61
+
+### Fixed
+
+**Every language fully translated.** The Booklists screens, the Detailed logging setting, "About"
+and "Show QR code" showed in English in every language except Czech. They are now translated in
+all 17 languages.
+
 ## 1.0.60
 
 ### Added

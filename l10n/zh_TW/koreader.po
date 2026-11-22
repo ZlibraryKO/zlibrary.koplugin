@@ -46,25 +46,25 @@ msgid "API returned an error for favorite books."
 msgstr "API返回收藏書籍錯誤。"
 
 msgid "Failed to fetch booklists (no response body)."
-msgstr ""
+msgstr "獲取書單失敗（無響應內容）。"
 
 msgid "Failed to parse booklists response."
-msgstr ""
+msgstr "解析書單響應失敗。"
 
 msgid "API returned an error for booklists."
-msgstr ""
+msgstr "API返回書單錯誤。"
 
 msgid "Untitled"
 msgstr "無標題"
 
 msgid "Failed to fetch booklist books (no response body)."
-msgstr ""
+msgstr "獲取書單中的書籍失敗（無響應內容）。"
 
 msgid "Failed to parse booklist books response."
-msgstr ""
+msgstr "解析書單書籍響應失敗。"
 
 msgid "API returned an error for booklist books."
-msgstr ""
+msgstr "API返回書單書籍錯誤。"
 
 msgid "Failed to remove the book from downloaded (no response body)."
 msgstr "從已下載移除書籍失敗(無響應內容)。"
@@ -199,7 +199,7 @@ msgid "HTTP Error"
 msgstr "HTTP 錯誤"
 
 msgid "Download failed: the server sent an empty file"
-msgstr ""
+msgstr "下載失敗：伺服器傳送了空檔案"
 
 msgid "Failed to save downloaded file"
 msgstr "保存下載文件失敗"
@@ -611,28 +611,28 @@ msgid "Downloaded books"
 msgstr "已下載書籍"
 
 msgid "Booklists"
-msgstr ""
+msgstr "書單"
 
 msgid "Getting your booklists..."
-msgstr ""
+msgstr "正在獲取書單..."
 
 msgid "Failed to fetch booklists"
-msgstr ""
+msgstr "獲取書單失敗"
 
 msgid "You have no booklists yet"
-msgstr ""
+msgstr "你還沒有書單"
 
 msgid "Getting booklist books..."
-msgstr ""
+msgstr "正在獲取書單中的書籍..."
 
 msgid "Failed to fetch booklist books"
-msgstr ""
+msgstr "獲取書單中的書籍失敗"
 
 msgid "Booklist books"
-msgstr ""
+msgstr "書單中的書籍"
 
 msgid "This booklist is empty"
-msgstr ""
+msgstr "此書單為空"
 
 msgid "Settings"
 msgstr "設置"
@@ -737,13 +737,13 @@ msgid "No cached covers to remove."
 msgstr "沒有可清除的封面快取。"
 
 msgid "Detailed logging"
-msgstr ""
+msgstr "詳細日誌"
 
 msgid "Writes everything the plugin does to crash.log, including what you search for. Without it only warnings and errors are logged."
-msgstr ""
+msgstr "將外掛的所有操作寫入 crash.log，包括你搜尋的內容。關閉時只記錄警告和錯誤。"
 
 msgid "About"
-msgstr ""
+msgstr "關於"
 
 msgid "Operation"
 msgstr "操作"
@@ -921,7 +921,7 @@ msgid "If you like the plugin and want it to keep working, the price of a coffee
 msgstr "如果您喜歡這個外掛並希望它繼續可用，一杯咖啡的支持就很有幫助："
 
 msgid "Show QR code"
-msgstr ""
+msgstr "顯示 QR 碼"
 
 msgid "Update installed successfully. Please restart KOReader for changes to take effect."
 msgstr "更新安裝成功。請重啟KOReader使更改生效。"

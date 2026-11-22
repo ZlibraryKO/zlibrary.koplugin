@@ -7,6 +7,10 @@ local LuaSettings = require("luasettings")
 local logger = require("logger")
 
 local DEF_TTL_CACHE_EXPIRY = 432000 -- 5 days
+-- The clock every expiry check and timestamp reads. One function rather than os.time() inline so
+-- test/cache_expiry_harness.lua can supply its own and step time by hand: with the real clock, a
+-- five-day TTL could only be checked by forging _at values, and the boundary second not at all.
+local function now() return os.time() end
 -- Hidden, and that is the whole point of the dot.
 --
 -- These directories used to be <data>/cache/zlibrary, which on Android is inside SHARED storage --
@@ -212,7 +216,7 @@ end
 
 function KVCache:insert(key, table_data)
     if not self._cache or type(key) ~= "string" or table_data == nil then return false end
-    self._cache:saveSetting(key, { data = table_data, _at = os.time() })
+    self._cache:saveSetting(key, { data = table_data, _at = now() })
     self._cache:flush() 
     return true
 end
@@ -229,7 +233,7 @@ function KVCache:get(key, cache_expiry, skip_rm)
     end
 
     local expiry = tonumber(cache_expiry) or DEF_TTL_CACHE_EXPIRY
-    local diff = os.time() - at
+    local diff = now() - at
     if diff < 0 or (expiry > 0 and diff > expiry) then
         if not skip_rm then self:remove(key) end
         return nil
@@ -295,7 +299,7 @@ function BookInfoCache:insert(book_hash, info_table)
     local path = self:getPath(book_hash)
     local book_cache = LuaSettings:open(path)
     book_cache:saveSetting("info", info_table)
-    book_cache:saveSetting("_at", os.time())
+    book_cache:saveSetting("_at", now())
     book_cache:flush()
     return true
 end
@@ -320,7 +324,7 @@ function BookInfoCache:get(book_hash, cache_expiry, skip_rm)
             if not skip_rm then book_cache:purge() end
             return nil
         end
-        local diff = os.time() - _at
+        local diff = now() - _at
         if diff < 0 or (cache_expiry > 0 and diff > cache_expiry) then
             if not skip_rm then book_cache:purge() end
             return nil
@@ -379,7 +383,7 @@ function CoverCache:get(book_hash, cache_expiry)
             local attr = lfs.attributes(path)
             local file_time = attr and (attr.modification or attr.access)
             if type(file_time) ~= "number" then return path end
-            local diff = os.time() - file_time
+            local diff = now() - file_time
              if diff < 0 or (cache_expiry > 0 and diff > cache_expiry) then
                 self:remove(book_hash)
                 return nil
@@ -490,10 +494,10 @@ function M.autoCacheCleanup(timestamp_store)
         return
     end
     local CACHE_CLEAN_INTERVAL = 86400
-    local current_time = os.time()
+    local current_time = now()
     local last_cleaned_at = tonumber(timestamp_store:get("last_cleaned_at"))
     if not last_cleaned_at or (current_time - last_cleaned_at) > CACHE_CLEAN_INTERVAL then
-        timestamp_store:insert("last_cleaned_at", os.time())
+        timestamp_store:insert("last_cleaned_at", current_time)
         logger.info("Cache: Starting global GC clean...")
         local cover_cache = M:new({type="cover"})
         cover_cache:gc_clean()

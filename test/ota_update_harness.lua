@@ -139,14 +139,26 @@ sh("mkdir -p " .. q(ROOT))
 local function build_zip(name, files)
     local src = ROOT .. "/zipsrc_" .. name
     sh("rm -rf " .. q(src))
+    -- Entries are listed explicitly and sorted, directories included, rather than left to
+    -- `zip -r .`: that took them in readdir order, which followed the order pairs() happened to
+    -- create the files in, so the same case built a differently ordered archive from run to run.
+    local entries, seen = {}, {}
     for rel, text in pairs(files) do
         local path = src .. "/" .. rel
         sh("mkdir -p " .. q(path:match("^(.*)/")))
         write(path, text)
+        entries[#entries + 1] = rel
+        for dir in rel:gmatch("()/") do
+            local d = rel:sub(1, dir)
+            if not seen[d] then seen[d] = true; entries[#entries + 1] = d end
+        end
     end
+    table.sort(entries)
+    local quoted = {}
+    for i, e in ipairs(entries) do quoted[i] = q(e) end
     local zip = ROOT .. "/" .. name .. ".zip"
     os.remove(zip)
-    sh("cd " .. q(src) .. " && zip -qr " .. q(zip) .. " .")
+    sh("cd " .. q(src) .. " && zip -q " .. q(zip) .. " -- " .. table.concat(quoted, " "))
     return zip
 end
 

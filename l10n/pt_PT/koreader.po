@@ -658,6 +658,12 @@ msgstr "Perguntar se deseja abrir após a transferência"
 msgid "Download categories"
 msgstr "Categorias de transferências"
 
+msgid "Author folders"
+msgstr "Pastas por autor"
+
+msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
+msgstr "Guarda cada livro transferido numa pasta com o nome do autor, dentro da pasta de transferências ou da categoria escolhida."
+
 msgid "View Settings"
 msgstr "Definições de visualização"
 

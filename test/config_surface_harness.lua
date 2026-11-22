@@ -212,8 +212,12 @@ local EXPECTED = {
 }
 
 -- Added on purpose: the settings accessor config_mirrors shares with config_core (the split), and
--- the Detailed logging setting (2026-11-22, see zlibrary/log.lua).
+-- the Detailed logging setting (2026-11-22, see zlibrary/log.lua), and the Author folders setting
+-- (2026-11-22, see author_folder_harness).
 local ALLOWED_EXTRA = {
+    ["SETTINGS_AUTHOR_FOLDERS_KEY:string"] = true,
+    ["getAuthorFolders:function"] = true,
+    ["setAuthorFolders:function"] = true,
     ["_getLuaSettings:function"] = true,
     ["SETTINGS_DETAILED_LOGGING_KEY:string"] = true,
     ["getDetailedLogging:function"] = true,

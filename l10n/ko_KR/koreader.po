@@ -652,6 +652,12 @@ msgstr "다운로드 후 열기 확인"
 msgid "Download categories"
 msgstr "다운로드 카테고리"
 
+msgid "Author folders"
+msgstr "저자별 폴더"
+
+msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
+msgstr "다운로드한 각 책을 다운로드 폴더 또는 선택한 카테고리 안에 있는 저자 이름의 폴더에 저장합니다."
+
 msgid "View Settings"
 msgstr "보기 설정"
 

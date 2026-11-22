@@ -652,6 +652,12 @@ msgstr "السؤال عن الفتح بعد التنزيل"
 msgid "Download categories"
 msgstr "فئات التنزيل"
 
+msgid "Author folders"
+msgstr "مجلدات المؤلفين"
+
+msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
+msgstr "يحفظ كل كتاب يتم تنزيله في مجلد باسم مؤلفه، داخل مجلد التنزيل أو الفئة المختارة."
+
 msgid "View Settings"
 msgstr "إعدادات العرض"
 

@@ -652,6 +652,12 @@ msgstr "Vragen om te openen na downloaden"
 msgid "Download categories"
 msgstr "Downloadcategorieën"
 
+msgid "Author folders"
+msgstr "Auteursmappen"
+
+msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
+msgstr "Slaat elk gedownload boek op in een map met de naam van de auteur, in de downloadmap of in de gekozen categorie."
+
 msgid "View Settings"
 msgstr "Weergave-instellingen"
 

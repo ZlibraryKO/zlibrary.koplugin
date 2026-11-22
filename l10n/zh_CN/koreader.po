@@ -652,6 +652,12 @@ msgstr "下载后询问是否打开"
 msgid "Download categories"
 msgstr "下载分类"
 
+msgid "Author folders"
+msgstr "按作者分文件夹"
+
+msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
+msgstr "将每本下载的书保存到以作者命名的文件夹中，位于下载文件夹或所选分类内。"
+
 msgid "View Settings"
 msgstr "视图设置"
 

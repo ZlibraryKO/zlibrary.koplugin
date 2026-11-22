@@ -26,6 +26,7 @@ If you find this plugin helpful, please consider supporting its development. You
 *   Browse most popular and recommended books.
 *   Open your Z-library booklists and download the books in them.
 *   Download content directly to your device.
+*   Optionally sort downloads into category and author folders.
 
 
 ## Prerequisites

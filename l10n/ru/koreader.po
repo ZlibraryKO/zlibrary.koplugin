@@ -652,6 +652,12 @@ msgstr "Спрашивать об открытии после загрузки"
 msgid "Download categories"
 msgstr "Категории загрузок"
 
+msgid "Author folders"
+msgstr "Папки по авторам"
+
+msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
+msgstr "Сохраняет каждую загруженную книгу в папку с именем её автора — в папке загрузок или в выбранной категории."
+
 msgid "View Settings"
 msgstr "Настройки просмотра"
 

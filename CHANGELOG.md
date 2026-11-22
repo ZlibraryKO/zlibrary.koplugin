@@ -6,6 +6,15 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.60
+
+### Added
+
+**Author folders.** A new setting, Z-library → Settings → Author folders, saves each downloaded
+book in a folder named after its author, created the first time and reused after that. When you
+also pick a download category, the author folder goes inside it (Fiction/Frank Herbert). It works
+with "Ask to open after download" switched off too. Off by default. Suggested in discussion #34.
+
 ## 1.0.59
 
 ### Added

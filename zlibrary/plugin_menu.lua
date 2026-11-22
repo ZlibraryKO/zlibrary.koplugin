@@ -90,6 +90,18 @@ function Zlibrary:addToMainMenu(menu_items)
                                 return Ui.buildCategoriesMenuItems()
                             end,
                         }, {
+                            -- No enabled_func, unlike categories: author folders need no choice
+                            -- from the open prompt, so they work with it switched off too.
+                            text = T("Author folders"),
+                            keep_menu_open = true,
+                            help_text = T("Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."),
+                            checked_func = function()
+                                return Config.getAuthorFolders()
+                            end,
+                            callback = function()
+                                Config.setAuthorFolders(not Config.getAuthorFolders())
+                            end,
+                        }, {
                                 text = T("View Settings"),
                                 keep_menu_open = true,
                                 sub_item_table = { {

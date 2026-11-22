@@ -133,6 +133,16 @@ function Config.setSkipOpenBookPrompt(skip)
     Config.saveSetting(Config.SETTINGS_SKIP_OPEN_BOOK_PROMPT_KEY, skip)
 end
 
+-- Off by default: filing every download under its author changes where books end up, so it has
+-- to be asked for. Independent of the open prompt, which only matters for categories.
+function Config.getAuthorFolders()
+    return Config.getSetting(Config.SETTINGS_AUTHOR_FOLDERS_KEY, false) == true
+end
+
+function Config.setAuthorFolders(on)
+    Config.saveSetting(Config.SETTINGS_AUTHOR_FOLDERS_KEY, on == true)
+end
+
 -- Timeout configuration functions
 function Config.getTimeoutConfig(timeout_key, default_timeout)
     local saved_timeout = Config.getSetting(timeout_key)

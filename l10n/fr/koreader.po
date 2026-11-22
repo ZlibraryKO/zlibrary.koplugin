@@ -652,6 +652,12 @@ msgstr "Demander d'ouvrir après le téléchargement"
 msgid "Download categories"
 msgstr "Catégories de téléchargement"
 
+msgid "Author folders"
+msgstr "Dossiers par auteur"
+
+msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
+msgstr "Enregistre chaque livre téléchargé dans un dossier portant le nom de son auteur, dans le dossier de téléchargement ou dans la catégorie choisie."
+
 msgid "View Settings"
 msgstr "Paramètres d'affichage"
 

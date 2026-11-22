@@ -653,6 +653,12 @@ msgstr "Zeptat se na otevření po stažení"
 msgid "Download categories"
 msgstr "Kategorie stažených knih"
 
+msgid "Author folders"
+msgstr "Složky podle autorů"
+
+msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
+msgstr "Uloží každou staženou knihu do složky pojmenované podle jejího autora, uvnitř složky stažených souborů nebo zvolené kategorie."
+
 msgid "View Settings"
 msgstr "Nastavení zobrazení"
 

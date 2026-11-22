@@ -913,6 +913,14 @@ msgstr ""
 msgid "Download categories"
 msgstr ""
 
+#: zlibrary/plugin_menu.lua:95
+msgid "Author folders"
+msgstr ""
+
+#: zlibrary/plugin_menu.lua:97
+msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
+msgstr ""
+
 #: zlibrary/plugin_menu.lua:93
 msgid "View Settings"
 msgstr ""

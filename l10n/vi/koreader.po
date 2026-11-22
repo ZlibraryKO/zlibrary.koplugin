@@ -653,6 +653,12 @@ msgstr "Yêu cầu mở sau khi tải xuống"
 msgid "Download categories"
 msgstr "Danh mục tải về"
 
+msgid "Author folders"
+msgstr "Thư mục theo tác giả"
+
+msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
+msgstr "Lưu mỗi sách tải về vào một thư mục mang tên tác giả, bên trong thư mục tải về hoặc danh mục đã chọn."
+
 msgid "View Settings"
 msgstr "Cài đặt hiển thị"
 

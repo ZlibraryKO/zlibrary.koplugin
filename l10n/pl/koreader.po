@@ -652,6 +652,12 @@ msgstr "Pytanie o otwarcie po pobraniu"
 msgid "Download categories"
 msgstr "Kategorie pobierania"
 
+msgid "Author folders"
+msgstr "Foldery autorów"
+
+msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
+msgstr "Zapisuje każdą pobraną książkę w folderze nazwanym od jej autora, w folderze pobierania lub w wybranej kategorii."
+
 msgid "View Settings"
 msgstr "Ustawienia widoku"
 

@@ -69,6 +69,54 @@ local function _categoryDestDir(download_dir, target)
     return dir
 end
 
+-- The longest author folder name, in bytes. Shorter than the 240 a file name gets: the file name
+-- already repeats the author, and on the FAT storage of a Kindle or Kobo long paths add up.
+local AUTHOR_FOLDER_MAX_BYTES = 100
+
+-- The folder an author's books go into, or nil for no author folder. The author text is used as
+-- Z-library gives it, co-authors included. Unlike a category name it comes from the server, not
+-- the user, so ".." is refused here rather than trusted.
+local function _authorFolderName(author)
+    if type(author) ~= "string" then return nil end
+    -- Whitespace first, so a newline becomes a space rather than the "_" the sanitiser makes of a
+    -- control character.
+    local name = author:gsub("%s+", " ")
+    name = Config.sanitizeCategoryName(name)
+    if name == "Unknown Author" then return nil end
+    -- FAT and Windows drop trailing dots and spaces, so "Tolkien, J. R. R." would not round-trip.
+    name = name:gsub("[%. ]+$", "")
+    if #name > AUTHOR_FOLDER_MAX_BYTES then
+        -- Step back while the first byte left out continues a character, so the cut lands between
+        -- two characters instead of inside one.
+        local cut = AUTHOR_FOLDER_MAX_BYTES
+        while cut > 0 do
+            local next_byte = name:byte(cut + 1)
+            if next_byte < 0x80 or next_byte >= 0xC0 then break end
+            cut = cut - 1
+        end
+        name = name:sub(1, cut):gsub("[%. ]+$", "")
+    end
+    if name == "" then return nil end
+    return name
+end
+
+-- Where a finished download is filed, and the label messages name it by. The category folder (or
+-- the download folder) is the base; an author folder, when there is one, goes below it. nil when
+-- the book stays where it was downloaded.
+local function _filingDestDir(download_dir, target, author)
+    local dir = _categoryDestDir(download_dir, target)
+    local label
+    if dir then
+        label = target.sub and (target.name .. " › " .. target.sub) or target.name
+    end
+    if author then
+        dir = (dir or download_dir) .. "/" .. author
+        label = label and (label .. " › " .. author) or author
+    end
+    if not dir then return nil end
+    return dir, label
+end
+
 -- A path in dir for filename that does not clash: "Book.epub", then "Book (2).epub",
 -- "Book (3).epub"... Filing keeps both copies rather than overwriting an existing book.
 local function _uniqueDestPath(dir, filename)
@@ -304,10 +352,11 @@ function Download.run(self, book)
                 -- Move the finished book into the category the user picked in the dialog, returning
                 -- the path it ends up at. On no choice, or any failure, this is target_filepath --
                 -- so whatever we hand to the reader below is always a file that exists.
+                -- With "Author folders" on, the book goes one level deeper, into a folder named after
+                -- its author -- also when no category was picked, and when there was no prompt.
+                local author = Config.getAuthorFolders() and _authorFolderName(book.author) or nil
                 local function fileInto(target)
-                    if not target then return target_filepath end
-                    local label = target.sub and (target.name .. " › " .. target.sub) or target.name
-                    local dest_dir = _categoryDestDir(target_dir, target)
+                    local dest_dir, label = _filingDestDir(target_dir, target, author)
                     if not dest_dir then return target_filepath end
                     if not util.directoryExists(dest_dir) then
                         util.makePath(dest_dir)
@@ -319,7 +368,12 @@ function Download.run(self, book)
                     end
                     local dest = _uniqueDestPath(dest_dir, filename)
                     if _safeMove(target_filepath, dest) then
-                        Ui.showInfoMessage(string.format(T("Moved to \"%s\"."), label))
+                        -- The author folder on its own is where the user asked every book to go,
+                        -- so it needs no message; a category is a choice made just now, and is
+                        -- confirmed.
+                        if target then
+                            Ui.showInfoMessage(string.format(T("Moved to \"%s\"."), label))
+                        end
                         return dest
                     end
                     Ui.showInfoMessage(string.format(

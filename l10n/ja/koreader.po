@@ -652,6 +652,12 @@ msgstr "ダウンロード後に開くか確認"
 msgid "Download categories"
 msgstr "ダウンロードカテゴリ"
 
+msgid "Author folders"
+msgstr "著者別フォルダ"
+
+msgid "Saves each downloaded book in a folder named after its author, inside the download folder or the chosen category."
+msgstr "ダウンロードした本を、ダウンロードフォルダまたは選択したカテゴリ内の、著者名のフォルダに保存します。"
+
 msgid "View Settings"
 msgstr "表示設定"
 

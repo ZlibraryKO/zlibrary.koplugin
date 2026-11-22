@@ -39,8 +39,12 @@ local Discovery = {}
 
 function Discovery.run(self, is_interactive, retry_callback)
     if not is_interactive and NetworkMgr:willRerunWhenOnline(function()
+        logger.info("Zlibrary:network - network is up, re-running", "autoDiscoverAndSetBaseUrl")
         self:autoDiscoverAndSetBaseUrl(is_interactive, retry_callback)
-    end) then return end
+    end) then
+        logger.info("Zlibrary:network - waiting for the network before", "autoDiscoverAndSetBaseUrl")
+        return
+    end
 
     logger.info("Zlibrary:autoDiscoverAndSetBaseUrl - START")
     local loading_msg = false

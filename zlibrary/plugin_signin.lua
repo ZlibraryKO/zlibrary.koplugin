@@ -237,8 +237,10 @@ function Zlibrary:login(callback, opts)
     end
 
     if NetworkMgr:willRerunWhenOnline(function()
+        logger.info("Zlibrary:network - network is up, re-running", "login")
         self:login(callback, opts)
     end) then
+        logger.info("Zlibrary:network - waiting for the network before", "login")
         return
     end
 

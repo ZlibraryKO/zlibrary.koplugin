@@ -178,8 +178,10 @@ end
 
 function Zlibrary:onSelectSearchBook(book_data)
     if NetworkMgr:willRerunWhenOnline(function()
+        logger.info("Zlibrary:network - network is up, re-running", "onSelectSearchBook")
         self:onSelectSearchBook(book_data)
     end) then
+        logger.info("Zlibrary:network - waiting for the network before", "onSelectSearchBook")
         return
     end
 

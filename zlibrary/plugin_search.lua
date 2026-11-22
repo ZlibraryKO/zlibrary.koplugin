@@ -20,8 +20,10 @@ local Zlibrary = {}
 
 function Zlibrary:performSearch(query)
     if NetworkMgr:willRerunWhenOnline(function()
+        logger.info("Zlibrary:network - network is up, re-running", "performSearch")
         self:performSearch(query)
     end) then
+        logger.info("Zlibrary:network - waiting for the network before", "performSearch")
         return
     end
 

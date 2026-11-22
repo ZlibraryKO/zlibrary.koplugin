@@ -236,22 +236,6 @@ function Zlibrary:addToMainMenu(menu_items)
                                         end,
                                     },
                                     {
-                                        -- The plugin names itself to the server by default. No
-                                        -- mirror measurably cares -- they answer the same to an
-                                        -- honest agent, a browser one and none at all -- but if
-                                        -- one ever starts refusing unfamiliar clients, this is
-                                        -- the switch that fixes it without waiting for a release.
-                                        text = T("Identify as a web browser"),
-                                        keep_menu_open = true,
-                                        help_text = T("Sends a browser's User-Agent instead of the plugin's own. Only worth trying if a server refuses the plugin itself."),
-                                        checked_func = function()
-                                            return Config.getUseBrowserUserAgent() == true
-                                        end,
-                                        callback = function()
-                                            Config.setUseBrowserUserAgent(not Config.getUseBrowserUserAgent())
-                                        end,
-                                    },
-                                    {
                                         -- The plugin's own switch for its dbg lines, so they can
                                         -- be had without KOReader's whole debug output.
                                         text = T("Detailed logging"),

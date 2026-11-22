@@ -7,7 +7,7 @@ when transitioning between UI states or on plugin exit.
 --]]--
 
 local UIManager = require("ui/uimanager")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 
 local DialogManager = {}
 

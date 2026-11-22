@@ -1,4 +1,4 @@
-local logger = require("logger")
+local logger = require("zlibrary.log")
 local json = require("json")
 local T = require("zlibrary.gettext")
 local ConfirmBox = require("ui/widget/confirmbox")

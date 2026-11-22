@@ -23,7 +23,7 @@ local UIManager = require("ui/uimanager")
 local Ui = require("zlibrary.ui")
 local T = require("zlibrary.gettext")
 local lfs = require("libs/libkoreader-lfs")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 local util = require("util")
 
 local Download = {}

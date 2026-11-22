@@ -2,7 +2,7 @@
 -- produce, and the caches and history that belong to one account. Part of the Config facade; see
 -- config_core.lua.
 
-local logger = require("logger")
+local logger = require("zlibrary.log")
 local LuaSettings = require("luasettings")
 local SearchHistory = require("zlibrary.search_history")
 local Config = require("zlibrary.config_core")

@@ -29,7 +29,7 @@ local EXTRACTED = {
         file = "zlibrary/discovery.lua", exports = "Discovery",
         requires = { "zlibrary.api", "zlibrary.async_helper", "zlibrary.cache", "zlibrary.config",
                      "zlibrary.ui", "zlibrary.gettext", "device", "ui/network/manager",
-                     "ui/uimanager", "logger" },
+                     "ui/uimanager", "zlibrary.log" },
         methods = {
             { name = "autoDiscoverAndSetBaseUrl", args = "is_interactive, retry_callback",
               call = "Discovery.run(self, is_interactive, retry_callback)" },
@@ -40,7 +40,7 @@ local EXTRACTED = {
         file = "zlibrary/download.lua", exports = "Download",
         requires = { "zlibrary.api", "zlibrary.async_helper", "zlibrary.config", "zlibrary.ui",
                      "zlibrary.gettext", "device", "ui/network/manager", "ui/uimanager",
-                     "apps/reader/readerui", "ui/trapper", "libs/libkoreader-lfs", "logger",
+                     "apps/reader/readerui", "ui/trapper", "libs/libkoreader-lfs", "zlibrary.log",
                      "util" },
         methods = {
             { name = "_fetchDetailsThenDownload", args = "book_stub",

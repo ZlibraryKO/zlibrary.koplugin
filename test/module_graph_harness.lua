@@ -91,16 +91,28 @@ r.check("no module requires itself, directly or through others", cycle == nil, c
 
 -- ---------------------------------------------------------------- the specific pair
 -- Named explicitly so a regression here reads as what it is rather than as a generic cycle.
-r.check("cache stays a leaf: it requires no plugin module",
-        next(deps["zlibrary.cache"] or {}) == nil,
-        "cache now requires: " .. (function()
-            local t = {}
-            for d in pairs(deps["zlibrary.cache"] or {}) do t[#t + 1] = d end
-            return table.concat(t, ", ")
-        end)())
+-- zlibrary.log is the one dependency a leaf may have: every logging module requires it, and it
+-- requires nothing of ours itself (checked first), so depending on it can never close a cycle.
+local function plugin_deps_besides_log(mod)
+    local t = {}
+    for d in pairs(deps[mod] or {}) do
+        if d ~= "zlibrary.log" then t[#t + 1] = d end
+    end
+    table.sort(t)
+    return t
+end
 
--- gettext is required by nearly everything, so it must depend on nothing of ours.
-r.check("gettext stays a leaf", next(deps["zlibrary.gettext"] or {}) == nil, "gettext gained a dependency")
+r.check("log is a leaf: it requires no plugin module", next(deps["zlibrary.log"] or {}) == nil,
+        "log now requires something of ours, so every module that logs could be in a cycle")
+
+local cache_deps = plugin_deps_besides_log("zlibrary.cache")
+r.check("cache stays a leaf: it requires no plugin module but log", #cache_deps == 0,
+        "cache now requires: " .. table.concat(cache_deps, ", "))
+
+-- gettext is required by nearly everything, so it must depend on nothing of ours but log.
+local gettext_deps = plugin_deps_besides_log("zlibrary.gettext")
+r.check("gettext stays a leaf (log aside)", #gettext_deps == 0,
+        "gettext gained a dependency: " .. table.concat(gettext_deps, ", "))
 
 -- ---------------------------------------------------------------- report the shape
 local names = {}

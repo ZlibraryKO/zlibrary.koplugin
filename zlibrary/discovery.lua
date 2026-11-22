@@ -18,7 +18,7 @@ local NetworkMgr = require("ui/network/manager")
 local UIManager = require("ui/uimanager")
 local Ui = require("zlibrary.ui")
 local T = require("zlibrary.gettext")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 
 -- Pick a URL at random from the k fastest working mirrors. Selecting the single quickest every time
 -- lands the reader on the same mirror on every sweep; spreading the choice over the top few keeps it

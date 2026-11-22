@@ -211,8 +211,14 @@ local EXPECTED = {
     "toggleViewFlag:function",
 }
 
--- Added on purpose by the split: the settings accessor config_mirrors shares with config_core.
-local ALLOWED_EXTRA = { ["_getLuaSettings:function"] = true }
+-- Added on purpose: the settings accessor config_mirrors shares with config_core (the split), and
+-- the Detailed logging setting (2026-11-22, see zlibrary/log.lua).
+local ALLOWED_EXTRA = {
+    ["_getLuaSettings:function"] = true,
+    ["SETTINGS_DETAILED_LOGGING_KEY:string"] = true,
+    ["getDetailedLogging:function"] = true,
+    ["setDetailedLogging:function"] = true,
+}
 
 local actual = {}
 for k, v in pairs(Config) do actual[k .. ":" .. type(v)] = true end

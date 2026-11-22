@@ -13,7 +13,7 @@ local Config = require("zlibrary.config")
 local Api = require("zlibrary.api")
 local Ui = require("zlibrary.ui")
 local AsyncHelper = require("zlibrary.async_helper")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 local Cache = require("zlibrary.cache")
 
 local Zlibrary = {}

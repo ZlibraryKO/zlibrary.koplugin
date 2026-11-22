@@ -10,7 +10,7 @@ local Config = require("zlibrary.config")
 local Discovery = require("zlibrary.discovery")
 local Download = require("zlibrary.download")
 local Ui = require("zlibrary.ui")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 local Ota = require("zlibrary.ota")
 local Cache = require("zlibrary.cache")
 local DialogManager = require("zlibrary.dialog_manager")
@@ -34,6 +34,8 @@ function Zlibrary:init()
     end
     self.plugin_path, _ = util.splitFilePathName(full_source_path):gsub("/+", "/")
 
+    -- First, so the startup lines below already follow the reader's choice.
+    logger.setDetailed(Config.getDetailedLogging())
     Config.loadCredentialsFromFile(self.plugin_path)
     -- Ota is the only reader of _meta.lua; config is told the version rather than reading it
     -- again, so the About dialog and the User-Agent can never name different ones.

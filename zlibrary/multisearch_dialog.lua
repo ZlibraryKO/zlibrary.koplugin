@@ -18,7 +18,7 @@ local Screen = Device.screen
 local T = require("zlibrary.gettext")
 local Config = require("zlibrary.config")
 local PreLoader = require("zlibrary.preloader").Preloader
-local logger = require("logger")
+local logger = require("zlibrary.log")
 
 local SearchDialog = InputContainer:extend{
     title = T("Z-library search"),

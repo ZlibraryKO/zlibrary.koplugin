@@ -2,7 +2,7 @@
 -- replaces the target once complete), and covers. Part of the Api facade; see api_core.lua.
 
 local Config = require("zlibrary.config")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 local json = require("json")
 local socketutil = require("socketutil")
 local T = require("zlibrary.gettext")

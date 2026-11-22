@@ -3,7 +3,7 @@
 
 local Config = require("zlibrary.config")
 local util = require("util")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 local json = require("json")
 local T = require("zlibrary.gettext")
 local Api = require("zlibrary.api_core")

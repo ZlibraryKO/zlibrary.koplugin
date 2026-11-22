@@ -4,6 +4,7 @@
 local util = require("util")
 local T = require("zlibrary.gettext")
 local Config = require("zlibrary.config_core")
+local Log = require("zlibrary.log")
 
 -- What the plugin calls itself.
 --
@@ -124,6 +125,18 @@ end
 
 function Config.setUseBrowserUserAgent(use_browser)
     Config.saveSetting(Config.SETTINGS_BROWSER_USER_AGENT_KEY, use_browser)
+end
+
+-- Off by default: the plugin's routine lines are dbg, out of crash.log unless KOReader's debug
+-- logging is on. On, they are written at info on their own; see zlibrary/log.lua. Setting it
+-- takes effect at once, and main.lua's init applies the stored value at startup.
+function Config.getDetailedLogging()
+    return Config.getSetting(Config.SETTINGS_DETAILED_LOGGING_KEY, false) == true
+end
+
+function Config.setDetailedLogging(on)
+    Config.saveSetting(Config.SETTINGS_DETAILED_LOGGING_KEY, on == true)
+    Log.setDetailed(on == true)
 end
 
 function Config.getTurnOffWifiAfterDownload()

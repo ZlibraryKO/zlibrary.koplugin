@@ -12,7 +12,7 @@ local util = require("util")
 local T = require("zlibrary.gettext")
 local Config = require("zlibrary.config")
 local Ui = require("zlibrary.ui")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 local Ota = require("zlibrary.ota")
 local Cache = require("zlibrary.cache")
 
@@ -249,6 +249,19 @@ function Zlibrary:addToMainMenu(menu_items)
                                         end,
                                         callback = function()
                                             Config.setUseBrowserUserAgent(not Config.getUseBrowserUserAgent())
+                                        end,
+                                    },
+                                    {
+                                        -- The plugin's own switch for its dbg lines, so they can
+                                        -- be had without KOReader's whole debug output.
+                                        text = T("Detailed logging"),
+                                        keep_menu_open = true,
+                                        help_text = T("Writes everything the plugin does to crash.log, including what you search for. Without it only warnings and errors are logged."),
+                                        checked_func = function()
+                                            return Config.getDetailedLogging()
+                                        end,
+                                        callback = function()
+                                            Config.setDetailedLogging(not Config.getDetailedLogging())
                                         end,
                                     },
                                 }

@@ -4,7 +4,7 @@
 
 local Config = require("zlibrary.config")
 local time = require("ui/time") 
-local logger = require("logger")
+local logger = require("zlibrary.log")
 local ltn12 = require("ltn12")
 local http = require("socket.http")
 local socketutil = require("socketutil")

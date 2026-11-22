@@ -1,6 +1,6 @@
 local util = require("util")
 local GetText = require("gettext")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 
 local full_source_path = debug.getinfo(1, "S").source
 if full_source_path:sub(1, 1) == "@" then

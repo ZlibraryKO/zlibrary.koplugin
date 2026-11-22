@@ -4,7 +4,7 @@
 
 local Config = require("zlibrary.config")
 local util = require("util")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 local json = require("json")
 local socket_url = require("socket.url")
 

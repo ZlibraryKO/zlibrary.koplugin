@@ -4,7 +4,7 @@ local util = require("util")
 local md5 = require("ffi/sha2").md5
 local DataStorage = require("datastorage")
 local LuaSettings = require("luasettings")
-local logger = require("logger")
+local logger = require("zlibrary.log")
 
 local DEF_TTL_CACHE_EXPIRY = 432000 -- 5 days
 -- The clock every expiry check and timestamp reads. One function rather than os.time() inline so

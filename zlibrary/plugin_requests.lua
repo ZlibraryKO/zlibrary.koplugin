@@ -47,12 +47,12 @@ function Zlibrary:_requestDispatcher(options, ...)
     end
 
     if NetworkMgr:willRerunWhenOnline(function()
-        logger.info("Zlibrary:network - network is up, re-running", options.log_context)
+        logger.dbg("Zlibrary:network - network is up, re-running", options.log_context)
         self:_requestDispatcher(options, table.unpack(api_extra_params))
     end) then
         -- Both lines go to the log so a re-run KOReader drops can be seen: "waiting" with no
         -- "re-running" after it. Without them most actions leave no trace of having started.
-        logger.info("Zlibrary:network - waiting for the network before", options.log_context)
+        logger.dbg("Zlibrary:network - waiting for the network before", options.log_context)
         return
     end
 

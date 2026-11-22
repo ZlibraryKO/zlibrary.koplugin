@@ -216,10 +216,10 @@ function Download.run(self, book)
     end
 
     if NetworkMgr:willRerunWhenOnline(function()
-        logger.info("Zlibrary:network - network is up, re-running", "downloadBook")
+        logger.dbg("Zlibrary:network - network is up, re-running", "downloadBook")
         self:downloadBook(book)
     end) then
-        logger.info("Zlibrary:network - waiting for the network before", "downloadBook")
+        logger.dbg("Zlibrary:network - waiting for the network before", "downloadBook")
         return
     end
 

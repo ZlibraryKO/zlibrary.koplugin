@@ -322,10 +322,10 @@ function Ota.startUpdateProcess(plugin_path_from_main)
     logger.dbg("Zlibrary:Ota.startUpdateProcess - Initiated by user. Plugin path: " .. tostring(plugin_path_from_main))
 
     if NetworkMgr:willRerunWhenOnline(function()
-        logger.info("Zlibrary:network - network is up, re-running", "Ota.startUpdateProcess")
+        logger.dbg("Zlibrary:network - network is up, re-running", "Ota.startUpdateProcess")
         Ota.startUpdateProcess(plugin_path_from_main)
     end) then
-        logger.info("Zlibrary:network - waiting for the network before", "Ota.startUpdateProcess")
+        logger.dbg("Zlibrary:network - waiting for the network before", "Ota.startUpdateProcess")
         return
     end
 

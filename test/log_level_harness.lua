@@ -4,10 +4,9 @@
 -- request's START and END, every successful fetch and three lines at each startup at info: about
 -- a fifth of the whole log on a Kindle in daily use. Routine lines are dbg now: written only with
 -- the plugin's own Detailed logging on (see log_detailed_harness) or KOReader's debug logging.
--- warn and err are unchanged. The only info lines left are the
--- "Zlibrary:network -" pair around a Wi-Fi wait, which appear only when Wi-Fi was off and are
--- there to catch a re-run KOReader drops. This fails on any other logger.info in main.lua or
--- zlibrary/*.lua, so a new one has to be added here on purpose.
+-- warn and err are unchanged. The "Zlibrary:network -" pair around a Wi-Fi wait was the last
+-- exception; it went to dbg too (2026-11-22), so there is no plugin line at info at all. This fails
+-- on any logger.info in main.lua or zlibrary/*.lua, so a new one has to be added here on purpose.
 
 local PLUGIN = assert(arg[1], "usage: luajit log_level_harness.lua <plugin-root> <luasocket-src>")
 
@@ -15,7 +14,7 @@ local support = dofile(PLUGIN .. "/test/support.lua")
 local r = support.reporter()
 
 -- Lines allowed at info, by the text they log.
-local ALLOWED = { "Zlibrary:network - " }
+local ALLOWED = {}
 
 local files = { "main.lua" }
 local ls = assert(io.popen('ls "' .. PLUGIN .. '/zlibrary"'))
@@ -46,6 +45,12 @@ end
 
 r.check("nothing else logs at info", #stray == 0,
         #stray .. " line(s), first " .. tostring(stray[1]) .. " -- use logger.dbg, or add it to ALLOWED")
-r.check("the Wi-Fi wait lines are still at info", allowed >= 14, allowed .. " found")
+local wifi_dbg = 0
+for _, rel in ipairs(files) do
+    for line in io.lines(PLUGIN .. "/" .. rel) do
+        if line:find('logger.dbg("Zlibrary:network - ', 1, true) then wifi_dbg = wifi_dbg + 1 end
+    end
+end
+r.check("the Wi-Fi wait lines are at dbg", wifi_dbg >= 14, wifi_dbg .. " found")
 
 r.finish()

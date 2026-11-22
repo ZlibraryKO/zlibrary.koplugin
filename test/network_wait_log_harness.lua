@@ -6,7 +6,8 @@
 -- write nothing until their request finishes. With them, a dropped re-run is a "waiting" line
 -- with no "re-running" after it. Checked on every call site in main.lua and zlibrary/*.lua, so a
 -- new one cannot be added without them; and run for real on the search, which must keep the
--- query itself out of the info log.
+-- query itself out of these lines. They are at dbg (2026-11-22): written with Detailed logging on,
+-- which is what a reader reporting the problem is asked to turn on.
 
 local PLUGIN = assert(arg[1], "usage: luajit network_wait_log_harness.lua <plugin-root> <luasocket-src>")
 
@@ -57,8 +58,8 @@ local rerun
 local env = {
     T = function(s) return s end,
     logger = {
-        info = function(...) logged[#logged + 1] = table.concat({ ... }, " ") end,
-        dbg = function() end, warn = function() end, err = function() end,
+        dbg = function(...) logged[#logged + 1] = table.concat({ ... }, " ") end,
+        info = function() end, warn = function() end, err = function() end,
     },
     NetworkMgr = { willRerunWhenOnline = function(_, fn) rerun = fn; return true end },
 }
@@ -80,6 +81,6 @@ r.check("and logs the re-run once the network is up",
 r.check("and the re-run is the same search", reran_with == QUERY, tostring(reran_with))
 local leaked = false
 for _, line in ipairs(logged) do if line:find(QUERY, 1, true) then leaked = true end end
-r.check("the query itself stays out of the info log", not leaked, "a search query was logged at info")
+r.check("the query itself stays out of the wait lines", not leaked, "a search query was logged with them")
 
 r.finish()

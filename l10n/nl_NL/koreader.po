@@ -997,6 +997,18 @@ msgstr "Talen (%d)"
 msgid "Set formats"
 msgstr "Formaten instellen"
 
+msgid "Content: Books"
+msgstr "Inhoud: boeken"
+
+msgid "Content: Articles"
+msgstr "Inhoud: artikelen"
+
+msgid "Articles"
+msgstr "Artikelen"
+
+msgid "Formats: books only"
+msgstr "Formaten: alleen boeken"
+
 #, lua-format
 msgid "Format: %s"
 msgstr "Formaat: %s"

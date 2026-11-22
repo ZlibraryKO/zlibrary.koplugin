@@ -143,6 +143,20 @@ function Config.setAuthorFolders(on)
     Config.saveSetting(Config.SETTINGS_AUTHOR_FOLDERS_KEY, on == true)
 end
 
+-- What a search looks for: "book" (the default) or "article". Anything else stored reads as
+-- "book", so a hand-edited value can never turn into an unknown content type in the request.
+function Config.getSearchContentType()
+    if Config.getSetting(Config.SETTINGS_SEARCH_CONTENT_TYPE_KEY) == "article" then
+        return "article"
+    end
+    return "book"
+end
+
+function Config.setSearchContentType(content_type)
+    Config.saveSetting(Config.SETTINGS_SEARCH_CONTENT_TYPE_KEY,
+        content_type == "article" and "article" or "book")
+end
+
 -- Timeout configuration functions
 function Config.getTimeoutConfig(timeout_key, default_timeout)
     local saved_timeout = Config.getSetting(timeout_key)

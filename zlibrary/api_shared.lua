@@ -114,6 +114,9 @@ local function _transformApiBookData(api_books)
                 series = book.series,
                 pages = book.pages,
                 identifier = book.identifier,
+                -- "article" for an article search's results; rows use it to show the format
+                -- even when the (books-only) format filter is set.
+                content_type = book.content_type,
             })
         else
             logger.warn("transformApiBookData - Failed to transform an API book item, skipping.", book)

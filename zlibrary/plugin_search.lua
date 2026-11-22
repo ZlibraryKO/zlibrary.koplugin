@@ -40,10 +40,11 @@ function Zlibrary:performSearch(query)
         local selected_languages = Config.getSearchLanguages()
         local selected_extensions = Config.getSearchExtensions()
         local selected_order = Config.getSearchOrder()
+        local content_type = Config.getSearchContentType()
         local current_page_to_search = 1
 
         local task = function()
-            return Api.search(query, user_session and user_session.user_id, user_session and user_session.user_key, selected_languages, selected_extensions, selected_order, current_page_to_search)
+            return Api.search(query, user_session and user_session.user_id, user_session and user_session.user_key, selected_languages, selected_extensions, selected_order, current_page_to_search, content_type)
         end
 
         local on_success
@@ -52,7 +53,7 @@ function Zlibrary:performSearch(query)
                 -- Use the retry dialog for timeouts and HTTP 400 errors
                 Ui.showSearchErrorDialog(api_result.error, query, user_session, selected_languages, selected_extensions, selected_order, current_page_to_search, loading_msg, on_success, function(final_err_msg)
                     -- Cancel callback - user already knows about the error
-                end)
+                end, content_type)
                 return
             end
 
@@ -66,6 +67,9 @@ function Zlibrary:performSearch(query)
             logger.dbg(string.format("Zlibrary:performSearch - Fetch successful. Results: %d", #api_result.results))
             Config.addSearchHistory(query)
             self.current_search_query = query
+            -- Kept with the results rather than read again for the next page: switching the
+            -- dialog's toggle and cancelling would otherwise append articles to a list of books.
+            self.current_search_content_type = content_type
             self.current_search_api_page_loaded = current_page_to_search
             self.all_search_results_data = api_result.results
             self.has_more_api_results = true
@@ -79,7 +83,7 @@ function Zlibrary:performSearch(query)
             -- Use the retry dialog for timeouts and HTTP 400 errors
             Ui.showSearchErrorDialog(err_msg, query, user_session, selected_languages, selected_extensions, selected_order, current_page_to_search, loading_msg, on_success, function(final_err_msg)
                 -- Cancel callback - user already knows about the error
-            end)
+            end, content_type)
         end
 
         AsyncHelper.runCancellable(task, on_success, on_error_handler, loading_msg)
@@ -127,7 +131,7 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
             local selected_order_more = Config.getSearchOrder()
 
             local task_load_more = function()
-                return Api.search(self.current_search_query, user_session_more.user_id, user_session_more.user_key, selected_languages_more, selected_extensions_more, selected_order_more, next_api_page_to_fetch)
+                return Api.search(self.current_search_query, user_session_more.user_id, user_session_more.user_key, selected_languages_more, selected_extensions_more, selected_order_more, next_api_page_to_fetch, self.current_search_content_type)
             end
 
             local on_success_load_more
@@ -198,7 +202,8 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
         -- Holding a row downloads it without opening the detail view. downloadBook resolves the
         -- link from the id and hash a search result already carries, and ends by confirming, so
         -- this hands straight over -- asking here as well produced two dialogs in a row.
-        function(book) self:downloadBook(book) end)
+        function(book) self:downloadBook(book) end,
+        self.current_search_content_type)
 end
 
 return Zlibrary

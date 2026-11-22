@@ -15,6 +15,20 @@ book in a folder named after its author, created the first time and reused after
 also pick a download category, the author folder goes inside it (Fiction/Frank Herbert). It works
 with "Ask to open after download" switched off too. Off by default. Suggested in discussion #34.
 
+**Article search.** The search dialog has a new "Content" button that switches between books and
+articles, so you can find and download scientific articles too. Your choice is remembered, and
+the results list says "Articles" when it shows them. The format filter only applies to books
+(articles are almost all PDF), so an "EPUB only" setting no longer hides them. Most popular stays
+books. Suggested in discussion #142.
+
+### Changed
+
+**A tidier search dialog.** Search is one big button under the search field, a cross in the
+title bar closes the dialog (so does the Back key), and the Cancel button is gone. Recent
+searches is now a clock icon beside the field, and tapping one of them puts it in the search box
+so you can check the filters or change the words before searching, instead of searching right
+away.
+
 ## 1.0.59
 
 ### Added

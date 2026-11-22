@@ -1393,6 +1393,22 @@ msgstr ""
 msgid "Set formats"
 msgstr ""
 
+#: zlibrary/ui_search.lua:164
+msgid "Content: Books"
+msgstr ""
+
+#: zlibrary/ui_search.lua:164
+msgid "Content: Articles"
+msgstr ""
+
+#: zlibrary/ui_search.lua:264
+msgid "Articles"
+msgstr ""
+
+#: zlibrary/ui_search.lua:210
+msgid "Formats: books only"
+msgstr ""
+
 #: zlibrary/ui_search.lua:134
 #, lua-format
 msgid "Format: %s"

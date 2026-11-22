@@ -495,5 +495,36 @@ r.check("healthCheck: does not consult the pinned redirect target",
 r.check("healthCheck: sends no session cookie",
         req and not (req.headers and req.headers["Cookie"]), "sent a cookie")
 
+-- Books or articles. Only "article" adds a content type: a book search must stay the request it
+-- always was, and Most popular never asks for articles.
+do
+    local function body_of(args)
+        local _, sreq = call("search", args, { body = "search_500" })
+        return sreq and sreq.body or ""
+    end
+    local abody = body_of({ "attention", UID, UKEY, nil, nil, nil, 1, "article" })
+    r.check("search: an article search asks for articles",
+            ("&" .. abody .. "&"):find("&content_type=article&", 1, true) ~= nil, "body: " .. abody)
+    local bbody = body_of({ "attention", UID, UKEY, nil, nil, nil, 1, "book" })
+    r.check("search: a book search sends no content type",
+            not bbody:find("content_type", 1, true), "body: " .. bbody)
+    local nbody = body_of({ "attention", UID, UKEY, nil, nil, nil, 1 })
+    r.check("search: no choice sends no content type (the request as before)",
+            not nbody:find("content_type", 1, true) and nbody == bbody, "body: " .. nbody)
+    -- The format filter is for books: articles are PDF, so "EPUB only" would hide nearly all.
+    local afbody = body_of({ "attention", UID, UKEY, { "english" }, { "EPUB" }, nil, 1, "article" })
+    r.check("search: an article search drops the format filter",
+            not afbody:find("extensions[", 1, true), "body: " .. afbody)
+    r.check("search: and keeps the language filter",
+            afbody:find("languages[0]=english", 1, true) ~= nil, "body: " .. afbody)
+    local bfbody = body_of({ "dune", UID, UKEY, nil, { "EPUB" }, nil, 1, "book" })
+    r.check("search: a book search keeps the format filter",
+            bfbody:find("extensions[0]=EPUB", 1, true) ~= nil, "body: " .. bfbody)
+    local _, popreq = call("getMostPopularBooks", { UID, UKEY, { "english" } }, { body = "search_500" })
+    local popbody = popreq and popreq.body or ""
+    r.check("getMostPopularBooks: its filtered search never asks for articles",
+            popbody ~= "" and not popbody:find("content_type", 1, true), "body: " .. popbody)
+end
+
 Api.makeHttpRequest = real_makeHttpRequest
 r.finish()

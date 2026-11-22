@@ -998,6 +998,18 @@ msgstr "Ngôn ngữ (%d)"
 msgid "Set formats"
 msgstr "Đặt định dạng"
 
+msgid "Content: Books"
+msgstr "Nội dung: sách"
+
+msgid "Content: Articles"
+msgstr "Nội dung: bài báo"
+
+msgid "Articles"
+msgstr "Bài báo"
+
+msgid "Formats: books only"
+msgstr "Định dạng: chỉ cho sách"
+
 #, lua-format
 msgid "Format: %s"
 msgstr "Định dạng: %s"

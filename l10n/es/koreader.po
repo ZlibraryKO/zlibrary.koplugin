@@ -997,6 +997,18 @@ msgstr "Idiomas (%d)"
 msgid "Set formats"
 msgstr "Configurar formatos"
 
+msgid "Content: Books"
+msgstr "Contenido: libros"
+
+msgid "Content: Articles"
+msgstr "Contenido: artículos"
+
+msgid "Articles"
+msgstr "Artículos"
+
+msgid "Formats: books only"
+msgstr "Formatos: solo libros"
+
 #, lua-format
 msgid "Format: %s"
 msgstr "Formato: %s"

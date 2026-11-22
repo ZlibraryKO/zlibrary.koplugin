@@ -327,4 +327,42 @@ do
             "got " .. tostring(Config.getAuthorFolders()))
 end
 
+-- ---------------------------------------------------------------- Search content type
+-- Books unless articles were chosen; nothing but "book" or "article" is stored or read back, so a
+-- hand-edited value cannot reach the search request.
+do
+    local function blk(pattern) return support.extract_block(CONFIG, pattern) .. "end\n" end
+    local body =
+        blk("(\nfunction Config%.getSearchContentType%(.-\n)end\n") ..
+        blk("(\nfunction Config%.setSearchContentType%(.-\n)end\n")
+    local store = {}
+    local Config = {
+        SETTINGS_SEARCH_CONTENT_TYPE_KEY = "zlibrary_search_content_type",
+        getSetting = function(key, default)
+            if store[key] == nil then return default end
+            return store[key]
+        end,
+        saveSetting = function(key, value) store[key] = value end,
+    }
+    local chunk = assert(loadstring("local Config = ...\n" .. body .. "return Config", "=content_type"))
+    setfenv(chunk, {})
+    chunk(Config)
+
+    r.check("search content type defaults to books", Config.getSearchContentType() == "book",
+            "got " .. tostring(Config.getSearchContentType()))
+    Config.setSearchContentType("article")
+    r.check("choosing articles is stored and read back",
+            store.zlibrary_search_content_type == "article" and Config.getSearchContentType() == "article",
+            "stored " .. tostring(store.zlibrary_search_content_type))
+    Config.setSearchContentType("book")
+    r.check("choosing books again reads back books", Config.getSearchContentType() == "book",
+            "got " .. tostring(Config.getSearchContentType()))
+    Config.setSearchContentType("journal")
+    r.check("an unknown value is stored as books", store.zlibrary_search_content_type == "book",
+            "stored " .. tostring(store.zlibrary_search_content_type))
+    store.zlibrary_search_content_type = "journal"
+    r.check("an unknown stored value reads as books", Config.getSearchContentType() == "book",
+            "got " .. tostring(Config.getSearchContentType()))
+end
+
 r.finish()

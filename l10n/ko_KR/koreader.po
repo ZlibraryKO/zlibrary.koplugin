@@ -997,6 +997,18 @@ msgstr "언어 (%d)"
 msgid "Set formats"
 msgstr "형식 설정"
 
+msgid "Content: Books"
+msgstr "콘텐츠: 도서"
+
+msgid "Content: Articles"
+msgstr "콘텐츠: 논문"
+
+msgid "Articles"
+msgstr "논문"
+
+msgid "Formats: books only"
+msgstr "형식: 도서 전용"
+
 #, lua-format
 msgid "Format: %s"
 msgstr "형식: %s"

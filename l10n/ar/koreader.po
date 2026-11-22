@@ -997,6 +997,18 @@ msgstr "اللغات (%d)"
 msgid "Set formats"
 msgstr "تعيين التنسيقات"
 
+msgid "Content: Books"
+msgstr "المحتوى: كتب"
+
+msgid "Content: Articles"
+msgstr "المحتوى: مقالات"
+
+msgid "Articles"
+msgstr "مقالات"
+
+msgid "Formats: books only"
+msgstr "الصيغ: للكتب فقط"
+
 #, lua-format
 msgid "Format: %s"
 msgstr "التنسيق: %s"

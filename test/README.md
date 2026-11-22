@@ -84,7 +84,9 @@ A selection, with more detail than the opening comments that `--list` prints.
 ## Conventions
 
 Each `*_harness.lua` is invoked as `luajit <harness> <plugin-root> <luasocket-src> <koreader-root>`
-and each `*_check.py` as `python3 <check> <plugin-root> <koreader-root>`. Drop a new file matching
+and each `*_check.py` as `python3 <check> <plugin-root> <koreader-root>`. Without `python3` on
+`PATH` each check counts as failed rather than skipped, so the suite can't pass with them unrun.
+Drop a new file matching
 either pattern into this directory and `run.sh` picks it up.
 
 `support.lua` holds the shared pieces: the pass/fail reporter, the KOReader module stubs, and

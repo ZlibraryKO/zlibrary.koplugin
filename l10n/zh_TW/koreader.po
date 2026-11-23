@@ -751,6 +751,9 @@ msgstr "操作"
 msgid "No books match the selected search languages and formats"
 msgstr "沒有符合所選搜尋語言和格式的書籍"
 
+msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
+msgstr "Z-library 目前拒絕搜尋請求。這是 Z-library 那邊的問題，不是外掛的問題：你的清單、「最熱門」和下載仍可正常使用。"
+
 msgid "No books found, please try again"
 msgstr "未找到書籍，請重試"
 

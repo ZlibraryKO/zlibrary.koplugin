@@ -751,6 +751,9 @@ msgstr "العملية"
 msgid "No books match the selected search languages and formats"
 msgstr "لا توجد كتب تطابق لغات وتنسيقات البحث المحددة"
 
+msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
+msgstr "يرفض Z-library عمليات البحث حاليًا. المشكلة من جهة Z-library وليست من الإضافة: قوائمك و«الأكثر شعبية» والتنزيلات لا تزال تعمل."
+
 msgid "No books found, please try again"
 msgstr "لم يتم العثور على كتب، يرجى المحاولة مرة أخرى"
 

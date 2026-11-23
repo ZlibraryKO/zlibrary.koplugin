@@ -54,6 +54,8 @@ local BODIES = {
                    pagination = { limit = 30, current = 1, total_items = 500, total_pages = 17 } },
     ok         = { success = 1 },
     api_failed = { success = 0, message = "nope" },
+    -- Every search since 2026-11-23, whatever its body, user agent or cookie.
+    search_denied = { success = 0, error = "Access denied" },
     -- Shaped like /papi/booklist responses, values made up. The booklist endpoints put their text in error.
     api_failed_error = { success = 0, error = "Booklist not found" },
     booklists_missing = { success = 1 },
@@ -125,13 +127,18 @@ local Api = require("zlibrary.api")
 -- replacing it here captures exactly what each one would have put on the wire.
 local sent, reply
 local real_makeHttpRequest = Api.makeHttpRequest
+-- A reply with _seq answers successive requests in turn (a call that makes two); sent_all keeps
+-- every request, sent only the last.
+local sent_all
 Api.makeHttpRequest = function(options)
     sent = options
+    if sent_all then sent_all[#sent_all + 1] = options end
+    if type(reply) == "table" and reply._seq then return table.remove(reply._seq, 1) end
     return reply
 end
 
 local function call(fn, args, response)
-    asked, sent = {}, nil
+    asked, sent, sent_all = {}, nil, {}
     reply = response
     local ok, result = pcall(Api[fn], unpack(args))
     return ok and result or { error = "RAISED: " .. tostring(result) }, sent, asked
@@ -409,6 +416,60 @@ r.check("getMostPopularBooks: nothing in the selected languages is an empty, fla
 pop = call("getMostPopularBooks", { UID, UKEY, { "portuguese" } }, { error = "boom" })
 r.check("getMostPopularBooks: a failed language search passes its error through",
         pop.error ~= nil and pop.books == nil, "no error returned")
+
+-- The refusal as the real transport hands it over: makeHttpRequest has already turned the 400
+-- into an error (the body's own text) and kept the body. A first version of the fallback only
+-- looked at a 200 answer's error field, passed every check here, and did nothing on a Kindle.
+local DENIED_400 = { error = "Access denied", status_code = 400, body = "search_denied" }
+-- A refused filtered search falls back to Z-library's own unfiltered list, flagged so the tab
+-- can say so, rather than leaving Most popular empty while that list still works.
+pop = call("getMostPopularBooks", { UID, UKEY, { "english" }, { "epub" } },
+           { _seq = { DENIED_400, { body = "books" } } })
+r.check("getMostPopularBooks: a refused search falls back to the most-popular endpoint",
+        #sent_all == 2 and sent_all[1].method == "POST" and sent_all[2].method == "GET"
+            and sent_all[2].url == "https://z.example/eapi/getMostPopularBooksUrl",
+        "requests: " .. #sent_all)
+r.check("getMostPopularBooks: the fallback keeps the session",
+        sent_all[2] and sent_all[2].headers and sent_all[2].headers["Cookie"] == COOKIE,
+        "cookie: " .. tostring(sent_all[2] and sent_all[2].headers and sent_all[2].headers["Cookie"]))
+r.check("getMostPopularBooks: the fallback's books, flagged as unfiltered, with no more pages",
+        pop.error == nil and type(pop.books) == "table" and #pop.books == 1
+            and pop.filters_ignored == true and not pop.filtered and not pop.has_more_results,
+        "error=" .. tostring(pop.error) .. " filters_ignored=" .. tostring(pop.filters_ignored))
+pop = call("getMostPopularBooks", { UID, UKEY, { "english" } },
+           { _seq = { DENIED_400, { error = "boom" } } })
+r.check("getMostPopularBooks: a failing fallback reports its own error",
+        pop.error == "boom" and pop.books == nil, "error=" .. tostring(pop.error))
+pop = call("getMostPopularBooks", { UID, UKEY, { "english" }, {}, 2 },
+           { _seq = { DENIED_400, { body = "books" } } })
+r.check("getMostPopularBooks: a refused later page is an error, not the first page again",
+        pop.error ~= nil and #sent_all == 1, "requests: " .. #sent_all)
+pop = call("getMostPopularBooks", { UID, UKEY, { "english" } },
+           { _seq = { { body = "api_failed_error" }, { body = "books" } } })
+r.check("getMostPopularBooks: only that refusal falls back",
+        pop.error ~= nil and #sent_all == 1, "requests: " .. #sent_all)
+local sres = call("search", { "dune", UID, UKEY }, { body = "search_denied" })
+r.check("search: keeps the server's own error text beside the translated one",
+        sres.api_error == "Access denied", "api_error=" .. tostring(sres.api_error))
+-- The reader sees why instead of the bare "Access denied", which reads like an account problem.
+local REFUSED = "Z-library is refusing searches right now"
+r.check("search: a refusal says it is on Z-library's side",
+        tostring(sres.error):find(REFUSED, 1, true) == 1, "error=" .. tostring(sres.error))
+sres = call("search", { "dune", UID, UKEY }, DENIED_400)
+r.check("search: and when the refusal comes as an HTTP 400",
+        sres.api_error == "Access denied" and sres.status_code == 400
+            and tostring(sres.error):find(REFUSED, 1, true) == 1,
+        "api_error=" .. tostring(sres.api_error) .. " error=" .. tostring(sres.error))
+sres = call("search", { "dune", UID, UKEY }, { body = "api_failed_error" })
+r.check("search: any other server error still shows its own text",
+        tostring(sres.error):find("Booklist not found", 1, true) ~= nil, "error=" .. tostring(sres.error))
+sres = call("search", { "dune", UID, UKEY }, { error = "HTTP Error: 500", status_code = 500, body = "api_failed" })
+r.check("search: and so does another HTTP error",
+        sres.error == "HTTP Error: 500" and sres.api_error == "nope", "error=" .. tostring(sres.error))
+pop = call("getMostPopularBooks", { UID, UKEY, { "english" } },
+           { _seq = { { body = "search_denied" }, { body = "books" } } })
+r.check("getMostPopularBooks: a refusal in a 200 answer falls back too",
+        pop.filters_ignored == true and #sent_all == 2, "requests: " .. #sent_all)
 
 -- The reader's format filter applies too: a reader who only wants EPUBs must not be shown PDFs
 -- in Most popular. Formats alone are enough to switch to the search, since the most-popular

@@ -12,6 +12,7 @@ local _usableCoverUrl = Shared._usableCoverUrl
 local _sessionCookie = Shared._sessionCookie
 local _authedHeaders = Shared._authedHeaders
 local _transformApiBookData = Shared._transformApiBookData
+local _extractErrorFromJsonBody = Shared._extractErrorFromJsonBody
 
 -- Also checked by the menu at fetch time: a list saved to the multi-search cache before a rule here
 -- existed still carries the URLs it rejects.
@@ -21,6 +22,13 @@ Api.usableCoverUrl = _usableCoverUrl
 -- documentation, but the search endpoint honours it (checked 2026-11-22): each result then carries
 -- content_type "article", and opens and downloads through the same endpoints as a book. Anything
 -- else sends no content type, so a book search is the request it always was.
+-- What a reader sees instead of the server's bare "Access denied", which Z-library has sent for
+-- every search since 2026-11-23 (an HTTP 400, whatever the session, user agent or body). That
+-- reads like a problem with their account or the plugin, and it is neither.
+local function _searchRefusedText()
+    return T("Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work.")
+end
+
 function Api.search(query, user_id, user_key, languages, extensions, order, page, content_type, is_redir_callback)
     -- The query at dbg, not info: what someone searches for is theirs, and crash.log at the default level is
     -- what gets attached to bug reports. The page number is enough to follow a session there.
@@ -92,6 +100,10 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
     if http_result.error then
         result.error = http_result.error
         result.status_code = http_result.status_code
+        -- The search refusal comes as a 400 with {"success":0,"error":"Access denied"}, so it
+        -- lands here, not at the data.error check below.
+        result.api_error = _extractErrorFromJsonBody(http_result.body)
+        if result.api_error == "Access denied" then result.error = _searchRefusedText() end
         logger.err(string.format("Zlibrary:Api.search - END (HTTP error) - Error: %s, Status: %s", result.error, tostring(result.status_code)))
         return result
     end
@@ -116,6 +128,9 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
         -- data.error may be a string or an object; guard the index the way _extractErrorFromJsonBody does.
         local api_message = (type(data.error) == "table" and data.error.message) or data.error
         result.error = T("Search API error") .. ": " .. tostring(api_message)
+        -- The server's own words, untranslated, for callers that react to a particular refusal.
+        result.api_error = tostring(api_message)
+        if result.api_error == "Access denied" then result.error = _searchRefusedText() end
         logger.warn(string.format("Zlibrary:Api.search - END (API error in response) - Error: %s", result.error))
         return result
     end
@@ -192,33 +207,8 @@ end
 -- empty query and the "popular" order it answers with the most popular books matching them,
 -- which is what this tab should show. `filtered` tells the caller that an empty result means
 -- "nothing matches those languages and formats".
-function Api.getMostPopularBooks(user_id, user_key, languages, extensions, page)
-    local url = Config.getMostPopularBooksUrl()
-    if not url then
-        logger.warn("Api.getMostPopularBooks - Base URL not configured")
-        return { error = T("Z-library server URL not configured.") }
-    end
-
-    local has_languages = type(languages) == "table" and #languages > 0
-    local has_extensions = type(extensions) == "table" and #extensions > 0
-    if has_languages or has_extensions then
-        local page_num = page or 1
-        local res = Api.search("", user_id, user_key, has_languages and languages or nil,
-            has_extensions and extensions or nil, { "popular" }, page_num)
-        if res.error then return { error = res.error } end
-        local books = res.results or {}
-        -- The search pages, 30 books at a time, up to the 500 the server reports as its total;
-        -- fetching only the first page left the tab at 30. Without a total, a full page is the
-        -- best sign there is another.
-        local has_more
-        if res.total_count then
-            has_more = page_num * Config.SEARCH_RESULTS_LIMIT < res.total_count
-        else
-            has_more = #books >= Config.SEARCH_RESULTS_LIMIT
-        end
-        return { books = books, filtered = true, has_more_results = has_more }
-    end
-
+-- Z-library's own most-popular list: one fixed page, no language or format filter.
+local function _fetchUnfilteredMostPopular(url, user_id, user_key)
     local headers = _authedHeaders(user_id, user_key)
 
     local http_result = Api.makeHttpRequest{
@@ -253,6 +243,48 @@ function Api.getMostPopularBooks(user_id, user_key, languages, extensions, page)
 
     local transformed_books = _transformApiBookData(data.books)
     return { books = transformed_books }
+end
+
+function Api.getMostPopularBooks(user_id, user_key, languages, extensions, page)
+    local url = Config.getMostPopularBooksUrl()
+    if not url then
+        logger.warn("Api.getMostPopularBooks - Base URL not configured")
+        return { error = T("Z-library server URL not configured.") }
+    end
+
+    local has_languages = type(languages) == "table" and #languages > 0
+    local has_extensions = type(extensions) == "table" and #extensions > 0
+    if has_languages or has_extensions then
+        local page_num = page or 1
+        local res = Api.search("", user_id, user_key, has_languages and languages or nil,
+            has_extensions and extensions or nil, { "popular" }, page_num)
+        if res.error then
+            -- Since 2026-11-23 the server answers every search with "Access denied" while its
+            -- own most-popular list still works. The unfiltered list beats an error, so show it
+            -- and say the filters were left out. Only for the first page: that list has no
+            -- others, and a later page failing means the earlier ones are already on screen.
+            if res.api_error == "Access denied" and page_num == 1 then
+                logger.warn("Api.getMostPopularBooks - filtered search refused, showing the unfiltered list")
+                local fallback = _fetchUnfilteredMostPopular(url, user_id, user_key)
+                if fallback.books then fallback.filters_ignored = true end
+                return fallback
+            end
+            return { error = res.error }
+        end
+        local books = res.results or {}
+        -- The search pages, 30 books at a time, up to the 500 the server reports as its total;
+        -- fetching only the first page left the tab at 30. Without a total, a full page is the
+        -- best sign there is another.
+        local has_more
+        if res.total_count then
+            has_more = page_num * Config.SEARCH_RESULTS_LIMIT < res.total_count
+        else
+            has_more = #books >= Config.SEARCH_RESULTS_LIMIT
+        end
+        return { books = books, filtered = true, has_more_results = has_more }
+    end
+
+    return _fetchUnfilteredMostPopular(url, user_id, user_key)
 end
 
 function Api.getBookDetails(user_id, user_key, book_id, book_hash)

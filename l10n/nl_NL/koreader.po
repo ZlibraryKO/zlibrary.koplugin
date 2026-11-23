@@ -751,6 +751,9 @@ msgstr "Bewerking"
 msgid "No books match the selected search languages and formats"
 msgstr "Geen boeken die overeenkomen met de geselecteerde zoektalen en -formaten"
 
+msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
+msgstr "Z-library weigert op dit moment zoekopdrachten. Dat ligt aan Z-library, niet aan de plug-in: je lijsten, Meest populair en downloads werken nog wel."
+
 msgid "No books found, please try again"
 msgstr "Geen boeken gevonden, probeer het opnieuw"
 

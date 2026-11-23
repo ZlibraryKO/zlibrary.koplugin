@@ -752,6 +752,9 @@ msgstr "Operace"
 msgid "No books match the selected search languages and formats"
 msgstr "Žádné knihy neodpovídají vybraným jazykům a formátům vyhledávání"
 
+msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
+msgstr "Z-library teď odmítá vyhledávání. Problém je na straně Z-library, ne pluginu: vaše seznamy, Nejoblíbenější a stahování dál fungují."
+
 msgid "No books found, please try again"
 msgstr "Nebyly nalezeny žádné knihy, zkuste to prosím znovu"
 

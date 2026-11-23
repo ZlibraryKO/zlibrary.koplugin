@@ -751,6 +751,9 @@ msgstr "Operazione"
 msgid "No books match the selected search languages and formats"
 msgstr "Nessun libro corrisponde alle lingue e ai formati di ricerca selezionati"
 
+msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
+msgstr "Al momento Z-library rifiuta le ricerche. Il problema è di Z-library, non del plugin: le tue liste, Più popolari e i download funzionano ancora."
+
 msgid "No books found, please try again"
 msgstr "Nessun libro trovato, riprova"
 

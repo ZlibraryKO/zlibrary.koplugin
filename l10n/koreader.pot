@@ -1051,6 +1051,10 @@ msgstr ""
 msgid "No books match the selected search languages and formats"
 msgstr ""
 
+#: zlibrary/api_books.lua:29
+msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
+msgstr ""
+
 #: zlibrary/plugin_requests.lua:145
 msgid "No books found, please try again"
 msgstr ""

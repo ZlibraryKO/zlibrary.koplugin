@@ -22,6 +22,13 @@ Api.usableCoverUrl = _usableCoverUrl
 -- documentation, but the search endpoint honours it (checked 2026-11-22): each result then carries
 -- content_type "article", and opens and downloads through the same endpoints as a book. Anything
 -- else sends no content type, so a book search is the request it always was.
+-- What a reader sees instead of the server's bare "Access denied", which Z-library has sent for
+-- every search since 2026-11-23 (an HTTP 400, whatever the session, user agent or body). That
+-- reads like a problem with their account or the plugin, and it is neither.
+local function _searchRefusedText()
+    return T("Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work.")
+end
+
 function Api.search(query, user_id, user_key, languages, extensions, order, page, content_type, is_redir_callback)
     -- The query at dbg, not info: what someone searches for is theirs, and crash.log at the default level is
     -- what gets attached to bug reports. The page number is enough to follow a session there.
@@ -96,6 +103,7 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
         -- The search refusal comes as a 400 with {"success":0,"error":"Access denied"}, so it
         -- lands here, not at the data.error check below.
         result.api_error = _extractErrorFromJsonBody(http_result.body)
+        if result.api_error == "Access denied" then result.error = _searchRefusedText() end
         logger.err(string.format("Zlibrary:Api.search - END (HTTP error) - Error: %s, Status: %s", result.error, tostring(result.status_code)))
         return result
     end
@@ -122,6 +130,7 @@ function Api.search(query, user_id, user_key, languages, extensions, order, page
         result.error = T("Search API error") .. ": " .. tostring(api_message)
         -- The server's own words, untranslated, for callers that react to a particular refusal.
         result.api_error = tostring(api_message)
+        if result.api_error == "Access denied" then result.error = _searchRefusedText() end
         logger.warn(string.format("Zlibrary:Api.search - END (API error in response) - Error: %s", result.error))
         return result
     end

@@ -4,6 +4,8 @@ English | [简体中文](./README.zh-CN.md)
 
 **Disclaimer:** This plugin is for educational purposes only. Please respect copyright laws and use this plugin responsibly.
 
+**Unofficial API:** The plugin uses Z-library's app API, which Z-library does not document or support for other apps. Z-library can change or switch off parts of it at any time. The features that use those parts then stop working until Z-library restores them, and the plugin cannot always work around that.
+
 Access Z-library seamlessly within your KOReader application. This plugin allows you to browse and download content directly to your e-reader.
 
 If you find this plugin helpful, please consider supporting its development. Your donations help keep the project alive and allow for new features and improvements.

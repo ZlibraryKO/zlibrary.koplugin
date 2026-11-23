@@ -450,12 +450,22 @@ r.check("getMostPopularBooks: only that refusal falls back",
         pop.error ~= nil and #sent_all == 1, "requests: " .. #sent_all)
 local sres = call("search", { "dune", UID, UKEY }, { body = "search_denied" })
 r.check("search: keeps the server's own error text beside the translated one",
-        sres.api_error == "Access denied" and tostring(sres.error):find("Access denied", 1, true) ~= nil,
-        "api_error=" .. tostring(sres.api_error))
+        sres.api_error == "Access denied", "api_error=" .. tostring(sres.api_error))
+-- The reader sees why instead of the bare "Access denied", which reads like an account problem.
+local REFUSED = "Z-library is refusing searches right now"
+r.check("search: a refusal says it is on Z-library's side",
+        tostring(sres.error):find(REFUSED, 1, true) == 1, "error=" .. tostring(sres.error))
 sres = call("search", { "dune", UID, UKEY }, DENIED_400)
 r.check("search: and when the refusal comes as an HTTP 400",
-        sres.api_error == "Access denied" and sres.status_code == 400,
-        "api_error=" .. tostring(sres.api_error))
+        sres.api_error == "Access denied" and sres.status_code == 400
+            and tostring(sres.error):find(REFUSED, 1, true) == 1,
+        "api_error=" .. tostring(sres.api_error) .. " error=" .. tostring(sres.error))
+sres = call("search", { "dune", UID, UKEY }, { body = "api_failed_error" })
+r.check("search: any other server error still shows its own text",
+        tostring(sres.error):find("Booklist not found", 1, true) ~= nil, "error=" .. tostring(sres.error))
+sres = call("search", { "dune", UID, UKEY }, { error = "HTTP Error: 500", status_code = 500, body = "api_failed" })
+r.check("search: and so does another HTTP error",
+        sres.error == "HTTP Error: 500" and sres.api_error == "nope", "error=" .. tostring(sres.error))
 pop = call("getMostPopularBooks", { UID, UKEY, { "english" } },
            { _seq = { { body = "search_denied" }, { body = "books" } } })
 r.check("getMostPopularBooks: a refusal in a 200 answer falls back too",

@@ -752,6 +752,9 @@ msgstr "Thao tác"
 msgid "No books match the selected search languages and formats"
 msgstr "Không có sách nào khớp với ngôn ngữ và định dạng tìm kiếm đã chọn"
 
+msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
+msgstr "Z-library hiện đang từ chối các lượt tìm kiếm. Lỗi nằm ở phía Z-library, không phải plugin: danh sách, Phổ biến nhất và tải xuống vẫn hoạt động."
+
 msgid "No books found, please try again"
 msgstr "Không tìm thấy sách, vui lòng thử lại"
 

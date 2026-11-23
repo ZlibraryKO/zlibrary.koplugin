@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-22 12:53+0000\n"
+"POT-Creation-Date: 2026-11-23 14:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -110,6 +110,9 @@ msgstr "فشل تحليل استجابة الكتاب المفضل."
 
 msgid "API returned an error for favorite book."
 msgstr "أرجع API خطأ للكتاب المفضل."
+
+msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
+msgstr "يرفض Z-library عمليات البحث حاليًا. المشكلة من جهة Z-library وليست من الإضافة: قوائمك و«الأكثر شعبية» والتنزيلات لا تزال تعمل."
 
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "لم يتم تعيين عنوان خادم Z-library (URL). يرجى ضبطه في إعدادات مكون Z-library الإضافي."
@@ -750,9 +753,6 @@ msgstr "العملية"
 
 msgid "No books match the selected search languages and formats"
 msgstr "لا توجد كتب تطابق لغات وتنسيقات البحث المحددة"
-
-msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
-msgstr "يرفض Z-library عمليات البحث حاليًا. المشكلة من جهة Z-library وليست من الإضافة: قوائمك و«الأكثر شعبية» والتنزيلات لا تزال تعمل."
 
 msgid "No books found, please try again"
 msgstr "لم يتم العثور على كتب، يرجى المحاولة مرة أخرى"

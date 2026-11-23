@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-22 12:53+0000\n"
+"POT-Creation-Date: 2026-11-23 14:06+0000\n"
 "PO-Revision-Date: 2026-04-03 00:00+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh <zh@li.org>\n"
@@ -110,6 +110,9 @@ msgstr "解析收藏书籍响应失败。"
 
 msgid "API returned an error for favorite book."
 msgstr "API返回了收藏书籍的错误。"
+
+msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
+msgstr "Z-library 目前拒绝搜索请求。这是 Z-library 方面的问题，不是插件的问题：你的列表、“最受欢迎”和下载仍可正常使用。"
 
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "未设置 Z-library 服务器地址(URL)。请在 Z-library 插件设置中进行配置。"
@@ -750,9 +753,6 @@ msgstr "操作"
 
 msgid "No books match the selected search languages and formats"
 msgstr "没有符合所选搜索语言和格式的书籍"
-
-msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
-msgstr "Z-library 目前拒绝搜索请求。这是 Z-library 方面的问题，不是插件的问题：你的列表、“最受欢迎”和下载仍可正常使用。"
 
 msgid "No books found, please try again"
 msgstr "未找到书籍，请重试"

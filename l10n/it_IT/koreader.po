@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-22 12:53+0000\n"
+"POT-Creation-Date: 2026-11-23 14:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -110,6 +110,9 @@ msgstr "Impossibile analizzare la risposta dell'aggiunta ai preferiti."
 
 msgid "API returned an error for favorite book."
 msgstr "L'API ha restituito un errore per l'aggiunta ai preferiti."
+
+msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
+msgstr "Al momento Z-library rifiuta le ricerche. Il problema è di Z-library, non del plugin: le tue liste, Più popolari e i download funzionano ancora."
 
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "L'indirizzo del server Z-library (URL) non è impostato. Configuralo nelle impostazioni del plugin Z-library."
@@ -750,9 +753,6 @@ msgstr "Operazione"
 
 msgid "No books match the selected search languages and formats"
 msgstr "Nessun libro corrisponde alle lingue e ai formati di ricerca selezionati"
-
-msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
-msgstr "Al momento Z-library rifiuta le ricerche. Il problema è di Z-library, non del plugin: le tue liste, Più popolari e i download funzionano ancora."
 
 msgid "No books found, please try again"
 msgstr "Nessun libro trovato, riprova"

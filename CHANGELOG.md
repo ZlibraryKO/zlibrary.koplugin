@@ -6,6 +6,16 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.62
+
+### Fixed
+
+**Most popular works while Z-library refuses searches.** Since 23 November Z-library answers
+every search from the plugin with "Access denied". Most popular with a language or format
+filter uses that search, so it showed the same error. It now falls back to Z-library's own
+Most popular list, without your filters. Your filters come back by themselves once Z-library
+accepts searches again. Search itself still fails until then; that is on Z-library's side.
+
 ## 1.0.61
 
 ### Fixed

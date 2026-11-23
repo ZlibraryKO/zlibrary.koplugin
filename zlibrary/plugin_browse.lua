@@ -56,7 +56,9 @@ function Zlibrary:showMultiSearchDialog(def_position, def_search_input)
                         local current_page = page or 1
                         widget:setPaginationState(api_result.has_more_results, current_page)
                         if current_page == 1 then
-                            widget:reloadFromBookData(books)
+                            -- An unfiltered stand-in is not cached: the entry would outlive the
+                            -- refusal by days and keep the filters off after search came back.
+                            widget:reloadFromBookData(books, api_result.filters_ignored)
                         else
                             widget:appendBatchDataAndReload(books)
                         end

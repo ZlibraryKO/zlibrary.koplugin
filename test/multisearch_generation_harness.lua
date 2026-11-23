@@ -274,10 +274,11 @@ r.check("a list from the cache that has no more pages stops", #fetches == 0,
 local popular_block = support.extract_block(support.plugin_class_files(PLUGIN),
     "toggle_items = {{%s*(text = T%(\"Most popular\"%),.-end)}, {%s*text = T%(\"Recommended\"%)")
 
-local popular_requests
-local function popular_toggle(total)
+local popular_requests, popular_notices
+local function popular_toggle(total, filters_ignored)
     local env = {
         T = function(s) return s end,
+        Ui = { showInfoMessage = function(text) popular_notices[#popular_notices + 1] = text end },
         Api = { getMostPopularBooks = "api_method" },
         Config = {
             getMostPopularCacheKey = function() return "popular" end,
@@ -293,7 +294,8 @@ local function popular_toggle(total)
                     books[#books + 1] = book(id)
                 end
                 options.display_menu_func(nil, books, nil,
-                    { has_more_results = total ~= nil and number * 30 < total or nil })
+                    { has_more_results = total ~= nil and number * 30 < total or nil,
+                      filters_ignored = filters_ignored })
             end,
         },
     }
@@ -302,9 +304,9 @@ local function popular_toggle(total)
     return chunk()
 end
 
-local function open_popular(total)
-    popular_requests = {}
-    local dialog = new_dialog({ toggle_items = { popular_toggle(total) } })
+local function open_popular(total, filters_ignored)
+    popular_requests, popular_notices = {}, {}
+    local dialog = new_dialog({ toggle_items = { popular_toggle(total, filters_ignored) } })
     dialog:ToggleSwitchCallBack(1)
     return dialog
 end
@@ -356,5 +358,16 @@ clear_cache()
 popular = open_popular(nil)
 reach_last_page(popular)
 r.check("Most popular: Z-library's own fixed list never asks for another page", requested() == "1", requested())
+
+-- The server refused the filtered search and the unfiltered list stood in. It is shown without a
+-- notice (the reader found one on every opening annoying), and stays out of the cache, which
+-- would otherwise keep serving it under the filtered key for days after search came back.
+clear_cache()
+popular = open_popular(nil, true)
+r.check("Most popular: an unfiltered stand-in is shown", #popular.books == 30, #popular.books .. " books")
+r.check("Most popular: without a notice", #popular_notices == 0, tostring(popular_notices[1]))
+r.check("Most popular: the stand-in is not cached", cache_store["popular"] == nil, "cached")
+popular = open_popular(nil, true)
+r.check("Most popular: so reopening asks the server again", requested() == "1", requested())
 
 r.finish()

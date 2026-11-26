@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-26 20:53+0000\n"
+"POT-Creation-Date: 2026-11-26 21:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -278,7 +278,7 @@ msgstr ""
 msgid "Unknown error"
 msgstr ""
 
-#: zlibrary/api_downloads.lua:94 zlibrary/api_transport.lua:513
+#: zlibrary/api_downloads.lua:94 zlibrary/api_transport.lua:540
 #: zlibrary/ui_core.lua:303
 msgid "HTTP Error"
 msgstr ""
@@ -327,34 +327,34 @@ msgstr ""
 msgid "Login failed: Invalid response format"
 msgstr ""
 
-#: zlibrary/api_transport.lua:337 zlibrary/api_transport.lua:398
+#: zlibrary/api_transport.lua:364 zlibrary/api_transport.lua:425
 msgid "Request timed out - please check your connection and try again"
 msgstr ""
 
-#: zlibrary/api_transport.lua:339 zlibrary/async_helper.lua:599
+#: zlibrary/api_transport.lua:366 zlibrary/async_helper.lua:599
 #: zlibrary/ui_core.lua:311
 msgid "Network request failed"
 msgstr ""
 
-#: zlibrary/api_transport.lua:409
+#: zlibrary/api_transport.lua:436
 msgid "The Z-library address may be wrong or no longer exist."
 msgstr ""
 
-#: zlibrary/api_transport.lua:411
+#: zlibrary/api_transport.lua:438
 msgid ""
 "Network connection error - please check your internet connection and try "
 "again"
 msgstr ""
 
-#: zlibrary/api_transport.lua:465 zlibrary/api_transport.lua:475
+#: zlibrary/api_transport.lua:492 zlibrary/api_transport.lua:502
 msgid "Too many redirects"
 msgstr ""
 
-#: zlibrary/api_transport.lua:504 zlibrary/api_transport.lua:524
+#: zlibrary/api_transport.lua:531 zlibrary/api_transport.lua:551
 msgid "Try a different Z-library server."
 msgstr ""
 
-#: zlibrary/api_transport.lua:513
+#: zlibrary/api_transport.lua:540
 msgid "Unknown Status"
 msgstr ""
 

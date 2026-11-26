@@ -213,6 +213,32 @@ local function _applyCookies(options)
     options.headers = headers
 end
 
+-- Since 2026-11-23 the app API answers /eapi/book/search with 400 {"error":"Access denied"} unless
+-- the request carries a non-empty `source` header. Any non-empty value is accepted, so the plugin
+-- names itself rather than posing as one of Z-library's own apps, the same way the User-Agent does:
+-- Z-library can tell these requests apart, and limit or block them if it chooses. Only /eapi requests
+-- get it (the website, covers and downloads elsewhere don't need it), and a caller's own value wins.
+local EAPI_SOURCE = "zlibrary.koplugin"
+
+local function _applyAppSource(options)
+    local parsed = socket_url.parse(options.url or "")
+    local path = parsed and parsed.path or ""
+    if not path:find("^/eapi/") then
+        return
+    end
+    local headers = {}
+    if type(options.headers) == "table" then
+        for k, v in pairs(options.headers) do
+            if string.lower(k) == "source" and v ~= "" then
+                return
+            end
+            headers[k] = v
+        end
+    end
+    headers["source"] = EAPI_SOURCE
+    options.headers = headers
+end
+
 -- 307 and 308 exist precisely to preserve the method and body. 303 mandates a GET, and 301/302
 -- are turned into one by every real client -- which is the whole reason these requests are issued
 -- with redirect=false and handled here. Dropping the body also means dropping the headers that
@@ -300,6 +326,7 @@ function Api.makeHttpRequest(options)
     end
 
     _applyCookies(options)
+    _applyAppSource(options)
 
     local request_params = {
         url = options.url,

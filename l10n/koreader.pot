@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-23 14:06+0000\n"
+"POT-Creation-Date: 2026-11-26 20:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,8 +37,8 @@ msgstr ""
 #: zlibrary/api_account.lua:124 zlibrary/api_account.lua:179
 #: zlibrary/api_account.lua:243 zlibrary/api_account.lua:286
 #: zlibrary/api_account.lua:329 zlibrary/api_account.lua:386
-#: zlibrary/api_account.lua:452 zlibrary/api_books.lua:164
-#: zlibrary/api_books.lua:252 zlibrary/api_books.lua:344
+#: zlibrary/api_account.lua:452 zlibrary/api_books.lua:166
+#: zlibrary/api_books.lua:254 zlibrary/api_books.lua:347
 msgid "Z-library server URL not configured."
 msgstr ""
 
@@ -155,100 +155,100 @@ msgstr ""
 msgid "API returned an error for favorite book."
 msgstr ""
 
-#: zlibrary/api_books.lua:29
+#: zlibrary/api_books.lua:31
 msgid ""
 "Z-library is refusing searches right now. This is on Z-library's side, not "
 "the plugin's: your lists, Most popular and downloads still work."
 msgstr ""
 
-#: zlibrary/api_books.lua:41 zlibrary/api_login.lua:149
+#: zlibrary/api_books.lua:43 zlibrary/api_login.lua:149
 msgid ""
 "The Z-library server address (URL) is not set. Please configure it in the Z-"
 "library plugin settings."
 msgstr ""
 
-#: zlibrary/api_books.lua:112
+#: zlibrary/api_books.lua:114
 msgid "No response received from server - please try again"
 msgstr ""
 
-#: zlibrary/api_books.lua:122
+#: zlibrary/api_books.lua:124
 msgid "Invalid response format from server"
 msgstr ""
 
-#: zlibrary/api_books.lua:130
+#: zlibrary/api_books.lua:132
 msgid "Search API error"
 msgstr ""
 
-#: zlibrary/api_books.lua:185
+#: zlibrary/api_books.lua:187
 msgid "Failed to fetch recommended books (no response body)."
 msgstr ""
 
-#: zlibrary/api_books.lua:191
+#: zlibrary/api_books.lua:193
 msgid "Failed to parse recommended books response."
 msgstr ""
 
-#: zlibrary/api_books.lua:196
+#: zlibrary/api_books.lua:198
 msgid "API returned an error for recommended books."
 msgstr ""
 
-#: zlibrary/api_books.lua:230
+#: zlibrary/api_books.lua:232
 msgid "Failed to fetch most popular books (no response body)."
 msgstr ""
 
-#: zlibrary/api_books.lua:236
+#: zlibrary/api_books.lua:238
 msgid "Failed to parse most popular books response."
 msgstr ""
 
-#: zlibrary/api_books.lua:241
+#: zlibrary/api_books.lua:243
 msgid "API returned an error for most popular books."
 msgstr ""
 
-#: zlibrary/api_books.lua:294 zlibrary/api_books.lua:396
+#: zlibrary/api_books.lua:297 zlibrary/api_books.lua:399
 #: zlibrary/api_downloads.lua:203
 msgid "Z-library server URL not configured or book identifiers missing."
 msgstr ""
 
-#: zlibrary/api_books.lua:317
+#: zlibrary/api_books.lua:320
 msgid "Failed to fetch book details (no response body)."
 msgstr ""
 
-#: zlibrary/api_books.lua:323
+#: zlibrary/api_books.lua:326
 msgid "Failed to parse book details response."
 msgstr ""
 
-#: zlibrary/api_books.lua:328
+#: zlibrary/api_books.lua:331
 msgid "API returned an error for book details."
 msgstr ""
 
-#: zlibrary/api_books.lua:334
+#: zlibrary/api_books.lua:337
 msgid "Failed to process book details."
 msgstr ""
 
-#: zlibrary/api_books.lua:366
+#: zlibrary/api_books.lua:369
 msgid "Failed to fetch similar books (no response body)."
 msgstr ""
 
-#: zlibrary/api_books.lua:372
+#: zlibrary/api_books.lua:375
 msgid "Failed to parse similar books response."
 msgstr ""
 
-#: zlibrary/api_books.lua:377
+#: zlibrary/api_books.lua:380
 msgid "API returned an error for similar books."
 msgstr ""
 
-#: zlibrary/api_books.lua:388 zlibrary/plugin_books.lua:256
+#: zlibrary/api_books.lua:391 zlibrary/plugin_books.lua:256
 msgid "Book ID is required."
 msgstr ""
 
-#: zlibrary/api_books.lua:425
+#: zlibrary/api_books.lua:428
 msgid "Failed to fetch book comments (no response body)."
 msgstr ""
 
-#: zlibrary/api_books.lua:433
+#: zlibrary/api_books.lua:436
 msgid "Failed to parse book comments response."
 msgstr ""
 
-#: zlibrary/api_books.lua:440
+#: zlibrary/api_books.lua:443
 msgid "API returned an error for book comments."
 msgstr ""
 
@@ -1061,26 +1061,26 @@ msgstr ""
 msgid "No books found, please try again"
 msgstr ""
 
-#: zlibrary/plugin_search.lua:38
+#: zlibrary/plugin_search.lua:66
 #, lua-format
 msgid "Searching for \"%s\"..."
 msgstr ""
 
-#: zlibrary/plugin_search.lua:62
+#: zlibrary/plugin_search.lua:121
 #, lua-format
 msgid "No results found for \"%s\"."
 msgstr ""
 
-#: zlibrary/plugin_search.lua:126
+#: zlibrary/plugin_search.lua:185
 #, lua-format
 msgid "Loading more results (Page %s)..."
 msgstr ""
 
-#: zlibrary/plugin_search.lua:150 zlibrary/plugin_search.lua:179
+#: zlibrary/plugin_search.lua:207 zlibrary/plugin_search.lua:236
 msgid "Failed to load more results"
 msgstr ""
 
-#: zlibrary/plugin_search.lua:171
+#: zlibrary/plugin_search.lua:228
 msgid "No more results found."
 msgstr ""
 

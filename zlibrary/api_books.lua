@@ -22,9 +22,11 @@ Api.usableCoverUrl = _usableCoverUrl
 -- documentation, but the search endpoint honours it (checked 2026-11-22): each result then carries
 -- content_type "article", and opens and downloads through the same endpoints as a book. Anything
 -- else sends no content type, so a book search is the request it always was.
--- What a reader sees instead of the server's bare "Access denied", which Z-library has sent for
--- every search since 2026-11-23 (an HTTP 400, whatever the session, user agent or body). That
--- reads like a problem with their account or the plugin, and it is neither.
+-- What a reader sees instead of the server's bare "Access denied" (an HTTP 400). Z-library sent it
+-- for every search from 2026-11-23; since 2026-11-26 it sends it only without a valid session.
+-- performSearch asks for an account first and signs in again once on this answer, so the text
+-- mostly reaches a reader when a fresh session is refused too, i.e. Z-library is refusing searches
+-- (or a session set only in zlibrary_credentials.lua has stopped working, which cannot be renewed).
 local function _searchRefusedText()
     return T("Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work.")
 end
@@ -259,9 +261,10 @@ function Api.getMostPopularBooks(user_id, user_key, languages, extensions, page)
         local res = Api.search("", user_id, user_key, has_languages and languages or nil,
             has_extensions and extensions or nil, { "popular" }, page_num)
         if res.error then
-            -- Since 2026-11-23 the server answers every search with "Access denied" while its
-            -- own most-popular list still works. The unfiltered list beats an error, so show it
-            -- and say the filters were left out. Only for the first page: that list has no
+            -- The server answers a search "Access denied" when it refuses searches (everyone,
+            -- 2026-11-23 to 11-26) or the session is missing or unusable (since 2026-11-26),
+            -- while its own most-popular list still works. The unfiltered list beats an error,
+            -- so show it and say the filters were left out. Only for the first page: that list has no
             -- others, and a later page failing means the earlier ones are already on screen.
             if res.api_error == "Access denied" and page_num == 1 then
                 logger.warn("Api.getMostPopularBooks - filtered search refused, showing the unfiltered list")

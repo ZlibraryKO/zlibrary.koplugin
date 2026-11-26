@@ -1,18 +1,16 @@
 -- Does a search -- the first page, or "load more" on the results page -- retry authentication?
 -- (The first-search half is at the end of this file.)
 --
--- It must not, and here is why. Search is an unauthenticated endpoint -- Api.search sends the
--- session cookie only when there is one, and the server answers without it -- so a search can
--- never come back with "Please login", and Api.isAuthenticationError can never match one. An
--- earlier version nonetheless carried an auth-retry in the load-more handlers, copied wholesale
--- from the authenticated fetch handlers where it belongs. It was dead code, and worse: it called
--- on_goto_page_handler again on "login success" with no one-shot guard, so had the endpoint ever
--- started rejecting a session it would have looped fetch -> login -> fetch forever.
+-- "Load more" must not. The first page was answered with the same session moments earlier, so a
+-- refusal there is not a stale session. An earlier version carried an auth-retry in the load-more
+-- handlers, copied from the authenticated fetch handlers, and it called on_goto_page_handler
+-- again on "login success" with no one-shot guard: had the endpoint ever rejected the session it
+-- would have looped fetch -> login -> fetch forever.
 --
--- The retry pattern is right for the paths that actually authenticate (My Books, book details,
--- downloads), which go through _requestDispatcher with a guarded, one-shot retry. This asserts
--- the contrast directly: absent from the search-pagination path, present in the fetch path. A
--- future copy-paste that reintroduces it fails here instead of on someone's device.
+-- The first search may sign in once, since 2026-11-26: the endpoint answers "Access denied" to a
+-- session it cannot use. That sign-in has to be the guarded, one-shot kind, keyed on that answer
+-- only (search_account_harness drives it). The retry pattern stays right for the paths that
+-- authenticate through _requestDispatcher; this asserts the contrast directly.
 
 local PLUGIN = assert(arg[1], "usage: luajit search_pagination_auth_harness.lua <plugin-root> <luasocket-src>")
 
@@ -73,19 +71,22 @@ r.check("and that retry is the guarded, one-shot kind",
         "the fetch retry is no longer gated by retry_on_auth_error, so it can loop")
 
 -- ---------------------------------------------------------------- the first search
--- The same dead auth-retry sat in performSearch too, in both handlers, until 2026-11. It was
--- guarded and one-shot, so it could not loop -- but it could not fire either: a search sent with a
--- malformed session still answers HTTP 200 with results (checked 2026-11-10), because the server
--- ignores a session it cannot use rather than refusing it. Had it ever matched, it would have put
--- a credentials dialog in the middle of a search, which works without an account.
+-- Until 2026-11 performSearch carried the dispatcher's auth-retry, keyed on "Please login" --
+-- which a search never answered. Since 2026-11-26 it signs in once on "Access denied" instead.
+-- Pinned here: that sign-in is behind the one-shot flag and the "Access denied" check, and no
+-- general auth classifier creeps back in.
 local search = support.extract_block(MAIN, "(\nfunction Zlibrary:performSearch%(.-\nend\n)")
 local search_code = strip_comments(search)
 
-r.check("the first search never re-logs-in", count(search_code, "self:login(") == 0,
-        "self:login appears in performSearch -- a search error must never start a sign-in")
+r.check("the first search signs in again only behind its one-shot guard",
+        count(search_code, "self:login(") == 2
+            and search_code:find("if may_renew_session and _mayRenewSessionFor(self, user_session) then", 1, true) ~= nil
+            and search_code:find("attemptSearch(false)", 1, true) ~= nil,
+        "performSearch's sign-in is no longer the account gate plus one guarded re-sign-in")
 r.check("and never classifies its error as an auth failure",
         count(search_code, "Api.isAuthenticationError(") == 0,
-        "Api.isAuthenticationError is called on a search result, which cannot be an auth error")
+        "Api.isAuthenticationError is called on a search result: a \"Please login\" in some other "
+        .. "error text would put a credentials dialog in the middle of a search")
 
 -- Removing the retry must not take the session with it. It carries the account's website
 -- settings -- hiding 18+ books among them -- so every search request has to send it.

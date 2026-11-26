@@ -834,11 +834,10 @@ end
 
 -- ---------------------------------------------------------------- who has to sign in, and when
 --
--- The search endpoint answers without credentials -- Api.search attaches the cookie only
--- `if user_id and user_key` -- so a fresh install can search, and never reaches Zlibrary:login
--- that way. This was originally assumed to be the trigger and is not. What genuinely needs an
--- account asks for one up front, instead of firing a request that cannot succeed and waiting for
--- the server to answer "Please login".
+-- What genuinely needs an account asks for one up front, instead of firing a request that cannot
+-- succeed and waiting for the server to answer "Please login". Search joined that list on
+-- 2026-11-26, when the search endpoint started answering "Access denied" without a valid session
+-- (until then it answered without credentials, and a fresh install could search).
 do
     local dispatcher = support.extract_block(MAIN,
         "(\nfunction Zlibrary:_requestDispatcher%(.-\n)end\n")
@@ -862,13 +861,15 @@ do
 end
 
 do
-    -- Guard the deliberate exception. Making search require an account would be a regression:
-    -- browsing before signing in works today and is worth keeping.
+    -- Search used to be the deliberate exception, and is not since 2026-11-26: the endpoint
+    -- answers "Access denied" without a valid session. So it asks for an account up front, before
+    -- the radio, like the dispatcher. search_account_harness drives what happens then.
     local search = support.extract_block(MAIN, "(\nfunction Zlibrary:performSearch%(.-\n)end\n")
-    r.check("search does not require an account",
-            search:find("hasCredentials", 1, true) == nil,
-            "search now demands credentials -- it works without them, and being able to browse "
-            .. "before signing in is deliberate")
+    local search_gate = search:find("if not Config.hasCredentials() then", 1, true)
+    local search_wifi = search:find("NetworkMgr:willRerunWhenOnline", 1, true)
+    r.check("search asks for an account before it asks for wifi",
+            search_gate ~= nil and search_wifi ~= nil and search_gate < search_wifi,
+            "search fires without an account, and the server answers \"Access denied\" since 2026-11-26")
 
     -- Api.search lives in api_books.lua and the cookie helper in api_shared.lua since the split.
     local api_src = read(PLUGIN .. "/zlibrary/api_books.lua") .. "\n" .. read(PLUGIN .. "/zlibrary/api_shared.lua")

@@ -18,7 +18,35 @@ local logger = require("zlibrary.log")
 
 local Zlibrary = {}
 
+-- Whether a search refused with "Access denied" is worth one fresh sign-in. Since 2026-11-26 the
+-- server answers a search that way when the session is missing or one it cannot use (it used to
+-- ignore such a session and answer anyway), and also when it refuses searches altogether, as it
+-- did for everyone from 2026-11-23. The answer does not say which, so: sign in again only when
+-- there is a password to do it with (a session set in zlibrary_credentials.lua alone cannot be
+-- renewed), and not for a session that was refused straight after a sign-in -- then it is the
+-- server refusing, and signing in before every search would only earn "Too many logins".
+local function _mayRenewSessionFor(plugin, user_session)
+    local credentials = Config.getCredentials()
+    if not (credentials.username and credentials.username ~= ""
+            and credentials.password and credentials.password ~= "") then
+        return false
+    end
+    return not (user_session and user_session.user_key
+        and user_session.user_key == plugin._search_refused_session_key)
+end
+
 function Zlibrary:performSearch(query)
+    -- Before the network gate, like the account gate in _requestDispatcher: search needs an
+    -- account since 2026-11-26, and asking needs no radio.
+    if not Config.hasCredentials() then
+        self:login(function(login_ok)
+            if login_ok then
+                self:performSearch(query)
+            end
+        end)
+        return
+    end
+
     if NetworkMgr:willRerunWhenOnline(function()
         logger.dbg("Zlibrary:network - network is up, re-running", "performSearch")
         self:performSearch(query)
@@ -27,13 +55,13 @@ function Zlibrary:performSearch(query)
         return
     end
 
-    -- No auth-retry here, on purpose. Search works without an account, and a session the server
-    -- cannot use is ignored rather than refused: a malformed one still gets results (HTTP 200,
-    -- checked 2026-11-10), so a search never answers "Please login". The re-login branches that
-    -- used to sit in both handlers could not fire -- and had one ever matched, it would have put
-    -- a credentials dialog in the middle of a search. The session itself must still go with every
-    -- request: it carries the account's website settings, such as hiding 18+ books.
-    local function attemptSearch()
+    -- At most one sign-in per search, and only for "Access denied" (see _mayRenewSessionFor and
+    -- the refused result the task turns it into).
+    -- Any other error goes to the retry dialog: a "Please login" in some other error text must
+    -- not put a credentials dialog in the middle of a search. The session goes with every
+    -- request: it is what the server checks, and it carries the account's website settings,
+    -- such as hiding 18+ books.
+    local function attemptSearch(may_renew_session)
         local user_session = Config.getUserSession()
         local loading_msg = Ui.showCancellableLoadingMessage(string.format(T("Searching for \"%s\"..."), query))
 
@@ -44,11 +72,39 @@ function Zlibrary:performSearch(query)
         local current_page_to_search = 1
 
         local task = function()
-            return Api.search(query, user_session and user_session.user_id, user_session and user_session.user_key, selected_languages, selected_extensions, selected_order, current_page_to_search, content_type)
+            local res = Api.search(query, user_session and user_session.user_id, user_session and user_session.user_key, selected_languages, selected_extensions, selected_order, current_page_to_search, content_type)
+            -- AsyncHelper hands a result carrying .error to on_error as a bare string, which
+            -- loses api_error. A refusal has to reach on_success whole to be told apart.
+            if type(res) == "table" and res.api_error == "Access denied" then
+                return { refused = true, refusal_text = res.error }
+            end
+            return res
         end
 
         local on_success
         on_success = function(api_result)
+            if api_result.refused then
+                if may_renew_session and _mayRenewSessionFor(self, user_session) then
+                    Ui.closeMessage(loading_msg)
+                    logger.dbg("Zlibrary:performSearch - search refused, signing in again once")
+                    self:login(function(login_ok)
+                        if login_ok then
+                            attemptSearch(false)
+                        end
+                    end)
+                    return
+                end
+                if not may_renew_session then
+                    -- Refused with the session a sign-in has just handed out: the server is
+                    -- refusing searches, not this session.
+                    self._search_refused_session_key = user_session and user_session.user_key
+                end
+                Ui.showSearchErrorDialog(api_result.refusal_text, query, user_session, selected_languages, selected_extensions, selected_order, current_page_to_search, loading_msg, on_success, function(final_err_msg)
+                    -- Cancel callback - user already knows about the error
+                end, content_type)
+                return
+            end
+
             if api_result.error then
                 -- Use the retry dialog for timeouts and HTTP 400 errors
                 Ui.showSearchErrorDialog(api_result.error, query, user_session, selected_languages, selected_extensions, selected_order, current_page_to_search, loading_msg, on_success, function(final_err_msg)
@@ -56,6 +112,9 @@ function Zlibrary:performSearch(query)
                 end, content_type)
                 return
             end
+
+            -- Answered, even if with nothing: a later refusal is worth a sign-in once more.
+            self._search_refused_session_key = nil
 
             if not api_result.results or #api_result.results == 0 then
                 Ui.closeMessage(loading_msg)
@@ -89,7 +148,7 @@ function Zlibrary:performSearch(query)
         AsyncHelper.runCancellable(task, on_success, on_error_handler, loading_msg)
     end
 
-    attemptSearch()
+    attemptSearch(true)
 end
 
 function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
@@ -140,13 +199,11 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
             on_success_load_more = function(api_result_more)
                 Ui.closeMessage(loading_msg_more)
                 if api_result_more.error then
-                    -- No auth-retry here. Search is an unauthenticated endpoint: it answers
-                    -- without a session and never returns "Please login", so isAuthenticationError
-                    -- could not match. The retry pattern was copied from the authenticated fetch
-                    -- handlers -- where it belongs, guarded and one-shot (see _requestDispatcher) --
-                    -- but here it was dead code, and its self-recursion had no one-shot guard, so
-                    -- had the endpoint ever started rejecting a session it would have looped. Any
-                    -- real error just surfaces.
+                    -- No sign-in here. The first page was answered with this same session moments
+                    -- ago, so a refusal now is not a stale session, and performSearch already
+                    -- carries the one guarded sign-in a search gets. An auth-retry copied here
+                    -- once had no one-shot guard and could loop fetch -> login -> fetch. Any
+                    -- error just surfaces.
                     Ui.showErrorMessage(Ui.colonConcat(T("Failed to load more results"), tostring(api_result_more.error)))
                     -- The fetch failed with the page counter already advanced; redraw what is
                     -- actually loaded so the display and the counter agree again.
@@ -175,7 +232,7 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
 
             on_error_load_more = function(err_msg_more)
                 Ui.closeMessage(loading_msg_more)
-                -- No auth-retry: see on_success_load_more. Search is unauthenticated.
+                -- No sign-in: see on_success_load_more.
                 Ui.showErrorMessage(Ui.colonConcat(T("Failed to load more results"), tostring(err_msg_more)))
                 -- Same as the error path above: redraw so the page counter matches the display.
                 menu_instance:updateItems(1, true)

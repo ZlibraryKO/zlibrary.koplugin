@@ -89,8 +89,8 @@ end
 -- request that cannot succeed, rather than waiting for the server to say "Please login" -- which
 -- costs a round trip and depends on the server phrasing it that way.
 --
--- Deliberately not consulted for search: the search endpoint answers without credentials, and
--- being able to browse before signing in is worth keeping.
+-- Search consults it too since 2026-11-26, when the search endpoint started answering "Access
+-- denied" to requests without a valid session.
 function Config.hasCredentials()
     local email = Config.getSetting(Config.SETTINGS_USERNAME_KEY)
     local password = Config.getSetting(Config.SETTINGS_PASSWORD_KEY)

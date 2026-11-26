@@ -6,6 +6,17 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.63
+
+### Fixed
+
+**Search works again, and asks you to sign in.** Since 26 November Z-library answers searches
+again, but only for a signed-in account: without one, or with a sign-in that has stopped working,
+it still says "Access denied". Searching without an account now opens the sign-in dialog first and
+searches once you have signed in. When a search is refused, the plugin signs in again once with
+your saved email and password and repeats the search, instead of saying that Z-library is refusing
+searches.
+
 ## 1.0.62
 
 ### Fixed

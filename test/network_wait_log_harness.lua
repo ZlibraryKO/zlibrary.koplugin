@@ -62,6 +62,8 @@ local env = {
         info = function() end, warn = function() end, err = function() end,
     },
     NetworkMgr = { willRerunWhenOnline = function(_, fn) rerun = fn; return true end },
+    -- Signed in: search asks for an account before the network gate.
+    Config = { hasCredentials = function() return true end },
 }
 local body = support.extract_block(PLUGIN .. "/zlibrary/plugin_search.lua",
     "(\nfunction Zlibrary:performSearch%(.-\n)end\n")

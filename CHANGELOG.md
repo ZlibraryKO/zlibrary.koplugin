@@ -6,6 +6,15 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.64
+
+### Fixed
+
+**Searches say which app is asking.** Z-library's app API refuses searches that carry no
+`source` header: "Access denied" without one, a normal answer with one. Every `/eapi` request
+now sends `source: zlibrary.koplugin`, so Z-library can see the request comes from this plugin.
+The website, covers and file downloads are unchanged.
+
 ## 1.0.63
 
 ### Fixed

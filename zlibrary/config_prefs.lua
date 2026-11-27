@@ -23,6 +23,12 @@ function Config.setPluginVersion(version)
     plugin_version = type(version) == "string" and version ~= "" and version or nil
 end
 
+-- The version that is running: read when the plugin started, so it stays put when an update
+-- replaces _meta.lua on disk before KOReader restarts.
+function Config.getPluginVersion()
+    return plugin_version
+end
+
 function Config.getUserAgent()
     return string.format("zlibrary.koplugin/%s (KOReader; +https://github.com/ZlibraryKO/zlibrary.koplugin)",
         plugin_version or "unknown")

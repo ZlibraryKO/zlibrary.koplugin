@@ -37,6 +37,7 @@ local function newRig(opts)
         latest = opts.latest == nil and "v1.0.65" or opts.latest,
         settings = opts.settings or {},
         fetches = 0, shown = {}, finals = {}, wifi_asks = 0, loading = 0, channels = 0,
+        pending = opts.pending, downloading = opts.downloading or false,
     }
     local env = setmetatable({
         logger = { dbg = function() end, info = function() end, err = function() end, warn = function() end },
@@ -52,7 +53,9 @@ local function newRig(opts)
             getUpdateNotice = function() return rig.notice end,
             getSetting = function(k) return rig.settings[k] end,
             saveSetting = function(k, v) rig.settings[k] = v end,
+            deleteSetting = function(k) rig.settings[k] = nil end,
         },
+        Download = { isActive = function() return rig.downloading end },
         Ui = { showCancellableLoadingMessage = function() rig.loading = rig.loading + 1; return {} end },
         UIManager = { show = function(_, w) table.insert(rig.shown, w) end },
         ConfirmBox = { new = function(_, spec) return spec end },
@@ -83,8 +86,10 @@ local function newRig(opts)
     local chunk = assert(loadstring("local Ota = {}\n" .. body .. "return Ota", "=ota"))
     setfenv(chunk, env)
     rig.Ota = chunk()
+    rig.Ota.pendingRestartVersion = function() return rig.pending end
     rig.Ota.fetchLatestReleaseInfo = function()
         rig.fetches = rig.fetches + 1
+        if rig.start_download_during_fetch then rig.downloading = true end
         if not rig.latest then return { error = "HTTP Error: 403 (rate limited)" } end
         return { release_info = release(rig.latest) }
     end
@@ -191,6 +196,41 @@ do
     local again = newRig({ settings = { offered = "1.0.65" } })
     again.Ota._offerUpdate(PATH, release("v1.0.65"))
     r.check("and still offers a version the notice offered before", offered(again) ~= nil)
+end
+
+-- ---------------------------------------------------------------- an update waits for a restart
+do
+    local rig = newRig({ pending = "1.0.65" })
+    rig.show_list()
+    r.check("no notice while an installed update waits for the restart",
+            rig.fetches == 0 and #rig.shown == 0 and rig.settings.last == nil,
+            string.format("fetches %d, shown %d", rig.fetches, #rig.shown))
+end
+
+-- ---------------------------------------------------------------- not over a download
+do
+    local rig = newRig({ downloading = true })
+    rig.show_list()
+    r.check("no check while a book downloads, and none recorded",
+            rig.fetches == 0 and #rig.shown == 0 and rig.settings.last == nil,
+            string.format("fetches %d, last %s", rig.fetches, tostring(rig.settings.last)))
+    rig.downloading = false
+    rig.show_list()
+    r.check("the next list after the download checks and offers",
+            rig.fetches == 1 and offered(rig) ~= nil, "fetches " .. rig.fetches)
+end
+
+do
+    local rig = newRig()
+    rig.start_download_during_fetch = true
+    rig.show_list()
+    r.check("a download that started during the check holds the offer back",
+            #rig.shown == 0 and rig.settings.offered == nil, "shown " .. #rig.shown)
+    r.check("and forgets the check, so the next list asks again",
+            rig.settings.last == nil, tostring(rig.settings.last))
+    rig.start_download_during_fetch, rig.downloading = false, false
+    rig.show_list()
+    r.check("which then offers it", offered(rig) ~= nil and rig.settings.offered == "1.0.65")
 end
 
 -- ---------------------------------------------------------------- nothing loads after startup

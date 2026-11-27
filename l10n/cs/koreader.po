@@ -1339,3 +1339,21 @@ msgstr "Upozorňovat na aktualizace"
 
 msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
 msgstr "Po zobrazení výsledků hledání nebo seznamu nejvýše jednou denně zkontroluje, zda vyšla nová verze pluginu, a jednou ji nabídne."
+
+msgid "You can keep reading and downloading: the new version starts the next time KOReader restarts."
+msgstr "Můžete dál číst a stahovat: nová verze se spustí při příštím restartu KOReaderu."
+
+msgid "Version %s is installed and starts the next time KOReader restarts."
+msgstr "Verze %s je nainstalována a spustí se při příštím restartu KOReaderu."
+
+msgid "Until then, you keep using %s."
+msgstr "Do té doby používáte dál %s."
+
+msgid "A download is running. Restart KOReader once it has finished."
+msgstr "Probíhá stahování. Restartujte KOReader, až skončí."
+
+msgid "Restart now"
+msgstr "Restartovat nyní"
+
+msgid "Restart to update"
+msgstr "Restartujte pro aktualizaci"

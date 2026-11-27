@@ -1335,3 +1335,21 @@ msgstr "업데이트 알림"
 
 msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
 msgstr "검색 결과나 목록이 표시된 후 하루에 최대 한 번 새 버전의 플러그인이 나왔는지 확인하고, 한 번만 안내합니다."
+
+msgid "You can keep reading and downloading: the new version starts the next time KOReader restarts."
+msgstr "계속 읽고 다운로드할 수 있습니다. 새 버전은 다음에 KOReader를 다시 시작할 때 실행됩니다."
+
+msgid "Version %s is installed and starts the next time KOReader restarts."
+msgstr "버전 %s이(가) 설치되었으며 다음에 KOReader를 다시 시작할 때 실행됩니다."
+
+msgid "Until then, you keep using %s."
+msgstr "그때까지는 %s을(를) 계속 사용합니다."
+
+msgid "A download is running. Restart KOReader once it has finished."
+msgstr "다운로드가 진행 중입니다. 완료된 후 KOReader를 다시 시작하세요."
+
+msgid "Restart now"
+msgstr "지금 다시 시작"
+
+msgid "Restart to update"
+msgstr "다시 시작하여 업데이트"

@@ -11,6 +11,9 @@ local Ui = require("zlibrary.ui")
 local DataStorage = require("datastorage")
 local AsyncHelper = require("zlibrary.async_helper")
 local ffiUtil = require("ffi/util")
+local Device = require("device")
+local Download = require("zlibrary.download")
+local Event = require("ui/event")
 local lfs = require("libs/libkoreader-lfs")
 
 local Ota = {}
@@ -72,6 +75,43 @@ end
 -- Exported so the About dialog shows the same version the updater compares against, instead of
 -- reading _meta.lua a second way and being able to disagree with it.
 Ota.getCurrentPluginVersion = getCurrentPluginVersion
+
+-- An update installed while KOReader kept running leaves two versions: the one that started, which
+-- keeps running whole (every module loads at startup), and the one on disk, which starts with the
+-- next restart. Returns the one on disk while they differ, nil otherwise.
+function Ota.pendingRestartVersion(plugin_path)
+    local running = Config.getPluginVersion()
+    if not running or type(plugin_path) ~= "string" then return nil end
+    local on_disk = getCurrentPluginVersion(plugin_path)
+    if on_disk and on_disk ~= running then return on_disk end
+    return nil
+end
+
+-- What "Restart now" does, or nil when it must not be offered: on a device KOReader cannot restart
+-- itself, or while a book download is running -- restarting kills the child writing the book.
+-- Asked again on the tap, since the dialog can sit open while one starts. The restart itself is
+-- the one KOReader's Exit menu uses, so the reader's position and settings are saved as usual.
+function Ota.restartAction()
+    if not Device:canRestart() or Download.isActive() then return nil end
+    return function()
+        if Download.isActive() then
+            Ui.showInfoMessage(T("A download is running. Restart KOReader once it has finished."))
+            return
+        end
+        UIManager:broadcastEvent(Event:new("Restart"))
+    end
+end
+
+local function _showInstalled(installed, opts)
+    opts = opts or {}
+    Ui.showUpdateInstalledDialog({
+        installed = installed,
+        running = Config.getPluginVersion(),
+        restart = Ota.restartAction(),
+        download_active = Download.isActive(),
+        just_installed = opts.just_installed,
+    })
+end
 
 -- The release workflow publishes zlibrary_plugin_v<version>.zip. Pick the update archive out of the
 -- release by name: a release can carry more than one asset -- a second archive, a checksum, a
@@ -314,7 +354,7 @@ function Ota.installUpdate(zip_filepath, plugin_base_path)
     -- to be dismissed and carries the plugin's one other mention of support -- see
     -- Ui.showUpdateInstalledDialog for why this moment and no other.
     _close_current_ota_status_widget()
-    Ui.showUpdateInstalledDialog()
+    _showInstalled(meta.version, { just_installed = true })
     return { success = true, message = "Update installed successfully." }
 end
 
@@ -349,6 +389,15 @@ end
 
 function Ota.startUpdateProcess(plugin_path_from_main)
     logger.dbg("Zlibrary:Ota.startUpdateProcess - Initiated by user. Plugin path: " .. tostring(plugin_path_from_main))
+
+    -- Installed earlier in this session: say so, without asking for Wi-Fi, instead of checking
+    -- GitHub and calling the version on disk the one in use.
+    local pending = Ota.pendingRestartVersion(plugin_path_from_main)
+    if pending then
+        logger.dbg("Zlibrary:Ota.startUpdateProcess - " .. pending .. " is installed, waiting for a restart")
+        _showInstalled(pending)
+        return
+    end
 
     if NetworkMgr:willRerunWhenOnline(function()
         logger.dbg("Zlibrary:network - network is up, re-running", "Ota.startUpdateProcess")
@@ -468,7 +517,7 @@ function Ota._offerUpdate(plugin_path_from_main, release_info, opts)
     local confirmation_message = string.format(T([[New version available: %s (you have %s). Download and install?]]),
         normalized_latest_version,
         current_version or T("an older version")
-    )
+    ) .. "\n\n" .. T("You can keep reading and downloading: the new version starts the next time KOReader restarts.")
 
     if opts.should_offer and not opts.should_offer(normalized_latest_version) then
         logger.dbg("Zlibrary:Ota.update notice - " .. normalized_latest_version .. " was offered before")
@@ -540,6 +589,10 @@ function Ota.maybeNotifyUpdate(plugin_path)
     if not Config.getUpdateNotice() then return end
     if not _isSupportedPluginPath(plugin_path) then return end
     if not NetworkMgr:isConnected() then return end
+    -- Already installed, waiting for a restart: there is nothing to offer.
+    if Ota.pendingRestartVersion(plugin_path) then return end
+    -- Not over a download's progress bar. No check is recorded, so the next list tries again.
+    if Download.isActive() then return end
 
     local now = os.time()
     local last = Config.getSetting(Config.SETTINGS_UPDATE_NOTICE_LAST_CHECK_KEY)
@@ -552,6 +605,12 @@ function Ota.maybeNotifyUpdate(plugin_path)
     notice_channel:pushTask(_fetchReleaseSummary, function(success, res)
         if not (success and type(res) == "table" and type(res.release_info) == "table") then
             logger.dbg("Zlibrary:Ota.update notice - check failed: " .. tostring(type(res) == "table" and res.error or res))
+            return
+        end
+        -- A download started while GitHub answered. Forget this check, so the next list asks again.
+        if Download.isActive() then
+            logger.dbg("Zlibrary:Ota.update notice - a download is running, offering later")
+            Config.deleteSetting(Config.SETTINGS_UPDATE_NOTICE_LAST_CHECK_KEY)
             return
         end
         Ota._offerUpdate(plugin_path, res.release_info, {

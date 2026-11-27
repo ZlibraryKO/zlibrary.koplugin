@@ -1335,3 +1335,21 @@ msgstr "الإشعار بالتحديثات"
 
 msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
 msgstr "بعد ظهور نتائج البحث أو قائمة، يتحقق مرة واحدة يوميًا على الأكثر من صدور إصدار جديد من المكون الإضافي، ويعرضه مرة واحدة."
+
+msgid "You can keep reading and downloading: the new version starts the next time KOReader restarts."
+msgstr "يمكنك متابعة القراءة والتنزيل: يبدأ الإصدار الجديد عند إعادة تشغيل KOReader في المرة القادمة."
+
+msgid "Version %s is installed and starts the next time KOReader restarts."
+msgstr "تم تثبيت الإصدار %s ويبدأ عند إعادة تشغيل KOReader في المرة القادمة."
+
+msgid "Until then, you keep using %s."
+msgstr "حتى ذلك الحين، تواصل استخدام %s."
+
+msgid "A download is running. Restart KOReader once it has finished."
+msgstr "يجري تنزيل الآن. أعد تشغيل KOReader بعد انتهائه."
+
+msgid "Restart now"
+msgstr "إعادة التشغيل الآن"
+
+msgid "Restart to update"
+msgstr "أعد التشغيل للتحديث"

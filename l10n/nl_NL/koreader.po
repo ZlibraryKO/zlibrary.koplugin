@@ -1335,3 +1335,21 @@ msgstr "Melden als er een update is"
 
 msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
 msgstr "Controleert na het tonen van zoekresultaten of een lijst hooguit één keer per dag of er een nieuwe versie van de plugin is, en biedt die één keer aan."
+
+msgid "You can keep reading and downloading: the new version starts the next time KOReader restarts."
+msgstr "Je kunt gewoon verder lezen en downloaden: de nieuwe versie start de volgende keer dat KOReader opnieuw opstart."
+
+msgid "Version %s is installed and starts the next time KOReader restarts."
+msgstr "Versie %s is geïnstalleerd en start de volgende keer dat KOReader opnieuw opstart."
+
+msgid "Until then, you keep using %s."
+msgstr "Tot die tijd gebruik je nog %s."
+
+msgid "A download is running. Restart KOReader once it has finished."
+msgstr "Er loopt een download. Start KOReader opnieuw zodra die klaar is."
+
+msgid "Restart now"
+msgstr "Nu opnieuw starten"
+
+msgid "Restart to update"
+msgstr "Opnieuw starten om bij te werken"

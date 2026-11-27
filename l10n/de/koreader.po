@@ -1338,3 +1338,21 @@ msgstr "Über Updates benachrichtigen"
 
 msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
 msgstr "Prüft nach dem Anzeigen von Suchergebnissen oder einer Liste höchstens einmal täglich, ob eine neue Version des Plugins erschienen ist, und bietet sie einmal an."
+
+msgid "You can keep reading and downloading: the new version starts the next time KOReader restarts."
+msgstr "Sie können weiterlesen und herunterladen: Die neue Version startet beim nächsten Neustart von KOReader."
+
+msgid "Version %s is installed and starts the next time KOReader restarts."
+msgstr "Version %s ist installiert und startet beim nächsten Neustart von KOReader."
+
+msgid "Until then, you keep using %s."
+msgstr "Bis dahin verwenden Sie weiter %s."
+
+msgid "A download is running. Restart KOReader once it has finished."
+msgstr "Ein Download läuft. Starten Sie KOReader neu, sobald er fertig ist."
+
+msgid "Restart now"
+msgstr "Jetzt neu starten"
+
+msgid "Restart to update"
+msgstr "Neustart zum Aktualisieren"

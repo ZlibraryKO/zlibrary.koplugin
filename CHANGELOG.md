@@ -22,6 +22,12 @@ for example to let a download finish, before restarting KOReader. Book details u
 first time you opened them, so after an update they could be the new version running inside the
 old one. Now everything loads at start, and the old version runs as a whole until the restart.
 
+**Update now, restart when it suits you.** The update dialog now says you can keep reading and
+downloading, and once the update is installed it tells you which version starts at the next restart
+and which one you keep using until then. **Restart now** restarts KOReader straight away; it is not
+offered while a book is downloading. Check for updates before the restart says the update is
+waiting instead of checking again, and the update notice stays away from downloads in progress.
+
 ## 1.0.64
 
 ### Fixed

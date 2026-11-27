@@ -1375,3 +1375,21 @@ msgstr "Thông báo khi có cập nhật"
 
 msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
 msgstr "Sau khi hiện kết quả tìm kiếm hoặc một danh sách, kiểm tra tối đa một lần mỗi ngày xem đã có phiên bản plugin mới chưa và đề xuất một lần."
+
+msgid "You can keep reading and downloading: the new version starts the next time KOReader restarts."
+msgstr "Bạn có thể tiếp tục đọc và tải xuống: phiên bản mới sẽ chạy vào lần khởi động lại KOReader tiếp theo."
+
+msgid "Version %s is installed and starts the next time KOReader restarts."
+msgstr "Phiên bản %s đã được cài đặt và sẽ chạy vào lần khởi động lại KOReader tiếp theo."
+
+msgid "Until then, you keep using %s."
+msgstr "Cho đến lúc đó, bạn vẫn dùng %s."
+
+msgid "A download is running. Restart KOReader once it has finished."
+msgstr "Đang có một lượt tải xuống. Hãy khởi động lại KOReader sau khi nó hoàn tất."
+
+msgid "Restart now"
+msgstr "Khởi động lại ngay"
+
+msgid "Restart to update"
+msgstr "Khởi động lại để cập nhật"

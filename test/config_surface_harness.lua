@@ -199,6 +199,7 @@ local EXPECTED = {
     "setCoverTimeout:function",
     "setDownloadTimeout:function",
     "setLoginTimeout:function",
+    "getPluginVersion:function",
     "setPluginVersion:function",
     "setPopularTimeout:function",
     "setRecommendedTimeout:function",

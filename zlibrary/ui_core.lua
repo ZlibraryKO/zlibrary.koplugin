@@ -197,45 +197,55 @@ function Ui.showAboutDialog(version)
     end
 end
 
--- Shown once an update has installed. This is the one moment the plugin has earned a word: the
--- reader chose to update, it worked, and they are already being told to restart -- so the ask
--- costs them nothing extra and needs no "shown once" bookkeeping, since a given version installs
--- once. The restart instruction stays first and Close stays the obvious way out; the QR sits on a
--- row above it for anyone who wants it.
+-- Shown once an update has installed, and again from "Check for updates" until the restart.
+-- The install is the one moment the plugin has earned a word: the reader chose to update and it
+-- worked, so the ask costs them nothing extra and needs no "shown once" bookkeeping, since a given
+-- version installs once. The reminder from "Check for updates" leaves it out.
 --
--- The restart sentence is the exact string the plain message used, so its sixteen translations
--- carry over untouched.
-function Ui.showUpdateInstalledDialog()
-    local text = table.concat({
-        T([[Update installed successfully. Please restart KOReader for changes to take effect.]]),
-        "",
-        T("If you like the plugin and want it to keep working, the price of a coffee helps:"),
-        DONATION_URL,
-    }, "\n")
+-- The reader does not have to restart: every module loaded at startup, so the old version keeps
+-- running whole. The text says which version starts when, and "Restart now" is there for anyone
+-- who wants the new one straight away -- only when the caller passed opts.restart, which it does
+-- not while a book is downloading or on a device KOReader cannot restart itself.
+--
+-- opts: installed (version on disk), running (version in use, may be nil), restart (function or
+-- nil), download_active, just_installed.
+function Ui.showUpdateInstalledDialog(opts)
+    opts = opts or {}
+    local lines = {
+        string.format(T("Version %s is installed and starts the next time KOReader restarts."),
+            tostring(opts.installed or "?")),
+    }
+    if opts.running then
+        lines[#lines] = lines[#lines] .. " " .. string.format(T("Until then, you keep using %s."), opts.running)
+    end
+    if opts.download_active then
+        lines[#lines + 1] = ""
+        lines[#lines + 1] = T("A download is running. Restart KOReader once it has finished.")
+    end
 
-    local qr_row = { { {
-        text = T("Show QR code"),
-        callback = function() Ui.showDonationQrCode() end,
-    } } }
+    local rows = {}
+    if opts.restart then
+        rows[#rows + 1] = { { text = T("Restart now"), callback = opts.restart } }
+    end
+    if opts.just_installed then
+        lines[#lines + 1] = ""
+        lines[#lines + 1] = T("If you like the plugin and want it to keep working, the price of a coffee helps:")
+        lines[#lines + 1] = DONATION_URL
+        rows[#rows + 1] = { { text = T("Show QR code"), callback = function() Ui.showDonationQrCode() end } }
+    end
 
+    local dialog_opts = {
+        title = opts.just_installed and T("Update installed") or T("Restart to update"),
+        text = table.concat(lines, "\n"),
+        no_ok_button = true,
+        cancel_text = T("Close"),
+        other_buttons = #rows > 0 and rows or nil,
+        other_buttons_first = true,
+    }
     if _plugin_instance and _plugin_instance.dialog_manager then
-        _plugin_instance.dialog_manager:showConfirmDialog({
-            title = T("Update installed"),
-            text = text,
-            no_ok_button = true,
-            cancel_text = T("Close"),
-            other_buttons = qr_row,
-            other_buttons_first = true,
-        })
+        _plugin_instance.dialog_manager:showConfirmDialog(dialog_opts)
     else
-        UIManager:show(ConfirmBox:new{
-            title = T("Update installed"),
-            text = text,
-            no_ok_button = true,
-            cancel_text = T("Close"),
-            other_buttons = qr_row,
-            other_buttons_first = true,
-        })
+        UIManager:show(ConfirmBox:new(dialog_opts))
     end
 end
 

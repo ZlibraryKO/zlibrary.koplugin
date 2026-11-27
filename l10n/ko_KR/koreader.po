@@ -1353,3 +1353,9 @@ msgstr "지금 다시 시작"
 
 msgid "Restart to update"
 msgstr "다시 시작하여 업데이트"
+
+msgid "Z-library refused the search. Z-library has changed something on its side; if a fix is out, Check for updates in Settings will find it."
+msgstr "Z-library가 검색을 거부했습니다. Z-library 측에서 무언가가 바뀌었습니다. 수정판이 나오면 설정의 '업데이트 확인'에서 찾을 수 있습니다."
+
+msgid "Z-library refused the search because your sign-in no longer works. Sign in again with Set credentials in Settings."
+msgstr "로그인이 더 이상 작동하지 않아 Z-library가 검색을 거부했습니다. 설정의 '인증 정보 설정'에서 다시 로그인하세요."

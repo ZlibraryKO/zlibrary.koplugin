@@ -1392,3 +1392,9 @@ msgstr "立即重启"
 
 msgid "Restart to update"
 msgstr "重启以完成更新"
+
+msgid "Z-library refused the search. Z-library has changed something on its side; if a fix is out, Check for updates in Settings will find it."
+msgstr "Z-library 拒绝了搜索。Z-library 在其服务端做了改动；如果有修复版本，设置中的“检查更新”会找到它。"
+
+msgid "Z-library refused the search because your sign-in no longer works. Sign in again with Set credentials in Settings."
+msgstr "你的登录已失效，Z-library 拒绝了搜索。请在设置中通过“设置账号信息”重新登录。"

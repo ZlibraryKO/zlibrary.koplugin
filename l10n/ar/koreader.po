@@ -1353,3 +1353,9 @@ msgstr "إعادة التشغيل الآن"
 
 msgid "Restart to update"
 msgstr "أعد التشغيل للتحديث"
+
+msgid "Z-library refused the search. Z-library has changed something on its side; if a fix is out, Check for updates in Settings will find it."
+msgstr "رفضت Z-library البحث. غيّرت Z-library شيئًا من جهتها؛ إذا صدر إصلاح، فسيعثر عليه «التحقق من التحديثات» في الإعدادات."
+
+msgid "Z-library refused the search because your sign-in no longer works. Sign in again with Set credentials in Settings."
+msgstr "رفضت Z-library البحث لأن تسجيل دخولك لم يعد يعمل. سجّل الدخول مجددًا عبر «تعيين بيانات الاعتماد» في الإعدادات."

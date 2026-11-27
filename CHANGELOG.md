@@ -28,6 +28,15 @@ and which one you keep using until then. **Restart now** restarts KOReader strai
 offered while a book is downloading. Check for updates before the restart says the update is
 waiting instead of checking again, and the update notice stays away from downloads in progress.
 
+### Changed
+
+**A refused search says what to do.** The message from the November outage said Z-library was
+refusing searches and that the rest of the plugin still worked. Since 1.0.63 the plugin signs in
+again by itself when a search is refused, so the message now only appears when that did not help.
+If a fresh sign-in is refused too, it says Z-library has changed something and that **Check for
+updates** will find a fix once one is out. If only a saved session was set up, with no password to
+sign in again with, it says your sign-in has stopped working and points to **Set credentials**.
+
 ## 1.0.64
 
 ### Fixed

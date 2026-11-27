@@ -1353,3 +1353,9 @@ msgstr "Uruchom ponownie teraz"
 
 msgid "Restart to update"
 msgstr "Uruchom ponownie, aby zaktualizować"
+
+msgid "Z-library refused the search. Z-library has changed something on its side; if a fix is out, Check for updates in Settings will find it."
+msgstr "Z-library odrzuciła wyszukiwanie. Z-library coś zmieniła po swojej stronie; jeśli pojawi się poprawka, znajdzie ją „Sprawdź aktualizacje” w Ustawieniach."
+
+msgid "Z-library refused the search because your sign-in no longer works. Sign in again with Set credentials in Settings."
+msgstr "Z-library odrzuciła wyszukiwanie, ponieważ Twoje logowanie już nie działa. Zaloguj się ponownie przez „Ustaw dane logowania” w Ustawieniach."

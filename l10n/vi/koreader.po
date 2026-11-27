@@ -1393,3 +1393,9 @@ msgstr "Khởi động lại ngay"
 
 msgid "Restart to update"
 msgstr "Khởi động lại để cập nhật"
+
+msgid "Z-library refused the search. Z-library has changed something on its side; if a fix is out, Check for updates in Settings will find it."
+msgstr "Z-library đã từ chối tìm kiếm. Z-library đã thay đổi điều gì đó ở phía họ; nếu có bản sửa, \"Kiểm tra cập nhật\" trong Cài đặt sẽ tìm thấy."
+
+msgid "Z-library refused the search because your sign-in no longer works. Sign in again with Set credentials in Settings."
+msgstr "Z-library đã từ chối tìm kiếm vì phiên đăng nhập của bạn không còn hoạt động. Hãy đăng nhập lại bằng \"Thông tin đăng nhập\" trong Cài đặt."

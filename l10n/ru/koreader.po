@@ -1353,3 +1353,9 @@ msgstr "Перезапустить сейчас"
 
 msgid "Restart to update"
 msgstr "Перезапустите для обновления"
+
+msgid "Z-library refused the search. Z-library has changed something on its side; if a fix is out, Check for updates in Settings will find it."
+msgstr "Z-library отклонила поиск. Z-library что-то изменила на своей стороне; если выйдет исправление, «Проверить обновления» в Настройках его найдёт."
+
+msgid "Z-library refused the search because your sign-in no longer works. Sign in again with Set credentials in Settings."
+msgstr "Z-library отклонила поиск, потому что ваш вход больше не работает. Войдите снова через «Указать учётные данные» в Настройках."

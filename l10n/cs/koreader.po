@@ -1357,3 +1357,9 @@ msgstr "Restartovat nyní"
 
 msgid "Restart to update"
 msgstr "Restartujte pro aktualizaci"
+
+msgid "Z-library refused the search. Z-library has changed something on its side; if a fix is out, Check for updates in Settings will find it."
+msgstr "Z-library hledání odmítla. Z-library na své straně něco změnila; pokud vyjde oprava, najde ji „Zkontrolovat aktualizace“ v Nastavení."
+
+msgid "Z-library refused the search because your sign-in no longer works. Sign in again with Set credentials in Settings."
+msgstr "Z-library hledání odmítla, protože vaše přihlášení už nefunguje. Přihlaste se znovu přes „Nastavit přihlašovací údaje“ v Nastavení."

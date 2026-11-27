@@ -1329,3 +1329,9 @@ msgstr "Compila tutti i campi"
 
 #~ msgid "Downloading..."
 #~ msgstr "Download in corso..."
+
+msgid "Notify about updates"
+msgstr "Avvisa degli aggiornamenti"
+
+msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
+msgstr "Dopo la comparsa di risultati di ricerca o di un elenco, controlla al massimo una volta al giorno se è uscita una nuova versione del plugin e la propone una volta."

@@ -1329,3 +1329,9 @@ msgstr "Пожалуйста, заполните все поля"
 
 #~ msgid "Downloading..."
 #~ msgstr "Загрузка..."
+
+msgid "Notify about updates"
+msgstr "Сообщать об обновлениях"
+
+msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
+msgstr "После показа результатов поиска или списка не чаще раза в день проверяет, вышла ли новая версия плагина, и предлагает её один раз."

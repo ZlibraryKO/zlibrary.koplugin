@@ -1329,3 +1329,9 @@ msgstr "Por favor, rellene todos los campos"
 
 #~ msgid "Downloading..."
 #~ msgstr "Descargando..."
+
+msgid "Notify about updates"
+msgstr "Avisar de actualizaciones"
+
+msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
+msgstr "Tras mostrar resultados de búsqueda o una lista, comprueba como máximo una vez al día si hay una nueva versión del plugin y la ofrece una vez."

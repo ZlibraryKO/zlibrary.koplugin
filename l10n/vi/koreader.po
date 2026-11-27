@@ -1369,3 +1369,9 @@ msgstr "Vui lòng điền đầy đủ các trường"
 
 #~ msgid "Downloading..."
 #~ msgstr "Đang tải về..."
+
+msgid "Notify about updates"
+msgstr "Thông báo khi có cập nhật"
+
+msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
+msgstr "Sau khi hiện kết quả tìm kiếm hoặc một danh sách, kiểm tra tối đa một lần mỗi ngày xem đã có phiên bản plugin mới chưa và đề xuất một lần."

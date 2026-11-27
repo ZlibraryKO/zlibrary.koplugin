@@ -15,6 +15,7 @@ local Api = require("zlibrary.api")
 local Ui = require("zlibrary.ui")
 local AsyncHelper = require("zlibrary.async_helper")
 local logger = require("zlibrary.log")
+local Ota = require("zlibrary.ota")
 
 local Zlibrary = {}
 
@@ -148,6 +149,8 @@ function Zlibrary:_fetchBookList(options, ...)
         
         self[options.results_member_name] = api_result.books
         options.display_menu_func(ui_self, self[options.results_member_name], plugin_self, api_result)
+        -- As after search results: the network has just answered.
+        Ota.maybeNotifyUpdate(self.plugin_path)
     end
     self:_requestDispatcher(options, ...)
 end  

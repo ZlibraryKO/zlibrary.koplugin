@@ -1333,3 +1333,9 @@ msgstr "Vyplňte prosím všechna pole"
 
 #~ msgid "Downloading..."
 #~ msgstr "Stahování..."
+
+msgid "Notify about updates"
+msgstr "Upozorňovat na aktualizace"
+
+msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
+msgstr "Po zobrazení výsledků hledání nebo seznamu nejvýše jednou denně zkontroluje, zda vyšla nová verze pluginu, a jednou ji nabídne."

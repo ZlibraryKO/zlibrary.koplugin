@@ -1609,3 +1609,9 @@ msgstr ""
 #: zlibrary/ui_settings.lua:481
 msgid "Please fill in all fields"
 msgstr ""
+
+msgid "Notify about updates"
+msgstr ""
+
+msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
+msgstr ""

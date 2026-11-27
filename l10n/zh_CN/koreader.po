@@ -1368,3 +1368,9 @@ msgstr "请填写所有字段"
 
 #~ msgid "Downloading..."
 #~ msgstr "正在下载..."
+
+msgid "Notify about updates"
+msgstr "更新提醒"
+
+msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
+msgstr "显示搜索结果或列表后，每天最多检查一次是否有新版本插件，并只提示一次。"

@@ -14,11 +14,16 @@ local Shared = require("zlibrary.ui_shared")
 local _showAndTrackDialog = Shared._showAndTrackDialog
 local _closeAndUntrackDialog = Shared._closeAndUntrackDialog
 
+-- Loaded with the rest of the plugin, not on first use. An update installed without restarting
+-- KOReader swaps the files on disk; a module first loaded after that would be the new version
+-- running inside the old one. With nothing loaded late, the old version runs whole until the
+-- restart. (It only needs cache, gettext and log, so loading it here makes no require cycle.)
+local ZlibBookDialog = require("zlibrary.bookdetails_dialog")
+
 local _plugin_instance = nil
 Shared.track_plugin_instance(function(instance) _plugin_instance = instance end)
 
 function Ui.showBookDetails(parent_zlibrary, book, clear_cache_callback)
-    local ZlibBookDialog = require("zlibrary.bookdetails_dialog")
     return ZlibBookDialog.showBookDetails(Ui, parent_zlibrary, book, clear_cache_callback)
 end
 

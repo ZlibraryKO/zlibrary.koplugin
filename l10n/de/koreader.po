@@ -1332,3 +1332,9 @@ msgstr "Bitte füllen Sie alle Felder aus"
 
 #~ msgid "Downloading..."
 #~ msgstr "Wird heruntergeladen..."
+
+msgid "Notify about updates"
+msgstr "Über Updates benachrichtigen"
+
+msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
+msgstr "Prüft nach dem Anzeigen von Suchergebnissen oder einer Liste höchstens einmal täglich, ob eine neue Version des Plugins erschienen ist, und bietet sie einmal an."

@@ -1329,3 +1329,9 @@ msgstr "Vul alle velden in"
 
 #~ msgid "Downloading..."
 #~ msgstr "Bezig met downloaden..."
+
+msgid "Notify about updates"
+msgstr "Melden als er een update is"
+
+msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
+msgstr "Controleert na het tonen van zoekresultaten of een lijst hooguit één keer per dag of er een nieuwe versie van de plugin is, en biedt die één keer aan."

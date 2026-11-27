@@ -393,7 +393,8 @@ local function newFlow(opts)
         end,
         _close_current_ota_status_widget = function() end,
     }, { __index = _G })
-    local body = support.extract_block(OTA, "(\nfunction Ota%.startUpdateProcess%(.-\n)return Ota")
+    -- From the release fetch shared with the update notice, which startUpdateProcess runs in the child.
+    local body = support.extract_block(OTA, "(\nlocal function _fetchReleaseSummary%(.-\n)return Ota")
     local chunk = assert(loadstring("local Ota = {}\n" .. body .. "return Ota", "=startUpdateProcess"))
     setfenv(chunk, env)
     rig.Ota = chunk()

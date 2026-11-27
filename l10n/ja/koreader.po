@@ -1329,3 +1329,9 @@ msgstr "すべての項目を入力してください"
 
 #~ msgid "Downloading..."
 #~ msgstr "ダウンロード中..."
+
+msgid "Notify about updates"
+msgstr "アップデートを通知"
+
+msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
+msgstr "検索結果やリストの表示後、1日に1回まで新しいバージョンのプラグインが出ているか確認し、1回だけ案内します。"

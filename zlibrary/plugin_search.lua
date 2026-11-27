@@ -15,6 +15,7 @@ local Api = require("zlibrary.api")
 local Ui = require("zlibrary.ui")
 local AsyncHelper = require("zlibrary.async_helper")
 local logger = require("zlibrary.log")
+local Ota = require("zlibrary.ota")
 
 local Zlibrary = {}
 
@@ -261,6 +262,8 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
         -- this hands straight over -- asking here as well produced two dialogs in a row.
         function(book) self:downloadBook(book) end,
         self.current_search_content_type)
+    -- The network has just answered, so this is when a quiet update check costs nothing.
+    Ota.maybeNotifyUpdate(self.plugin_path)
 end
 
 return Zlibrary

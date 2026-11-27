@@ -173,7 +173,6 @@ function Zlibrary:addToMainMenu(menu_items)
                         {
                             text = T("Check for updates"),
                             keep_menu_open = false,
-                            separator = true,
                             callback = function()
                                 if self.plugin_path then
                                     Ota.startUpdateProcess(self.plugin_path)
@@ -181,6 +180,18 @@ function Zlibrary:addToMainMenu(menu_items)
                                     logger.err("ZLibrary: Plugin path not available for OTA update.")
                                     Ui.showErrorMessage(T("Error: Plugin path not found. Cannot check for updates."))
                                 end
+                            end,
+                        },
+                        {
+                            text = T("Notify about updates"),
+                            keep_menu_open = true,
+                            separator = true,
+                            help_text = T("After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."),
+                            checked_func = function()
+                                return Config.getUpdateNotice()
+                            end,
+                            callback = function()
+                                Config.setUpdateNotice(not Config.getUpdateNotice())
                             end,
                         },
                         {

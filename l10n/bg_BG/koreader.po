@@ -1323,3 +1323,9 @@ msgstr "Попълнете всички полета"
 
 #~ msgid "Fetch most popular books from Z-library?"
 #~ msgstr "Зареждане на най-популярни книги от Z-library?"
+
+msgid "Notify about updates"
+msgstr "Известия за актуализации"
+
+msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
+msgstr "След показване на резултати от търсене или списък проверява най-много веднъж дневно дали е излязла нова версия на приставката и я предлага веднъж."

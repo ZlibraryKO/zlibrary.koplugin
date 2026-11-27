@@ -1329,3 +1329,9 @@ msgstr "모든 항목을 입력하세요"
 
 #~ msgid "Downloading..."
 #~ msgstr "다운로드 중..."
+
+msgid "Notify about updates"
+msgstr "업데이트 알림"
+
+msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
+msgstr "검색 결과나 목록이 표시된 후 하루에 최대 한 번 새 버전의 플러그인이 나왔는지 확인하고, 한 번만 안내합니다."

@@ -6,6 +6,22 @@ is summarised rather than listed; the commit history has the detail.
 The version number is set by the release workflow, which bumps the patch version on every push
 to `main` — so the top section is the one about to ship.
 
+## 1.0.65
+
+### New
+
+**The plugin tells you when an update is out.** Z-library changes its app API without notice, and
+until now you only got a fix if you opened Settings > Check for updates yourself. Now, after search
+results or a list appear, the plugin checks at most once a day whether a new version is out and
+offers it once, with the usual update dialog. It never turns Wi-Fi on for this, shows nothing while
+it checks, and stays silent when there is nothing new. You can switch it off with **Notify about
+updates**, right below Check for updates.
+
+**Updating without restarting is safe.** You can install an update and keep using the plugin,
+for example to let a download finish, before restarting KOReader. Book details used to load the
+first time you opened them, so after an update they could be the new version running inside the
+old one. Now everything loads at start, and the old version runs as a whole until the restart.
+
 ## 1.0.64
 
 ### Fixed

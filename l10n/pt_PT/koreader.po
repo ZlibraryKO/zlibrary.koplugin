@@ -1177,3 +1177,9 @@ msgstr "Por favor, preencha todos os campos"
 
 #~ msgid "Login failed: Invalid session data"
 #~ msgstr "Falha ao iniciar sessão: Dados de sessão inválidos"
+
+msgid "Notify about updates"
+msgstr "Avisar sobre atualizações"
+
+msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
+msgstr "Depois de aparecerem resultados de pesquisa ou uma lista, verifica no máximo uma vez por dia se saiu uma nova versão do plugin e propõe-na uma vez."

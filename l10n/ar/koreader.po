@@ -1329,3 +1329,9 @@ msgstr "يرجى ملء جميع الحقول"
 
 #~ msgid "Downloading..."
 #~ msgstr "جارٍ التنزيل..."
+
+msgid "Notify about updates"
+msgstr "الإشعار بالتحديثات"
+
+msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
+msgstr "بعد ظهور نتائج البحث أو قائمة، يتحقق مرة واحدة يوميًا على الأكثر من صدور إصدار جديد من المكون الإضافي، ويعرضه مرة واحدة."

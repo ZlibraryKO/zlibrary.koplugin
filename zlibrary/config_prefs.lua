@@ -143,6 +143,16 @@ function Config.setAuthorFolders(on)
     Config.saveSetting(Config.SETTINGS_AUTHOR_FOLDERS_KEY, on == true)
 end
 
+-- On by default: the plugin only reaches readers' fixes if they hear about them, and Z-library
+-- changes its API without notice. Only an explicit false turns it off.
+function Config.getUpdateNotice()
+    return Config.getSetting(Config.SETTINGS_UPDATE_NOTICE_KEY, true) ~= false
+end
+
+function Config.setUpdateNotice(on)
+    Config.saveSetting(Config.SETTINGS_UPDATE_NOTICE_KEY, on == true)
+end
+
 -- What a search looks for: "book" (the default) or "article". Anything else stored reads as
 -- "book", so a hand-edited value can never turn into an unknown content type in the request.
 function Config.getSearchContentType()

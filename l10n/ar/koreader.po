@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-26 21:10+0000\n"
+"POT-Creation-Date: 2026-11-27 08:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -111,8 +111,11 @@ msgstr "فشل تحليل استجابة الكتاب المفضل."
 msgid "API returned an error for favorite book."
 msgstr "أرجع API خطأ للكتاب المفضل."
 
-msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
-msgstr "يرفض Z-library عمليات البحث حاليًا. المشكلة من جهة Z-library وليست من الإضافة: قوائمك و«الأكثر شعبية» والتنزيلات لا تزال تعمل."
+msgid "Z-library refused the search. Z-library has changed something on its side; if a fix is out, Check for updates in Settings will find it."
+msgstr "رفضت Z-library البحث. غيّرت Z-library شيئًا من جهتها؛ إذا صدر إصلاح، فسيعثر عليه «التحقق من التحديثات» في الإعدادات."
+
+msgid "Z-library refused the search because your sign-in no longer works. Sign in again with Set credentials in Settings."
+msgstr "رفضت Z-library البحث لأن تسجيل دخولك لم يعد يعمل. سجّل الدخول مجددًا عبر «تعيين بيانات الاعتماد» في الإعدادات."
 
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "لم يتم تعيين عنوان خادم Z-library (URL). يرجى ضبطه في إعدادات مكون Z-library الإضافي."
@@ -438,6 +441,9 @@ msgstr "المؤلف"
 msgid "Search"
 msgstr "بحث"
 
+msgid "A download is running. Restart KOReader once it has finished."
+msgstr "يجري تنزيل الآن. أعد تشغيل KOReader بعد انتهائه."
+
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "فشل التحديث: تعذر تحديد مكان تثبيت المكون الإضافي."
 
@@ -489,6 +495,9 @@ msgstr "إصدار جديد متاح: %s (لديك %s). تنزيل وتثبيت�
 
 msgid "an older version"
 msgstr "إصدار أقدم"
+
+msgid "You can keep reading and downloading: the new version starts the next time KOReader restarts."
+msgstr "يمكنك متابعة القراءة والتنزيل: يبدأ الإصدار الجديد عند إعادة تشغيل KOReader في المرة القادمة."
 
 msgid "Update available"
 msgstr "تحديث متاح"
@@ -699,6 +708,12 @@ msgstr "التحقق من التحديثات"
 
 msgid "Error: Plugin path not found. Cannot check for updates."
 msgstr "خطأ: لم يتم العثور على مسار المكون الإضافي. لا يمكن التحقق من التحديثات."
+
+msgid "Notify about updates"
+msgstr "الإشعار بالتحديثات"
+
+msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
+msgstr "بعد ظهور نتائج البحث أو قائمة، يتحقق مرة واحدة يوميًا على الأكثر من صدور إصدار جديد من المكون الإضافي، ويعرضه مرة واحدة."
 
 msgid "Advanced"
 msgstr "إعدادات متقدمة"
@@ -926,11 +941,22 @@ msgstr "إذا أعجبتك الإضافة وأردت أن تستمر في ال�
 msgid "Show QR code"
 msgstr "عرض رمز QR"
 
-msgid "Update installed successfully. Please restart KOReader for changes to take effect."
-msgstr "تم تثبيت التحديث بنجاح. يرجى إعادة تشغيل KOReader لتطبيق التغييرات."
+#, lua-format
+msgid "Version %s is installed and starts the next time KOReader restarts."
+msgstr "تم تثبيت الإصدار %s ويبدأ عند إعادة تشغيل KOReader في المرة القادمة."
+
+#, lua-format
+msgid "Until then, you keep using %s."
+msgstr "حتى ذلك الحين، تواصل استخدام %s."
+
+msgid "Restart now"
+msgstr "إعادة التشغيل الآن"
 
 msgid "Update installed"
 msgstr "تم تثبيت التحديث"
+
+msgid "Restart to update"
+msgstr "أعد التشغيل للتحديث"
 
 msgid "Request timed out"
 msgstr "انتهت مهلة الطلب"
@@ -1157,6 +1183,12 @@ msgstr "تعيين وتحقّق"
 msgid "Please fill in all fields"
 msgstr "يرجى ملء جميع الحقول"
 
+#~ msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
+#~ msgstr "يرفض Z-library عمليات البحث حاليًا. المشكلة من جهة Z-library وليست من الإضافة: قوائمك و«الأكثر شعبية» والتنزيلات لا تزال تعمل."
+
+#~ msgid "Update installed successfully. Please restart KOReader for changes to take effect."
+#~ msgstr "تم تثبيت التحديث بنجاح. يرجى إعادة تشغيل KOReader لتطبيق التغييرات."
+
 #~ msgid "Set download directory"
 #~ msgstr "تعيين دليل التنزيل"
 
@@ -1329,33 +1361,3 @@ msgstr "يرجى ملء جميع الحقول"
 
 #~ msgid "Downloading..."
 #~ msgstr "جارٍ التنزيل..."
-
-msgid "Notify about updates"
-msgstr "الإشعار بالتحديثات"
-
-msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
-msgstr "بعد ظهور نتائج البحث أو قائمة، يتحقق مرة واحدة يوميًا على الأكثر من صدور إصدار جديد من المكون الإضافي، ويعرضه مرة واحدة."
-
-msgid "You can keep reading and downloading: the new version starts the next time KOReader restarts."
-msgstr "يمكنك متابعة القراءة والتنزيل: يبدأ الإصدار الجديد عند إعادة تشغيل KOReader في المرة القادمة."
-
-msgid "Version %s is installed and starts the next time KOReader restarts."
-msgstr "تم تثبيت الإصدار %s ويبدأ عند إعادة تشغيل KOReader في المرة القادمة."
-
-msgid "Until then, you keep using %s."
-msgstr "حتى ذلك الحين، تواصل استخدام %s."
-
-msgid "A download is running. Restart KOReader once it has finished."
-msgstr "يجري تنزيل الآن. أعد تشغيل KOReader بعد انتهائه."
-
-msgid "Restart now"
-msgstr "إعادة التشغيل الآن"
-
-msgid "Restart to update"
-msgstr "أعد التشغيل للتحديث"
-
-msgid "Z-library refused the search. Z-library has changed something on its side; if a fix is out, Check for updates in Settings will find it."
-msgstr "رفضت Z-library البحث. غيّرت Z-library شيئًا من جهتها؛ إذا صدر إصلاح، فسيعثر عليه «التحقق من التحديثات» في الإعدادات."
-
-msgid "Z-library refused the search because your sign-in no longer works. Sign in again with Set credentials in Settings."
-msgstr "رفضت Z-library البحث لأن تسجيل دخولك لم يعد يعمل. سجّل الدخول مجددًا عبر «تعيين بيانات الاعتماد» في الإعدادات."

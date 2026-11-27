@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-26 21:10+0000\n"
+"POT-Creation-Date: 2026-11-27 08:43+0000\n"
 "PO-Revision-Date: 2026-09-05 13:23+0700\n"
 "Last-Translator: \n"
 "Language-Team: vi <vi@li.org>\n"
@@ -112,8 +112,11 @@ msgstr "Không thể phân tích phản hồi sách yêu thích."
 msgid "API returned an error for favorite book."
 msgstr "API trả về lỗi đối với sách yêu thích."
 
-msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
-msgstr "Z-library hiện đang từ chối các lượt tìm kiếm. Lỗi nằm ở phía Z-library, không phải plugin: danh sách, Phổ biến nhất và tải xuống vẫn hoạt động."
+msgid "Z-library refused the search. Z-library has changed something on its side; if a fix is out, Check for updates in Settings will find it."
+msgstr "Z-library đã từ chối tìm kiếm. Z-library đã thay đổi điều gì đó ở phía họ; nếu có bản sửa, \"Kiểm tra cập nhật\" trong Cài đặt sẽ tìm thấy."
+
+msgid "Z-library refused the search because your sign-in no longer works. Sign in again with Set credentials in Settings."
+msgstr "Z-library đã từ chối tìm kiếm vì phiên đăng nhập của bạn không còn hoạt động. Hãy đăng nhập lại bằng \"Thông tin đăng nhập\" trong Cài đặt."
 
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "Chưa thiết lập địa chỉ máy chủ (URL) Z-library. Vui lòng cấu hình trong cài đặt plugin Z-library."
@@ -439,6 +442,9 @@ msgstr "Tác giả"
 msgid "Search"
 msgstr "Tìm kiếm"
 
+msgid "A download is running. Restart KOReader once it has finished."
+msgstr "Đang có một lượt tải xuống. Hãy khởi động lại KOReader sau khi nó hoàn tất."
+
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "Cập nhật thất bại: Không thể xác định vị trí cài đặt plugin."
 
@@ -490,6 +496,9 @@ msgstr "Có phiên bản mới: %s (bạn đang dùng %s). Tải về và cài �
 
 msgid "an older version"
 msgstr "phiên bản cũ hơn"
+
+msgid "You can keep reading and downloading: the new version starts the next time KOReader restarts."
+msgstr "Bạn có thể tiếp tục đọc và tải xuống: phiên bản mới sẽ chạy vào lần khởi động lại KOReader tiếp theo."
 
 msgid "Update available"
 msgstr "Có bản cập nhật mới"
@@ -700,6 +709,12 @@ msgstr "Kiểm tra cập nhật"
 
 msgid "Error: Plugin path not found. Cannot check for updates."
 msgstr "Lỗi: Không tìm thấy đường dẫn plugin. Không thể kiểm tra cập nhật."
+
+msgid "Notify about updates"
+msgstr "Thông báo khi có cập nhật"
+
+msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
+msgstr "Sau khi hiện kết quả tìm kiếm hoặc một danh sách, kiểm tra tối đa một lần mỗi ngày xem đã có phiên bản plugin mới chưa và đề xuất một lần."
 
 msgid "Advanced"
 msgstr "Nâng cao"
@@ -927,11 +942,22 @@ msgstr "Nếu bạn thích tiện ích này và muốn nó tiếp tục hoạt �
 msgid "Show QR code"
 msgstr "Hiện mã QR"
 
-msgid "Update installed successfully. Please restart KOReader for changes to take effect."
-msgstr "Cập nhật thành công. Vui lòng khởi động lại KOReader để thay đổi có hiệu lực."
+#, lua-format
+msgid "Version %s is installed and starts the next time KOReader restarts."
+msgstr "Phiên bản %s đã được cài đặt và sẽ chạy vào lần khởi động lại KOReader tiếp theo."
+
+#, lua-format
+msgid "Until then, you keep using %s."
+msgstr "Cho đến lúc đó, bạn vẫn dùng %s."
+
+msgid "Restart now"
+msgstr "Khởi động lại ngay"
 
 msgid "Update installed"
 msgstr "Đã cài đặt bản cập nhật"
+
+msgid "Restart to update"
+msgstr "Khởi động lại để cập nhật"
 
 msgid "Request timed out"
 msgstr "Hết thời gian yêu cầu"
@@ -1158,6 +1184,12 @@ msgstr "Thiết lập và xác minh"
 msgid "Please fill in all fields"
 msgstr "Vui lòng điền đầy đủ các trường"
 
+#~ msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
+#~ msgstr "Z-library hiện đang từ chối các lượt tìm kiếm. Lỗi nằm ở phía Z-library, không phải plugin: danh sách, Phổ biến nhất và tải xuống vẫn hoạt động."
+
+#~ msgid "Update installed successfully. Please restart KOReader for changes to take effect."
+#~ msgstr "Cập nhật thành công. Vui lòng khởi động lại KOReader để thay đổi có hiệu lực."
+
 #~ msgid "Set download directory"
 #~ msgstr "Đặt thư mục tải về"
 
@@ -1369,33 +1401,3 @@ msgstr "Vui lòng điền đầy đủ các trường"
 
 #~ msgid "Downloading..."
 #~ msgstr "Đang tải về..."
-
-msgid "Notify about updates"
-msgstr "Thông báo khi có cập nhật"
-
-msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
-msgstr "Sau khi hiện kết quả tìm kiếm hoặc một danh sách, kiểm tra tối đa một lần mỗi ngày xem đã có phiên bản plugin mới chưa và đề xuất một lần."
-
-msgid "You can keep reading and downloading: the new version starts the next time KOReader restarts."
-msgstr "Bạn có thể tiếp tục đọc và tải xuống: phiên bản mới sẽ chạy vào lần khởi động lại KOReader tiếp theo."
-
-msgid "Version %s is installed and starts the next time KOReader restarts."
-msgstr "Phiên bản %s đã được cài đặt và sẽ chạy vào lần khởi động lại KOReader tiếp theo."
-
-msgid "Until then, you keep using %s."
-msgstr "Cho đến lúc đó, bạn vẫn dùng %s."
-
-msgid "A download is running. Restart KOReader once it has finished."
-msgstr "Đang có một lượt tải xuống. Hãy khởi động lại KOReader sau khi nó hoàn tất."
-
-msgid "Restart now"
-msgstr "Khởi động lại ngay"
-
-msgid "Restart to update"
-msgstr "Khởi động lại để cập nhật"
-
-msgid "Z-library refused the search. Z-library has changed something on its side; if a fix is out, Check for updates in Settings will find it."
-msgstr "Z-library đã từ chối tìm kiếm. Z-library đã thay đổi điều gì đó ở phía họ; nếu có bản sửa, \"Kiểm tra cập nhật\" trong Cài đặt sẽ tìm thấy."
-
-msgid "Z-library refused the search because your sign-in no longer works. Sign in again with Set credentials in Settings."
-msgstr "Z-library đã từ chối tìm kiếm vì phiên đăng nhập của bạn không còn hoạt động. Hãy đăng nhập lại bằng \"Thông tin đăng nhập\" trong Cài đặt."

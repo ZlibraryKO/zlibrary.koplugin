@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-26 21:10+0000\n"
+"POT-Creation-Date: 2026-11-27 08:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese <zh@li.org>\n"
@@ -111,8 +111,11 @@ msgstr "解析加入收藏響應失敗。"
 msgid "API returned an error for favorite book."
 msgstr "API返回加入收藏錯誤。"
 
-msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
-msgstr "Z-library 目前拒絕搜尋請求。這是 Z-library 那邊的問題，不是外掛的問題：你的清單、「最熱門」和下載仍可正常使用。"
+msgid "Z-library refused the search. Z-library has changed something on its side; if a fix is out, Check for updates in Settings will find it."
+msgstr "Z-library 拒絕了搜尋。Z-library 在其伺服器端做了變更；如果有修正版本，設置中的「檢查更新」會找到它。"
+
+msgid "Z-library refused the search because your sign-in no longer works. Sign in again with Set credentials in Settings."
+msgstr "你的登入已失效，Z-library 拒絕了搜尋。請在設置中透過「設置憑證」重新登入。"
 
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "未設置 Z-library 伺服器地址（URL）。請在 Z-library 插件設置中配置。"
@@ -438,6 +441,9 @@ msgstr "作者"
 msgid "Search"
 msgstr "搜索"
 
+msgid "A download is running. Restart KOReader once it has finished."
+msgstr "正在下載。請在下載完成後重新啟動 KOReader。"
+
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "更新失敗：無法確定插件安裝位置。"
 
@@ -489,6 +495,9 @@ msgstr "有新版本可用: %s (您當前版本為%s)。要下載並安裝嗎？
 
 msgid "an older version"
 msgstr "舊版本"
+
+msgid "You can keep reading and downloading: the new version starts the next time KOReader restarts."
+msgstr "你可以繼續閱讀和下載：新版本將在下次重新啟動 KOReader 時啟用。"
 
 msgid "Update available"
 msgstr "有可用更新"
@@ -699,6 +708,12 @@ msgstr "檢查更新"
 
 msgid "Error: Plugin path not found. Cannot check for updates."
 msgstr "錯誤：未找到插件路徑。無法檢查更新。"
+
+msgid "Notify about updates"
+msgstr "更新提醒"
+
+msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
+msgstr "顯示搜尋結果或清單後，每天最多檢查一次是否有新版本插件，並只提示一次。"
 
 msgid "Advanced"
 msgstr "進階選項"
@@ -926,11 +941,22 @@ msgstr "如果您喜歡這個外掛並希望它繼續可用，一杯咖啡的支
 msgid "Show QR code"
 msgstr "顯示 QR 碼"
 
-msgid "Update installed successfully. Please restart KOReader for changes to take effect."
-msgstr "更新安裝成功。請重啟KOReader使更改生效。"
+#, lua-format
+msgid "Version %s is installed and starts the next time KOReader restarts."
+msgstr "版本 %s 已安裝，將在下次重新啟動 KOReader 時啟用。"
+
+#, lua-format
+msgid "Until then, you keep using %s."
+msgstr "在此之前，你仍在使用 %s。"
+
+msgid "Restart now"
+msgstr "立即重新啟動"
 
 msgid "Update installed"
 msgstr "更新已安裝"
+
+msgid "Restart to update"
+msgstr "重新啟動以完成更新"
 
 msgid "Request timed out"
 msgstr "請求逾時"
@@ -1157,6 +1183,12 @@ msgstr "設置並驗證"
 msgid "Please fill in all fields"
 msgstr "請填寫所有欄位"
 
+#~ msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
+#~ msgstr "Z-library 目前拒絕搜尋請求。這是 Z-library 那邊的問題，不是外掛的問題：你的清單、「最熱門」和下載仍可正常使用。"
+
+#~ msgid "Update installed successfully. Please restart KOReader for changes to take effect."
+#~ msgstr "更新安裝成功。請重啟KOReader使更改生效。"
+
 #~ msgid "Set download directory"
 #~ msgstr "設置下載目錄"
 
@@ -1329,33 +1361,3 @@ msgstr "請填寫所有欄位"
 
 #~ msgid "Downloading..."
 #~ msgstr "正在下載..."
-
-msgid "Notify about updates"
-msgstr "更新提醒"
-
-msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
-msgstr "顯示搜尋結果或清單後，每天最多檢查一次是否有新版本插件，並只提示一次。"
-
-msgid "You can keep reading and downloading: the new version starts the next time KOReader restarts."
-msgstr "你可以繼續閱讀和下載：新版本將在下次重新啟動 KOReader 時啟用。"
-
-msgid "Version %s is installed and starts the next time KOReader restarts."
-msgstr "版本 %s 已安裝，將在下次重新啟動 KOReader 時啟用。"
-
-msgid "Until then, you keep using %s."
-msgstr "在此之前，你仍在使用 %s。"
-
-msgid "A download is running. Restart KOReader once it has finished."
-msgstr "正在下載。請在下載完成後重新啟動 KOReader。"
-
-msgid "Restart now"
-msgstr "立即重新啟動"
-
-msgid "Restart to update"
-msgstr "重新啟動以完成更新"
-
-msgid "Z-library refused the search. Z-library has changed something on its side; if a fix is out, Check for updates in Settings will find it."
-msgstr "Z-library 拒絕了搜尋。Z-library 在其伺服器端做了變更；如果有修正版本，設置中的「檢查更新」會找到它。"
-
-msgid "Z-library refused the search because your sign-in no longer works. Sign in again with Set credentials in Settings."
-msgstr "你的登入已失效，Z-library 拒絕了搜尋。請在設置中透過「設置憑證」重新登入。"

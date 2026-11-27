@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-26 21:10+0000\n"
+"POT-Creation-Date: 2026-11-27 08:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -111,8 +111,11 @@ msgstr "즐겨찾기 추가 응답을 해석하지 못했습니다."
 msgid "API returned an error for favorite book."
 msgstr "즐겨찾기 추가에 대해 API 오류가 반환되었습니다."
 
-msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
-msgstr "현재 Z-library가 검색을 거부하고 있습니다. 플러그인이 아닌 Z-library 측의 문제입니다. 목록, 인기순, 다운로드는 계속 사용할 수 있습니다."
+msgid "Z-library refused the search. Z-library has changed something on its side; if a fix is out, Check for updates in Settings will find it."
+msgstr "Z-library가 검색을 거부했습니다. Z-library 측에서 무언가가 바뀌었습니다. 수정판이 나오면 설정의 '업데이트 확인'에서 찾을 수 있습니다."
+
+msgid "Z-library refused the search because your sign-in no longer works. Sign in again with Set credentials in Settings."
+msgstr "로그인이 더 이상 작동하지 않아 Z-library가 검색을 거부했습니다. 설정의 '인증 정보 설정'에서 다시 로그인하세요."
 
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "Z-library 서버 주소(URL)가 설정되지 않았습니다. Z-library 플러그인 설정에서 지정하세요."
@@ -438,6 +441,9 @@ msgstr "저자"
 msgid "Search"
 msgstr "검색"
 
+msgid "A download is running. Restart KOReader once it has finished."
+msgstr "다운로드가 진행 중입니다. 완료된 후 KOReader를 다시 시작하세요."
+
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "업데이트 실패: 플러그인 설치 위치를 확인할 수 없습니다."
 
@@ -489,6 +495,9 @@ msgstr "새 버전 이용 가능: %s (현재 버전: %s). 다운로드하고 설
 
 msgid "an older version"
 msgstr "이전 버전"
+
+msgid "You can keep reading and downloading: the new version starts the next time KOReader restarts."
+msgstr "계속 읽고 다운로드할 수 있습니다. 새 버전은 다음에 KOReader를 다시 시작할 때 실행됩니다."
 
 msgid "Update available"
 msgstr "업데이트 가능"
@@ -699,6 +708,12 @@ msgstr "업데이트 확인"
 
 msgid "Error: Plugin path not found. Cannot check for updates."
 msgstr "오류: 플러그인 경로를 찾을 수 없습니다. 업데이트를 확인할 수 없습니다."
+
+msgid "Notify about updates"
+msgstr "업데이트 알림"
+
+msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
+msgstr "검색 결과나 목록이 표시된 후 하루에 최대 한 번 새 버전의 플러그인이 나왔는지 확인하고, 한 번만 안내합니다."
 
 msgid "Advanced"
 msgstr "고급"
@@ -926,11 +941,22 @@ msgstr "이 플러그인이 마음에 들고 계속 작동하기를 바라신다
 msgid "Show QR code"
 msgstr "QR 코드 표시"
 
-msgid "Update installed successfully. Please restart KOReader for changes to take effect."
-msgstr "업데이트가 성공적으로 설치되었습니다. 변경 사항을 적용하려면 KOReader를 재시작하세요."
+#, lua-format
+msgid "Version %s is installed and starts the next time KOReader restarts."
+msgstr "버전 %s이(가) 설치되었으며 다음에 KOReader를 다시 시작할 때 실행됩니다."
+
+#, lua-format
+msgid "Until then, you keep using %s."
+msgstr "그때까지는 %s을(를) 계속 사용합니다."
+
+msgid "Restart now"
+msgstr "지금 다시 시작"
 
 msgid "Update installed"
 msgstr "업데이트 설치됨"
+
+msgid "Restart to update"
+msgstr "다시 시작하여 업데이트"
 
 msgid "Request timed out"
 msgstr "요청 시간 초과"
@@ -1157,6 +1183,12 @@ msgstr "설정 후 확인"
 msgid "Please fill in all fields"
 msgstr "모든 항목을 입력하세요"
 
+#~ msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
+#~ msgstr "현재 Z-library가 검색을 거부하고 있습니다. 플러그인이 아닌 Z-library 측의 문제입니다. 목록, 인기순, 다운로드는 계속 사용할 수 있습니다."
+
+#~ msgid "Update installed successfully. Please restart KOReader for changes to take effect."
+#~ msgstr "업데이트가 성공적으로 설치되었습니다. 변경 사항을 적용하려면 KOReader를 재시작하세요."
+
 #~ msgid "Set download directory"
 #~ msgstr "다운로드 디렉토리 설정"
 
@@ -1329,33 +1361,3 @@ msgstr "모든 항목을 입력하세요"
 
 #~ msgid "Downloading..."
 #~ msgstr "다운로드 중..."
-
-msgid "Notify about updates"
-msgstr "업데이트 알림"
-
-msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
-msgstr "검색 결과나 목록이 표시된 후 하루에 최대 한 번 새 버전의 플러그인이 나왔는지 확인하고, 한 번만 안내합니다."
-
-msgid "You can keep reading and downloading: the new version starts the next time KOReader restarts."
-msgstr "계속 읽고 다운로드할 수 있습니다. 새 버전은 다음에 KOReader를 다시 시작할 때 실행됩니다."
-
-msgid "Version %s is installed and starts the next time KOReader restarts."
-msgstr "버전 %s이(가) 설치되었으며 다음에 KOReader를 다시 시작할 때 실행됩니다."
-
-msgid "Until then, you keep using %s."
-msgstr "그때까지는 %s을(를) 계속 사용합니다."
-
-msgid "A download is running. Restart KOReader once it has finished."
-msgstr "다운로드가 진행 중입니다. 완료된 후 KOReader를 다시 시작하세요."
-
-msgid "Restart now"
-msgstr "지금 다시 시작"
-
-msgid "Restart to update"
-msgstr "다시 시작하여 업데이트"
-
-msgid "Z-library refused the search. Z-library has changed something on its side; if a fix is out, Check for updates in Settings will find it."
-msgstr "Z-library가 검색을 거부했습니다. Z-library 측에서 무언가가 바뀌었습니다. 수정판이 나오면 설정의 '업데이트 확인'에서 찾을 수 있습니다."
-
-msgid "Z-library refused the search because your sign-in no longer works. Sign in again with Set credentials in Settings."
-msgstr "로그인이 더 이상 작동하지 않아 Z-library가 검색을 거부했습니다. 설정의 '인증 정보 설정'에서 다시 로그인하세요."

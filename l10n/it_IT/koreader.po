@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: v1.0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-26 21:10+0000\n"
+"POT-Creation-Date: 2026-11-27 08:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -111,8 +111,11 @@ msgstr "Impossibile analizzare la risposta dell'aggiunta ai preferiti."
 msgid "API returned an error for favorite book."
 msgstr "L'API ha restituito un errore per l'aggiunta ai preferiti."
 
-msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
-msgstr "Al momento Z-library rifiuta le ricerche. Il problema è di Z-library, non del plugin: le tue liste, Più popolari e i download funzionano ancora."
+msgid "Z-library refused the search. Z-library has changed something on its side; if a fix is out, Check for updates in Settings will find it."
+msgstr "Z-library ha rifiutato la ricerca. Z-library ha cambiato qualcosa dalla sua parte; se esce una correzione, «Controlla aggiornamenti» nelle Impostazioni la troverà."
+
+msgid "Z-library refused the search because your sign-in no longer works. Sign in again with Set credentials in Settings."
+msgstr "Z-library ha rifiutato la ricerca perché il tuo accesso non funziona più. Accedi di nuovo con «Imposta credenziali» nelle Impostazioni."
 
 msgid "The Z-library server address (URL) is not set. Please configure it in the Z-library plugin settings."
 msgstr "L'indirizzo del server Z-library (URL) non è impostato. Configuralo nelle impostazioni del plugin Z-library."
@@ -438,6 +441,9 @@ msgstr "Autore"
 msgid "Search"
 msgstr "Cerca"
 
+msgid "A download is running. Restart KOReader once it has finished."
+msgstr "È in corso un download. Riavvia KOReader quando è terminato."
+
 msgid "Update failed: Could not determine where to install the plugin."
 msgstr "Aggiornamento fallito: Impossibile determinare dove installare il plugin."
 
@@ -489,6 +495,9 @@ msgstr "Nuova versione disponibile: %s (hai %s). Scaricare e installare?"
 
 msgid "an older version"
 msgstr "una versione precedente"
+
+msgid "You can keep reading and downloading: the new version starts the next time KOReader restarts."
+msgstr "Puoi continuare a leggere e scaricare: la nuova versione si avvia al prossimo riavvio di KOReader."
 
 msgid "Update available"
 msgstr "Aggiornamento disponibile"
@@ -699,6 +708,12 @@ msgstr "Controlla aggiornamenti"
 
 msgid "Error: Plugin path not found. Cannot check for updates."
 msgstr "Errore: Percorso plugin non trovato. Impossibile controllare gli aggiornamenti."
+
+msgid "Notify about updates"
+msgstr "Avvisa degli aggiornamenti"
+
+msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
+msgstr "Dopo la comparsa di risultati di ricerca o di un elenco, controlla al massimo una volta al giorno se è uscita una nuova versione del plugin e la propone una volta."
 
 msgid "Advanced"
 msgstr "Avanzate"
@@ -926,11 +941,22 @@ msgstr "Se il plugin ti piace e vuoi che continui a funzionare, il prezzo di un 
 msgid "Show QR code"
 msgstr "Mostra codice QR"
 
-msgid "Update installed successfully. Please restart KOReader for changes to take effect."
-msgstr "Aggiornamento installato con successo. Riavvia KOReader affinché le modifiche abbiano effetto."
+#, lua-format
+msgid "Version %s is installed and starts the next time KOReader restarts."
+msgstr "La versione %s è installata e si avvia al prossimo riavvio di KOReader."
+
+#, lua-format
+msgid "Until then, you keep using %s."
+msgstr "Fino ad allora continui a usare la %s."
+
+msgid "Restart now"
+msgstr "Riavvia ora"
 
 msgid "Update installed"
 msgstr "Aggiornamento installato"
+
+msgid "Restart to update"
+msgstr "Riavvia per aggiornare"
 
 msgid "Request timed out"
 msgstr "Richiesta scaduta"
@@ -1157,6 +1183,12 @@ msgstr "Imposta e verifica"
 msgid "Please fill in all fields"
 msgstr "Compila tutti i campi"
 
+#~ msgid "Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work."
+#~ msgstr "Al momento Z-library rifiuta le ricerche. Il problema è di Z-library, non del plugin: le tue liste, Più popolari e i download funzionano ancora."
+
+#~ msgid "Update installed successfully. Please restart KOReader for changes to take effect."
+#~ msgstr "Aggiornamento installato con successo. Riavvia KOReader affinché le modifiche abbiano effetto."
+
 #~ msgid "Set download directory"
 #~ msgstr "Imposta directory di download"
 
@@ -1329,33 +1361,3 @@ msgstr "Compila tutti i campi"
 
 #~ msgid "Downloading..."
 #~ msgstr "Download in corso..."
-
-msgid "Notify about updates"
-msgstr "Avvisa degli aggiornamenti"
-
-msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
-msgstr "Dopo la comparsa di risultati di ricerca o di un elenco, controlla al massimo una volta al giorno se è uscita una nuova versione del plugin e la propone una volta."
-
-msgid "You can keep reading and downloading: the new version starts the next time KOReader restarts."
-msgstr "Puoi continuare a leggere e scaricare: la nuova versione si avvia al prossimo riavvio di KOReader."
-
-msgid "Version %s is installed and starts the next time KOReader restarts."
-msgstr "La versione %s è installata e si avvia al prossimo riavvio di KOReader."
-
-msgid "Until then, you keep using %s."
-msgstr "Fino ad allora continui a usare la %s."
-
-msgid "A download is running. Restart KOReader once it has finished."
-msgstr "È in corso un download. Riavvia KOReader quando è terminato."
-
-msgid "Restart now"
-msgstr "Riavvia ora"
-
-msgid "Restart to update"
-msgstr "Riavvia per aggiornare"
-
-msgid "Z-library refused the search. Z-library has changed something on its side; if a fix is out, Check for updates in Settings will find it."
-msgstr "Z-library ha rifiutato la ricerca. Z-library ha cambiato qualcosa dalla sua parte; se esce una correzione, «Controlla aggiornamenti» nelle Impostazioni la troverà."
-
-msgid "Z-library refused the search because your sign-in no longer works. Sign in again with Set credentials in Settings."
-msgstr "Z-library ha rifiutato la ricerca perché il tuo accesso non funziona più. Accedi di nuovo con «Imposta credenziali» nelle Impostazioni."

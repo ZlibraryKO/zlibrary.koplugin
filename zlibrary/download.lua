@@ -28,6 +28,16 @@ local util = require("util")
 
 local Download = {}
 
+-- How many book downloads are running right now. Restarting KOReader kills the child that is
+-- writing the book, so "Restart now" after an update is only offered while this is zero, and the
+-- update notice waits rather than pop up over a progress bar. A count, not a flag: a retry can
+-- start from a dialog while the first run's wrap is still unwinding.
+local active_downloads = 0
+
+function Download.isActive()
+    return active_downloads > 0
+end
+
 local function _usableFormat(format)
     if type(format) ~= "string" then
         return nil
@@ -477,7 +487,10 @@ function Download.run(self, book)
             -- book.filesize is raw server JSON; a non-numeric value would make math.min throw
             -- inside the scheduled poll, so only poll against a real number.
             local stop_poll = startProgressPoll(target_filepath, progress_callback, tonumber(book.filesize))
+            -- Counted across the pcall only, so a throw cannot leave a download "running" for good.
+            active_downloads = active_downloads + 1
             local ok, completed, api_result = pcall(runDownloadInSubprocess, user_session, referer_url)
+            active_downloads = active_downloads - 1
             -- After the pcall, so a throw cannot leave the poll rescheduling against a closed dialog.
             stop_poll()
 

@@ -1329,3 +1329,33 @@ msgstr "모든 항목을 입력하세요"
 
 #~ msgid "Downloading..."
 #~ msgstr "다운로드 중..."
+
+msgid "Notify about updates"
+msgstr "업데이트 알림"
+
+msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
+msgstr "검색 결과나 목록이 표시된 후 하루에 최대 한 번 새 버전의 플러그인이 나왔는지 확인하고, 한 번만 안내합니다."
+
+msgid "You can keep reading and downloading: the new version starts the next time KOReader restarts."
+msgstr "계속 읽고 다운로드할 수 있습니다. 새 버전은 다음에 KOReader를 다시 시작할 때 실행됩니다."
+
+msgid "Version %s is installed and starts the next time KOReader restarts."
+msgstr "버전 %s이(가) 설치되었으며 다음에 KOReader를 다시 시작할 때 실행됩니다."
+
+msgid "Until then, you keep using %s."
+msgstr "그때까지는 %s을(를) 계속 사용합니다."
+
+msgid "A download is running. Restart KOReader once it has finished."
+msgstr "다운로드가 진행 중입니다. 완료된 후 KOReader를 다시 시작하세요."
+
+msgid "Restart now"
+msgstr "지금 다시 시작"
+
+msgid "Restart to update"
+msgstr "다시 시작하여 업데이트"
+
+msgid "Z-library refused the search. Z-library has changed something on its side; if a fix is out, Check for updates in Settings will find it."
+msgstr "Z-library가 검색을 거부했습니다. Z-library 측에서 무언가가 바뀌었습니다. 수정판이 나오면 설정의 '업데이트 확인'에서 찾을 수 있습니다."
+
+msgid "Z-library refused the search because your sign-in no longer works. Sign in again with Set credentials in Settings."
+msgstr "로그인이 더 이상 작동하지 않아 Z-library가 검색을 거부했습니다. 설정의 '인증 정보 설정'에서 다시 로그인하세요."

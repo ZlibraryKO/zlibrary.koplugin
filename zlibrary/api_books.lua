@@ -25,10 +25,19 @@ Api.usableCoverUrl = _usableCoverUrl
 -- What a reader sees instead of the server's bare "Access denied" (an HTTP 400). Z-library sent it
 -- for every search from 2026-11-23; since 2026-11-26 it sends it only without a valid session.
 -- performSearch asks for an account first and signs in again once on this answer, so the text
--- mostly reaches a reader when a fresh session is refused too, i.e. Z-library is refusing searches
--- (or a session set only in zlibrary_credentials.lua has stopped working, which cannot be renewed).
+-- reaches a reader when a fresh session is refused too: Z-library has changed what it accepts, as
+-- it did when it started asking for the source header, and the fix is likely a plugin update --
+-- which is why the text points at Check for updates rather than saying the plugin is not at fault.
+-- No promise that other features still work: true during the 2026-11 outage, not a given next
+-- time. (performSearch replaces this when the session cannot be renewed: see Api.searchSignInText.)
 local function _searchRefusedText()
-    return T("Z-library is refusing searches right now. This is on Z-library's side, not the plugin's: your lists, Most popular and downloads still work.")
+    return T("Z-library refused the search. Z-library has changed something on its side; if a fix is out, Check for updates in Settings will find it.")
+end
+
+-- For a refused search when there is no password to sign in again with (a session set only in
+-- zlibrary_credentials.lua): then it is the sign-in that stopped working, not Z-library.
+function Api.searchSignInText()
+    return T("Z-library refused the search because your sign-in no longer works. Sign in again with Set credentials in Settings.")
 end
 
 function Api.search(query, user_id, user_key, languages, extensions, order, page, content_type, is_redir_callback)

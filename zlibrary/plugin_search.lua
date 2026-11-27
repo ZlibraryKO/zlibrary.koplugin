@@ -15,6 +15,7 @@ local Api = require("zlibrary.api")
 local Ui = require("zlibrary.ui")
 local AsyncHelper = require("zlibrary.async_helper")
 local logger = require("zlibrary.log")
+local Ota = require("zlibrary.ota")
 
 local Zlibrary = {}
 
@@ -25,12 +26,14 @@ local Zlibrary = {}
 -- there is a password to do it with (a session set in zlibrary_credentials.lua alone cannot be
 -- renewed), and not for a session that was refused straight after a sign-in -- then it is the
 -- server refusing, and signing in before every search would only earn "Too many logins".
-local function _mayRenewSessionFor(plugin, user_session)
+local function _canSignInAgain()
     local credentials = Config.getCredentials()
-    if not (credentials.username and credentials.username ~= ""
-            and credentials.password and credentials.password ~= "") then
-        return false
-    end
+    return credentials.username and credentials.username ~= ""
+        and credentials.password and credentials.password ~= ""
+end
+
+local function _mayRenewSessionFor(plugin, user_session)
+    if not _canSignInAgain() then return false end
     return not (user_session and user_session.user_key
         and user_session.user_key == plugin._search_refused_session_key)
 end
@@ -99,7 +102,10 @@ function Zlibrary:performSearch(query)
                     -- refusing searches, not this session.
                     self._search_refused_session_key = user_session and user_session.user_key
                 end
-                Ui.showSearchErrorDialog(api_result.refusal_text, query, user_session, selected_languages, selected_extensions, selected_order, current_page_to_search, loading_msg, on_success, function(final_err_msg)
+                -- Nothing to sign in with: the session is what stopped working, so say that rather
+                -- than blame Z-library.
+                local refusal_text = _canSignInAgain() and api_result.refusal_text or Api.searchSignInText()
+                Ui.showSearchErrorDialog(refusal_text, query, user_session, selected_languages, selected_extensions, selected_order, current_page_to_search, loading_msg, on_success, function(final_err_msg)
                     -- Cancel callback - user already knows about the error
                 end, content_type)
                 return
@@ -261,6 +267,8 @@ function Zlibrary:displaySearchResults(initial_book_data_list, query_string)
         -- this hands straight over -- asking here as well produced two dialogs in a row.
         function(book) self:downloadBook(book) end,
         self.current_search_content_type)
+    -- The network has just answered, so this is when a quiet update check costs nothing.
+    Ota.maybeNotifyUpdate(self.plugin_path)
 end
 
 return Zlibrary

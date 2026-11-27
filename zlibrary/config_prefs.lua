@@ -23,6 +23,12 @@ function Config.setPluginVersion(version)
     plugin_version = type(version) == "string" and version ~= "" and version or nil
 end
 
+-- The version that is running: read when the plugin started, so it stays put when an update
+-- replaces _meta.lua on disk before KOReader restarts.
+function Config.getPluginVersion()
+    return plugin_version
+end
+
 function Config.getUserAgent()
     return string.format("zlibrary.koplugin/%s (KOReader; +https://github.com/ZlibraryKO/zlibrary.koplugin)",
         plugin_version or "unknown")
@@ -141,6 +147,16 @@ end
 
 function Config.setAuthorFolders(on)
     Config.saveSetting(Config.SETTINGS_AUTHOR_FOLDERS_KEY, on == true)
+end
+
+-- On by default: the plugin only reaches readers' fixes if they hear about them, and Z-library
+-- changes its API without notice. Only an explicit false turns it off.
+function Config.getUpdateNotice()
+    return Config.getSetting(Config.SETTINGS_UPDATE_NOTICE_KEY, true) ~= false
+end
+
+function Config.setUpdateNotice(on)
+    Config.saveSetting(Config.SETTINGS_UPDATE_NOTICE_KEY, on == true)
 end
 
 -- What a search looks for: "book" (the default) or "article". Anything else stored reads as

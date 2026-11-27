@@ -1368,3 +1368,33 @@ msgstr "请填写所有字段"
 
 #~ msgid "Downloading..."
 #~ msgstr "正在下载..."
+
+msgid "Notify about updates"
+msgstr "更新提醒"
+
+msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
+msgstr "显示搜索结果或列表后，每天最多检查一次是否有新版本插件，并只提示一次。"
+
+msgid "You can keep reading and downloading: the new version starts the next time KOReader restarts."
+msgstr "你可以继续阅读和下载：新版本将在下次重启 KOReader 时启用。"
+
+msgid "Version %s is installed and starts the next time KOReader restarts."
+msgstr "版本 %s 已安装，将在下次重启 KOReader 时启用。"
+
+msgid "Until then, you keep using %s."
+msgstr "在此之前，你仍在使用 %s。"
+
+msgid "A download is running. Restart KOReader once it has finished."
+msgstr "正在下载。请在下载完成后重启 KOReader。"
+
+msgid "Restart now"
+msgstr "立即重启"
+
+msgid "Restart to update"
+msgstr "重启以完成更新"
+
+msgid "Z-library refused the search. Z-library has changed something on its side; if a fix is out, Check for updates in Settings will find it."
+msgstr "Z-library 拒绝了搜索。Z-library 在其服务端做了改动；如果有修复版本，设置中的“检查更新”会找到它。"
+
+msgid "Z-library refused the search because your sign-in no longer works. Sign in again with Set credentials in Settings."
+msgstr "你的登录已失效，Z-library 拒绝了搜索。请在设置中通过“设置账号信息”重新登录。"

@@ -62,6 +62,7 @@ local EXPECTED = {
     "login:function",
     "makeHttpRequest:function",
     "search:function",
+    "searchSignInText:function",
     "unfavoriteBook:function",
     "usableCoverUrl:function",
 }

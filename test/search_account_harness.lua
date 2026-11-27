@@ -21,10 +21,12 @@ local support = dofile(PLUGIN .. "/test/support.lua")
 local r = support.reporter()
 
 local SRC = PLUGIN .. "/zlibrary/plugin_search.lua"
-local helper = support.extract_block(SRC, "(\nlocal function _mayRenewSessionFor%(.-\nend\n)")
+local helper = support.extract_block(SRC,
+    "(\nlocal function _canSignInAgain%(.-\nlocal function _mayRenewSessionFor%(.-\nend\n)")
 local perform = support.extract_block(SRC, "(\nfunction Zlibrary:performSearch%(.-\nend\n)")
 
-local DENIED = { error = "Z-library is refusing searches right now.", api_error = "Access denied", status_code = 400 }
+local DENIED = { error = "Z-library refused the search.", api_error = "Access denied", status_code = 400 }
+local SIGN_IN_TEXT = "your sign-in no longer works"
 local RESULTS = { results = { { id = 1, title = "Dune" } } }
 
 -- opts.account: "password" (email + password stored), "file" (session only), or "none".
@@ -65,6 +67,7 @@ local function newRig(opts)
         addSearchHistory = function() end,
     }
     env.Api = {
+        searchSignInText = function() return "Z-library refused the search because " .. SIGN_IN_TEXT .. "." end,
         search = function(_, _, user_key)
             table.insert(rig.searches, tostring(user_key))
             return rig.answers[math.min(#rig.searches, #rig.answers)]
@@ -75,7 +78,10 @@ local function newRig(opts)
         showCancellableLoadingMessage = function() return {} end,
         closeMessage = function() end,
         showInfoMessage = function() end,
-        showSearchErrorDialog = function() rig.error_dialogs = rig.error_dialogs + 1 end,
+        showSearchErrorDialog = function(text)
+            rig.error_dialogs = rig.error_dialogs + 1
+            rig.error_text = text
+        end,
     }
     -- The real routing (async_helper.lua): a result carrying .error goes to on_error as a bare
     -- string, everything else to on_success. A fake that handed every result to on_success hid
@@ -143,6 +149,8 @@ do
     r.check("a search still refused after the fresh sign-in shows the refusal",
             rig.logins == 1 and #rig.searches == 2 and rig.error_dialogs == 1,
             string.format("logins %d, searches %d, error dialogs %d", rig.logins, #rig.searches, rig.error_dialogs))
+    r.check("with the text for Z-library changing something, not the sign-in one",
+            rig.error_text == DENIED.error, tostring(rig.error_text))
     rig.search()
     r.check("and the next search is refused without another sign-in",
             rig.logins == 1 and #rig.searches == 3 and rig.error_dialogs == 2,
@@ -168,6 +176,8 @@ do
     r.check("a session set only in the credentials file is not renewed: the refusal shows",
             rig.logins == 0 and #rig.searches == 1 and rig.error_dialogs == 1,
             string.format("logins %d, searches %d, error dialogs %d", rig.logins, #rig.searches, rig.error_dialogs))
+    r.check("and says the sign-in stopped working, not that Z-library changed something",
+            tostring(rig.error_text):find(SIGN_IN_TEXT, 1, true) ~= nil, tostring(rig.error_text))
 end
 
 -- ---------------------------------------------------------------- other errors

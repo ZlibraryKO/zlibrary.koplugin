@@ -221,7 +221,10 @@ local function newInstall(opts)
             table.insert(rig.finals, { text = text, is_error = is_error })
         end,
         _close_current_ota_status_widget = function() end,
-        Ui = { showUpdateInstalledDialog = function() rig.installed_dialogs = rig.installed_dialogs + 1 end },
+        _showInstalled = function(version, o)
+            rig.installed_dialogs = rig.installed_dialogs + 1
+            rig.installed_version, rig.installed_opts = version, o
+        end,
     }, { __index = _G })
     local body = support.extract_block(OTA,
         "(\nlocal function _removeTree%(.-\nfunction Ota%.installUpdate%(.-\nend\n)")
@@ -259,6 +262,9 @@ do
     r.check("good archive: the ZIP is cleaned up", not exists(zip))
     r.check("good archive: the update-installed dialog is raised, and no error",
             rig.installed_dialogs == 1 and #rig.finals == 0)
+    r.check("good archive: as the install moment, naming the version now on disk",
+            rig.installed_opts and rig.installed_opts.just_installed == true
+                and rig.installed_version == "1.0.2", tostring(rig.installed_version))
 end
 
 -- A reader with no credentials file does not get the template.
@@ -362,11 +368,12 @@ sh("rm -rf " .. q(ROOT))
 -- startUpdateProcess with the network, the dialogs and the child stubbed: what goes into each
 -- runCancellable, what comes back out, and what happens on success, failure and cancel.
 local function newFlow(opts)
-    local rig = { runs = {}, finals = {}, shown = {}, installs = {}, removed = {}, loading = {} }
+    local rig = { runs = {}, finals = {}, shown = {}, installs = {}, removed = {}, loading = {}, reminders = {},
+                  wifi_asks = 0 }
     local env = setmetatable({
         logger = { dbg = function() end, info = function() end, err = function() end, warn = function() end },
         T = function(s) return s end,
-        NetworkMgr = { willRerunWhenOnline = function() return false end },
+        NetworkMgr = { willRerunWhenOnline = function() rig.wifi_asks = rig.wifi_asks + 1; return false end },
         DataStorage = { getDataDir = function() return "/data" end },
         util = { fileExists = function() return true end },
         os = setmetatable({ remove = function(p) table.insert(rig.removed, p) return true end }, { __index = os }),
@@ -392,11 +399,14 @@ local function newFlow(opts)
             table.insert(rig.finals, { text = text, is_error = is_error })
         end,
         _close_current_ota_status_widget = function() end,
+        _showInstalled = function(version, o) table.insert(rig.reminders, { version = version, opts = o }) end,
     }, { __index = _G })
-    local body = support.extract_block(OTA, "(\nfunction Ota%.startUpdateProcess%(.-\n)return Ota")
+    -- From the release fetch shared with the update notice, which startUpdateProcess runs in the child.
+    local body = support.extract_block(OTA, "(\nlocal function _fetchReleaseSummary%(.-\n)return Ota")
     local chunk = assert(loadstring("local Ota = {}\n" .. body .. "return Ota", "=startUpdateProcess"))
     setfenv(chunk, env)
     rig.Ota = chunk()
+    rig.Ota.pendingRestartVersion = function() return opts and opts.pending end
     rig.Ota.installUpdate = function(zip, path)
         table.insert(rig.installs, { zip = zip, path = path })
         return opts and opts.install_result or { success = true }
@@ -493,6 +503,83 @@ do
     rig.runs[1].on_success({ release_info = { tag_name = "v1.0.1", assets = RELEASE.assets } })
     r.check("the same version is not offered",
             #rig.shown == 0 and #rig.finals == 1 and rig.finals[1].is_error == false)
+end
+
+-- ---------------------------------------------------------------- installed, not yet restarted
+-- Check for updates before the restart says what is waiting, instead of reading the new
+-- _meta.lua and calling it the version in use.
+do
+    local rig = newFlow({ pending = "1.0.2" })
+    rig.Ota.fetchLatestReleaseInfo = function() error("no check while an update waits") end
+    rig.Ota.startUpdateProcess("/data/plugins/zlibrary.koplugin/")
+    r.check("an installed update waiting for a restart is shown as such",
+            #rig.reminders == 1 and rig.reminders[1].version == "1.0.2"
+                and not (rig.reminders[1].opts and rig.reminders[1].opts.just_installed),
+            "reminders " .. #rig.reminders)
+    r.check("without a Wi-Fi prompt, a check or an offer",
+            rig.wifi_asks == 0 and #rig.runs == 0 and #rig.shown == 0 and #rig.finals == 0,
+            string.format("wifi %d, runs %d, shown %d", rig.wifi_asks, #rig.runs, #rig.shown))
+end
+
+do
+    local rig = newFlow()
+    rig.Ota.fetchLatestReleaseInfo = function() return { release_info = RELEASE } end
+    rig.Ota.startUpdateProcess("/data/plugins/zlibrary.koplugin/")
+    rig.runs[1].on_success(rig.runs[1].task())
+    local offer = rig.shown[#rig.shown]
+    r.check("the offer says the reader can carry on until the restart",
+            offer and offer.text:find("keep reading and downloading", 1, true) ~= nil,
+            tostring(offer and offer.text))
+end
+
+-- ---------------------------------------------------------------- which version waits, and Restart now
+do
+    local block = support.extract_block(OTA,
+        "(\nfunction Ota%.pendingRestartVersion%(.-\n)local function _showInstalled")
+    local function newPending(o)
+        local rig = { broadcasts = {}, infos = {}, running = o.running, on_disk = o.on_disk,
+                      can_restart = o.can_restart ~= false, downloading = o.downloading or false }
+        local env = setmetatable({
+            type = type,
+            T = function(s) return s end,
+            Config = { getPluginVersion = function() return rig.running end },
+            getCurrentPluginVersion = function() return rig.on_disk end,
+            Device = { canRestart = function() return rig.can_restart end },
+            Download = { isActive = function() return rig.downloading end },
+            Event = { new = function(_, name) return { name = name } end },
+            UIManager = { broadcastEvent = function(_, e) table.insert(rig.broadcasts, e.name) end },
+            Ui = { showInfoMessage = function(t) table.insert(rig.infos, t) end },
+        }, { __index = _G })
+        local chunk = assert(loadstring("local Ota = {}\n" .. block .. "return Ota", "=pending"))
+        setfenv(chunk, env)
+        rig.Ota = chunk()
+        return rig
+    end
+    local P2 = "/data/plugins/zlibrary.koplugin/"
+    r.check("no update waits while disk and memory agree",
+            newPending({ running = "1.0.1", on_disk = "1.0.1" }).Ota.pendingRestartVersion(P2) == nil)
+    r.check("an update installed this session is the one waiting",
+            newPending({ running = "1.0.1", on_disk = "1.0.2" }).Ota.pendingRestartVersion(P2) == "1.0.2")
+    r.check("an unknown running or disk version is not a waiting update",
+            newPending({ running = nil, on_disk = "1.0.2" }).Ota.pendingRestartVersion(P2) == nil
+                and newPending({ running = "1.0.1", on_disk = nil }).Ota.pendingRestartVersion(P2) == nil)
+
+    local rig = newPending({})
+    local restart = rig.Ota.restartAction()
+    r.check("Restart now is offered when nothing is downloading", type(restart) == "function")
+    restart()
+    r.check("and restarts the way KOReader's Exit menu does",
+            #rig.broadcasts == 1 and rig.broadcasts[1] == "Restart", table.concat(rig.broadcasts, ","))
+    r.check("not while a book downloads",
+            newPending({ downloading = true }).Ota.restartAction() == nil)
+    r.check("not on a device KOReader cannot restart",
+            newPending({ can_restart = false }).Ota.restartAction() == nil)
+    rig = newPending({})
+    restart = rig.Ota.restartAction()
+    rig.downloading = true
+    restart()
+    r.check("a download that started while the dialog was open blocks the tap",
+            #rig.broadcasts == 0 and #rig.infos == 1, "broadcasts " .. #rig.broadcasts)
 end
 
 r.finish()

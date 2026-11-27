@@ -451,10 +451,14 @@ r.check("getMostPopularBooks: only that refusal falls back",
 local sres = call("search", { "dune", UID, UKEY }, { body = "search_denied" })
 r.check("search: keeps the server's own error text beside the translated one",
         sres.api_error == "Access denied", "api_error=" .. tostring(sres.api_error))
--- The reader sees why instead of the bare "Access denied", which reads like an account problem.
-local REFUSED = "Z-library is refusing searches right now"
-r.check("search: a refusal says it is on Z-library's side",
-        tostring(sres.error):find(REFUSED, 1, true) == 1, "error=" .. tostring(sres.error))
+-- The reader sees why instead of the bare "Access denied", and where a fix would come from.
+local REFUSED = "Z-library refused the search"
+r.check("search: a refusal says Z-library changed something, and points at Check for updates",
+        tostring(sres.error):find(REFUSED, 1, true) == 1
+            and tostring(sres.error):find("Check for updates", 1, true) ~= nil,
+        "error=" .. tostring(sres.error))
+r.check("search: and promises nothing about other features",
+        tostring(sres.error):find("still work", 1, true) == nil, "error=" .. tostring(sres.error))
 sres = call("search", { "dune", UID, UKEY }, DENIED_400)
 r.check("search: and when the refusal comes as an HTTP 400",
         sres.api_error == "Access denied" and sres.status_code == 400

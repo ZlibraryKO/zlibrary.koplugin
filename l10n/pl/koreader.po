@@ -1329,3 +1329,33 @@ msgstr "Wypełnij wszystkie pola"
 
 #~ msgid "Downloading..."
 #~ msgstr "Pobieranie..."
+
+msgid "Notify about updates"
+msgstr "Powiadamiaj o aktualizacjach"
+
+msgid "After search results or a list appear, checks at most once a day whether a new version of the plugin is out, and offers it once."
+msgstr "Po wyświetleniu wyników wyszukiwania lub listy sprawdza najwyżej raz dziennie, czy wyszła nowa wersja wtyczki, i proponuje ją jeden raz."
+
+msgid "You can keep reading and downloading: the new version starts the next time KOReader restarts."
+msgstr "Możesz dalej czytać i pobierać: nowa wersja uruchomi się przy następnym ponownym uruchomieniu KOReadera."
+
+msgid "Version %s is installed and starts the next time KOReader restarts."
+msgstr "Wersja %s jest zainstalowana i uruchomi się przy następnym ponownym uruchomieniu KOReadera."
+
+msgid "Until then, you keep using %s."
+msgstr "Do tego czasu nadal używasz wersji %s."
+
+msgid "A download is running. Restart KOReader once it has finished."
+msgstr "Trwa pobieranie. Uruchom ponownie KOReadera, gdy się zakończy."
+
+msgid "Restart now"
+msgstr "Uruchom ponownie teraz"
+
+msgid "Restart to update"
+msgstr "Uruchom ponownie, aby zaktualizować"
+
+msgid "Z-library refused the search. Z-library has changed something on its side; if a fix is out, Check for updates in Settings will find it."
+msgstr "Z-library odrzuciła wyszukiwanie. Z-library coś zmieniła po swojej stronie; jeśli pojawi się poprawka, znajdzie ją „Sprawdź aktualizacje” w Ustawieniach."
+
+msgid "Z-library refused the search because your sign-in no longer works. Sign in again with Set credentials in Settings."
+msgstr "Z-library odrzuciła wyszukiwanie, ponieważ Twoje logowanie już nie działa. Zaloguj się ponownie przez „Ustaw dane logowania” w Ustawieniach."

@@ -11,6 +11,9 @@ local Ui = require("zlibrary.ui")
 local DataStorage = require("datastorage")
 local AsyncHelper = require("zlibrary.async_helper")
 local ffiUtil = require("ffi/util")
+local Device = require("device")
+local Download = require("zlibrary.download")
+local Event = require("ui/event")
 local lfs = require("libs/libkoreader-lfs")
 
 local Ota = {}
@@ -72,6 +75,43 @@ end
 -- Exported so the About dialog shows the same version the updater compares against, instead of
 -- reading _meta.lua a second way and being able to disagree with it.
 Ota.getCurrentPluginVersion = getCurrentPluginVersion
+
+-- An update installed while KOReader kept running leaves two versions: the one that started, which
+-- keeps running whole (every module loads at startup), and the one on disk, which starts with the
+-- next restart. Returns the one on disk while they differ, nil otherwise.
+function Ota.pendingRestartVersion(plugin_path)
+    local running = Config.getPluginVersion()
+    if not running or type(plugin_path) ~= "string" then return nil end
+    local on_disk = getCurrentPluginVersion(plugin_path)
+    if on_disk and on_disk ~= running then return on_disk end
+    return nil
+end
+
+-- What "Restart now" does, or nil when it must not be offered: on a device KOReader cannot restart
+-- itself, or while a book download is running -- restarting kills the child writing the book.
+-- Asked again on the tap, since the dialog can sit open while one starts. The restart itself is
+-- the one KOReader's Exit menu uses, so the reader's position and settings are saved as usual.
+function Ota.restartAction()
+    if not Device:canRestart() or Download.isActive() then return nil end
+    return function()
+        if Download.isActive() then
+            Ui.showInfoMessage(T("A download is running. Restart KOReader once it has finished."))
+            return
+        end
+        UIManager:broadcastEvent(Event:new("Restart"))
+    end
+end
+
+local function _showInstalled(installed, opts)
+    opts = opts or {}
+    Ui.showUpdateInstalledDialog({
+        installed = installed,
+        running = Config.getPluginVersion(),
+        restart = Ota.restartAction(),
+        download_active = Download.isActive(),
+        just_installed = opts.just_installed,
+    })
+end
 
 -- The release workflow publishes zlibrary_plugin_v<version>.zip. Pick the update archive out of the
 -- release by name: a release can carry more than one asset -- a second archive, a checksum, a
@@ -314,12 +354,50 @@ function Ota.installUpdate(zip_filepath, plugin_base_path)
     -- to be dismissed and carries the plugin's one other mention of support -- see
     -- Ui.showUpdateInstalledDialog for why this moment and no other.
     _close_current_ota_status_widget()
-    Ui.showUpdateInstalledDialog()
+    _showInstalled(meta.version, { just_installed = true })
     return { success = true, message = "Update installed successfully." }
+end
+
+-- The release, cut down to the fields the offer uses. Runs in a forked child: the full record
+-- carries json nulls, which do not survive the pipe back.
+local function _fetchReleaseSummary()
+    local fetched = Ota.fetchLatestReleaseInfo()
+    if fetched.error or type(fetched.release_info) ~= "table" then
+        return { error = fetched.error or "release_info is nil" }
+    end
+    local info = fetched.release_info
+    local assets = {}
+    if type(info.assets) == "table" then
+        for _, a in ipairs(info.assets) do
+            if type(a) == "table" then
+                assets[#assets + 1] = {
+                    name = type(a.name) == "string" and a.name or nil,
+                    browser_download_url = type(a.browser_download_url) == "string" and a.browser_download_url or nil,
+                }
+            end
+        end
+    end
+    return { release_info = {
+        tag_name = type(info.tag_name) == "string" and info.tag_name or nil,
+        assets = assets,
+    } }
+end
+
+local function _isSupportedPluginPath(path)
+    return type(path) == "string" and string.match(path, "plugins/zlibrary.koplugin/?$") ~= nil
 end
 
 function Ota.startUpdateProcess(plugin_path_from_main)
     logger.dbg("Zlibrary:Ota.startUpdateProcess - Initiated by user. Plugin path: " .. tostring(plugin_path_from_main))
+
+    -- Installed earlier in this session: say so, without asking for Wi-Fi, instead of checking
+    -- GitHub and calling the version on disk the one in use.
+    local pending = Ota.pendingRestartVersion(plugin_path_from_main)
+    if pending then
+        logger.dbg("Zlibrary:Ota.startUpdateProcess - " .. pending .. " is installed, waiting for a restart")
+        _showInstalled(pending)
+        return
+    end
 
     if NetworkMgr:willRerunWhenOnline(function()
         logger.dbg("Zlibrary:network - network is up, re-running", "Ota.startUpdateProcess")
@@ -335,7 +413,7 @@ function Ota.startUpdateProcess(plugin_path_from_main)
         return
     end
 
-    if not string.match(plugin_path_from_main, "plugins/zlibrary.koplugin/?$") then
+    if not _isSupportedPluginPath(plugin_path_from_main) then
         local err_msg = string.format(T("Unsupported plugin path for OTA update: %s. Only 'plugins/zlibrary.koplugin' is supported."), plugin_path_from_main)
         logger.err("Zlibrary:Ota.startUpdateProcess - " .. err_msg)
         _show_ota_final_message(err_msg, true)
@@ -347,28 +425,7 @@ function Ota.startUpdateProcess(plugin_path_from_main)
     -- the full release record carries json nulls, which do not survive the pipe.
     _close_current_ota_status_widget()
     current_ota_status_widget = Ui.showCancellableLoadingMessage(T("Checking for updates..."))
-    AsyncHelper.runCancellable(function()
-        local fetched = Ota.fetchLatestReleaseInfo()
-        if fetched.error or type(fetched.release_info) ~= "table" then
-            return { error = fetched.error or "release_info is nil" }
-        end
-        local info = fetched.release_info
-        local assets = {}
-        if type(info.assets) == "table" then
-            for _, a in ipairs(info.assets) do
-                if type(a) == "table" then
-                    assets[#assets + 1] = {
-                        name = type(a.name) == "string" and a.name or nil,
-                        browser_download_url = type(a.browser_download_url) == "string" and a.browser_download_url or nil,
-                    }
-                end
-            end
-        end
-        return { release_info = {
-            tag_name = type(info.tag_name) == "string" and info.tag_name or nil,
-            assets = assets,
-        } }
-    end, function(fetched)
+    AsyncHelper.runCancellable(_fetchReleaseSummary, function(fetched)
         Ota._offerUpdate(plugin_path_from_main, fetched.release_info)
     end, function(err)
         current_ota_status_widget = nil -- runCancellable has closed it
@@ -380,12 +437,23 @@ function Ota.startUpdateProcess(plugin_path_from_main)
 end
 
 -- The rest of the check, once the release is known: compare versions and ask.
-function Ota._offerUpdate(plugin_path_from_main, release_info)
+-- opts.quiet (the update notice): nothing is shown but the offer itself, every other outcome goes
+-- to the log. opts.should_offer(version) may veto an offer; opts.on_offer(version) runs when the
+-- dialog is shown.
+function Ota._offerUpdate(plugin_path_from_main, release_info, opts)
+    opts = opts or {}
+    local function finish(message, is_error)
+        if opts.quiet then
+            logger.dbg("Zlibrary:Ota.update notice - no offer: " .. tostring(message))
+            return
+        end
+        _show_ota_final_message(message, is_error)
+    end
     -- runCancellable closed the checking message itself.
     current_ota_status_widget = nil
     if not release_info or type(release_info) ~= "table" then
         logger.err("Zlibrary:Ota.startUpdateProcess - Invalid release_info structure received.")
-        _show_ota_final_message(T("Could not find update information (invalid data format)."), true)
+        finish(T("Could not find update information (invalid data format)."), true)
         return
     end
 
@@ -394,28 +462,28 @@ function Ota._offerUpdate(plugin_path_from_main, release_info)
 
     if not latest_version_tag or type(latest_version_tag) ~= "string" or #latest_version_tag == 0 then
         logger.warn("Zlibrary:Ota.startUpdateProcess - Invalid or missing latest_version_tag in release information.")
-        _show_ota_final_message(T("Could not find update version information."), true)
+        finish(T("Could not find update version information."), true)
         return
     end
 
     local normalized_latest_version = string.match(latest_version_tag, "v?([%d%.]+)")
     if not normalized_latest_version then
         logger.warn("Zlibrary:Ota.startUpdateProcess - Could not normalize latest_version_tag: " .. latest_version_tag)
-        _show_ota_final_message(T("Could not understand the update version format."), true)
+        finish(T("Could not understand the update version format."), true)
         return
     end
     logger.dbg("Zlibrary:Ota.startUpdateProcess - GitHub tag: " .. latest_version_tag .. ", Normalized latest version: " .. normalized_latest_version)
 
     if not assets or type(assets) ~= "table" or #assets == 0 then
         logger.warn("Zlibrary:Ota.startUpdateProcess - Invalid or missing assets in release information.")
-        _show_ota_final_message(T("Could not find update files."), true)
+        finish(T("Could not find update files."), true)
         return
     end
 
     local asset = selectUpdateAsset(assets)
     if not asset then
         logger.warn("Zlibrary:Ota.startUpdateProcess - No update archive among the release assets.")
-        _show_ota_final_message(T("Could not find a download link for the update."), true)
+        finish(T("Could not find a download link for the update."), true)
         return
     end
 
@@ -441,7 +509,7 @@ function Ota._offerUpdate(plugin_path_from_main, release_info)
         else
             message = string.format(T("Could not determine your current version, but the latest is %s. If you recently updated, you might be up-to-date."), normalized_latest_version)
         end
-        _show_ota_final_message(message, false)
+        finish(message, false)
         logger.dbg("Zlibrary:Ota.startUpdateProcess - No new update needed. Current: " .. (current_version or "Unknown") .. ", Latest (normalized): " .. normalized_latest_version)
         return
     end
@@ -449,7 +517,13 @@ function Ota._offerUpdate(plugin_path_from_main, release_info)
     local confirmation_message = string.format(T([[New version available: %s (you have %s). Download and install?]]),
         normalized_latest_version,
         current_version or T("an older version")
-    )
+    ) .. "\n\n" .. T("You can keep reading and downloading: the new version starts the next time KOReader restarts.")
+
+    if opts.should_offer and not opts.should_offer(normalized_latest_version) then
+        logger.dbg("Zlibrary:Ota.update notice - " .. normalized_latest_version .. " was offered before")
+        return
+    end
+    if opts.on_offer then opts.on_offer(normalized_latest_version) end
 
     local confirm_dialog = ConfirmBox:new{
         title = T("Update available"),
@@ -501,6 +575,54 @@ function Ota._offerUpdate(plugin_path_from_main, release_info)
     -- dialog for as long as the user takes to answer -- still claiming to be checking.
     _close_current_ota_status_widget()
     UIManager:show(confirm_dialog)
+end
+
+-- The update notice: a quiet background check after a list of books has been shown, so a reader
+-- who never opens "Check for updates" still hears about a fix. At most once a day, only when the
+-- device is already connected (no Wi-Fi prompt), on a background channel (no loading message, no
+-- trap for the reader's taps), and each version is offered once. Everything that is not an offer
+-- stays in the log.
+local DAY = 24 * 60 * 60
+local notice_channel
+
+function Ota.maybeNotifyUpdate(plugin_path)
+    if not Config.getUpdateNotice() then return end
+    if not _isSupportedPluginPath(plugin_path) then return end
+    if not NetworkMgr:isConnected() then return end
+    -- Already installed, waiting for a restart: there is nothing to offer.
+    if Ota.pendingRestartVersion(plugin_path) then return end
+    -- Not over a download's progress bar. No check is recorded, so the next list tries again.
+    if Download.isActive() then return end
+
+    local now = os.time()
+    local last = Config.getSetting(Config.SETTINGS_UPDATE_NOTICE_LAST_CHECK_KEY)
+    -- A clock that went backwards (a device without RTC battery) must not stop checks for good.
+    if type(last) == "number" and last <= now and now - last < DAY then return end
+    -- Recorded before the request, so a check that fails is not repeated with every list.
+    Config.saveSetting(Config.SETTINGS_UPDATE_NOTICE_LAST_CHECK_KEY, now)
+
+    notice_channel = notice_channel or AsyncHelper:createChannel("UpdateNotice", 1)
+    notice_channel:pushTask(_fetchReleaseSummary, function(success, res)
+        if not (success and type(res) == "table" and type(res.release_info) == "table") then
+            logger.dbg("Zlibrary:Ota.update notice - check failed: " .. tostring(type(res) == "table" and res.error or res))
+            return
+        end
+        -- A download started while GitHub answered. Forget this check, so the next list asks again.
+        if Download.isActive() then
+            logger.dbg("Zlibrary:Ota.update notice - a download is running, offering later")
+            Config.deleteSetting(Config.SETTINGS_UPDATE_NOTICE_LAST_CHECK_KEY)
+            return
+        end
+        Ota._offerUpdate(plugin_path, res.release_info, {
+            quiet = true,
+            should_offer = function(version)
+                return Config.getSetting(Config.SETTINGS_UPDATE_NOTICE_OFFERED_KEY) ~= version
+            end,
+            on_offer = function(version)
+                Config.saveSetting(Config.SETTINGS_UPDATE_NOTICE_OFFERED_KEY, version)
+            end,
+        })
+    end)
 end
 
 return Ota
